@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+GREEN='\033[1;32m'
+BLUE='\033[1;34m'
+CYAN='\033[1;36m'
+YELLOW='\033[0;33m'
+NC='\033[0m'
+
+docker-compose exec -d webapp quasar dev
+
+echo "";
+echo -e " ${CYAN}Wait and try again!!!${NC}";
+echo "";
+echo -e " App:         ${BLUE}http://localhost:9090/${NC}";
+echo "";
+echo "==========================================================";

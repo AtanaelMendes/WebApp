@@ -1,0 +1,12 @@
+version: '3.3'
+services:
+  webapp:
+    container_name: webapp
+    build:
+      './.docker'
+    volumes:
+      - ./:/app
+    ports:
+      - 9090:8080
+    tty: true
+
