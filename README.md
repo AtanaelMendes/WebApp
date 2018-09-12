@@ -17,8 +17,8 @@ $ npm install
 ```
 
 ### Pronto!
-Agora execute o comando abaixo para iniciar a aplicação
+Agora saia do container e execute o comando abaixo para iniciar a aplicação
 ```sh
 $ ./run
 ```
-A apicalção já estará rodando no endereço `http://localhost:9090/`
+Após alguns segundos a apicalção já estará rodando no endereço `http://localhost:9090/`
