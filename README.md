@@ -8,7 +8,7 @@ $ ./start
 
 Acesse o shell do container
 ```sh
-$ ./shell webapp
+$ ./shell app
 ```
 
 Instale as dependências do projeto com o comando dentro do container
