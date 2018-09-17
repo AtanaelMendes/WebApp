@@ -1,23 +1,38 @@
 <template>
-  <mg-layout>
+  <AgroLayout>
 
     <template slot="title">
       Início
     </template>
 
     <div slot="content" class="layout-padding">
-      <div class="row wrap">
-        <div class="text-center col-md-1 col-xs-3 col-sm-2" v-for="aplicativo in aplicativos">
-          <q-btn flat color="primary" :icon="aplicativo.icon" @click="$router.push(aplicativo.path)" size="2rem" style="min-height:0"/>
-          <br>
-          <small @click="$router.push(aplicativo.path)" class="text-primary" style="cursor:pointer">
-            {{aplicativo.title}}
-          </small>
+      <div class="row gutter-sm">
+
+        <div class="col-3">
+          <q-card class="bg-secondary">
+            <q-card-title>
+              Emissão de Nota
+            </q-card-title>
+            <q-card-main>
+              uhuhuhuhu
+            </q-card-main>
+          </q-card>
+        </div>
+
+        <div class="col-3">
+          <q-card class="bg-secondary">
+            <q-card-title>
+              Contratos
+            </q-card-title>
+            <q-card-main>
+              uhuhuhuhu
+            </q-card-main>
+          </q-card>
         </div>
       </div>
     </div>
 
-  </mg-layout>
+  </AgroLayout>
 </template>
 
 <script>
@@ -34,18 +49,8 @@ export default {
       left: false
     }
   },
-
-  computed: {
-    aplicativos: {
-      get () {
-        return this.$store.state.aplicativos.aplicativos
-      }
-    }
-  },
-
   methods: {
   },
-
   mounted () {
   }
 

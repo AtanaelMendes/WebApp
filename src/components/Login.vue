@@ -43,7 +43,8 @@
 
             <q-card-main>
               <p class="text-justify">
-                Ao clicar em <strong>RECUPERAR</strong> será lhe encaminhado um email com o link para a recuperação de senha.
+                Ao clicar em <strong>RECUPERAR</strong>
+                será lhe enviado um email com o link para a recuperação de senha.
               </p>
               <q-input type="email" float-label="Email"/>
             </q-card-main>

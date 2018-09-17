@@ -23,15 +23,8 @@
       </q-toolbar>
     </q-layout-header>
 
-    <q-layout-drawer
-      v-model="leftDrawerOpen"
-      :content-class="$q.theme === 'mat' ? 'bg-grey-2' : null"
-    >
-      <q-list
-        no-border
-        link
-        inset-delimiter
-      >
+    <q-layout-drawer v-model="leftDrawerOpen">
+      <q-list no-border link inset-delimiter>
         <q-list-header>Essential Links</q-list-header>
         <q-item @click.native="openURL('http://quasar-framework.org')">
           <q-item-side icon="school" />
