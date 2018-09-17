@@ -1,34 +1,43 @@
 <template>
-  <AgroLayout>
+  <AgroLayout drawer class="bg-green-1">
 
-    <template slot="title">
+    <template slot="title" class="fundo">
       Início
     </template>
 
+    <div slot="drawer">
+      <q-list link>
+        <q-list-header>Menu</q-list-header>
+
+        <q-item>
+          <q-item-main>
+            Emissão de Notas
+          </q-item-main>
+        </q-item>
+
+        <q-item>
+          <q-item-main>
+            Contratos
+          </q-item-main>
+        </q-item>
+
+        <q-item>
+          <q-item-main>
+          </q-item-main>
+        </q-item>
+
+        <q-item>
+          <q-item-main>
+          </q-item-main>
+        </q-item>
+
+      </q-list>
+    </div>
+
     <div slot="content" class="layout-padding">
-      <div class="row gutter-sm">
+      <div class="row gutter-sm justify-center">
 
-        <div class="col-3">
-          <q-card class="bg-secondary">
-            <q-card-title>
-              Emissão de Nota
-            </q-card-title>
-            <q-card-main>
-              uhuhuhuhu
-            </q-card-main>
-          </q-card>
-        </div>
 
-        <div class="col-3">
-          <q-card class="bg-secondary">
-            <q-card-title>
-              Contratos
-            </q-card-title>
-            <q-card-main>
-              uhuhuhuhu
-            </q-card-main>
-          </q-card>
-        </div>
       </div>
     </div>
 
@@ -58,4 +67,8 @@ export default {
 </script>
 
 <style>
+.img-responsive{
+  height: auto;
+  width: auto;
+}
 </style>

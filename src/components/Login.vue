@@ -7,7 +7,7 @@
             <q-card class="login q-pa-sm">
 
               <q-card-media align="center" class="q-pa-md">
-                <img class="logo" src="/statics/logo.jpg" />
+                <img class="logo" src="/statics/images/logo.jpg" />
               </q-card-media>
 
               <q-card-main class="gutter-y-sm">
@@ -129,7 +129,7 @@ export default {
   box-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.4);
 }
 .fundo {
-  background-image: url("/statics/fundo.jpg");
+  background-image: url("/statics/images/fundo.jpg");
   background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;

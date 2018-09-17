@@ -28,7 +28,7 @@
       <q-toolbar>
         <slot name="footer">
           <q-toolbar-title>
-            © MG Papelaria
+            © AgroProject
           </q-toolbar-title>
         </slot>
       </q-toolbar>
@@ -36,9 +36,7 @@
 
     <!-- Left Side Panel -->
     <q-layout-drawer v-if="drawer" side="left" v-model="left" :overlay="leftOverlay" :behavior="leftBehavior" :breakpoint="leftBreakpoint">
-      <q-scroll-area class="fit">
-        <slot name="drawer"></slot>
-      </q-scroll-area>
+      <slot name="drawer"></slot>
     </q-layout-drawer>
 
     <!-- Right Side Panel -->
@@ -123,7 +121,7 @@
         header: true,
         headerReveal: true,
 
-        footer: false,
+        footer: true,
         footerReveal: false,
 
         left: true,
@@ -138,23 +136,8 @@
         leftSide: false,
         rightSide: false,
 
-        // right: true,
-        //
-        // headerReveal: true,
-        // rightOverlay: false,
-        // rightBehavior: 'default',
-        // leftBreakpoint: 992,
-        // rightBreakpoint: 992,
-        //
-        // topleft: 'h',
-        // topcenter: 'H',
-        // topright: 'h',
-        // middleleft: 'L',
-        // middlecenter: 'p',
-        // middleright: 'r',
-        // bottomleft: 'l',
-        bottomcenter: 'F',
-        bottomright: 'f',
+        // bottomcenter: 'F',
+        // bottomright: 'f',
         scrolling: true
       }
     },
