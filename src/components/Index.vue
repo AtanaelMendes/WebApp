@@ -6,7 +6,7 @@
     </template>
 
     <div slot="drawer">
-      <q-list link>
+      <q-list link no-border>
         <q-list-header>Menu</q-list-header>
 
         <q-item>

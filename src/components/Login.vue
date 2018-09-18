@@ -7,7 +7,7 @@
             <q-card class="login q-pa-sm">
 
               <q-card-media align="center" class="q-pa-md">
-                <img class="logo" src="/statics/images/logo.jpg" />
+                <img class="logo shadow-10" src="/statics/images/logo.jpg" />
               </q-card-media>
 
               <q-card-main class="gutter-y-sm">
@@ -32,30 +32,29 @@
       </q-page>
     </q-page-container>
 
-    <q-modal  maximized v-model="modalRecuperacaoSenha">
-      <div class="row justify-center">
-        <div class="col-xs-10 col-sm-8 col-md-6 col-lg-4 q-pa-lg">
-          <q-card>
-            <q-card-media class="q-pa-md">
-              <img class="logo" src="/statics/logo.jpg" />
-            </q-card-media>
-            <q-card-separator/>
+    <q-modal minimized v-model="modalRecuperacaoSenha">
+      <div class="justify-center">
+        <div class="col-xs-10 col-sm-8 col-md-6 col-lg-4 q-pa-lg gutter-y-sm">
 
-            <q-card-main>
-              <p class="text-justify">
-                Ao clicar em <strong>RECUPERAR</strong>
-                será lhe enviado um email com o link para a recuperação de senha.
-              </p>
-              <q-input type="email" float-label="Email"/>
-            </q-card-main>
-            <q-card-separator/>
+          <div>
+            <p class="text-justify">
+              Ao clicar em <strong>RECUPERAR</strong> será enviado<br />
+              um email com o link para a recuperação<br />
+              de senha.
+            </p>
+          </div>
 
-            <q-card-actions align="end">
-              <q-btn color="secondary" label="recuperar"/>
-              <q-btn @click="modalRecuperacaoSenha = false" color="primary" flat label="voltar"/>
-            </q-card-actions>
+          <div>
+            <q-field>
+              <q-input placeholder="insira seu email" type="email" float-label="Email" v-model="emailRecover"/>
+            </q-field>
+          </div>
 
-          </q-card>
+          <div align="end">
+            <q-btn color="secondary" label="recuperar"/>
+            <q-btn @click="modalRecuperacaoSenha = false" color="primary" flat label="fechar"/>
+          </div>
+
         </div>
       </div>
     </q-modal>
@@ -69,6 +68,7 @@ export default {
   name: 'login',
   data () {
     return {
+      emailRecover:null,
       usuario: 'peter@klaven',
       senha: "cityslicka",
       erro: false,
@@ -126,7 +126,6 @@ export default {
 
 .logo {
   border-radius: 50%;
-  box-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.4);
 }
 .fundo {
   background-image: url("/statics/images/fundo.jpg");
