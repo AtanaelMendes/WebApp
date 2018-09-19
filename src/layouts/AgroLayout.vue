@@ -144,16 +144,11 @@
     components: {
     },
     computed: {
-      // aplicativos: {
-      //   get () {
-      //     return this.$store.state.aplicativos.aplicativos
-      //   }
-      // },
-      // perfil: {
-      //   get () {
-      //     return this.$store.state.perfil.perfilState
-      //   }
-      // }
+      perfil: {
+        get () {
+          return this.$store.state.perfil.perfilState
+        }
+      }
     },
     props: {
       navigation: {
@@ -171,28 +166,28 @@
     },
     methods: {
 
-      // logout () {
-      //   var vm = this
-      //
-      //   vm.$q.dialog({
-      //     title: 'Sair do sistema',
-      //     message: 'Tem certeza que deseja sair?',
-      //     ok: 'Sair',
-      //     cancel: 'Cancelar'
-      //   }).then(() => {
-      //     vm.$axios.get('auth/logout').then(response => {
-      //       localStorage.removeItem('auth.token')
-      //       localStorage.removeItem('auth.usuario.usuario')
-      //       localStorage.removeItem('auth.usuario.codusuario')
-      //       localStorage.removeItem('auth.usuario.avatar')
-      //       vm.$router.push('/login')
-      //       vm.$q.notify({
-      //         message: 'Até mais...',
-      //         type: 'positive',
-      //       })
-      //     })
-      //   })
-      // }
+      logout () {
+        var vm = this
+
+        vm.$q.dialog({
+          title: 'Sair do sistema',
+          message: 'Tem certeza que deseja sair?',
+          ok: 'Sair',
+          cancel: 'Cancelar'
+        }).then(() => {
+          vm.$axios.get('auth/logout').then(response => {
+            localStorage.removeItem('auth.token')
+            localStorage.removeItem('auth.usuario.usuario')
+            localStorage.removeItem('auth.usuario.codusuario')
+            localStorage.removeItem('auth.usuario.avatar')
+            vm.$router.push('/login')
+            vm.$q.notify({
+              message: 'Até mais...',
+              type: 'positive',
+            })
+          })
+        })
+      }
 
     }
   }

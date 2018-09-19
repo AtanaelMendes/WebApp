@@ -12,8 +12,8 @@
 
               <q-card-main class="gutter-y-sm">
                 <div>
-                  <q-input v-model="usuario" float-label="Usuário" autofocus />
-                  <q-input v-model="senha" type="password" float-label="Senha" />
+                  <q-input v-model="user" float-label="Usuário" autofocus />
+                  <q-input v-model="password" type="password" float-label="password" />
                 </div>
 
                 <div class="gutter-y-sm">
@@ -21,7 +21,7 @@
                     <q-btn @click="login()" class="full-width btn" color="secondary" label="entrar"/>
                   </div>
                   <div align="end">
-                    <q-btn @click="modalRecuperacaoSenha = true" dense color="primary" flat label="esqueci minha senha"/>
+                    <q-btn @click="modalPassRecover = true" dense color="primary" flat label="esqueci minha senha"/>
                   </div>
                 </div>
 
@@ -32,7 +32,7 @@
       </q-page>
     </q-page-container>
 
-    <q-modal minimized v-model="modalRecuperacaoSenha">
+    <q-modal minimized v-model="modalPassRecover">
       <div class="justify-center">
         <div class="col-xs-10 col-sm-8 col-md-6 col-lg-4 q-pa-lg gutter-y-sm">
 
@@ -51,8 +51,8 @@
           </div>
 
           <div align="end">
-            <q-btn color="secondary" label="recuperar"/>
-            <q-btn @click="modalRecuperacaoSenha = false" color="primary" flat label="fechar"/>
+            <q-btn color="secondary" label="recuperar"/>&nbsp
+            <q-btn @click="modalPassRecover = false" color="primary" flat label="fechar"/>
           </div>
 
         </div>
@@ -69,11 +69,11 @@ export default {
   data () {
     return {
       emailRecover:null,
-      usuario: 'peter@klaven',
-      senha: "cityslicka",
+      user: 'atanael',
+      password: "baseteste",
       erro: false,
       mensagem: 'mensagem',
-      modalRecuperacaoSenha: false
+      modalPassRecover: false
     }
   },
 
@@ -87,25 +87,22 @@ export default {
     login: function (e) {
       var vm = this
       let data = {
-        usuario: vm.usuario,
-        senha: vm.senha
+        usuario: vm.user,
+        senha: vm.password
       }
-      console.log("aqui")
       // Busca Autenticacao
-      vm.$axios.post('https://reqres.in/api/login', data).then(response => {
+      vm.$axios.post('auth/login', data).then(response => {
         // salva token no Local Storage
         let token = response.data.token
         localStorage.setItem('auth.token', token)
 
         vm.$axios.get('auth/user').then(response => {
           // salva código da imagem avatar do usuário
-          localStorage.setItem('auth.usuario.avatar', response.data.user.avatar)
-          localStorage.setItem('auth.usuario.usuario', response.data.user.usuario)
-          localStorage.setItem('auth.usuario.codusuario', response.data.user.codusuario)
+          localStorage.setItem('auth.user.user', response.data.usuario.usuario)
+          localStorage.setItem('auth.user.coduser', response.data.usuario.codusuario)
           this.$store.commit('perfil/updatePerfil', {
-            usuario: localStorage.getItem('auth.usuario.usuario'),
-            avatar: localStorage.getItem('auth.usuario.avatar'),
-            codusuario: localStorage.getItem('auth.usuario.codusuario')
+            user: localStorage.getItem('auth.user.user'),
+            coduser: localStorage.getItem('auth.user.coduser')
           })
         }).catch(error => {
           console.log(error.response)

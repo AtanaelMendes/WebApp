@@ -12,10 +12,10 @@ export default {
         // let method = resource.config.method.toLowerCase()
         // return window.axios[method](resource.config.url, resource.config.params)
       } else {
-        router.push('/login/')
+        router.push('/')
       }
     }).catch(function () {
-      return router.push('/login/')
+      return router.push('/')
     })
   }
 }
