@@ -10,24 +10,29 @@
         <q-list-header>Menu</q-list-header>
 
         <q-item>
+          <q-item-side icon="receipt"/>
           <q-item-main>
             Emissão de Notas
           </q-item-main>
         </q-item>
 
         <q-item>
+          <q-item-side icon="gavel"/>
           <q-item-main>
             Contratos
           </q-item-main>
         </q-item>
 
         <q-item>
+          <q-item-side icon="receipt"/>
           <q-item-main>
           </q-item-main>
         </q-item>
 
         <q-item>
+          <q-item-side icon="info"/>
           <q-item-main>
+            Sobre
           </q-item-main>
         </q-item>
 

@@ -19,6 +19,7 @@ module.exports = function (ctx) {
     ],
     supportIE: false,
     build: {
+      env: envparser(),
       scopeHoisting: true,
       // vueRouterMode: 'history',
       // vueCompiler: true,

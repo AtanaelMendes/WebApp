@@ -52,7 +52,7 @@
             </q-item-tile>
           </q-item-side>
           <q-item-main link @click.native="$router.push('/usuario/perfil')" style="cursor:pointer">
-            <!-- {{ perfil.usuario }} -->
+            {{ perfil.usuario }}
           </q-item-main>
           <q-item-side right>
             <q-item-tile link icon="exit_to_app"@click.native="logout" style="cursor:pointer"/>

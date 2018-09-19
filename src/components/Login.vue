@@ -97,17 +97,20 @@ export default {
         localStorage.setItem('auth.token', token)
 
         vm.$axios.get('auth/user').then(response => {
-          // salva código da imagem avatar do usuário
-          localStorage.setItem('auth.user.user', response.data.usuario.usuario)
-          localStorage.setItem('auth.user.coduser', response.data.usuario.codusuario)
+
+          localStorage.setItem('auth.user.user', response.data.user.usuario)
+          localStorage.setItem('auth.user.coduser', response.data.user.codusuario)
+
           this.$store.commit('perfil/updatePerfil', {
             user: localStorage.getItem('auth.user.user'),
             coduser: localStorage.getItem('auth.user.coduser')
           })
+
         }).catch(error => {
-          console.log(error.response)
+          console.log('aqui')
+          console.log(error)
         })
-        vm.$router.push('/')
+        // vm.$router.push('/')
       }).catch(error => {
         // Mensagem de erro
         console.log('erro no login')

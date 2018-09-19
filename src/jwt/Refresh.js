@@ -4,7 +4,7 @@ import router from '../router'
 export default {
   handle: function (response) {
     return Vue.prototype.$axios.get('/auth/refresh').then(function (response) {
-      console.log('refresh')
+      console.log('aqui no refresh')
       console.log(response)
       if (!response.data.mensagem) {
         localStorage.setItem('auth.token', response.data)
