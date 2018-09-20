@@ -11,15 +11,28 @@
               </q-card-media>
 
               <q-card-main class="gutter-y-sm">
+
                 <div>
-                  <q-input v-model="username" float-label="Usuário" autofocus />
-                  <q-input v-model="password" type="password" float-label="password" />
+                  <form @keyup.enter="submit">
+
+                    <q-input v-model="form.username" @blur="$v.form.username.$touch"
+                      :error="$v.form.username.$error" type="email"
+                      float-label="Email" placeholder="insira seu email" autofocus
+                    />
+
+                    <q-input v-model="form.password" @blur="$v.form.password.$touch"
+                      :error="$v.form.password.$error" type="password"
+                      float-label="Senha" placeholder="Insira sua senha"
+                    />
+
+                  </form>
                 </div>
 
                 <div class="gutter-y-sm">
                   <div>
-                    <q-btn @click="login()" class="full-width btn" color="secondary" label="entrar"/>
+                    <q-btn class="full-width" color="secondary" @click="submit" label="entrar"/>
                   </div>
+
                   <div align="end">
                     <q-btn @click="modalPassRecover = true" dense color="primary" flat label="esqueci minha senha"/>
                   </div>
@@ -44,14 +57,19 @@
             </p>
           </div>
 
-          <div>
-            <q-field>
-              <q-input placeholder="insira seu email" type="email" float-label="Email" v-model="emailRecover"/>
-            </q-field>
+          <div v-if="modalPassRecover">
+            <form @keyup.enter="submit">
+
+              <q-input v-model="emailRecover" @blur="$v.emailRecover.$touch"
+                :error="$v.emailRecover.$error" type="email"
+                float-label="Email" placeholder="insira seu email"
+              />
+
+            </form>
           </div>
 
           <div align="end">
-            <q-btn color="secondary" label="recuperar"/>&nbsp
+            <q-btn @click="submitRecover" color="secondary" label="recuperar"/>&nbsp
             <q-btn @click="modalPassRecover = false" color="primary" flat label="fechar"/>
           </div>
 
@@ -64,70 +82,95 @@
 
 
 <script>
+import { required, email, minLength } from 'vuelidate/lib/validators'
+
 export default {
   name: 'login',
   data () {
     return {
+      form: {
+        username: 'mendes@mendes.com',
+        password: '12345678',
+        // username: 'mendes@mendes.com',
+        // password: "12345678",
+      },
       emailRecover: null,
-      username: 'mendes@mendes.com',
-      password: "12345678",
       erro: false,
       mensagem: 'mensagem',
       modalPassRecover: false
     }
   },
-
+  validations: {
+    form: {
+      username: { required, email },
+      password: { required, minLength: minLength(8) }
+    },
+    emailRecover: {required, email },
+  },
   components: {
   },
   created() {
     //do something after creating vue instance
   },
   methods: {
+    submitRecover: function (){
+      this.$v.emailRecover.$touch()
 
-    login: function (e) {
+      if (this.$v.emailRecover.$error) {
+        this.$q.notify('Email inválido')
+        return
+      }
+      console.log('passou')
+    },
+
+    submit: function (e) {
+
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        this.$q.notify('Email ou Senha inválido')
+        return
+      }
+
       var vm = this
       let data = {
         grant_type: 'password',
         client_id: '2',
         client_secret: 'uY0WBc41kKaSxqpaiga5iOgK0afD0DxzhVLxXkxc',
         scope: null,
-        username: vm.username,
-        senha: vm.password
+        username: vm.form.username,
+        password: vm.form.password
       }
       // Busca Autenticacao
       vm.$axios.post('oauth/token', data).then(response => {
+        console.log('antes')
+
         // salva token no Local Storage
         let token = response.data.token
         let refresh_token = response.data.refresh_token
         localStorage.setItem('auth.token', token)
         localStorage.setItem('auth.refresh_token', refresh_token)
 
-        vm.$axios.get('account/').then(response => {
-
-          // salva código da imagem avatar do usuário
-          localStorage.setItem('auth.usuario.avatar', response.data.user.avatar)
-          localStorage.setItem('auth.usuario.usuario', response.data.user.usuario)
-          localStorage.setItem('auth.usuario.codusuario', response.data.user.codusuario)
-
-          this.$store.commit('perfil/updatePerfil', {
-            usuario: localStorage.getItem('auth.usuario.usuario'),
-            avatar: localStorage.getItem('auth.usuario.avatar'),
-            codusuario: localStorage.getItem('auth.usuario.codusuario')
-          })
-
-        }).catch(error => {
-<<<<<<< HEAD
-          console.log('Erro Ocorrido:')
-=======
-          console.log('erro')
->>>>>>> telaLogin
-          console.log(error)
-        })
-        vm.$router.push('/')
+        // vm.$axios.get('account/').then(response => {
+        //   console.log('depois')
+        //   // salva código da imagem avatar do usuário
+        //   localStorage.setItem('auth.usuario.usuario', response.data.user.usuario)
+        //   localStorage.setItem('auth.usuario.codusuario', response.data.user.codusuario)
+        //
+        //   this.$store.commit('perfil/updatePerfil', {
+        //     usuario: localStorage.getItem('auth.usuario.usuario'),
+        //     codusuario: localStorage.getItem('auth.usuario.codusuario')
+        //   })
+        //
+        // }).catch(error => {
+        //   console.log('Erro Ocorrido:')
+        //   console.log(error)
+        // })
+        // vm.$router.push('/')
       }).catch(error => {
         // Mensagem de erro
         console.log('Erro Ocorrido:')
         this.erro = true
+        console.log(error)
         this.mensagem = error.response.data.mensagem
       })
     }
@@ -140,6 +183,7 @@ export default {
 .logo {
   border-radius: 50%;
 }
+
 .fundo {
   background-image: url("/statics/images/fundo.jpg");
   background-position: center center;

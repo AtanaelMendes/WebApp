@@ -3,8 +3,8 @@ import router from '../router'
 
 export default {
   handle: function (response) {
-    return Vue.prototype.$axios.post('/auth/token/refresh').then(function (response) {
-      console.log('aqui no refresh')
+    console.log('aqui no refresh')
+    return Vue.prototype.$axios.post('auth/token/refresh').then(function (response) {
       console.log(response)
       if (!response.data.mensagem) {
         localStorage.setItem('auth.token', response.data)
@@ -12,10 +12,10 @@ export default {
         // let method = resource.config.method.toLowerCase()
         // return window.axios[method](resource.config.url, resource.config.params)
       } else {
-        router.push('/')
+        router.push('/login')
       }
     }).catch(function () {
-      return router.push('/')
+      return router.push('/login')
 
     })
   }

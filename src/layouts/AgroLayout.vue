@@ -41,17 +41,12 @@
 
     <!-- Right Side Panel -->
     <q-layout-drawer v-model="rightSide" side="right" behavior="mobile">
-
       <q-list inset-separator>
 
         <q-item>
-          <!-- <q-item-side link to="/inbox/1" v-if="perfil.avatar"> -->
           <q-item-side link to="/inbox/1">
-            <q-item-tile avatar>
-              <!-- <img :src="perfil.avatar"> -->
-            </q-item-tile>
           </q-item-side>
-          <q-item-main link @click.native="$router.push('/usuario/perfil')" style="cursor:pointer">
+          <q-item-main @click.native="$router.push('/usuario/perfil')" style="cursor:pointer">
             {{ perfil.usuario }}
           </q-item-main>
           <q-item-side right>
@@ -60,29 +55,6 @@
         </q-item>
 
       </q-list>
-
-      <!-- <q-list inset-separator>
-        <q-item>
-          <q-item-side :avatar="perfil.avatar" v-if="perfil.avatar.length > 0"/>
-          <q-item-main>
-            <router-link :to="{ path: '/usuario/perfil' }">
-            {{ perfil.usuario }}
-            </router-link>
-          </q-item-main>
-          <q-item-side right icon="exit_to_app" @click="logout" style="cursor:pointer"/>
-        </q-item>
-      </q-list> -->
-
-      <div class="row wrap">
-        <!-- <div class="text-center col-3" v-for="aplicativo in aplicativos"> -->
-        <div class="text-center col-3">
-          <!-- <span @click="$router.push(aplicativo.path)" style="cursor:pointer"> -->
-          <!-- <q-icon :name="aplicativo.icon" style="font-size:3em" color="primary" /> -->
-            <!-- <small class="text-primary">{{ aplicativo.title }}</small> -->
-          </span>
-        </div>
-
-      </div>
     </q-layout-drawer>
 
     <q-page-container>
