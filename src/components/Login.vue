@@ -12,7 +12,7 @@
 
               <q-card-main class="gutter-y-sm">
                 <div>
-                  <q-input v-model="user" float-label="Usuário" autofocus />
+                  <q-input v-model="username" float-label="Usuário" autofocus />
                   <q-input v-model="password" type="password" float-label="password" />
                 </div>
 
@@ -68,9 +68,9 @@ export default {
   name: 'login',
   data () {
     return {
-      emailRecover:null,
-      user: 'atanael',
-      password: "baseteste",
+      emailRecover: null,
+      username: 'mendes@mendes.com',
+      password: "12345678",
       erro: false,
       mensagem: 'mensagem',
       modalPassRecover: false
@@ -87,16 +87,22 @@ export default {
     login: function (e) {
       var vm = this
       let data = {
-        usuario: vm.user,
+        grant_type: 'password',
+        client_id: '2',
+        client_secret: 'uY0WBc41kKaSxqpaiga5iOgK0afD0DxzhVLxXkxc',
+        scope: null,
+        username: vm.username,
         senha: vm.password
       }
       // Busca Autenticacao
-      vm.$axios.post('auth/login', data).then(response => {
+      vm.$axios.post('oauth/token', data).then(response => {
         // salva token no Local Storage
         let token = response.data.token
+        let refresh_token = response.data.refresh_token
         localStorage.setItem('auth.token', token)
+        localStorage.setItem('auth.refresh_token', refresh_token)
 
-        vm.$axios.get('auth/user').then(response => {
+        vm.$axios.get('account/').then(response => {
 
           localStorage.setItem('auth.user.user', response.data.user.usuario)
           localStorage.setItem('auth.user.coduser', response.data.user.codusuario)
@@ -107,13 +113,13 @@ export default {
           })
 
         }).catch(error => {
-          console.log('aqui')
+          console.log('Erro Ocorrido:')
           console.log(error)
         })
         // vm.$router.push('/')
       }).catch(error => {
         // Mensagem de erro
-        console.log('erro no login')
+        console.log('Erro Ocorrido:')
         this.erro = true
         this.mensagem = error.response.data.mensagem
       })

@@ -3,7 +3,7 @@ import router from '../router'
 
 export default {
   handle: function (response) {
-    return Vue.prototype.$axios.get('/auth/refresh').then(function (response) {
+    return Vue.prototype.$axios.post('/auth/token/refresh').then(function (response) {
       console.log('aqui no refresh')
       console.log(response)
       if (!response.data.mensagem) {
@@ -16,6 +16,7 @@ export default {
       }
     }).catch(function () {
       return router.push('/')
+
     })
   }
 }
