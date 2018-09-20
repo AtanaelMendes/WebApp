@@ -23,11 +23,11 @@
           </q-item-main>
         </q-item>
 
-        <q-item>
+        <!-- <q-item>
           <q-item-side icon="receipt"/>
           <q-item-main>
           </q-item-main>
-        </q-item>
+        </q-item> -->
 
         <q-item>
           <q-item-side icon="info"/>

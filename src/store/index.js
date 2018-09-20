@@ -2,20 +2,15 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import example from './module-example'
+import perfil from './perfil'
 
 Vue.use(Vuex)
 
-/*
- * If not building with SSR mode, you can
- * directly export the Store instantiation
- */
+const store = new Vuex.Store({
+  modules: {
+    example,
+    perfil,
+  }
+})
 
-export default function (/* { ssrContext } */) {
-  const Store = new Vuex.Store({
-    modules: {
-      example
-    }
-  })
-
-  return Store
-}
+export default store
