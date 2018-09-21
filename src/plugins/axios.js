@@ -14,17 +14,17 @@ export default ({ Vue }) => {
     if (AUTH_TOKEN) {
       config.headers.common['Authorization'] = `Bearer ${AUTH_TOKEN}`
     }
-    Loading.show()
+    // Loading.show()
     return config
   }, function (error) {
     return Promise.reject(error)
   })
 
   Vue.prototype.$axios.interceptors.response.use((response) => {
-    Loading.hide()
+    // Loading.hide()
     return response
   }, function (error) {
-    Loading.hide()
+    // Loading.hide()
     console.log('erro: ' + error)
     let mensagem = 'Erro ao acessar API'
     if (error.response) {

@@ -64,8 +64,26 @@ export default {
     }
   },
   methods: {
+    getCredentials: function (){
+      let vm = this
+      vm.$axios.get('account').then(response => {
+
+        // localStorage.setItem('auth.usuario.usuario', response.data.user.usuario)
+        // localStorage.setItem('auth.usuario.codusuario', response.data.user.codusuario)
+        //
+        // this.$store.commit('perfil/updatePerfil', {
+        //   usuario: localStorage.getItem('auth.usuario.usuario'),
+        //   codusuario: localStorage.getItem('auth.usuario.codusuario')
+        // })
+
+      }).catch(error => {
+        console.log('Erro Ocorrido:')
+        console.log(error)
+      })
+    }
   },
   mounted () {
+    this.getCredentials()
   }
 
 }

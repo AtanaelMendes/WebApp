@@ -83,6 +83,7 @@
 
 <script>
 import { required, email, minLength } from 'vuelidate/lib/validators'
+import { Loading } from 'quasar'
 
 export default {
   name: 'login',
@@ -125,6 +126,8 @@ export default {
 
     submit: function (e) {
 
+      Loading.show()
+
       this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.$q.notify('Email ou Senha inválido')
@@ -142,48 +145,31 @@ export default {
       }
       // Busca Autenticacao
       vm.$axios.post('oauth/token', data).then(response => {
-        console.log('antes')
 
         // salva token no Local Storage
-        let token = response.data.token
+        let token = response.data.access_token
         let refresh_token = response.data.refresh_token
         localStorage.setItem('auth.token', token)
         localStorage.setItem('auth.refresh_token', refresh_token)
 
-        // vm.$axios.get('account/').then(response => {
-        //   console.log('depois')
-        //   // salva código da imagem avatar do usuário
-        //   localStorage.setItem('auth.usuario.usuario', response.data.user.usuario)
-        //   localStorage.setItem('auth.usuario.codusuario', response.data.user.codusuario)
-        //
-        //   this.$store.commit('perfil/updatePerfil', {
-        //     usuario: localStorage.getItem('auth.usuario.usuario'),
-        //     codusuario: localStorage.getItem('auth.usuario.codusuario')
-        //   })
-        //
-        // }).catch(error => {
-        //   console.log('Erro Ocorrido:')
-        //   console.log(error)
-        // })
-        // vm.$router.push('/')
+        Loading.hide()
+        vm.$router.push('/')
       }).catch(error => {
         // Mensagem de erro
-        console.log('Erro Ocorrido:')
+        console.log('Erro Login Ocorrido:')
         this.erro = true
         console.log(error)
         this.mensagem = error.response.data.mensagem
+        Loading.hide()
       })
     }
-
   }
 }
 </script>
 <style>
-
 .logo {
   border-radius: 50%;
 }
-
 .fundo {
   background-image: url("/statics/images/fundo.jpg");
   background-position: center center;
@@ -195,5 +181,4 @@ export default {
 .login {
   background-color: rgba(255, 255, 255, 0.8);
 }
-
 </style>
