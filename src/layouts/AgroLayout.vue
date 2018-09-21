@@ -84,11 +84,14 @@
 </template>
 
 <script>
+
+import router from '../router'
+
   export default {
     name: 'agro-layout',
     data () {
       return {
-
+        token_id: null,
         view: 'lHr LpR lFr',
         header: true,
         headerReveal: true,
@@ -147,15 +150,21 @@
           ok: 'Sair',
           cancel: 'Cancelar'
         }).then(() => {
-          vm.$axios.get('auth/logout').then(response => {
-            localStorage.removeItem('auth.token')
-            localStorage.removeItem('auth.usuario.usuario')
-            localStorage.removeItem('auth.usuario.codusuario')
-            localStorage.removeItem('auth.usuario.avatar')
-            vm.$router.push('/login')
-            vm.$q.notify({
-              message: 'Até mais...',
-              type: 'positive',
+          console.log('pegando o token_id')
+          vm.$axios.get('oauth/personal-access-tokens').then(response => {
+            vm.token_id = response.data[0].id
+          }).then(function(){
+            console.log('deletando o token')
+            vm.$axios.delete('oauth/personal-access-tokens/' + vm.token_id).then(response => {
+              if (response.status === 200){
+                localStorage.removeItem('auth.token')
+                localStorage.removeItem('auth.refresh_token')
+                router.push('/login')
+                vm.$q.notify({
+                  message: 'Até mais...',
+                  type: 'positive',
+                })
+              }
             })
           })
         })
