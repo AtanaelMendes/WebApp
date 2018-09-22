@@ -150,20 +150,29 @@ import router from '../router'
           ok: 'Sair',
           cancel: 'Cancelar'
         }).then(() => {
+
           console.log('pegando o token_id')
+
           vm.$axios.get('oauth/personal-access-tokens').then(response => {
             vm.token_id = response.data[0].id
-          }).then(function(){
+
+          }).then(function (){
+
             console.log('deletando o token')
+
             vm.$axios.delete('oauth/personal-access-tokens/' + vm.token_id).then(response => {
+
               if (response.status === 200){
                 localStorage.removeItem('auth.token')
                 localStorage.removeItem('auth.refresh_token')
+
                 router.push('/login')
+
                 vm.$q.notify({
                   message: 'Até mais...',
                   type: 'positive',
                 })
+
               }
             })
           })
@@ -175,7 +184,4 @@ import router from '../router'
 </script>
 
 <style>
-  .icone-app {
-    font-size: 50px
-  }
 </style>

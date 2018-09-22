@@ -40,7 +40,7 @@
 
 <script>
 
-import AgroLayout from '../../../layouts/AgroLayout'
+import AgroLayout from 'layouts/AgroLayout'
 
 export default {
   name: 'index-example',
