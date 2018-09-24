@@ -2,21 +2,23 @@
   <q-layout :view="view">
     <q-layout-header v-model="header" :reveal="headerReveal">
       <q-toolbar color="secondary">
+
+        <!-- left drawer -->
         <slot name="menu">
-          <q-btn flat round dense icon="menu" @click="left = !left" v-if="drawer"/>
+          <q-btn flat round dense icon="apps"  @click="left = !left"/>
         </slot>
+
+        <q-btn icon="arrow_back" flat round class="within-iframe-hide" v-if="backPath" @click="$router.replace(backPath)"/>
 
         <q-toolbar-title>
           <slot name="title"></slot>
         </q-toolbar-title>
 
-        <q-btn flat round class="within-iframe-hide" v-if="backPath" @click="$router.replace(backPath)" style="margin-right: 15px">
-          <q-icon name="arrow_back" />
-        </q-btn>
-
+        <!-- right drawer -->
         <slot name="menuRight">
-          <q-btn flat round dense icon="apps" @click="rightSide = !rightSide" />
+          <q-btn flat round dense icon="menu" @click="rightSide = !rightSide" v-if="drawer"/>
         </slot>
+
       </q-toolbar>
 
       <slot name="tabHeader">
@@ -34,24 +36,53 @@
       </q-toolbar>
     </q-layout-footer> -->
 
-    <!-- Left Side Panel -->
-    <q-layout-drawer v-if="drawer" side="left" v-model="left" :overlay="leftOverlay" :behavior="leftBehavior" :breakpoint="leftBreakpoint">
+    <!-- Right Side Panel -->
+    <q-layout-drawer width="250" v-if="drawer" side="right" v-model="rightSide" behavior="default">
       <slot name="drawer"></slot>
     </q-layout-drawer>
 
-    <!-- Right Side Panel -->
-    <q-layout-drawer v-model="rightSide" side="right" behavior="mobile">
-      <q-list inset-separator>
+    <!-- Left Side Panel -->
+    <q-layout-drawer width="250" v-model="left" side="left" :overlay="leftOverlay" :behavior="leftBehavior" :breakpoint="leftBreakpoint">
+
+      <q-item>
+        <q-item-side link to="/inbox/1">
+        </q-item-side>
+        <q-item-main @click.native="$router.push('/usuario/perfil')" style="cursor:pointer">
+          Atanael
+        </q-item-main>
+        <q-item-side right>
+          <q-item-tile link icon="exit_to_app"@click.native="logout" style="cursor:pointer"/>
+        </q-item-side>
+      </q-item>
+
+      <q-list link no-border>
 
         <q-item>
-          <q-item-side link to="/inbox/1">
-          </q-item-side>
-          <q-item-main @click.native="$router.push('/usuario/perfil')" style="cursor:pointer">
-            {{ perfil.usuario }}
+          <q-item-side icon="receipt"/>
+          <q-item-main>
+            Emissão de Notas
           </q-item-main>
-          <q-item-side right>
-            <q-item-tile link icon="exit_to_app"@click.native="logout" style="cursor:pointer"/>
-          </q-item-side>
+        </q-item>
+
+        <q-item>
+          <q-item-side icon="gavel"/>
+          <q-item-main>
+            Contratos
+          </q-item-main>
+        </q-item>
+
+        <q-item>
+          <q-item-side icon="account_box"/>
+          <q-item-main @click.native="$router.push('/cadastro')">
+            Criar novo usuário
+          </q-item-main>
+        </q-item>
+
+        <q-item>
+          <q-item-side icon="info"/>
+          <q-item-main>
+            Sobre
+          </q-item-main>
         </q-item>
 
       </q-list>
@@ -104,12 +135,9 @@ import router from '../router'
         leftBreakpoint: 996,
         leftBehavior: 'default',
 
-        leftScroll: false,
-        rightScroll: true,
         rightBreakpoint: 2000,
         hideTabs: true,
-        leftSide: false,
-        rightSide: false,
+        rightSide: true,
 
         // bottomcenter: 'F',
         // bottomright: 'f',

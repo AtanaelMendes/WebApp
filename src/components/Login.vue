@@ -114,14 +114,13 @@ export default {
     //do something after creating vue instance
   },
   methods: {
-    submitRecover: function (){
+    submitRecover: function () {
       this.$v.emailRecover.$touch()
 
-      if (this.$v.emailRecover.$error) {
-        this.$q.notify('Email inválido')
+      if ( this.$v.emailRecover.$error ) {
+        this.$q.notify( 'Email inválido' )
         return
       }
-      console.log('passou')
     },
 
     submit: function (e) {
@@ -129,13 +128,13 @@ export default {
       Loading.show()
 
       this.$v.form.$touch()
-      if (this.$v.form.$error) {
-        this.$q.notify('Email ou Senha inválido')
+      if ( this.$v.form.$error ) {
+        this.$q.notify( 'Email ou Senha inválido' )
         return
       }
 
       var vm = this
-      let data = {
+      let params = {
         grant_type: 'password',
         client_id: '2',
         client_secret: 'uY0WBc41kKaSxqpaiga5iOgK0afD0DxzhVLxXkxc',
@@ -144,17 +143,17 @@ export default {
         password: vm.form.password
       }
       // Busca Autenticacao
-      vm.$axios.post('oauth/token', data).then(response => {
+      vm.$axios.post( 'oauth/token', params ).then( response => {
 
         // salva token no Local Storage
         let token = response.data.access_token
         let refresh_token = response.data.refresh_token
-        localStorage.setItem('auth.token', token)
-        localStorage.setItem('auth.refresh_token', refresh_token)
+        localStorage.setItem( 'auth.token', token )
+        localStorage.setItem( 'auth.refresh_token', refresh_token )
 
         Loading.hide()
-        vm.$router.push('/')
-      }).catch(error => {
+        vm.$router.push( '/' )
+      }).catch( error => {
         // Mensagem de erro
         console.log('Erro Login Ocorrido:')
         this.erro = true
