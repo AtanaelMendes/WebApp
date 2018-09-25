@@ -10,8 +10,9 @@
       <q-list highlight no no-border>
         <template v-if="users">
           <template v-for="user in users">
-            <q-item>
+            <q-item inset-separator>
               <q-item-side icon="account_circle"/>
+
               <q-item-main>
                 <q-item-tile>
                   {{user.id}}
@@ -20,14 +21,14 @@
                   {{user.email}}
                 </q-item-tile>
               </q-item-main>
+
               <q-item-side>
-                <q-item-tile>
-                  <q-icon name="date_range"/> 16 maio 1989
-                </q-item-tile>
-                <q-item-tile></q-item-tile>
+                <q-icon name="date_range"/>
+                {{ moment(user.created_at).fromNow() }}
               </q-item-side>
+
             </q-item>
-            <q-item-separator />
+
           </template>
         </template>
       </q-list>
