@@ -10,19 +10,19 @@
       <q-list highlight no no-border>
         <template v-if="users">
           <template v-for="user in users">
-            <q-item inset-separator>
+            <q-item link inset-separator @click.native="layoutModal = true, userData = user" multiline>
               <q-item-side icon="account_circle"/>
 
               <q-item-main>
                 <q-item-tile>
-                  {{user.id}}
+                  {{user.id}} Atanael Gamarra Mendes Costa
                 </q-item-tile>
                 <q-item-tile>
                   {{user.email}}
                 </q-item-tile>
               </q-item-main>
 
-              <q-item-side>
+              <q-item-side stamp>
                 <q-icon name="date_range"/>
                 {{ moment(user.created_at).format('DD MMMM YYYY') }}
               </q-item-side>
@@ -33,34 +33,95 @@
         </template>
       </q-list>
 
-      <template>
-        <q-modal v-model="opened" maximized class="gutter-y-sm">
-          <q-page padding class="row">
-            <div class="col-xs-10 col-sm-6 col-md-4 col-lg-4 gutter-sm">
+      <!-- MODAL CREATE USER -->
+      <q-modal v-model="opened" maximized class="gutter-y-sm">
+        <q-page padding class="row">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 gutter-sm">
 
-              <div>
+            <div>
+              <q-field icon="email">
                 <q-input v-model="form.email" placeholder="informe seu email" float-label="Email" type="text"
                   @blur="$v.form.email.$touch" :error="$v.form.email.$error"
                 />
+              </q-field>
+
+              <q-field icon="lock">
                 <q-input v-model="form.password" placeholder="mínimo 8 caracteres" float-label="Senha" type="password"
                   @blur="$v.form.password.$touch" :error="$v.form.password.$error"
                 />
+              </q-field>
+
+              <q-field icon="lock">
                 <q-input v-model="form.repeatPassword" placeholder="mínimo 8 caracteres" float-label="Confirmar Senha"
                   type="password" @blur="$v.form.repeatPassword.$touch" :error="$v.form.repeatPassword.$error"
                 />
-              </div>
-              <div align="end">
-                <q-btn color="secondary" label="Cadastrar" @click="create()"/>&nbsp
-                <q-btn color="primary" flat @click="opened = false" label="Cancelar" />
-              </div>
-
+              </q-field>
             </div>
-          </q-page>
-        </q-modal>
-      </template>
+            <div align="end">
+              <q-btn color="secondary" label="Cadastrar" @click="create()"/>&nbsp
+              <q-btn color="primary" flat @click="opened = false" label="Cancelar" />
+            </div>
+
+          </div>
+        </q-page>
+      </q-modal>
+
+      <!-- MODAL EDIT/DELETE USER -->
+      <q-modal maximized v-model="layoutModal" v-if="userData">
+        <q-modal-layout>
+          <q-toolbar slot="header" color="secondary">
+            <q-btn flat round dense @click="layoutModal = false" icon="arrow_back"  />
+            <q-toolbar-title>
+              Editar
+            </q-toolbar-title>
+            <q-btn flat round dense icon="delete"/>&nbsp
+          </q-toolbar>
+
+          <div class="layout-padding">
+            <div class="row">
+              <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
+                <div class="q-headline">{{userData.email}}</div>
+                <q-item>
+                  <q-item-main class="gutter-y-sm">
+
+                    <q-item-tile>
+                      <q-field icon="person">
+                        <q-input type="text" float-label="Nome" v-model="updateForm.name" clearable/>
+                      </q-field>
+                    </q-item-tile>
+
+                    <q-item-tile>
+                      <q-field icon="mail">
+                        <q-input type="email" float-label="Email" v-model="updateForm.email" clearable/>
+                      </q-field>
+                    </q-item-tile>
+
+                    <q-item-tile>
+                      <q-field icon="lock">
+                        <q-input type="password" float-label="Senha" v-model="updateForm.password" clearable/>
+                      </q-field>
+                    </q-item-tile>
+
+                    <q-item-tile align="end">
+                      <q-btn color="secondary" label="Salvar"/>
+                    </q-item-tile>
+
+                  </q-item-main>
+                </q-item>
+              </div>
+            </div>
+          </div>
+
+          <!-- <q-toolbar slot="footer">
+            <q-toolbar-title>
+              Footer
+            </q-toolbar-title>
+          </q-toolbar> -->
+        </q-modal-layout>
+      </q-modal>
 
       <q-page-sticky corner="bottom-right" :offset="[25, 25]">
-        <q-btn round color="secondary" @click="opened = true" icon="add" />
+        <q-btn round color="secondary" @click="opened = true" icon="person_add" />
       </q-page-sticky>
 
     </div>
@@ -81,7 +142,14 @@ export default {
     return {
       users: null,
       opened: false,
-      form:{
+      userData: null,
+      layoutModal: false,
+      updateForm: {
+        name: null,
+        email: null,
+        password: null,
+      },
+      form: {
         email: null,
         password: null,
         repeatPassword: null
@@ -95,14 +163,19 @@ export default {
       repeatPassword: { sameAsPassword: sameAs('password') }
     }
   },
+  watch: {
+    userData: function(data) {
+      this.updateForm.name = data.email
+      this.updateForm.email = data.email
+    }
+  },
   methods: {
-    list: function () {
+    list: function() {
 
       let vm = this
 
       vm.$axios.get( 'account?trashed=true' ).then( response => {
         vm.users = response.data
-        console.log(vm.users);
       }).catch( error => {
         console.log('Erro Ocorrido:')
         console.log(error)
