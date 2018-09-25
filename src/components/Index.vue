@@ -5,7 +5,7 @@
       Início
     </template>
 
-    <div slot="leftDrawer">
+    <template slot="leftDrawer">
       <q-item>
         <q-item-side link to="/inbox/1"/>
         <q-item-main @click.native="$router.push('/usuario/perfil')" style="cursor:pointer">
@@ -45,7 +45,7 @@
         </q-item>
 
       </q-list>
-    </div>
+    </template>
 
     <div slot="content">
     <!-- <div slot="content" class="layout-padding"> -->

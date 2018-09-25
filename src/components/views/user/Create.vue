@@ -24,7 +24,7 @@
 
               <q-item-side>
                 <q-icon name="date_range"/>
-                {{ moment(user.created_at).fromNow() }}
+                {{ moment(user.created_at).format('DD MMMM YYYY') }}
               </q-item-side>
 
             </q-item>
@@ -126,14 +126,14 @@ export default {
         if (response.status == 201){
           vm.$q.notify({
             type: 'positive',
-            message: 'Success, Cadastro criado com sucesso'
+            message: 'Cadastro criado com sucesso'
           })
           vm.opened = false
         }
       }).catch( error => {
         if (error.response.status == 422){
           this.$q.dialog({
-            title:'Atenção',
+            title:'Ops',
             message: 'Já existe um cadastro com esse email'
           })
         }

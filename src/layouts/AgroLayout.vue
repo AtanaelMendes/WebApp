@@ -3,23 +3,23 @@
     <q-layout-header v-model="header" :reveal="headerReveal">
       <q-toolbar color="secondary">
 
+      <!-- left drawer -->
+      <slot name="leftDrawerBtn">
+        <q-btn flat round dense icon="menu"  @click="leftSide = !leftSide" v-if="leftDrawer"/>
+      </slot>
+
       <q-btn icon="arrow_back" flat round class="within-iframe-hide" v-if="backPath" @click="$router.replace(backPath)"/>
 
       <q-toolbar-title><slot name="title"></slot></q-toolbar-title></q-toolbar>
 
+      <!-- right drawer -->
+      <slot name="rightDrawerBtn">
+        <q-btn flat round dense icon="menu" @click="rightSide = !rightSide" v-if="rightDrawer"/>
+      </slot>
+
       <slot name="tabHeader"></slot>
 
     </q-layout-header>
-
-    <!-- left drawer -->
-    <slot name="leftDrawer">
-      <q-btn flat round dense icon="menu"  @click="leftSide = !leftSide" v-if="leftDrawer"/>
-    </slot>
-
-    <!-- right drawer -->
-    <slot name="rightDrawer">
-      <q-btn flat round dense icon="menu" @click="rightSide = !rightSide" v-if="rightDrawer"/>
-    </slot>
 
     <!-- <q-layout-footer v-model="footer" :reveal="footerReveal">
       <q-toolbar>
@@ -90,6 +90,8 @@ import router from '../router'
 
         drawerWidth: 250,
 
+        bottomcenter: 'F',
+        bottomright: 'f',
         scrolling: true
       }
     },
