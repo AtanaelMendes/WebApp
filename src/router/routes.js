@@ -4,7 +4,7 @@ export default [
   { path: '/Login',  component: () => import('components/Login.vue') },
 
   //cadastro de usuario
-  { path: '/cadastro',  component: () => import('components/views/user/Index.vue') },
+  { path: '/cadastro',  component: () => import('components/views/user/Create.vue') },
 
   // rota de exemplo
   { path: '/exemplo',  component: () => import('components/views/example/Index.vue') },

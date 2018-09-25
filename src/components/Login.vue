@@ -4,6 +4,7 @@
       <q-page>
         <div class="row">
           <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3 fixed-center">
+
             <q-card class="login q-pa-sm">
 
               <q-card-media align="center" class="q-pa-md">

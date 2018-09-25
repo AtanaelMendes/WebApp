@@ -1,13 +1,20 @@
 <template>
-  <AgroLayout drawer class="bg-green-1">
+  <AgroLayout leftDrawer class="bg-green-1">
 
     <template slot="title">
       Início
     </template>
 
-    <div slot="drawer">
-      <!-- <q-list link no-border>
-        <q-list-header>Menu</q-list-header>
+    <div slot="leftDrawer">
+      <q-item>
+        <q-item-side link to="/inbox/1"/>
+        <q-item-main @click.native="$router.push('/usuario/perfil')" style="cursor:pointer">
+          Atanael
+        </q-item-main>
+        <q-item-side link icon="exit_to_app" @click.native="logout" style="cursor:pointer"/>
+      </q-item>
+
+      <q-list link no-border>
 
         <q-item>
           <q-item-side icon="receipt"/>
@@ -37,7 +44,7 @@
           </q-item-main>
         </q-item>
 
-      </q-list> -->
+      </q-list>
     </div>
 
     <div slot="content">
@@ -68,7 +75,7 @@ export default {
   methods: {
     getCredentials: function (){
       let vm = this
-      vm.$axios.get('account').then(response => {
+      vm.$axios.get('account/info').then(response => {
 
         // localStorage.setItem('auth.usuario.usuario', response.data.user.usuario)
         // localStorage.setItem('auth.usuario.codusuario', response.data.user.codusuario)
@@ -81,6 +88,43 @@ export default {
       }).catch(error => {
         console.log('Erro Ocorrido:')
         console.log(error)
+      })
+    },
+    logout () {
+      var vm = this
+
+      vm.$q.dialog({
+        title: 'Sair do sistema',
+        message: 'Tem certeza que deseja sair?',
+        ok: 'Sair',
+        cancel: 'Cancelar'
+      }).then(() => {
+
+        console.log('pegando o token_id')
+
+        vm.$axios.get('oauth/personal-access-tokens').then(response => {
+          vm.token_id = response.data[0].id
+
+        }).then(function (){
+
+          console.log('deletando o token')
+
+          vm.$axios.delete('oauth/personal-access-tokens/' + vm.token_id).then(response => {
+
+            if (response.status === 200){
+              localStorage.removeItem('auth.token')
+              localStorage.removeItem('auth.refresh_token')
+
+              router.push('/login')
+
+              vm.$q.notify({
+                message: 'Até mais...',
+                type: 'positive',
+              })
+
+            }
+          })
+        })
       })
     }
   },

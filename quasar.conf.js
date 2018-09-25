@@ -53,6 +53,7 @@ module.exports = function (ctx) {
         'QItemMain',
         'QItemSide',
         'QItemTile',
+        'QItemSeparator',
 
         // adicionado
         'QPageSticky',
