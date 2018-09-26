@@ -3,19 +3,23 @@
     <q-layout-header v-model="header" :reveal="headerReveal">
       <q-toolbar color="secondary">
 
-      <!-- left drawer -->
-      <slot name="leftDrawerBtn">
-        <q-btn flat round dense icon="menu"  @click="leftSide = !leftSide" v-if="leftDrawer"/>
-      </slot>
+        <!-- left drawer -->
+        <slot name="leftDrawerBtn">
+          <q-btn flat round dense icon="menu"  @click="leftSide = !leftSide" v-if="leftDrawer"/>
+        </slot>
 
-      <q-btn icon="arrow_back" flat round class="within-iframe-hide" v-if="backPath" @click="$router.replace(backPath)"/>
+        <q-btn icon="arrow_back" flat round class="within-iframe-hide" v-if="backPath" @click="$router.replace(backPath)"/>
 
-      <q-toolbar-title><slot name="title"></slot></q-toolbar-title></q-toolbar>
+        <q-toolbar-title><slot name="title"></slot></q-toolbar-title>
 
-      <!-- right drawer -->
-      <slot name="rightDrawerBtn">
-        <q-btn flat round dense icon="menu" @click="rightSide = !rightSide" v-if="rightDrawer"/>
-      </slot>
+        <!-- right buttons -->
+        <slot name="rightBtn"></slot>
+
+        <!-- right drawer -->
+        <slot name="rightDrawerBtn">
+          <q-btn flat round dense icon="menu" @click="rightSide = !rightSide" v-if="rightDrawer"/>
+        </slot>
+      </q-toolbar>
 
       <slot name="tabHeader"></slot>
 

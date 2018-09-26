@@ -1,11 +1,11 @@
 <template>
-  <AgroLayout leftDrawer class="bg-green-1">
+  <AgroLayout leftDrawer>
 
-    <template slot="title">
+    <div slot="title">
       Início
-    </template>
+    </div>
 
-    <template slot="leftDrawer">
+    <div slot="leftDrawer">
       <q-item>
         <q-item-side link to="/inbox/1"/>
         <q-item-main @click.native="$router.push('/usuario/perfil')" style="cursor:pointer">
@@ -32,7 +32,7 @@
 
         <q-item>
           <q-item-side icon="account_box"/>
-          <q-item-main @click.native="$router.push('/cadastro')">
+          <q-item-main @click.native="$router.push('/usuario')">
             Criar novo usuário
           </q-item-main>
         </q-item>
@@ -45,7 +45,7 @@
         </q-item>
 
       </q-list>
-    </template>
+    </div>
 
     <div slot="content">
     <!-- <div slot="content" class="layout-padding"> -->
@@ -60,6 +60,7 @@
 
 <script>
 import AgroLayout from '../layouts/AgroLayout'
+import router from '../router'
 
 export default {
   name: 'index',
