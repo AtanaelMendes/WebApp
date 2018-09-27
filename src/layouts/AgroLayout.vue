@@ -5,7 +5,7 @@
 
         <!-- left drawer -->
         <slot name="leftDrawerBtn">
-          <q-btn flat round dense icon="menu"  @click="leftSide = !leftSide" v-if="leftDrawer"/>
+          <q-btn flat round dense icon="menu" @click="leftSide = !leftSide" v-if="leftDrawer"/>
         </slot>
 
         <q-btn icon="arrow_back" flat round class="within-iframe-hide" v-if="backPath" @click="$router.replace(backPath)"/>
@@ -25,16 +25,6 @@
 
     </q-layout-header>
 
-    <!-- <q-layout-footer v-model="footer" :reveal="footerReveal">
-      <q-toolbar>
-        <slot name="footer">
-          <q-toolbar-title>
-            © AgroProject
-          </q-toolbar-title>
-        </slot>
-      </q-toolbar>
-    </q-layout-footer> -->
-
     <!-- Left Side Panel -->
     <q-layout-drawer :width="drawerWidth" v-if="leftDrawer" side="left" v-model="leftSide" behavior="default" >
       <slot name="leftDrawer"></slot>
@@ -50,23 +40,6 @@
         <router-view />
       </slot>
     </q-page-container>
-
-    <!-- <q-toolbar>
-      <q-toolbar-title>
-        <slot name="footer">
-          &copy; MG Papelaria
-        </slot>
-      </q-toolbar-title>
-    </q-toolbar> -->
-
-    <!-- Footer -->
-    <!--
-    <q-toolbar>
-    <q-toolbar-title>
-    &copy; MG Papelaria
-  </q-toolbar-title>
-</q-toolbar>
--->
 
   </q-layout>
 </template>
