@@ -11,7 +11,36 @@
     </div>
 
     <div slot="content" >
+
       <q-page padding class="row">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
+          <q-list higlight no-border>
+
+            <div class="q-title">Nome da Pessoa</div>
+
+            <q-item>
+              <q-item-side icon="work"/>
+              <q-item-main>
+                <q-item-tile>Nome do grupo econômico</q-item-tile>
+              </q-item-main>
+            </q-item>
+
+            <q-item>
+              <q-item-side icon="contact_mail"/>
+              <q-item-main>
+                fulano@gmail.com
+              </q-item-main>
+            </q-item>
+
+            <!-- <q-item>
+              <q-item-side/>
+              <q-item-main>
+              </q-item-main>
+            </q-item> -->
+
+          </q-list>
+        </div>
+
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
           <form @keyup.enter="updateUser()" class="gutter-sm">
 
@@ -92,18 +121,17 @@ export default {
       }
       this.$q.dialog({
         title: 'Inativar',
-        message: 'Tem certeza que deseja inativar esse usuário?',
+        message: 'Têm certeza que deseja inativar este usuário?',
         ok: 'OK',
         cancel: 'Cancelar'
       }).then(() => {
         vm.$axios.delete( 'account/'+ params.id ).then( response => {
-
           this.$q.notify({
             type: 'positive',
             message: 'Usuário excluido com sucesso'
           })
           vm.$router.push( '/usuario' )
-      })
+        })
       }).catch( error => {
         console.log('Erro Ocorrido:')
         console.log(error)
@@ -115,10 +143,8 @@ export default {
       let params = {
         id: vm.$route.params.id
       }
-
       vm.$axios.get( 'account/'+ params.id ).then( response => {
         vm.userData = response.data
-        console.log(vm.userData)
       }).catch( error => {
         if (error.response.status == 404){
           this.$q.dialog({
@@ -130,23 +156,19 @@ export default {
         console.log('Erro Ocorrido:')
         console.log(error)
       })
-
     },
 
     updateUser: function() {
       this.$v.form.$touch()
-
       if ( this.$v.form.$error ) {
         this.$q.notify( 'preencha os campos corretamente' )
         return
       }
-
       let vm = this
       let params = {
         email: vm.form.email,
         password: vm.form.password,
       }
-
       vm.$axios.post( 'account', params ).then( response => {
         if (response.status == 201){
           vm.$q.notify({
@@ -166,7 +188,6 @@ export default {
         console.log(error)
       })
     }
-
   },
   mounted() {
     this.getUser()

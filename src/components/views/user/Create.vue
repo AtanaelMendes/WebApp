@@ -2,7 +2,7 @@
   <AgroLayout back-path="/usuario">
 
     <div slot="title">
-      Novo Cadastro
+      Novo Usuário
     </div>
 
     <div slot="rightBtn">
