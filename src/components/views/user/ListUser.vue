@@ -1,9 +1,14 @@
 <template>
   <AgroLayout rightDrawer back-path="/">
 
-    <template slot="title">
+    <div slot="title" v-if="$q.platform.is.desktop">
       Usuários
-    </template>
+    </div>
+
+    <div slot="searchField">
+      <q-search no-icon	inverted-light placeholder="Busca por nome" color="white"
+      clearable v-model="searchName" :after="[{icon: 'search'}]"/>
+    </div>
 
     <div slot="rightDrawer">
       <q-list>
@@ -72,6 +77,7 @@ export default {
       trashed: '',
       users: null,
       userData: null,
+      searchName: ''
     }
   },
   watch: {
