@@ -39,7 +39,7 @@
 
         <q-item>
           <q-item-side icon="account_box"/>
-          <q-item-main @click.native="$router.push('/usuario')">
+          <q-item-main @click.native="$router.push('/pessoas')">
             Pessoas
           </q-item-main>
         </q-item>
@@ -88,7 +88,7 @@
 
           <q-card inline class="q-ma-sm">
             <q-card-media overlay-position="top">
-              <img src="statics/images/fundo.jpg">
+              <img src="~/assets/milho.jpg">
 
               <q-card-title slot="overlay">
                 Title
@@ -103,7 +103,7 @@
 
           <q-card inline class="q-ma-sm">
             <q-card-media>
-              <img src="statics/images/fundo.jpg">
+              <img src="~/assets/milho.jpg">
             </q-card-media>
             <q-list>
               <q-item>
@@ -144,7 +144,7 @@
 
           <q-card inline class="q-ma-sm">
             <q-card-media>
-              <img src="statics/images/fundo.jpg">
+              <img src="~/assets/milho.jpg">
               <q-card-title slot="overlay">
                 Title
               </q-card-title>
@@ -153,7 +153,7 @@
 
           <q-card inline class="q-ma-sm">
             <q-card-media>
-              <img src="statics/images/fundo.jpg">
+              <img src="~/assets/milho.jpg">
               <q-card-title slot="overlay">
                 Title
                 <span slot="subtitle">Subtitle</span>

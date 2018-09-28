@@ -1,5 +1,5 @@
 <template>
-  <q-layout :view="view">
+  <q-layout view="lHr LpR lFr">
     <q-layout-header v-model="header" :reveal="headerReveal">
       <q-toolbar color="secondary">
 
@@ -11,6 +11,9 @@
         <q-btn icon="arrow_back" flat round class="within-iframe-hide" v-if="backPath" @click="$router.replace(backPath)"/>
 
         <q-toolbar-title><slot name="title"></slot></q-toolbar-title>
+
+        <!-- search field -->
+        <slot name="searchField"></slot>&nbsp
 
         <!-- right buttons -->
         <slot name="rightBtn"></slot>
@@ -53,7 +56,7 @@ import router from '../router'
     data () {
       return {
         token_id: null,
-        view: 'lHr LpR lFr',
+        view: '',
         header: true,
         headerReveal: true,
 
@@ -69,7 +72,8 @@ import router from '../router'
 
         bottomcenter: 'F',
         bottomright: 'f',
-        scrolling: true
+        scrolling: true,
+
       }
     },
     components: {

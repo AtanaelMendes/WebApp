@@ -9,7 +9,6 @@ export default ({ Vue }) => {
   })
 
   Vue.prototype.$axios.interceptors.request.use(function (config) {
-    console.log("aqui no interceptor")
     const AUTH_TOKEN = localStorage.getItem('auth.token')
     if (AUTH_TOKEN) {
       config.headers.common['Authorization'] = `Bearer ${AUTH_TOKEN}`
