@@ -123,7 +123,6 @@ export default {
         return
       }
     },
-
     submit: function (e) {
 
       Loading.show()
