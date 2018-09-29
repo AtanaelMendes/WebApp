@@ -6,8 +6,8 @@
     </div>
 
     <div slot="rightBtn">
-      <q-btn flat round icon="done" @click="updateUser()" v-if="$q.platform.is.mobile"/>
-      <q-btn flat round icon="delete" @click="deleteUser()"/>
+      <q-btn flat round icon="done" @click="updatePerson()" v-if="$q.platform.is.mobile"/>
+      <q-btn flat round icon="delete" @click="deletePerson()"/>
     </div>
 
     <div slot="content" >
@@ -42,12 +42,12 @@
         </div>
 
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-          <form @keyup.enter="updateUser()" class="gutter-sm">
+          <form @keyup.enter="updatePerson()" class="gutter-sm">
 
             <div>
               <q-field icon="person">
-                <q-input type="text" float-label="Nome" placeholder="Mínimo 3 caracteres" v-model="form.name" clearable
-                  @blur="$v.form.name.$touch" :error="$v.form.name.$error"
+                <q-input type="text" float-label="Nome" placeholder="Mínimo 3 caracteres" v-model="form.nome" clearable
+                  @blur="$v.form.nome.$touch" :error="$v.form.nome.$error"
                 />
               </q-field>
 
@@ -58,20 +58,20 @@
               </q-field>
 
               <q-field icon="lock">
-                <q-input type="password" float-label="Senha" v-model="form.password" placeholder="Mínimo 8 caracteres" clearable
-                  @blur="$v.form.password.$touch" :error="$v.form.password.$error"
+                <q-input type="password" float-label="Senha" v-model="form.senha" placeholder="Mínimo 8 caracteres" clearable
+                  @blur="$v.form.senha.$touch" :error="$v.form.senha.$error"
                 />
               </q-field>
 
               <q-field icon="lock">
-                <q-input type="password" float-label="Confirmar Senha" v-model="form.repeatPassword"  clearable
-                  @blur="$v.form.repeatPassword.$touch" :error="$v.form.repeatPassword.$error" placeholder="Mínimo 8 caracteres"
+                <q-input type="password" float-label="Confirmar Senha" v-model="form.repetirSenha"  clearable
+                  @blur="$v.form.repetirSenha.$touch" :error="$v.form.repetirSenha.$error" placeholder="Mínimo 8 caracteres"
                 />
               </q-field>
             </div>
 
             <div align="end">
-              <q-btn color="secondary" label="Salvar" @click="updateUser()"/>
+              <q-btn color="secondary" label="Salvar" @click="updatePerson()"/>
             </div>
 
           </form>
@@ -88,7 +88,7 @@ import AgroLayout from 'layouts/AgroLayout'
 import { Platform } from 'quasar'
 
 export default {
-  name: 'index-example',
+  nome: 'index-example',
   components: {
     AgroLayout
   },
@@ -97,24 +97,39 @@ export default {
       userId: null,
       userData: null,
       form: {
-        name: null,
+        nome: null,
+        cpf: null,
+        cnpj: null,
+        ie: null,
+        razaoSocial: null,
+        nomeFantasia: null,
+        grupoEconomico: null,
+        telefone1: null,
+        telefone2: null,
+        telefone3: null,
+        telefone1Tipo: null,
+        telefone2Tipo: null,
+        telefone3Tipo: null,
         email: null,
-        password: null,
-        repeatPassword: null
+        contato: null,
+        cobranca: false,
+        fiscal: false,
+        senha: null,
+        repetirSenha: null
       }
     }
   },
   validations: {
     form: {
-      name: { required, minLength: minLength(3) },
+      nome: { required, minLength: minLength(3) },
       email: { required, email},
-      password: { required,  minLength: minLength(8) },
-      repeatPassword: { sameAsPassword: sameAs('password') }
+      senha: { required,  minLength: minLength(8) },
+      repetirSenha: { sameAsPassword: sameAs('senha') }
     }
   },
   methods: {
 
-    deleteUser: function() {
+    deletePerson: function() {
       let vm = this
       let params = {
         id: vm.$route.params.id
@@ -138,7 +153,7 @@ export default {
       })
     },
 
-    getUser: function() {
+    getPerson: function() {
       let vm = this
       let params = {
         id: vm.$route.params.id
@@ -158,7 +173,7 @@ export default {
       })
     },
 
-    updateUser: function() {
+    updatePerson: function() {
       this.$v.form.$touch()
       if ( this.$v.form.$error ) {
         this.$q.notify( 'preencha os campos corretamente' )
@@ -167,7 +182,7 @@ export default {
       let vm = this
       let params = {
         email: vm.form.email,
-        password: vm.form.password,
+        password: vm.form.senha,
       }
       vm.$axios.post( 'account', params ).then( response => {
         if (response.status == 201){
@@ -190,7 +205,7 @@ export default {
     }
   },
   mounted() {
-    this.getUser()
+    this.getPerson()
   }
 }
 </script>
