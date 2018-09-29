@@ -169,8 +169,8 @@ export default {
         email: vm.form.email,
         password: vm.form.password,
       }
-      vm.$axios.post( 'account', params ).then( response => {
-        if (response.status == 201){
+      vm.$axios.put( 'account/'+ vm.$route.params.id, params ).then( response => {
+        if (response.status == 200){
           vm.$q.notify({
             type: 'positive',
             message: 'Cadastro alterado com sucesso'
