@@ -8,6 +8,9 @@
           <q-btn flat round dense icon="menu" @click="leftSide = !leftSide" v-if="leftDrawer"/>
         </slot>
 
+        <!-- left buttons -->
+        <slot name="leftBtn"></slot>
+
         <q-btn icon="arrow_back" flat round class="within-iframe-hide" v-if="backPath" @click="$router.replace(backPath)"/>
 
         <q-toolbar-title><slot name="title"></slot></q-toolbar-title>
