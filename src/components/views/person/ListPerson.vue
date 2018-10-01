@@ -15,7 +15,12 @@
         <q-list-header>Filtros</q-list-header>
         <q-item>
           <q-item-main>
-            <q-toggle v-model="filter.inactive" color="secondary" label="todos"/>
+            <q-option-group type="radio" color="secondary"v-model="group" :options="[
+            { label: 'Todos', value: null },
+            { label: 'Inativos', value: 'trashed' },
+            { label: 'Ativos', value: 'non-trashed'}
+          ]"
+            />
           </q-item-main>
         </q-item>
       </q-list>
@@ -72,9 +77,9 @@ export default {
   data () {
     return {
       filter: {
-        inactive: false
+        type: null,
+        email: null
       },
-      trashed: '',
       persons: null,
       personData: null,
       searchName: ''
@@ -83,7 +88,8 @@ export default {
   watch: {
     filter: {
       handler: function(val, oldval) {
-        this.list(val.inactive)
+        this.list(val)
+        console.log(val)
       },
       deep: true,
     }
@@ -98,7 +104,7 @@ export default {
         vm.trashed = ''
       }
 
-      vm.$axios.get( 'account'+ vm.trashed ).then( response => {
+      vm.$axios.get( 'account'+ vm.email ).then( response => {
         vm.persons = response.data
       }).catch( error => {
         console.log('Erro Ocorrido:')
