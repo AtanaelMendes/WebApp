@@ -1,47 +1,17 @@
 <template>
   <AgroLayout back-path="/usuario">
-
     <div slot="title">
       Editar
     </div>
 
     <div slot="rightBtn">
       <q-btn flat round icon="done" @click="updateUser()" v-if="$q.platform.is.mobile"/>
-      <q-btn flat round icon="delete" @click="deleteUser()"/>
     </div>
 
     <div slot="content" >
 
       <q-page padding class="row">
-        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
-          <q-list higlight no-border>
-
-            <div class="q-title">Nome da Pessoa</div>
-
-            <q-item>
-              <q-item-side icon="work"/>
-              <q-item-main>
-                <q-item-tile>Nome do grupo econômico</q-item-tile>
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-side icon="contact_mail"/>
-              <q-item-main>
-                fulano@gmail.com
-              </q-item-main>
-            </q-item>
-
-            <!-- <q-item>
-              <q-item-side/>
-              <q-item-main>
-              </q-item-main>
-            </q-item> -->
-
-          </q-list>
-        </div>
-
-        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 " >
           <form @keyup.enter="updateUser()" class="gutter-sm">
 
             <div>
@@ -113,31 +83,6 @@ export default {
     }
   },
   methods: {
-
-    deleteUser: function() {
-      let vm = this
-      let params = {
-        id: vm.$route.params.id
-      }
-      this.$q.dialog({
-        title: 'Inativar',
-        message: 'Têm certeza que deseja inativar este usuário?',
-        ok: 'OK',
-        cancel: 'Cancelar'
-      }).then(() => {
-        vm.$axios.delete( 'account/'+ params.id ).then( response => {
-          this.$q.notify({
-            type: 'positive',
-            message: 'Usuário excluido com sucesso'
-          })
-          vm.$router.push( '/usuario' )
-        })
-      }).catch( error => {
-        console.log('Erro Ocorrido:')
-        console.log(error)
-      })
-    },
-
     getUser: function() {
       let vm = this
       let params = {
@@ -157,7 +102,6 @@ export default {
         console.log(error)
       })
     },
-
     updateUser: function() {
       this.$v.form.$touch()
       if ( this.$v.form.$error ) {

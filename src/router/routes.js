@@ -5,6 +5,7 @@ export default [
 
   //rotas de usuario
   { path: '/usuario',  component: () => import('components/views/user/ListUser.vue') },
+  { path: '/usuario/perfil/:id',  component: () => import('components/views/user/ProfileUser.vue') },
   { path: '/usuario/editar/:id',  component: () => import('components/views/user/EditUser.vue') },
   { path: '/usuario/cadastro',  component: () => import('components/views/user/CreateUser.vue') },
 
