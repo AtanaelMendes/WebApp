@@ -6,31 +6,54 @@
     </div>
 
     <div slot="rightBtn">
-      <q-btn flat round icon="edit" @click="editUser()" v-if="$q.platform.is.mobile"/>
-      <q-btn flat round icon="delete" @click="deleteUser()"/>
+      <q-btn flat round icon="edit" @click="editUser()"/>
     </div>
 
     <div slot="content" >
 
       <q-page padding class="row">
-        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
-          <q-list higlight no-border>
-
-            <div class="q-title">Nome da Pessoa</div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 q-pa-sm">
+          <q-list no-border>
 
             <q-item>
-              <q-item-side icon="work"/>
-              <q-item-main>
-                <q-item-tile>Nome do grupo econômico</q-item-tile>
+              <q-item-main class="q-title">
+                {{userData.email}}
               </q-item-main>
             </q-item>
 
-            <q-item>
-              <q-item-side icon="contact_mail"/>
+            <q-item class="bg-negative text-white" v-if="userData.deleted_at">
+              <q-item-side icon="voice_over_off" color="white"/>
               <q-item-main>
-                fulano@gmail.com
+                Usuário inativo
               </q-item-main>
-            </q-item>
+              <q-item-side>
+                <q-item-tile stamp class="text-white">01 outubro 2018</q-item-tile>
+                <!--<q-item-tile stamp>{{ moment(userData.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>-->
+              </q-item-side>
+            </q-item><br/>
+
+            <q-card>
+              <q-card-main>
+                <q-item>
+                  <q-item-side icon="work"/>
+                  <q-item-main>
+                    <q-item-tile>Nome do grupo econômico</q-item-tile>
+                  </q-item-main>
+                </q-item>
+
+                <q-item>
+                  <q-item-side icon="contact_mail"/>
+                  <q-item-main>
+                    {{userData.email}}
+                  </q-item-main>
+                </q-item>
+              </q-card-main>
+              <q-card-separator/>
+              <q-card-actions align="end">
+                <q-btn @click.native="activateUser(userData.id)" color="primary" flat label="ativar" v-if="userData.deleted_at"/>
+                <q-btn @click.native="inactivateUser(userData.id)" color="primary" flat label="inativar" v-else/>
+              </q-card-actions>
+            </q-card>
 
             <!-- <q-item>
               <q-item-side/>
@@ -39,42 +62,6 @@
             </q-item> -->
 
           </q-list>
-        </div>
-
-        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" v-if="$q.platform.is.desktop">
-          <form @keyup.enter="updateUser()" class="gutter-sm">
-
-            <div>
-              <q-field icon="person">
-                <q-input type="text" float-label="Nome" placeholder="Mínimo 3 caracteres" v-model="form.name" clearable
-                         @blur="$v.form.name.$touch" :error="$v.form.name.$error"
-                />
-              </q-field>
-
-              <q-field icon="mail">
-                <q-input type="email" float-label="Email" v-model="form.email" clearable
-                         @blur="$v.form.email.$touch" :error="$v.form.email.$error"
-                />
-              </q-field>
-
-              <q-field icon="lock">
-                <q-input type="password" float-label="Senha" v-model="form.password" placeholder="Mínimo 8 caracteres" clearable
-                         @blur="$v.form.password.$touch" :error="$v.form.password.$error"
-                />
-              </q-field>
-
-              <q-field icon="lock">
-                <q-input type="password" float-label="Confirmar Senha" v-model="form.repeatPassword"  clearable
-                         @blur="$v.form.repeatPassword.$touch" :error="$v.form.repeatPassword.$error" placeholder="Mínimo 8 caracteres"
-                />
-              </q-field>
-            </div>
-
-            <div align="end">
-              <q-btn color="secondary" label="Salvar" @click="updateUser()"/>
-            </div>
-
-          </form>
         </div>
       </q-page>
 
@@ -85,7 +72,6 @@
 <script>
   import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
   import AgroLayout from 'layouts/AgroLayout'
-  import { Platform } from 'quasar'
 
   export default {
     name: 'index-example',
@@ -96,27 +82,13 @@
       return {
         userId: null,
         userData: null,
-        form: {
-          name: null,
-          email: null,
-          password: null,
-          repeatPassword: null
-        }
-      }
-    },
-    validations: {
-      form: {
-        name: { required, minLength: minLength(3) },
-        email: { required, email},
-        password: { required,  minLength: minLength(8) },
-        repeatPassword: { sameAsPassword: sameAs('password') }
       }
     },
     methods: {
       editUser: function() {
         this.$router.push( '/usuario/editar/' + this.$route.params.id)
       },
-      deleteUser: function() {
+      inactivateUser: function() {
         let vm = this
         let params = {
           id: vm.$route.params.id
@@ -131,6 +103,26 @@
             this.$q.notify({
               type: 'positive',
               message: 'Usuário excluido com sucesso'
+            })
+            vm.$router.push( '/usuario' )
+          })
+        }).catch( error => {
+          console.log('Erro Ocorrido:')
+          console.log(error)
+        })
+      },
+      activateUser: function(id) {
+        let vm = this
+        this.$q.dialog({
+          title: 'Ativar',
+          message: 'Têm certeza que deseja ativar este usuário?',
+          ok: 'OK',
+          cancel: 'Cancelar'
+        }).then(() => {
+          vm.$axios.put( 'account/'+ id + '/restore' ).then( response => {
+            this.$q.notify({
+              type: 'positive',
+              message: 'Usuário ativado com sucesso'
             })
             vm.$router.push( '/usuario' )
           })
@@ -158,37 +150,6 @@
           console.log(error)
         })
       },
-
-      updateUser: function() {
-        this.$v.form.$touch()
-        if ( this.$v.form.$error ) {
-          this.$q.notify( 'preencha os campos corretamente' )
-          return
-        }
-        let vm = this
-        let params = {
-          email: vm.form.email,
-          password: vm.form.password,
-        }
-        vm.$axios.put( 'account/'+ vm.$route.params.id, params ).then( response => {
-          if (response.status == 200){
-            vm.$q.notify({
-              type: 'positive',
-              message: 'Cadastro alterado com sucesso'
-            })
-            vm.$router.push( '/usuario' )
-          }
-        }).catch( error => {
-          if (error.response.status == 422){
-            this.$q.dialog({
-              title:'Ops',
-              message: 'Já existe um cadastro com esse email'
-            })
-          }
-          console.log('Erro Ocorrido:')
-          console.log(error)
-        })
-      }
     },
     mounted() {
       this.getUser()
