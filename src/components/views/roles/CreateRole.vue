@@ -6,15 +6,62 @@
     </template>
 
     <div slot="content" >
+      <q-page padding class="row">
 
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+          <q-list>
+
+            <div class="row">
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                <q-item>
+                  <q-item-main>
+
+                    <q-item-tile>Nova Permissão</q-item-tile>
+
+                    <q-item-tile>
+                      <q-input type="text" v-model="permissao.nome" float-label="Nome"
+                               @blur="$v.permissao.nome.$touch" :error="$v.permissao.nome.$error"
+                      />
+                    </q-item-tile>
+
+                    <q-item-tile>
+                      <q-input type="text" v-model.trim="permissao.codigo" float-label="Código" lower-case
+                               @blur="$v.permissao.codigo.$touch" :error="$v.permissao.codigo.$error"
+                      />
+
+                    </q-item-tile>
+
+                    <q-item-tile>
+                      <q-input type="text" v-model="permissao.descricao" float-label="Descrição"/>
+                    </q-item-tile>
+
+                    <q-item-tile>
+                      <q-input type="text" v-model="codigo" float-label="teste"/>
+                    </q-item-tile>
+
+                    <q-item-tile align="end" class="q-mt-md">
+                      <q-btn @click.native="createPermission()" color="secondary" label="criar"/>
+                    </q-item-tile>
+
+                  </q-item-main>
+                </q-item>
+              </div>
+            </div>
+
+
+          </q-list>
+        </div>
+
+      </q-page>
     </div>
 
   </AgroLayout>
 </template>
 
 <script>
-
+  import { required, helpers } from 'vuelidate/lib/validators'
   import AgroLayout from 'layouts/AgroLayout'
+  const alpha = helpers.regex('alpha', /^[a-z_]+$/)
 
   export default {
     name: 'create-role',
@@ -23,11 +70,34 @@
     },
     data () {
       return {
+        codigo: null,
+        permissao: {
+          nome: null,
+          codigo: null,
+          descricao: null
+        }
+      }
+    },
+    watch: {
+      codigo: function(val) {
+        this.codigo = this.codigo.replace(/^[a-z_]+$/)
+      }
+    },
+    validations: {
+      permissao: {
+        nome: { required },
+        codigo: { required, alpha },
       }
     },
     methods: {
+      createPermission: function () {
+        this.$v.permissao.$touch()
 
-
+        if ( this.$v.permissao.$error ) {
+          this.$q.notify( 'preencha os campos corretamente' )
+          return
+        }
+      }
     },
     mounted() {
     }

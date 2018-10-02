@@ -76,9 +76,7 @@ export default {
   methods: {
 
     create: function () {
-
       this.$v.form.$touch()
-
       if ( this.$v.form.$error ) {
         this.$q.notify( 'preencha os campos corretamente' )
         return
