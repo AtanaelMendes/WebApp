@@ -1,9 +1,8 @@
 <template>
   <q-layout view="hHh Lpr lFf">
     <q-page-container class="fundo">
-      <q-page>
-        <div class="row">
-          <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3 fixed-center">
+      <q-page class="row justify-center">
+          <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3 q-pt-md">
 
             <q-card class="login q-pa-sm">
 
@@ -18,7 +17,7 @@
 
                     <q-input v-model="form.username" @blur="$v.form.username.$touch"
                       :error="$v.form.username.$error" type="email"
-                      float-label="Email" placeholder="insira seu email" autofocus
+                      float-label="Email" placeholder="insira seu email"
                     />
 
                     <q-input v-model="form.password" @blur="$v.form.password.$touch"
@@ -42,7 +41,6 @@
               </q-card-main>
             </q-card>
           </div>
-        </div>
       </q-page>
     </q-page-container>
 
