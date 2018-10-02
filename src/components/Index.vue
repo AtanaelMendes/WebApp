@@ -16,45 +16,52 @@
 
       <q-list link no-border>
 
-        <q-item>
-          <q-item-side icon="receipt"/>
-          <q-item-main>
-            Emissão de Notas
-          </q-item-main>
-        </q-item>
+        <!--<q-item>-->
+          <!--<q-item-side icon="receipt"/>-->
+          <!--<q-item-main>-->
+            <!--Emissão de Notas-->
+          <!--</q-item-main>-->
+        <!--</q-item>-->
+
+        <!--<q-item>-->
+          <!--<q-item-side icon="gavel"/>-->
+          <!--<q-item-main>-->
+            <!--Contratos-->
+          <!--</q-item-main>-->
+        <!--</q-item>-->
 
         <q-item>
-          <q-item-side icon="gavel"/>
-          <q-item-main>
-            Contratos
-          </q-item-main>
-        </q-item>
-
-        <q-item>
-          <q-item-side icon="account_box"/>
+          <q-item-side icon="people"/>
           <q-item-main @click.native="$router.push('/usuario')">
             Usuários
           </q-item-main>
         </q-item>
 
         <q-item>
-          <q-item-side icon="account_box"/>
+          <q-item-side icon="people"/>
           <q-item-main @click.native="$router.push('/pessoas')">
             Pessoas
           </q-item-main>
         </q-item>
 
         <q-item>
-          <q-item-side icon="info"/>
-          <q-item-main>
-            Sobre
+          <q-item-side icon="thumbs_up_down"/>
+          <q-item-main @click.native="$router.push('/permissao')">
+            Permissoẽs
           </q-item-main>
         </q-item>
+
+        <!--<q-item>-->
+          <!--<q-item-side icon="info"/>-->
+          <!--<q-item-main>-->
+            <!--Sobre-->
+          <!--</q-item-main>-->
+        <!--</q-item>-->
 
       </q-list>
     </div>
 
-    <div slot="content" class="layout-padding">
+    <div slot="content" >
       <div class="row gutter-sm">
 
         <div :class="column">
@@ -291,7 +298,7 @@ export default {
   },
   methods: {
     getCredentials: function (){
-      let vm = this
+      let vm = this;
       vm.$axios.get('account/info').then(response => {
 
         // localStorage.setItem('auth.usuario.usuario', response.data.user.usuario)
@@ -303,12 +310,12 @@ export default {
         // })
 
       }).catch(error => {
-        console.log('Erro Ocorrido:')
+        console.log('Erro Ocorrido:');
         console.log(error)
       })
     },
     logout () {
-      var vm = this
+      var vm = this;
 
       vm.$q.dialog({
         title: 'Sair do sistema',
@@ -317,22 +324,22 @@ export default {
         cancel: 'Cancelar'
       }).then(() => {
 
-        console.log('pegando o token_id')
+        console.log('pegando o token_id');
 
         vm.$axios.get('oauth/personal-access-tokens').then(response => {
           vm.token_id = response.data[0].id
 
         }).then(function (){
 
-          console.log('deletando o token')
+          console.log('deletando o token');
 
           vm.$axios.delete('oauth/personal-access-tokens/' + vm.token_id).then(response => {
 
             if (response.status === 200){
-              localStorage.removeItem('auth.token')
-              localStorage.removeItem('auth.refresh_token')
+              localStorage.removeItem('auth.token');
+              localStorage.removeItem('auth.refresh_token');
 
-              router.push('/login')
+              router.push('/login');
 
               vm.$q.notify({
                 message: 'Até mais...',
@@ -348,22 +355,8 @@ export default {
   mounted () {
     this.getCredentials()
   }
-
 }
 </script>
 
 <style>
-.dash {
-  background-image: url("/statics/images/dash.png");
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-  background-color:#464646;
-  height: 100vh;
-}
-.img-responsive{
-  height: auto;
-  width: auto;
-}
 </style>
