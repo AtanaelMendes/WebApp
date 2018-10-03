@@ -41,6 +41,21 @@
 
             </form>
           </div>
+
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+            <q-list v-if="papeis">
+              <q-item v-for="papel in papeis">
+                <q-item-main>
+                  {{papel.name}}
+                </q-item-main>
+                <q-item-side>
+                  <q-btn icon="check_box" color="positive" flat dense @click="rmRole()"  v-if="form.roleId"/>
+                  <q-btn icon="check_box_outline_blank" flat dense @click="form.roleId = papel.id" v-else/>
+                </q-item-side>
+              </q-item>
+            </q-list>
+          </div>
+
         </q-page>
 
     </div>
@@ -59,10 +74,12 @@ export default {
   },
   data () {
     return {
+      papeis: null,
       form: {
         email: null,
         password: null,
-        repeatPassword: null
+        repeatPassword: null,
+        roleId: false,
       }
     }
   },
@@ -74,7 +91,19 @@ export default {
     }
   },
   methods: {
-
+    rmRole: function(){
+      this.form.roleId = false
+    },
+    roles: function() {
+      let vm = this
+      vm.$axios.get( 'role' ).then( response => {
+        vm.papeis = response.data
+        console.log(vm.papeis)
+      }).catch( error => {
+        console.log('Erro Ocorrido:')
+        console.log(error)
+      })
+    },
     create: function () {
       this.$v.form.$touch()
       if ( this.$v.form.$error ) {
@@ -86,6 +115,7 @@ export default {
       let params = {
         email: vm.form.email,
         password: vm.form.password,
+        roles: vm.form.roleId
       }
 
       vm.$axios.post( 'account', params ).then( response => {
@@ -110,6 +140,7 @@ export default {
 
   },
   mounted() {
+    this.roles()
   }
 }
 </script>
