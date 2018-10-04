@@ -19,24 +19,20 @@
                     <q-item-tile>Nova Permissão</q-item-tile>
 
                     <q-item-tile>
-                      <q-input type="text" v-model="permissao.nome" float-label="Nome"
+                      <q-input type="text" v-model="permissao.nome" float-label="Nome" clearable
                                @blur="$v.permissao.nome.$touch" :error="$v.permissao.nome.$error"
                       />
                     </q-item-tile>
 
                     <q-item-tile>
-                      <q-input type="text" v-model.trim="permissao.codigo" float-label="Código" lower-case
+                      <q-input type="text" v-model.trim="permissao.codigo" float-label="Código" lower-case clearable
                                @blur="$v.permissao.codigo.$touch" :error="$v.permissao.codigo.$error"
                       />
 
                     </q-item-tile>
 
                     <q-item-tile>
-                      <q-input type="text" v-model="permissao.descricao" float-label="Descrição"/>
-                    </q-item-tile>
-
-                    <q-item-tile>
-                      <q-input type="text" v-model="codigo" float-label="teste"/>
+                      <q-input type="text" v-model="permissao.descricao" float-label="Descrição" clearable :pattern="regex"/>
                     </q-item-tile>
 
                     <q-item-tile align="end" class="q-mt-md">
@@ -70,17 +66,13 @@
     },
     data () {
       return {
+        regex:  /^[a-z_]+$/,
         codigo: null,
         permissao: {
           nome: null,
           codigo: null,
           descricao: null
         }
-      }
-    },
-    watch: {
-      codigo: function(val) {
-        this.codigo = this.codigo.replace(/^[a-z_]+$/)
       }
     },
     validations: {
@@ -103,6 +95,9 @@
     }
   }
 </script>
+
+<!--[08:47, 3/10/2018] Danilo: ^(ROLE)(_[A-Z]+)+$-->
+<!--[08:47, 3/10/2018] Danilo: ^([a-z]+)(_[a-z]+)+$-->
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>

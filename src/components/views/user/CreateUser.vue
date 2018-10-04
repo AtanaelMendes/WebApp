@@ -12,29 +12,56 @@
     <div slot="content" >
 
         <q-page padding class="row">
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 q-px-sm">
 
             <form @keyup.enter="create()" class="gutter-sm">
 
               <div>
-                <q-field icon="email">
-                  <q-input v-model="form.email" placeholder="informe seu email" float-label="Email" type="text"
-                    @blur="$v.form.email.$touch" :error="$v.form.email.$error"
+                <q-field >
+                  <q-input v-model="form.email"
+                           placeholder="informe seu email"
+                           float-label="Email"
+                           type="text"
+                           @blur="$v.form.email.$touch"
+                           :error="$v.form.email.$error"
                   />
                 </q-field>
 
-                <q-field icon="lock">
-                  <q-input v-model="form.password" placeholder="mínimo 8 caracteres" float-label="Senha" type="password"
-                    @blur="$v.form.password.$touch" :error="$v.form.password.$error"
+                <q-field >
+                  <q-input v-model="form.password"
+                           placeholder="mínimo 8 caracteres"
+                           float-label="Senha"
+                           type="password"
+                           @blur="$v.form.password.$touch"
+                           :error="$v.form.password.$error"
                   />
                 </q-field>
 
-                <q-field icon="lock">
-                  <q-input v-model="form.repeatPassword" placeholder="mínimo 8 caracteres" float-label="Confirmar Senha"
-                    type="password" @blur="$v.form.repeatPassword.$touch" :error="$v.form.repeatPassword.$error"
+                <q-field  class="q-pb-lg">
+                  <q-input v-model="form.repeatPassword"
+                           placeholder="mínimo 8 caracteres"
+                           float-label="Confirmar Senha"
+                           type="password"
+                           @blur="$v.form.repeatPassword.$touch"
+                           :error="$v.form.repeatPassword.$error"
                   />
                 </q-field>
+
+                <div class="q-title q-mb-sm">Permissões</div>
+                <q-list id="chip_container"
+                        v-if="form.selectedRoles"
+                        class="chip-container"
+                        :class="{ 'chip-container-error': $v.form.selectedRoles.$error }"
+                  >
+                  <q-item v-for="role in form.selectedRoles" :key="role.id" class="chip-inline">
+                    <q-chip class="q-ma-xs" @hide="removeRole(role)" closable color="light" text-color="black">{{role.name}}</q-chip>
+                  </q-item>
+                </q-list>
+
+                <q-btn class="full-width q-mt-md" color="secondary" @click="openRolesDialog()" label="Adicionar"/>
+
               </div>
+
               <div align="end">
                 <q-btn color="secondary" label="Cadastrar" @click="create()" v-if="$q.platform.is.desktop"/>
               </div>
@@ -43,20 +70,11 @@
           </div>
 
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-            <q-list v-if="papeis">
-              <q-item v-for="papel in papeis">
-                <q-item-main>
-                  {{papel.name}}
-                </q-item-main>
-                <q-item-side>
-                  <q-btn icon="check_box" color="positive" flat dense @click="rmRole()"  v-if="form.roleId"/>
-                  <q-btn icon="check_box_outline_blank" flat dense @click="form.roleId = papel.id" v-else/>
-                </q-item-side>
-              </q-item>
-            </q-list>
           </div>
 
         </q-page>
+
+
 
     </div>
   </AgroLayout>
@@ -75,11 +93,12 @@ export default {
   data () {
     return {
       papeis: null,
+      modalSelectRole: false,
       form: {
+        selectedRoles: [],
         email: null,
         password: null,
         repeatPassword: null,
-        roleId: false,
       }
     }
   },
@@ -87,18 +106,66 @@ export default {
     form: {
       email: { required, email},
       password: { required,  minLength: minLength(8) },
-      repeatPassword: { sameAsPassword: sameAs('password') }
+      repeatPassword: { sameAsPassword: sameAs('password') },
+      selectedRoles: { required }
     }
   },
   methods: {
-    rmRole: function(){
-      this.form.roleId = false
+    openRolesDialog: function() {
+      this.$q.dialog({
+        title: 'Papéis',
+        message: 'Selecione as funções do usuário.',
+        options: {
+          type: 'checkbox',
+          model: this.getIdsByRoles(this.form.selectedRoles),
+          items: this.rolesToItems()
+        },
+        cancel: true,
+        preventClose: true,
+        color: 'secondary'
+      }).then(data => {
+        this.replaceRoles(data)
+      }).catch(() => {})
     },
-    roles: function() {
+    rolesToItems: function() {
+      var items = []
+       this.papeis.forEach(function (role) {
+         var item = {}
+         item['label'] = role.name
+         item['value'] = role.id
+         items.push(item)
+       })
+      return items
+    },
+    getIdsByRoles: function(roles) {
+      var rolesIds = []
+      roles.forEach(function (role) {
+        rolesIds.push(role.id)
+      })
+      return rolesIds
+    },
+    getRolesById: function(ids) {
+      var roles = []
+      for(var i = 0; i < ids.length; i++) {
+        this.papeis.forEach(function (role) {
+         if(role.id == ids[i]){
+           roles.push(role)
+         }
+        })
+      }
+      return roles
+    },
+    replaceRoles: function(selectedRoles) {
+      this.form.selectedRoles = this.getRolesById(selectedRoles)
+    },
+    removeRole: function(role) {
+      var id = this.form.selectedRoles.indexOf(role)
+      this.form.selectedRoles.splice(id,1)
+    },
+    listRoles: function() {
       let vm = this
       vm.$axios.get( 'role' ).then( response => {
         vm.papeis = response.data
-        console.log(vm.papeis)
       }).catch( error => {
         console.log('Erro Ocorrido:')
         console.log(error)
@@ -107,7 +174,14 @@ export default {
     create: function () {
       this.$v.form.$touch()
       if ( this.$v.form.$error ) {
-        this.$q.notify( 'preencha os campos corretamente' )
+        if( this.$v.form.selectedRoles.$error ){
+          // this.$v.form.selectedRoles
+          this.$q.notify( 'Selecione ao menos uma funcao' )
+        }
+        if( this.$v.form.email.$error ){
+          this.$q.notify( 'Email inválido' )
+        }
+        // this.$q.notify( 'preencha os campos corretamente' )
         return
       }
 
@@ -115,7 +189,6 @@ export default {
       let params = {
         email: vm.form.email,
         password: vm.form.password,
-        roles: vm.form.roleId
       }
 
       vm.$axios.post( 'account', params ).then( response => {
@@ -140,11 +213,21 @@ export default {
 
   },
   mounted() {
-    this.roles()
+    this.listRoles()
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
+  .chip-container {
+    min-height: 100px ;
+  }
+  .chip-inline {
+    display: inline;
+    padding: unset;
+  }
+  .chip-container-error{
+    border-color: red;
+  }
 </style>

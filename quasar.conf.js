@@ -102,7 +102,8 @@ module.exports = function (ctx) {
         'QStepperNavigation',
         'QProgress',
         'QUploader',
-        'QAutocomplete'
+        'QAutocomplete',
+        'QChipsInput'
       ],
       directives: [
         'Ripple',

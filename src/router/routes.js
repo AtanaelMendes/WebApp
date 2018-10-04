@@ -4,7 +4,7 @@ export default [
   { path: '/Login',  component: () => import('components/Login.vue') },
 
   // rotas de roles
-  { path: '/permissao',  component: () => import('components/views/roles/CreateRole.vue') },
+  { path: '/permissao',  component: () => import('components/views/roles/Permissao.vue') },
 
   //rotas de usuarios
   { path: '/usuario',  component: () => import('components/views/user/ListUser.vue') },

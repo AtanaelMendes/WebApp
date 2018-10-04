@@ -33,7 +33,7 @@
 
     <div slot="content">
       <q-page class="row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 q-pa-sm">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
           <q-list highlight no no-border>
 
             <template v-if="users">
@@ -61,7 +61,7 @@
           </q-list>
         </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 q-pa-sm" v-if="details">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 q-pa-sm" v-if="details">
           <q-list no-border>
 
             <q-item>
