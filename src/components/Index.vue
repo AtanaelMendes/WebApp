@@ -44,13 +44,6 @@
           </q-item-main>
         </q-item>
 
-        <q-item>
-          <q-item-side icon="thumbs_up_down"/>
-          <q-item-main @click.native="$router.push('/permissao')">
-            Permissoẽs
-          </q-item-main>
-        </q-item>
-
         <!--<q-item>-->
           <!--<q-item-side icon="info"/>-->
           <!--<q-item-main>-->

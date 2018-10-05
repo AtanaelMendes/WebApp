@@ -55,7 +55,8 @@ import { Platform } from 'quasar'
 export default {
   name: 'index-example',
   components: {
-    AgroLayout
+    AgroLayout,
+    Roles
   },
   data () {
     return {

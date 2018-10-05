@@ -33,7 +33,8 @@
 
     <div slot="content">
       <q-page class="row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
           <q-list highlight no no-border>
 
             <template v-if="users">
@@ -58,10 +59,11 @@
                 </q-item>
               </template>
             </template>
+
           </q-list>
         </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 q-pa-sm" v-if="details">
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-pa-sm" v-if="details">
           <q-list no-border>
 
             <q-item>
@@ -83,6 +85,7 @@
 
             <q-card>
               <q-card-main>
+
                 <q-item>
                   <q-item-side icon="work"/>
                   <q-item-main>
@@ -96,26 +99,46 @@
                     {{profile.email}}
                   </q-item-main>
                 </q-item>
+
               </q-card-main>
               <q-card-separator/>
+
               <q-card-actions align="end">
                 <q-btn @click.native="activateUser(profile.id)" color="primary" flat label="ativar" v-if="profile.deleted"/>
                 <q-btn @click.native="inactivateUser(profile.id)" color="primary" flat label="inativar" v-else/>
               </q-card-actions>
-            </q-card>
 
-            <!-- <q-item>
-              <q-item-side/>
-              <q-item-main>
-              </q-item-main>
-            </q-item> -->
+            </q-card>
 
           </q-list>
         </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-pa-sm" v-if="details">
+
+          <div class="q-title q-mb-sm">Papéis</div>
+
+          <q-list id="chip_container"
+                  v-if="form.selectedRoles"
+                  class="chip-container"
+                  :class="{ 'chip-container-error': $v.form.selectedRoles.$error }"
+          >
+            <q-item v-for="role in form.selectedRoles" :key="role.id" class="chip-inline">
+              <q-chip class="q-ma-xs" @hide="removeRole(role)" closable color="light" text-color="black">{{role.name}}</q-chip>
+            </q-item>
+          </q-list>
+
+          <q-btn class="full-width q-my-md" color="secondary" @click="openRolesDialog()" label="Adicionar"/>
+
+          <div align="end">
+            <q-btn color="secondary" label="salvar" @click="updateUserRoles()" v-if="$q.platform.is.desktop"/>
+          </div>
+
+        </div>
+
       </q-page>
 
       <q-page-sticky corner="bottom-right" :offset="[25, 25]">
-        <q-btn round color="secondary" @click.native="$router.push('/usuario/cadastro')" icon="person_add" />
+        <q-btn size="20px" round color="secondary" @click.native="$router.push('/usuario/cadastro')" icon="person_add" />
       </q-page-sticky>
 
     </div>
@@ -128,16 +151,18 @@ import AgroLayout from 'layouts/AgroLayout'
 import { Platform } from 'quasar'
 
 export default {
-  name: 'index',
+  name: 'list-user',
   components: {
     AgroLayout
   },
-
   data () {
     return {
       filter: {
         type: 'non-trashed',
         email: '',
+      },
+      form: {
+        selectedRoles: []
       },
       profile: {
         id: null,
@@ -159,7 +184,82 @@ export default {
       deep: true,
     }
   },
+  validations: {
+    form: {
+      selectedRoles: { required }
+    }
+  },
   methods: {
+    updateUserRoles: function() {
+      this.$v.form.$touch()
+      if ( this.$v.form.$error ) {
+        if( this.$v.form.selectedRoles.$error ){
+          // this.$v.form.selectedRoles
+          this.$q.notify( 'Selecione ao menos um papel' )
+        }
+        return
+      }
+    },
+    openRolesDialog: function() {
+      this.$q.dialog({
+        title: 'Papéis',
+        message: 'Selecione os funções do usuário.',
+        options: {
+          type: 'checkbox',
+          model: this.getIdsByRoles(this.form.selectedRoles),
+          items: this.rolesToItems()
+        },
+        cancel: true,
+        preventClose: true,
+        color: 'secondary'
+      }).then(data => {
+        this.replaceRoles(data)
+      }).catch(() => {})
+    },
+    rolesToItems: function() {
+      var items = []
+      this.papeis.forEach(function (role) {
+        var item = {}
+        item['label'] = role.name
+        item['value'] = role.id
+        items.push(item)
+      })
+      return items
+    },
+    getIdsByRoles: function(roles) {
+      var rolesIds = []
+      roles.forEach(function (role) {
+        rolesIds.push(role.id)
+      })
+      return rolesIds
+    },
+    getRolesById: function(ids) {
+      var roles = []
+      for(var i = 0; i < ids.length; i++) {
+        this.papeis.forEach(function (role) {
+          if(role.id == ids[i]){
+            roles.push(role)
+          }
+        })
+      }
+      return roles
+    },
+    replaceRoles: function(selectedRoles) {
+      this.form.selectedRoles = this.getRolesById(selectedRoles)
+    },
+    removeRole: function(role) {
+      var id = this.form.selectedRoles.indexOf(role)
+      this.form.selectedRoles.splice(id,1)
+    },
+    listRoles: function() {
+      let vm = this
+      vm.$axios.get( 'role' ).then( response => {
+        vm.papeis = response.data
+      }).catch( error => {
+        console.log('Erro Ocorrido:')
+        console.log(error)
+      })
+    },
     activateUser: function(id) {
       let vm = this
       this.$q.dialog({
@@ -218,6 +318,7 @@ export default {
         vm.profile.nome = user.id
         vm.profile.email = user.email
         vm.profile.deleted = user.deleted_at
+        // vm.form.selectedRoles = user.roles
       }else {
         vm.$router.push('usuario/perfil/' + user.id)
       }
@@ -245,14 +346,21 @@ export default {
   },
   mounted () {
     this.list({type: 'non-trashed'})
+    this.listRoles()
   }
 
 }
 </script>
 
 <style>
-.img-responsive{
-  height: auto;
-  width: auto;
-}
+  .chip-container {
+    min-height: 100px ;
+  }
+  .chip-inline {
+    display: inline;
+    padding: unset;
+  }
+  .chip-container-error{
+    border-color: red;
+  }
 </style>

@@ -47,7 +47,7 @@
                   />
                 </q-field>
 
-                <div class="q-title q-mb-sm">Permissões</div>
+                <div class="q-title q-mb-sm">Papéis</div>
                 <q-list id="chip_container"
                         v-if="form.selectedRoles"
                         class="chip-container"
@@ -68,10 +68,6 @@
 
             </form>
           </div>
-
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-          </div>
-
         </q-page>
 
 
@@ -86,14 +82,13 @@ import AgroLayout from 'layouts/AgroLayout'
 import { Platform } from 'quasar'
 
 export default {
-  name: 'index-example',
+  name: 'create-user',
   components: {
     AgroLayout
   },
   data () {
     return {
       papeis: null,
-      modalSelectRole: false,
       form: {
         selectedRoles: [],
         email: null,
@@ -176,12 +171,17 @@ export default {
       if ( this.$v.form.$error ) {
         if( this.$v.form.selectedRoles.$error ){
           // this.$v.form.selectedRoles
-          this.$q.notify( 'Selecione ao menos uma funcao' )
+          this.$q.notify( 'Selecione ao menos uma papel' )
         }
         if( this.$v.form.email.$error ){
           this.$q.notify( 'Email inválido' )
         }
-        // this.$q.notify( 'preencha os campos corretamente' )
+        if( this.$v.form.password.$error ){
+          this.$q.notify( 'Senha inválida' )
+        }
+        if( this.$v.form.repeatPassword.$error ){
+          this.$q.notify( 'As senhas não conferem' )
+        }
         return
       }
 
