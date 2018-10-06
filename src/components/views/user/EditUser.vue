@@ -10,16 +10,16 @@
 
     <div slot="content" >
 
-      <q-page padding class="row">
+      <q-page padding class="row gutter-x-md">
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 " >
           <form @keyup.enter="updateUser()" class="gutter-sm">
 
             <div>
-              <q-field icon="person">
-                <q-input type="text" float-label="Nome" placeholder="Mínimo 3 caracteres" v-model="form.name" clearable
-                  @blur="$v.form.name.$touch" :error="$v.form.name.$error"
-                />
-              </q-field>
+              <!--<q-field icon="person">-->
+                <!--<q-input type="text" float-label="Nome" placeholder="Mínimo 3 caracteres" v-model="form.name" clearable-->
+                  <!--@blur="$v.form.name.$touch" :error="$v.form.name.$error"-->
+                <!--/>-->
+              <!--</q-field>-->
 
               <q-field icon="mail">
                 <q-input type="email" float-label="Email" v-model="form.email" clearable
@@ -27,17 +27,17 @@
                 />
               </q-field>
 
-              <q-field icon="lock">
-                <q-input type="password" float-label="Senha" v-model="form.password" placeholder="Mínimo 8 caracteres" clearable
-                  @blur="$v.form.password.$touch" :error="$v.form.password.$error"
-                />
-              </q-field>
+              <!--<q-field icon="lock">-->
+                <!--<q-input type="password" float-label="Senha" v-model="form.password" placeholder="Mínimo 8 caracteres" clearable-->
+                  <!--@blur="$v.form.password.$touch" :error="$v.form.password.$error"-->
+                <!--/>-->
+              <!--</q-field>-->
 
-              <q-field icon="lock">
-                <q-input type="password" float-label="Confirmar Senha" v-model="form.repeatPassword"  clearable
-                  @blur="$v.form.repeatPassword.$touch" :error="$v.form.repeatPassword.$error" placeholder="Mínimo 8 caracteres"
-                />
-              </q-field>
+              <!--<q-field icon="lock">-->
+                <!--<q-input type="password" float-label="Confirmar Senha" v-model="form.repeatPassword"  clearable-->
+                  <!--@blur="$v.form.repeatPassword.$touch" :error="$v.form.repeatPassword.$error" placeholder="Mínimo 8 caracteres"-->
+                <!--/>-->
+              <!--</q-field>-->
             </div>
 
             <div align="end">
@@ -46,6 +46,23 @@
 
           </form>
         </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-pa-sm">
+          <div class="q-title q-mb-sm">Papéis</div>
+
+          <q-list id="chip_container"
+                  v-if="form.selectedRoles"
+                  class="chip-container"
+                  :class="{ 'chip-container-error': $v.form.selectedRoles.$error }"
+          >
+            <q-item v-for="role in form.selectedRoles" :key="role.id" class="chip-inline">
+              <q-chip class="q-ma-xs" @hide="removeRole(role)" closable color="secondary" text-color="white">{{role.name}}</q-chip>
+            </q-item>
+          </q-list>
+
+          <q-btn class="full-width q-my-md" color="secondary" @click="openRolesDialog()" label="Adicionar"/>
+        </div>
+
       </q-page>
 
     </div>
@@ -66,23 +83,86 @@ export default {
     return {
       userId: null,
       userData: null,
+      rolesId: [],
       form: {
         name: null,
         email: null,
         password: null,
-        repeatPassword: null
+        repeatPassword: null,
+        selectedRoles: []
       }
     }
   },
   validations: {
     form: {
-      name: { required, minLength: minLength(3) },
+      // name: { required, minLength: minLength(3) },
       email: { required, email},
-      password: { required,  minLength: minLength(8) },
-      repeatPassword: { sameAsPassword: sameAs('password') }
+      // password: { required,  minLength: minLength(8) },
+      // repeatPassword: { sameAsPassword: sameAs('password') },
+      selectedRoles: { required }
     }
   },
   methods: {
+    openRolesDialog: function() {
+      this.$q.dialog({
+        title: 'Papéis',
+        message: 'Selecione os funções do usuário.',
+        options: {
+          type: 'checkbox',
+          model: this.getIdsByRoles(this.form.selectedRoles),
+          items: this.rolesToItems()
+        },
+        cancel: true,
+        preventClose: true,
+        color: 'secondary'
+      }).then(data => {
+        this.replaceRoles(data)
+      }).catch(() => {})
+    },
+    rolesToItems: function() {
+      var items = []
+      this.papeis.forEach(function (role) {
+        var item = {}
+        item['label'] = role.name
+        item['value'] = role.id
+        items.push(item)
+      })
+      return items
+    },
+    getIdsByRoles: function(roles) {
+      var rolesIds = []
+      roles.forEach(function (role) {
+        rolesIds.push(role.id)
+      })
+      return rolesIds
+    },
+    getRolesById: function(ids) {
+      var roles = []
+      for(var i = 0; i < ids.length; i++) {
+        this.papeis.forEach(function (role) {
+          if(role.id == ids[i]){
+            roles.push(role)
+          }
+        })
+      }
+      return roles
+    },
+    replaceRoles: function(selectedRoles) {
+      this.form.selectedRoles = this.getRolesById(selectedRoles)
+    },
+    removeRole: function(role) {
+      var id = this.form.selectedRoles.indexOf(role)
+      this.form.selectedRoles.splice(id,1)
+    },
+    listRoles: function() {
+      let vm = this
+      vm.$axios.get( 'role' ).then( response => {
+        vm.papeis = response.data
+      }).catch( error => {
+        console.log('Erro Ocorrido:')
+        console.log(error)
+      })
+    },
     getUser: function() {
       let vm = this
       let params = {
@@ -90,6 +170,9 @@ export default {
       }
       vm.$axios.get( 'account/'+ params.id ).then( response => {
         vm.userData = response.data
+        console.log(vm.userData)
+        vm.form.selectedRoles = vm.userData.roles
+        vm.form.email = vm.userData.email
       }).catch( error => {
         if (error.response.status == 404){
           this.$q.dialog({
@@ -105,14 +188,21 @@ export default {
     updateUser: function() {
       this.$v.form.$touch()
       if ( this.$v.form.$error ) {
-        this.$q.notify( 'preencha os campos corretamente' )
+        if( this.$v.form.selectedRoles.$error ){
+          this.$q.notify( 'Selecione ao menos um papel' )
+        }
+        if( this.$v.form.email.$error ){
+          this.$q.notify( 'Email inválido' )
+        }
         return
       }
       let vm = this
       let params = {
         email: vm.form.email,
-        password: vm.form.password,
+        roles: vm.getIdsByRoles(vm.form.selectedRoles).join(',')
+        // password: vm.form.password,
       }
+      console.log(params)
       vm.$axios.put( 'account/'+ vm.$route.params.id, params ).then( response => {
         if (response.status == 200){
           vm.$q.notify({
@@ -135,9 +225,20 @@ export default {
   },
   mounted() {
     this.getUser()
+    this.listRoles()
   }
 }
 </script>
 
 <style>
+  .chip-container {
+    min-height: 100px ;
+  }
+  .chip-inline {
+    display: inline;
+    padding: unset;
+  }
+  .chip-container-error{
+    border-color: red;
+  }
 </style>

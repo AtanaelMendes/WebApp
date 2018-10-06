@@ -54,7 +54,7 @@
                         :class="{ 'chip-container-error': $v.form.selectedRoles.$error }"
                   >
                   <q-item v-for="role in form.selectedRoles" :key="role.id" class="chip-inline">
-                    <q-chip class="q-ma-xs" @hide="removeRole(role)" closable color="light" text-color="black">{{role.name}}</q-chip>
+                    <q-chip class="q-ma-xs" @hide="removeRole(role)" closable color="secondary" text-color="white">{{role.name}}</q-chip>
                   </q-item>
                 </q-list>
 
