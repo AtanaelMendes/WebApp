@@ -206,7 +206,6 @@ export default {
         vm.$axios.get( 'account/'+ id ).then( response => {
           vm.userProfile = response.data
           vm.details = true
-          console.log(vm.userProfile)
         }).catch( error => {
           if (error.response.status == 404){
             this.$q.dialog({
@@ -224,7 +223,6 @@ export default {
       let vm = this
       vm.$axios.get( 'account?' + this.serialize(val) ).then( response => {
         vm.users = response.data
-        console.log(vm.users)
       }).catch( error => {
         console.log('Erro Ocorrido:')
         console.log(error)

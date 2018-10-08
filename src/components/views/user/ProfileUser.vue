@@ -71,14 +71,15 @@
 </template>
 
 <script>
-  import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
   import AgroLayout from 'layouts/AgroLayout'
+  import GetUser from 'components/views/mixins/GetUser'
 
   export default {
-    name: 'index-example',
+    name: 'profile-user',
     components: {
       AgroLayout
     },
+    mixins: [GetUser],
     data () {
       return {
         userId: null,
@@ -132,29 +133,8 @@
           console.log(error)
         })
       },
-      getUser: function() {
-        let vm = this
-        let params = {
-          id: vm.$route.params.id
-        }
-        vm.$axios.get( 'account/'+ params.id ).then( response => {
-          vm.userData = response.data
-        }).catch( error => {
-          if (error.response.status == 404){
-            this.$q.dialog({
-              title:'Ops',
-              message: 'Não foi possível carregar as informações'
-            })
-          }
-          vm.$router.push( '/usuario' )
-          console.log('Erro Ocorrido:')
-          console.log(error)
-        })
-      },
     },
-    mounted() {
-      this.getUser()
-    }
+    mounted() {}
   }
 </script>
 

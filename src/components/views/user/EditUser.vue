@@ -72,13 +72,16 @@
 <script>
 import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
 import AgroLayout from 'layouts/AgroLayout'
+import RolesMixins from 'components/views/mixins/RolesMixins'
+import GetUser from 'components/views/mixins/GetUser'
 import { Platform } from 'quasar'
 
 export default {
-  name: 'index-example',
+  name: 'edit-user',
   components: {
     AgroLayout
   },
+  mixins: [RolesMixins, GetUser],
   data () {
     return {
       userId: null,
@@ -103,88 +106,6 @@ export default {
     }
   },
   methods: {
-    openRolesDialog: function() {
-      this.$q.dialog({
-        title: 'Papéis',
-        message: 'Selecione os funções do usuário.',
-        options: {
-          type: 'checkbox',
-          model: this.getIdsByRoles(this.form.selectedRoles),
-          items: this.rolesToItems()
-        },
-        cancel: true,
-        preventClose: true,
-        color: 'secondary'
-      }).then(data => {
-        this.replaceRoles(data)
-      }).catch(() => {})
-    },
-    rolesToItems: function() {
-      var items = []
-      this.papeis.forEach(function (role) {
-        var item = {}
-        item['label'] = role.name
-        item['value'] = role.id
-        items.push(item)
-      })
-      return items
-    },
-    getIdsByRoles: function(roles) {
-      var rolesIds = []
-      roles.forEach(function (role) {
-        rolesIds.push(role.id)
-      })
-      return rolesIds
-    },
-    getRolesById: function(ids) {
-      var roles = []
-      for(var i = 0; i < ids.length; i++) {
-        this.papeis.forEach(function (role) {
-          if(role.id == ids[i]){
-            roles.push(role)
-          }
-        })
-      }
-      return roles
-    },
-    replaceRoles: function(selectedRoles) {
-      this.form.selectedRoles = this.getRolesById(selectedRoles)
-    },
-    removeRole: function(role) {
-      var id = this.form.selectedRoles.indexOf(role)
-      this.form.selectedRoles.splice(id,1)
-    },
-    listRoles: function() {
-      let vm = this
-      vm.$axios.get( 'role' ).then( response => {
-        vm.papeis = response.data
-      }).catch( error => {
-        console.log('Erro Ocorrido:')
-        console.log(error)
-      })
-    },
-    getUser: function() {
-      let vm = this
-      let params = {
-        id: vm.$route.params.id
-      }
-      vm.$axios.get( 'account/'+ params.id ).then( response => {
-        vm.userData = response.data
-        console.log(vm.userData)
-        vm.form.selectedRoles = vm.userData.roles
-        vm.form.email = vm.userData.email
-      }).catch( error => {
-        if (error.response.status == 404){
-          this.$q.dialog({
-            title:'Ops',
-            message: 'Não foi possível carregar as informações'
-          })
-        }
-        vm.$router.push( '/usuario' )
-        console.log('Erro Ocorrido:')
-        console.log(error)
-      })
-    },
     updateUser: function() {
       this.$v.form.$touch()
       if ( this.$v.form.$error ) {
@@ -200,7 +121,6 @@ export default {
       let params = {
         email: vm.form.email,
         roles: vm.getIdsByRoles(vm.form.selectedRoles).join(',')
-        // password: vm.form.password,
       }
       console.log(params)
       vm.$axios.put( 'account/'+ vm.$route.params.id, params ).then( response => {
@@ -224,21 +144,10 @@ export default {
     }
   },
   mounted() {
-    this.getUser()
     this.listRoles()
   }
 }
 </script>
 
 <style>
-  .chip-container {
-    min-height: 100px ;
-  }
-  .chip-inline {
-    display: inline;
-    padding: unset;
-  }
-  .chip-container-error{
-    border-color: red;
-  }
 </style>
