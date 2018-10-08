@@ -112,4 +112,14 @@ import router from '../router'
 </script>
 
 <style>
+  .chip-container {
+    min-height: 100px ;
+  }
+  .chip-inline {
+    display: inline;
+    padding: unset;
+  }
+  .chip-container-error{
+    border-color: red;
+  }
 </style>

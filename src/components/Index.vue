@@ -30,16 +30,16 @@
           <!--</q-item-main>-->
         <!--</q-item>-->
 
-        <q-item>
+        <q-item @click.native="$router.push('/usuario')">
           <q-item-side icon="people"/>
-          <q-item-main @click.native="$router.push('/usuario')">
+          <q-item-main>
             Usuários
           </q-item-main>
         </q-item>
 
-        <q-item>
+        <q-item @click.native="$router.push('/pessoas')">
           <q-item-side icon="people"/>
-          <q-item-main @click.native="$router.push('/pessoas')">
+          <q-item-main>
             Pessoas
           </q-item-main>
         </q-item>

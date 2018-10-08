@@ -1,6 +1,6 @@
 <template>
   <div class="error-page window-height window-width bg-light column items-center no-wrap">
-    <div class="error-code bg-primary flex items-center content-center justify-center">
+    <div class="error-code bg-secondary flex items-center content-center justify-center">
       404
     </div>
     <div>
@@ -10,7 +10,7 @@
         <p class="text-center group">
           <q-btn
             v-if="canGoBack"
-            color="primary"
+            color="secondary"
             push
             @click="goBack"
             icon="keyboard_arrow_left"
@@ -18,7 +18,7 @@
             Voltar
           </q-btn>
           <q-btn
-            color="primary"
+            color="secondary"
             push
             @click="$router.replace('/')"
             icon-right="home"
