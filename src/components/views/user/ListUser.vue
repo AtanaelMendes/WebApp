@@ -42,7 +42,7 @@
                 <q-item link inset-separator multiline @click.native="viewProfile(user.id)">
                   <q-item-side icon="account_circle"/>
 
-                  <q-item-main>
+                  <q-item-main >
                     <q-item-tile>
                       {{user.id}} {{user.email}}
                       <q-chip v-if="user.deleted_at" small square color="red">
@@ -78,20 +78,12 @@
                 Usuário inativo
               </q-item-main>
               <q-item-side>
-                <q-item-tile stamp class="text-white">01 outubro 2018</q-item-tile>
-                <!--<q-item-tile stamp>{{ moment(profile.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>-->
+                <q-item-tile stamp class="text-white">{{ moment(userProfile.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>
               </q-item-side>
             </q-item><br/>
 
             <q-card>
               <q-card-main>
-
-                <q-item>
-                  <q-item-side icon="work"/>
-                  <q-item-main>
-                    <q-item-tile>Nome do grupo econômico</q-item-tile>
-                  </q-item-main>
-                </q-item>
 
                 <q-item>
                   <q-item-side icon="contact_mail"/>
@@ -104,7 +96,7 @@
               <q-card-separator/>
 
               <q-card-main>
-                <q-chip color="secondary" v-for="userRoles in userProfile.roles" class="q-ma-xs">
+                <q-chip color="secondary" v-for="userRoles in userProfile.roles" :key="userRoles.id" class="q-ma-xs">
                   {{userRoles.name}}
                 </q-chip>
               </q-card-main>
@@ -207,10 +199,10 @@ export default {
       }
     },
     viewProfile: function(id) {
-      console.log('aqui')
       let vm = this
-      if(vm.$q.platform.is.desktop) {
-        let vm = this
+      if(this.$q.platform.is.mobile) {
+        vm.$router.push('usuario/perfil/' + id)
+      }else {
         vm.$axios.get( 'account/'+ id ).then( response => {
           vm.userProfile = response.data
           vm.details = true
@@ -225,9 +217,8 @@ export default {
           console.log('Erro Ocorrido:')
           console.log(error)
         })
-      }else {
-        vm.$router.push('usuario/perfil/' + userProfile.id)
       }
+
     },
     list: function(val) {
       let vm = this

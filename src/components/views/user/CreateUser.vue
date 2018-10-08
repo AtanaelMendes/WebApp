@@ -12,7 +12,7 @@
     <div slot="content" >
 
         <q-page padding class="row">
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 q-px-sm">
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-px-sm">
 
             <form @keyup.enter="create()" class="gutter-sm">
 
@@ -171,7 +171,7 @@ export default {
       if ( this.$v.form.$error ) {
         if( this.$v.form.selectedRoles.$error ){
           // this.$v.form.selectedRoles
-          this.$q.notify( 'Selecione ao menos uma papel' )
+          this.$q.notify( 'Selecione ao menos um papel' )
         }
         if( this.$v.form.email.$error ){
           this.$q.notify( 'Email inválido' )

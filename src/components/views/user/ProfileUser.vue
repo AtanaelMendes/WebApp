@@ -27,19 +27,12 @@
                 Usuário inativo
               </q-item-main>
               <q-item-side>
-                <q-item-tile stamp class="text-white">01 outubro 2018</q-item-tile>
-                <!--<q-item-tile stamp>{{ moment(userData.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>-->
+                <q-item-tile stamp class="text-white">{{ moment(userData.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>
               </q-item-side>
             </q-item><br/>
 
             <q-card>
               <q-card-main>
-                <q-item>
-                  <q-item-side icon="work"/>
-                  <q-item-main>
-                    <q-item-tile>Nome do grupo econômico</q-item-tile>
-                  </q-item-main>
-                </q-item>
 
                 <q-item>
                   <q-item-side icon="contact_mail"/>
@@ -49,6 +42,14 @@
                 </q-item>
               </q-card-main>
               <q-card-separator/>
+
+              <q-card-main>
+                <q-chip color="secondary" v-for="userRoles in userData.roles" :key="userData.id" class="q-ma-xs">
+                  {{userRoles.name}}
+                </q-chip>
+              </q-card-main>
+              <q-card-separator/>
+
               <q-card-actions align="end">
                 <q-btn @click.native="activateUser(userData.id)" color="primary" flat label="ativar" v-if="userData.deleted_at"/>
                 <q-btn @click.native="inactivateUser(userData.id)" color="primary" flat label="inativar" v-else/>

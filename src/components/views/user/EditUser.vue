@@ -15,25 +15,25 @@
           <form @keyup.enter="updateUser()" class="gutter-sm">
 
             <div>
-              <!--<q-field icon="person">-->
+              <!--<q-field>-->
                 <!--<q-input type="text" float-label="Nome" placeholder="Mínimo 3 caracteres" v-model="form.name" clearable-->
                   <!--@blur="$v.form.name.$touch" :error="$v.form.name.$error"-->
                 <!--/>-->
               <!--</q-field>-->
 
-              <q-field icon="mail">
+              <q-field>
                 <q-input type="email" float-label="Email" v-model="form.email" clearable
                   @blur="$v.form.email.$touch" :error="$v.form.email.$error"
                 />
               </q-field>
 
-              <!--<q-field icon="lock">-->
+              <!--<q-field>-->
                 <!--<q-input type="password" float-label="Senha" v-model="form.password" placeholder="Mínimo 8 caracteres" clearable-->
                   <!--@blur="$v.form.password.$touch" :error="$v.form.password.$error"-->
                 <!--/>-->
               <!--</q-field>-->
 
-              <!--<q-field icon="lock">-->
+              <!--<q-field>-->
                 <!--<q-input type="password" float-label="Confirmar Senha" v-model="form.repeatPassword"  clearable-->
                   <!--@blur="$v.form.repeatPassword.$touch" :error="$v.form.repeatPassword.$error" placeholder="Mínimo 8 caracteres"-->
                 <!--/>-->
