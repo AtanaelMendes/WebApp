@@ -123,7 +123,7 @@
         this.resetPasswordForm.email.errorMessage = null;
       },
       submitPasswordRecoveryForm: function () {
-        this.$v.resetPasswordForm.$touch()
+        this.$v.resetPasswordForm.$touch();
 
         if (this.$v.resetPasswordForm.$error ) {
           this.resetPasswordForm.email.error = this.$v.resetPasswordForm.email.$error;
@@ -176,19 +176,28 @@
           email: this.form.email.value,
           password: this.form.password.value
         };
-        // Busca Autenticacao
+
         this.$axios.post( 'oauth/token', params ).then( response => {
+          localStorage.setItem( 'auth.token', response.data.access_token );
+          localStorage.setItem( 'auth.refresh_token', response.data.refresh_token );
 
-          // salva token no Local Storage
-          let token = response.data.access_token
-          let refresh_token = response.data.refresh_token
-          localStorage.setItem( 'auth.token', token )
-          localStorage.setItem( 'auth.refresh_token', refresh_token )
-
-          Loading.hide()
-          this.$router.push( '/admin' )
+          Loading.hide();
+          this.$router.push( '/admin' );
         }).catch( error => {
-          Loading.hide()
+          Loading.hide();
+          switch(error.response.status){
+            case 401:
+              this.showErrorDialog("Email e/ou senha incorretos!")
+              break;
+          }
+
+        })
+      },
+      showErrorDialog: function (message) {
+        this.$q.dialog({
+          title: 'Ops!',
+          message: message,
+          ok: true,
         })
       }
     }
