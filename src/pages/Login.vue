@@ -173,7 +173,7 @@
           client_id: process.env.CLIENT_ID,
           client_secret: process.env.CLIENT_SECRET,
           scope: null,
-          email: this.form.email.value,
+          username: this.form.email.value,
           password: this.form.password.value
         };
 

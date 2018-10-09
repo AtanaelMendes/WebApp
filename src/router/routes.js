@@ -2,8 +2,17 @@
 const routes = [
   { path: '/', component: () => import('pages/Index.vue') },
   { path: '/login', component: () => import('pages/Login.vue') },
-  { path: '/admin', component: () => import('pages/Admin.vue') }
-]
+  { path: '/admin', component: () => import('layouts/Admin.vue'),
+    children: [
+      { path: '', component: () => import('pages/admin/Dashboard.vue'),
+        children: [
+          { path: 'teste', component: () => import('pages/admin/Teste.vue') }
+        ]
+      },
+
+    ]
+  },
+];
 
 // Always leave this as last one
 if (process.env.MODE !== 'ssr') {
