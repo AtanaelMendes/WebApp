@@ -23,8 +23,7 @@
                             :options="[
                             { label: 'Ativos', value: 'non-trashed'},
                             { label: 'Inativos', value: 'trashed' },
-                            { label: 'Todos', value: '' }
-                            ]"
+                            { label: 'Todos', value: '' }]"
             />
           </q-item-main>
         </q-item>

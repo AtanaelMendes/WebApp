@@ -15,11 +15,11 @@
         <q-list-header>Filtros</q-list-header>
         <q-item>
           <q-item-main>
-            <q-option-group type="radio" color="secondary"v-model="group" :options="[
-            { label: 'Todos', value: null },
-            { label: 'Inativos', value: 'trashed' },
-            { label: 'Ativos', value: 'non-trashed'}
-          ]"
+            <q-option-group type="radio" color="secondary"v-model="filter.type"
+                            :options="[
+                            { label: 'Todos', value: null },
+                            { label: 'Inativos', value: 'trashed' },
+                            { label: 'Ativos', value: 'non-trashed'}]"
             />
           </q-item-main>
         </q-item>
@@ -28,35 +28,153 @@
 
     <div slot="content">
 
-      <q-page padding>
-        <q-list highlight no no-border>
-          <template v-if="persons">
-            <template v-for="person in persons">
-              <q-item link inset-separator multiline @click.native="getUser(person.id)">
-                <q-item-side icon="account_circle"/>
+      <q-page class="row gutter-x-md q-px-sm">
 
-                <q-item-main>
-                  <q-item-tile>
-                    {{person.id}} {{person.email}}
-                    <q-chip v-if="person.deleted_at" small square color="red">
-                      INATIVO
-                    </q-chip>
-                  </q-item-tile>
-                </q-item-main>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+          <q-list highlight no no-border v-if="loaded">
+            <q-item v-for="person in 10" :key="person" link inset-separator multiline @click.native="getPerson()">
+              <q-item-side icon="account_circle"/>
 
-                <q-item-side>
-                  <q-item-tile stamp>{{ moment(person.created_at).format('DD MMMM YYYY') }}</q-item-tile>
-                  <q-item-tile v-if="person.deleted_at" stamp>{{ moment(person.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>
-                </q-item-side>
+              <q-item-main>
+                <q-item-tile>
+                  {{person}} Fulano da Silva
+                  <q-chip small square color="red" v-if="person == 3">
+                    INATIVO
+                  </q-chip>
+                </q-item-tile>
+              </q-item-main>
 
-              </q-item>
-            </template>
-          </template>
-        </q-list>
+              <q-item-side>
+                <q-item-tile stamp>16 maio 2002</q-item-tile>
+                <!--<q-item-tile stamp>{{ moment(person.created_at).format('DD MMMM YYYY') }}</q-item-tile>-->
+                <!--<q-item-tile v-if="person.deleted_at" stamp>{{ moment(person.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>-->
+              </q-item-side>
+            </q-item>
+          </q-list>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="personLoaded">
+          <q-list no-border highlight>
+
+            <q-item>
+              <q-item-main class="q-title">
+                Fulano da Silva
+              </q-item-main>
+              <q-item-side>
+                <q-btn  color="primary" flat label="ativar"/>
+                <q-btn  color="primary" flat label="inativar"/>
+                <!--<q-btn @click.native="activateUser(userProfile.id)" color="primary" flat label="ativar" v-if="userProfile.deleted_at"/>-->
+                <!--<q-btn @click.native="inactivateUser(userProfile.id)" color="primary" flat label="inativar" v-else/>-->
+              </q-item-side>
+            </q-item>
+
+            <q-item class="bg-negative text-white">
+              <q-item-side icon="voice_over_off" color="white"/>
+              <q-item-main>
+                Pessoa inativo
+              </q-item-main>
+              <q-item-side>
+                <q-item-tile stamp class="text-white">16 maio 2002</q-item-tile>
+                <!--<q-item-tile stamp class="text-white">{{ moment(userProfile.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>-->
+              </q-item-side>
+            </q-item>
+
+            <q-item>
+              <q-item-main>
+                <q-item-tile stamp class="text-faded">
+                  Razão Social
+                </q-item-tile>
+                <q-item-tile>
+                  Migliorini & migliorini
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+
+            <q-item>
+              <q-item-main>
+                <q-item-tile stamp class="text-faded">
+                  Fantasia
+                </q-item-tile>
+                <q-item-tile>
+                  MG Papelaria
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+
+            <q-item>
+              <q-item-main>
+                <q-item-tile stamp class="text-faded">
+                  CNPJ
+                </q-item-tile>
+                <q-item-tile>
+                  {{numeral(cnpj).format('00000000000000').replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5")}}
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+
+            <q-item>
+              <q-item-main>
+                <q-item-tile stamp class="text-faded">
+                  Grupo Econômico
+                </q-item-tile>
+                <q-item-tile>
+                  MG Papelaria
+                </q-item-tile>
+
+              </q-item-main>
+            </q-item>
+          </q-list>
+
+          <q-card>
+            <q-card-title>
+              Contato  Fiscal/Cobrança
+            </q-card-title>
+            <q-card-separator/>
+            <q-card-main>
+              <q-list highlight no-border>
+
+                <q-item>
+                  <q-item-main>
+                    <q-item-tile stamp class="text-faded">
+                      Email
+                    </q-item-tile>
+                    <q-item-tile>
+                      dummy@dummy.com
+                    </q-item-tile>
+                  </q-item-main>
+                </q-item>
+
+                <q-item>
+                  <q-item-main>
+                    <q-item-tile stamp class="text-faded">
+                      Celular
+                    </q-item-tile>
+                    <q-item-tile>
+                      {{numeral(celular).format('00000000000').replace(/^(\d{2})(\d{1})(\d{4})(\d{4})/, "($1) $2-$3-$4")}}
+                    </q-item-tile>
+                  </q-item-main>
+                </q-item>
+
+                <q-item>
+                  <q-item-main>
+                    <q-item-tile stamp class="text-faded">
+                      Fixo
+                    </q-item-tile>
+                    <q-item-tile>
+                      {{numeral(fixo).format('0000000000').replace(/^(\d{2})(\d{4})(\d{4})/, "($1) $2-$3")}}
+                    </q-item-tile>
+                  </q-item-main>
+                </q-item>
+
+              </q-list>
+            </q-card-main>
+          </q-card>
+
+        </div>
       </q-page>
 
       <q-page-sticky corner="bottom-right" :offset="[25, 25]">
-        <q-btn round color="secondary" @click.native="$router.push('/pessoa/cadastro')" icon="person_add" />
+        <q-btn size="20px" round color="secondary" @click.native="$router.push('/pessoa/cadastro')" icon="person_add" />
       </q-page-sticky>
 
     </div>
@@ -64,12 +182,11 @@
 </template>
 
 <script>
-import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
 import AgroLayout from 'layouts/AgroLayout'
 import { Platform } from 'quasar'
 
 export default {
-  name: 'index',
+  name: 'list-person',
   components: {
     AgroLayout
   },
@@ -78,11 +195,16 @@ export default {
     return {
       filter: {
         type: null,
-        email: null
       },
-      persons: null,
-      personData: null,
-      searchName: ''
+      loaded: false,
+      personLoaded: false,
+      personsData: [],
+      searchName: '',
+
+      celular: 66999763509,
+      fixo: 6635325569,
+      cpf: 45855566932,
+      cnpj: 987666334189
     }
   },
   watch: {
@@ -96,36 +218,35 @@ export default {
   },
   methods: {
     list: function(val) {
-      let vm = this
-
-      if (val == true){
-        vm.trashed = '?trashed=true'
-      }else if (val == false){
-        vm.trashed = ''
+      this.loaded = true
+      // let vm = this
+      // vm.$axios.get( 'account'+ vm.email ).then( response => {
+      //   vm.personsData = response.data
+      // }).catch( error => {
+      //   console.log('Erro Ocorrido:')
+      //   console.log(error)
+      // })
+    },
+    getPerson: function (id) {
+      if(this.$q.platform.is.mobile) {
+        this.$router.push('pessoa/editar/' + id)
+      }else {
+        this.personLoaded = true
+        // let vm = this
+        // vm.$axios.get( 'account'+ vm.email ).then( response => {
+        //   vm.personsData = response.data
+        // }).catch( error => {
+        //   console.log('Erro Ocorrido:')
+        //   console.log(error)
+        // })
       }
 
-      vm.$axios.get( 'account'+ vm.email ).then( response => {
-        vm.persons = response.data
-      }).catch( error => {
-        console.log('Erro Ocorrido:')
-        console.log(error)
-      })
     },
-    getUser: function (id) {
-      this.$router.push('pessoa/editar/' + id)
-    },
-
   },
   mounted () {
     this.list()
   }
-
 }
 </script>
-
 <style>
-.img-responsive{
-  height: auto;
-  width: auto;
-}
 </style>
