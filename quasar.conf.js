@@ -1,10 +1,11 @@
 // Configuration for your app
+const envparser = require('./config/envparser');
 
 module.exports = function (ctx) {
   return {
     // app plugins (/src/plugins)
     plugins: [
-      'axios'
+      'axios', 'vuelidate'
     ],
     css: [
       'app.styl'
@@ -18,6 +19,7 @@ module.exports = function (ctx) {
     ],
     supportIE: false,
     build: {
+      env: envparser(),
       scopeHoisting: true,
       // vueRouterMode: 'history',
       // vueCompiler: true,
@@ -48,14 +50,23 @@ module.exports = function (ctx) {
         'QListHeader',
         'QItem',
         'QItemMain',
-        'QItemSide'
+        'QItemSide',
+        'QCard',
+        'QCardTitle',
+        'QCardMain',
+        'QCardMedia',
+        'QCardSeparator',
+        'QCardActions',
+        'QInput',
+        'QModal',
+        'QField'
       ],
       directives: [
         'Ripple'
       ],
       // Quasar plugins
       plugins: [
-        'Notify'
+        'Notify', 'Dialog', 'Loading'
       ]
       // iconSet: ctx.theme.mat ? 'material-icons' : 'ionicons'
       // i18n: 'de' // Quasar language

@@ -1,7 +1,4 @@
 <template>
-  <q-page class="flex flex-center">
-    <img alt="Quasar logo" src="~assets/quasar-logo-full.svg">
-  </q-page>
 </template>
 
 <style>
@@ -9,6 +6,15 @@
 
 <script>
 export default {
-  name: 'PageIndex'
+  name: 'PageIndex',
+  created() {
+    let token = localStorage.getItem('auth.token');
+
+    if (token == null) {
+      this.$router.push('/login')
+    } else {
+      this.$router.push('/admin')
+    }
+  }
 }
 </script>
