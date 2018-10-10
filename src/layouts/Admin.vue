@@ -1,30 +1,26 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-layout-header>
-    </q-layout-header>
+    <q-layout-header></q-layout-header>
 
-    <q-layout-drawer v-model="leftDrawerOpen" :content-class="$q.theme === 'mat' ? 'bg-grey-2' : null">
+    <q-layout-drawer v-model="leftDrawerOpen">
+      <div class="navigation-header">
+        <img src="statics/person-profile-image.jpg" class="profile-image shadow-1"/>
+        <span class="profile-name">Fulano da Silva</span>
+        <span class="profile-email">fulano@gmail.com</span>
+        <q-btn flat round dense icon="settings" class="settings_icon" />
+      </div>
       <q-list no-border link inset-delimiter>
-        <q-list-header>Essential Links</q-list-header>
+        <q-item @click.native="$router.push('/admin')">
+          <q-item-side icon="dashboard" />
+          <q-item-main label="Dashboard" />
+        </q-item>
         <q-item @click.native="openURL('http://quasar-framework.org')">
-          <q-item-side icon="school" />
-          <q-item-main label="Docs" sublabel="quasar-framework.org" />
+          <q-item-side icon="group" />
+          <q-item-main label="Usuários" />
         </q-item>
-        <q-item @click.native="openURL('https://github.com/quasarframework/')">
-          <q-item-side icon="code" />
-          <q-item-main label="GitHub" sublabel="github.com/quasarframework" />
-        </q-item>
-        <q-item @click.native="openURL('https://discord.gg/5TDhbDg')">
-          <q-item-side icon="chat" />
-          <q-item-main label="Discord Chat Channel" sublabel="https://discord.gg/5TDhbDg" />
-        </q-item>
-        <q-item @click.native="openURL('http://forum.quasar-framework.org')">
-          <q-item-side icon="record_voice_over" />
-          <q-item-main label="Forum" sublabel="forum.quasar-framework.org" />
-        </q-item>
-        <q-item @click.native="openURL('https://twitter.com/quasarframework')">
-          <q-item-side icon="rss feed" />
-          <q-item-main label="Twitter" sublabel="@quasarframework" />
+        <q-item @click.native="openURL('http://quasar-framework.org')">
+          <q-item-side icon="group" />
+          <q-item-main label="Pessoas" />
         </q-item>
       </q-list>
     </q-layout-drawer>
@@ -52,4 +48,40 @@ export default {
 </script>
 
 <style>
+  .navigation-header{
+    height: 150px;
+    background-color: teal;
+    padding: 20px;
+  }
+  .navigation-header .profile-image{
+    border-radius: 50%;
+    border: 2px solid white;
+    width: 65px;
+    height: auto;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .navigation-header .profile-name{
+    color: white;
+    font-size: 16px;
+    font-weight: 400;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .navigation-header .profile-email{
+    color: white;
+    font-size: 14px;
+    font-weight: 300;
+    display: block;
+  }
+
+  .navigation-header .settings_icon{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 20px;
+    color: white;
+  }
 </style>
