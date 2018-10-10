@@ -5,6 +5,10 @@
       Pessoas
     </div>
 
+    <div slot="rightBtn">
+      <q-btn flat round icon="edit" @click="editPerson()" v-if="$q.platform.is.desktop && personsData.id"/>
+    </div>
+
     <div slot="searchField">
       <q-search no-icon	inverted-light placeholder="Busca por nome" color="white"
       clearable v-model="searchName" :after="[{icon: 'search'}]"/>
@@ -64,7 +68,7 @@
                 <q-btn  color="primary" flat label="ativar"/>
                 <q-btn  color="primary" flat label="inativar"/>
                 <!--<q-btn @click.native="activateUser(userProfile.id)" color="primary" flat label="ativar" v-if="userProfile.deleted_at"/>-->
-                <!--<q-btn @click.native="inactivateUser(userProfile.id)" color="primary" flat label="inativar" v-else/>-->
+                <!--<q-btn @click.native="inactive(userProfile.id)" color="primary" flat label="inativar" v-else/>-->
               </q-item-side>
             </q-item>
 
@@ -115,6 +119,17 @@
             <q-item>
               <q-item-main>
                 <q-item-tile stamp class="text-faded">
+                  CNPJ
+                </q-item-tile>
+                <q-item-tile>
+                  {{numeral(cnpj).format('00000000000').replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")}}
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+
+            <q-item>
+              <q-item-main>
+                <q-item-tile stamp class="text-faded">
                   Grupo Econômico
                 </q-item-tile>
                 <q-item-tile>
@@ -125,50 +140,67 @@
             </q-item>
           </q-list>
 
-          <q-card>
-            <q-card-title>
-              Contato  Fiscal/Cobrança
-            </q-card-title>
-            <q-card-separator/>
-            <q-card-main>
-              <q-list highlight no-border>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-for="contato in 4" :key="contato">
 
-                <q-item>
-                  <q-item-main>
-                    <q-item-tile stamp class="text-faded">
-                      Email
-                    </q-item-tile>
-                    <q-item-tile>
-                      dummy@dummy.com
-                    </q-item-tile>
-                  </q-item-main>
-                </q-item>
+              <q-card class="q-ma-xs">
+                <q-card-title>
+                  Fiscal/Cobrança
+                </q-card-title>
+                <q-card-separator/>
+                <q-card-main>
+                  <q-list highlight no-border>
 
-                <q-item>
-                  <q-item-main>
-                    <q-item-tile stamp class="text-faded">
-                      Celular
-                    </q-item-tile>
-                    <q-item-tile>
-                      {{numeral(celular).format('00000000000').replace(/^(\d{2})(\d{1})(\d{4})(\d{4})/, "($1) $2-$3-$4")}}
-                    </q-item-tile>
-                  </q-item-main>
-                </q-item>
+                    <q-item>
+                      <q-item-main>
+                        <q-item-tile stamp class="text-faded">
+                          Nome
+                        </q-item-tile>
+                        <q-item-tile>
+                          Ronaldinho
+                        </q-item-tile>
+                      </q-item-main>
+                    </q-item>
 
-                <q-item>
-                  <q-item-main>
-                    <q-item-tile stamp class="text-faded">
-                      Fixo
-                    </q-item-tile>
-                    <q-item-tile>
-                      {{numeral(fixo).format('0000000000').replace(/^(\d{2})(\d{4})(\d{4})/, "($1) $2-$3")}}
-                    </q-item-tile>
-                  </q-item-main>
-                </q-item>
+                    <q-item>
+                      <q-item-main>
+                        <q-item-tile stamp class="text-faded">
+                          Email
+                        </q-item-tile>
+                        <q-item-tile>
+                          atanaelmendes@gmail.com
+                        </q-item-tile>
+                      </q-item-main>
+                    </q-item>
 
-              </q-list>
-            </q-card-main>
-          </q-card>
+                    <q-item>
+                      <q-item-main>
+                        <q-item-tile stamp class="text-faded">
+                          Celular
+                        </q-item-tile>
+                        <q-item-tile>
+                          {{numeral(celular).format('00000000000').replace(/^(\d{2})(\d{1})(\d{4})(\d{4})/, "($1) $2-$3-$4")}}
+                        </q-item-tile>
+                      </q-item-main>
+                    </q-item>
+
+                    <q-item>
+                      <q-item-main>
+                        <q-item-tile stamp class="text-faded">
+                          Fixo
+                        </q-item-tile>
+                        <q-item-tile>
+                          {{numeral(fixo).format('0000000000').replace(/^(\d{2})(\d{4})(\d{4})/, "($1) $2-$3")}}
+                        </q-item-tile>
+                      </q-item-main>
+                    </q-item>
+
+                  </q-list>
+                </q-card-main>
+              </q-card>
+
+            </div>
+          </div>
 
         </div>
       </q-page>
@@ -190,7 +222,6 @@ export default {
   components: {
     AgroLayout
   },
-
   data () {
     return {
       filter: {
@@ -217,6 +248,31 @@ export default {
     }
   },
   methods: {
+    editPerson: function() {
+      if(this.personsData.id) {
+        this.$router.push('pessoa/editar/' + this.personsData.id)
+      }
+    },
+    inactive: function(id) {
+      let vm = this
+      this.$q.dialog({
+        title: 'Inativar',
+        message: 'Têm certeza que deseja inativar este usuário?',
+        ok: 'OK',
+        cancel: 'Cancelar'
+      }).then(() => {
+        vm.$axios.delete( 'account/'+ id ).then( response => {
+          this.$q.notify({
+            type: 'positive',
+            message: 'Usuário excluido com sucesso'
+          })
+          vm.$router.push( '/usuario' )
+        })
+      }).catch( error => {
+        console.log('Erro Ocorrido:')
+        console.log(error)
+      })
+    },
     list: function(val) {
       this.loaded = true
       // let vm = this
@@ -245,6 +301,7 @@ export default {
   },
   mounted () {
     this.list()
+    this.personsData.id = 1
   }
 }
 </script>

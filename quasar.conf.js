@@ -103,7 +103,8 @@ module.exports = function (ctx) {
         'QProgress',
         'QUploader',
         'QAutocomplete',
-        'QChipsInput'
+        'QChipsInput',
+        'QBtnToggle'
       ],
       directives: [
         'Ripple',
