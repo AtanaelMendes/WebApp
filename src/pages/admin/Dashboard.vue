@@ -1,39 +1,50 @@
 <template>
-  <div style="display: flex">
-    <div style="flex-grow: 1" :class="{'teste' : $q.platform.is.mobile}" >
-      <toolbar title="teste" type="menu" @menu_clicked="test"></toolbar>
+  <div style="display: flex" >
+    <div style="flex-grow: 1" v-if="!hideMainPage" >
+      <toolbar title="teste" navigation_type="menu" @navigation_clicked="test"></toolbar>
       <span>Dashboard</span>
       <q-btn label="Inner" @click="openChildPage" />
     </div>
-    <router-view style="flex-grow: 1"/>
+    <router-view style="flex-grow: 1.5" />
   </div>
 </template>
 
 <script>
     import toolbar from 'components/Toolbar.vue'
-    import {Platform} from 'quasar'
 
     export default {
         name: "Dashboard",
       data () {
-        return {}
+        return {
+          hideMainPage: false,
+          size: this.$q.screen.lt.md
+        }
+      },
+      created(){
+        if(this.$q.screen.lt.md) {
+          this.hideMainPage = this.$route.path == '/admin' ? false : true
+        }
       },
       methods: {
         test(){
           console.log("teste")
         },
         openChildPage(){
-
+          this.$router.push('/admin/teste');
         }
       },
       components: {
         toolbar
+      },
+      beforeRouteUpdate (to, from, next) {
+        console.log("beforeRouteEnter")
+        if(this.$q.screen.lt.md){
+          this.hideMainPage = to.path == '/admin' ? false : true;
+        }
+        next();
       }
     }
 </script>
 
 <style scoped>
-  .teste{
-    flex-grow: 0 !important;
-  }
 </style>
