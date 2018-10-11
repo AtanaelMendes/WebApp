@@ -5,8 +5,8 @@
     <q-layout-drawer v-model="leftDrawerOpen">
       <div class="navigation-header">
         <img src="statics/person-profile-image.jpg" class="profile-image shadow-1"/>
-        <span class="profile-name">Fulano da Silva</span>
-        <span class="profile-email">fulano@gmail.com</span>
+        <span class="profile-name">{{currentAccount.name}}</span>
+        <span class="profile-email">{{currentAccount.email}}</span>
         <q-btn flat round dense icon="settings" class="settings_icon" />
       </div>
       <q-list no-border link inset-delimiter>
@@ -38,8 +38,18 @@ export default {
   name: 'Admin',
   data () {
     return {
-      leftDrawerOpen: this.$q.platform.is.desktop
+      leftDrawerOpen: this.$q.platform.is.desktop,
+      currentAccount: {
+        name: null,
+        email: null
+      }
     }
+  },
+  created(){
+    this.$axios.get( 'account/info').then( response => {
+      this.currentAccount.name = 'Fulano da Silva';
+      this.currentAccount.email = response.data.email;
+    })
   },
   methods: {
     openURL
