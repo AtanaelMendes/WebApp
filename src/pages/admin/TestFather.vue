@@ -1,12 +1,13 @@
 <template>
-  <div style="display: flex" >
+  <q-page style="display: flex">
     <div style="flex-grow: 1" v-if="!hideMainPage" >
       <toolbar title="teste" navigation_type="menu" @navigation_clicked="test"></toolbar>
       <span>Dashboard</span>
       <q-btn label="Inner" @click="openChildPage" />
     </div>
+
     <router-view style="flex-grow: 1.5" />
-  </div>
+  </q-page>
 </template>
 
 <script>
@@ -17,7 +18,6 @@
       data () {
         return {
           hideMainPage: false,
-          size: this.$q.screen.lt.md
         }
       },
       created(){
