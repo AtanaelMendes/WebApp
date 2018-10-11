@@ -5,8 +5,8 @@
         <div class="col-xs-8 col-sm-6 col-md-4 q-pt-md" style="text-align: center">
 
           <h1 class="title">AgroProject</h1>
-          <q-card class="login" color="white" text-color="black" inline style="max-width: 500px; min-width: 400px">
-            <q-card-title style="text-align: left">
+          <q-card class="login" color="white" text-color="black" inline style="max-width: 500px; min-width: 400px; text-align: left" >
+            <q-card-title >
               Bem vindo ao AgroProject
             </q-card-title>
             <q-card-main class="gutter-y-sm">
