@@ -123,31 +123,29 @@ export default {
         }
         return
       }
-
-      let vm = this
-      let params = {
-        email: vm.form.email,
-        password: vm.form.password,
-      }
-
-      vm.$axios.post( 'account', params ).then( response => {
-        if (response.status == 201){
-          vm.$q.notify({
-            type: 'positive',
-            message: 'Cadastro criado com sucesso'
-          })
-          vm.$router.push( '/usuario' )
-        }
-      }).catch( error => {
-        if (error.response.status == 422){
-          this.$q.dialog({
-            title:'Ops',
-            message: 'Já existe um cadastro com esse email'
-          })
-        }
-        console.log('Erro Ocorrido:')
-        console.log(error)
-      })
+      // let vm = this
+      // let params = {
+      //   email: vm.form.email,
+      //   password: vm.form.password,
+      // }
+      // vm.$axios.post( 'account', params ).then( response => {
+      //   if (response.status == 201){
+      //     vm.$q.notify({
+      //       type: 'positive',
+      //       message: 'Cadastro criado com sucesso'
+      //     })
+      //     vm.$router.push( '/usuario' )
+      //   }
+      // }).catch( error => {
+      //   if (error.response.status == 422){
+      //     this.$q.dialog({
+      //       title:'Ops',
+      //       message: 'Já existe um cadastro com esse email'
+      //     })
+      //   }
+      //   console.log('Erro Ocorrido:')
+      //   console.log(error)
+      // })
     }
   },
   mounted() {

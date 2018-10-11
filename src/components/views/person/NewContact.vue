@@ -32,7 +32,11 @@
           </q-item>
 
           <q-item>
-            <q-item-main>
+            <q-item-main v-if="form.phoneType == 1">
+              <q-input type="number" float-label="Celular" v-model="form.cellPhone" clearable/>
+            </q-item-main>
+
+            <q-item-main v-if="form.phoneType == 2">
               <q-input type="number" float-label="Telefone" v-model="form.phone" clearable/>
             </q-item-main>
 
@@ -72,6 +76,7 @@
           nome: null,
           email:null,
           phone: null,
+          cellPhone: null,
           phoneType: 1,
           fiscalCobranca: 1,
         }
@@ -79,7 +84,45 @@
     },
     methods: {
       create: function () {
-        console.log('criou')
+        this.$v.form.$touch()
+        if ( this.$v.form.$error ) {
+          if( this.$v.form.nome.$error ){
+            this.$q.notify( 'Nome Inválido' )
+          }
+          if( this.$v.form.email.$error ){
+            this.$q.notify( 'Email inválido' )
+          }
+          if( this.$v.form.phone.$error ){
+            this.$q.notify( 'Telefone inválido' )
+          }
+          if( this.$v.form.cellPhone.$error ){
+            this.$q.notify( 'Celular inválido' )
+          }
+          return
+        }
+        // let vm = this
+        // let params = {
+        //   email: vm.form.email,
+        //   password: vm.form.password,
+        // }
+        // vm.$axios.post( 'account', params ).then( response => {
+        //   if (response.status == 201){
+        //     vm.$q.notify({
+        //       type: 'positive',
+        //       message: 'Cadastro criado com sucesso'
+        //     })
+        //     vm.$router.push( '/usuario' )
+        //   }
+        // }).catch( error => {
+        //   if (error.response.status == 422){
+        //     this.$q.dialog({
+        //       title:'Ops',
+        //       message: 'Já existe um cadastro com esse email'
+        //     })
+        //   }
+        //   console.log('Erro Ocorrido:')
+        //   console.log(error)
+        // })
       }
     },
     mounted() {

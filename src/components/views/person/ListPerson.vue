@@ -19,11 +19,14 @@
         <q-list-header>Filtros</q-list-header>
         <q-item>
           <q-item-main>
-            <q-option-group type="radio" color="secondary"v-model="filter.type"
-                            :options="[
-                            { label: 'Todos', value: null },
-                            { label: 'Inativos', value: 'trashed' },
-                            { label: 'Ativos', value: 'non-trashed'}]"
+            <q-option-group
+              type="radio"
+              color="secondary"
+              v-model="filter.type"
+              :options="[
+                        { label: 'Todos', value: null },
+                        { label: 'Inativos', value: 'trashed' },
+                        { label: 'Ativos', value: 'non-trashed'}]"
             />
           </q-item-main>
         </q-item>
@@ -32,13 +35,13 @@
 
     <div slot="content">
 
-      <q-page class="row gutter-x-md q-px-sm">
+      <q-page class="row">
 
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
           <q-list highlight no no-border v-if="loaded">
-            <q-item v-for="person in 10" :key="person" link inset-separator multiline @click.native="getPerson()">
-              <q-item-side icon="account_circle"/>
 
+            <q-item v-for="person in 20" :key="person" link inset-separator multiline @click.native="getPerson()">
+              <q-item-side icon="account_circle"/>
               <q-item-main>
                 <q-item-tile>
                   {{person}} Fulano da Silva
@@ -58,21 +61,20 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="personLoaded">
-          <q-list no-border highlight>
+          <q-list no-border>
 
             <q-item>
               <q-item-main class="q-title">
-                Fulano da Silva
+                Atanael Gamarra Mendes Costa
               </q-item-main>
               <q-item-side>
-                <q-btn  color="primary" flat label="ativar"/>
                 <q-btn  color="primary" flat label="inativar"/>
-                <!--<q-btn @click.native="activateUser(userProfile.id)" color="primary" flat label="ativar" v-if="userProfile.deleted_at"/>-->
+                <!--<q-btn @click.native="active(userProfile.id)" color="primary" flat label="ativar" v-if="userProfile.deleted_at"/>-->
                 <!--<q-btn @click.native="inactive(userProfile.id)" color="primary" flat label="inativar" v-else/>-->
               </q-item-side>
             </q-item>
 
-            <q-item class="bg-negative text-white">
+            <q-item class="bg-negative text-white q-ma-sm">
               <q-item-side icon="voice_over_off" color="white"/>
               <q-item-main>
                 Pessoa inativo
@@ -257,16 +259,36 @@ export default {
       let vm = this
       this.$q.dialog({
         title: 'Inativar',
-        message: 'Têm certeza que deseja inativar este usuário?',
+        message: 'Têm certeza que deseja inativar esta pessoa?',
         ok: 'OK',
         cancel: 'Cancelar'
       }).then(() => {
-        vm.$axios.delete( 'account/'+ id ).then( response => {
+        vm.$axios.delete( 'account-pessoa/'+ id ).then( response => {
           this.$q.notify({
             type: 'positive',
-            message: 'Usuário excluido com sucesso'
+            message: 'Pessoa inativada com sucesso'
           })
-          vm.$router.push( '/usuario' )
+          this.list()
+        })
+      }).catch( error => {
+        console.log('Erro Ocorrido:')
+        console.log(error)
+      })
+    },
+    active: function(id) {
+      let vm = this
+      this.$q.dialog({
+        title: 'Ativar',
+        message: 'Têm certeza que deseja ativar esta pessoa-?',
+        ok: 'OK',
+        cancel: 'Cancelar'
+      }).then(() => {
+        vm.$axios.delete( 'account-pessoa/'+ id ).then( response => {
+          this.$q.notify({
+            type: 'positive',
+            message: 'Pessoa ativada com sucesso'
+          })
+          this.list()
         })
       }).catch( error => {
         console.log('Erro Ocorrido:')
@@ -276,7 +298,7 @@ export default {
     list: function(val) {
       this.loaded = true
       // let vm = this
-      // vm.$axios.get( 'account'+ vm.email ).then( response => {
+      // vm.$axios.get( 'account-pessoa'+ vm.email ).then( response => {
       //   vm.personsData = response.data
       // }).catch( error => {
       //   console.log('Erro Ocorrido:')
@@ -285,11 +307,11 @@ export default {
     },
     getPerson: function (id) {
       if(this.$q.platform.is.mobile) {
-        this.$router.push('pessoa/editar/' + id)
+        this.$router.push('pessoa/perfil')
       }else {
         this.personLoaded = true
         // let vm = this
-        // vm.$axios.get( 'account'+ vm.email ).then( response => {
+        // vm.$axios.get( 'account-pessoa'+ vm.email ).then( response => {
         //   vm.personsData = response.data
         // }).catch( error => {
         //   console.log('Erro Ocorrido:')

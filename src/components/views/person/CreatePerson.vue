@@ -14,27 +14,74 @@
         <q-page padding class="row">
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 
-            <form @keyup.enter="create()" class="gutter-sm">
+            <form @keyup.enter="create()" class="q-mx-lg q-px-lg gutter-y-xs">
 
               <div>
-                <q-field icon="email">
-                  <q-input v-model="form.email" placeholder="informe seu email" float-label="Email" type="text"
-                    @blur="$v.form.email.$touch" :error="$v.form.email.$error"
-                  />
-                </q-field>
-
-                <q-field icon="lock">
-                  <q-input v-model="form.password" placeholder="mínimo 8 caracteres" float-label="Senha" type="password"
-                    @blur="$v.form.password.$touch" :error="$v.form.password.$error"
-                  />
-                </q-field>
-
-                <q-field icon="lock">
-                  <q-input v-model="form.repeatPassword" placeholder="mínimo 8 caracteres" float-label="Confirmar Senha"
-                    type="password" @blur="$v.form.repeatPassword.$touch" :error="$v.form.repeatPassword.$error"
-                  />
-                </q-field>
+                <q-btn-toggle v-model="docType" toggle-color="secondary"
+                              :options="[
+                            {label: 'Física', value: 1},
+                            {label: 'Jurídica', value: 2}]"
+                />
               </div>
+
+              <div>
+                <q-input
+                  v-model="form.grupoEconomico"
+                  float-label="Grupo Econômico"
+                  type="text"
+                  @blur="$v.form.grupoEconomico.$touch"
+                  :error="$v.form.grupoEconomico.$error"
+                  clearable/>
+              </div>
+
+              <div>
+                <q-input
+                  v-model="form.nome"
+                  float-label="Nome" type="text"
+                  @blur="$v.form.nome.$touch"
+                  :error="$v.form.nome.$error"
+                  clearable
+                />
+              </div>
+
+              <div v-if="docType == 1">
+                <q-input
+                  v-model="form.cpf"
+                  float-label="CPF"
+                  type="number"
+                  @blur="$v.form.cpf.$touch"
+                  :error="$v.form.cpf.$error"
+                  clearable
+                />
+              </div>
+
+              <div v-if="docType == 2" >
+                <q-input
+                  v-model="form.cnpj"
+                  float-label="CNPJ"
+                  type="number"
+                  @blur="$v.form.cnpj.$touch"
+                  :error="$v.form.cnpj.$error"
+                  clearable
+                />
+              </div>
+
+              <div>
+                <q-input v-model="form.ie" float-label="Inscrição Estadual" type="number" clearable/>
+              </div>
+
+              <div>
+                <q-input v-model="form.im" float-label="Inscrição Municipal" type="number" clearable/>
+              </div>
+
+              <div>
+                <q-input v-model="form.razaoSocial" float-label="Razão Social" type="text" clearable/>
+              </div>
+
+              <div>
+                <q-input v-model="form.nomeFantasia" float-label="Nome Fantasia" type="text" clearable/>
+              </div>
+
               <div align="end">
                 <q-btn color="secondary" label="Cadastrar" @click="create()" v-if="$q.platform.is.desktop"/>
               </div>
@@ -48,67 +95,83 @@
 </template>
 
 <script>
-import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
+import { required, maxLength, requiredIf, minLength } from 'vuelidate/lib/validators'
 import AgroLayout from 'layouts/AgroLayout'
 import { Platform } from 'quasar'
 
 export default {
-  name: 'index-example',
+  name: 'nova-pessoa',
   components: {
-    AgroLayout,
-    Roles
+    AgroLayout
   },
   data () {
     return {
+      docType: 1,
       form: {
-        email: null,
-        password: null,
-        repeatPassword: null
+        nome: null,
+        cpfCnpj: null,
+        razaoSocial: null,
+        nomeFantasia: null,
+        grupoEconomico: null,
+        ie: null,
+        im: null
       }
     }
   },
   validations: {
     form: {
-      email: { required, email},
-      password: { required,  minLength: minLength(8) },
-      repeatPassword: { sameAsPassword: sameAs('password') }
+      nome: { required, minLength: minLength(3) },
+      grupoEconomico: { required },
+      cpf: { minLength: minLength(11), maxLength: maxLength(11), required: requiredIf(function () { return this.docType == 1 }) },
+      cnpj: { minLength: minLength(14), maxLength: maxLength(14), required: requiredIf(function () { return this.docType == 2 }) },
     }
   },
   methods: {
-
     create: function () {
-
       this.$v.form.$touch()
-
       if ( this.$v.form.$error ) {
-        this.$q.notify( 'preencha os campos corretamente' )
+        if( this.$v.form.nome.$error ){
+          this.$q.notify( 'Nome inválido' )
+        }
+        if( this.$v.form.cpf.$error ){
+          this.$q.notify( 'CPF inválido' )
+        }
+        if( this.$v.form.cnpj.$error ){
+          this.$q.notify( 'CNPJ inválido' )
+        }
+        if( this.$v.form.grupoEconomico.$error ){
+          this.$q.notify( 'Selecione ao menos um grupo econômico' )
+        }
         return
       }
-
-      let vm = this
-      let params = {
-        email: vm.form.email,
-        password: vm.form.password,
-      }
-
-      vm.$axios.post( 'account', params ).then( response => {
-        if (response.status == 201){
-          vm.$q.notify({
-            type: 'positive',
-            message: 'Cadastro criado com sucesso'
-          })
-          vm.$router.push( '/usuario' )
-        }
-      }).catch( error => {
-        if (error.response.status == 422){
-          this.$q.dialog({
-            title:'Ops',
-            message: 'Já existe um cadastro com esse email'
-          })
-        }
-        console.log('Erro Ocorrido:')
-        console.log(error)
+      this.$q.notify({
+        type: 'positive',
+        message: 'Passou'
       })
+
+      // let vm = this
+      // let params = {
+      //   email: vm.form.email,
+      //   password: vm.form.password,
+      // }
+      // vm.$axios.post( 'account-pessoa', params ).then( response => {
+      //   if (response.status == 201){
+      //     vm.$q.notify({
+      //       type: 'positive',
+      //       message: 'Cadastro criado com sucesso'
+      //     })
+      //     vm.$router.push( '/pessoas' )
+      //   }
+      // }).catch( error => {
+      //   if (error.response.status == 422){
+      //     this.$q.dialog({
+      //       title:'Ops',
+      //       message: 'Já existe um cadastro com esse email'
+      //     })
+      //   }
+      //   console.log('Erro Ocorrido:')
+      //   console.log(error)
+      // })
     }
 
   },

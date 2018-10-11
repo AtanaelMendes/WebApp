@@ -18,39 +18,40 @@
 
     <div slot="content">
       <div class="row" v-if="tabs=='tab-perfil'">
-        <div  class="col-xs-12 col-sm-6 col-md-4 col-lg-3 q-mx-lg q-px-lg gutter-y-xs">
+        <div  class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+          <form @keyup.enter="updatePerson()" class="q-mx-lg q-px-lg gutter-y-xs">
+            <div>
+              <q-input stack-label="Nome" type="text" v-model="form.nome" clearable/>
+            </div>
 
-          <div>
-            <q-input stack-label="Nome" type="text" v-model="form.nome" clearable/>
-          </div>
+            <div>
+              <q-input stack-label="CPF" type="number" v-model="form.cpf" clearable/>
+            </div>
 
-          <div>
-            <q-input stack-label="CPF" type="number" v-model="form.cpf" clearable/>
-          </div>
+            <div>
+              <q-input stack-label="CNPJ" type="number" v-model="form.cnpj" clearable/>
+            </div>
 
-          <div>
-            <q-input stack-label="CNPJ" type="number" v-model="form.cnpj" clearable/>
-          </div>
+            <div>
+              <q-input stack-label="Inscrição Estadual" type="number" v-model="form.ie" clearable/>
+            </div>
 
-          <div>
-            <q-input stack-label="Inscrição Estadual" type="number" v-model="form.ie" clearable/>
-          </div>
+            <div>
+              <q-input stack-label="Razão Social" type="text" v-model="form.razaoSocial" clearable/>
+            </div>
 
-          <div>
-            <q-input stack-label="Razão Social" type="text" v-model="form.razaoSocial" clearable/>
-          </div>
+            <div>
+              <q-input stack-label="Nome Fantasia" type="text" v-model="form.nomeFantasia" clearable/>
+            </div>
 
-          <div>
-            <q-input stack-label="Nome Fantasia" type="text" v-model="form.nomeFantasia" clearable/>
-          </div>
+            <div>
+              <q-input stack-label="Grupo Econômico" type="text" v-model="form.grupoEconomico" clearable/>
+            </div>
 
-          <div>
-            <q-input stack-label="Grupo Econômico" type="text" v-model="form.grupoEconomico" clearable/>
-          </div>
-
-          <div align="end">
-            <q-btn color="secondary" label="Salvar" @click="updatePerson()" v-if="$q.platform.is.desktop"/>
-          </div>
+            <div align="end">
+              <q-btn color="secondary" label="Salvar" @click="updatePerson()" v-if="$q.platform.is.desktop"/>
+            </div>
+          </form>
 
           <!--fim tab perfil-->
         </div>
@@ -116,6 +117,7 @@
 
             <q-card-actions align="end">
               <q-btn label="excluir" color="primary" flat @click="deleteContact()"/>
+              <q-btn label="editar" color="primary" flat @click="$router.push('/pessoa/editar-contato')"/>
             </q-card-actions>
           </q-card>
         </div>
@@ -139,6 +141,10 @@
       </template>
 
     <!--fim slot content-->
+      <br/>
+      <br/>
+      <br/>
+      <br/>
     </div>
   </AgroLayout>
 </template>
@@ -155,12 +161,12 @@ export default {
   },
   data () {
     return {
-      userId: null,
-      userData: null,
+      personId: null,
+      personData: [],
       tabs: 'tab-perfil',
-      modalAddContact: false,
       form: {
         nome: 'MG papelaria',
+        cpfCnpj: null,
         cpf: 45866655871,
         cnpj: 15877744520384,
         ie: 666999666,
@@ -168,20 +174,24 @@ export default {
         nomeFantasia: 'Mg Papelaria',
         grupoEconomico: 'MGpapelaria'
       },
-      // contato
-      celular: 66999763509,
-      fixo: 6635325569
     }
   },
   validations: {
     form: {
       nome: { required, minLength: minLength(3) },
-      email: { required, email},
+      cpfCnpj: { required, email},
     }
   },
   methods: {
     deleteContact: function(id) {
       console.log('excluiu contato')
+      // let vm = this
+      // vm.$axios.delete( 'account/'+ id ).then( response => {
+      //   vm.contacts = response.data
+      // }).catch( error => {
+      //   console.log('Erro Ocorrido:')
+      //   console.log(error)
+      // })
     },
     getPerson: function() {
       let vm = this
@@ -189,7 +199,7 @@ export default {
         id: vm.$route.params.id
       }
       vm.$axios.get( 'account/'+ params.id ).then( response => {
-        vm.userData = response.data
+        vm.personData = response.data
       }).catch( error => {
         if (error.response.status == 404){
           this.$q.dialog({
@@ -197,7 +207,7 @@ export default {
             message: 'Não foi possível carregar as informações'
           })
         }
-        vm.$router.push( '/usuario' )
+        vm.$router.push( '/pessoas' )
         console.log('Erro Ocorrido:')
         console.log(error)
       })
@@ -219,15 +229,15 @@ export default {
             type: 'positive',
             message: 'Cadastro alterado com sucesso'
           })
-          vm.$router.push( '/usuario' )
+          vm.$router.push( '/pessoas' )
         }
       }).catch( error => {
-        if (error.response.status == 422){
-          this.$q.dialog({
-            title:'Ops',
-            message: 'Já existe um cadastro com esse email'
-          })
-        }
+        // if (error.response.status == 422){
+        //   this.$q.dialog({
+        //     title:'Ops',
+        //     message: 'Já existe um cadastro com esse email'
+        //   })
+        // }
         console.log('Erro Ocorrido:')
         console.log(error)
       })
