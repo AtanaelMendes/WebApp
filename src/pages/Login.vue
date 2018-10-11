@@ -2,11 +2,11 @@
   <q-layout view="hHh Lpr lFf">
     <q-page-container class="background">
       <q-page class="row justify-center">
-        <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3 q-pt-md">
+        <div class="col-xs-8 col-sm-6 col-md-4 q-pt-md" style="text-align: center">
 
           <h1 class="title">AgroProject</h1>
-          <q-card class="login" color="white" text-color="black" inline style="width: 500px">
-            <q-card-title>
+          <q-card class="login" color="white" text-color="black" inline style="max-width: 500px; min-width: 400px">
+            <q-card-title style="text-align: left">
               Bem vindo ao AgroProject
             </q-card-title>
             <q-card-main class="gutter-y-sm">
@@ -110,6 +110,13 @@
         email: { value: { required, email } }
       }
     },
+    created() {
+      let token = localStorage.getItem('auth.token');
+
+      if (token != null) {
+        this.$router.push('/admin')
+      }
+    },
     methods: {
       openPasswordRecoveryModal: function(){
         this.passwordRecoveryModalOpened = true;
@@ -210,11 +217,13 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
+    background-color: #05614f99;
+    background-blend-mode: darken;
   }
   .title{
     color: white;
     font-weight: 800;
     text-align: center;
-    font-size: 90px;
+    font-size: 80px;
   }
 </style>
