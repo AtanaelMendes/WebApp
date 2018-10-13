@@ -5,7 +5,17 @@
         <q-btn flat round dense icon="more_vert"  @click="openMenu" />
       </template>
     </toolbar>
-    <span>Dashboard inner</span>
+    <q-scroll-area style="width: 100%; height: 100%;" :thumb-style="{
+        right: '4px',
+        borderRadius: '5px',
+        background: 'red',
+        width: '10px',
+        opacity: 1}">
+
+      <span>Dashboard inner</span>
+      <p v-for="item in 100">b</p>
+
+    </q-scroll-area>
   </div>
 </template>
 

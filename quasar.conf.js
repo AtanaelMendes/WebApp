@@ -42,6 +42,7 @@ module.exports = function (ctx) {
         'QLayoutDrawer',
         'QPageContainer',
         'QPage',
+        'QPageSticky',
         'QToolbar',
         'QToolbarTitle',
         'QBtn',
@@ -51,6 +52,7 @@ module.exports = function (ctx) {
         'QItem',
         'QItemMain',
         'QItemSide',
+        'QItemTile',
         'QCard',
         'QCardTitle',
         'QCardMain',
@@ -59,14 +61,22 @@ module.exports = function (ctx) {
         'QCardActions',
         'QInput',
         'QModal',
-        'QField'
+        'QField',
+        'QRating',
+        'QPopover',
+        'QCollapsible',
+        'QScrollArea'
       ],
       directives: [
-        'Ripple'
+        'Ripple',
+        'CloseOverlay'
       ],
       // Quasar plugins
       plugins: [
-        'Notify', 'Dialog', 'Loading', 'Screen'
+        'Notify',
+        'Dialog',
+        'Loading',
+        'Screen'
       ]
       // iconSet: ctx.theme.mat ? 'material-icons' : 'ionicons'
       // i18n: 'de' // Quasar language

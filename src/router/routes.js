@@ -4,6 +4,16 @@ const routes = [
   { path: '/login', component: () => import('pages/Login.vue') },
   { path: '/admin', component: () => import('layouts/Admin.vue'),
     children: [
+      { path: '', component: () => import('pages/admin/Dashboard.vue')},
+      { path: 'teste', component: () => import('pages/admin/TestFather.vue'),
+        children: [
+          { path: 'child', component: () => import('pages/admin/TestChild.vue') }
+        ]
+      },
+    ]
+  }
+  /*{ path: '/admin', component: () => import('layouts/Admin.vue'),
+    children: [
       { path: '', component: () => import('pages/admin/TestFather.vue'),
         children: [
           { path: 'teste', component: () => import('pages/admin/TestChild.vue') }
@@ -11,7 +21,7 @@ const routes = [
       },
 
     ]
-  },
+  },*/
 ];
 
 // Always leave this as last one
