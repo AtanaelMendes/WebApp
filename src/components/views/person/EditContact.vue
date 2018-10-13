@@ -11,43 +11,66 @@
 
           <q-item>
             <q-item-main align="center">
-              <q-btn-toggle v-model="form.fiscalCobranca" toggle-color="secondary"
-                            :options="[
-                            {label: 'Fiscal', value: 1},
-                            {label: 'Cobrança', value: 2}]"
+              <q-btn-toggle
+                v-model="form.fiscalCobranca"
+                toggle-color="secondary"
+                :options="[{label: 'Fiscal', value: 1},
+                           {label: 'Cobrança', value: 2}]"
               />
             </q-item-main>
           </q-item>
 
           <q-item>
             <q-item-main>
-              <q-input type="text" float-label="Nome" v-model="form.nome" clearable/>
+              <q-input
+                type="text"
+                float-label="Nome"
+                v-model="form.nome"
+                clearable
+                @blur="$v.form.nome.$touch"
+                :error="$v.form.nome.$error"
+              />
             </q-item-main>
           </q-item>
 
           <q-item>
             <q-item-main>
-              <q-input type="email" float-label="Email" v-model="form.email" clearable/>
+              <q-input
+                type="email"
+                float-label="Email"
+                v-model="form.email"
+                clearable
+                @blur="$v.form.email.$touch"
+                :error="$v.form.email.$error"
+              />
             </q-item-main>
           </q-item>
 
           <q-item>
-            <q-item-main>
-              <q-input type="number" float-label="Telefone" v-model="form.phone" clearable/>
+            <q-item-main >
+              <q-input
+                type="number"
+                float-label="Telefone"
+                v-model="form.phone"
+                clearable
+                @blur="$v.form.phone.$touch"
+                :error="$v.form.phone.$error"
+              />
             </q-item-main>
 
             <q-item-side>
-              <q-btn-toggle dense v-model="form.phoneType" toggle-color="secondary"
-                            :options="[
-                            {label: 'celular', value: 1, icon: 'stay_primary_portrait'},
-                            {label: 'Fixo', value: 2, icon: 'phone'}]"
+              <q-btn-toggle
+                dense v-model="form.phoneType"
+                toggle-color="secondary"
+                :options="[{label: 'celular', value: 1, icon: 'stay_primary_portrait'},
+                           {label: 'Fixo', value: 2, icon: 'phone'}]"
               />
             </q-item-side>
           </q-item>
 
           <q-item>
             <q-item-main align="end">
-              <q-btn label="salvar" color="secondary" @click="create()"/>
+              <q-btn label="salvar" color="secondary" @click="update()"/>
             </q-item-main>
           </q-item>
 
@@ -59,7 +82,7 @@
 </template>
 
 <script>
-
+  import { required, maxLength, requiredIf, minLength, email } from 'vuelidate/lib/validators'
   import AgroLayout from 'layouts/AgroLayout'
 
   export default {
@@ -71,16 +94,48 @@
       return {
         form: {
           nome: null,
-          email:null,
+          email: null,
           phone: null,
           phoneType: 1,
           fiscalCobranca: 1,
         }
       }
     },
+    validations: {
+      form: {
+        nome: { required, minLength: minLength(3) },
+        email: { email, required: requiredIf(function () { return this.form.phone == undefined}) },
+        phone: { minLength: minLength(10), maxLength: maxLength(11),
+          required: requiredIf(function () { return this.form.email == undefined})
+        }
+      }
+    },
     methods: {
-      create: function () {
-        console.log('criou')
+      update: function () {
+        this.$v.form.$touch()
+        if ( this.$v.form.$error ) {
+          if( this.$v.form.nome.$error ){
+            this.$q.notify( 'Nome Inválido' )
+          }
+          if( this.$v.form.email.$error ){
+            this.$q.notify( 'Email inválido' )
+          }
+          if( this.$v.form.phone.$error ){
+            this.$q.notify( 'Telefone inválido' )
+          }
+          // if( this.$v.form.cellPhone.$error ){
+          //   this.$q.notify( 'Celular inválido' )
+          // }
+          this.$q.notify({
+            type: 'warning',
+            message: 'faio'
+          })
+          return
+        }
+        this.$q.notify({
+          type: 'positive',
+          message: 'passou'
+        })
       }
     },
     mounted() {
