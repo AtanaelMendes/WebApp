@@ -7,7 +7,7 @@
         <img src="assets/person-profile-image.jpg" class="profile-image shadow-1"/>
         <span class="profile-name">{{currentAccount.name}}</span>
         <span class="profile-email">{{currentAccount.email}}</span>
-        <q-btn flat round dense icon="settings" class="settings_icon" />
+        <q-btn flat round dense icon="settings" class="settings_icon" v-on:click="getAccountInfo" />
       </div>
       <q-list no-border link inset-delimiter>
         <q-item @click.native="$router.push('/admin')">
@@ -46,13 +46,16 @@ export default {
     }
   },
   created(){
-    this.$axios.get( 'account/info').then( response => {
-      this.currentAccount.name = 'Fulano da Silva';
-      this.currentAccount.email = response.data.email;
-    })
+    this.getAccountInfo();
   },
   methods: {
-    openURL
+    openURL,
+    getAccountInfo: function(){
+      this.$axios.get( 'account/info').then( response => {
+        this.currentAccount.name = 'Fulano da Silva';
+        this.currentAccount.email = response.data.email;
+      })
+    }
   }
 }
 </script>

@@ -1,7 +1,10 @@
 import axios from 'axios'
 import {Notify} from 'quasar'
+import router from '../router'
 
 export default ({ Vue }) => {
+  //let isRetry = false;
+
   Vue.prototype.$axios = axios.create({
     baseURL: process.env.API_URL,
     'X-Requested-With': 'XMLHttpRequest'
@@ -26,7 +29,10 @@ export default ({ Vue }) => {
     }
     //if (error.response.status === 401 && error.config._retry) {
     if(error.response.status === 401) {
-      refreshToken();
+      router.push( '/login' );
+      //refreshToken();
+    }else{
+      //isRetry = false;
     }
     return Promise.reject(error);
   });
@@ -40,13 +46,19 @@ export default ({ Vue }) => {
       refresh_token: localStorage.getItem('auth.refresh_token')
     };
 
-    Vue.prototype.$axios.post('oauth/token', data).then(function (response) {
-      if (!response.data.mensagem) {
+    //Vue.prototype.$axios.interceptors.response.eject(interceptorResponse);
+    //router.push('/login');
+    router.push( '/login' );
+    Vue.prototype.$axios.post('oauth/token', data)
+      .then(function (response) {
         localStorage.setItem('auth.token', response.data.access_token);
         localStorage.setItem('auth.refresh_token', response.data.refresh_token);
-      } else {
+      })
+      .catch(function (error) {
+        //isRetry = true;
         router.push('/login');
-      }
-    });
+      });
+
+    //Vue.prototype.$axios.interceptors.response.use(interceptorResponse);
   }
 }

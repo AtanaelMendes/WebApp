@@ -1,6 +1,6 @@
 <template>
   <q-page style="display: flex" >
-    <div style="flex-grow: 1" v-if="!hideMainPage"  >
+    <div style="flex-grow: 1"  >
       <toolbar title="teste" navigation_type="menu" @navigation_clicked="test"></toolbar>
       <q-scroll-area style="width: 100%; height: 100%;" :thumb-style="{
           right: '4px',
@@ -242,6 +242,11 @@
       components: {
         toolbar
       },
+      methods: {
+        test: function(){
+
+        }
+      }
     }
 </script>
 
