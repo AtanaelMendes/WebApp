@@ -4,7 +4,7 @@
 
     <q-layout-drawer v-model="leftDrawerOpen">
       <div class="navigation-header">
-        <img src="statics/person-profile-image.jpg" class="profile-image shadow-1"/>
+        <img src="assets/person-profile-image.jpg" class="profile-image shadow-1"/>
         <span class="profile-name">{{currentAccount.name}}</span>
         <span class="profile-email">{{currentAccount.email}}</span>
         <q-btn flat round dense icon="settings" class="settings_icon" />
@@ -58,6 +58,9 @@ export default {
 </script>
 
 <style>
+  body{
+    overflow: hidden;
+  }
   .navigation-header{
     height: 150px;
     background-color: teal;

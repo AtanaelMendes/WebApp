@@ -212,7 +212,7 @@
 </script>
 <style>
   .background {
-    background-image: url('/statics/login_background.jpg');
+    background-image: url('/assets/login_background.jpg');
     background-position: center center;
     background-repeat: no-repeat;
     background-attachment: fixed;
