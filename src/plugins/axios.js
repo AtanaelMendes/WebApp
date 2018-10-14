@@ -1,16 +1,18 @@
 import axios from 'axios'
 import {Notify} from 'quasar'
-import router from '../router'
 
-export default ({ Vue }) => {
-  //let isRetry = false;
+export default ({app, router, Vue}) => {
 
   Vue.prototype.$axios = axios.create({
     baseURL: process.env.API_URL,
     'X-Requested-With': 'XMLHttpRequest'
   });
 
-  Vue.prototype.$axios.interceptors.request.use(function (config) {
+  const instance = Vue.prototype.$axios;
+
+  let interceptorResponse = instance.interceptors.response.use(customSuccessResponse, customErrorResponse);
+
+  instance.interceptors.request.use(function (config) {
     const AUTH_TOKEN = localStorage.getItem('auth.token');
     if (AUTH_TOKEN) {
       config.headers.common['Authorization'] = 'Bearer ' + AUTH_TOKEN;
@@ -20,22 +22,26 @@ export default ({ Vue }) => {
     return Promise.reject(error)
   });
 
-  Vue.prototype.$axios.interceptors.response.use(function (response) {
+
+  function customSuccessResponse(response) {
     return response;
-  }, function (error) {
+  }
+
+  function customErrorResponse(error) {
     if(error.message === 'Network Error'){
       Notify.create("Erro ao estabelecer uma conexão com o servidor.");
       return Promise.reject(error);
     }
-    //if (error.response.status === 401 && error.config._retry) {
+
     if(error.response.status === 401) {
-      router.push( '/login' );
-      //refreshToken();
-    }else{
-      //isRetry = false;
+      //Se não for response da tela de login
+      if(error.response.data.error && error.response.data.error === 'invalid_credentials'){
+        return Promise.reject(error);
+      }
+      refreshToken();
     }
     return Promise.reject(error);
-  });
+  }
 
   function refreshToken () {
     let data = {
@@ -46,19 +52,20 @@ export default ({ Vue }) => {
       refresh_token: localStorage.getItem('auth.refresh_token')
     };
 
-    //Vue.prototype.$axios.interceptors.response.eject(interceptorResponse);
-    //router.push('/login');
-    router.push( '/login' );
-    Vue.prototype.$axios.post('oauth/token', data)
+    instance.interceptors.response.eject(interceptorResponse);
+
+    instance.post('oauth/token', data)
       .then(function (response) {
         localStorage.setItem('auth.token', response.data.access_token);
         localStorage.setItem('auth.refresh_token', response.data.refresh_token);
       })
       .catch(function (error) {
-        //isRetry = true;
+        localStorage.removeItem('auth.token');
+        localStorage.removeItem('auth.refresh_token');
         router.push('/login');
       });
 
-    //Vue.prototype.$axios.interceptors.response.use(interceptorResponse);
+    interceptorResponse = instance.interceptors.response.use(customSuccessResponse, customErrorResponse);
   }
+
 }
