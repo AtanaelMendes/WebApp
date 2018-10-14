@@ -1,18 +1,18 @@
 import axios from 'axios'
 import {Notify} from 'quasar'
 
+
+const axiosInstance = axios.create({
+  baseURL: process.env.API_URL,
+  'X-Requested-With': 'XMLHttpRequest'
+});
+
 export default ({app, router, Vue}) => {
+  Vue.prototype.$axios = axiosInstance;
 
-  Vue.prototype.$axios = axios.create({
-    baseURL: process.env.API_URL,
-    'X-Requested-With': 'XMLHttpRequest'
-  });
+  let interceptorResponse = axiosInstance.interceptors.response.use(customSuccessResponse, customErrorResponse);
 
-  const instance = Vue.prototype.$axios;
-
-  let interceptorResponse = instance.interceptors.response.use(customSuccessResponse, customErrorResponse);
-
-  instance.interceptors.request.use(function (config) {
+  axiosInstance.interceptors.request.use(function (config) {
     const AUTH_TOKEN = localStorage.getItem('auth.token');
     if (AUTH_TOKEN) {
       config.headers.common['Authorization'] = 'Bearer ' + AUTH_TOKEN;
@@ -52,9 +52,9 @@ export default ({app, router, Vue}) => {
       refresh_token: localStorage.getItem('auth.refresh_token')
     };
 
-    instance.interceptors.response.eject(interceptorResponse);
+    axiosInstance.interceptors.response.eject(interceptorResponse);
 
-    instance.post('oauth/token', data)
+    axiosInstance.post('oauth/token', data)
       .then(function (response) {
         localStorage.setItem('auth.token', response.data.access_token);
         localStorage.setItem('auth.refresh_token', response.data.refresh_token);
@@ -65,7 +65,10 @@ export default ({app, router, Vue}) => {
         router.push('/login');
       });
 
-    interceptorResponse = instance.interceptors.response.use(customSuccessResponse, customErrorResponse);
+    interceptorResponse = axiosInstance.interceptors.response.use(customSuccessResponse, customErrorResponse);
   }
+}
 
+export {
+  axiosInstance
 }
