@@ -1,31 +1,31 @@
 <template>
-  <div>
-    <toolbar title="teste inner" :navigation_type="navigationType" @navigation_clicked="goToBack">
-      <template slot="action_itens">
-        <q-btn flat round dense icon="more_vert"  @click="openMenu" />
-      </template>
-    </toolbar>
-    <q-scroll-area style="width: 100%; height: 100%;" :thumb-style="{
-        right: '4px',
-        borderRadius: '5px',
-        background: 'red',
-        width: '10px',
-        opacity: 1}">
+  <custom-page>
 
+    <template slot="toolbar">
+      <toolbar title="teste inner" :navigation_type="navigationType" @navigation_clicked="goToBack">
+        <template slot="action_itens">
+          <q-btn flat round dense icon="more_vert"  @click="openMenu" />
+        </template>
+      </toolbar>
+    </template>
+
+    <template slot="content">
       <span>Dashboard inner</span>
       <p v-for="item in 100">b</p>
+    </template>
 
-    </q-scroll-area>
-  </div>
+  </custom-page>
 </template>
 
 <script>
   import toolbar from 'components/Toolbar.vue'
+  import customPage from 'components/CustomPage.vue'
 
     export default {
       name: "Teste",
       components: {
-        toolbar
+        toolbar,
+        customPage
       },
       data() {
         return {
