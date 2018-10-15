@@ -1,5 +1,5 @@
 <template>
-  <custom-page>
+  <custom-page hasMargin>
 
     <toolbar slot="toolbar" title="teste inner" :navigation_type="navigationType" @navigation_clicked="goToBack">
       <template slot="action_itens">

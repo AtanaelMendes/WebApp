@@ -1,6 +1,6 @@
 <template>
 
-  <custom-page>
+  <custom-page hasMargin>
     <toolbar slot="toolbar" title="teste" navigation_type="menu" @navigation_clicked="test"></toolbar>
 
     <span>Dashboard</span><br/>

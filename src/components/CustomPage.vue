@@ -11,7 +11,7 @@
         width: '8px',
         opacity: 1}">
 
-        <div class="q-pa-sm"  :class="isChildContainer">
+        <div :class="getContainerClasses" >
           <slot></slot>
         </div>
 
@@ -25,14 +25,20 @@
 <script>
     export default {
       name: "CustomPage",
+      props: {
+        hasMargin: Boolean
+      },
       data: function () {
         return {
           hideMainPage: false,
         }
       },
       computed: {
-        isChildContainer: function () {
-          return this.isChildPath(this.$route.path) ? "child" : ""
+        getContainerClasses: function () {
+          return {
+            'child': this.isChildPath(this.$route.path),
+            'q-pa-sm': this.hasMargin
+          }
         }
       },
       created(){
