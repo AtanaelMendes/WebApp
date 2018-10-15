@@ -14,7 +14,7 @@
           <q-item-side icon="dashboard" />
           <q-item-main label="Dashboard" />
         </q-item>
-        <q-item @click.native="openURL('http://quasar-framework.org')">
+        <q-item @click.native="$router.push('/admin/usuarios')">
           <q-item-side icon="group" />
           <q-item-main label="Usuários" />
         </q-item>

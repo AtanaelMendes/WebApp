@@ -5,6 +5,11 @@ const routes = [
   { path: '/admin', component: () => import('layouts/Admin.vue'),
     children: [
       { path: '', component: () => import('pages/admin/Dashboard.vue')},
+      { path: 'usuarios', component: () => import('pages/admin/users/UserList.vue'),
+        children: [
+          { path: ':id', component: () => import('pages/admin/users/UserView.vue') }
+        ]
+      },
       { path: 'teste', component: () => import('pages/admin/TestFather.vue'),
         children: [
           { path: 'child', component: () => import('pages/admin/TestChild.vue') }
