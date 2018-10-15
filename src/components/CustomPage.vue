@@ -4,7 +4,7 @@
 
       <slot name="toolbar"></slot>
 
-      <q-scroll-area style="width: 100%; height: 100%;" :thumb-style="{
+      <q-scroll-area style="width: 100%; height: 100%;" class="child" :thumb-style="{
         right: '4px',
         borderRadius: '5px',
         background: '#dfdfdf',
@@ -36,7 +36,7 @@
       computed: {
         getContainerClasses: function () {
           return {
-            'child': this.isChildPath(this.$route.path),
+            //'child': this.isChildPath(this.$route.path),
             'q-pa-sm': this.hasMargin
           }
         }
