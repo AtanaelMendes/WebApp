@@ -1,15 +1,11 @@
 <template>
 
   <custom-page>
-    <template slot="toolbar">
-      <toolbar title="teste" navigation_type="menu" @navigation_clicked="test"></toolbar>
-    </template>
+    <toolbar slot="toolbar" title="teste" navigation_type="menu" @navigation_clicked="test"></toolbar>
 
-    <template slot="content">
-      <span>Dashboard</span><br/>
-      <q-btn label="Inner" @click="openChildPage" /><br/>
-      <p v-for="item in 100">a</p>
-    </template>
+    <span>Dashboard</span><br/>
+    <q-btn label="Inner" @click="openChildPage" /><br/>
+    <p v-for="item in 100">a</p>
 
   </custom-page>
 </template>
@@ -30,7 +26,7 @@
           console.log("teste")
         },
         openChildPage(){
-          this.$router.push('/teste/child');
+          this.$router.push('/admin/teste/child');
         }
       },
       components: {

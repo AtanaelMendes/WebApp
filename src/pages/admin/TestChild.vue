@@ -1,18 +1,14 @@
 <template>
   <custom-page>
 
-    <template slot="toolbar">
-      <toolbar title="teste inner" :navigation_type="navigationType" @navigation_clicked="goToBack">
-        <template slot="action_itens">
-          <q-btn flat round dense icon="more_vert"  @click="openMenu" />
-        </template>
-      </toolbar>
-    </template>
+    <toolbar slot="toolbar" title="teste inner" :navigation_type="navigationType" @navigation_clicked="goToBack">
+      <template slot="action_itens">
+        <q-btn flat round dense icon="more_vert"  @click="openMenu" />
+      </template>
+    </toolbar>
 
-    <template slot="content">
-      <span>Dashboard inner</span>
-      <p v-for="item in 100">b</p>
-    </template>
+    <span>Dashboard inner</span>
+    <p v-for="item in 100">b</p>
 
   </custom-page>
 </template>
