@@ -10,17 +10,6 @@
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 
           <q-item>
-            <q-item-main align="center">
-              <q-btn-toggle
-                v-model="form.fiscalCobranca"
-                toggle-color="secondary"
-                :options="[{label: 'Fiscal', value: 1},
-                           {label: 'Cobrança', value: 2}]"
-              />
-            </q-item-main>
-          </q-item>
-
-          <q-item>
             <q-item-main>
               <q-input
                 type="text"
@@ -69,6 +58,13 @@
           </q-item>
 
           <q-item>
+            <q-item-main>
+              <q-checkbox class="q-pr-sm" v-model="form.fiscal" label="Fiscal" />
+              <q-checkbox v-model="form.cobranca" label="Cobrança" />
+            </q-item-main>
+          </q-item>
+
+          <q-item>
             <q-item-main align="end">
               <q-btn label="salvar" color="secondary" @click="create()"/>
             </q-item-main>
@@ -92,11 +88,12 @@
     data () {
       return {
         form: {
+          fiscal: false,
+          cobranca: false,
           nome: null,
           email: null,
           phone: null,
           phoneType: 1,
-          fiscalCobranca: 1,
         }
       }
     },
@@ -113,27 +110,24 @@
       create: function () {
         this.$v.form.$touch()
         if ( this.$v.form.$error ) {
-          if( this.$v.form.nome.$error ){
+          if ( this.$v.form.nome.$error ){
             this.$q.notify( 'Nome Inválido' )
           }
-          if( this.$v.form.email.$error ){
+          if ( this.$v.form.email.$error ){
             this.$q.notify( 'Email inválido' )
           }
-          if( this.$v.form.phone.$error ){
+          if ( this.$v.form.phone.$error ){
             this.$q.notify( 'Telefone inválido' )
           }
-          // if( this.$v.form.cellPhone.$error ){
-          //   this.$q.notify( 'Celular inválido' )
-          // }
-          this.$q.notify({
-            type: 'warning',
-            message: 'faio'
-          })
+          return
+        }
+        if (this.form.fiscal == false && this.form.cobranca == false ){
+          this.$q.notify( 'Selecione ao menos um tipo de contato' )
           return
         }
         this.$q.notify({
           type: 'positive',
-          message: 'passou'
+          message: 'função de create'
         })
         // let vm = this
         // let params = {

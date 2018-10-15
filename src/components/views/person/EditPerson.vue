@@ -17,45 +17,84 @@
     </div>
 
     <div slot="content">
-      <div class="row" v-if="tabs=='tab-perfil'">
+      <q-page padding class="row" v-if="tabs=='tab-perfil'">
         <div  class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-          <form @keyup.enter="updatePerson()" class="q-mx-lg q-px-lg gutter-y-xs">
+          <form @keyup.enter="create()" class="q-mx-lg q-px-lg gutter-y-xs">
+
             <div>
-              <q-input stack-label="Nome" type="text" v-model="form.nome" clearable/>
+              <q-select v-model="select" placeholder="Grupo Econômico" clearable :options="selectOptions"/>
+              <!--<agro-autocomplete-economic-group placeholder="Grupo Econômico" v-model="data.codgrupoeconomico" :init="data.codgrupoeconomico"/>-->
             </div>
 
             <div>
-              <q-input stack-label="CPF" type="number" v-model="form.cpf" clearable/>
+              <q-input
+                v-model="form.nome"
+                float-label="Nome" type="text"
+                @blur="$v.form.nome.$touch"
+                :error="$v.form.nome.$error"
+                clearable
+              />
             </div>
 
             <div>
-              <q-input stack-label="CNPJ" type="number" v-model="form.cnpj" clearable/>
+              <q-item class="q-pa-none">
+                <q-item-main v-if="docType == 1">
+                  <q-input
+                    v-model="form.cpf"
+                    float-label="CPF"
+                    type="number"
+                    @blur="$v.form.cpf.$touch"
+                    :error="$v.form.cpf.$error"
+                    clearable
+                  />
+                </q-item-main>
+                <q-item-main v-if="docType == 2">
+                  <q-input
+                    v-model="form.cnpj"
+                    float-label="CNPJ"
+                    type="number"
+                    @blur="$v.form.cnpj.$touch"
+                    :error="$v.form.cnpj.$error"
+                    clearable
+                  />
+                </q-item-main>
+                <q-item-side>
+                  <q-btn-toggle
+                    dense
+                    v-model="docType"
+                    toggle-color="secondary"
+                    :options="[{label: 'Física', value: 1},
+                               {label: 'Jurídica', value: 2}]"
+                  />
+                </q-item-side>
+              </q-item>
             </div>
 
             <div>
-              <q-input stack-label="Inscrição Estadual" type="number" v-model="form.ie" clearable/>
+              <q-input v-model="form.ie" float-label="Inscrição Estadual" type="number" clearable/>
             </div>
 
             <div>
-              <q-input stack-label="Razão Social" type="text" v-model="form.razaoSocial" clearable/>
+              <q-input v-model="form.im" float-label="Inscrição Municipal" type="number" clearable/>
             </div>
 
-            <div>
-              <q-input stack-label="Nome Fantasia" type="text" v-model="form.nomeFantasia" clearable/>
+            <div v-if="docType == 2">
+              <q-input v-model="form.razaoSocial" float-label="Razão Social" type="text" clearable/>
             </div>
 
-            <div>
-              <q-input stack-label="Grupo Econômico" type="text" v-model="form.grupoEconomico" clearable/>
+            <div v-if="docType == 2">
+              <q-input v-model="form.nomeFantasia" float-label="Nome Fantasia" type="text" clearable/>
             </div>
 
             <div align="end">
               <q-btn color="secondary" label="Salvar" @click="updatePerson()" v-if="$q.platform.is.desktop"/>
             </div>
+
           </form>
 
           <!--fim tab perfil-->
         </div>
-      </div>
+      </q-page>
 
       <div class="row" v-if="tabs == 'tab-contato'">
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="contato in 4" :key="contato">
@@ -95,7 +134,8 @@
                       Celular
                     </q-item-tile>
                     <q-item-tile>
-                      {{numeral(celular).format('00000000000').replace(/^(\d{2})(\d{1})(\d{4})(\d{4})/, "($1) $2-$3-$4")}}
+                      <!--{{numeral(celular).format('00000000000').replace(/^(\d{2})(\d{1})(\d{4})(\d{4})/, "($1) $2-$3-$4")}}-->
+                      (66) 9-9976-3509
                     </q-item-tile>
                   </q-item-main>
                 </q-item>
@@ -106,7 +146,8 @@
                       Fixo
                     </q-item-tile>
                     <q-item-tile>
-                      {{numeral(fixo).format('0000000000').replace(/^(\d{2})(\d{4})(\d{4})/, "($1) $2-$3")}}
+                      <!--{{numeral(fixo).format('0000000000').replace(/^(\d{2})(\d{4})(\d{4})/, "($1) $2-$3")}}-->
+                      (66) 3532-5569
                     </q-item-tile>
                   </q-item-main>
                 </q-item>
@@ -127,19 +168,6 @@
         </q-page-sticky>
       </div>
 
-      <template>
-        <q-modal v-model="modalAddContact">
-          <list no-border>
-            <q-item>
-              <q-item-main>
-                campos aqui
-              </q-item-main>
-            </q-item>
-          </list>
-          <q-btn color="primary" @click="modalAddContact = false" label="Close"/>
-        </q-modal>
-      </template>
-
     <!--fim slot content-->
       <br/>
       <br/>
@@ -150,41 +178,60 @@
 </template>
 
 <script>
-import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
+import { required, maxLength, requiredIf, minLength } from 'vuelidate/lib/validators'
+import agroAutocompleteEconomicGroup from 'components/views/utils/agroAutocompleteEconomicGroup'
 import AgroLayout from 'layouts/AgroLayout'
 import { Platform } from 'quasar'
 
 export default {
   nome: 'edit-person',
   components: {
-    AgroLayout
+    AgroLayout,
+    agroAutocompleteEconomicGroup
   },
   data () {
     return {
+      select: null,
       personId: null,
       personData: [],
+      docType: 1,
       tabs: 'tab-perfil',
       form: {
         nome: 'MG papelaria',
-        cpfCnpj: null,
         cpf: 45866655871,
         cnpj: 15877744520384,
-        ie: 666999666,
         razaoSocial: 'Migliorini & Migliorini',
         nomeFantasia: 'Mg Papelaria',
-        grupoEconomico: 'MGpapelaria'
+        grupoEconomico: 'MGpapelaria',
+        ie: 666999666,
+        im: null
       },
+      selectOptions: [
+        {
+          label: 'Google',
+          value: 'goog'
+        },
+        {
+          label: 'Facebook',
+          value: 'fb'
+        }
+      ],
     }
   },
   validations: {
     form: {
       nome: { required, minLength: minLength(3) },
-      cpfCnpj: { required, email},
+      grupoEconomico: { required },
+      cpf: { minLength: minLength(11), maxLength: maxLength(11), required: requiredIf(function () { return this.docType == 1 }) },
+      cnpj: { minLength: minLength(14), maxLength: maxLength(14), required: requiredIf(function () { return this.docType == 2 }) },
     }
   },
   methods: {
+    selected (item) {
+      this.$q.notify(`Selected suggestion "${item.label}"`)
+    },
     deleteContact: function(id) {
-      console.log('excluiu contato')
+      this.$q.notify( 'função de excluir contato' )
       // let vm = this
       // vm.$axios.delete( 'account/'+ id ).then( response => {
       //   vm.contacts = response.data
@@ -194,53 +241,26 @@ export default {
       // })
     },
     getPerson: function() {
-      let vm = this
-      let params = {
-        id: vm.$route.params.id
-      }
-      vm.$axios.get( 'account/'+ params.id ).then( response => {
-        vm.personData = response.data
-      }).catch( error => {
-        if (error.response.status == 404){
-          this.$q.dialog({
-            title:'Ops',
-            message: 'Não foi possível carregar as informações'
-          })
-        }
-        vm.$router.push( '/pessoas' )
-        console.log('Erro Ocorrido:')
-        console.log(error)
-      })
+      // let vm = this
+      // let params = {
+      //   id: vm.$route.params.id
+      // }
+      // vm.$axios.get( 'account/'+ params.id ).then( response => {
+      //   vm.personData = response.data
+      // }).catch( error => {
+      //   if (error.response.status == 404){
+      //     this.$q.dialog({
+      //       title:'Ops',
+      //       message: 'Não foi possível carregar as informações'
+      //     })
+      //   }
+      //   vm.$router.push( '/pessoas' )
+      //   console.log('Erro Ocorrido:')
+      //   console.log(error)
+      // })
     },
     updatePerson: function() {
-      this.$v.form.$touch()
-      if ( this.$v.form.$error ) {
-        this.$q.notify( 'preencha os campos corretamente' )
-        return
-      }
-      let vm = this
-      let params = {
-        email: vm.form.email,
-        password: vm.form.senha,
-      }
-      vm.$axios.post( 'account', params ).then( response => {
-        if (response.status == 201){
-          vm.$q.notify({
-            type: 'positive',
-            message: 'Cadastro alterado com sucesso'
-          })
-          vm.$router.push( '/pessoas' )
-        }
-      }).catch( error => {
-        // if (error.response.status == 422){
-        //   this.$q.dialog({
-        //     title:'Ops',
-        //     message: 'Já existe um cadastro com esse email'
-        //   })
-        // }
-        console.log('Erro Ocorrido:')
-        console.log(error)
-      })
+      this.$q.notify( 'função de update' )
     }
   },
   mounted() {

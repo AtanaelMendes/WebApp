@@ -74,11 +74,11 @@
                 <q-input v-model="form.im" float-label="Inscrição Municipal" type="number" clearable/>
               </div>
 
-              <div>
+              <div v-if="docType == 2">
                 <q-input v-model="form.razaoSocial" float-label="Razão Social" type="text" clearable/>
               </div>
 
-              <div>
+              <div v-if="docType == 2">
                 <q-input v-model="form.nomeFantasia" float-label="Nome Fantasia" type="text" clearable/>
               </div>
 
@@ -109,7 +109,8 @@ export default {
       docType: 1,
       form: {
         nome: null,
-        cpfCnpj: null,
+        cpf: null,
+        cnpj: null,
         razaoSocial: null,
         nomeFantasia: null,
         grupoEconomico: null,
