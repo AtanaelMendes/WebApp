@@ -67,7 +67,8 @@ module.exports = function (ctx) {
         'QRating',
         'QPopover',
         'QCollapsible',
-        'QScrollArea'
+        'QScrollArea',
+        'QSearch',
       ],
       directives: [
         'Ripple',
