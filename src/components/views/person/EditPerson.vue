@@ -12,18 +12,26 @@
     <div slot="tabHeader">
       <q-tabs v-model="tabs" color="secondary">
         <q-tab slot="title" name="tab-perfil" icon="account_box" label="Perfil" default/>
-        <q-tab slot="title" name="tab-contato" icon="contact_mail" label="Contato"/>
+        <q-tab slot="title" name="tab-contato" icon="contact_mail" label="Contatos"/>
+        <q-tab slot="title" name="tab-endereco" icon="place" label="Endereços"/>
       </q-tabs>
     </div>
 
     <div slot="content">
-      <q-page padding class="row" v-if="tabs=='tab-perfil'">
+      <q-page padding class="row" v-if="tabs == 'tab-perfil'">
         <div  class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
           <form @keyup.enter="create()" class="q-mx-lg q-px-lg gutter-y-xs">
 
             <div>
-              <q-select v-model="select" placeholder="Grupo Econômico" clearable :options="selectOptions"/>
-              <!--<agro-autocomplete-economic-group placeholder="Grupo Econômico" v-model="data.codgrupoeconomico" :init="data.codgrupoeconomico"/>-->
+              <q-item class="q-pa-none">
+                <q-item-main>
+                  <q-select v-model="select" placeholder="Grupo Econômico" clearable :options="selectOptions"/>
+                  <!--<agro-autocomplete-economic-group placeholder="Grupo Econômico" v-model="data.codgrupoeconomico" :init="data.codgrupoeconomico"/>-->
+                </q-item-main>
+                <q-item-side>
+                  <q-btn color="secondary" dense square icon="add" @click.native="modalCreateGE = true"/>
+                </q-item-side>
+              </q-item>
             </div>
 
             <div>
@@ -96,7 +104,8 @@
         </div>
       </q-page>
 
-      <div class="row" v-if="tabs == 'tab-contato'">
+      <!--tab contato-->
+      <q-page class="row q-pa-md" v-if="tabs == 'tab-contato'">
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="contato in 4" :key="contato">
           <q-card class="q-ma-md q-body-1">
             <q-card-title class="q-py-xs">
@@ -166,13 +175,121 @@
         <q-page-sticky corner="bottom-right" :offset="[25, 25]">
           <q-btn size="20px" round color="secondary" @click.native="$router.push('/pessoa/novo-contato/'+ 1 )" icon="add"/>
         </q-page-sticky>
-      </div>
+
+        <!--fim tab contato-->
+      </q-page>
+
+      <!--tab endereco-->
+      <q-page padding class="row" v-if="tabs == 'tab-endereco'">
+
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="endereco in 4" :key="endereco">
+          <q-card class="q-ma-md q-body-1">
+            <q-card-title class="q-py-xs">
+              Fiscal/Cobrança
+            </q-card-title>
+            <q-card-separator/>
+            <q-card-main>
+              <q-list no-border class="q-py-xs">
+
+                <q-item class="q-py-xs q-body-1">
+                  <q-item-main>
+                    <q-item-tile stamp class="text-faded">
+                      Endereço
+                    </q-item-tile>
+                    <q-item-tile>
+                      Avenida dos Flamboyants
+                    </q-item-tile>
+                  </q-item-main>
+                </q-item>
+
+                <q-item class="q-py-xs q-body-1">
+                  <q-item-main>
+                    <q-item-tile stamp class="text-faded">
+                      Número
+                    </q-item-tile>
+                    <q-item-tile>
+                      701
+                    </q-item-tile>
+                  </q-item-main>
+                </q-item>
+
+                <q-item class="q-py-xs q-body-1">
+                  <q-item-main>
+                    <q-item-tile stamp class="text-faded">
+                      Complemento
+                    </q-item-tile>
+                    <q-item-tile>
+                      não informado
+                    </q-item-tile>
+                  </q-item-main>
+                </q-item>
+
+                <q-item class=" q-body-1">
+                  <q-item-main>
+                    <q-item-tile stamp class="text-faded">
+                      Bairro
+                    </q-item-tile>
+                    <q-item-tile>
+                      Jardim Jacarandas
+                    </q-item-tile>
+                  </q-item-main>
+                </q-item>
+
+                <q-item class=" q-body-1">
+                  <q-item-main>
+                    <q-item-tile stamp class="text-faded">
+                      CEP
+                    </q-item-tile>
+                    <q-item-tile>
+                      78555000
+                    </q-item-tile>
+                  </q-item-main>
+                </q-item>
+
+                <q-item class=" q-body-1">
+                  <q-item-main>
+                    <q-item-tile stamp class="text-faded">
+                      Cidade
+                    </q-item-tile>
+                    <q-item-tile>
+                      Sinop, MT
+                    </q-item-tile>
+                  </q-item-main>
+                </q-item>
+
+              </q-list>
+            </q-card-main>
+            <q-card-separator/>
+
+            <q-card-actions align="end">
+              <q-btn label="excluir" color="primary" flat @click="deleteAddress()"/>
+              <q-btn label="editar" color="primary" flat @click="$router.push('/pessoa/editar-endereco/'+ 1 )"/>
+            </q-card-actions>
+          </q-card>
+        </div>
+
+        <q-page-sticky corner="bottom-right" :offset="[25, 25]">
+          <q-btn size="20px" round color="secondary" @click.native="$router.push('/pessoa/novo-endereco/'+ 1 )" icon="add"/>
+        </q-page-sticky>
+
+        <!--fim tab endereco-->
+      </q-page>
+
+      <!--modal de create GE-->
+      <q-modal v-model="modalCreateGE" minimized>
+        <q-card>
+          <q-card-main>
+            <q-input float-label="Grupo Econômico" v-model="novoGrupoEconomico"/>
+          </q-card-main>
+          <q-card-actions align="end">
+            <q-btn flat color="secondary" @click="modalCreateGE = false"  label="Cancelar"/>
+            <q-btn color="secondary" @click="createEconomicGroup()"  label="Criar"/>
+          </q-card-actions>
+        </q-card>
+      </q-modal>
 
     <!--fim slot content-->
-      <br/>
-      <br/>
-      <br/>
-      <br/>
+      <br/>  <br/>   <br/>  <br/>
     </div>
   </AgroLayout>
 </template>
@@ -191,6 +308,8 @@ export default {
   },
   data () {
     return {
+      modalCreateGE: false,
+      novoGrupoEconomico: null,
       select: null,
       personId: null,
       personData: [],
@@ -227,11 +346,23 @@ export default {
     }
   },
   methods: {
-    selected (item) {
-      this.$q.notify(`Selected suggestion "${item.label}"`)
+    createEconomicGroup: function() {
+      this.$q.notify( {
+        type: 'positive',
+        message: 'função de criar grupo economico'
+      } )
+    },
+    deleteAddress: function(id) {
+      this.$q.notify( {
+        type: 'positive',
+        message: 'função de excluir endereco'
+      } )
     },
     deleteContact: function(id) {
-      this.$q.notify( 'função de excluir contato' )
+      this.$q.notify( {
+        type: 'positive',
+        message: 'função de excluir contato'
+      } )
       // let vm = this
       // vm.$axios.delete( 'account/'+ id ).then( response => {
       //   vm.contacts = response.data

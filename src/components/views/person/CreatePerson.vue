@@ -9,9 +9,17 @@
       <q-btn flat round icon="done" @click="create()" v-if="$q.platform.is.mobile"/>
     </div>
 
+    <div slot="tabHeader">
+      <q-tabs v-model="tabs" color="secondary">
+        <q-tab slot="title" name="tab-perfil" icon="account_box" label="Perfil" default/>
+        <q-tab slot="title" name="tab-contato" icon="contact_mail" label="Contatos"/>
+        <q-tab slot="title" name="tab-endereco" icon="place" label="Endereços"/>
+      </q-tabs>
+    </div>
+
     <div slot="content" >
 
-        <q-page padding class="row">
+        <q-page padding class="row" v-if="tabs == 'tab-perfil'">
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 
             <form @keyup.enter="create()" class="q-mx-lg q-px-lg gutter-y-xs">
@@ -25,13 +33,15 @@
               </div>
 
               <div>
-                <q-input
-                  v-model="form.grupoEconomico"
-                  float-label="Grupo Econômico"
-                  type="text"
-                  @blur="$v.form.grupoEconomico.$touch"
-                  :error="$v.form.grupoEconomico.$error"
-                  clearable/>
+                <q-item class="q-pa-none">
+                  <q-item-main>
+                    <q-select v-model="select" placeholder="Grupo Econômico" clearable :options="selectOptions"/>
+                    <!--<agro-autocomplete-economic-group placeholder="Grupo Econômico" v-model="data.codgrupoeconomico" :init="data.codgrupoeconomico"/>-->
+                  </q-item-main>
+                  <q-item-side>
+                    <q-btn color="secondary" dense square icon="add" @click.native="modalCreateGE = true"/>
+                  </q-item-side>
+                </q-item>
               </div>
 
               <div>
@@ -90,6 +100,19 @@
           </div>
         </q-page>
 
+      <!--modal de create GE-->
+      <q-modal v-model="modalCreateGE" minimized>
+        <q-card>
+          <q-card-main>
+            <q-input float-label="Grupo Econômico" v-model="novoGrupoEconomico"/>
+          </q-card-main>
+          <q-card-actions align="end">
+            <q-btn flat color="secondary" @click="modalCreateGE = false"  label="Cancelar"/>
+            <q-btn color="secondary" @click="createEconomicGroup()"  label="Criar"/>
+          </q-card-actions>
+        </q-card>
+      </q-modal>
+
     </div>
   </AgroLayout>
 </template>
@@ -98,15 +121,30 @@
 import { required, maxLength, requiredIf, minLength } from 'vuelidate/lib/validators'
 import AgroLayout from 'layouts/AgroLayout'
 import { Platform } from 'quasar'
-
+import agroAutocompleteEconomicGroup from 'components/views/utils/agroAutocompleteEconomicGroup'
 export default {
   name: 'nova-pessoa',
   components: {
-    AgroLayout
+    AgroLayout,
+    agroAutocompleteEconomicGroup
   },
   data () {
     return {
       docType: 1,
+      select: null,
+      selectOptions: [
+        {
+          label: 'Google',
+          value: 'goog'
+        },
+        {
+          label: 'Facebook',
+          value: 'fb'
+        }
+      ],
+      modalCreateGE: false,
+      novoGrupoEconomico: null,
+      tabs: 'tab-perfil',
       form: {
         nome: null,
         cpf: null,
@@ -128,6 +166,12 @@ export default {
     }
   },
   methods: {
+    createEconomicGroup: function(){
+      this.$q.notify({
+        type: 'positive',
+        message: 'Funcao de Create GE'
+      })
+    },
     create: function () {
       this.$v.form.$touch()
       if ( this.$v.form.$error ) {

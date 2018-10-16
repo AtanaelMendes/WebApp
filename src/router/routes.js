@@ -16,6 +16,8 @@ export default [
   { path: '/pessoa/cadastro',  component: () => import('components/views/person/CreatePerson.vue') },
   { path: '/pessoa/novo-contato/:id',  component: () => import('components/views/person/NewContact.vue') },
   { path: '/pessoa/editar-contato',  component: () => import('components/views/person/EditContact.vue') },
+  { path: '/pessoa/novo-endereco/:id',  component: () => import('components/views/person/NewAddress.vue') },
+  { path: '/pessoa/editar-endereco/:id',  component: () => import('components/views/person/EditAddress.vue') },
 
   // rota de exemplo
   { path: '/exemplo',  component: () => import('components/views/example/InfinitScroll.vue') },
