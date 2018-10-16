@@ -1,6 +1,6 @@
 <template>
   <q-page style="display: flex">
-    <div style="flex-grow: 1;" v-if="!hideMainPage">
+    <div style="flex-grow: 1; position: relative" v-if="!hideMainPage">
 
       <slot name="toolbar"></slot>
 
@@ -16,6 +16,10 @@
         </div>
 
       </q-scroll-area>
+
+      <div class="fab-container">
+        <slot name="fab-container"></slot>
+      </div>
     </div>
 
     <router-view style="flex-grow: 1.5" />
@@ -73,6 +77,12 @@
     box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 0 5px 8px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.12);
   }
   .child{
-    border-right: 1px solid #dddddd;
+    border-right: 2px solid #dddddd;
+  }
+
+  .fab-container{
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
   }
 </style>

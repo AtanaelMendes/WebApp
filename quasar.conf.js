@@ -55,6 +55,7 @@ module.exports = function (ctx) {
         'QItemMain',
         'QItemSide',
         'QItemTile',
+        'QItemSeparator',
         'QCard',
         'QCardTitle',
         'QCardMain',
@@ -68,6 +69,8 @@ module.exports = function (ctx) {
         'QPopover',
         'QCollapsible',
         'QScrollArea',
+        'QChip',
+        'QOptionGroup',
         'QSearch',
       ],
       directives: [
