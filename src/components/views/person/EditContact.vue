@@ -14,10 +14,10 @@
               <q-input
                 type="text"
                 float-label="Nome"
-                v-model="form.nome"
+                v-model="formContact.nome"
                 clearable
-                @blur="$v.form.nome.$touch"
-                :error="$v.form.nome.$error"
+                @blur="$v.formContact.nome.$touch"
+                :error="$v.formContact.nome.$error"
               />
             </q-item-main>
           </q-item>
@@ -27,10 +27,10 @@
               <q-input
                 type="email"
                 float-label="Email"
-                v-model="form.email"
+                v-model="formContact.email"
                 clearable
-                @blur="$v.form.email.$touch"
-                :error="$v.form.email.$error"
+                @blur="$v.formContact.email.$touch"
+                :error="$v.formContact.email.$error"
               />
             </q-item-main>
           </q-item>
@@ -40,16 +40,16 @@
               <q-input
                 type="number"
                 float-label="Telefone"
-                v-model="form.phone"
+                v-model="formContact.phone"
                 clearable
-                @blur="$v.form.phone.$touch"
-                :error="$v.form.phone.$error"
+                @blur="$v.formContact.phone.$touch"
+                :error="$v.formContact.phone.$error"
               />
             </q-item-main>
 
             <q-item-side>
               <q-btn-toggle
-                dense v-model="form.phoneType"
+                dense v-model="formContact.phoneType"
                 toggle-color="secondary"
                 :options="[{label: 'celular', value: 1, icon: 'stay_primary_portrait'},
                            {label: 'Fixo', value: 2, icon: 'phone'}]"
@@ -59,14 +59,14 @@
 
           <q-item>
             <q-item-main>
-              <q-checkbox class="q-pr-sm" v-model="form.fiscal" label="Fiscal" />
-              <q-checkbox v-model="form.cobranca" label="Cobrança" />
+              <q-checkbox class="q-pr-sm" v-model="formContact.fiscal" label="Fiscal" />
+              <q-checkbox v-model="formContact.cobranca" label="Cobrança" />
             </q-item-main>
           </q-item>
 
           <q-item>
             <q-item-main align="end">
-              <q-btn label="salvar" color="secondary" @click="update()"/>
+              <q-btn label="salvar" color="secondary" @click="updateContact()"/>
             </q-item-main>
           </q-item>
 
@@ -79,26 +79,16 @@
 <script>
   import { required, maxLength, requiredIf, minLength, email } from 'vuelidate/lib/validators'
   import AgroLayout from 'layouts/AgroLayout'
+  import EditContactMixin from 'components/views/mixins/EditContactMixin'
 
   export default {
     name: 'index-example',
     components: {
       AgroLayout
     },
-    data () {
-      return {
-        form: {
-          fiscal: false,
-          cobranca: false,
-          nome: null,
-          email: null,
-          phone: null,
-          phoneType: 1,
-        }
-      }
-    },
+    mixins: [EditContactMixin],
     validations: {
-      form: {
+      formContact: {
         nome: { required, minLength: minLength(3) },
         email: { email, required: requiredIf(function () { return this.form.phone == undefined}) },
         phone: { minLength: minLength(10), maxLength: maxLength(11),
@@ -106,33 +96,6 @@
         }
       }
     },
-    methods: {
-      update: function () {
-        this.$v.form.$touch()
-        if ( this.$v.form.$error ) {
-          if( this.$v.form.nome.$error ){
-            this.$q.notify( 'Nome Inválido' )
-          }
-          if( this.$v.form.email.$error ){
-            this.$q.notify( 'Email inválido' )
-          }
-          if( this.$v.form.phone.$error ){
-            this.$q.notify( 'Telefone inválido' )
-          }
-          return
-        }
-        if (this.form.fiscal == false && this.form.cobranca == false ){
-          this.$q.notify( 'Selecione ao menos um tipo de contato' )
-          return
-        }
-        this.$q.notify( {
-          type: 'positive',
-          message: 'função de update'
-        } )
-      }
-    },
-    mounted() {
-    }
   }
 </script>
 

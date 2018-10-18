@@ -9,96 +9,90 @@
       <q-btn flat round icon="done" @click="create()" v-if="$q.platform.is.mobile"/>
     </div>
 
-    <div slot="tabHeader">
-      <q-tabs v-model="tabs" color="secondary">
-        <q-tab slot="title" name="tab-perfil" icon="account_box" label="Perfil" default/>
-        <q-tab slot="title" name="tab-contato" icon="contact_mail" label="Contatos"/>
-        <q-tab slot="title" name="tab-endereco" icon="place" label="Endereços"/>
-      </q-tabs>
-    </div>
-
     <div slot="content" >
 
-        <q-page padding class="row" v-if="tabs == 'tab-perfil'">
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+      <!--tab perfil-->
+      <q-page padding class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 
-            <form @keyup.enter="create()" class="q-mx-lg q-px-lg gutter-y-xs">
+          <form @keyup.enter="create()" class="q-mx-lg q-px-lg gutter-y-xs">
+            <div>
+              <q-btn-toggle
+                v-model="docType"
+                toggle-color="secondary"
+                :options="[{label: 'Física', value: 1},
+                           {label: 'Jurídica', value: 2}]"
+              />
+            </div>
 
-              <div>
-                <q-btn-toggle v-model="docType" toggle-color="secondary"
-                              :options="[
-                            {label: 'Física', value: 1},
-                            {label: 'Jurídica', value: 2}]"
-                />
-              </div>
+            <div>
+              <q-item class="q-pa-none">
+                <q-item-main>
+                  <q-select v-model="select" placeholder="Grupo Econômico" clearable :options="selectOptions"/>
+                  <!--<agro-autocomplete-economic-group placeholder="Grupo Econômico" v-model="data.codgrupoeconomico" :init="data.codgrupoeconomico"/>-->
+                </q-item-main>
+                <q-item-side>
+                  <q-btn color="secondary" dense square icon="add" @click.native="modalCreateGE = true"/>
+                </q-item-side>
+              </q-item>
+            </div>
 
-              <div>
-                <q-item class="q-pa-none">
-                  <q-item-main>
-                    <q-select v-model="select" placeholder="Grupo Econômico" clearable :options="selectOptions"/>
-                    <!--<agro-autocomplete-economic-group placeholder="Grupo Econômico" v-model="data.codgrupoeconomico" :init="data.codgrupoeconomico"/>-->
-                  </q-item-main>
-                  <q-item-side>
-                    <q-btn color="secondary" dense square icon="add" @click.native="modalCreateGE = true"/>
-                  </q-item-side>
-                </q-item>
-              </div>
+            <div>
+              <q-input
+                v-model="form.nome"
+                float-label="Nome" type="text"
+                @blur="$v.form.nome.$touch"
+                :error="$v.form.nome.$error"
+                clearable
+              />
+            </div>
 
-              <div>
-                <q-input
-                  v-model="form.nome"
-                  float-label="Nome" type="text"
-                  @blur="$v.form.nome.$touch"
-                  :error="$v.form.nome.$error"
-                  clearable
-                />
-              </div>
+            <div v-if="docType == 1">
+              <q-input
+                v-model="form.cpf"
+                float-label="CPF"
+                type="number"
+                @blur="$v.form.cpf.$touch"
+                :error="$v.form.cpf.$error"
+                clearable
+              />
+            </div>
 
-              <div v-if="docType == 1">
-                <q-input
-                  v-model="form.cpf"
-                  float-label="CPF"
-                  type="number"
-                  @blur="$v.form.cpf.$touch"
-                  :error="$v.form.cpf.$error"
-                  clearable
-                />
-              </div>
+            <div v-if="docType == 2" >
+              <q-input
+                v-model="form.cnpj"
+                float-label="CNPJ"
+                type="number"
+                @blur="$v.form.cnpj.$touch"
+                :error="$v.form.cnpj.$error"
+                clearable
+              />
+            </div>
 
-              <div v-if="docType == 2" >
-                <q-input
-                  v-model="form.cnpj"
-                  float-label="CNPJ"
-                  type="number"
-                  @blur="$v.form.cnpj.$touch"
-                  :error="$v.form.cnpj.$error"
-                  clearable
-                />
-              </div>
+            <div>
+              <q-input v-model="form.ie" float-label="Inscrição Estadual" type="number" clearable/>
+            </div>
 
-              <div>
-                <q-input v-model="form.ie" float-label="Inscrição Estadual" type="number" clearable/>
-              </div>
+            <div>
+              <q-input v-model="form.im" float-label="Inscrição Municipal" type="number" clearable/>
+            </div>
 
-              <div>
-                <q-input v-model="form.im" float-label="Inscrição Municipal" type="number" clearable/>
-              </div>
+            <div v-if="docType == 2">
+              <q-input v-model="form.razaoSocial" float-label="Razão Social" type="text" clearable/>
+            </div>
 
-              <div v-if="docType == 2">
-                <q-input v-model="form.razaoSocial" float-label="Razão Social" type="text" clearable/>
-              </div>
+            <div v-if="docType == 2">
+              <q-input v-model="form.nomeFantasia" float-label="Nome Fantasia" type="text" clearable/>
+            </div>
 
-              <div v-if="docType == 2">
-                <q-input v-model="form.nomeFantasia" float-label="Nome Fantasia" type="text" clearable/>
-              </div>
+            <div align="end">
+              <q-btn color="secondary" label="Cadastrar" @click="create()" v-if="$q.platform.is.desktop"/>
+            </div>
 
-              <div align="end">
-                <q-btn color="secondary" label="Cadastrar" @click="create()" v-if="$q.platform.is.desktop"/>
-              </div>
-
-            </form>
-          </div>
-        </q-page>
+          </form>
+        </div>
+        <!--fim tab perfil-->
+      </q-page>
 
       <!--modal de create GE-->
       <q-modal v-model="modalCreateGE" minimized>

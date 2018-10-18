@@ -104,7 +104,8 @@ module.exports = function (ctx) {
         'QUploader',
         'QAutocomplete',
         'QChipsInput',
-        'QBtnToggle'
+        'QBtnToggle',
+        'QJumbotron'
       ],
       directives: [
         'Ripple',
