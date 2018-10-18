@@ -7,7 +7,8 @@ const routes = [
       { path: '', component: () => import('pages/admin/Dashboard.vue')},
       { path: 'usuarios', component: () => import('pages/admin/users/UserList.vue'),
         children: [
-          { path: ':id', component: () => import('pages/admin/users/UserView.vue') }
+          { name: 'view_user', path: ':id', component: () => import('pages/admin/users/UserView.vue') },
+          { name: 'add_user', path: 'add', component: () => import('pages/admin/users/UserAdd.vue') }
         ]
       },
       { path: 'teste', component: () => import('pages/admin/TestFather.vue'),

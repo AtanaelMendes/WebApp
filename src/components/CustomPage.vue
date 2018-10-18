@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <router-view style="flex-grow: 1.5" />
+    <router-view :style="{width: childWidth}" class="teste" />
   </q-page>
 </template>
 
@@ -30,7 +30,8 @@
     export default {
       name: "CustomPage",
       props: {
-        hasMargin: Boolean
+        hasMargin: Boolean,
+        widthInner: String
       },
       data: function () {
         return {
@@ -43,9 +44,13 @@
             //'child': this.isChildPath(this.$route.path),
             'q-pa-sm': this.hasMargin
           }
+        },
+        childWidth: function () {
+          return this.widthInner
         }
       },
       created(){
+
         if(this.$q.screen.lt.md) {
           this.hideMainPage = !this.isChildPath(this.$route.path);
         }

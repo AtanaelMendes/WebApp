@@ -17,7 +17,7 @@
         </q-item-main>
       </q-item>
       <q-item-separator />
-      <q-list-header>Papéis</q-list-header>
+      <q-list-header>Funções</q-list-header>
       <q-item>
         <q-item-main>
           <q-chip color="secondary" v-for="role in account.roles" :key="role.id" class="q-ma-xs">

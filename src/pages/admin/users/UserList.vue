@@ -1,5 +1,5 @@
-<template>
-  <custom-page >
+<template >
+  <custom-page widthInner="60%" >
     <toolbar slot="toolbar" title="Usuários" searchable navigation_type="menu" @search_changed="listBySearch">
       <template slot="action_itens">
         <q-btn flat round dense icon="tune" >
@@ -97,35 +97,13 @@
           this.$axios.get( 'account?' + this.serialize(val) ).then( response => {
             this.users = response.data;
             this.isEmptyList = this.users.length === 0;
-          }).catch( error => {
-            console.log('Erro Ocorrido:')
-            console.log(error)
           })
         },
         viewUser: function(id) {
-          this.$router.push('/admin/usuarios/' + id)
-          /*let vm = this
-          if(this.$q.platform.is.mobile) {
-            vm.$router.push('usuarios/' + id)
-          }else {
-            vm.$axios.get( 'account/'+ id ).then( response => {
-              vm.userProfile = response.data
-              vm.details = true
-            }).catch( error => {
-              if (error.response.status == 404){
-                this.$q.dialog({
-                  title:'Ops',
-                  message: 'Não foi possível carregar as informações'
-                })
-              }
-              console.log('Erro Ocorrido:')
-              console.log(error)
-            })
-          }*/
-
+          this.$router.push({name: 'view_user', params: {id:id}});
         },
         addUser: function(){
-
+          this.$router.push({name: 'add_user'});
         },
         serialize: function(obj) {
           var query = [];
@@ -139,8 +117,11 @@
         },
       },
       mounted () {
-        this.list({type: 'non-trashed'})
-      }
+        this.list({type: 'non-trashed'});
+        this.$root.$on('refreshUserList', () => {
+          this.list({type: 'non-trashed'});
+        });
+      },
     }
 </script>
 
