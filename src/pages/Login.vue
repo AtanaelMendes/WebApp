@@ -12,19 +12,9 @@
             <q-card-main class="gutter-y-sm">
               <div>
                 <form @keyup.enter="login">
-                  <q-field :error="form.email.error" class="q-mb-sm">
-                    <q-input v-model="form.email.value" v-on:input="clearEmailError()" type="email" float-label="Email" placeholder="Digite seu email"/>
-                    <div class="q-field-bottom row no-wrap" style="height: 22px">
-                      <div class="q-field-error col" v-if="form.email.error" >{{form.email.errorMessage}}</div>
-                    </div>
-                  </q-field>
+                  <custom-input-text type="email" placeholder="Digite seu email" label="Email" :model="form.email" />
 
-                  <q-field :error="form.password.error" class="q-mb-sm">
-                    <q-input v-model="form.password.value" v-on:input="clearPasswordError()" type="password" float-label="Senha" placeholder="Digite  sua senha"/>
-                    <div class="q-field-bottom row no-wrap" style="height: 22px">
-                      <div class="q-field-error col" v-if="form.password.error" >{{form.password.errorMessage}}</div>
-                    </div>
-                  </q-field>
+                  <custom-input-text type="password" placeholder="Digite sua senha" label="Senha" :model="form.password" />
                 </form>
               </div>
 
@@ -48,12 +38,7 @@
         <div v-if="passwordRecoveryModalOpened">
           <form @keyup.enter="login">
 
-            <q-field :error="resetPasswordForm.email.error" class="q-mt-lg q-mb-lg">
-              <q-input v-model="resetPasswordForm.email.value" v-on:input="clearEmail2Error()" type="email" float-label="Email" placeholder="Digite seu email"/>
-              <div class="q-field-bottom row no-wrap"  style="height: 22px">
-                <div class="q-field-error col" v-if="resetPasswordForm.email.error" >{{resetPasswordForm.email.errorMessage}}</div>
-              </div>
-            </q-field>
+            <custom-input-text type="email" placeholder="Digite seu email" label="Email" :model="resetPasswordForm.email" />
 
           </form>
         </div>
@@ -73,9 +58,13 @@
 <script>
   import { required, email, minLength } from 'vuelidate/lib/validators'
   import { Loading } from 'quasar'
+  import customInputText from 'components/CustomInputText.vue'
 
   export default {
     name: 'login',
+    components: {
+      customInputText
+    },
     data () {
       return {
         form: {
@@ -141,15 +130,7 @@
           }
           return;
         }
-      },
-      clearEmailError: function(){
-        this.form.email.error = false;
-      },
-      clearPasswordError: function(){
-        this.form.password.error = false;
-      },
-      clearEmail2Error: function(){
-        this.resetPasswordForm.email.error = false;
+        //TODO: Implementar a lógica aqui
       },
       login: function () {
         this.$v.form.$touch();
