@@ -82,10 +82,6 @@
               <q-input v-model="form.ie" float-label="Inscrição Estadual" type="number" clearable/>
             </div>
 
-            <div>
-              <q-input v-model="form.im" float-label="Inscrição Municipal" type="number" clearable/>
-            </div>
-
             <div v-if="docType == 2">
               <q-input v-model="form.razaoSocial" float-label="Razão Social" type="text" clearable/>
             </div>
@@ -309,10 +305,11 @@ export default {
   data () {
     return {
       modalCreateGE: false,
+      loaded: false,
       novoGrupoEconomico: null,
       select: null,
       personId: null,
-      personData: [],
+      personProfile: null,
       docType: 1,
       tabs: 'tab-perfil',
       form: {
@@ -323,7 +320,6 @@ export default {
         nomeFantasia: 'Mg Papelaria',
         grupoEconomico: 'MGpapelaria',
         ie: 666999666,
-        im: null
       },
       selectOptions: [
         {
@@ -372,23 +368,15 @@ export default {
       // })
     },
     getPerson: function() {
-      // let vm = this
-      // let params = {
-      //   id: vm.$route.params.id
-      // }
-      // vm.$axios.get( 'account/'+ params.id ).then( response => {
-      //   vm.personData = response.data
-      // }).catch( error => {
-      //   if (error.response.status == 404){
-      //     this.$q.dialog({
-      //       title:'Ops',
-      //       message: 'Não foi possível carregar as informações'
-      //     })
-      //   }
-      //   vm.$router.push( '/pessoas' )
-      //   console.log('Erro Ocorrido:')
-      //   console.log(error)
-      // })
+      let vm = this
+      vm.$axios.get( 'pessoa/'+ vm.$route.params.id ).then( response => {
+        vm.personProfile = response.data
+        console.log(vm.personProfile)
+        vm.loaded = true
+      }).catch( error => {
+        console.log('Erro Ocorrido:')
+        console.log(error)
+      })
     },
     updatePerson: function() {
       this.$q.notify( 'função de update' )

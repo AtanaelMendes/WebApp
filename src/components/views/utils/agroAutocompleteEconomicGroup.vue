@@ -57,10 +57,11 @@
       },
       search (terms, done) {
         let vm = this
-        let params = {}
-        params.sort = 'marca'
-        params.marca = terms
-        // vm.$axios.get('marca/autocompletar', { params }).then(response => {
+        // let params = {
+        //   sort: 'nome',
+        //   nome: terms
+        // }
+        // vm.$axios.get('grupo_economico', params ).then(response => {
         //   let results = response.data
         //   done(results)
         // }).catch(function (error) {

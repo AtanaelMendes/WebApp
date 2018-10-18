@@ -6,7 +6,7 @@
     </div>
 
     <div slot="rightBtn">
-      <q-btn flat round icon="edit" @click="editPerson()" v-if="$q.platform.is.desktop && personsData.id"/>
+      <q-btn flat round icon="edit" @click="editPerson()" v-if="$q.platform.is.desktop && personLoaded"/>
     </div>
 
     <div slot="searchField">
@@ -36,29 +36,31 @@
     <div slot="content">
       <q-page class="row">
 
+        <!--lista de pessoa-->
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
           <q-list highlight no no-border v-if="loaded">
 
-            <q-item v-for="person in 20" :key="person" link inset-separator multiline @click.native="getPerson()">
+            <q-item v-for="person in personsData" :key="person.id" link inset-separator multiline @click.native="getPerson(person.id)">
               <q-item-side icon="account_circle"/>
               <q-item-main>
                 <q-item-tile>
-                  {{person}} Fulano da Silva
-                  <q-chip small square color="red" v-if="person == 3">
+                  {{person.nome}}
+                  <q-chip small square color="red" v-if="person.deleted_at">
                     INATIVO
                   </q-chip>
                 </q-item-tile>
               </q-item-main>
 
               <q-item-side>
-                <q-item-tile stamp>16 maio 2002</q-item-tile>
-                <!--<q-item-tile stamp>{{ moment(person.created_at).format('DD MMMM YYYY') }}</q-item-tile>-->
-                <!--<q-item-tile v-if="person.deleted_at" stamp>{{ moment(person.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>-->
+                <q-item-tile stamp>{{ moment(person.created_at).format('DD MMMM YYYY') }}</q-item-tile>
+                <q-item-tile v-if="person.deleted_at" stamp>{{ moment(person.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>
               </q-item-side>
             </q-item>
           </q-list>
         </div>
+        <!--fim lista pessoa-->
 
+        <!--controle das tab de perfil da pesssoa-->
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="personLoaded">
           <q-btn-toggle
             flat
@@ -69,77 +71,21 @@
                         {label: 'Contatos', value: 'contato'},
                         {label: 'Endereços', value: 'endereco'}]"
           />
+          <!-- FIM controle das tab de perfil da pesssoa-->
 
           <!--tab perfil-->
           <q-list no-border v-if="tabs == 'perfil' ">
 
             <q-item>
               <q-item-main class="q-title">
-                Atanael Gamarra Mendes Costa
+                {{personProfile.nome}}
               </q-item-main>
               <q-item-side>
-                <q-btn  color="primary" flat label="inativar"/>
-                <!--<q-btn @click.native="active(userProfile.id)" color="primary" flat label="ativar" v-if="userProfile.deleted_at"/>-->
-                <!--<q-btn @click.native="inactive(userProfile.id)" color="primary" flat label="inativar" v-else/>-->
+                <q-btn @click.native="active(personProfile.id)" color="primary" flat label="ativar" v-if="personProfile.deleted_at"/>
+                <q-btn @click.native="inactive(personProfile.id)" color="primary" flat label="inativar" v-else/>
               </q-item-side>
             </q-item>
-
-            <q-item class="bg-negative text-white q-ma-sm">
-              <q-item-side icon="voice_over_off" color="white"/>
-              <q-item-main>
-                Pessoa inativo
-              </q-item-main>
-              <q-item-side>
-                <q-item-tile stamp class="text-white">16 maio 2002</q-item-tile>
-                <!--<q-item-tile stamp class="text-white">{{ moment(userProfile.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>-->
-              </q-item-side>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile stamp class="text-faded">
-                  Razão Social
-                </q-item-tile>
-                <q-item-tile>
-                  Migliorini & migliorini
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile stamp class="text-faded">
-                  Fantasia
-                </q-item-tile>
-                <q-item-tile>
-                  MG Papelaria
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile stamp class="text-faded">
-                  CNPJ
-                </q-item-tile>
-                <q-item-tile>
-                  00.987.666/3341-89
-                  <!--{{numeral(cnpj).format('00000000000000').replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5")}}-->
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile stamp class="text-faded">
-                  CPF
-                </q-item-tile>
-                <q-item-tile>
-                  586.541.236-97
-                  <!--{{numeral(cnpj).format('00000000000').replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")}}-->
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
+            <q-item-separator class="q-mx-md"/>
 
             <q-item>
               <q-item-main>
@@ -147,12 +93,67 @@
                   Grupo Econômico
                 </q-item-tile>
                 <q-item-tile>
-                  MG Papelaria
+                  {{personProfile.grupo_economico_id}}
                 </q-item-tile>
-
               </q-item-main>
             </q-item>
+
+            <q-item class="bg-negative text-white q-ma-sm" v-if="personProfile.deleted_at">
+              <q-item-side icon="voice_over_off" color="white"/>
+              <q-item-main>
+                Pessoa inativo
+              </q-item-main>
+              <q-item-side>
+                <q-item-tile stamp class="text-white">{{ moment(personProfile.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>
+              </q-item-side>
+            </q-item>
+
+            <q-item v-if="personProfile.razao_social">
+              <q-item-main>
+                <q-item-tile stamp class="text-faded">
+                  Razão Social
+                </q-item-tile>
+                <q-item-tile>
+                  {{personProfile.razao_social}}
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+
+            <q-item v-if="personProfile.nome_fantasia">
+              <q-item-main>
+                <q-item-tile stamp class="text-faded">
+                  Nome Fantasia
+                </q-item-tile>
+                <q-item-tile>
+                  {{personProfile.nome_fantasia}}
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+
+            <q-item v-if="personProfile.cnpj">
+              <q-item-main>
+                <q-item-tile stamp class="text-faded">
+                  CNPJ
+                </q-item-tile>
+                <q-item-tile>
+                  {{personProfile.cnpj}}
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+
+            <q-item v-if="personProfile.cpf">
+              <q-item-main>
+                <q-item-tile stamp class="text-faded">
+                  CPF
+                </q-item-tile>
+                <q-item-tile>
+                  {{personProfile.cpf}}
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+
           </q-list>
+          <!--FIM profile person-->
 
           <!--tab contato-->
           <div class="row" v-if="tabs == 'contato' ">
@@ -216,9 +217,12 @@
                 </q-card-main>
                 <q-card-actions align="end">
                   <q-btn color="primary" flat label="excluir" @click.native="deleteContact()"/>
-                  <q-btn color="primary" flat label="editar" @click.native="updateContact()"/>
+                  <q-btn color="primary" flat label="editar" @click.native="modalEditContact = true"/>
                 </q-card-actions>
               </q-card>
+            </div>
+            <div>
+              <q-btn label="Adicionar novo" color="secondary"/>
             </div>
           </div>
           <!--FIm tab contato-->
@@ -405,6 +409,7 @@ export default {
       },
       loaded: false,
       personLoaded: false,
+      personProfile: null,
       personsData: [],
       searchName: '',
       modalNewAddress: false,
@@ -437,79 +442,80 @@ export default {
   },
   methods: {
     editPerson: function() {
-      if(this.personsData.id) {
-        this.$router.push('pessoa/editar/' + this.personsData.id)
+      if(this.personProfile.id) {
+        this.$router.push('pessoa/editar/' + this.personProfile.id)
       }
     },
     inactive: function(id) {
-      // let vm = this
-      // this.$q.dialog({
-      //   title: 'Inativar',
-      //   message: 'Têm certeza que deseja inativar esta pessoa?',
-      //   ok: 'OK',
-      //   cancel: 'Cancelar'
-      // }).then(() => {
-      //   vm.$axios.delete( 'account-pessoa/'+ id ).then( response => {
-      //     this.$q.notify({
-      //       type: 'positive',
-      //       message: 'Pessoa inativada com sucesso'
-      //     })
-      //     this.list()
-      //   })
-      // }).catch( error => {
-      //   console.log('Erro Ocorrido:')
-      //   console.log(error)
-      // })
+      let vm = this
+      this.$q.dialog({
+        title: 'Inativar',
+        message: 'Têm certeza que deseja inativar esta pessoa?',
+        ok: 'OK',
+        cancel: 'Cancelar'
+      }).then(() => {
+        vm.$axios.delete( 'pessoa/'+ id ).then( response => {
+          this.$q.notify({
+            type: 'positive',
+            message: 'Pessoa inativada com sucesso'
+          })
+          this.list()
+        })
+      }).catch( error => {
+        console.log('Erro Ocorrido:')
+        console.log(error)
+      })
     },
     active: function(id) {
-      // let vm = this
-      // this.$q.dialog({
-      //   title: 'Ativar',
-      //   message: 'Têm certeza que deseja ativar esta pessoa-?',
-      //   ok: 'OK',
-      //   cancel: 'Cancelar'
-      // }).then(() => {
-      //   vm.$axios.delete( 'account-pessoa/'+ id ).then( response => {
-      //     this.$q.notify({
-      //       type: 'positive',
-      //       message: 'Pessoa ativada com sucesso'
-      //     })
-      //     this.list()
-      //   })
-      // }).catch( error => {
-      //   console.log('Erro Ocorrido:')
-      //   console.log(error)
-      // })
+      let vm = this
+      this.$q.dialog({
+        title: 'Ativar',
+        message: 'Têm certeza que deseja ativar esta pessoa?',
+        ok: 'OK',
+        cancel: 'Cancelar'
+      }).then(() => {
+        vm.$axios.delete( 'pessoa/'+ id ).then( response => {
+          this.$q.notify({
+            type: 'positive',
+            message: 'Pessoa ativada com sucesso'
+          })
+          this.list()
+        })
+      }).catch( error => {
+        console.log('Erro Ocorrido:')
+        console.log(error)
+      })
     },
-    list: function(val) {
+    list: function() {
       this.loaded = true
-      // let vm = this
-      // vm.$axios.get( 'account-pessoa'+ vm.email ).then( response => {
-      //   vm.personsData = response.data
-      // }).catch( error => {
-      //   console.log('Erro Ocorrido:')
-      //   console.log(error)
-      // })
+      let vm = this
+      vm.$axios.get( 'pessoa' ).then( response => {
+        vm.personsData = response.data
+        // console.log(vm.personsData)
+      }).catch( error => {
+        console.log('Erro Ocorrido:')
+        console.log(error)
+      })
     },
     getPerson: function (id) {
       if(this.$q.platform.is.mobile) {
         this.$router.push('pessoa/perfil')
       }else {
-        this.personLoaded = true
-        // let vm = this
-        // vm.$axios.get( 'account-pessoa'+ vm.email ).then( response => {
-        //   vm.personsData = response.data
-        // }).catch( error => {
-        //   console.log('Erro Ocorrido:')
-        //   console.log(error)
-        // })
+        let vm = this
+        vm.$axios.get( 'pessoa/'+ id ).then( response => {
+          vm.personProfile = response.data
+          this.personLoaded = true
+          console.log(vm.personProfile)
+        }).catch( error => {
+          console.log('Erro Ocorrido:')
+          console.log(error)
+        })
       }
 
     },
   },
   mounted () {
     this.list()
-    this.personsData.id = 1
   }
 }
 </script>

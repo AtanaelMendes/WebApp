@@ -13,7 +13,7 @@ export default [
   { path: '/pessoas',  component: () => import('components/views/person/ListPerson.vue') },
   { path: '/pessoa/perfil',  component: () => import('components/views/person/ProfilePerson.vue') },
   { path: '/pessoa/editar/:id',  component: () => import('components/views/person/EditPerson.vue') },
-  { path: '/pessoa/cadastro',  component: () => import('components/views/person/CreatePerson.vue') },
+  { path: '/pessoa/cadastro',  component: () => import('components/views/person/NewPerson.vue') },
   { path: '/pessoa/novo-contato/:id',  component: () => import('components/views/person/NewContact.vue') },
   { path: '/pessoa/editar-contato',  component: () => import('components/views/person/EditContact.vue') },
   { path: '/pessoa/novo-endereco/:id',  component: () => import('components/views/person/NewAddress.vue') },

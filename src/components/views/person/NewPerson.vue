@@ -28,7 +28,12 @@
             <div>
               <q-item class="q-pa-none">
                 <q-item-main>
-                  <q-select v-model="select" placeholder="Grupo Econômico" clearable :options="selectOptions"/>
+                  <agro-select-economic-group
+                    label="Grupo Econômico"
+                    v-model="formPerson.grupoEconomico"
+                    required>
+                  </agro-select-economic-group>
+                  <!--<q-select v-model="select" placeholder="Grupo Econômico" clearable :options="selectOptions"/>-->
                   <!--<agro-autocomplete-economic-group placeholder="Grupo Econômico" v-model="data.codgrupoeconomico" :init="data.codgrupoeconomico"/>-->
                 </q-item-main>
                 <q-item-side>
@@ -39,50 +44,49 @@
 
             <div>
               <q-input
-                v-model="form.nome"
-                float-label="Nome" type="text"
-                @blur="$v.form.nome.$touch"
-                :error="$v.form.nome.$error"
+                v-model="formPerson.nome"
+                float-label="Nome"
+                upper-case
+                @blur="$v.formPerson.nome.$touch"
+                :error="$v.formPerson.nome.$error"
                 clearable
               />
             </div>
 
             <div v-if="docType == 1">
               <q-input
-                v-model="form.cpf"
+                v-model="formPerson.cpf"
                 float-label="CPF"
-                type="number"
-                @blur="$v.form.cpf.$touch"
-                :error="$v.form.cpf.$error"
+                @blur="$v.formPerson.cpf.$touch"
+                :error="$v.formPerson.cpf.$error"
                 clearable
               />
             </div>
 
             <div v-if="docType == 2" >
               <q-input
-                v-model="form.cnpj"
+                v-model="formPerson.cnpj"
                 float-label="CNPJ"
-                type="number"
-                @blur="$v.form.cnpj.$touch"
-                :error="$v.form.cnpj.$error"
+                @blur="$v.formPerson.cnpj.$touch"
+                :error="$v.formPerson.cnpj.$error"
                 clearable
               />
             </div>
 
             <div>
-              <q-input v-model="form.ie" float-label="Inscrição Estadual" type="number" clearable/>
+              <q-input v-model="formPerson.ie" float-label="Inscrição Estadual" clearable/>
             </div>
 
             <div>
-              <q-input v-model="form.im" float-label="Inscrição Municipal" type="number" clearable/>
+              <q-input v-model="formPerson.im" float-label="Inscrição Municipal" clearable/>
             </div>
 
             <div v-if="docType == 2">
-              <q-input v-model="form.razaoSocial" float-label="Razão Social" type="text" clearable/>
+              <q-input upper-case	v-model="formPerson.razaoSocial" float-label="Razão Social" clearable/>
             </div>
 
             <div v-if="docType == 2">
-              <q-input v-model="form.nomeFantasia" float-label="Nome Fantasia" type="text" clearable/>
+              <q-input upper-case	v-model="formPerson.nomeFantasia" float-label="Nome Fantasia" clearable/>
             </div>
 
             <div align="end">
@@ -98,7 +102,14 @@
       <q-modal v-model="modalCreateGE" minimized>
         <q-card>
           <q-card-main>
-            <q-input float-label="Grupo Econômico" v-model="novoGrupoEconomico"/>
+            <form @keyup.enter="createEconomicGroup()">
+              <q-input
+                float-label="Grupo Econômico"
+                v-model="novoGrupoEconomico"
+                @blur="$v.novoGrupoEconomico.$touch"
+                :error="$v.novoGrupoEconomico.$error"
+              />
+            </form>
           </q-card-main>
           <q-card-actions align="end">
             <q-btn flat color="secondary" @click="modalCreateGE = false"  label="Cancelar"/>
@@ -116,11 +127,13 @@ import { required, maxLength, requiredIf, minLength } from 'vuelidate/lib/valida
 import AgroLayout from 'layouts/AgroLayout'
 import { Platform } from 'quasar'
 import agroAutocompleteEconomicGroup from 'components/views/utils/agroAutocompleteEconomicGroup'
+import AgroSelectEconomicGroup from 'components/views/utils/AgroSelectEconomicGroup'
 export default {
   name: 'nova-pessoa',
   components: {
     AgroLayout,
-    agroAutocompleteEconomicGroup
+    agroAutocompleteEconomicGroup,
+    AgroSelectEconomicGroup
   },
   data () {
     return {
@@ -139,7 +152,7 @@ export default {
       modalCreateGE: false,
       novoGrupoEconomico: null,
       tabs: 'tab-perfil',
-      form: {
+      formPerson: {
         nome: null,
         cpf: null,
         cnpj: null,
@@ -152,70 +165,100 @@ export default {
     }
   },
   validations: {
-    form: {
+    formPerson: {
       nome: { required, minLength: minLength(3) },
       grupoEconomico: { required },
       cpf: { minLength: minLength(11), maxLength: maxLength(11), required: requiredIf(function () { return this.docType == 1 }) },
       cnpj: { minLength: minLength(14), maxLength: maxLength(14), required: requiredIf(function () { return this.docType == 2 }) },
-    }
+    },
+    novoGrupoEconomico: { required, minLength: minLength(5) }
   },
   methods: {
     createEconomicGroup: function(){
-      this.$q.notify({
-        type: 'positive',
-        message: 'Funcao de Create GE'
+      this.$v.novoGrupoEconomico.$touch()
+      if ( this.$v.novoGrupoEconomico.$error ) {
+        this.$q.notify( 'Nome do Grupo inválido' )
+        return
+      }
+      let vm = this
+      let params = {
+        nome: vm.novoGrupoEconomico
+      }
+      vm.$axios.post( 'grupo_economico', params ).then( response => {
+        if (response.status == 201){
+          vm.$q.notify({
+            type: 'positive',
+            message: 'Grupo criado com sucesso'
+          })
+        }
+        vm.novoGrupoEconomico = null
+        vm.modalCreateGE = false
+      }).catch( error => {
+        // if (error.response.status == 422){
+        //   this.$q.dialog({
+        //     title:'Ops',
+        //     message: 'Erro desconhecido'
+        //   })
+        //   modalCreateGE = false
+        // }
+        console.log('Erro Ocorrido:')
+        console.log(error)
+        vm.modalCreateGE = false
       })
     },
     create: function () {
-      this.$v.form.$touch()
-      if ( this.$v.form.$error ) {
-        if( this.$v.form.nome.$error ){
+      this.$v.formPerson.$touch()
+      if ( this.$v.formPerson.$error ) {
+        if( this.$v.formPerson.nome.$error ){
           this.$q.notify( 'Nome inválido' )
         }
-        if( this.$v.form.cpf.$error ){
+        if( this.$v.formPerson.cpf.$error ){
           this.$q.notify( 'CPF inválido' )
         }
-        if( this.$v.form.cnpj.$error ){
+        if( this.$v.formPerson.cnpj.$error ){
           this.$q.notify( 'CNPJ inválido' )
         }
-        if( this.$v.form.grupoEconomico.$error ){
+        if( this.$v.formPerson.grupoEconomico.$error ){
           this.$q.notify( 'Selecione ao menos um grupo econômico' )
         }
         return
       }
-      this.$q.notify({
-        type: 'positive',
-        message: 'Passou'
+      let vm = this
+      let params = {
+        grupo_economico_id: vm.formPerson.grupoEconomico,
+        nome: vm.formPerson.nome,
+        cpf: this.formatCpf(vm.formPerson.cpf),
+        cnpj: this.formatCnpj(vm.formPerson.cnpj),
+        inscricao_estadual: vm.formPerson.ie,
+        razao_social: vm.formPerson.razaoSocial,
+        nome_fantasia: vm.formPerson.nomeFantasia
+      }
+      vm.$axios.post( 'pessoa', params ).then( response => {
+        if (response.status == 201){
+          vm.$q.notify({
+            type: 'positive',
+            message: 'Cadastro criado com sucesso'
+          })
+          vm.$router.push( '/pessoas' )
+        }
+      }).catch( error => {
+        console.log('Erro Ocorrido:')
+        console.log(error)
       })
-
-      // let vm = this
-      // let params = {
-      //   email: vm.form.email,
-      //   password: vm.form.password,
-      // }
-      // vm.$axios.post( 'account-pessoa', params ).then( response => {
-      //   if (response.status == 201){
-      //     vm.$q.notify({
-      //       type: 'positive',
-      //       message: 'Cadastro criado com sucesso'
-      //     })
-      //     vm.$router.push( '/pessoas' )
-      //   }
-      // }).catch( error => {
-      //   if (error.response.status == 422){
-      //     this.$q.dialog({
-      //       title:'Ops',
-      //       message: 'Já existe um cadastro com esse email'
-      //     })
-      //   }
-      //   console.log('Erro Ocorrido:')
-      //   console.log(error)
-      // })
+    },
+    formatCpf: function(cpf){
+      if(cpf != null) {
+        cpf = this.numeral(cpf).format('00000000000').replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
+        return cpf
+      }
+    },
+    formatCnpj: function(cnpj){
+      if(cnpj != null) {
+        cnpj = this.numeral(cnpj).format('00000000000000').replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5")
+        return cnpj
+      }
     }
-
   },
-  mounted() {
-  }
 }
 </script>
 
