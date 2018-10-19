@@ -1,5 +1,5 @@
 <template>
-  <custom-page >
+  <custom-page isChild>
     <toolbar slot="toolbar" >
       <template slot="action_itens">
         <q-btn flat round dense icon="edit" />

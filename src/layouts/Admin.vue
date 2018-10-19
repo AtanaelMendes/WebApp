@@ -47,6 +47,8 @@ export default {
   },
   created(){
     this.getAccountInfo();
+
+    this.$root.$on('toogleLeftDrawer', this.toogleLeftDrawer)
   },
   methods: {
     openURL,
@@ -55,6 +57,9 @@ export default {
         this.currentAccount.name = 'Fulano da Silva';
         this.currentAccount.email = response.data.email;
       })
+    },
+    toogleLeftDrawer() {
+      this.leftDrawerOpen = !this.leftDrawerOpen;
     }
   }
 }

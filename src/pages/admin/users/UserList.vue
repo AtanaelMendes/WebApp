@@ -1,5 +1,5 @@
 <template >
-  <custom-page widthInner="60%" >
+  <custom-page widthInner="60%" isParent >
     <toolbar slot="toolbar" title="Usuários" searchable navigation_type="menu" @search_changed="listBySearch">
       <template slot="action_itens">
         <q-btn flat round dense icon="tune" >

@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <router-view :style="{width: childWidth}" class="teste" />
+    <router-view :style="{width: childWidth}"  v-bind:class="{'child-full-width' : hideMainPage}" />
   </q-page>
 </template>
 
@@ -31,7 +31,9 @@
       name: "CustomPage",
       props: {
         hasMargin: Boolean,
-        widthInner: String
+        widthInner: String,
+        isChild: Boolean,
+        isParent: Boolean
       },
       data: function () {
         return {
@@ -49,31 +51,35 @@
           return this.widthInner
         }
       },
-      created(){
+      mounted(){
+        this.$root.$once('childMounted', this.childMounted);
+
+        this.$root.$once('childUnmounted', this.childUnmounted);
 
         if(this.$q.screen.lt.md) {
-          this.hideMainPage = !this.isChildPath(this.$route.path);
+          if (this.isChild) {
+            this.$root.$emit("childMounted")
+          }
+        }
+      },
+      destroyed() {
+        if(this.isChild){
+          this.$root.$emit("childUnmounted")
         }
       },
       methods: {
-        isChildPath(path) {
-          if(path.charAt(0) === '/'){
-            path = path.substr(1);
+        childMounted: function() {
+          if(this.isParent) {
+            this.hideMainPage = true;
           }
-          if(path.charAt(path.length - 1) === '/'){
-            path = path.substr(0, path.length - 1);
+
+        },
+        childUnmounted: function () {
+          if(this.isParent) {
+            this.hideMainPage = false;
           }
-          var arr = path.split("/");
-          return arr.length > 2
         }
       },
-      beforeRouteUpdate (to, from, next) {
-        console.log("beforeRouteEnter")
-        if(this.$q.screen.lt.md){
-          this.hideMainPage = !this.isChildPath(to.path);
-        }
-        next();
-      }
     }
 </script>
 
@@ -83,6 +89,10 @@
   }
   .child{
     border-right: 2px solid #dddddd;
+  }
+
+  .child-full-width{
+    width: 100% !important;
   }
 
   .fab-container{

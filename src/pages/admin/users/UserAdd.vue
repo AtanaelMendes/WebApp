@@ -1,5 +1,5 @@
 <template>
-  <custom-page>
+  <custom-page isChild>
     <toolbar slot="toolbar" navigation_type="close" title="Novo Unuário">
       <q-btn slot="action_itens" flat dense label="salvar" @click="create()"/>
     </toolbar>

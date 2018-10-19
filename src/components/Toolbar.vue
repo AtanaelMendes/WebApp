@@ -56,12 +56,23 @@
       }
     },
     methods: {
+      openLeftDrawer() {
+        this.$root.$emit("toogleLeftDrawer");
+      },
       navigationClicked (){
         if(this.searchIsVisible){
           this.searchIsVisible = false;
           this.searchButtonIsVisible = true;
           this.$emit('search_changed', "");
+          return
         }
+
+        if(this.navigation_type === 'menu'){
+          console.log('enviar evento pra abrir menu')
+          this.openLeftDrawer();
+          return
+        }
+
         this.$emit('navigation_clicked', this.navigation_type);
       },
       showSearchInput(){
