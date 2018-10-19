@@ -25,6 +25,7 @@
               />
             </div>
 
+            <!--GRUPO ECONOMICO-->
             <div>
               <q-item class="q-pa-none">
                 <q-item-main>
@@ -33,8 +34,11 @@
                     v-model="formPerson.grupoEconomico"
                     required>
                   </agro-select-economic-group>
-                  <!--<q-select v-model="select" placeholder="Grupo Econômico" clearable :options="selectOptions"/>-->
-                  <!--<agro-autocomplete-economic-group placeholder="Grupo Econômico" v-model="data.codgrupoeconomico" :init="data.codgrupoeconomico"/>-->
+                  <!--<agro-autocomplete-economic-group
+                  placeholder="Grupo Econômico"
+                  v-model="data.codgrupoeconomico"
+                  :init="data.codgrupoeconomico"
+                  />-->
                 </q-item-main>
                 <q-item-side>
                   <q-btn color="secondary" dense square icon="add" @click.native="modalCreateGE = true"/>
@@ -42,6 +46,7 @@
               </q-item>
             </div>
 
+            <!--NOME-->
             <div>
               <q-input
                 v-model="formPerson.nome"
@@ -53,6 +58,7 @@
               />
             </div>
 
+            <!--CPF-->
             <div v-if="docType == 1">
               <q-input
                 v-model="formPerson.cpf"
@@ -63,6 +69,7 @@
               />
             </div>
 
+            <!--CNPJ-->
             <div v-if="docType == 2" >
               <q-input
                 v-model="formPerson.cnpj"
@@ -73,18 +80,22 @@
               />
             </div>
 
+            <!--INSCRICAO ESTADUAL-->
             <div>
               <q-input v-model="formPerson.ie" float-label="Inscrição Estadual" clearable/>
             </div>
 
+            <!--INSCRICAO MUNICIPAL-->
             <div>
               <q-input v-model="formPerson.im" float-label="Inscrição Municipal" clearable/>
             </div>
 
+            <!--RAZAO SOCIAL-->
             <div v-if="docType == 2">
               <q-input upper-case	v-model="formPerson.razaoSocial" float-label="Razão Social" clearable/>
             </div>
 
+            <!--NOME FANTASIA-->
             <div v-if="docType == 2">
               <q-input upper-case	v-model="formPerson.nomeFantasia" float-label="Nome Fantasia" clearable/>
             </div>
@@ -138,17 +149,6 @@ export default {
   data () {
     return {
       docType: 1,
-      select: null,
-      selectOptions: [
-        {
-          label: 'Google',
-          value: 'goog'
-        },
-        {
-          label: 'Facebook',
-          value: 'fb'
-        }
-      ],
       modalCreateGE: false,
       novoGrupoEconomico: null,
       tabs: 'tab-perfil',
@@ -194,13 +194,6 @@ export default {
         vm.novoGrupoEconomico = null
         vm.modalCreateGE = false
       }).catch( error => {
-        // if (error.response.status == 422){
-        //   this.$q.dialog({
-        //     title:'Ops',
-        //     message: 'Erro desconhecido'
-        //   })
-        //   modalCreateGE = false
-        // }
         console.log('Erro Ocorrido:')
         console.log(error)
         vm.modalCreateGE = false
@@ -230,6 +223,7 @@ export default {
         cpf: this.formatCpf(vm.formPerson.cpf),
         cnpj: this.formatCnpj(vm.formPerson.cnpj),
         inscricao_estadual: vm.formPerson.ie,
+        inscricao_municipal: vm.formPerson.im,
         razao_social: vm.formPerson.razaoSocial,
         nome_fantasia: vm.formPerson.nomeFantasia
       }

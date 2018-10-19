@@ -315,6 +315,7 @@
         <q-modal v-model="modalEditContact" minimized no-backdrop-dismiss>
           <form class="q-pa-md gutter-y-xs" @keyup.enter="updateContact()">
 
+            <!--CONTATO NOME-->
             <q-item>
               <q-item-main>
                 <q-input
@@ -328,6 +329,7 @@
               </q-item-main>
             </q-item>
 
+            <!--CONTATO EMAIL-->
             <q-item>
               <q-item-main>
                 <q-input
@@ -341,6 +343,7 @@
               </q-item-main>
             </q-item>
 
+            <!--CONTATO TELEFONE-->
             <q-item>
               <q-item-main >
                 <q-input
@@ -353,6 +356,7 @@
                 />
               </q-item-main>
 
+              <!--CONTATO TIPO TELEFONE-->
               <q-item-side>
                 <q-btn-toggle
                   dense v-model="formContact.phoneType"
@@ -363,6 +367,7 @@
               </q-item-side>
             </q-item>
 
+            <!--CONTATO TIPO FISCAL COBRANCA-->
             <q-item>
               <q-item-main>
                 <q-checkbox class="q-pr-sm" v-model="formContact.fiscal" label="Fiscal" />
@@ -474,7 +479,7 @@ export default {
         ok: 'OK',
         cancel: 'Cancelar'
       }).then(() => {
-        vm.$axios.delete( 'pessoa/'+ id ).then( response => {
+        vm.$axios.put( 'pessoa/'+ id +'/restore').then( response => {
           this.$q.notify({
             type: 'positive',
             message: 'Pessoa ativada com sucesso'

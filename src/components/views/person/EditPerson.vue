@@ -18,15 +18,26 @@
     </div>
 
     <div slot="content">
+
+      <!--TAB PEFIL-->
       <q-page padding class="row" v-if="tabs == 'tab-perfil'">
-        <div  class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+        <div  class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
           <form @keyup.enter="create()" class="q-mx-lg q-px-lg gutter-y-xs">
 
+            <!--GRUPO ECONOMICO-->
             <div>
               <q-item class="q-pa-none">
                 <q-item-main>
-                  <q-select v-model="select" placeholder="Grupo Econômico" clearable :options="selectOptions"/>
-                  <!--<agro-autocomplete-economic-group placeholder="Grupo Econômico" v-model="data.codgrupoeconomico" :init="data.codgrupoeconomico"/>-->
+                  <agro-select-economic-group
+                    label="Grupo Econômico"
+                    v-model="formPersonUpdate.grupoEconomico"
+                    required>
+                  </agro-select-economic-group>
+                  <!--<agro-autocomplete-economic-group
+                  placeholder="Grupo Econômico"
+                  v-model="data.codgrupoeconomico"
+                  :init="data.codgrupoeconomico"
+                  />-->
                 </q-item-main>
                 <q-item-side>
                   <q-btn color="secondary" dense square icon="add" @click.native="modalCreateGE = true"/>
@@ -34,38 +45,42 @@
               </q-item>
             </div>
 
+            <!--NOME-->
             <div>
               <q-input
-                v-model="form.nome"
-                float-label="Nome" type="text"
-                @blur="$v.form.nome.$touch"
-                :error="$v.form.nome.$error"
+                v-model="formPersonUpdate.nome"
+                float-label="Nome"
+                @blur="$v.formPersonUpdate.nome.$touch"
+                :error="$v.formPersonUpdate.nome.$error"
                 clearable
               />
             </div>
 
+            <!--CPF-->
             <div>
               <q-item class="q-pa-none">
                 <q-item-main v-if="docType == 1">
                   <q-input
-                    v-model="form.cpf"
+                    v-model="formPersonUpdate.cpf"
                     float-label="CPF"
-                    type="number"
-                    @blur="$v.form.cpf.$touch"
-                    :error="$v.form.cpf.$error"
+                    @blur="$v.formPersonUpdate.cpf.$touch"
+                    :error="$v.formPersonUpdate.cpf.$error"
                     clearable
                   />
                 </q-item-main>
+
+                <!--CNPJ-->
                 <q-item-main v-if="docType == 2">
                   <q-input
-                    v-model="form.cnpj"
+                    v-model="formPersonUpdate.cnpj"
                     float-label="CNPJ"
-                    type="number"
-                    @blur="$v.form.cnpj.$touch"
-                    :error="$v.form.cnpj.$error"
+                    @blur="$v.formPersonUpdate.cnpj.$touch"
+                    :error="$v.formPersonUpdate.cnpj.$error"
                     clearable
                   />
                 </q-item-main>
+
+                <!--TIPO PESSOA-->
                 <q-item-side>
                   <q-btn-toggle
                     dense
@@ -78,16 +93,40 @@
               </q-item>
             </div>
 
+            <!--ISCRICAO ESTADUAL-->
             <div>
-              <q-input v-model="form.ie" float-label="Inscrição Estadual" type="number" clearable/>
+              <q-input
+                v-model="formPersonUpdate.ie"
+                float-label="Inscrição Estadual"
+                clearable
+              />
             </div>
 
-            <div v-if="docType == 2">
-              <q-input v-model="form.razaoSocial" float-label="Razão Social" type="text" clearable/>
+            <!--INSCRICAO MUNICIPAL-->
+            <div>
+              <q-input
+                v-model="formPersonUpdate.im"
+                float-label="Inscrição Municipal"
+                clearable
+              />
             </div>
 
+            <!--RAZAO SOCIAL-->
             <div v-if="docType == 2">
-              <q-input v-model="form.nomeFantasia" float-label="Nome Fantasia" type="text" clearable/>
+              <q-input
+                v-model="formPersonUpdate.razaoSocial"
+                float-label="Razão Social"
+                clearable
+              />
+            </div>
+
+            <!--NOME FANTASIA-->
+            <div v-if="docType == 2">
+              <q-input
+                v-model="formPersonUpdate.nomeFantasia"
+                float-label="Nome Fantasia"
+                clearable
+              />
             </div>
 
             <div align="end">
@@ -95,12 +134,11 @@
             </div>
 
           </form>
-
-          <!--fim tab perfil-->
         </div>
       </q-page>
+      <!-- FIM TAB PERFIL-->
 
-      <!--tab contato-->
+      <!-- TAB CONTATO-->
       <q-page class="row q-pa-md" v-if="tabs == 'tab-contato'">
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="contato in 4" :key="contato">
           <q-card class="q-ma-md q-body-1">
@@ -172,10 +210,10 @@
           <q-btn size="20px" round color="secondary" @click.native="$router.push('/pessoa/novo-contato/'+ 1 )" icon="add"/>
         </q-page-sticky>
 
-        <!--fim tab contato-->
       </q-page>
+      <!--FIM TAB CONTATO-->
 
-      <!--tab endereco-->
+      <!--TAB ENDERECO-->
       <q-page padding class="row" v-if="tabs == 'tab-endereco'">
 
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="endereco in 4" :key="endereco">
@@ -268,14 +306,19 @@
           <q-btn size="20px" round color="secondary" @click.native="$router.push('/pessoa/novo-endereco/'+ 1 )" icon="add"/>
         </q-page-sticky>
 
-        <!--fim tab endereco-->
       </q-page>
+      <!--FIM TAB ENDERECO-->
 
-      <!--modal de create GE-->
+      <!--MODAL NOVO GE-->
       <q-modal v-model="modalCreateGE" minimized>
         <q-card>
           <q-card-main>
-            <q-input float-label="Grupo Econômico" v-model="novoGrupoEconomico"/>
+            <q-input
+              float-label="Grupo Econômico"
+              v-model="novoGrupoEconomico"
+              @blur="$v.novoGrupoEconomico.$touch"
+              :error="$v.novoGrupoEconomico.$error"
+            />
           </q-card-main>
           <q-card-actions align="end">
             <q-btn flat color="secondary" @click="modalCreateGE = false"  label="Cancelar"/>
@@ -283,8 +326,9 @@
           </q-card-actions>
         </q-card>
       </q-modal>
+      <!--FIM MODAL NOVO GE-->
 
-    <!--fim slot content-->
+    <!-- FIM SLOT CONTENT-->
       <br/>  <br/>   <br/>  <br/>
     </div>
   </AgroLayout>
@@ -293,6 +337,7 @@
 <script>
 import { required, maxLength, requiredIf, minLength } from 'vuelidate/lib/validators'
 import agroAutocompleteEconomicGroup from 'components/views/utils/agroAutocompleteEconomicGroup'
+import AgroSelectEconomicGroup from 'components/views/utils/AgroSelectEconomicGroup'
 import AgroLayout from 'layouts/AgroLayout'
 import { Platform } from 'quasar'
 
@@ -300,53 +345,66 @@ export default {
   nome: 'edit-person',
   components: {
     AgroLayout,
-    agroAutocompleteEconomicGroup
+    agroAutocompleteEconomicGroup,
+    AgroSelectEconomicGroup
   },
   data () {
     return {
       modalCreateGE: false,
       loaded: false,
       novoGrupoEconomico: null,
-      select: null,
       personId: null,
       personProfile: null,
       docType: 1,
       tabs: 'tab-perfil',
-      form: {
-        nome: 'MG papelaria',
-        cpf: 45866655871,
-        cnpj: 15877744520384,
-        razaoSocial: 'Migliorini & Migliorini',
-        nomeFantasia: 'Mg Papelaria',
-        grupoEconomico: 'MGpapelaria',
-        ie: 666999666,
-      },
-      selectOptions: [
-        {
-          label: 'Google',
-          value: 'goog'
-        },
-        {
-          label: 'Facebook',
-          value: 'fb'
-        }
-      ],
+      formPersonUpdate: {
+        nome: null,
+        cpf: null,
+        cnpj: null,
+        razaoSocial: null,
+        nomeFantasia: null,
+        grupoEconomico: null,
+        ie: null
+      }
     }
   },
   validations: {
-    form: {
+    formPersonUpdate: {
       nome: { required, minLength: minLength(3) },
       grupoEconomico: { required },
       cpf: { minLength: minLength(11), maxLength: maxLength(11), required: requiredIf(function () { return this.docType == 1 }) },
       cnpj: { minLength: minLength(14), maxLength: maxLength(14), required: requiredIf(function () { return this.docType == 2 }) },
-    }
+    },
+    novoGrupoEconomico: { required, minLength: minLength(5) }
   },
   methods: {
+    updatePerson: function() {
+      this.$q.notify( 'função de update' )
+    },
     createEconomicGroup: function() {
-      this.$q.notify( {
-        type: 'positive',
-        message: 'função de criar grupo economico'
-      } )
+      this.$v.novoGrupoEconomico.$touch()
+      if ( this.$v.novoGrupoEconomico.$error ) {
+        this.$q.notify( 'Nome do Grupo inválido' )
+        return
+      }
+      let vm = this
+      let params = {
+        nome: vm.novoGrupoEconomico
+      }
+      vm.$axios.post( 'grupo_economico', params ).then( response => {
+        if (response.status == 201){
+          vm.$q.notify({
+            type: 'positive',
+            message: 'Grupo criado com sucesso'
+          })
+        }
+        vm.novoGrupoEconomico = null
+        vm.modalCreateGE = false
+      }).catch( error => {
+        console.log('Erro Ocorrido:')
+        console.log(error)
+        vm.modalCreateGE = false
+      })
     },
     deleteAddress: function(id) {
       this.$q.notify( {
@@ -367,19 +425,33 @@ export default {
       //   console.log(error)
       // })
     },
+    fillForm: function(person){
+      this.formPersonUpdate.nome = person.nome
+      if(person.cpf != null){
+        this.docType = 1
+        this.formPersonUpdate.cpf = person.cpf
+      }
+      if(person.cnpj != null){
+        this.docType = 2
+        this.formPersonUpdate.cnpj = person.cnpj
+      }
+      this.formPersonUpdate.razaoSocial = person.razao_social
+      this.formPersonUpdate.nomeFantasia = person.nome_fantasia
+      this.formPersonUpdate.grupoEconomico = person.grupo_economico.id
+      this.formPersonUpdate.ie = person.inscricao_estadual
+      this.formPersonUpdate.im = person.inscricao_municipal
+    },
     getPerson: function() {
       let vm = this
       vm.$axios.get( 'pessoa/'+ vm.$route.params.id ).then( response => {
         vm.personProfile = response.data
+        this.fillForm(vm.personProfile)
         console.log(vm.personProfile)
         vm.loaded = true
       }).catch( error => {
         console.log('Erro Ocorrido:')
         console.log(error)
       })
-    },
-    updatePerson: function() {
-      this.$q.notify( 'função de update' )
     }
   },
   mounted() {

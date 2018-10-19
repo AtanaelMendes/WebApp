@@ -22,11 +22,21 @@ export default {
   },
   data () {
     return {
+      loaded: false,
     }
   },
   methods: {
-
-
+    axiosRequest: function() {
+      let vm = this
+      vm.$axios.get( 'rota/'+ vm.$route.params.id ).then( response => {
+        vm.var = response.data
+        console.log(vm.var)
+        vm.loaded = true
+      }).catch( error => {
+        console.log('Erro Ocorrido:')
+        console.log(error)
+      })
+    }
   },
   mounted() {
   }
