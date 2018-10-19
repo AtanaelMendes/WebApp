@@ -25,7 +25,7 @@
 
     <q-list highlight no-border sparse v-if="!isEmptyList">
 
-        <q-item link separator multiline @click.native="viewUser(user.id)" v-for="user in users">
+        <q-item link separator multiline @click.native="viewUser(user.id)" v-for="(user, key) in users">
           <q-item-main >
             <q-item-tile>
               {{user.email}}
@@ -117,9 +117,9 @@
         },
       },
       mounted () {
-        this.list({type: 'non-trashed'});
+        this.list(this.filter);
         this.$root.$on('refreshUserList', () => {
-          this.list({type: 'non-trashed'});
+          this.list(this.filter);
         });
       },
     }
