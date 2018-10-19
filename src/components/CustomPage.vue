@@ -52,9 +52,9 @@
         }
       },
       mounted(){
-        this.$root.$once('childMounted', this.childMounted);
+        this.$root.$on('childMounted', this.childMounted);
 
-        this.$root.$once('childUnmounted', this.childUnmounted);
+        this.$root.$on('childUnmounted', this.childUnmounted);
 
         if(this.$q.screen.lt.md) {
           if (this.isChild) {

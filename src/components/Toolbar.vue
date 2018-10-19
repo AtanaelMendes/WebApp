@@ -1,7 +1,7 @@
 <template>
   <div style="overflow: hidden; padding-bottom: 5px">
     <q-toolbar color="primary" class="shadow-3" >
-      <q-btn flat round dense :icon="navigation_icon" v-if="navigation_type" v-on:click="navigationClicked" />
+      <q-btn flat round dense :icon="navigation_icon" v-if="isNavigationVisible" v-on:click="navigationClicked" />
       <q-toolbar-title>
         <span v-if="!searchIsVisible">{{title}}</span>
         <q-search v-if="searchIsVisible" v-model="searchValue"
@@ -45,8 +45,28 @@
             return 'arrow_back';
           case 'close':
             return 'close';
+          case 'closeAndBack':
+            if(this.$q.screen.lt.md) {
+              return 'arrow_back';
+            }
+            return 'close';
+          case 'noneAndBack':
+            if(this.$q.screen.lt.md) {
+              return 'arrow_back';
+            }
+            return;
         }
       },
+      isNavigationVisible: function () {
+        console.log("isNavigationVisible")
+        if(this.navigation_type === 'noneAndBack'){
+          if(this.$q.screen.lt.md) {
+            return true;
+          }
+          return false;
+        }
+        return true;
+      }
     },
     watch: {
       searchValue: {
@@ -70,9 +90,9 @@
         if(this.navigation_type === 'menu'){
           console.log('enviar evento pra abrir menu')
           this.openLeftDrawer();
-          return
         }
 
+        console.log('navigation_clicked');
         this.$emit('navigation_clicked', this.navigation_type);
       },
       showSearchInput(){

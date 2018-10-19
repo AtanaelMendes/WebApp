@@ -1,6 +1,6 @@
 <template>
   <custom-page isChild>
-    <toolbar slot="toolbar" navigation_type="close" title="Novo Unuário">
+    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Novo Unuário">
       <q-btn slot="action_itens" flat dense label="salvar" @click="create()"/>
     </toolbar>
 
@@ -222,6 +222,9 @@
             })
           }
         })
+      },
+      backAction: function () {
+        this.$router.go(-1);
       }
     },
     mounted(){

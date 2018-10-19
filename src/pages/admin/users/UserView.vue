@@ -1,6 +1,6 @@
 <template>
   <custom-page isChild>
-    <toolbar slot="toolbar" >
+    <toolbar slot="toolbar" navigation_type="noneAndBack" @navigation_clicked="backAction">
       <template slot="action_itens">
         <q-btn flat round dense icon="edit" />
         <q-btn flat round dense icon="more_vert" />
@@ -62,6 +62,9 @@
             console.log(error)
           })
         },
+        backAction: function () {
+          this.$router.go(-1);
+        }
       },
       mounted(){
         this.getUser(this.$route.params.id );
