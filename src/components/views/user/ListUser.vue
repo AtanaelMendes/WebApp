@@ -14,21 +14,25 @@
       <q-btn flat round icon="edit" @click="editUser()" v-if="$q.platform.is.desktop && userProfile.id"/>
     </div>
 
+    <!--MENU DA DIREITA-->
     <div slot="rightDrawer">
       <q-list>
         <q-list-header>Filtros</q-list-header>
         <q-item>
           <q-item-main>
-            <q-option-group type="radio" color="secondary"v-model="filter.type"
-                            :options="[
-                            { label: 'Ativos', value: 'non-trashed'},
-                            { label: 'Inativos', value: 'trashed' },
-                            { label: 'Todos', value: '' }]"
+            <q-option-group
+              type="radio"
+              color="secondary"
+              v-model="filter.type"
+              :options="[{ label: 'Ativos', value: 'non-trashed'},
+                         { label: 'Inativos', value: 'trashed' },
+                         { label: 'Todos', value: '' }]"
             />
           </q-item-main>
         </q-item>
       </q-list>
     </div>
+    <!--FIM MENU DA DIREITA-->
 
     <div slot="content">
       <q-page class="row">

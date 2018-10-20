@@ -44,6 +44,13 @@
           </q-item-main>
         </q-item>
 
+        <q-item @click.native="$router.push('/administracao')">
+          <q-item-side icon="people"/>
+          <q-item-main>
+            Administração
+          </q-item-main>
+        </q-item>
+
         <!--<q-item>-->
           <!--<q-item-side icon="info"/>-->
           <!--<q-item-main>-->

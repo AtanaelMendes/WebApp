@@ -3,13 +3,13 @@ export default [
   { path: '/', component: () => import('components/Index.vue') },
   { path: '/Login',  component: () => import('components/Login.vue') },
 
-  //rotas de usuarios
+  // ROTAS DE USUARIO
   { path: '/usuario',  component: () => import('components/views/user/ListUser.vue') },
   { path: '/usuario/perfil/:id',  component: () => import('components/views/user/ProfileUser.vue') },
   { path: '/usuario/editar/:id',  component: () => import('components/views/user/EditUser.vue') },
   { path: '/usuario/cadastro',  component: () => import('components/views/user/CreateUser.vue') },
 
-  // rotas de pessoas
+  // ROTAS DE PESSOAS
   { path: '/pessoas',  component: () => import('components/views/person/ListPerson.vue') },
   { path: '/pessoa/perfil',  component: () => import('components/views/person/ProfilePerson.vue') },
   { path: '/pessoa/editar/:id',  component: () => import('components/views/person/EditPerson.vue') },
@@ -18,6 +18,10 @@ export default [
   { path: '/pessoa/editar-contato',  component: () => import('components/views/person/EditContact.vue') },
   { path: '/pessoa/novo-endereco/:id',  component: () => import('components/views/person/NewAddress.vue') },
   { path: '/pessoa/editar-endereco/:id',  component: () => import('components/views/person/EditAddress.vue') },
+
+  // ROTAS DE PRODUTOR
+  { path: '/administracao',  component: () => import('components/views/farmer/ListFarmer.vue') },
+  { path: '/administracao/nova-area',  component: () => import('components/views/farmer/NewFarmer.vue') },
 
   // rota de exemplo
   { path: '/exemplo',  component: () => import('components/views/example/InfinitScroll.vue') },
