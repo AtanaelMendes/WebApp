@@ -2,7 +2,7 @@
   <custom-page isChild>
     <toolbar slot="toolbar" navigation_type="noneAndBack" @navigation_clicked="backAction">
       <template slot="action_itens" v-if="account">
-        <q-btn flat round dense icon="edit" />
+        <q-btn flat round dense icon="edit" @click.native="editUser(account.id)"/>
         <q-btn flat round dense icon="more_vert" >
           <q-popover anchor="bottom left">
             <q-list link>
@@ -81,6 +81,9 @@
           }).catch( error => {
 
           })
+        },
+        editUser: function(id){
+          this.$router.push({name: 'edit_user', params: {id:id}});
         },
         disableAccount: function(id) {
           this.$q.dialog({

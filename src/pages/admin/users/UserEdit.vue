@@ -1,7 +1,7 @@
 <template>
   <custom-page isChild>
-    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Novo Unuário">
-      <q-btn slot="action_itens" flat dense label="salvar" @click="saveAccount()"/>
+    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Editar Unuário">
+      <q-btn slot="action_itens" flat dense label="salvar" @click="updateAccount()"/>
     </toolbar>
 
     <form class="q-pa-md">
@@ -51,7 +51,7 @@
   import { Loading } from 'quasar'
 
   export default {
-    name: "UserAdd",
+    name: "UserEdit",
     components: {
       toolbar,
       customPage,
@@ -61,6 +61,7 @@
       return {
         roles: null,
         formChanged: false,
+        accountId: null,
         form: {
           email: {
             value: null,
@@ -96,7 +97,7 @@
     validations: {
       form: {
         email: { value: { required, email } },
-        password: { value: {required, minLength: minLength(8) } },
+        password: { value: {minLength: minLength(8) } },
         repeatPassword: { value: {function () {
               return this.form.repeatPassword.value === this.form.password.value;
             }}},
@@ -104,6 +105,21 @@
       }
     },
     methods:{
+      getUser: function(id) {
+        Loading.show();
+        this.$axios.get( 'account/'+ id).then( response => {
+          let account = response.data;
+
+          this.accountId = account.id;
+          this.form.email.value = account.email;
+          this.form.selectedRoles.value = account.roles;
+
+          Loading.hide();
+
+        }).catch( error => {
+          Loading.hide();
+        })
+      },
       openRolesDialog: function() {
         this.$q.dialog({
           title: 'Funções',
@@ -170,7 +186,7 @@
           this.form.selectedRoles.value.splice(id,1)
         })
       },
-      saveAccount: function () {
+      updateAccount: function () {
         this.$v.form.$touch();
 
         if ( this.$v.form.$error ) {
@@ -185,9 +201,7 @@
             this.form.email.errorMessage = "Este email é inválido"
           }
 
-          if(this.form.password.error && !this.$v.form.password.value.required){
-            this.form.password.errorMessage = "Digite uma senha"
-          }else if(this.form.password.error && !this.$v.form.password.value.minLength){
+          if(this.form.password.error && !this.$v.form.password.value.minLength){
             this.form.password.errorMessage = "A senha deve ter no mínimo 8 caracteres"
           }
 
@@ -211,13 +225,13 @@
 
         };
 
-        this.$axios.post( 'account', params ).then( response => {
-          if (response.status === 201){
+        this.$axios.put( 'account/' + this.accountId, params ).then( response => {
+          if (response.status === 200){
             Loading.hide();
 
             this.$q.notify({
               type: 'positive',
-              message: 'Cadastro criado com sucesso'
+              message: 'Cadastro atualizado com sucesso'
             });
 
             this.formChanged = false;
@@ -239,14 +253,15 @@
       }
     },
     mounted(){
-      this.listRoles()
+      this.listRoles();
+      this.getUser(this.$route.params.id );
     },
     beforeRouteLeave (to, from, next) {
-      if(from.name === "add_user") {
+      if(from.name === "edit_user") {
         if (this.formChanged) {
           this.$q.dialog({
             title: 'Atenção',
-            message: 'Se sair você perderá todas as informações. Deseja continuar?',
+            message: 'Se sair você perderá todas as alterações. Deseja continuar?',
             ok: 'Sim',
             cancel: 'Cancelar',
             preventClose: true,
