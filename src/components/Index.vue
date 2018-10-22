@@ -44,10 +44,10 @@
           </q-item-main>
         </q-item>
 
-        <q-item @click.native="$router.push('/administracao')">
+        <q-item @click.native="$router.push('/areas')">
           <q-item-side icon="people"/>
           <q-item-main>
-            Administração
+            Áreas
           </q-item-main>
         </q-item>
 

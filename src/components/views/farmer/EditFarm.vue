@@ -1,12 +1,14 @@
 <template>
   <AgroLayout back-path="/areas">
     <div slot="title">
-      Nova Área
+      Editar Área
     </div>
+
+
     <div slot="content" >
 
       <q-page padding class="row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
 
           <!--LOCALIZACAO-->
           <q-item>
@@ -57,7 +59,7 @@
             <q-item>
               <q-item-main>
                 <span v-for="talhao in arrayTalhoes" :key="talhao.nome">
-                  <q-chip closable @hide="removeTalhao(talhao)" class="q-ma-xs">
+                  <q-chip closable @hide="deleteTalhao(talhao)" class="q-ma-xs">
                     {{talhao.nome}}
                   </q-chip>
                 </span>
@@ -73,14 +75,15 @@
 
           <q-item>
             <q-item-main align="end">
-              <q-btn color="secondary" label="salvar" @click.native="createArea()"/>
+              <q-btn color="secondary" label="salvar" @click.native="updateArea()"/>
             </q-item-main>
           </q-item>
 
         </div>
+
       </q-page>
 
-      <!--MODALADICIONAR TALHAO-->
+      <!--MODAL ADICIONAR TALHAO-->
       <template>
         <q-modal v-model="modalAddTalhao" minimized>
 
@@ -89,11 +92,11 @@
             <q-item>
               <q-item-main class="gutter-y-sm">
                 <q-item-tile>
-                  <q-input float-label="Nome Talhão" v-model="novoTalhao" @keyup.enter="addTalhao()"/>
+                  <q-input float-label="Nome Talhão" v-model="novoTalhao" @keyup.enter="verifynomeTalhao()"/>
                 </q-item-tile>
                 <q-item-tile align="end">
                   <q-btn label="cancelar" color="secondary" flat @click.native="modalAddTalhao = false"/>
-                  <q-btn label="adicionar" color="secondary" @click.native="addTalhao()"/>
+                  <q-btn label="adicionar" color="secondary" @click.native="verifynomeTalhao()"/>
                 </q-item-tile>
               </q-item-main>
             </q-item>
@@ -101,18 +104,18 @@
           </q-list>
         </q-modal>
       </template>
-      <!-- FIM MODALADICIONAR TALHAO-->
+      <!-- FIM MODAL ADICIONAR TALHAO-->
+
 
     </div>
   </AgroLayout>
 </template>
 
 <script>
-
   import AgroLayout from 'layouts/AgroLayout'
 
   export default {
-    name: 'index-example',
+    name: 'edit-farm',
     components: {
       AgroLayout
     },
@@ -146,23 +149,47 @@
           }
         ],
         loaded: false,
+        talhaoLoaded: false,
         modalAddTalhao: false,
         novoTalhao: null,
+        areaData: null,
         arrayTalhoes: [],
         formFarmer: {
           produtorID: null,
           localizacaoID: null,
           tamanho: null,
           unidadeMedidaID: 'Área',
-        },
+        }
       }
     },
     methods: {
-      removeTalhao: function(id) {
-        var rm = this.arrayTalhoes.indexOf(id)
-        this.arrayTalhoes.splice(rm, 1)
+      listTalhao: function(id) {
+        this.$axios.get( 'rota' ).then( response => {
+          console.log(response)
+          this.arrayTalhoes = response.data
+          this.talhaoLoaded = true
+        }).catch( error => {
+          console.log(error)
+        })
       },
-      addTalhao: function() {
+      loadArea: function() {
+        this.$axios.get( 'rota' ).then( response => {
+          console.log(response)
+          this.areaData = response
+          this.loaded = true
+          this.listTalhao(this.areaData.id)
+        }).catch( error => {
+          console.log(error)
+        })
+      },
+      deleteTalhao: function(id) {
+        vm.$axios.del( 'rota/'+ id ).then( response => {
+          console.log(response)
+        }).catch( error => {
+          console.log(error)
+        })
+      },
+      verifynomeTalhao: function() {
         let vm = this
         vm.arrayTalhoes.push({
           nome: vm.novoTalhao
@@ -177,26 +204,28 @@
           vm.arrayTalhoes.pop()
           vm.$q.notify({
             type: 'negative',
-            message: 'Este nome já foi adicionado'
+            message: 'Este nome já existe'
           })
           return
         }
-        this.modalAddTalhao = false
-        this.novoTalhao = null
+        this.createTalhao()
       },
-      createTalhao: function(id) {
+      createTalhao: function () {
         let vm = this
-        let params = {
-          area_id: id
-        }
-        vm.$axios.post( 'rota/'+ params ).then( response => {
-          console.log(response)
-        }).catch( error => {
-          console.log('Erro Ocorrido:')
-          console.log(error)
-        })
+
+        // let params = {
+        //   area_id: this.areaData.id,
+        //   nome: this.novoTalhao
+        // }
+        // vm.$axios.post( 'rota/'+ params ).then( response => {
+        //   console.log(response)
+          this.modalAddTalhao = false
+          this.novoTalhao = null
+        // }).catch( error => {
+        //   console.log(error)
+        // })
       },
-      createArea: function() {
+      updateArea: function() {
         let vm = this
         let params = {
           produtor_id: vm.produtorID,
@@ -204,16 +233,17 @@
           tamanho: vm.tamanho,
           unidade_medida_id: vm.unidadeMedidaID
         }
-        vm.$axios.post( 'rota/'+ params ).then( response => {
-          vm.areaID = response.data
-          this.createTalhao(id)
-          console.log(vm.areaID)
+        vm.$axios.put( 'rota/'+ params ).then( response => {
+          console.log(response)
         }).catch( error => {
           console.log('Erro Ocorrido:')
           console.log(error)
         })
       }
     },
+    mounted() {
+      // this.loadArea
+    }
   }
 </script>
 

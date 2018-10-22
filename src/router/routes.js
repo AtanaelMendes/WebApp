@@ -19,9 +19,10 @@ export default [
   { path: '/pessoa/novo-endereco/:id',  component: () => import('components/views/person/NewAddress.vue') },
   { path: '/pessoa/editar-endereco/:id',  component: () => import('components/views/person/EditAddress.vue') },
 
-  // ROTAS DE PRODUTOR
-  { path: '/administracao',  component: () => import('components/views/farmer/ListFarmer.vue') },
-  { path: '/administracao/nova-area',  component: () => import('components/views/farmer/NewFarmer.vue') },
+  // ROTAS DE AREA
+  { path: '/areas',  component: () => import('components/views/farmer/ListFarmer.vue') },
+  { path: '/area/nova-area',  component: () => import('components/views/farmer/NewFarmer.vue') },
+  { path: '/area/editar-area',  component: () => import('components/views/farmer/EditFarm.vue') },
 
   // rota de exemplo
   { path: '/exemplo',  component: () => import('components/views/example/InfinitScroll.vue') },

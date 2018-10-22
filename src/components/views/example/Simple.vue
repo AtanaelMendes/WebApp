@@ -1,8 +1,8 @@
 <template>
   <AgroLayout back-path="/exemplo">
-    <template slot="title">
+    <div slot="title">
       Novo Cadastro
-    </template>
+    </div>
 
 
     <div slot="content" >

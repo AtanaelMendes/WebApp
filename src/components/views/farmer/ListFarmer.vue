@@ -1,8 +1,13 @@
 <template>
   <AgroLayout back-path="/" rightDrawer>
-    <template slot="title">
+    <div slot="title">
       Administração
-    </template>
+    </div>
+
+    <div slot="rightBtn">
+      <q-btn flat round icon="edit" @click="editArea()" v-if="$q.platform.is.desktop && areaLoaded"/>
+    </div>
+
 
     <!--MENU DA DIREITA-->
     <div slot="rightDrawer">
@@ -154,7 +159,7 @@
       </q-page>
 
       <q-page-sticky corner="bottom-right" :offset="[25, 25]">
-        <q-btn size="20px" round color="secondary" @click.native="$router.push('/administracao/nova-area')" icon="person_add" />
+        <q-btn size="20px" round color="secondary" @click.native="$router.push('/area/nova-area')" icon="person_add" />
       </q-page-sticky>
 
     </div>
@@ -184,6 +189,9 @@
     methods: {
       selectArea: function() {
         this.areaLoaded = true
+      },
+      editArea: function(){
+        this.$router.push('/area/editar-area')
       },
       axiosRequest: function() {
         let vm = this

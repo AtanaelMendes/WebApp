@@ -1,11 +1,11 @@
 <template>
   <AgroLayout drawer back-path="/exemplo">
-    <template slot="title">
+    <div slot="title">
       Titulo
-    </template>
+    </div>
 
     <!-- Menu Drawer (Esquerda) -->
-    <template slot="drawer" width="200" style="width: 200px;">
+    <div slot="drawer" width="200" style="width: 200px;">
       <q-list highlight no-border>
 
         <q-item>
@@ -16,7 +16,7 @@
         </q-item>
 
       </q-list>
-    </template>
+    </div>
 
     <div slot="content" >
 

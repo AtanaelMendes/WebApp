@@ -3,8 +3,6 @@ import router from '../router'
 
 export default {
   handle: function (response) {
-    console.log('aqui no refresh')
-
     let data = {
       grant_type: 'refresh_token',
       client_id: '2',
