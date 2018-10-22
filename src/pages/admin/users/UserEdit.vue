@@ -49,6 +49,8 @@
   import customInputText from 'components/CustomInputText.vue'
   import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
   import { Loading } from 'quasar'
+  import * as UserUtils from 'assets/js/UserUtils'
+  import UserMixin from 'components/mixins/users/UserMixin'
 
   export default {
     name: "UserEdit",
@@ -57,11 +59,12 @@
       customPage,
       customInputText
     },
+    mixins: [UserMixin],
     data(){
       return {
         roles: null,
-        formChanged: false,
         accountId: null,
+        copiedObj: null,
         form: {
           email: {
             value: null,
@@ -86,14 +89,6 @@
         }
       }
     },
-    watch: {
-      form: {
-        handler: function(val, oldval) {
-          this.formChanged = true;
-        },
-        deep: true,
-      }
-    },
     validations: {
       form: {
         email: { value: { required, email } },
@@ -114,76 +109,12 @@
           this.form.email.value = account.email;
           this.form.selectedRoles.value = account.roles;
 
+          this.copiedObj = JSON.parse(JSON.stringify(this.form));
+
           Loading.hide();
 
         }).catch( error => {
           Loading.hide();
-        })
-      },
-      openRolesDialog: function() {
-        this.$q.dialog({
-          title: 'Funções',
-          message: 'Selecione as funções do usuário.',
-          options: {
-            type: 'checkbox',
-            model: this.getIdsByRoles(this.form.selectedRoles.value),
-            items: this.parseRolesToItems(this.roles)
-          },
-          cancel: true,
-          preventClose: true,
-          color: 'primary'
-        }).then(data => {
-          this.replaceRoles(data)
-        })
-      },
-      parseRolesToItems: function(roles) {
-        var items = [];
-        roles.forEach(function (role) {
-          var item = {};
-          item['label'] = role.name;
-          item['value'] = role.id;
-          items.push(item)
-        });
-        return items
-      },
-      getIdsByRoles: function(roles) {
-        let rolesIds = [];
-        roles.forEach(function (role) {
-          rolesIds.push(role.id)
-        });
-        return rolesIds
-      },
-      getRolesById: function(ids) {
-        let roles = [];
-        for(let i = 0; i < ids.length; i++) {
-          this.roles.forEach(function (role) {
-            if(role.id === ids[i]){
-              roles.push(role)
-            }
-          })
-        }
-        return roles
-      },
-      listRoles: function() {
-        this.$axios.get( 'role' ).then( response => {
-          this.roles = response.data
-        })
-      },
-      replaceRoles: function(selectedRoles) {
-        this.form.selectedRoles.error = false;
-        this.form.selectedRoles.value = this.getRolesById(selectedRoles)
-      },
-      removeRole: function(role) {
-        this.$q.dialog({
-          title: 'Atenção',
-          message: 'Realmente deseja apagar essa permissão?',
-          ok: 'Sim',
-          cancel: 'Não',
-          preventClose: true,
-          color: 'primary'
-        }).then(data => {
-          let id = this.form.selectedRoles.value.indexOf(role);
-          this.form.selectedRoles.value.splice(id,1)
         })
       },
       updateAccount: function () {
@@ -221,7 +152,7 @@
         let params = {
           email: this.form.email.value,
           password: this.form.password.value,
-          roles: this.getIdsByRoles(this.form.selectedRoles.value).join()
+          roles: UserUtils.getIdsByRoles(this.form.selectedRoles.value).join()
 
         };
 
@@ -234,7 +165,7 @@
               message: 'Cadastro atualizado com sucesso'
             });
 
-            this.formChanged = false;
+            this.copiedObj = JSON.parse(JSON.stringify(this.form));
             this.$router.push('/admin/usuarios');
             this.$root.$emit('refreshUserList')
           }
@@ -254,11 +185,11 @@
     },
     mounted(){
       this.listRoles();
-      this.getUser(this.$route.params.id );
+      this.getUser(this.$route.params.id);
     },
     beforeRouteLeave (to, from, next) {
       if(from.name === "edit_user") {
-        if (this.formChanged) {
+        if (!UserUtils.compare(this.copiedObj, this.form)) {
           this.$q.dialog({
             title: 'Atenção',
             message: 'Se sair você perderá todas as alterações. Deseja continuar?',
