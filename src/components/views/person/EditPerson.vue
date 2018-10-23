@@ -11,9 +11,9 @@
 
     <div slot="tabHeader">
       <q-tabs v-model="tabs" color="secondary">
-        <q-tab slot="title" name="tab-perfil" icon="account_box" label="Perfil" default/>
-        <q-tab slot="title" name="tab-contato" icon="contact_mail" label="Contatos"/>
-        <q-tab slot="title" name="tab-endereco" icon="place" label="Endereços"/>
+        <q-tab slot="title" name="tab-perfil" label="Perfil" default/>
+        <q-tab slot="title" name="tab-contato" label="Contatos"/>
+        <q-tab slot="title" name="tab-endereco" label="Endereços"/>
       </q-tabs>
     </div>
 

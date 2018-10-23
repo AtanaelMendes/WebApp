@@ -14,51 +14,51 @@
           <form class="gutter-y-xs" @keyup.enter="createAddress()">
             <div>
               <q-input
-                v-model="form.endereco"
+                v-model="formUser.endereco"
                 float-label="Endereço"
                 clearable
-                @blur="$v.form.endereco.$touch"
-                :error="$v.form.endereco.$error"
+                @blur="$v.formUser.endereco.$touch"
+                :error="$v.formUser.endereco.$error"
               />
             </div>
             <div>
               <q-input
-                v-model="form.numero"
+                v-model="formUser.numero"
                 type="number"
                 float-label="Número"
                 clearable
-                @blur="$v.form.numero.$touch"
-                :error="$v.form.numero.$error"
+                @blur="$v.formUser.numero.$touch"
+                :error="$v.formUser.numero.$error"
               />
             </div>
             <div>
-              <q-input v-model="form.complemento" float-label="Complemento" clearable/>
+              <q-input v-model="formUser.complemento" float-label="Complemento" clearable/>
             </div>
             <div>
               <q-input
-                v-model="form.bairro"
+                v-model="formUser.bairro"
                 float-label="Bairro"
                 clearable
-                @blur="$v.form.bairro.$touch"
-                :error="$v.form.bairro.$error"
+                @blur="$v.formUser.bairro.$touch"
+                :error="$v.formUser.bairro.$error"
               />
             </div>
             <div>
               <q-select
-                v-model="form.cidade"
+                v-model="formUser.cidade"
                 placeholder="Cidade"
                 clearable
                 :options="selectOptions"
-                @blur="$v.form.cidade.$touch"
-                :error="$v.form.cidade.$error"
+                @blur="$v.formUser.cidade.$touch"
+                :error="$v.formUser.cidade.$error"
               />
             </div>
             <div>
-              <q-input v-model="form.cep" type="number" float-label="CEP" clearable/>
+              <q-input v-model="formUser.cep" type="number" float-label="CEP" clearable/>
             </div>
             <div>
-              <q-checkbox class="q-pr-sm" v-model="form.fiscal" label="Fiscal" />
-              <q-checkbox v-model="form.cobranca" label="Cobrança" />
+              <q-checkbox class="q-pr-sm" v-model="formUser.fiscal" label="Fiscal" />
+              <q-checkbox v-model="formUser.cobranca" label="Cobrança" />
             </div>
             <div align="end">
               <q-btn color="secondary" label="Salvar" @click="createAddress()" v-if="$q.platform.is.desktop"/>

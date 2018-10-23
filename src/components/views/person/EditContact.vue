@@ -38,7 +38,6 @@
           <q-item>
             <q-item-main >
               <q-input
-                type="number"
                 float-label="Telefone"
                 v-model="formContact.phone"
                 clearable
@@ -80,7 +79,6 @@
   import { required, maxLength, requiredIf, minLength, email } from 'vuelidate/lib/validators'
   import AgroLayout from 'layouts/AgroLayout'
   import EditContactMixin from 'components/views/mixins/EditContactMixin'
-
   export default {
     name: 'index-example',
     components: {
@@ -90,12 +88,12 @@
     validations: {
       formContact: {
         nome: { required, minLength: minLength(3) },
-        email: { email, required: requiredIf(function () { return this.form.phone == undefined}) },
+        email: { email, required: requiredIf(function () { return this.formContact.phone == undefined}) },
         phone: { minLength: minLength(10), maxLength: maxLength(11),
-          required: requiredIf(function () { return this.form.email == undefined})
+          required: requiredIf(function () { return this.formContact.email == undefined})
         }
       }
-    },
+    }
   }
 </script>
 

@@ -16,8 +16,8 @@
                 float-label="Nome"
                 v-model="form.nome"
                 clearable
-                @blur="$v.form.nome.$touch"
-                :error="$v.form.nome.$error"
+                @blur="$v.formUser.nome.$touch"
+                :error="$v.formUser.nome.$error"
               />
             </q-item-main>
           </q-item>
@@ -29,8 +29,8 @@
                 float-label="Email"
                 v-model="form.email"
                 clearable
-                @blur="$v.form.email.$touch"
-                :error="$v.form.email.$error"
+                @blur="$v.formUser.email.$touch"
+                :error="$v.formUser.email.$error"
               />
             </q-item-main>
           </q-item>
@@ -42,8 +42,8 @@
                 float-label="Telefone"
                 v-model="form.phone"
                 clearable
-                @blur="$v.form.phone.$touch"
-                :error="$v.form.phone.$error"
+                @blur="$v.formUser.phone.$touch"
+                :error="$v.formUser.phone.$error"
               />
             </q-item-main>
 
@@ -87,7 +87,7 @@
     },
     data () {
       return {
-        form: {
+        formUser: {
           fiscal: false,
           cobranca: false,
           nome: null,
@@ -98,30 +98,30 @@
       }
     },
     validations: {
-      form: {
+      formUser: {
         nome: { required, minLength: minLength(3) },
-        email: { email, required: requiredIf(function () { return this.form.phone == undefined}) },
+        email: { email, required: requiredIf(function () { return this.formUser.phone == undefined}) },
         phone: { minLength: minLength(10), maxLength: maxLength(11),
-          required: requiredIf(function () { return this.form.email == undefined})
+          required: requiredIf(function () { return this.formUser.email == undefined})
         }
       }
     },
     methods: {
       create: function () {
-        this.$v.form.$touch()
-        if ( this.$v.form.$error ) {
-          if ( this.$v.form.nome.$error ){
+        this.$v.formUser.$touch()
+        if ( this.$v.formUser.$error ) {
+          if ( this.$v.formUser.nome.$error ){
             this.$q.notify( 'Nome Inválido' )
           }
-          if ( this.$v.form.email.$error ){
+          if ( this.$v.formUser.email.$error ){
             this.$q.notify( 'Email inválido' )
           }
-          if ( this.$v.form.phone.$error ){
+          if ( this.$v.formUser.phone.$error ){
             this.$q.notify( 'Telefone inválido' )
           }
           return
         }
-        if (this.form.fiscal == false && this.form.cobranca == false ){
+        if (this.formUser.fiscal == false && this.formUser.cobranca == false ){
           this.$q.notify( 'Selecione ao menos um tipo de contato' )
           return
         }
@@ -131,8 +131,8 @@
         })
         // let vm = this
         // let params = {
-        //   email: vm.form.email,
-        //   password: vm.form.password,
+        //   email: vm.formUser.email,
+        //   password: vm.formUser.password,
         // }
         // vm.$axios.post( 'account', params ).then( response => {
         //   if (response.status == 201){

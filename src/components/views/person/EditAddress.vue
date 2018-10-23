@@ -62,7 +62,7 @@
             value: 'fb'
           }
         ],
-        form: {
+        formUser: {
           endereco: null,
           numero: null,
           complemento: null,
@@ -75,7 +75,7 @@
       }
     },
     validations: {
-      form: {
+      formUser: {
         endereco: { required, minLength: minLength(5) },
         numero: { required },
         bairro: { required, minLength: minLength(5) },
@@ -85,30 +85,30 @@
     },
     methods: {
       fakeData: function() {
-        this.form.endereco = 'Rua dos Flamboyants'
-        this.form.numero = '701'
-        this.form.bairro = 'Jardim Jacarandas'
-        this.form.cep = 78555000
-        this.form.fiscal = true
+        this.formUser.endereco = 'Rua dos Flamboyants'
+        this.formUser.numero = '701'
+        this.formUser.bairro = 'Jardim Jacarandas'
+        this.formUser.cep = 78555000
+        this.formUser.fiscal = true
       },
       update: function () {
-        this.$v.form.$touch()
-        if ( this.$v.form.$error ) {
-          if ( this.$v.form.endereco.$error ){
+        this.$v.formUser.$touch()
+        if ( this.$v.formUser.$error ) {
+          if ( this.$v.formUser.endereco.$error ){
             this.$q.notify( 'Informe um endereço' )
           }
-          if ( this.$v.form.numero.$error ){
+          if ( this.$v.formUser.numero.$error ){
             this.$q.notify( 'Informe o numero' )
           }
-          if ( this.$v.form.bairro.$error ){
+          if ( this.$v.formUser.bairro.$error ){
             this.$q.notify( 'Informe o bairro' )
           }
-          if ( this.$v.form.cidade.$error ){
+          if ( this.$v.formUser.cidade.$error ){
             this.$q.notify( 'Informe a cidade' )
           }
           return
         }
-        if (this.form.fiscal == false && this.form.cobranca == false ){
+        if (this.formUser.fiscal == false && this.formUser.cobranca == false ){
           this.$q.notify( 'Selecione ao menos um tipo de endereco' )
           return
         }
