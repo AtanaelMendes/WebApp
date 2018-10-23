@@ -6,7 +6,7 @@ methods: {
       message: 'Selecione as funções do usuário.',
       options: {
         type: 'checkbox',
-        model: this.getIdsByRoles(this.form.selectedRoles),
+        model: this.getIdsByRoles(this.formUser.selectedRoles),
         items: this.rolesToItems()
       },
       cancel: true,
@@ -45,11 +45,11 @@ methods: {
     return roles
   },
   replaceRoles: function(selectedRoles) {
-    this.form.selectedRoles = this.getRolesById(selectedRoles)
+    this.formUser.selectedRoles = this.getRolesById(selectedRoles)
   },
   removeRole: function(role) {
-    var id = this.form.selectedRoles.indexOf(role)
-    this.form.selectedRoles.splice(id,1)
+    var id = this.formUser.selectedRoles.indexOf(role)
+    this.formUser.selectedRoles.splice(id,1)
   },
   listRoles: function() {
     let vm = this

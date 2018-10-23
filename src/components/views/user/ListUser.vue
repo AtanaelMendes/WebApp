@@ -93,6 +93,10 @@
                   <q-item-main>
                     {{userProfile.email}}
                   </q-item-main>
+                  <q-item-side>
+                    <q-btn @click.native="activateUser(userProfile.id)" color="primary" flat label="ativar" v-if="userProfile.deleted_at"/>
+                    <q-btn @click.native="inactivateUser(userProfile.id)" color="primary" flat label="inativar" v-else/>
+                  </q-item-side>
                 </q-item>
 
               </q-card-main>
@@ -103,12 +107,6 @@
                   {{userRoles.name}}
                 </q-chip>
               </q-card-main>
-              <q-card-separator/>
-
-              <q-card-actions align="end">
-                <q-btn @click.native="activateUser(userProfile.id)" color="primary" flat label="ativar" v-if="userProfile.deleted_at"/>
-                <q-btn @click.native="inactivateUser(userProfile.id)" color="primary" flat label="inativar" v-else/>
-              </q-card-actions>
 
             </q-card>
 

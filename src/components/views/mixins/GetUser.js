@@ -4,8 +4,8 @@ export default {
       let vm = this
       vm.$axios.get( 'account/'+ vm.$route.params.id ).then( response => {
         vm.userData = response.data
-        vm.form.selectedRoles = vm.userData.roles
-        vm.form.email = vm.userData.email
+        vm.formUser.selectedRoles = vm.userData.roles
+        vm.formUser.email = vm.userData.email
       }).catch( error => {
         if (error.response.status == 404){
           this.$q.dialog({

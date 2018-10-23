@@ -12,58 +12,69 @@
     <div slot="content" >
 
         <q-page padding class="row">
-          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 q-px-sm">
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 q-px-sm">
 
-            <form @keyup.enter="create()" class="gutter-sm">
+            <form @keyup.enter="create()">
+              <div class="gutter-y-sm">
 
-              <div>
-                <q-field >
-                  <q-input v-model="form.email"
-                           placeholder="informe seu email"
-                           float-label="Email"
-                           type="text"
-                           @blur="$v.form.email.$touch"
-                           :error="$v.form.email.$error"
+                <div>
+                  <q-input
+                    clearable
+                    v-model="formUser.email"
+                    placeholder="informe seu email"
+                    float-label="Email"
+                    type="text"
+                    @blur="$v.formUser.email.$touch"
+                    :error="$v.formUser.email.$error"
                   />
-                </q-field>
+                </div>
 
-                <q-field >
-                  <q-input v-model="form.password"
-                           placeholder="mínimo 8 caracteres"
-                           float-label="Senha"
-                           type="password"
-                           @blur="$v.form.password.$touch"
-                           :error="$v.form.password.$error"
+                <div>
+                  <q-input
+                    clearable
+                    v-model="formUser.password"
+                    placeholder="mínimo 8 caracteres"
+                    float-label="Senha"
+                    type="password"
+                    @blur="$v.formUser.password.$touch"
+                    :error="$v.formUser.password.$error"
                   />
-                </q-field>
+                </div>
 
-                <q-field  class="q-pb-lg">
-                  <q-input v-model="form.repeatPassword"
-                           placeholder="mínimo 8 caracteres"
-                           float-label="Confirmar Senha"
-                           type="password"
-                           @blur="$v.form.repeatPassword.$touch"
-                           :error="$v.form.repeatPassword.$error"
+                <div>
+                  <q-input
+                    clearable
+                    v-model="formUser.repeatPassword"
+                    placeholder="mínimo 8 caracteres"
+                    float-label="Confirmar Senha"
+                    type="password"
+                    @blur="$v.formUser.repeatPassword.$touch"
+                    :error="$v.formUser.repeatPassword.$error"
                   />
-                </q-field>
+                </div>
 
                 <div class="q-title q-mb-sm">Papéis</div>
-                <q-list id="chip_container"
-                        v-if="form.selectedRoles"
-                        class="chip-container"
-                        :class="{ 'chip-container-error': $v.form.selectedRoles.$error }"
+                <div>
+                  <q-list
+                    id="chip_container"
+                    v-if="formUser.selectedRoles"
+                    class="chip-container"
+                    :class="{ 'chip-container-error': $v.formUser.selectedRoles.$error }"
                   >
-                  <q-item v-for="role in form.selectedRoles" :key="role.id" class="chip-inline">
-                    <q-chip class="q-ma-xs" @hide="removeRole(role)" closable color="secondary" text-color="white">{{role.name}}</q-chip>
-                  </q-item>
-                </q-list>
+                    <q-item v-for="role in formUser.selectedRoles" :key="role.id" class="chip-inline">
+                      <q-chip class="q-ma-xs" @hide="removeRole(role)" closable color="secondary" text-color="white">{{role.name}}</q-chip>
+                    </q-item>
+                  </q-list>
+                </div>
 
-                <q-btn class="full-width q-mt-md" color="secondary" @click="openRolesDialog()" label="Adicionar"/>
+                <div>
+                  <q-btn class="full-width q-mt-md" color="secondary" @click="openRolesDialog()" label="Adicionar"/>
+                </div>
 
-              </div>
+                <div align="end">
+                  <q-btn color="secondary" label="Cadastrar" @click="create()" v-if="$q.platform.is.desktop"/>
+                </div>
 
-              <div align="end">
-                <q-btn color="secondary" label="Cadastrar" @click="create()" v-if="$q.platform.is.desktop"/>
               </div>
 
             </form>
@@ -89,7 +100,7 @@ export default {
   data () {
     return {
       papeis: null,
-      form: {
+      formUser: {
         selectedRoles: [],
         email: null,
         password: null,
@@ -98,7 +109,7 @@ export default {
     }
   },
   validations: {
-    form: {
+    formUser: {
       email: { required, email},
       password: { required,  minLength: minLength(8) },
       repeatPassword: { sameAsPassword: sameAs('password') },
@@ -107,26 +118,26 @@ export default {
   },
   methods: {
     create: function () {
-      this.$v.form.$touch()
-      if ( this.$v.form.$error ) {
-        if( this.$v.form.selectedRoles.$error ){
+      this.$v.formUser.$touch()
+      if ( this.$v.formUser.$error ) {
+        if( this.$v.formUser.selectedRoles.$error ){
           this.$q.notify( 'Selecione ao menos um papel' )
         }
-        if( this.$v.form.email.$error ){
+        if( this.$v.formUser.email.$error ){
           this.$q.notify( 'Email inválido' )
         }
-        if( this.$v.form.password.$error ){
+        if( this.$v.formUser.password.$error ){
           this.$q.notify( 'Senha inválida' )
         }
-        if( this.$v.form.repeatPassword.$error ){
+        if( this.$v.formUser.repeatPassword.$error ){
           this.$q.notify( 'As senhas não conferem' )
         }
         return
       }
       // let vm = this
       // let params = {
-      //   email: vm.form.email,
-      //   password: vm.form.password,
+      //   email: vm.formUser.email,
+      //   password: vm.formUser.password,
       // }
       // vm.$axios.post( 'account', params ).then( response => {
       //   if (response.status == 201){
