@@ -48,8 +48,8 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
-  import { Loading } from 'quasar'
   import UserService from 'assets/js/UserService'
+  import FormMixin from 'components/mixins/FormMixin'
 
   export default {
     name: "UserEdit",
@@ -58,11 +58,11 @@
       customPage,
       customInputText
     },
+    mixins: [FormMixin],
     data(){
       return {
         roles: null,
         accountId: null,
-        copiedObj: null,
         form: {
           email: {
             value: null,
@@ -95,20 +95,14 @@
     },
     methods:{
       getUser: function(id) {
-        Loading.show();
-        this.$axios.get( 'account/'+ id).then( response => {
+        UserService.getAccount(id).then(response => {
           let account = response.data;
 
           this.accountId = account.id;
           this.form.email.value = account.email;
           this.form.selectedRoles.value = account.roles;
 
-          this.copiedObj = JSON.parse(JSON.stringify(this.form));
-
-          Loading.hide();
-
-        }).catch( error => {
-          Loading.hide();
+          this.setFormObj(this.form);
         })
       },
       openRolesDialog: function(){
@@ -153,7 +147,6 @@
           email: this.form.email.value,
           password: this.form.password.value,
           roles: UserService.getIdsByRoles(this.form.selectedRoles.value).join()
-
         };
 
         UserService.updateAccount(params, this.accountId).then(response => {
@@ -162,7 +155,7 @@
             message: 'Cadastro atualizado com sucesso'
           });
 
-          this.copiedObj = JSON.parse(JSON.stringify(this.form));
+          this.setFormObj(this.form);
           this.$router.push('/admin/usuarios');
           this.$root.$emit('refreshUserList')
         }).catch(error => {
@@ -180,28 +173,9 @@
       }
     },
     mounted(){
+      this.routeName = 'edit_user';
       this.listRoles();
       this.getUser(this.$route.params.id);
-    },
-    beforeRouteLeave (to, from, next) {
-      if(from.name === "edit_user") {
-        if (!UserService.compare(this.copiedObj, this.form)) {
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Se sair você perderá todas as alterações. Deseja continuar?',
-            ok: 'Sim',
-            cancel: 'Cancelar',
-            preventClose: true,
-            color: 'primary'
-          }).then(data => {
-            next();
-          }).catch(() => {
-            // Picked "Cancel" or dismissed
-          });
-          return;
-        }
-      }
-      next()
     },
   }
 </script>

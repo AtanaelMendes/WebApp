@@ -40,13 +40,6 @@
           hideMainPage: false,
         }
       },
-      /*watch: {
-        '$route' (to, from) {
-          console.log('route switched')
-          console.log(to)
-          console.log(from)
-        }
-      },*/
       computed: {
         getContainerClasses: function () {
           return {
@@ -86,10 +79,6 @@
             this.hideMainPage = false;
           }
         }
-      },
-      beforeRouteLeave (to, from, next) {
-        console.log("beforeRouteLeave......")
-        next()
       },
     }
 </script>

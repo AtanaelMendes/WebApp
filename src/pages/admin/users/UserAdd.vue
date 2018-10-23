@@ -48,8 +48,8 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
-  import { Loading } from 'quasar'
   import UserService from 'assets/js/UserService'
+  import FormMixin from 'components/mixins/FormMixin'
 
   export default {
     name: "UserAdd",
@@ -58,6 +58,7 @@
       customPage,
       customInputText
     },
+    mixins: [FormMixin],
     data(){
       return {
         roles: null,
@@ -144,7 +145,7 @@
             message: 'Cadastro criado com sucesso'
           });
 
-          this.copiedObj = JSON.parse(JSON.stringify(this.form));
+          this.setFormObj(this.form);
           this.$router.push('/admin/usuarios');
           this.$root.$emit('refreshUserList')
         }).catch(error => {
@@ -161,29 +162,11 @@
       }
     },
     mounted(){
-      this.copiedObj = JSON.parse(JSON.stringify(this.form));
+      this.routeName = 'add_user';
+      this.setFormObj(this.form);
       this.listRoles()
     },
-    beforeRouteLeave (to, from, next) {
-      if(from.name === "add_user") {
-        if (!UserService.compare(this.copiedObj, this.form)) {
-          this.$q.dialog({
-            title: 'Atenção',
-            message: 'Se sair você perderá todas as informações. Deseja continuar?',
-            ok: 'Sim',
-            cancel: 'Cancelar',
-            preventClose: true,
-            color: 'primary'
-          }).then(data => {
-            next();
-          }).catch(() => {
-            // Picked "Cancel" or dismissed
-          });
-          return;
-        }
-      }
-      next()
-    },
+
   }
 </script>
 
