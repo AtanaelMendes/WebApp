@@ -18,17 +18,17 @@
 
         <div style="width: 50%; margin-left: 20px">
           <q-list-header class="q-pa-none">Funções</q-list-header>
-          <q-field :error="form.selectedRoles.error">
+          <q-field :error="form.selectedRoles.errorMessage != null">
             <q-list id="chip_container"
                     v-if="form.selectedRoles.value"
                     class="chip-container"
-                    :class="{ 'chip-container-error': form.selectedRoles.error }">
+                    :class="{ 'chip-container-error': form.selectedRoles.errorMessage != null }">
               <q-item v-for="role in form.selectedRoles.value" :key="role.id" class="chip-inline">
                 <q-chip class="q-ma-xs" @hide="removeRole(role)" closable color="secondary" text-color="white">{{role.name}}</q-chip>
               </q-item>
             </q-list>
             <div class="q-field-bottom row no-wrap q-field-no-input-fix" style="height: 22px">
-              <div class="q-field-error col" v-if="form.selectedRoles.error" >{{form.selectedRoles.errorMessage}}</div>
+              <div class="q-field-error col" v-if="form.selectedRoles.errorMessage != null" >{{form.selectedRoles.errorMessage}}</div>
             </div>
           </q-field>
 
@@ -49,8 +49,7 @@
   import customInputText from 'components/CustomInputText.vue'
   import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
   import { Loading } from 'quasar'
-  import * as UserUtils from 'assets/js/UserUtils'
-  import UserMixin from 'components/mixins/users/UserMixin'
+  import UserService from 'assets/js/UserService'
 
   export default {
     name: "UserAdd",
@@ -59,29 +58,24 @@
       customPage,
       customInputText
     },
-    mixins: [UserMixin],
     data(){
       return {
         roles: null,
         form: {
           email: {
             value: null,
-            error: false,
             errorMessage: null
           },
           password: {
             value: null,
-            error: false,
             errorMessage: null
           },
           repeatPassword: {
             value: null,
-            error: false,
             errorMessage: null
           },
           selectedRoles: {
             value: [],
-            error: false,
             errorMessage: null
           },
         }
@@ -98,62 +92,62 @@
       }
     },
     methods:{
+      openRolesDialog: function(){
+        UserService.openRolesDialog(this.form.selectedRoles.value, this.roles).then(roles =>{
+          this.form.selectedRoles.errorMessage = null;
+          this.form.selectedRoles.value = roles;
+        })
+      },
+      removeRole: function(role){
+        UserService.removeRole(this.form.selectedRoles.value, role);
+      },
+      listRoles: function(){
+        UserService.listRoles().then(roles => {this.roles = roles})
+      },
       saveAccount: function () {
         this.$v.form.$touch();
 
         if ( this.$v.form.$error ) {
-          this.form.email.error = this.$v.form.email.$error;
-          this.form.password.error = this.$v.form.password.$error;
-          this.form.repeatPassword.error = this.$v.form.repeatPassword.$error;
-          this.form.selectedRoles.error = this.$v.form.selectedRoles.$error;
-
-          if(this.form.email.error && !this.$v.form.email.value.required){
+          if(!this.$v.form.email.value.required){
             this.form.email.errorMessage = "Digite um email"
-          }else if(this.form.email.error && !this.$v.form.email.value.email){
+          }else if(!this.$v.form.email.value.email){
             this.form.email.errorMessage = "Este email é inválido"
           }
 
-          if(this.form.password.error && !this.$v.form.password.value.required){
+          if(!this.$v.form.password.value.required){
             this.form.password.errorMessage = "Digite uma senha"
-          }else if(this.form.password.error && !this.$v.form.password.value.minLength){
+          }else if(!this.$v.form.password.value.minLength){
             this.form.password.errorMessage = "A senha deve ter no mínimo 8 caracteres"
           }
 
-          if(this.form.repeatPassword.error){
+          if(!this.$v.form.repeatPassword.value.required){
             this.form.repeatPassword.errorMessage = "As senhas não são iguais"
           }
 
-          if(this.form.selectedRoles.error){
+          if(!this.$v.form.selectedRoles.value.required){
             this.form.selectedRoles.errorMessage = "Adicione ao menos uma função"
           }
 
           return;
         }
 
-        Loading.show();
-
         let params = {
           email: this.form.email.value,
           password: this.form.password.value,
-          roles: UserUtils.getIdsByRoles(this.form.selectedRoles.value).join()
+          roles: UserService.getIdsByRoles(this.form.selectedRoles.value).join()
 
         };
 
-        this.$axios.post( 'account', params ).then( response => {
-          if (response.status === 201){
-            Loading.hide();
+        UserService.saveAccount(params).then(response => {
+          this.$q.notify({
+            type: 'positive',
+            message: 'Cadastro criado com sucesso'
+          });
 
-            this.$q.notify({
-              type: 'positive',
-              message: 'Cadastro criado com sucesso'
-            });
-
-            this.copiedObj = JSON.parse(JSON.stringify(this.form));
-            this.$router.push('/admin/usuarios');
-            this.$root.$emit('refreshUserList')
-          }
-        }).catch( error => {
-          Loading.hide();
+          this.copiedObj = JSON.parse(JSON.stringify(this.form));
+          this.$router.push('/admin/usuarios');
+          this.$root.$emit('refreshUserList')
+        }).catch(error => {
           if (error.response.status === 422){
             this.$q.dialog({
               title:'Ops',
@@ -172,7 +166,7 @@
     },
     beforeRouteLeave (to, from, next) {
       if(from.name === "add_user") {
-        if (!UserUtils.compare(this.copiedObj, this.form)) {
+        if (!UserService.compare(this.copiedObj, this.form)) {
           this.$q.dialog({
             title: 'Atenção',
             message: 'Se sair você perderá todas as informações. Deseja continuar?',

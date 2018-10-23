@@ -1,8 +1,8 @@
 <template>
-  <q-field :error="model.error" class="q-mb-sm">
+  <q-field :error="model.errorMessage != null" class="q-mb-sm">
     <q-input v-model="model.value" v-on:input="clearErrorMessage()" :type="type" :float-label="label" :placeholder="placeholder"/>
     <div class="q-field-bottom row no-wrap" style="height: 22px">
-      <div class="q-field-error col" v-if="model.error" >{{model.errorMessage}}</div>
+      <div class="q-field-error col" v-if="model.errorMessage != null" >{{model.errorMessage}}</div>
     </div>
   </q-field>
 </template>
@@ -19,7 +19,7 @@
     data: function () {
       return {
         clearErrorMessage: function () {
-          this.model.error = false
+          this.model.errorMessage = null
         }
       }
     },
