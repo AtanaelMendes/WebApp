@@ -1,22 +1,23 @@
 <template>
   <AgroLayout back-path="/areas">
     <div slot="title">
-      Editar Área
+      Nova Área
     </div>
-
-
     <div slot="content" >
 
       <q-page padding class="row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
 
           <!--LOCALIZACAO-->
           <q-item>
             <q-item-main>
               <q-select
+                clearable
                 float-label="Localização"
-                v-model="formFarmer.localizacaoID"
                 :options="options"
+                v-model="formFarmer.localizacaoID"
+                @blur="$v.formArea.localizacaoID.$touch"
+                :error="$v.formArea.localizacaoID.$error"
               />
             </q-item-main>
           </q-item>
@@ -24,10 +25,23 @@
           <!--TAMANHO-->
           <q-item>
             <q-item-main>
-              <q-input float-label="Tamanho" v-model="formFarmer.tamanho" clearable/>
+              <q-input
+                float-label="Tamanho"
+                type="number"
+                clearable
+                v-model="formFarmer.tamanho"
+                @blur="$v.formArea.tamanho.$touch"
+                :error="$v.formArea.tamanho.$error"
+              />
             </q-item-main>
+
+            <!--UNIDADE MEDIDA-->
             <q-item-side>
-              <q-btn-dropdown color="secondary" :label="formFarmer.unidadeMedidaID">
+              <q-btn-dropdown
+                outline
+                :color="($v.formArea.unidadeMedidaID.$error)?'red':'secondary'"
+                :label="(formFarmer.unidadeMedidaID)?formFarmer.unidadeMedidaID:'Medida'"
+              >
                 <q-list link>
 
                   <q-item @click.native="formFarmer.unidadeMedidaID = 'm2' " v-close-overlay>
@@ -59,7 +73,7 @@
             <q-item>
               <q-item-main>
                 <span v-for="talhao in arrayTalhoes" :key="talhao.nome">
-                  <q-chip closable @hide="deleteTalhao(talhao)" class="q-ma-xs">
+                  <q-chip closable @hide="removeTalhao(talhao)" class="q-ma-xs">
                     {{talhao.nome}}
                   </q-chip>
                 </span>
@@ -75,15 +89,14 @@
 
           <q-item>
             <q-item-main align="end">
-              <q-btn color="secondary" label="salvar" @click.native="updateArea()"/>
+              <q-btn color="secondary" label="salvar" @click.native="createArea()"/>
             </q-item-main>
           </q-item>
 
         </div>
-
       </q-page>
 
-      <!--MODAL ADICIONAR TALHAO-->
+      <!--MODALADICIONAR TALHAO-->
       <template>
         <q-modal v-model="modalAddTalhao" minimized>
 
@@ -92,11 +105,11 @@
             <q-item>
               <q-item-main class="gutter-y-sm">
                 <q-item-tile>
-                  <q-input float-label="Nome Talhão" v-model="novoTalhao" @keyup.enter="verifynomeTalhao()"/>
+                  <q-input float-label="Nome Talhão" v-model="novoTalhao" @keyup.enter="addTalhao()"/>
                 </q-item-tile>
                 <q-item-tile align="end">
                   <q-btn label="cancelar" color="secondary" flat @click.native="modalAddTalhao = false"/>
-                  <q-btn label="adicionar" color="secondary" @click.native="verifynomeTalhao()"/>
+                  <q-btn label="adicionar" color="secondary" @click.native="addTalhao()"/>
                 </q-item-tile>
               </q-item-main>
             </q-item>
@@ -104,8 +117,7 @@
           </q-list>
         </q-modal>
       </template>
-      <!-- FIM MODAL ADICIONAR TALHAO-->
-
+      <!-- FIM MODALADICIONAR TALHAO-->
 
     </div>
   </AgroLayout>
@@ -113,9 +125,9 @@
 
 <script>
   import AgroLayout from 'layouts/AgroLayout'
-
+  import { required } from 'vuelidate/lib/validators'
   export default {
-    name: 'edit-farm',
+    name: 'index-example',
     components: {
       AgroLayout
     },
@@ -149,47 +161,30 @@
           }
         ],
         loaded: false,
-        talhaoLoaded: false,
         modalAddTalhao: false,
         novoTalhao: null,
-        areaData: null,
         arrayTalhoes: [],
-        formFarmer: {
+        formArea: {
           produtorID: null,
           localizacaoID: null,
           tamanho: null,
-          unidadeMedidaID: 'Área',
-        }
+          unidadeMedidaID: null,
+        },
+      }
+    },
+    validations: {
+      formArea: {
+        localizacaoID: { required },
+        tamanho: { required },
+        unidadeMedidaID: { required },
       }
     },
     methods: {
-      listTalhao: function(id) {
-        this.$axios.get( 'rota' ).then( response => {
-          console.log(response)
-          this.arrayTalhoes = response.data
-          this.talhaoLoaded = true
-        }).catch( error => {
-          console.log(error)
-        })
+      removeTalhao: function(id) {
+        var rm = this.arrayTalhoes.indexOf(id)
+        this.arrayTalhoes.splice(rm, 1)
       },
-      loadArea: function() {
-        this.$axios.get( 'rota' ).then( response => {
-          console.log(response)
-          this.areaData = response
-          this.loaded = true
-          this.listTalhao(this.areaData.id)
-        }).catch( error => {
-          console.log(error)
-        })
-      },
-      deleteTalhao: function(id) {
-        vm.$axios.del( 'rota/'+ id ).then( response => {
-          console.log(response)
-        }).catch( error => {
-          console.log(error)
-        })
-      },
-      verifynomeTalhao: function() {
+      addTalhao: function() {
         let vm = this
         vm.arrayTalhoes.push({
           nome: vm.novoTalhao
@@ -204,28 +199,39 @@
           vm.arrayTalhoes.pop()
           vm.$q.notify({
             type: 'negative',
-            message: 'Este nome já existe'
+            message: 'Este nome já foi adicionado'
           })
           return
         }
-        this.createTalhao()
+        this.modalAddTalhao = false
+        this.novoTalhao = null
       },
-      createTalhao: function () {
+      createTalhao: function(id) {
         let vm = this
-
-        // let params = {
-        //   area_id: this.areaData.id,
-        //   nome: this.novoTalhao
-        // }
-        // vm.$axios.post( 'rota/'+ params ).then( response => {
-        //   console.log(response)
-          this.modalAddTalhao = false
-          this.novoTalhao = null
-        // }).catch( error => {
-        //   console.log(error)
-        // })
+        let params = {
+          area_id: id
+        }
+        vm.$axios.post( 'rota/'+ params ).then( response => {
+          console.log(response)
+        }).catch( error => {
+          console.log('Erro Ocorrido:')
+          console.log(error)
+        })
       },
-      updateArea: function() {
+      createArea: function() {
+        this.$v.formArea.$touch()
+        if ( this.$v.formArea.$error ) {
+          if ( this.$v.formArea.localizacaoID.$error ) {
+            this.$q.notify( 'Selecione uma localização' )
+          }
+          if ( this.$v.formArea.tamanho.$error ) {
+            this.$q.notify( 'Imforme um tamanho' )
+          }
+          if ( this.$v.formArea.unidadeMedidaID.$error ) {
+            this.$q.notify( 'Selecione uma unidade de medida' )
+          }
+          return
+        }
         let vm = this
         let params = {
           produtor_id: vm.produtorID,
@@ -233,17 +239,16 @@
           tamanho: vm.tamanho,
           unidade_medida_id: vm.unidadeMedidaID
         }
-        vm.$axios.put( 'rota/'+ params ).then( response => {
-          console.log(response)
+        vm.$axios.post( 'rota/'+ params ).then( response => {
+          vm.areaID = response.data
+          this.createTalhao(id)
+          console.log(vm.areaID)
         }).catch( error => {
           console.log('Erro Ocorrido:')
           console.log(error)
         })
       }
     },
-    mounted() {
-      // this.loadArea
-    }
   }
 </script>
 
