@@ -146,7 +146,7 @@
           });
 
           this.setFormObj(this.form);
-          this.$router.push('/admin/usuarios');
+          this.$router.push({name: 'users'});
           this.$root.$emit('refreshUserList')
         }).catch(error => {
           if (error.response.status === 422){
@@ -158,7 +158,7 @@
         })
       },
       backAction: function () {
-        this.$router.push('/admin/usuarios')
+        this.$router.push({name: 'users'});
       }
     },
     mounted(){
