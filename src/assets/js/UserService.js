@@ -124,7 +124,7 @@ const updateAccount = (params, accountId) => {
 const getAccount = (accountId) => {
   return new Promise((resolve, reject) => {
     Loading.show();
-    this.$axios.get( 'account/'+ accountId).then( response => {
+    Vue.prototype.$axios.get( 'account/'+ accountId).then( response => {
       Loading.hide();
       resolve(response);
 
