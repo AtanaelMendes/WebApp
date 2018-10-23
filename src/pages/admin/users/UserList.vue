@@ -63,6 +63,7 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
+  import UserService from 'assets/js/UserService'
 
     export default {
       name: "UserList",
@@ -93,11 +94,11 @@
         listBySearch: function(val){
           this.filter.email = val;
         },
-        list: function(val) {
-          this.$axios.get( 'account?' + this.serialize(val) ).then( response => {
+        list: function(filter) {
+          UserService.listAccounts(filter).then(response => {
             this.users = response.data;
             this.isEmptyList = this.users.length === 0;
-          })
+          });
         },
         viewUser: function(id) {
           this.$router.push({name: 'view_user', params: {id:id}});
@@ -105,19 +106,11 @@
         addUser: function(){
           this.$router.push({name: 'add_user'});
         },
-        serialize: function(obj) {
-          var query = [];
-          for (var property in obj)
-            if (obj.hasOwnProperty(property)) {
-              if(obj[property] != null){
-                query.push(encodeURIComponent(property) + "=" + encodeURIComponent(obj[property]));
-              }
-            }
-          return query.join("&");
-        },
+
       },
       mounted () {
         this.list(this.filter);
+
         this.$root.$on('refreshUserList', () => {
           this.list(this.filter);
         });
