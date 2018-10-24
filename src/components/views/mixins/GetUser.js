@@ -14,8 +14,7 @@ export default {
           })
         }
         vm.$router.push( '/usuario' )
-        console.log('Erro Ocorrido:')
-        console.log(error)
+        console.log(error.request)
       })
     },
   },
