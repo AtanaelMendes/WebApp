@@ -137,6 +137,8 @@
 import { required, maxLength, requiredIf, minLength } from 'vuelidate/lib/validators'
 import AgroLayout from 'layouts/AgroLayout'
 import { Platform } from 'quasar'
+import CPF from 'gerador-validador-cpf'
+import ValidateCnpjMixin from 'components/views/mixins/ValidateCnpjMixin'
 import agroAutocompleteEconomicGroup from 'components/views/utils/agroAutocompleteEconomicGroup'
 import AgroSelectEconomicGroup from 'components/views/utils/AgroSelectEconomicGroup'
 export default {
@@ -146,6 +148,7 @@ export default {
     agroAutocompleteEconomicGroup,
     AgroSelectEconomicGroup
   },
+  mixins: [ValidateCnpjMixin],
   data () {
     return {
       docType: 1,
@@ -168,8 +171,8 @@ export default {
     formPerson: {
       nome: { required, minLength: minLength(3) },
       grupoEconomico: { required },
-      cpf: { minLength: minLength(11), maxLength: maxLength(11), required: requiredIf(function () { return this.docType == 1 }) },
-      cnpj: { minLength: minLength(14), maxLength: maxLength(14), required: requiredIf(function () { return this.docType == 2 }) },
+      cpf: { minLength: minLength(11), maxLength: maxLength(14), required: requiredIf(function () { return this.docType == 1 }) },
+      cnpj: { minLength: minLength(14), maxLength: maxLength(18), required: requiredIf(function () { return this.docType == 2 }) },
     },
     novoGrupoEconomico: { required, minLength: minLength(5) }
   },
@@ -186,16 +189,12 @@ export default {
       }
       vm.$axios.post( 'grupo_economico', params ).then( response => {
         if (response.status == 201){
-          vm.$q.notify({
-            type: 'positive',
-            message: 'Grupo criado com sucesso'
-          })
+          vm.$q.notify({ type: 'positive', message: 'Grupo criado com sucesso' })
         }
         vm.novoGrupoEconomico = null
         vm.modalCreateGE = false
       }).catch( error => {
-        console.log('Erro Ocorrido:')
-        console.log(error)
+        console.log(error.request)
         vm.modalCreateGE = false
       })
     },
@@ -206,7 +205,7 @@ export default {
           this.$q.notify( 'Nome inválido' )
         }
         if( this.$v.formPerson.cpf.$error ){
-          this.$q.notify( 'CPF inválido' )
+          this.$q.notify( 'Informe o CPF' )
         }
         if( this.$v.formPerson.cnpj.$error ){
           this.$q.notify( 'CNPJ inválido' )
@@ -217,10 +216,15 @@ export default {
         return
       }
       let vm = this
+      var validatedCpf = this.formatCpf(vm.formPerson.cpf)
+      if (validatedCpf == false){
+        this.$q.notify({type: 'negative', message: 'CPF Inválido'})
+        return
+      }
       let params = {
         grupo_economico_id: vm.formPerson.grupoEconomico,
         nome: vm.formPerson.nome,
-        cpf: this.formatCpf(vm.formPerson.cpf),
+        cpf: validatedCpf,
         cnpj: this.formatCnpj(vm.formPerson.cnpj),
         inscricao_estadual: vm.formPerson.ie,
         inscricao_municipal: vm.formPerson.im,
@@ -229,27 +233,29 @@ export default {
       }
       vm.$axios.post( 'pessoa', params ).then( response => {
         if (response.status == 201){
-          vm.$q.notify({
-            type: 'positive',
-            message: 'Cadastro criado com sucesso'
-          })
+          vm.$q.notify({ type: 'positive', message: 'Cadastro criado com sucesso' })
           vm.$router.push( '/pessoas' )
         }
       }).catch( error => {
-        console.log('Erro Ocorrido:')
-        console.log(error)
+        console.log(error.request)
       })
     },
     formatCpf: function(cpf){
-      if(cpf != null) {
-        cpf = this.numeral(cpf).format('00000000000').replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
+      var isCpf = CPF.validate(cpf)
+      if(cpf != null && isCpf == true) {
+        cpf = CPF.format(cpf)
         return cpf
+      }else {
+        return isCpf
       }
     },
     formatCnpj: function(cnpj){
-      if(cnpj != null) {
-        cnpj = this.numeral(cnpj).format('00000000000000').replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5")
+      var isCnpj = this.validateCnpj(cnpj)
+      if(cnpj != null && isCnpj == true) {
+        cnpj = this.formatCnpj(cnpj)
         return cnpj
+      }else {
+        return isCnpj
       }
     }
   },

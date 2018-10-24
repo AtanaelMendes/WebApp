@@ -199,7 +199,7 @@
       //     }
       //     vm.$router.push( '/pessoas' )
       //     console.log('Erro Ocorrido:')
-      //     console.log(error)
+      //     console.log(error.request)
       //   })
       }
     },

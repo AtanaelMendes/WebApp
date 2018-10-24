@@ -22,7 +22,7 @@
       <!--TAB PEFIL-->
       <q-page padding class="row" v-if="tabs == 'tab-perfil'">
         <div  class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
-          <form @keyup.enter="create()" class="q-mx-lg q-px-lg gutter-y-xs">
+          <form @keyup.enter="updatePerson()" class="q-mx-lg q-px-lg gutter-y-xs">
 
             <!--GRUPO ECONOMICO-->
             <div>
@@ -61,7 +61,7 @@
               <q-item class="q-pa-none">
                 <q-item-main v-if="docType == 1">
                   <q-input
-                    v-model="formPersonUpdate.cpf"
+                    v-model.trim="formPersonUpdate.cpf"
                     float-label="CPF"
                     @blur="$v.formPersonUpdate.cpf.$touch"
                     :error="$v.formPersonUpdate.cpf.$error"
@@ -72,7 +72,7 @@
                 <!--CNPJ-->
                 <q-item-main v-if="docType == 2">
                   <q-input
-                    v-model="formPersonUpdate.cnpj"
+                    v-model.trim="formPersonUpdate.cnpj"
                     float-label="CNPJ"
                     @blur="$v.formPersonUpdate.cnpj.$touch"
                     :error="$v.formPersonUpdate.cnpj.$error"
@@ -340,7 +340,8 @@ import agroAutocompleteEconomicGroup from 'components/views/utils/agroAutocomple
 import AgroSelectEconomicGroup from 'components/views/utils/AgroSelectEconomicGroup'
 import AgroLayout from 'layouts/AgroLayout'
 import { Platform } from 'quasar'
-
+import CPF from 'gerador-validador-cpf'
+import ValidateCnpjMixin from 'components/views/mixins/ValidateCnpjMixin'
 export default {
   nome: 'edit-person',
   components: {
@@ -348,6 +349,7 @@ export default {
     agroAutocompleteEconomicGroup,
     AgroSelectEconomicGroup
   },
+  mixins: [ValidateCnpjMixin],
   data () {
     return {
       modalCreateGE: false,
@@ -372,14 +374,60 @@ export default {
     formPersonUpdate: {
       nome: { required, minLength: minLength(3) },
       grupoEconomico: { required },
-      cpf: { minLength: minLength(11), maxLength: maxLength(11), required: requiredIf(function () { return this.docType == 1 }) },
-      cnpj: { minLength: minLength(14), maxLength: maxLength(14), required: requiredIf(function () { return this.docType == 2 }) },
+      cpf: { minLength: minLength(11), maxLength: maxLength(14), required: requiredIf(function () { return this.docType == 1 }) },
+      cnpj: { minLength: minLength(14), maxLength: maxLength(18), required: requiredIf(function () { return this.docType == 2 }) },
     },
     novoGrupoEconomico: { required, minLength: minLength(5) }
   },
   methods: {
     updatePerson: function() {
-      this.$q.notify( 'função de update' )
+      this.$v.formPersonUpdate.$touch()
+      if ( this.$v.formPersonUpdate.$error ) {
+        if( this.$v.formPersonUpdate.nome.$error ){
+          this.$q.notify( 'Nome inválido' )
+        }
+        if( this.$v.formPersonUpdate.cpf.$error ){
+          this.$q.notify( 'Informe o CPF' )
+        }
+        if( this.$v.formPersonUpdate.cnpj.$error ){
+          this.$q.notify( 'CNPJ inválido' )
+        }
+        if( this.$v.formPersonUpdate.grupoEconomico.$error ){
+          this.$q.notify( 'Selecione ao menos um grupo econômico' )
+        }
+        return
+      }
+      let vm = this
+      var id = this.$route.params.id
+      var validatedCpf = this.formatCpf(vm.formPersonUpdate.cpf)
+      var vailidatedCnpj = this.formatCnpj(vm.formPersonUpdate.cnpj)
+      if (validatedCpf == false){
+        this.$q.notify({type: 'negative', message: 'CPF Inválido'})
+        return
+      }
+      if (vailidatedCnpj == false){
+        this.$q.notify({type: 'negative', message: 'CNPJ Inválido'})
+        return
+      }
+      let params = {
+        grupo_economico_id: vm.formPersonUpdate.grupoEconomico,
+        nome: vm.formPersonUpdate.nome,
+        cpf: validatedCpf,
+        cnpj: vailidatedCnpj,
+        inscricao_estadual: vm.formPersonUpdate.ie,
+        inscricao_municipal: vm.formPersonUpdate.im,
+        razao_social: vm.formPersonUpdate.razaoSocial,
+        nome_fantasia: vm.formPersonUpdate.nomeFantasia
+      }
+      vm.$axios.put( 'pessoa/'+ id, params ).then( response => {
+        vm.$q.notify({ type: 'positive', message: 'Cadastro alterado com sucesso' })
+        vm.$router.push( '/pessoas' )
+      }).catch( error => {
+        if(error.request.status == 422){
+          vm.$q.notify({ type: 'negative', message: error.request.response })
+        }
+        console.log(error.request)
+      })
     },
     createEconomicGroup: function() {
       this.$v.novoGrupoEconomico.$touch()
@@ -401,8 +449,7 @@ export default {
         vm.novoGrupoEconomico = null
         vm.modalCreateGE = false
       }).catch( error => {
-        console.log('Erro Ocorrido:')
-        console.log(error)
+        console.log(error.request)
         vm.modalCreateGE = false
       })
     },
@@ -422,7 +469,7 @@ export default {
       //   vm.contacts = response.data
       // }).catch( error => {
       //   console.log('Erro Ocorrido:')
-      //   console.log(error)
+      //   console.log(error.request)
       // })
     },
     fillForm: function(person){
@@ -446,12 +493,28 @@ export default {
       vm.$axios.get( 'pessoa/'+ vm.$route.params.id ).then( response => {
         vm.personProfile = response.data
         this.fillForm(vm.personProfile)
-        console.log(vm.personProfile)
         vm.loaded = true
       }).catch( error => {
-        console.log('Erro Ocorrido:')
-        console.log(error)
+        console.log(error.request)
       })
+    },
+    formatCpf: function(cpf){
+      var isCpf = CPF.validate(cpf)
+      if(cpf != null && isCpf == true) {
+        cpf = CPF.format(cpf)
+        return cpf
+      }else {
+        return isCpf
+      }
+    },
+    formatCnpj: function(cnpj){
+      var isCnpj = this.validateCnpj(cnpj)
+      if(cnpj != null && isCnpj == true) {
+        cnpj = this.cnpjFormat(cnpj)
+        return cnpj
+      }else {
+        return isCnpj
+      }
     }
   },
   mounted() {

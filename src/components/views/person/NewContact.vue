@@ -79,7 +79,6 @@
 <script>
   import { required, maxLength, requiredIf, minLength, email } from 'vuelidate/lib/validators'
   import AgroLayout from 'layouts/AgroLayout'
-
   export default {
     name: 'new-contact',
     components: {

@@ -15,7 +15,7 @@
                 clearable
                 float-label="Localização"
                 :options="options"
-                v-model="formFarmer.localizacaoID"
+                v-model="formArea.localizacaoID"
                 @blur="$v.formArea.localizacaoID.$touch"
                 :error="$v.formArea.localizacaoID.$error"
               />
@@ -29,7 +29,7 @@
                 float-label="Tamanho"
                 type="number"
                 clearable
-                v-model="formFarmer.tamanho"
+                v-model="formArea.tamanho"
                 @blur="$v.formArea.tamanho.$touch"
                 :error="$v.formArea.tamanho.$error"
               />
@@ -40,25 +40,25 @@
               <q-btn-dropdown
                 outline
                 :color="($v.formArea.unidadeMedidaID.$error)?'red':'secondary'"
-                :label="(formFarmer.unidadeMedidaID)?formFarmer.unidadeMedidaID:'Medida'"
+                :label="(formArea.unidadeMedidaID)?formArea.unidadeMedidaID:'Medida'"
               >
                 <q-list link>
 
-                  <q-item @click.native="formFarmer.unidadeMedidaID = 'm2' " v-close-overlay>
+                  <q-item @click.native="formArea.unidadeMedidaID = 'm2' " v-close-overlay>
                     <q-item-main>
                       <q-item-tile>M²</q-item-tile>
                       <q-item-tile sublabel>Metros quadrados</q-item-tile>
                     </q-item-main>
                   </q-item>
 
-                  <q-item @click.native="formFarmer.unidadeMedidaID = 'hm2' " v-close-overlay>
+                  <q-item @click.native="formArea.unidadeMedidaID = 'hm2' " v-close-overlay>
                     <q-item-main>
                       <q-item-tile>HM²</q-item-tile>
                       <q-item-tile sublabel>Hectare</q-item-tile>
                     </q-item-main>
                   </q-item>
 
-                  <q-item @click.native="formFarmer.unidadeMedidaID = 'hag' " v-close-overlay>
+                  <q-item @click.native="formArea.unidadeMedidaID = 'hag' " v-close-overlay>
                     <q-item-main>
                       <q-item-tile>HA</q-item-tile>
                       <q-item-tile sublabel>alqueire Goiano</q-item-tile>
@@ -209,13 +209,12 @@
       createTalhao: function(id) {
         let vm = this
         let params = {
-          area_id: id
+          talhoes: vm.arrayTalhoes
         }
-        vm.$axios.post( 'rota/'+ params ).then( response => {
-          console.log(response)
+        vm.$axios.post( 'rota/'+ id, params ).then( response => {
+          // to do fazer algo aqui
         }).catch( error => {
-          console.log('Erro Ocorrido:')
-          console.log(error)
+          console.log(error.request)
         })
       },
       createArea: function() {
@@ -232,21 +231,20 @@
           }
           return
         }
-        let vm = this
-        let params = {
-          produtor_id: vm.produtorID,
-          localizacao_id: vm.localizacaoID,
-          tamanho: vm.tamanho,
-          unidade_medida_id: vm.unidadeMedidaID
-        }
-        vm.$axios.post( 'rota/'+ params ).then( response => {
-          vm.areaID = response.data
-          this.createTalhao(id)
-          console.log(vm.areaID)
-        }).catch( error => {
-          console.log('Erro Ocorrido:')
-          console.log(error)
-        })
+        this.$q.notify( {type: 'positive', message: 'funcao create'} )
+        // let vm = this
+        // let params = {
+        //   produtor_id: vm.produtorID,
+        //   localizacao_id: vm.localizacaoID,
+        //   tamanho: vm.tamanho,
+        //   unidade_medida_id: vm.unidadeMedidaID
+        // }
+        // vm.$axios.post( 'rota/'+ params ).then( response => {
+        //   vm.areaID = response.data
+        //   this.createTalhao(vm.areaID)
+        // }).catch( error => {
+        //   console.log(error.request)
+        // })
       }
     },
   }

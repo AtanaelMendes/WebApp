@@ -73,7 +73,7 @@
           />
           <!-- FIM controle das tab de perfil da pesssoa-->
 
-          <!--tab perfil-->
+          <!--tab profile-->
           <q-list no-border v-if="tabs == 'perfil' ">
 
             <q-item>
@@ -93,7 +93,7 @@
                   Grupo Econômico
                 </q-item-tile>
                 <q-item-tile>
-                  {{personProfile.grupo_economico_id}}
+                  {{personProfile.grupo_economico.nome}}
                 </q-item-tile>
               </q-item-main>
             </q-item>
@@ -245,6 +245,7 @@
           <!--FIM tab endereco-->
 
         </div>
+        <!--FIM controle das tab de perfil da pesssoa-->
       </q-page>
 
       <!--MODAL endereco-->
@@ -399,7 +400,6 @@ import EditContactMixin from 'components/views/mixins/EditContactMixin'
 import { required, minLength, maxLength, requiredIf, email } from 'vuelidate/lib/validators'
 import AgroLayout from 'layouts/AgroLayout'
 import { Platform } from 'quasar'
-
 export default {
   name: 'list-person',
   components: {
@@ -467,8 +467,7 @@ export default {
           this.list()
         })
       }).catch( error => {
-        console.log('Erro Ocorrido:')
-        console.log(error)
+        console.log(error.request)
       })
     },
     active: function(id) {
@@ -487,8 +486,7 @@ export default {
           this.list()
         })
       }).catch( error => {
-        console.log('Erro Ocorrido:')
-        console.log(error)
+        console.log(error.request)
       })
     },
     list: function() {
@@ -498,8 +496,7 @@ export default {
         vm.personsData = response.data
         // console.log(vm.personsData)
       }).catch( error => {
-        console.log('Erro Ocorrido:')
-        console.log(error)
+        console.log(error.request)
       })
     },
     getPerson: function (id) {
@@ -512,8 +509,7 @@ export default {
           this.personLoaded = true
           console.log(vm.personProfile)
         }).catch( error => {
-          console.log('Erro Ocorrido:')
-          console.log(error)
+          console.log(error.request)
         })
       }
 
