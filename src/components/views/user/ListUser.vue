@@ -169,8 +169,7 @@ export default {
           vm.details = false
         })
       }).catch( error => {
-        console.log('Erro Ocorrido:')
-        console.log(error)
+        console.log(error.response)
       })
     },
     inactivateUser: function(id) {
@@ -190,8 +189,7 @@ export default {
           vm.details = false
         })
       }).catch( error => {
-        console.log('Erro Ocorrido:')
-        console.log(error)
+        console.log(error.response)
       })
     },
     editUser: function() {
@@ -214,8 +212,7 @@ export default {
               message: 'Não foi possível carregar as informações'
             })
           }
-          console.log('Erro Ocorrido:')
-          console.log(error)
+          console.log(error.response)
         })
       }
 
@@ -225,8 +222,7 @@ export default {
       vm.$axios.get( 'account?' + this.serialize(val) ).then( response => {
         vm.users = response.data
       }).catch( error => {
-        console.log('Erro Ocorrido:')
-        console.log(error)
+        console.log(error.response)
       })
     },
     serialize: function(obj) {

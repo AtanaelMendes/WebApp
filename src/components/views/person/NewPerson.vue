@@ -32,7 +32,7 @@
                   <agro-select-economic-group
                     label="Grupo Econômico"
                     v-model="formPerson.grupoEconomico"
-                    required>
+                  >
                   </agro-select-economic-group>
                   <!--<agro-autocomplete-economic-group
                   placeholder="Grupo Econômico"
@@ -51,9 +51,9 @@
               <q-input
                 v-model="formPerson.nome"
                 float-label="Nome"
-                upper-case
                 @blur="$v.formPerson.nome.$touch"
                 :error="$v.formPerson.nome.$error"
+                upper-case
                 clearable
               />
             </div>
@@ -61,6 +61,7 @@
             <!--CPF-->
             <div v-if="docType == 1">
               <q-input
+                key="cpf"
                 v-model="formPerson.cpf"
                 float-label="CPF"
                 @blur="$v.formPerson.cpf.$touch"
@@ -72,6 +73,7 @@
             <!--CNPJ-->
             <div v-if="docType == 2" >
               <q-input
+                key="cnpj"
                 v-model="formPerson.cnpj"
                 float-label="CNPJ"
                 @blur="$v.formPerson.cnpj.$touch"
@@ -115,6 +117,7 @@
           <q-card-main>
             <form @keyup.enter="createEconomicGroup()">
               <q-input
+                upper-case
                 float-label="Grupo Econômico"
                 v-model="novoGrupoEconomico"
                 @blur="$v.novoGrupoEconomico.$touch"
@@ -216,16 +219,27 @@ export default {
         return
       }
       let vm = this
-      var validatedCpf = this.formatCpf(vm.formPerson.cpf)
+      var validatedCpf = null
+      if (vm.formPerson.cpf != null) {
+        validatedCpf = vm.formatCpf(vm.formPerson.cpf)
+      }
       if (validatedCpf == false){
         this.$q.notify({type: 'negative', message: 'CPF Inválido'})
+        return
+      }
+      var validatedCnpj = null
+      if ( vm.formPerson.cnpj != null ) {
+        validatedCnpj = vm.CNPJ(vm.formPerson.cnpj)
+      }
+      if (validatedCnpj == false){
+        this.$q.notify({type: 'negative', message: 'CNPJ Inválido'})
         return
       }
       let params = {
         grupo_economico_id: vm.formPerson.grupoEconomico,
         nome: vm.formPerson.nome,
         cpf: validatedCpf,
-        cnpj: this.formatCnpj(vm.formPerson.cnpj),
+        cnpj: validatedCnpj,
         inscricao_estadual: vm.formPerson.ie,
         inscricao_municipal: vm.formPerson.im,
         razao_social: vm.formPerson.razaoSocial,
@@ -237,6 +251,9 @@ export default {
           vm.$router.push( '/pessoas' )
         }
       }).catch( error => {
+        if (error.request.status == 422) {
+          vm.$q.notify({ type: 'negative', message: error.request.response})
+        }
         console.log(error.request)
       })
     },
@@ -247,15 +264,6 @@ export default {
         return cpf
       }else {
         return isCpf
-      }
-    },
-    formatCnpj: function(cnpj){
-      var isCnpj = this.validateCnpj(cnpj)
-      if(cnpj != null && isCnpj == true) {
-        cnpj = this.formatCnpj(cnpj)
-        return cnpj
-      }else {
-        return isCnpj
       }
     }
   },

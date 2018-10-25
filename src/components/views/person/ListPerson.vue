@@ -157,11 +157,15 @@
 
           <!--tab contato-->
           <div class="row" v-if="tabs == 'contato' ">
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-for="contato in 4" :key="contato">
+            <div
+              v-if="personContacts.length > 0 && contactsLoaded"
+              class="col-xs-12 col-sm-12 col-md-6 col-lg-6"
+              v-for="contato in personContacts"
+              :key="contato.id">
 
               <q-card class="q-ma-xs">
                 <q-card-title>
-                  Fiscal/Cobrança
+                  {{contato.nome}}
                 </q-card-title>
                 <q-card-separator/>
                 <q-card-main>
@@ -170,48 +174,55 @@
                     <q-item>
                       <q-item-main>
                         <q-item-tile stamp class="text-faded">
-                          Nome
+                          Tipo
                         </q-item-tile>
-                        <q-item-tile>
-                          Ronaldinho
+                        <q-item-tile v-if="contato.isFiscal">
+                          Fiscal
+                        </q-item-tile>
+                        <q-item-tile v-if="contato.isCobranca">
+                          Cobrança
                         </q-item-tile>
                       </q-item-main>
                     </q-item>
 
-                    <q-item>
+                    <q-item v-for="email in contato.email">
                       <q-item-main>
                         <q-item-tile stamp class="text-faded">
                           Email
                         </q-item-tile>
                         <q-item-tile>
-                          atanaelmendes@gmail.com
+                          {{email.endereco}}
+                        </q-item-tile>
+                        <q-item-tile stamp>
+                          {{email.descricao}}
                         </q-item-tile>
                       </q-item-main>
                     </q-item>
 
-                    <q-item>
-                      <q-item-main>
-                        <q-item-tile stamp class="text-faded">
-                          Celular
-                        </q-item-tile>
-                        <q-item-tile>
-                          (66) 9-9966-9966
-                          <!--{{numeral(celular).format('00000000000').replace(/^(\d{2})(\d{1})(\d{4})(\d{4})/, "($1) $2-$3-$4")}}-->
-                        </q-item-tile>
-                      </q-item-main>
-                    </q-item>
+                    <template v-for="telefone in contato.telefone">
 
-                    <q-item>
-                      <q-item-main>
-                        <q-item-tile stamp class="text-faded">
-                          Fixo
-                        </q-item-tile>
-                        <q-item-tile>
-                          (66) 3532-5569
-                          <!--{{numeral(fixo).format('0000000000').replace(/^(\d{2})(\d{4})(\d{4})/, "($1) $2-$3")}}-->
-                        </q-item-tile>
-                      </q-item-main>
-                    </q-item>
+                      <q-item v-if="telefone.is_celular">
+                        <q-item-main>
+                          <q-item-tile stamp class="text-faded">
+                            Celular
+                          </q-item-tile>
+                          <q-item-tile>
+                            {{numeral(telefone.numero).format('00000000000').replace(/^(\d{2})(\d{1})(\d{4})(\d{4})/, "($1) $2-$3-$4")}}
+                          </q-item-tile>
+                        </q-item-main>
+                      </q-item>
+
+                      <q-item v-if="telefone.is_fixo">
+                        <q-item-main>
+                          <q-item-tile stamp class="text-faded">
+                            Fixo
+                          </q-item-tile>
+                          <q-item-tile>
+                            {{numeral(telefone.numero).format('0000000000').replace(/^(\d{2})(\d{4})(\d{4})/, "($1) $2-$3")}}
+                          </q-item-tile>
+                        </q-item-main>
+                      </q-item>
+                    </template>
 
                   </q-list>
                 </q-card-main>
@@ -221,19 +232,16 @@
                 </q-card-actions>
               </q-card>
             </div>
-            <div>
-              <q-btn label="Adicionar novo" color="secondary"/>
-            </div>
           </div>
           <!--FIm tab contato-->
 
           <!--TAB endereco-->
           <div class="row" v-if="tabs == 'endereco' ">
-            <div>
+            <div v-if="personAddress.length > 0 && addressLoaded">
               <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-for="endereco in 4" :key="endereco"></div>-->
             </div>
 
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div v-else class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <q-jumbotron class="q-ma-md">
                 <div class="q-display-1">Não há endereço cadastrado</div>
                 <hr class="q-hr q-my-lg">
@@ -414,8 +422,12 @@ export default {
       },
       loaded: false,
       personLoaded: false,
+      contactsLoaded: false,
+      addressLoaded:false,
       personProfile: null,
       personsData: [],
+      personContacts: [],
+      personAddress: [],
       searchName: '',
       modalNewAddress: false,
       modalEditContact: false,
@@ -425,7 +437,6 @@ export default {
     filter: {
       handler: function(val, oldval) {
         this.list(val)
-        console.log(val)
       },
       deep: true,
     }
@@ -506,14 +517,32 @@ export default {
         let vm = this
         vm.$axios.get( 'pessoa/'+ id ).then( response => {
           vm.personProfile = response.data
+          this.getPersonContacts()
+          this.getPersonAddress()
           this.personLoaded = true
-          console.log(vm.personProfile)
         }).catch( error => {
           console.log(error.request)
         })
       }
-
     },
+    getPersonContacts: function () {
+      let vm = this
+      this.$axios( { url: '/pessoa/1/contato/', baseURL: 'https://demo3716022.mockable.io' } ).then( response => {
+        vm.personContacts = response.data
+        // this.contactsLoaded = true
+      }).catch( error => {
+        console.log(error.request)
+      })
+    },
+    getPersonAddress: function () {
+      let vm = this
+      this.$axios( { url: 'pessoa/id/endereco/', baseURL: 'http://demo3716022.mockable.io/' } ).then( response => {
+        vm.personAddress = response.data
+        this.addressLoaded = true
+      }).catch( error => {
+        console.log(error.request)
+      })
+    }
   },
   mounted () {
     this.list()

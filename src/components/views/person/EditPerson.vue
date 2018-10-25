@@ -48,11 +48,11 @@
             <!--NOME-->
             <div>
               <q-input
-                v-model="formPersonUpdate.nome"
+                clearable
                 float-label="Nome"
+                v-model="formPersonUpdate.nome"
                 @blur="$v.formPersonUpdate.nome.$touch"
                 :error="$v.formPersonUpdate.nome.$error"
-                clearable
               />
             </div>
 
@@ -61,22 +61,24 @@
               <q-item class="q-pa-none">
                 <q-item-main v-if="docType == 1">
                   <q-input
-                    v-model.trim="formPersonUpdate.cpf"
+                    clearable
+                    key="cpf"
                     float-label="CPF"
+                    v-model.trim="formPersonUpdate.cpf"
                     @blur="$v.formPersonUpdate.cpf.$touch"
                     :error="$v.formPersonUpdate.cpf.$error"
-                    clearable
                   />
                 </q-item-main>
 
                 <!--CNPJ-->
                 <q-item-main v-if="docType == 2">
                   <q-input
-                    v-model.trim="formPersonUpdate.cnpj"
+                    clearable
+                    key="cnpj"
                     float-label="CNPJ"
+                    v-model.trim="formPersonUpdate.cnpj"
                     @blur="$v.formPersonUpdate.cnpj.$touch"
                     :error="$v.formPersonUpdate.cnpj.$error"
-                    clearable
                   />
                 </q-item-main>
 
@@ -96,9 +98,9 @@
             <!--ISCRICAO ESTADUAL-->
             <div>
               <q-input
+                clearable
                 v-model="formPersonUpdate.ie"
                 float-label="Inscrição Estadual"
-                clearable
               />
             </div>
 
@@ -399,13 +401,19 @@ export default {
       }
       let vm = this
       var id = this.$route.params.id
-      var validatedCpf = this.formatCpf(vm.formPersonUpdate.cpf)
-      var vailidatedCnpj = this.formatCnpj(vm.formPersonUpdate.cnpj)
+      var validatedCpf = null
+      if (vm.formPersonUpdate.cpf != null) {
+        validatedCpf = vm.formatCpf(vm.formPersonUpdate.cpf)
+      }
       if (validatedCpf == false){
         this.$q.notify({type: 'negative', message: 'CPF Inválido'})
         return
       }
-      if (vailidatedCnpj == false){
+      var validatedCnpj = null
+      if ( vm.formPersonUpdate.cnpj != null ) {
+        validatedCnpj = vm.CNPJ(vm.formPersonUpdate.cnpj)
+      }
+      if (validatedCnpj == false){
         this.$q.notify({type: 'negative', message: 'CNPJ Inválido'})
         return
       }
@@ -413,7 +421,7 @@ export default {
         grupo_economico_id: vm.formPersonUpdate.grupoEconomico,
         nome: vm.formPersonUpdate.nome,
         cpf: validatedCpf,
-        cnpj: vailidatedCnpj,
+        cnpj: validatedCnpj,
         inscricao_estadual: vm.formPersonUpdate.ie,
         inscricao_municipal: vm.formPersonUpdate.im,
         razao_social: vm.formPersonUpdate.razaoSocial,
@@ -505,15 +513,6 @@ export default {
         return cpf
       }else {
         return isCpf
-      }
-    },
-    formatCnpj: function(cnpj){
-      var isCnpj = this.validateCnpj(cnpj)
-      if(cnpj != null && isCnpj == true) {
-        cnpj = this.cnpjFormat(cnpj)
-        return cnpj
-      }else {
-        return isCnpj
       }
     }
   },
