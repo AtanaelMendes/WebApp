@@ -36,7 +36,7 @@
     <div slot="content">
       <q-page class="row">
 
-        <!--lista de pessoa-->
+        <!--LISTA DE PESSOA-->
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
           <q-list highlight no no-border v-if="loaded">
 
@@ -58,10 +58,10 @@
             </q-item>
           </q-list>
         </div>
-        <!--fim lista pessoa-->
+        <!--FIM LISTA DE PESSOA-->
 
-        <!--controle das tab de perfil da pesssoa-->
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="personLoaded">
+          <!--CONTROLE DAS TAB DE PERFIL DA PESSOA-->
           <q-btn-toggle
             flat
             color="primary"
@@ -71,9 +71,9 @@
                         {label: 'Contatos', value: 'contato'},
                         {label: 'Endereços', value: 'endereco'}]"
           />
-          <!-- FIM controle das tab de perfil da pesssoa-->
+          <!-- CONTROLE DAS TAB DE PERFIL DA PESSOA-->
 
-          <!--tab profile-->
+          <!--TAB PERFIL-->
           <q-list no-border v-if="tabs == 'perfil' ">
 
             <q-item>
@@ -153,89 +153,97 @@
             </q-item>
 
           </q-list>
-          <!--FIM profile person-->
+          <!--FIM TAB PERFIL-->
 
-          <!--tab contato-->
+          <!--TAB CONTATO-->
           <div class="row" v-if="tabs == 'contato' ">
-            <div
-              v-if="personContacts.length > 0 && contactsLoaded"
-              class="col-xs-12 col-sm-12 col-md-6 col-lg-6"
-              v-for="contato in personContacts"
-              :key="contato.id">
+            <div key="tabs-contact" v-if="personContacts.length > 0 && contactsLoaded" class="col-12">
+              <div class="row">
+                <div v-for="contato in personContacts" :key="contato.id" class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 
-              <q-card class="q-ma-xs">
-                <q-card-title>
-                  {{contato.nome}}
-                </q-card-title>
-                <q-card-separator/>
-                <q-card-main>
-                  <q-list highlight no-border>
+                  <q-card class="q-ma-xs">
+                    <q-card-title>
+                      {{contato.nome}}
+                    </q-card-title>
+                    <q-card-separator/>
+                    <q-card-main>
+                      <q-list no-border>
 
-                    <q-item>
-                      <q-item-main>
-                        <q-item-tile stamp class="text-faded">
-                          Tipo
-                        </q-item-tile>
-                        <q-item-tile v-if="contato.isFiscal">
-                          Fiscal
-                        </q-item-tile>
-                        <q-item-tile v-if="contato.isCobranca">
-                          Cobrança
-                        </q-item-tile>
-                      </q-item-main>
-                    </q-item>
+                        <q-item class="q-px-none">
+                          <q-item-main>
+                            <q-item-tile sublabel>
+                              Tipo
+                            </q-item-tile>
+                            <q-item-tile v-if="contato.isFiscal">
+                              Fiscal
+                            </q-item-tile>
+                            <q-item-tile v-if="contato.isCobranca">
+                              Cobrança
+                            </q-item-tile>
+                          </q-item-main>
+                        </q-item>
 
-                    <q-item v-for="email in contato.email">
-                      <q-item-main>
-                        <q-item-tile stamp class="text-faded">
-                          Email
-                        </q-item-tile>
-                        <q-item-tile>
-                          {{email.endereco}}
-                        </q-item-tile>
-                        <q-item-tile stamp>
-                          {{email.descricao}}
-                        </q-item-tile>
-                      </q-item-main>
-                    </q-item>
+                        <q-item v-for="email in contato.email" class="q-px-none">
+                          <q-item-main>
+                            <q-item-tile sublabel>
+                              Email
+                            </q-item-tile>
+                            <q-item-tile>
+                              {{email.endereco}}
+                            </q-item-tile>
+                          </q-item-main>
+                        </q-item>
 
-                    <template v-for="telefone in contato.telefone">
+                        <template v-for="telefone in contato.telefone">
+                          <q-item v-if="telefone.is_celular" class="q-px-none">
+                            <q-item-main>
+                              <q-item-tile sublabel>
+                                Celular
+                              </q-item-tile>
+                              <q-item-tile>
+                                {{numeral(telefone.numero).format('00000000000').replace(/^(\d{2})(\d{1})(\d{4})(\d{4})/, "($1) $2-$3-$4")}}
+                              </q-item-tile>
+                            </q-item-main>
+                          </q-item>
 
-                      <q-item v-if="telefone.is_celular">
-                        <q-item-main>
-                          <q-item-tile stamp class="text-faded">
-                            Celular
-                          </q-item-tile>
-                          <q-item-tile>
-                            {{numeral(telefone.numero).format('00000000000').replace(/^(\d{2})(\d{1})(\d{4})(\d{4})/, "($1) $2-$3-$4")}}
-                          </q-item-tile>
-                        </q-item-main>
-                      </q-item>
+                          <q-item v-if="telefone.is_fixo" class="q-px-none">
+                            <q-item-main>
+                              <q-item-tile sublabel>
+                                Fixo
+                              </q-item-tile>
+                              <q-item-tile>
+                                {{numeral(telefone.numero).format('0000000000').replace(/^(\d{2})(\d{4})(\d{4})/, "($1) $2-$3")}}
+                              </q-item-tile>
+                            </q-item-main>
+                          </q-item>
+                        </template>
 
-                      <q-item v-if="telefone.is_fixo">
-                        <q-item-main>
-                          <q-item-tile stamp class="text-faded">
-                            Fixo
-                          </q-item-tile>
-                          <q-item-tile>
-                            {{numeral(telefone.numero).format('0000000000').replace(/^(\d{2})(\d{4})(\d{4})/, "($1) $2-$3")}}
-                          </q-item-tile>
-                        </q-item-main>
-                      </q-item>
-                    </template>
+                      </q-list>
+                    </q-card-main>
+                    <q-card-separator/>
+                    <q-card-actions align="end">
+                      <q-btn color="primary" flat label="excluir" @click.native="deleteContact()"/>
+                      <q-btn color="primary" flat label="editar" @click.native="getPersonContactByID(contato.id)"/>
+                    </q-card-actions>
+                  </q-card>
 
-                  </q-list>
-                </q-card-main>
-                <q-card-actions align="end">
-                  <q-btn color="primary" flat label="excluir" @click.native="deleteContact()"/>
-                  <q-btn color="primary" flat label="editar" @click.native="modalEditContact = true"/>
-                </q-card-actions>
-              </q-card>
+                </div>
+              </div>
+              <q-page-sticky corner="bottom-right" :offset="[100, 25]">
+                <q-btn size="20px" round color="secondary" @click.native="modalNewContact = true" icon="add" />
+              </q-page-sticky>
+            </div>
+            <div key="tabs-contact" v-else class="col-12">
+              <q-jumbotron class="q-ma-md">
+                <div class="q-display-1">Não há contato cadastrado</div>
+                <hr class="q-hr q-my-lg">
+                <q-btn @click.native="modalNewContact = true" color="primary" class="full-width" label="Cadastrar contato" />
+              </q-jumbotron>
             </div>
           </div>
-          <!--FIm tab contato-->
+          <!--FIm TAB CONTATO-->
 
-          <!--TAB endereco-->
+          <!--TAB ENDERECO-->
           <div class="row" v-if="tabs == 'endereco' ">
             <div v-if="personAddress.length > 0 && addressLoaded">
               <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-for="endereco in 4" :key="endereco"></div>-->
@@ -250,10 +258,9 @@
             </div>
 
           </div>
-          <!--FIM tab endereco-->
-
+          <!--FIM TAB ENDERECO-->
+        <br/><br/><br/><br/><br/>
         </div>
-        <!--FIM controle das tab de perfil da pesssoa-->
       </q-page>
 
       <!--MODAL endereco-->
@@ -319,9 +326,84 @@
       </template>
       <!--FIM modal endereco-->
 
-      <!--MODAL update contato-->
+      <!--MODAL UPDATE CONTATO-->
       <template>
         <q-modal v-model="modalEditContact" minimized no-backdrop-dismiss>
+          <form class="q-pa-md gutter-y-xs" @keyup.enter="updateContact()">
+
+            <!--CONTATO NOME-->
+            <q-item>
+              <q-item-main>
+                <q-input
+                  clearable
+                  type="text"
+                  float-label="Nome"
+                  v-model="formContact.nome"
+                  @blur="$v.formContact.nome.$touch"
+                  :error="$v.formContact.nome.$error"
+                />
+              </q-item-main>
+            </q-item>
+
+            <!--CONTATO EMAIL-->
+            <q-item>
+              <q-item-main>
+                <q-input
+                  type="email"
+                  float-label="Email"
+                  v-model="formContact.email"
+                  clearable
+                  @blur="$v.formContact.email.$touch"
+                  :error="$v.formContact.email.$error"
+                />
+              </q-item-main>
+            </q-item>
+
+            <!--CONTATO TELEFONE-->
+            <q-item>
+              <q-item-main >
+                <q-input
+                  type="number"
+                  float-label="Telefone"
+                  v-model="formContact.phone"
+                  clearable
+                  @blur="$v.formContact.phone.$touch"
+                  :error="$v.formContact.phone.$error"
+                />
+              </q-item-main>
+
+              <!--CONTATO TIPO TELEFONE-->
+              <q-item-side>
+                <q-btn-toggle
+                  dense v-model="formContact.phoneType"
+                  toggle-color="secondary"
+                  :options="[{label: 'celular', value: 1, icon: 'stay_primary_portrait'},
+                             {label: 'Fixo', value: 2, icon: 'phone'}]"
+                />
+              </q-item-side>
+            </q-item>
+
+            <!--CONTATO TIPO FISCAL COBRANCA-->
+            <q-item>
+              <q-item-main>
+                <q-checkbox class="q-pr-sm" v-model="formContact.fiscal" label="Fiscal" />
+                <q-checkbox v-model="formContact.cobranca" label="Cobrança" />
+              </q-item-main>
+            </q-item>
+
+            <div align="end">
+              <q-btn flat color="secondary" @click="modalEditContact = false, cleanForm()" label="Cancelar"/>
+              <q-btn color="secondary" label="Salvar" @click="updateContact()"/>
+            </div>
+
+          </form>
+        </q-modal>
+      </template>
+      <!--FIM MODAL UPDATE CONTATO-->
+
+      <!--MODAL NEW CONTATO-->
+      <template>
+        <q-modal v-model="modalNewContact" minimized no-backdrop-dismiss>
           <form class="q-pa-md gutter-y-xs" @keyup.enter="updateContact()">
 
             <!--CONTATO NOME-->
@@ -385,14 +467,14 @@
             </q-item>
 
             <div align="end">
-              <q-btn flat color="secondary" @click="modalEditContact = false" label="Cancelar"/>
+              <q-btn flat color="secondary" @click="modalNewContact = false, cleanForm()" label="Cancelar"/>
               <q-btn color="secondary" label="Salvar" @click="updateContact()"/>
             </div>
 
           </form>
         </q-modal>
       </template>
-      <!--FIM modal update contato-->
+      <!--FIM MODAL NEW CONTATO-->
 
       <q-page-sticky corner="bottom-right" :offset="[25, 25]">
         <q-btn size="20px" round color="secondary" @click.native="$router.push('/pessoa/cadastro')" icon="person_add" />
@@ -420,10 +502,21 @@ export default {
       filter: {
         type: null,
       },
+      formContact: {
+        fiscal: false,
+        cobranca: false,
+        nome: null,
+        email: null,
+        phone: null,
+        isCelular: false,
+        isFixo: false,
+        phoneType: 1,
+      },
       loaded: false,
       personLoaded: false,
       contactsLoaded: false,
       addressLoaded:false,
+      contactsformLoaded: false,
       personProfile: null,
       personsData: [],
       personContacts: [],
@@ -431,6 +524,7 @@ export default {
       searchName: '',
       modalNewAddress: false,
       modalEditContact: false,
+      modalNewContact: false,
     }
   },
   watch: {
@@ -529,7 +623,7 @@ export default {
       let vm = this
       this.$axios( { url: '/pessoa/1/contato/', baseURL: 'https://demo3716022.mockable.io' } ).then( response => {
         vm.personContacts = response.data
-        // this.contactsLoaded = true
+        this.contactsLoaded = true
       }).catch( error => {
         console.log(error.request)
       })
@@ -542,7 +636,24 @@ export default {
       }).catch( error => {
         console.log(error.request)
       })
-    }
+    },
+    fillFormContact: function(data) {
+      this.formContact.fiscal = data.isFiscal
+      this.formContact.cobranca = data.isCobranca
+      this.formContact.nome = data.nome
+      this.formContact.email = data.email[0].endereco
+      this.formContact.emailDescricao = data.email[0].descricao
+      this.formContact.phone = data.telefone[0].numero
+      this.formContact.isFixo = data.telefone[0].is_fixo
+      this.formContact.isCelular = data.telefone[0].is_Celular
+      if( data.telefone[0].is_celular == true ) {
+        this.formContact.phoneType = 1
+      }
+      if( data.telefone[0].is_fixo == true) {
+        this.formContact.phoneType = 2
+      }
+      this.modalEditContact = true
+    },
   },
   mounted () {
     this.list()
