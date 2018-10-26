@@ -13,7 +13,10 @@
 
       <q-btn flat round dense icon="search" v-if="searchable && searchButtonIsVisible" @click="showSearchInput"  />
       <slot name="action_itens"></slot>
+
     </q-toolbar>
+
+    <slot name="tabs"></slot>
   </div>
 </template>
 

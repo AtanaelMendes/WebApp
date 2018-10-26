@@ -72,17 +72,25 @@ module.exports = function (ctx) {
         'QChip',
         'QOptionGroup',
         'QSearch',
+        'QBtnToggle',
+        'QAutocomplete',
+        'QDialog',
+        'QTabs',
+        'QTab',
+        'QTabPane',
+        'QRouteTab',
       ],
       directives: [
         'Ripple',
-        'CloseOverlay'
+        'CloseOverlay',
+        'MaskedInput'
       ],
       // Quasar plugins
       plugins: [
         'Notify',
         'Dialog',
         'Loading',
-        'Screen'
+        'Screen',
       ]
       // iconSet: ctx.theme.mat ? 'material-icons' : 'ionicons'
       // i18n: 'de' // Quasar language

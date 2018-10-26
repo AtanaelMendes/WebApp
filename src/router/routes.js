@@ -12,6 +12,13 @@ const routes = [
           { name: 'edit_user', path: 'edit/:id', component: () => import('pages/admin/users/UserEdit.vue') }
         ]
       },
+      { name: 'pessoas', path: 'pessoas', component: () => import('pages/admin/pessoas/PessoaList.vue'),
+        children: [
+          { name: 'view_pessoa', path: 'view/:id', component: () => import('pages/admin/pessoas/PessoaView.vue') },
+          { name: 'add_pessoa', path: 'add', component: () => import('pages/admin/pessoas/PessoaAdd.vue') },
+          { name: 'edit_pessoa', path: 'edit/:id', component: () => import('pages/admin/pessoas/PessoaEdit.vue') }
+        ]
+      },
       { path: 'teste', component: () => import('pages/admin/TestFather.vue'),
         children: [
           { path: 'child', component: () => import('pages/admin/TestChild.vue') }

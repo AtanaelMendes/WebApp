@@ -4,7 +4,7 @@
 
     <q-layout-drawer v-model="leftDrawerOpen" class="layout-drawer" content-class="bg-grey-2">
       <div class="navigation-header">
-        <img src="assets/person-profile-image.jpg" class="profile-image shadow-1"/>
+        <img src="~assets/person-profile-image.jpg" class="profile-image shadow-1"/>
         <span class="profile-name">{{currentAccount.name}}</span>
         <span class="profile-email">{{currentAccount.email}}</span>
         <q-btn flat round dense icon="settings" class="settings_icon" v-on:click="getAccountInfo" />
@@ -14,11 +14,11 @@
           <q-item-side icon="dashboard" />
           <q-item-main label="Dashboard" />
         </q-item>
-        <q-item @click.native="$router.push('/admin/usuarios')">
+        <q-item @click.native="$router.push({name:'users'})">
           <q-item-side icon="group" />
           <q-item-main label="Usuários" />
         </q-item>
-        <q-item @click.native="openURL('http://quasar-framework.org')">
+        <q-item @click.native="$router.push({name:'pessoas'})">
           <q-item-side icon="group" />
           <q-item-main label="Pessoas" />
         </q-item>
@@ -78,7 +78,7 @@ export default {
     border-radius: 50%;
     border: 2px solid white;
     width: 65px;
-    height: auto;
+    height: 65px;
     display: block;
     margin-bottom: 10px;
   }

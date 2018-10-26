@@ -1,11 +1,11 @@
-import { Dialog } from 'quasar'
 import Vue from 'vue'
-import { Loading } from 'quasar'
+import { Loading, Dialog } from 'quasar'
+import AgroUtils from 'assets/js/AgroUtils'
 
 export default {
   listAccounts(filter){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'account?' + serialize(filter) ).then( response => {
+      Vue.prototype.$axios.get( 'account?' + AgroUtils.serialize(filter) ).then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
@@ -148,13 +148,4 @@ function getRolesById(roles, ids) {
   return selectedRoles;
 }
 
-function serialize(obj) {
-  var query = [];
-  for (var property in obj)
-    if (obj.hasOwnProperty(property)) {
-      if(obj[property] != null){
-        query.push(encodeURIComponent(property) + "=" + encodeURIComponent(obj[property]));
-      }
-    }
-  return query.join("&");
-}
+
