@@ -12,4 +12,14 @@ export default {
       })
     });
   },
+
+  savePessoa(params){
+    return new Promise((resolve, reject) => {
+      this.$axios.post('/pessoa', params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
 }

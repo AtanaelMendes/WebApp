@@ -63,7 +63,7 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import PessoaService from 'assets/js/PessoaService'
+  import pessoaService from 'assets/js/service/PessoaService'
 
   export default {
     name: "PessoasList",
@@ -95,7 +95,7 @@
         this.filter.email = val;
       },
       list: function(filter) {
-        PessoaService.listPessoas(filter).then(response => {
+        pessoaService.listPessoas(filter).then(response => {
           this.pessoas = response.data;
           this.isEmptyList = this.pessoas.length === 0;
         });

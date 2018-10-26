@@ -48,7 +48,7 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
-  import UserService from 'assets/js/UserService'
+  import UserService from 'assets/js/service/UserService'
   import FormMixin from 'components/mixins/FormMixin'
 
   export default {

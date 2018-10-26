@@ -63,7 +63,7 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import UserService from 'assets/js/UserService'
+  import userService from 'assets/js/service/UserService'
 
     export default {
       name: "UserList",
@@ -95,7 +95,7 @@
           this.filter.email = val;
         },
         list: function(filter) {
-          UserService.listAccounts(filter).then(response => {
+          userService.listAccounts(filter).then(response => {
             this.users = response.data;
             this.isEmptyList = this.users.length === 0;
           });

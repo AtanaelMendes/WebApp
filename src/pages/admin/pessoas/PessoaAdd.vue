@@ -3,23 +3,22 @@
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Nova Pessoa">
       <q-btn slot="action_itens" flat dense label="salvar" @click="savePessoa()"/>
 
-      <q-tabs slot="tabs" align="justify"  class="shadow-3" color="brand" text-color="brand" underline-color="deep-orange">
+      <!--<q-tabs slot="tabs" align="justify"  class="shadow-3" color="brand" text-color="brand" underline-color="deep-orange">
         <q-tab slot="title" label="Informações" />
         <q-tab slot="title" label="Contatos"/>
         <q-tab slot="title" label="Localizações"/>
-      </q-tabs>
+      </q-tabs>-->
 
     </toolbar>
 
     <form class="q-pa-md">
 
       <q-field class="q-mb-sm" style="text-align: center; margin-bottom: 40px">
-        <q-btn-toggle v-model="pessoaType" toggle-color="primary" inverted @input="pessoaTypeChanged"
+        <q-btn-toggle v-model="pessoa.pessoaType" toggle-color="primary" inverted @input="pessoaTypeChanged"
                       :options="[{label: 'Física', value: 1},{label: 'Jurídica', value: 2}]"/>
       </q-field>
 
-      <!--<q-field :error="form.grupoEconomico.errorMessage != null" class="q-mb-sm">-->
-      <q-field :error="form.grupoEconomico.errorMessage != null" class="q-mb-sm" style="width: 50%; padding-right:20px">
+      <q-field :error="pessoa.grupoEconomico.errorMessage != null" class="q-mb-sm" style="width: 50%; padding-right:20px">
         <q-item class="q-pa-none" >
           <q-item-main>
             <q-input v-model="grupoEconomicoSearchTerms" placeholder="Grupo Econômico" :after="[{icon:'arrow_drop_down'}]">
@@ -33,28 +32,28 @@
         </q-item>
 
         <div class="q-field-bottom row no-wrap" style="height: 22px">
-          <div class="q-field-error col" v-if="form.grupoEconomico.errorMessage != null" >{{form.grupoEconomico.errorMessage}}</div>
+          <div class="q-field-error col" v-if="pessoa.grupoEconomico.errorMessage != null" >{{pessoa.grupoEconomico.errorMessage}}</div>
         </div>
       </q-field>
 
       <div style="display: flex">
-        <custom-input-text type="text" label="Nome" :model="form.nome" maxlength="20" style="flex-grow: 1; margin-right: 20px" />
+        <custom-input-text type="text" label="Nome" :model="pessoa.nome" maxlength="20" style="flex-grow: 1; margin-right: 20px" />
 
-        <custom-input-text key="cpf" type="text" label="CPF" :model="form.cpf" mask="###.###.###-##" v-if="pessoaType === 1" style="flex-grow: 1; margin-left: 20px" />
+        <custom-input-text key="cpf" type="text" label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1" style="flex-grow: 1; margin-left: 20px" />
 
-        <custom-input-text key="cnpj" type="text" label="CNPJ" :model="form.cnpj" mask="##.###.###/####-##" v-if="pessoaType === 2" style="flex-grow: 1; margin-left: 20px" />
+        <custom-input-text key="cnpj" type="text" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2" style="flex-grow: 1; margin-left: 20px" />
       </div>
 
-      <div style="display: flex" v-if="pessoaType === 2">
-        <custom-input-text type="text" label="Razão Social" :model="form.razaoSocial" style="flex-grow: 1; margin-right: 20px" />
+      <div style="display: flex" v-if="pessoa.pessoaType === 2">
+        <custom-input-text type="text" label="Razão Social" :model="pessoa.razaoSocial" style="flex-grow: 1; margin-right: 20px" />
 
-        <custom-input-text type="text" label="Nome Fantasia" :model="form.nomeFantasia" style="flex-grow: 1; margin-left: 20px" />
+        <custom-input-text type="text" label="Nome Fantasia" :model="pessoa.nomeFantasia" style="flex-grow: 1; margin-left: 20px" />
       </div>
 
       <div style="display: flex">
-        <custom-input-text type="text" label="Inscrição Estadual" :model="form.inscricaoEstadual" style="flex-grow: 1; margin-right: 20px" />
+        <custom-input-text type="text" label="Inscrição Estadual" :model="pessoa.inscricaoEstadual" style="flex-grow: 1; margin-right: 20px" />
 
-        <custom-input-text type="text" label="Inscrição Municipal" :model="form.inscricaoMunicipal" style="flex-grow: 1; margin-left: 20px" />
+        <custom-input-text type="text" label="Inscrição Municipal" :model="pessoa.inscricaoMunicipal" style="flex-grow: 1; margin-left: 20px" />
       </div>
 
     </form>
@@ -66,7 +65,7 @@
 
       <div slot="body">
         <form @keyup.enter="createGrupoEconomico()">
-          <custom-input-text type="text" label="Grupo Econômico" :model="formGrupoEconomico.nome" />
+          <custom-input-text type="text" label="Grupo Econômico" :model="grupoEconomico.nome" />
         </form>
       </div>
 
@@ -83,9 +82,10 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
-  import { required, requiredIf, minLength, maxLength } from 'vuelidate/lib/validators'
-  import PessoaService from 'assets/js/PessoaService'
-  //import FormMixin from 'components/mixins/FormMixin'
+  import PessoaService from 'assets/js/service/PessoaService'
+  import GrupoEconomicoService from 'assets/js/service/GrupoEconomicoService'
+  //import Pessoa from 'assets/js/model/Pessoa'
+  import GrupoEconomico from 'assets/js/model/GrupoEconomico'
 
   export default {
     name: "PessoaAdd",
@@ -98,77 +98,18 @@
     data(){
       return {
         grupoEconomicoSearchTerms: '',
-        pessoaType: 1,
         newGrupoEconomicoDialog: false,
-
-        form: {
-          nome: {
-            value: null,
-            errorMessage: null
-          },
-          grupoEconomico: {
-            value: null,
-            errorMessage: null
-          },
-          cpf: {
-            value: null,
-            errorMessage: null
-          },
-          cnpj: {
-            value: null,
-            errorMessage: null
-          },
-          inscricaoEstadual: {
-            value: null,
-            errorMessage: null
-          },
-          inscricaoMunicipal: {
-            value: null,
-            errorMessage: null
-          },
-          razaoSocial: {
-            value: null,
-            errorMessage: null
-          },
-          nomeFantasia: {
-            value: null,
-            errorMessage: null
-          }
-        },
-        formGrupoEconomico: {
-          nome: {
-            value: null,
-            errorMessage: null
-          },
-        },
+        //pessoa: Pessoa,
+        pessoa: require('assets/js/model/Pessoa'),
+        grupoEconomico: GrupoEconomico,
       }
     },
     validations(){
-      let validation;
-
       if(this.newGrupoEconomicoDialog){
-        validation = {
-          formGrupoEconomico: {
-            nome: { value: { required, minLength: minLength(3) } },
-          }
-        };
+        return this.grupoEconomico.getValidation();
       }else {
-        validation = {
-          form: {
-            nome: { value: { required, minLength: minLength(3), maxLength: maxLength(20) } },
-            grupoEconomico: { value: {required} }
-          }
-        };
-
-        if(this.pessoaType === 1){
-          validation.form.cpf = {value: required};
-        }else if(this.pessoaType === 2){
-          validation.form.cnpj = {value: required};
-          validation.form.razaoSocial = {value: required};
-          validation.form.nomeFantasia = {value: required};
-        }
+        return this.pessoa.getValidation();
       }
-      return validation;
     },
     methods:{
       openNovoGrupoEconomicoDialog: function(){
@@ -176,141 +117,73 @@
       },
       closeNovoGrupoEconomicoDialog: function(){
         this.newGrupoEconomicoDialog = false;
-        this.formGrupoEconomico.nome.value = null;
-        this.formGrupoEconomico.nome.errorMessage = null;
+        this.grupoEconomico.nome.value = null;
+        this.grupoEconomico.nome.errorMessage = null;
       },
       pessoaTypeChanged: function(value){
-        this.form.grupoEconomico.errorMessage = null;
-        this.form.nome.errorMessage = null;
+        this.pessoa.grupoEconomico.errorMessage = null;
+        this.pessoa.nome.errorMessage = null;
 
         switch (value) {
           case 1:
-            this.form.cpf.value = null;
-            this.form.cpf.errorMessage = null;
+            this.pessoa.cpf.value = null;
+            this.pessoa.cpf.errorMessage = null;
             break;
           case 2:
-            this.form.cnpj.value = null;
-            this.form.cnpj.errorMessage = null;
-            this.form.razaoSocial.value = null;
-            this.form.razaoSocial.errorMessage = null;
-            this.form.nomeFantasia.value = null;
-            this.form.nomeFantasia.errorMessage = null;
+            this.pessoa.cnpj.value = null;
+            this.pessoa.cnpj.errorMessage = null;
+            this.pessoa.razaoSocial.value = null;
+            this.pessoa.razaoSocial.errorMessage = null;
+            this.pessoa.nomeFantasia.value = null;
+            this.pessoa.nomeFantasia.errorMessage = null;
             break;
         }
       },
       savePessoa: function(){
-        this.$v.form.$touch();
-
-        if ( this.$v.form.$error ) {
-          if(!this.$v.form.nome.value.required){
-            this.form.nome.errorMessage = "Digite um nome"
-          }else if(!this.$v.form.nome.value.minLength){
-            this.form.nome.errorMessage = "O nome deve ter no mínimo 3 caracteres"
-          }
-
-          if(!this.$v.form.grupoEconomico.value.required){
-            this.form.grupoEconomico.errorMessage = "Selecione um Grupo Econòmico"
-          }
-
-          if(this.pessoaType === 1){
-            if(!this.$v.form.cpf.value.required){
-              this.form.cpf.errorMessage = "Digite um CPF"
-            }
-          }else if(this.pessoaType === 2){
-            if(!this.$v.form.cnpj.value.required){
-              this.form.cnpj.errorMessage = "Digite um CNPJ"
-            }
-
-            if(!this.$v.form.razaoSocial.value.required){
-              this.form.razaoSocial.errorMessage = "Digite uma razão social"
-            }
-
-            if(!this.$v.form.nomeFantasia.value.required){
-              this.form.nomeFantasia.errorMessage = "Digite um nome fantasia"
-            }
-          }
-
+        if(!this.pessoa.isValid(this)){
           return;
         }
 
-        let params = {
-          nome: this.form.nome.value,
-          grupo_economico_id: this.form.grupoEconomico.value,
-          cpf: this.form.cpf.value,
-          cnpj: this.form.cnpj.value,
-          inscricao_estadual: this.form.inscricaoEstadual.value,
-          inscricao_municipal: this.form.inscricaoMunicipal.value,
-          razao_social: this.form.razaoSocial.value,
-          nome_fantasia: this.form.nomeFantasia.value
-        };
-
-        this.$axios.post('/pessoa', params).then(response => {
-          if(response.status === 201){
-            this.$q.notify({
-              type: 'positive',
-              message: 'Pessoa criada com sucesso'
-            });
+        PessoaService.savePessoa(this.pessoa.getValues()).then(response => {
+          if(response.status === 201) {
+            this.$q.notify({type: 'positive', message: 'Pessoa criada com sucesso'});
 
             //  this.setFormObj(this.form);
             this.$router.push({name: 'pessoas'});
             this.$root.$emit('refreshPessoaList')
           }
-        }).catch(error => {
-          console.error(error);
-        })
+        });
+
       },
       createGrupoEconomico: function(){
-        this.$v.formGrupoEconomico.$touch();
-
-        if ( this.$v.formGrupoEconomico.$error ) {
-          if(!this.$v.formGrupoEconomico.nome.value.required){
-            this.formGrupoEconomico.nome.errorMessage = "Digite um nome"
-          }else if(!this.$v.formGrupoEconomico.nome.value.minLength){
-            this.formGrupoEconomico.nome.errorMessage = "O nome deve ter no mínimo 3 caracteres"
-          }
+        if(!this.grupoEconomico.isValid(this)){
           return;
         }
 
-        let params = {'nome':this.formGrupoEconomico.nome.value};
-        this.$axios.post('grupo_economico', params).then(response => {
-          this.$q.notify({
-            type: 'positive',
-            message: 'Grupo Econômico criado com sucesso'
-          });
+        GrupoEconomicoService.saveGrupoEconomico(this.grupoEconomico.getValues()).then(response => {
+          this.$q.notify({type: 'positive', message: 'Grupo Econômico criado com sucesso'});
 
           this.closeNovoGrupoEconomicoDialog();
 
         }).catch(error => {
           if (error.response.status === 422){
-            this.$q.dialog({
-              title:'Ops',
-              message: 'Já existe um registro com esse nome'
-            })
+            this.$q.dialog({title:'Ops', message: 'Já existe um registro com esse nome'})
           }
         })
       },
       search (terms, done) {
-        this.$axios.get('grupo_economico?nome=' + terms).then(response => {
-          done(parseGruposEconomicos(response.data))
+        GrupoEconomicoService.searchGrupoEconomico(terms).then(response => {
+          done(response)
         });
       },
       selected (item) {
-        this.form.grupoEconomico.value = item.id;
+        this.pessoa.grupoEconomico.value = item.id;
       },
       backAction: function () {
         this.$router.push({name: 'pessoas'});
       }
     },
     mounted(){}
-  }
-
-  function parseGruposEconomicos(gruposEconomicos) {
-    return gruposEconomicos.map(grupoEconomico => {
-      return {
-        label: grupoEconomico.nome,
-        id: grupoEconomico.id
-      }
-    })
   }
 </script>
 
