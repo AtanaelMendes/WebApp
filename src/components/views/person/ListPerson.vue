@@ -157,7 +157,7 @@
 
           <!--TAB CONTATO-->
           <div class="row" v-if="tabs == 'contato' ">
-            <div key="tabs-contact" v-if="personContacts.length > 0 && contactsLoaded" class="col-12">
+            <div key="tab-contact" v-if="personContacts.length > 0 && contactsLoaded" class="col-12">
               <div class="row">
                 <div v-for="contato in personContacts" :key="contato.id" class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 
@@ -183,7 +183,7 @@
                           </q-item-main>
                         </q-item>
 
-                        <q-item v-for="email in contato.email" class="q-px-none">
+                        <q-item v-for="email in contato.email" :key="email.endereco" class="q-px-none">
                           <q-item-main>
                             <q-item-tile sublabel>
                               Email
@@ -233,7 +233,7 @@
                 <q-btn size="20px" round color="secondary" @click.native="modalNewContact = true" icon="add" />
               </q-page-sticky>
             </div>
-            <div key="tabs-contact" v-else class="col-12">
+            <div key="tab-contact" v-else class="col-12">
               <q-jumbotron class="q-ma-md">
                 <div class="q-display-1">Não há contato cadastrado</div>
                 <hr class="q-hr q-my-lg">
@@ -245,8 +245,113 @@
 
           <!--TAB ENDERECO-->
           <div class="row" v-if="tabs == 'endereco' ">
-            <div v-if="personAddress.length > 0 && addressLoaded">
-              <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-for="endereco in 4" :key="endereco"></div>-->
+            <div key="tab-endereco" v-if="personAddress.length > 0 && addressLoaded" class="col-12">
+              <div class="row">
+                <div v-for="endereco in personAddress" :key="endereco.id" class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+
+                  <q-card class="q-ma-xs">
+                    <q-card-main>
+                      <q-list no-border>
+
+                        <q-item class="q-px-none">
+                          <q-item-main>
+                            <q-item-tile v-if="endereco.is_fiscal">
+                              Fiscal
+                            </q-item-tile>
+                            <q-item-tile v-if="endereco.is_cobranca">
+                              Cobrança
+                            </q-item-tile>
+                          </q-item-main>
+                        </q-item>
+
+                        <q-item class="q-px-none">
+                          <q-item-main>
+                            <q-item-tile sublabel>
+                              Endereco
+                            </q-item-tile>
+                            <q-item-tile>
+                              {{endereco.endereco}}
+                            </q-item-tile>
+                          </q-item-main>
+                        </q-item>
+
+                        <q-item class="q-px-none">
+                          <q-item-main>
+                            <q-item-tile sublabel>
+                              Número
+                            </q-item-tile>
+                            <q-item-tile>
+                              {{endereco.numero}}
+                            </q-item-tile>
+                          </q-item-main>
+                        </q-item>
+
+                        <q-item class="q-px-none" v-if="endereco.complemento">
+                          <q-item-main>
+                            <q-item-tile sublabel>
+                              Complemento
+                            </q-item-tile>
+                            <q-item-tile>
+                              {{endereco.complemento}}
+                            </q-item-tile>
+                          </q-item-main>
+                        </q-item>
+
+                        <q-item class="q-px-none">
+                          <q-item-main>
+                            <q-item-tile sublabel>
+                              Bairro
+                            </q-item-tile>
+                            <q-item-tile>
+                              {{endereco.bairro}}
+                            </q-item-tile>
+                          </q-item-main>
+                        </q-item>
+
+                        <q-item class="q-px-none">
+                          <q-item-main>
+                            <q-item-tile sublabel>
+                              Cidade
+                            </q-item-tile>
+                            <q-item-tile>
+                              {{endereco.cidade}}
+                            </q-item-tile>
+                          </q-item-main>
+                        </q-item>
+
+                        <q-item class="q-px-none">
+                          <q-item-main>
+                            <q-item-tile sublabel>
+                              Estado
+                            </q-item-tile>
+                            <q-item-tile>
+                              {{endereco.estado}}
+                            </q-item-tile>
+                          </q-item-main>
+                        </q-item>
+
+                        <q-item class="q-px-none">
+                          <q-item-main>
+                            <q-item-tile sublabel>
+                              CEP
+                            </q-item-tile>
+                            <q-item-tile>
+                              {{endereco.cep}}
+                            </q-item-tile>
+                          </q-item-main>
+                        </q-item>
+
+                      </q-list>
+                    </q-card-main>
+                    <q-card-separator/>
+                    <q-card-actions align="end">
+                      <q-btn flat color="primary" label="excluir" @click.native="deletePersonAddress(endereco.id)"/>
+                      <q-btn flat color="primary" label="editar" @click.native="getAddressById(endereco.id)"/>
+                    </q-card-actions>
+                  </q-card>
+
+                </div>
+              </div>
             </div>
 
             <div v-else class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -392,7 +497,7 @@
             </q-item>
 
             <div align="end">
-              <q-btn flat color="secondary" @click="modalEditContact = false, cleanForm()" label="Cancelar"/>
+              <q-btn flat color="secondary" @click="modalEditContact = false, cleanContactForm()" label="Cancelar"/>
               <q-btn color="secondary" label="Salvar" @click="updateContact()"/>
             </div>
 
@@ -467,7 +572,7 @@
             </q-item>
 
             <div align="end">
-              <q-btn flat color="secondary" @click="modalNewContact = false, cleanForm()" label="Cancelar"/>
+              <q-btn flat color="secondary" @click="modalNewContact = false, cleanContactForm()" label="Cancelar"/>
               <q-btn color="secondary" label="Salvar" @click="updateContact()"/>
             </div>
 
@@ -512,19 +617,30 @@ export default {
         isFixo: false,
         phoneType: 1,
       },
+      formAddress: {
+        endereco: null,
+        numero: null,
+        complemento: null,
+        bairro: null,
+        cep: null,
+        cobranca: false,
+        fiscal: false
+      },
       loaded: false,
       personLoaded: false,
       contactsLoaded: false,
       addressLoaded:false,
       contactsformLoaded: false,
+      addressformLoaded: false,
       personProfile: null,
       personsData: [],
       personContacts: [],
       personAddress: [],
       searchName: '',
-      modalNewAddress: false,
       modalEditContact: false,
       modalNewContact: false,
+      modalEditAddress: false,
+      modalNewAddress: false,
     }
   },
   watch: {

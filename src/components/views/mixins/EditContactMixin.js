@@ -1,6 +1,6 @@
 export default {
   methods: {
-    cleanForm: function(){
+    cleanContactForm: function(){
       this.formContact.fiscal = false
       this.formContact.cobranca = false
       this.formContact.nome = null
@@ -19,10 +19,7 @@ export default {
       })
     },
     deleteContact(id) {
-      this.$q.notify( {
-        type: 'positive',
-        message: 'função de delete'
-      } )
+      this.$q.notify({ type: 'positive',  message: 'função de delete' })
     },
     updateContact: function (id) {
       this.$v.formContact.$touch()
@@ -65,7 +62,7 @@ export default {
       }
       this.$axios( { url: 'pessoa/1/contato/1', baseURL: 'http://demo3716022.mockable.io/', method: 'put', data: params } ).then( response => {
         if(response.status == 200){
-          this.cleanForm()
+          this.cleanContactForm()
           this.modalEditContact = false
           this.$q.notify({ type: 'positive', message: 'função de update' })
         }
