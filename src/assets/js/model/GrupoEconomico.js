@@ -1,4 +1,4 @@
-import { required, minLength, maxLength } from 'vuelidate/lib/validators'
+import { helpers} from 'vuelidate/lib/validators'
 
 export default {
   nome: {
@@ -6,25 +6,23 @@ export default {
     errorMessage: null
   },
 
-  getValidation(){
-    return {nome: { value: { required, minLength: minLength(3) } },}
-  },
+  isValid(){
+    let hasError = false;
 
-  isValid(context){
-    context.$v.$touch();
-
-    if ( context.$v.$error ) {
-      if(!context.$v.nome.value.required){
-        this.nome.errorMessage = "Digite um nome"
-      }else if(!context.$v.nome.value.minLength){
-        this.nome.errorMessage = "O nome deve ter no mínimo 3 caracteres"
-      }
-      return false;
+    if(!helpers.req(this.nome.value)){
+      this.nome.errorMessage = "Digite um nome";
+      hasError = true;
+    }else if(helpers.len(this.nome.value) < 3){
+      this.nome.errorMessage = "O nome deve ter no mínimo 3 caracteres";
+      hasError = true;
     }
-    return true;
+
+    return !hasError;
   },
 
   getValues(){
-
+    return{
+      nome: this.nome.value,
+    }
   }
 }

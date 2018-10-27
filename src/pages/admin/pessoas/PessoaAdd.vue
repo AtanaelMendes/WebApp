@@ -84,7 +84,7 @@
   import customInputText from 'components/CustomInputText.vue'
   import PessoaService from 'assets/js/service/PessoaService'
   import GrupoEconomicoService from 'assets/js/service/GrupoEconomicoService'
-  //import Pessoa from 'assets/js/model/Pessoa'
+  import Pessoa from 'assets/js/model/Pessoa'
   import GrupoEconomico from 'assets/js/model/GrupoEconomico'
 
   export default {
@@ -99,18 +99,17 @@
       return {
         grupoEconomicoSearchTerms: '',
         newGrupoEconomicoDialog: false,
-        //pessoa: Pessoa,
-        pessoa: require('assets/js/model/Pessoa'),
+        pessoa: Pessoa,
         grupoEconomico: GrupoEconomico,
       }
     },
-    validations(){
+    /*validations(){
       if(this.newGrupoEconomicoDialog){
         return this.grupoEconomico.getValidation();
       }else {
         return this.pessoa.getValidation();
       }
-    },
+    },*/
     methods:{
       openNovoGrupoEconomicoDialog: function(){
         this.newGrupoEconomicoDialog = true;
@@ -140,7 +139,7 @@
         }
       },
       savePessoa: function(){
-        if(!this.pessoa.isValid(this)){
+        if(!this.pessoa.isValid()){
           return;
         }
 
@@ -178,12 +177,19 @@
       },
       selected (item) {
         this.pessoa.grupoEconomico.value = item.id;
+        this.pessoa.grupoEconomico.errorMessage = null;
       },
       backAction: function () {
         this.$router.push({name: 'pessoas'});
       }
     },
-    mounted(){}
+    mounted(){},
+    beforeDestroy(){
+      console.log('beforeDestroy')
+      console.log(this.pessoa)
+      this.pessoa = null;
+      console.log(this.pessoa)
+    }
   }
 </script>
 
