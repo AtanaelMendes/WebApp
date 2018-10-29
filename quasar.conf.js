@@ -7,7 +7,8 @@ module.exports = function (ctx) {
     plugins: [
       'axios',
       'vuelidate',
-      'moment'
+      'moment',
+      'numeral'
     ],
     css: [
       'app.styl'
@@ -34,7 +35,7 @@ module.exports = function (ctx) {
     devServer: {
       // https: true,
       // port: 8080,
-      open: true // opens browser window automatically
+      open: false // opens browser window automatically
     },
     // framework: 'all' --- includes everything; for dev only!
     framework: {
@@ -56,29 +57,55 @@ module.exports = function (ctx) {
         'QItemSide',
         'QItemTile',
         'QItemSeparator',
-        'QCard',
-        'QCardTitle',
-        'QCardMain',
-        'QCardMedia',
-        'QCardSeparator',
-        'QCardActions',
+
+        // adicionado
+        'QBtnDropdown',
+        'QInfiniteScroll',
+        'QLayoutFooter',
+        'QFab',
+        'QFabAction',
+        'QBreadcrumbs',
+        'QBreadcrumbsEl',
+        'QTooltip',
         'QInput',
-        'QModal',
+        'QCheckbox',
         'QField',
-        'QRating',
-        'QPopover',
+        'QRadio',
+        'QOptionGroup',
+        'QModal',
+        'QCard',
+        'QCardMain',
+        'QCardTitle',
+        'QCardActions',
+        'QCardSeparator',
+        'QCardMedia',
         'QCollapsible',
+        'QToggle',
+        'QRange',
         'QScrollArea',
         'QChip',
-        'QOptionGroup',
-        'QSearch',
-        'QBtnToggle',
-        'QAutocomplete',
-        'QDialog',
+        'QPopover',
+        'QRating',
+        'GoBack',
+        'QSelect',
+        'QDatetime',
         'QTabs',
         'QTab',
         'QTabPane',
         'QRouteTab',
+        'QDatetimePicker',
+        'QTimeline',
+        'QTimelineEntry',
+        'QSearch',
+        'QStepper',
+        'QStep',
+        'QStepperNavigation',
+        'QProgress',
+        'QUploader',
+        'QAutocomplete',
+        'QChipsInput',
+        'QBtnToggle',
+        'QJumbotron'
       ],
       directives: [
         'Ripple',
