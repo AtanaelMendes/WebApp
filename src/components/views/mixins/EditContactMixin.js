@@ -19,6 +19,7 @@ export default {
       })
     },
     deleteContact(id) {
+      // pessoa_id: vm.personProfile.id,
       this.$q.notify({ type: 'positive',  message: 'função de delete' })
     },
     updateContact: function (id) {
@@ -48,6 +49,7 @@ export default {
         fixo = true
       }
       let params = {
+        pessoa_id: vm.personProfile.id,
         nome: this.formContact.nome,
         is_fiscal: this.formContact.fiscal,
         is_cobranca: this.formContact.cobranca,
@@ -56,8 +58,8 @@ export default {
         },
         telefone: {
           numero: this.formContact.phone,
-        is_celular: celular,
-        is_fixo: fixo,
+          is_celular: celular,
+          is_fixo: fixo,
         }
       }
       this.$axios( { url: 'pessoa/1/contato/1', baseURL: 'http://demo3716022.mockable.io/', method: 'put', data: params } ).then( response => {

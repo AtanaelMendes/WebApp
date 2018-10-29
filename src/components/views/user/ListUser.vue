@@ -146,7 +146,7 @@ export default {
     filter: {
       handler: function(val, oldval) {
         var filter = {type: val.type, email:(val.email.length > 2 ? val.email : '')}
-        this.list(filter)
+        this.listPersons(filter)
       },
       deep: true,
     }
@@ -165,7 +165,7 @@ export default {
             type: 'positive',
             message: 'Usuário ativado com sucesso'
           })
-          vm.list(vm.filter)
+          vm.listPersons(vm.filter)
           vm.details = false
         })
       }).catch( error => {
@@ -185,7 +185,7 @@ export default {
             type: 'positive',
             message: 'Usuário excluido com sucesso'
           })
-          vm.list(vm.filter)
+          vm.listPersons(vm.filter)
           vm.details = false
         })
       }).catch( error => {
@@ -217,7 +217,7 @@ export default {
       }
 
     },
-    list: function(val) {
+    listPersons: function(val) {
       let vm = this
       vm.$axios.get( 'account?' + this.serialize(val) ).then( response => {
         vm.users = response.data
@@ -237,7 +237,7 @@ export default {
     },
   },
   mounted () {
-    this.list({type: 'non-trashed'})
+    this.listPersons({type: 'non-trashed'})
   }
 
 }

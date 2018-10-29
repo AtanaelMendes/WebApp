@@ -6,7 +6,7 @@
     </div>
 
     <div slot="rightBtn">
-      <q-btn flat round icon="edit" @click="editPerson()" v-if="$q.platform.is.desktop && personLoaded"/>
+      <q-btn flat round icon="edit" @click="editPerson()" v-if="$q.platform.is.desktop && listPersonLoaded"/>
     </div>
 
     <div slot="searchField">
@@ -40,7 +40,7 @@
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
           <q-list highlight no no-border v-if="loaded">
 
-            <q-item v-for="person in personsData" :key="person.id" link inset-separator multiline @click.native="getPerson(person.id)">
+            <q-item v-for="person in listPersonsData" :key="person.id" link inset-separator multiline @click.native="getPerson(person.id)">
               <q-item-side icon="account_circle"/>
               <q-item-main>
                 <q-item-tile>
@@ -60,7 +60,7 @@
         </div>
         <!--FIM LISTA DE PESSOA-->
 
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="personLoaded">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="listPersonLoaded">
           <!--CONTROLE DAS TAB DE PERFIL DA PESSOA-->
           <q-btn-toggle
             flat
@@ -345,15 +345,17 @@
                     </q-card-main>
                     <q-card-separator/>
                     <q-card-actions align="end">
-                      <q-btn flat color="primary" label="excluir" @click.native="deletePersonAddress(endereco.id)"/>
-                      <q-btn flat color="primary" label="editar" @click.native="getAddressById(endereco.id)"/>
+                      <q-btn flat color="primary" label="excluir" @click.native="deleteAddress(endereco.id)"/>
+                      <q-btn flat color="primary" label="editar" @click.native="getAddressByID(endereco.id)"/>
                     </q-card-actions>
                   </q-card>
 
                 </div>
               </div>
+              <q-page-sticky corner="bottom-right" :offset="[100, 25]">
+                <q-btn size="20px" round color="secondary" @click.native="modalNewAddress = true" icon="add" />
+              </q-page-sticky>
             </div>
-
             <div v-else class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <q-jumbotron class="q-ma-md">
                 <div class="q-display-1">Não há endereço cadastrado</div>
@@ -368,7 +370,7 @@
         </div>
       </q-page>
 
-      <!--MODAL endereco-->
+      <!--MODAL NEW ENDERECO-->
       <template>
         <q-modal v-model="modalNewAddress" minimized no-backdrop-dismiss>
           <form class="q-pa-md gutter-y-xs" @keyup.enter="createAddress()">
@@ -422,14 +424,77 @@
               <q-checkbox v-model="formAddress.cobranca" label="Cobrança" />
             </div>
             <div align="end">
-              <q-btn flat color="secondary" @click="modalNewAddress = false" label="Cancelar"/>
+              <q-btn flat color="secondary" @click="cleanAddressForm()" label="Cancelar"/>
               <q-btn color="secondary" label="Salvar" @click="createAddress()"/>
             </div>
 
           </form>
         </q-modal>
       </template>
-      <!--FIM modal endereco-->
+      <!--FIM MODAL NEW ENDERECO-->
+
+      <!--MODAL EDIT ENDERECO-->
+      <template>
+        <q-modal v-model="modalEditAddress" minimized no-backdrop-dismiss>
+          <form class="q-pa-md gutter-y-xs" @keyup.enter="updateAddress()">
+
+            <div>
+              <q-input
+                v-model="formAddress.endereco"
+                float-label="Endereço"
+                clearable
+                @blur="$v.formAddress.endereco.$touch"
+                :error="$v.formAddress.endereco.$error"
+              />
+            </div>
+            <div>
+              <q-input
+                v-model="formAddress.numero"
+                type="number"
+                float-label="Número"
+                clearable
+                @blur="$v.formAddress.numero.$touch"
+                :error="$v.formAddress.numero.$error"
+              />
+            </div>
+            <div>
+              <q-input v-model="formAddress.complemento" float-label="Complemento" clearable/>
+            </div>
+            <div>
+              <q-input
+                v-model="formAddress.bairro"
+                float-label="Bairro"
+                clearable
+                @blur="$v.formAddress.bairro.$touch"
+                :error="$v.formAddress.bairro.$error"
+              />
+            </div>
+            <div>
+              <q-select
+                v-model="formAddress.cidade"
+                placeholder="Cidade"
+                clearable
+                :options="selectOptions"
+                @blur="$v.formAddress.cidade.$touch"
+                :error="$v.formAddress.cidade.$error"
+              />
+            </div>
+            <div>
+              <q-input v-model="formAddress.cep" type="number" float-label="CEP" clearable/>
+            </div>
+            <div>
+              <q-checkbox class="q-pr-sm" v-model="formAddress.fiscal" label="Fiscal" />
+              <q-checkbox v-model="formAddress.cobranca" label="Cobrança" />
+            </div>
+            <div align="end">
+              <q-btn flat color="secondary" @click="cleanAddressForm()" label="Cancelar"/>
+              <q-btn color="secondary" label="Salvar" @click="updateAddress()"/>
+            </div>
+
+          </form>
+        </q-modal>
+      </template>
+      <!--FIM MODAL EDIT ENDERECO-->
 
       <!--MODAL UPDATE CONTATO-->
       <template>
@@ -592,6 +657,7 @@
 <script>
 import NewAddressMixin from 'components/views/mixins/NewAddressMixin'
 import EditContactMixin from 'components/views/mixins/EditContactMixin'
+import EditAddressMixin from 'components/views/mixins/EditAddressMixin'
 import { required, minLength, maxLength, requiredIf, email } from 'vuelidate/lib/validators'
 import AgroLayout from 'layouts/AgroLayout'
 import { Platform } from 'quasar'
@@ -600,7 +666,7 @@ export default {
   components: {
     AgroLayout
   },
-  mixins: [NewAddressMixin, EditContactMixin],
+  mixins: [NewAddressMixin, EditContactMixin, EditAddressMixin],
   data () {
     return {
       tabs: 'perfil',
@@ -627,13 +693,13 @@ export default {
         fiscal: false
       },
       loaded: false,
-      personLoaded: false,
+      listPersonLoaded: false,
       contactsLoaded: false,
       addressLoaded:false,
       contactsformLoaded: false,
       addressformLoaded: false,
-      personProfile: null,
-      personsData: [],
+      personProfile: [],
+      listPersonsData: [],
       personContacts: [],
       personAddress: [],
       searchName: '',
@@ -646,7 +712,7 @@ export default {
   watch: {
     filter: {
       handler: function(val, oldval) {
-        this.list(val)
+        this.listPersons(val)
       },
       deep: true,
     }
@@ -685,7 +751,7 @@ export default {
             type: 'positive',
             message: 'Pessoa inativada com sucesso'
           })
-          this.list()
+          this.listPersons()
         })
       }).catch( error => {
         console.log(error.request)
@@ -704,18 +770,18 @@ export default {
             type: 'positive',
             message: 'Pessoa ativada com sucesso'
           })
-          this.list()
+          this.listPersons()
         })
       }).catch( error => {
         console.log(error.request)
       })
     },
-    list: function() {
+    listPersons: function() {
       this.loaded = true
       let vm = this
       vm.$axios.get( 'pessoa' ).then( response => {
-        vm.personsData = response.data
-        // console.log(vm.personsData)
+        vm.listPersonsData = response.data
+        // console.log(vm.listPersonsData)
       }).catch( error => {
         console.log(error.request)
       })
@@ -727,15 +793,16 @@ export default {
         let vm = this
         vm.$axios.get( 'pessoa/'+ id ).then( response => {
           vm.personProfile = response.data
-          this.getPersonContacts()
-          this.getPersonAddress()
-          this.personLoaded = true
+          var id = vm.personProfile.id
+          this.getPersonContacts(id)
+          this.getPersonAddress(id)
+          this.listPersonLoaded = true
         }).catch( error => {
           console.log(error.request)
         })
       }
     },
-    getPersonContacts: function () {
+    getPersonContacts: function (id) {
       let vm = this
       this.$axios( { url: '/pessoa/1/contato/', baseURL: 'https://demo3716022.mockable.io' } ).then( response => {
         vm.personContacts = response.data
@@ -744,7 +811,7 @@ export default {
         console.log(error.request)
       })
     },
-    getPersonAddress: function () {
+    getPersonAddress: function (id) {
       let vm = this
       this.$axios( { url: 'pessoa/id/endereco/', baseURL: 'http://demo3716022.mockable.io/' } ).then( response => {
         vm.personAddress = response.data
@@ -770,9 +837,20 @@ export default {
       }
       this.modalEditContact = true
     },
+    fillFormAddress: function (data) {
+      this.formAddress.endereco = data.endereco
+      this.formAddress.bairro = data.bairro
+      this.formAddress.numero = data.numero
+      this.formAddress.complemento = data.complemento
+      this.formAddress.cep = data.cep
+      this.formAddress.cidade = data.cidade
+      this.formAddress.estado = data.estado
+      this.formAddress.cobranca = data.is_cobranca
+      this.formAddress.fiscal = data.is_fiscal
+    }
   },
   mounted () {
-    this.list()
+    this.listPersons()
   }
 }
 </script>

@@ -7,19 +7,23 @@ export default {
       this.formAddress.bairro = null,
       this.formAddress.cep = null,
       this.formAddress.cobranca = false,
-      this.formAddress.fiscal = false
+      this.formAddress.fiscal = false,
+      this.modalEditAddress = false,
+      this.modalNewAddress = false
     },
-    getPersonAddressByID: function (id) {
-      this.$axios( { url: 'pessoa/endereco/1', baseURL: 'http://demo3716022.mockable.io/' } ).then( response => {
+    getAddressByID: function (id) {
+      this.$axios( { url: 'pessoa/1/endereco/1', baseURL: 'http://demo3716022.mockable.io/' } ).then( response => {
         this.fillFormAddress(response.data)
         this.addressformLoaded = true
+        this.modalEditAddress = true
       }).catch( error => {
         console.log(error.request)
       })
     },
     deleteAddress: function (id) {
-      this.$q.notify({ type: 'positive',  message: 'função de delete' }
-    },
+      // pessoa_id: vm.personProfile.id,
+      this.$q.notify({ type: 'positive',  message: 'função de delete' })
+      },
     updateAddress: function (id) {
       this.$v.formAddress.$touch()
       if ( this.$v.formAddress.$error ) {
@@ -33,15 +37,16 @@ export default {
         return
       }
       let params = {
-        pessoa_id: null,
-        endereco: null,
-        numero: null,
-        complemento: null,
-        bairro: null,
-        cep: null,
-        cidade_id: null,
-        is_cobranca: false,
-        is_fiscal: false
+        pessoa_id: vm.personProfile.id,
+        endereco: this.formAddress.endereco,
+        numero: this.formAddress.numero,
+        complemento: this.formAddress.complemento,
+        bairro: this.formAddress.bairro,
+        cep: this.formAddress.cep,
+        cidade_id: this.formAddress.cidade,
+        estado_id: this.formAddress.estado,
+        is_cobranca: this.formAddress.cobranca,
+        is_fiscal: this.formAddress.fiscal
       }
       this.$axios( { url: 'pessoa/1/endereco/1', baseURL: 'http://demo3716022.mockable.io/', method: 'put', data: params } ).then( response => {
         if(response.status == 200){

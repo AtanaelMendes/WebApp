@@ -170,7 +170,7 @@
     },
     data () {
       return {
-        personLoaded: false,
+        listPersonLoaded: false,
         personData: [],
 
         celular: 66999763509,
@@ -189,7 +189,7 @@
       //   }
       //   vm.$axios.get( 'account/'+ params.id ).then( response => {
       //     vm.personData = response.data
-      //     this.personLoaded = true
+      //     this.listPersonLoaded = true
       //   }).catch( error => {
       //     if (error.response.status == 404){
       //       this.$q.dialog({
