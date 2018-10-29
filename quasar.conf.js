@@ -1,5 +1,5 @@
 // Configuration for your app
-const envparser = require('./config/envparser')
+const envparser = require('./config/envparser');
 
 module.exports = function (ctx) {
   return {
@@ -45,6 +45,7 @@ module.exports = function (ctx) {
         'QLayoutDrawer',
         'QPageContainer',
         'QPage',
+        'QPageSticky',
         'QToolbar',
         'QToolbarTitle',
         'QBtn',
@@ -58,7 +59,6 @@ module.exports = function (ctx) {
         'QItemSeparator',
 
         // adicionado
-        'QPageSticky',
         'QBtnDropdown',
         'QInfiniteScroll',
         'QLayoutFooter',
@@ -109,15 +109,15 @@ module.exports = function (ctx) {
       ],
       directives: [
         'Ripple',
-        'TouchSwipe',
-        'TouchHold',
-        'CloseOverlay'
+        'CloseOverlay',
+        'MaskedInput'
       ],
       // Quasar plugins
       plugins: [
         'Notify',
         'Dialog',
-        'Loading'
+        'Loading',
+        'Screen',
       ]
       // iconSet: ctx.theme.mat ? 'material-icons' : 'ionicons'
       // i18n: 'de' // Quasar language
