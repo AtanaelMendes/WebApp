@@ -25,8 +25,8 @@
       </q-tabs>
 
     </toolbar>
-      <div v-if="pessoa" class="q-ma-lg">
-        <div v-if="selectedTab === 'tab-info'">
+      <div v-if="pessoa" >
+        <div v-if="selectedTab === 'tab-info'" class="q-ma-lg">
 
           <div class="item">
             <span class="label">Grupo Econômico</span>
@@ -74,9 +74,7 @@
 
         </div>
 
-        <div v-if="selectedTab === 'tab-contatos'">
-          <span>Contatos</span>
-        </div>
+        <ContatoList v-if="selectedTab === 'tab-contatos'"></ContatoList>
 
         <div v-if="selectedTab === 'tab-localizacoes'">
           <span>Localizações</span>
@@ -89,12 +87,14 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import PessoaService from 'assets/js/service/PessoaService'
+  import ContatoList from 'pages/admin/pessoas/tabs/ContatoList'
 
   export default {
     name: "PessoaView",
     components: {
       toolbar,
       customPage,
+      ContatoList
     },
     watch: {
       '$route' (to, from) {
