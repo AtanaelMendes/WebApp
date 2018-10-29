@@ -2,29 +2,19 @@
   <q-layout view="hHh Lpr lFf">
     <q-page-container class="background">
       <q-page class="row justify-center">
-        <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3 q-pt-md">
+        <div class=" q-pt-md" style="text-align: center">
 
           <h1 class="title">AgroProject</h1>
-          <q-card class="login" color="white" text-color="black" inline style="width: 500px">
-            <q-card-title>
+          <q-card class="login" color="white" text-color="black" inline style="max-width: 500px; min-width: 400px; text-align: left" >
+            <q-card-title >
               Bem vindo ao AgroProject
             </q-card-title>
             <q-card-main class="gutter-y-sm">
               <div>
                 <form @keyup.enter="login">
-                  <q-field :error="form.email.error" class="q-mb-sm">
-                    <q-input v-model="form.email.value" v-on:input="clearEmailError()" type="email" float-label="Email" placeholder="Digite seu email"/>
-                    <div class="q-field-bottom row no-wrap" style="height: 22px">
-                      <div class="q-field-error col" v-if="form.email.error" >{{form.email.errorMessage}}</div>
-                    </div>
-                  </q-field>
+                  <custom-input-text type="email" placeholder="Digite seu email" label="Email" :model="form.email" />
 
-                  <q-field :error="form.password.error" class="q-mb-sm">
-                    <q-input v-model="form.password.value" v-on:input="clearPasswordError()" type="password" float-label="Senha" placeholder="Digite  sua senha"/>
-                    <div class="q-field-bottom row no-wrap" style="height: 22px">
-                      <div class="q-field-error col" v-if="form.password.error" >{{form.password.errorMessage}}</div>
-                    </div>
-                  </q-field>
+                  <custom-input-text type="password" placeholder="Digite sua senha" label="Senha" :model="form.password" />
                 </form>
               </div>
 
@@ -48,12 +38,7 @@
         <div v-if="passwordRecoveryModalOpened">
           <form @keyup.enter="login">
 
-            <q-field :error="resetPasswordForm.email.error" class="q-mt-lg q-mb-lg">
-              <q-input v-model="resetPasswordForm.email.value" v-on:input="clearEmail2Error()" type="email" float-label="Email" placeholder="Digite seu email"/>
-              <div class="q-field-bottom row no-wrap"  style="height: 22px">
-                <div class="q-field-error col" v-if="resetPasswordForm.email.error" >{{resetPasswordForm.email.errorMessage}}</div>
-              </div>
-            </q-field>
+            <custom-input-text type="email" placeholder="Digite seu email" label="Email" :model="resetPasswordForm.email" />
 
           </form>
         </div>
@@ -73,27 +58,28 @@
 <script>
   import { required, email, minLength } from 'vuelidate/lib/validators'
   import { Loading } from 'quasar'
+  import customInputText from 'components/CustomInputText.vue'
 
   export default {
     name: 'login',
+    components: {
+      customInputText
+    },
     data () {
       return {
         form: {
           email: {
-            value: null,
-            error: false,
+            value: 'danilo__oliveira@hotmail.com',
             errorMessage: null
           },
           password: {
-            value: null,
-            error: false,
+            value: '12345678',
             errorMessage: null
           },
         },
         resetPasswordForm: {
           email: {
             value: null,
-            error: false,
             errorMessage: null
           },
         },
@@ -101,6 +87,7 @@
 
       }
     },
+
     validations: {
       form: {
         email: { value: { required, email } },
@@ -108,6 +95,13 @@
       },
       resetPasswordForm: {
         email: { value: { required, email } }
+      }
+    },
+    created() {
+      let token = localStorage.getItem('auth.token');
+
+      if (token != null) {
+        this.$router.push('/admin')
       }
     },
     methods: {
@@ -119,47 +113,36 @@
       },
       clearResetPasswordForm : function(){
         this.resetPasswordForm.email.value = null;
-        this.resetPasswordForm.email.error = false;
         this.resetPasswordForm.email.errorMessage = null;
       },
       submitPasswordRecoveryForm: function () {
         this.$v.resetPasswordForm.$touch();
 
         if (this.$v.resetPasswordForm.$error ) {
-          this.resetPasswordForm.email.error = this.$v.resetPasswordForm.email.$error;
-          if(this.resetPasswordForm.email.error && !this.$v.resetPasswordForm.email.value.required){
+
+          if(!this.$v.resetPasswordForm.email.value.required){
             this.resetPasswordForm.email.errorMessage = "Digite um email"
-          }else if(this.resetPasswordForm.email.error && !this.$v.resetPasswordForm.email.value.email){
+          }else if(!this.$v.resetPasswordForm.email.value.email){
             this.resetPasswordForm.email.errorMessage = "Este email é inválido."
           }
           return;
         }
-      },
-      clearEmailError: function(){
-        this.form.email.error = false;
-      },
-      clearPasswordError: function(){
-        this.form.password.error = false;
-      },
-      clearEmail2Error: function(){
-        this.resetPasswordForm.email.error = false;
+        //TODO: Implementar a lógica aqui
       },
       login: function () {
         this.$v.form.$touch();
 
         if (this.$v.form.$error) {
-          this.form.email.error = this.$v.form.email.$error;
-          this.form.password.error = this.$v.form.password.$error;
 
-          if(this.form.email.error && !this.$v.form.email.value.required){
+          if(!this.$v.form.email.value.required){
             this.form.email.errorMessage = "Digite um email"
-          }else if(this.form.email.error && !this.$v.form.email.value.email){
+          }else if(!this.$v.form.email.value.email){
             this.form.email.errorMessage = "Este email é inválido."
           }
 
-          if(this.form.password.error && !this.$v.form.password.value.required){
+          if(!this.$v.form.password.value.required){
             this.form.password.errorMessage = "Digite uma senha."
-          }else if(this.form.password.error && !this.$v.form.password.value.minLength){
+          }else if(!this.$v.form.password.value.minLength){
             this.form.password.errorMessage = "A senha deve ter no mínimo 8 caracteres."
           }
 
@@ -205,16 +188,18 @@
 </script>
 <style>
   .background {
-    background-image: url('/statics/login_background.jpg');
+    background-image: url('/assets/login_background.jpg');
     background-position: center center;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
+    background-color: #05614f99;
+    background-blend-mode: darken;
   }
   .title{
     color: white;
     font-weight: 800;
     text-align: center;
-    font-size: 90px;
+    font-size: 80px;
   }
 </style>

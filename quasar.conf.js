@@ -5,7 +5,9 @@ module.exports = function (ctx) {
   return {
     // app plugins (/src/plugins)
     plugins: [
-      'axios', 'vuelidate'
+      'axios',
+      'vuelidate',
+      'moment'
     ],
     css: [
       'app.styl'
@@ -42,6 +44,7 @@ module.exports = function (ctx) {
         'QLayoutDrawer',
         'QPageContainer',
         'QPage',
+        'QPageSticky',
         'QToolbar',
         'QToolbarTitle',
         'QBtn',
@@ -51,6 +54,8 @@ module.exports = function (ctx) {
         'QItem',
         'QItemMain',
         'QItemSide',
+        'QItemTile',
+        'QItemSeparator',
         'QCard',
         'QCardTitle',
         'QCardMain',
@@ -59,14 +64,33 @@ module.exports = function (ctx) {
         'QCardActions',
         'QInput',
         'QModal',
-        'QField'
+        'QField',
+        'QRating',
+        'QPopover',
+        'QCollapsible',
+        'QScrollArea',
+        'QChip',
+        'QOptionGroup',
+        'QSearch',
+        'QBtnToggle',
+        'QAutocomplete',
+        'QDialog',
+        'QTabs',
+        'QTab',
+        'QTabPane',
+        'QRouteTab',
       ],
       directives: [
-        'Ripple'
+        'Ripple',
+        'CloseOverlay',
+        'MaskedInput'
       ],
       // Quasar plugins
       plugins: [
-        'Notify', 'Dialog', 'Loading'
+        'Notify',
+        'Dialog',
+        'Loading',
+        'Screen',
       ]
       // iconSet: ctx.theme.mat ? 'material-icons' : 'ionicons'
       // i18n: 'de' // Quasar language
