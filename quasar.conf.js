@@ -5,7 +5,10 @@ module.exports = function (ctx) {
   return {
     // app plugins (/src/plugins)
     plugins: [
-      'axios'
+      'axios',
+      'vuelidate',
+      'moment',
+      'numeral'
     ],
     css: [
       'app.styl'
@@ -52,6 +55,7 @@ module.exports = function (ctx) {
         'QItemMain',
         'QItemSide',
         'QItemTile',
+        'QItemSeparator',
 
         // adicionado
         'QPageSticky',
@@ -97,12 +101,17 @@ module.exports = function (ctx) {
         'QStep',
         'QStepperNavigation',
         'QProgress',
-        'QUploader'
+        'QUploader',
+        'QAutocomplete',
+        'QChipsInput',
+        'QBtnToggle',
+        'QJumbotron'
       ],
       directives: [
         'Ripple',
         'TouchSwipe',
-        'TouchHold'
+        'TouchHold',
+        'CloseOverlay'
       ],
       // Quasar plugins
       plugins: [

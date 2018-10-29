@@ -1,88 +1,44 @@
 <template>
-  <q-layout :view="view">
+  <q-layout view="lHr LpR lFr">
     <q-layout-header v-model="header" :reveal="headerReveal">
       <q-toolbar color="secondary">
-        <slot name="menu">
-          <q-btn flat round dense icon="menu" @click="left = !left" v-if="drawer"/>
+
+        <!-- left drawer -->
+        <slot name="leftDrawerBtn">
+          <q-btn flat round dense icon="menu" @click="leftSide = !leftSide" v-if="leftDrawer"/>
         </slot>
 
-        <q-toolbar-title>
-          <slot name="title"></slot>
-        </q-toolbar-title>
+        <!-- left buttons -->
+        <slot name="leftBtn"></slot>
 
-        <q-btn flat round class="within-iframe-hide" v-if="backPath" @click="$router.replace(backPath)" style="margin-right: 15px">
-          <q-icon name="arrow_back" />
-        </q-btn>
+        <q-btn icon="arrow_back" flat round class="within-iframe-hide" v-if="backPath" @click="$router.replace(backPath)"/>
 
-        <slot name="menuRight">
-          <q-btn flat round dense icon="apps" @click="rightSide = !rightSide" />
+        <q-toolbar-title><slot name="title"></slot></q-toolbar-title>
+
+        <!-- search field -->
+        <slot name="searchField"></slot>&nbsp
+
+        <!-- right buttons -->
+        <slot name="rightBtn"></slot>
+
+        <!-- right drawer -->
+        <slot name="rightDrawerBtn">
+          <q-btn flat round dense icon="menu" @click="rightSide = !rightSide" v-if="rightDrawer"/>
         </slot>
       </q-toolbar>
 
-      <slot name="tabHeader">
-      </slot>
+      <slot name="tabHeader"></slot>
 
     </q-layout-header>
 
-    <!-- <q-layout-footer v-model="footer" :reveal="footerReveal">
-      <q-toolbar>
-        <slot name="footer">
-          <q-toolbar-title>
-            © AgroProject
-          </q-toolbar-title>
-        </slot>
-      </q-toolbar>
-    </q-layout-footer> -->
-
     <!-- Left Side Panel -->
-    <q-layout-drawer v-if="drawer" side="left" v-model="left" :overlay="leftOverlay" :behavior="leftBehavior" :breakpoint="leftBreakpoint">
-      <slot name="drawer"></slot>
+    <q-layout-drawer :width="drawerWidth" v-if="leftDrawer" side="left" v-model="leftSide" behavior="default" >
+      <slot name="leftDrawer"></slot>
     </q-layout-drawer>
 
     <!-- Right Side Panel -->
-    <q-layout-drawer v-model="rightSide" side="right" behavior="mobile">
-
-      <q-list inset-separator>
-
-        <q-item>
-          <!-- <q-item-side link to="/inbox/1" v-if="perfil.avatar"> -->
-          <q-item-side link to="/inbox/1">
-            <q-item-tile avatar>
-              <!-- <img :src="perfil.avatar"> -->
-            </q-item-tile>
-          </q-item-side>
-          <q-item-main link @click.native="$router.push('/usuario/perfil')" style="cursor:pointer">
-            {{ perfil.usuario }}
-          </q-item-main>
-          <q-item-side right>
-            <q-item-tile link icon="exit_to_app"@click.native="logout" style="cursor:pointer"/>
-          </q-item-side>
-        </q-item>
-
-      </q-list>
-
-      <!-- <q-list inset-separator>
-        <q-item>
-          <q-item-side :avatar="perfil.avatar" v-if="perfil.avatar.length > 0"/>
-          <q-item-main>
-            <router-link :to="{ path: '/usuario/perfil' }">
-            {{ perfil.usuario }}
-            </router-link>
-          </q-item-main>
-          <q-item-side right icon="exit_to_app" @click="logout" style="cursor:pointer"/>
-        </q-item>
-      </q-list> -->
-
-      <div class="row wrap">
-        <!-- <div class="text-center col-3" v-for="aplicativo in aplicativos"> -->
-        <div class="text-center col-3">
-          <!-- <span @click="$router.push(aplicativo.path)" style="cursor:pointer"> -->
-          <!-- <q-icon :name="aplicativo.icon" style="font-size:3em" color="primary" /> -->
-            <!-- <small class="text-primary">{{ aplicativo.title }}</small> -->
-          </span>
-        </div>
-
-      </div>
+    <q-layout-drawer :width="drawerWidth" v-if="rightDrawer" side="right" v-model="rightSide" behavior="default">
+      <slot name="rightDrawer"></slot>
     </q-layout-drawer>
 
     <q-page-container>
@@ -91,54 +47,36 @@
       </slot>
     </q-page-container>
 
-    <!-- <q-toolbar>
-      <q-toolbar-title>
-        <slot name="footer">
-          &copy; MG Papelaria
-        </slot>
-      </q-toolbar-title>
-    </q-toolbar> -->
-
-    <!-- Footer -->
-    <!--
-    <q-toolbar>
-    <q-toolbar-title>
-    &copy; MG Papelaria
-  </q-toolbar-title>
-</q-toolbar>
--->
-
   </q-layout>
 </template>
 
 <script>
+
+import router from '../router'
+
   export default {
-    name: 'agro-layout',
+    name: 'agrolayout',
     data () {
       return {
-
-        view: 'lHr LpR lFr',
+        token_id: null,
+        view: '',
         header: true,
         headerReveal: true,
 
         footer: true,
         footerReveal: false,
 
-        left: true,
-        leftOverlay: false,
-        leftBreakpoint: 996,
-        leftBehavior: 'default',
-
-        leftScroll: false,
-        rightScroll: true,
-        rightBreakpoint: 2000,
         hideTabs: true,
-        leftSide: false,
-        rightSide: false,
 
-        // bottomcenter: 'F',
-        // bottomright: 'f',
-        scrolling: true
+        leftSide: true,
+        rightSide: true,
+
+        drawerWidth: 250,
+
+        bottomcenter: 'F',
+        bottomright: 'f',
+        scrolling: true,
+
       }
     },
     components: {
@@ -155,7 +93,11 @@
         type: Boolean,
         default: false
       },
-      drawer: {
+      rightDrawer: {
+        type: Boolean,
+        default: false
+      },
+      leftDrawer: {
         type: Boolean,
         default: false
       },
@@ -165,36 +107,19 @@
       }
     },
     methods: {
-
-      logout () {
-        var vm = this
-
-        vm.$q.dialog({
-          title: 'Sair do sistema',
-          message: 'Tem certeza que deseja sair?',
-          ok: 'Sair',
-          cancel: 'Cancelar'
-        }).then(() => {
-          vm.$axios.get('auth/logout').then(response => {
-            localStorage.removeItem('auth.token')
-            localStorage.removeItem('auth.usuario.usuario')
-            localStorage.removeItem('auth.usuario.codusuario')
-            localStorage.removeItem('auth.usuario.avatar')
-            vm.$router.push('/login')
-            vm.$q.notify({
-              message: 'Até mais...',
-              type: 'positive',
-            })
-          })
-        })
-      }
-
     }
   }
 </script>
 
 <style>
-  .icone-app {
-    font-size: 50px
+  .chip-container {
+    min-height: 100px ;
+  }
+  .chip-inline {
+    display: inline;
+    padding: unset;
+  }
+  .chip-container-error{
+    border-color: red;
   }
 </style>
