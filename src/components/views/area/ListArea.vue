@@ -1,49 +1,10 @@
 <template>
   <AgroLayout back-path="/" rightDrawer>
-    <div slot="title">
-      Administração
-    </div>
-
-    <div slot="rightBtn">
-      <q-btn flat round icon="edit" @click="editArea()" v-if="$q.platform.is.desktop && areaLoaded"/>
-    </div>
-
-
-    <!--MENU DA DIREITA-->
-    <div slot="rightDrawer">
-      <q-list>
-        <q-list-header>Filtros</q-list-header>
-        <q-item>
-          <q-item-main>
-            <q-option-group
-              type="radio"
-              color="secondary"
-              v-model="filter.type"
-              :options="[{ label: 'Ativos', value: 'non-trashed'},
-                         { label: 'Inativos', value: 'trashed' },
-                         { label: 'Todos', value: '' }]"
-            />
-          </q-item-main>
-        </q-item>
-      </q-list>
-    </div>
-    <!--FIM MENU DA DIREITA-->
 
 
     <div slot="content" >
 
-      <q-page padding class="row" v-if="loaded">
-
-        <div class="col-xs-12 col-sm-12 col-6 col-lg-4">
-          <q-list highlight inset-separator no-border>
-            <q-item v-for="farmer in 10" :key="farmer" @click.native="selectArea()">
-              <q-item-side icon="account_circle"/>
-              <q-item-main>
-                LISTA DE AREAS
-              </q-item-main>
-            </q-item>
-          </q-list>
-        </div>
+      <q-page padding >
 
         <div class="col-xs-12 col-sm-12 col-6 col-lg-8" v-if="areaLoaded">
 
@@ -159,7 +120,7 @@
       </q-page>
 
       <q-page-sticky corner="bottom-right" :offset="[25, 25]">
-        <q-btn size="20px" round color="secondary" @click.native="$router.push('/area/nova-area')" icon="person_add" />
+        <q-btn size="20px" round color="secondary" @click.native="$router.push('/areas/nova-areas')" icon="person_add" />
       </q-page-sticky>
 
     </div>
@@ -185,28 +146,6 @@
           type: null
         }
       }
-    },
-    methods: {
-      selectArea: function() {
-        this.areaLoaded = true
-      },
-      editArea: function(){
-        this.$router.push('/area/editar-area')
-      },
-      axiosRequest: function() {
-        let vm = this
-        vm.$axios.get( 'rota/'+ vm.$route.params.id ).then( response => {
-          vm.var = response.data
-          console.log(vm.var)
-          vm.loaded = true
-        }).catch( error => {
-          console.log('Erro Ocorrido:')
-          console.log(error)
-        })
-      }
-    },
-    mounted() {
-      this.loaded = true
     }
   }
 </script>

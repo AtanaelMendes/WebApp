@@ -22,6 +22,10 @@
           <q-item-side icon="group" />
           <q-item-main label="Pessoas" />
         </q-item>
+        <q-item @click.native="$router.push({name:'areas'})">
+          <q-item-side icon="place" />
+          <q-item-main label="Áreas" />
+        </q-item>
       </q-list>
     </q-layout-drawer>
 

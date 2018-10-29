@@ -16,7 +16,7 @@
 
       <q-page padding class="row">
         <!--TAB AREA-->
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4" v-if="tabs == 'tab-area' ">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4" v-if="tabs == 'tab-areas' ">
 
           <!--LOCALIZACAO-->
           <q-item>
