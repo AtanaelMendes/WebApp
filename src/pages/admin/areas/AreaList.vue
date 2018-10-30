@@ -1,6 +1,7 @@
 <template>
   <custom-page widthInner="60%" isParent >
-    <toolbar slot="toolbar" title="Áreas" searchable navigation_type="menu" @search_changed="listBySearch">
+    <!--<toolbar slot="toolbar" title="Áreas" searchable navigation_type="menu" @search_changed="listBySearch">-->
+    <toolbar slot="toolbar" title="Áreas" searchable navigation_type="menu">
       <template slot="action_itens">
         <q-btn flat round dense icon="tune" >
           <q-popover anchor="bottom left">
@@ -23,14 +24,25 @@
       </template>
     </toolbar>
 
-    <q-list highlight inset-separator no-border v-if="loaded">
-      <q-item v-for="farmer in 10" :key="farmer" @click.native="selectArea()">
-        <q-item-side icon="account_circle"/>
+    <q-list highlight inset-separator no-border v-if="areas" link>
+      <q-item v-for="area in areas" :key="area.id" @click.native="selectArea(area.id)">
+        <q-item-side icon="place"/>
         <q-item-main>
-          LISTA DE AREAS
+          <q-item-tile>
+            {{area.complemento}}
+          </q-item-tile>
+          <q-item-tile sublabel>
+            {{area.endereco}} - {{area.cidade}}
+          </q-item-tile>
         </q-item-main>
       </q-item>
     </q-list>
+    <div v-else class="no-result">
+      <img src="~/assets/sad_2.svg"/>
+      <span>Nenhum resultado encontrado.</span>
+    </div>
+
+    <q-btn slot="fab-container" round color="primary" @click="addArea()" icon="add" size="20px" />
 
   </custom-page>
 </template>
@@ -38,6 +50,7 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
+  import addressService from 'assets/js/service/AddressService'
   export default {
     name: "AreasList",
     components: {
@@ -46,6 +59,8 @@
     },
     data () {
       return {
+        areas: [],
+        isEmptyList: null,
         areaLoaded: false,
         filter: {
           type: 'non-trashed',
@@ -62,29 +77,35 @@
       }
     },
     methods: {
-      selectArea: function() {
-        this.areaLoaded = true
+      list: function(filter) {
+        addressService.listAreas(filter).then(response => {
+          // console.log(response.data)
+          this.areas = response.data;
+          this.isEmptyList = this.areas.length === 0;
+        });
       },
-      // list: function(filter) {
-      //   pessoaService.listPessoas(filter).then(response => {
-      //     this.pessoas = response.data;
-      //     this.isEmptyList = this.pessoas.length === 0;
-      //   });
-      // },
-
-      // viewPessoa: function(id) {
-      //   this.$router.push({name: 'view_pessoa', params: {id:id}});
-      //   this.$router.push({name: 'add_pessoa'});
-      // }
+      selectArea: function(id) {
+        this.$router.push({name: 'view_area', params: {id:id}});
+        // this.$router.push({name: 'add_pessoa'});
+      },
+      addArea: function(){
+        this.$router.push({name: 'add_area'});
+      },
     },
     mounted () {
-      this.loaded = true
-
+      this.list(this.filter);
       // this.$root.$on('refreshPessoaList', () => {
-      //   this.list(this.filter);
+      //
       // });
     },
   }
 </script>
 <style>
+  .no-result span{
+    display: block;
+    margin-top: 30px;
+    font-size: 25px;
+    font-weight: 300;
+    color: #ababab;
+  }
 </style>

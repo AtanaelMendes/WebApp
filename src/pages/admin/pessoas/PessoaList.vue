@@ -64,7 +64,6 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import pessoaService from 'assets/js/service/PessoaService'
-
   export default {
     name: "PessoasList",
     components: {
