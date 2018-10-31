@@ -50,7 +50,7 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import addressService from 'assets/js/service/AddressService'
+  import areaService from 'assets/js/service/AreaService'
   export default {
     name: "AreasList",
     components: {
@@ -78,7 +78,7 @@
     },
     methods: {
       list: function(filter) {
-        addressService.listAreas(filter).then(response => {
+        areaService.listAreas(filter).then(response => {
           // console.log(response.data)
           this.areas = response.data;
           this.isEmptyList = this.areas.length === 0;

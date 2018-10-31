@@ -12,15 +12,26 @@ export default {
           })
     });
   },
+
   getAddressByID(id){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios(
-        { url: 'area-detalhes', baseURL: 'http://demo3716022.mockable.io/' }).then( response =>{
+        { url: 'area-detalhes', baseURL: 'http://demo3716022.mockable.io/' } ).then( response =>{
         resolve(response);
       }).catch(error =>{
         reject(error)
       })
     });
-  }
+  },
+
+  saveArea(params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios( { url: 'area-create', baseURL: 'http://demo3716022.mockable.io/', method: 'post', data: params } ).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
 // { url: 'lista-areas', baseURL: 'http://demo3716022.mockable.io/', method: 'put', data: params }
 }

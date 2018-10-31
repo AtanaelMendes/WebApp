@@ -1,27 +1,34 @@
 import { helpers} from 'vuelidate/lib/validators'
 
-export default{
-  pessoaType: 1,
-  nome: {
+export default class{
+  pessoaType = 1;
+  produtor_id = null;
+  nome = {
     value: null,
     errorMessage: null
-  },
-  tamanho: {
+  };
+  tamanho = {
     value: null,
     errorMessage: null
-  },
-  loacalizacao_id: {
+  };
+  localizacao = {
     value: null,
     errorMessage: null
-  },
-  produtor_id: {
+  };
+  unidade_medida = {
     value: null,
     errorMessage: null
-  },
-  unidade_medida_id: {
-    value: null,
-    errorMessage: null
-  },
+  };
+  constructor(area){
+    if(area !== undefined){
+      this.nome.value = area.nome.value;
+      this.tamanho.value = area.tamanho.value;
+      this.localizacao.value = area.localizacao.value;
+      this.unidade_medida.value = area.unidade_medida.value;
+      this.produtor_id = area.produtor_id;
+
+    }
+  };
   isValid(){
     let hasError = false;
 
@@ -33,47 +40,31 @@ export default{
       hasError = true;
     }
 
-    if(!helpers.req(this.grupoEconomico.value)){
-      this.grupoEconomico.errorMessage = "Selecione um Grupo Econòmico";
+    if(!helpers.req(this.tamanho.value)){
+      this.tamanho.errorMessage = "Informe o tamanho da área";
       hasError = true;
     }
 
-    if(this.pessoaType === 1){
-      if(!helpers.req(this.cpf.value)){
-        this.cpf.errorMessage = "Digite um CPF";
-        hasError = true;
-      }
-    }else if(this.pessoaType === 2) {
-      if (!helpers.req(this.cnpj.value)) {
-        this.cnpj.errorMessage = "Digite um CNPJ";
-        hasError = true;
-      }
+    if (!helpers.req(this.localizacao.value)) {
+      this.localizacao.errorMessage = "Informe a Localização";
+      hasError = true;
+    }
 
-      if (!helpers.req(this.razaoSocial.value)) {
-        this.razaoSocial.errorMessage = "Digite uma razão social";
-        hasError = true;
-      }
-
-      if (!helpers.req(this.nomeFantasia.value)) {
-        this.nomeFantasia.errorMessage = "Digite um nome fantasia";
-        hasError = true;
-      }
+    if (!helpers.req(this.unidade_medida.value)) {
+      this.unidade_medida.errorMessage = "Informe unidade de medida";
+      hasError = true;
     }
 
     return !hasError;
-  },
+  };
 
   getValues(){
     return{
       nome: this.nome.value,
-      grupo_economico_id: this.grupoEconomico.value,
-      cpf: this.cpf.value,
-      cnpj: this.cnpj.value,
-      inscricao_estadual: this.inscricaoEstadual.value,
-      inscricao_municipal: this.inscricaoMunicipal.value,
-      razao_social: this.razaoSocial.value,
-      nome_fantasia: this.nomeFantasia.value
+      tamanho: this.tamanho.value,
+      localizacao: this.localizacao.value,
+      unidade_medida: this.unidade_medida.value,
+      produtor_id: null
     }
   }
-
 }

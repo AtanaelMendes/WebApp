@@ -105,7 +105,7 @@
         <div class="col-6">
           <q-list class="q-pa-sm" no-border>
             <q-list-header>Talhões</q-list-header>
-              <q-chip class="q-my-sm" v-for="talhao in area.talhoes" color="primary">{{talhao.nome}}</q-chip>
+              <q-chip class="q-ma-xs" v-for="talhao in area.talhoes" color="primary">{{talhao.nome}}</q-chip>
           </q-list>
         </div>
       </div>
@@ -116,7 +116,7 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import addressService from 'assets/js/service/AddressService'
+  import AreaService from 'assets/js/service/AreaService'
   export default {
     name: "AreaView",
     components: {
@@ -137,7 +137,7 @@
     },
     methods: {
       getArea: function(){
-        addressService.getAddressByID(this.$route.params.id).then(area => {
+        AreaService.getAddressByID(this.$route.params.id).then(area => {
           console.log(area.data)
           this.area = area.data;
         })
