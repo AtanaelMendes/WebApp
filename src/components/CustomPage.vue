@@ -4,7 +4,7 @@
 
       <slot name="toolbar"></slot>
 
-      <q-scroll-area style="width: 100%; height: 100%;" class="child" :thumb-style="{
+      <q-scroll-area v-if="!noScroll" style="width: 100%; height: 100%; z-index: 2" :class="{'shadow-4': isParent}" :thumb-style="{
         right: '4px',
         borderRadius: '5px',
         background: '#dfdfdf',
@@ -16,6 +16,10 @@
         </div>
 
       </q-scroll-area>
+
+      <div v-if="noScroll" :class="getContainerClasses" class="child" >
+        <slot></slot>
+      </div>
 
       <div class="fab-container">
         <slot name="fab-container"></slot>
@@ -33,7 +37,11 @@
         hasMargin: Boolean,
         widthInner: String,
         isChild: Boolean,
-        isParent: Boolean
+        isParent: Boolean,
+        noScroll: {
+          type: Boolean,
+          default: false
+        }
       },
       data: function () {
         return {
@@ -88,7 +96,7 @@
     box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 0 5px 8px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.12);
   }
   .child{
-    border-right: 2px solid #dddddd;
+    height: 100%;;
   }
 
   .child-full-width{
@@ -99,5 +107,6 @@
     position: absolute;
     bottom: 18px;
     right: 18px;
+    z-index: 1000;
   }
 </style>

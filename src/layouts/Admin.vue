@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-layout-header></q-layout-header>
 
-    <q-layout-drawer v-model="leftDrawerOpen" class="layout-drawer" content-class="bg-grey-2">
+    <q-layout-drawer v-model="leftDrawerOpen" class="layout-drawer">
       <div class="navigation-header">
         <img src="~assets/person-profile-image.jpg" class="profile-image shadow-1"/>
         <span class="profile-name">{{currentAccount.name}}</span>
@@ -106,6 +106,9 @@ export default {
     color: white;
   }
 
+  .q-layout-drawer{
+    background: #fcfcfc;
+  }
   .layout-drawer .q-list-link .q-item:hover{
     background: rgba(217, 217, 217, 0.3);
   }
