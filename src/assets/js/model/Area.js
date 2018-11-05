@@ -19,6 +19,7 @@ export default class{
     value: null,
     errorMessage: null
   };
+  talhoes = [];
   constructor(area){
     if(area !== undefined){
       this.nome.value = area.nome.value;
@@ -60,11 +61,12 @@ export default class{
 
   getValues(){
     return{
+      produtor_id: null,
       nome: this.nome.value,
       tamanho: this.tamanho.value,
       localizacao: this.localizacao.value,
       unidade_medida: this.unidade_medida.value,
-      produtor_id: null
+      talhoes: this.talhoes
     }
   }
 }
