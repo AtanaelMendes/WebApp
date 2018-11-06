@@ -12,8 +12,8 @@ export default {
   },
   getAddressByID(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios(
-        { url: 'area-detalhes', baseURL: 'http://demo3716022.mockable.io/' } ).then( response =>{
+      Vue.prototype.$axios({ url: 'area-detalhes', baseURL: 'http://demo3716022.mockable.io/' } ).then( response =>{
+        // console.log(response)
         resolve(response);
       }).catch(error =>{
         reject(error)
@@ -23,6 +23,15 @@ export default {
   saveArea(params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios( { url: 'area-create', baseURL: 'http://demo3716022.mockable.io/', method: 'post', data: params } ).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  updateArea(params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios( { url: 'area-update', baseURL: 'http://demo3716022.mockable.io/', method: 'put', data: params } ).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)

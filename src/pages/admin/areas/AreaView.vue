@@ -136,9 +136,11 @@
       }
     },
     methods: {
+      editArea: function(id){
+        this.$router.push({name: 'edit_area', params: {id:id}});
+      },
       getArea: function(){
         AreaService.getAddressByID(this.$route.params.id).then(area => {
-          console.log(area.data)
           this.area = area.data;
         })
       },

@@ -21,8 +21,8 @@ const routes = [
       { name: 'areas', path: 'areas', component: () => import('pages/admin/areas/AreaList.vue'),
         children: [
           { name: 'view_area', path: 'view/:id', component: () => import('pages/admin/areas/AreaView.vue') },
-          { name: 'add_area', path: 'add', component: () => import('pages/admin/areas/AreaAdd.vue') }
-          // { name: 'edit_area', path: 'edit/:id', component: () => import('pages/admin/area/AreaEdit.vue') }
+          { name: 'add_area', path: 'add', component: () => import('pages/admin/areas/AreaAdd.vue') },
+          { name: 'edit_area', path: 'edit/:id', component: () => import('pages/admin/areas/AreaEdit.vue') }
         ]
       },
       { path: 'teste', component: () => import('pages/admin/TestFather.vue'),
