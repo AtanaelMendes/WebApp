@@ -64,8 +64,8 @@
           <q-list v-if="area.talhoes.length > 0">
             <q-item>
               <q-item-main>
-                <q-chip v-for="talhao in area.talhoes" @hide="removeTalhao(talhao)" closable flat round color="primary" class="q-ma-xs">
-                  {{talhao.nome}}
+                <q-chip v-for="(talhao, index) in area.talhoes" @hide="removeTalhao(index)" closable flat round color="primary" class="q-ma-xs">
+                  {{talhao.nome.value}}
                 </q-chip>
               </q-item-main>
             </q-item>
@@ -79,16 +79,20 @@
       <span slot="message">Informe o nome para criar um talhao</span>
 
       <div slot="body">
-        <form @keyup.enter="addTalhao()">
-          <q-field>
-            <q-input float-label="Nome do talhão" v-model="novoTalhao"/>
-          </q-field>
+        <form @keyup.enter="addTalhao(novoTalhao)">
+          <custom-input-text label="Nome talhão" :model="novoTalhao.nome" style="flex-grow: 1; margin-right: 20px" />
+          <!--<q-field :error="arrayTalhaoes.nome.errorMessage != null">-->
+            <!--<q-input float-label="Nome do talhão" v-model="novoTalhao.nome"/>-->
+            <!--<div class="q-field-bottom row no-wrap" style="height: 22px">-->
+              <!--<div class="q-field-error col" v-if="arrayTalhaoes.nome.errorMessage != null" >{{arrayTalhaoes.nome.errorMessage}}</div>-->
+            <!--</div>-->
+          <!--</q-field>-->
         </form>
       </div>
 
       <template slot="buttons" slot-scope="props">
         <q-btn flat @click="closeNovoTalhaoDialog"  label="Cancelar"/>
-        <q-btn flat @click="addTalhao()"  label="Salvar"/>
+        <q-btn flat @click="addTalhao(novoTalhao)"  label="Adicionar"/>
       </template>
     </q-dialog>
 
@@ -100,6 +104,7 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import Area from 'assets/js/model/Area'
+  import Talhao from 'assets/js/model/Talhao'
   import AreaService from 'assets/js/service/AreaService'
   import UnidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   export default {
@@ -113,59 +118,44 @@
       return {
         localizacaoSearchTerms: '',
         newTalhaoDialog: false,
-        novoTalhao: null,
+        novoTalhao: new Talhao(),
         area: new Area(),
         UnidadeMedidaOptions: [],
         unidadeMedida: null
       }
     },
     methods:{
-      removeTalhao: function(id) {
-        var rm = this.area.talhoes.indexOf(id)
-        this.area.talhoes.splice(rm, 1)
-      },
-      addTalhao: function() {
-        let vm = this
-        this.area.talhoes.push({
-          nome: vm.novoTalhao
-        })
-        var verifyName = 0
-        this.area.talhoes.forEach(function (talhao) {
-          if(talhao.nome == vm.novoTalhao){
-            verifyName++
-          }
-        })
-        if(verifyName > 1){
-          this.area.talhoes.pop()
-          this.$q.notify({
-            type: 'negative',
-            message: 'Este nome já foi adicionado'
-          })
-          return
-        }
-        vm.novoTalhao = null
-        this.closeNovoTalhaoDialog()
-      },
-      openNovoTalhaoDialog: function(){
-        this.newTalhaoDialog = true;
-      },
-      closeNovoTalhaoDialog: function(){
-        this.newTalhaoDialog = false;
-        // this.grupoEconomico.nome.value = null;
-        // this.grupoEconomico.nome.errorMessage = null;
-      },
       createTalhao: function(){
         if(!this.grupoEconomico.isValid(this)){
           return;
         }
-        GrupoEconomicoService.saveGrupoEconomico(this.grupoEconomico.getValues()).then(response => {
-          this.$q.notify({type: 'positive', message: 'Grupo Econômico criado com sucesso'});
+        AreaService.createTalhao(this.area.getValues()).then(response => {
+          this.$q.notify({type: 'positive', message: 'Talhão criado com sucesso'});
           this.closeNovoTalhaoDialog();
         }).catch(error => {
           if (error.response.status === 422){
             this.$q.dialog({title:'Ops', message: 'Já existe um registro com esse nome'})
           }
         })
+      },
+      removeTalhao: function(index) {
+        this.area.removeTalhao(index)
+      },
+      addTalhao: function(talhao) {
+        if(talhao.isValid()){
+          this.area.addTalhao(talhao).then(value =>{
+            this.closeNovoTalhaoDialog()
+          }).catch(value =>{
+            this.$q.dialog({title:'Ops', message: 'Este nome já foi adicionado'})
+          })
+        }
+      },
+      openNovoTalhaoDialog: function(){
+        this.novoTalhao = new Talhao()
+        this.newTalhaoDialog = true;
+      },
+      closeNovoTalhaoDialog: function(){
+        this.newTalhaoDialog = false;
       },
       searchLocalizacao (terms, done) {
         AreaService.searchLocalizacao(terms).then(response => {

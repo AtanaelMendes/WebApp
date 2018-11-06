@@ -10,7 +10,6 @@ export default {
           })
     });
   },
-
   getAddressByID(id){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios(
@@ -21,7 +20,6 @@ export default {
       })
     });
   },
-
   saveArea(params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios( { url: 'area-create', baseURL: 'http://demo3716022.mockable.io/', method: 'post', data: params } ).then(response => {
@@ -31,7 +29,6 @@ export default {
       })
     });
   },
-
   searchLocalizacao(terms){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios(
@@ -43,7 +40,6 @@ export default {
       })
     });
   },
-
   parseLocalizacao(gruposEconomicos) {
     return gruposEconomicos.map(localizacao => {
       return {
