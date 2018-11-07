@@ -19,17 +19,6 @@ export default class{
       this.nome.errorMessage = "O nome deve ter no mínimo 3 caracteres";
       hasError = true;
     }
-    // var verifyName = 0;
-    // this.talhoes.forEach(function (talhao) {
-    //   if(talhao.nome == this.nome.value){
-    //     verifyName++;
-    //   }
-    // })
-    // if(verifyName > 1){
-    //   this.talhoes.pop();
-    //   this.nome.errorMessage = "Este nome já foi adicionado";
-    //   hasError = true;
-    // }
     return !hasError;
   };
   getValues(){

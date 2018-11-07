@@ -11,8 +11,8 @@
           <custom-input-text type="text" label="Nome" :model="area.nome" maxlength="20" style="flex-grow: 1; margin-right: 20px" />
         </div>
         <div class="col-6">
-          <q-field :error="area.localizacao.errorMessage != null" class="q-mb-sm q-mt-md">
-            <q-input v-model="localizacaoSearchTerms" placeholder="Localização">
+          <q-field :error="area.localizacao.errorMessage != null" >
+            <q-input v-model="localizacaoSearchTerms" float-label="Localização">
               <q-autocomplete @search="searchLocalizacao" @selected="selectedLocalizacao" :min-characters="3" value-field="label"/>
             </q-input>
             <div class="q-field-bottom row no-wrap" style="height: 22px">
@@ -57,7 +57,12 @@
           <q-list v-if="area.talhoes.length > 0">
             <q-item>
               <q-item-main>
-                <q-chip v-for="(talhao, index) in area.talhoes" @hide="removeTalhao(index)" closable flat round color="primary" class="q-ma-xs">
+                <q-chip
+                  v-for="(talhao, index) in area.talhoes"
+                  :key="index"
+                  @hide="deleteTalhao(index)"
+                  closable flat round
+                  color="primary" class="q-ma-xs">
                   {{talhao.nome.value}}
                 </q-chip>
               </q-item-main>
@@ -74,12 +79,6 @@
       <div slot="body">
         <form @keyup.enter="newTalhao(novoTalhao)">
           <custom-input-text label="Nome talhão" :model="novoTalhao.nome" style="flex-grow: 1; margin-right: 20px" />
-          <!--<q-field :error="arrayTalhaoes.nome.errorMessage != null">-->
-          <!--<q-input float-label="Nome do talhão" v-model="novoTalhao.nome"/>-->
-          <!--<div class="q-field-bottom row no-wrap" style="height: 22px">-->
-          <!--<div class="q-field-error col" v-if="arrayTalhaoes.nome.errorMessage != null" >{{arrayTalhaoes.nome.errorMessage}}</div>-->
-          <!--</div>-->
-          <!--</q-field>-->
         </form>
       </div>
 
@@ -113,11 +112,35 @@
         newTalhaoDialog: false,
         novoTalhao: new Talhao(),
         area: new Area(),
+        areaData: null,
         UnidadeMedidaOptions: [],
-        unidadeMedida: null
       }
     },
     methods:{
+      fillForm: function(areaData){
+        let vm = this
+        this.area.nome.value = areaData.nome
+        this.area.tamanho.value = areaData.tamanho
+        areaData.talhoes.forEach(function (talhao) {
+          vm.area.talhoes.push({nome: {value: talhao.nome, errorMessage: null}})
+        })
+        this.UnidadeMedidaOptions = areaData.unidadeMedida.map(unit => {
+          vm.area.unidade_medida.value = unit.id
+          return {
+            value: unit.id,
+            label: unit.simbolo,
+            sublabel: unit.descricao
+          }
+        })
+        this.localizacaoSearchTerms = areaData.localizacao[0].endereco + ', ' + areaData.localizacao[0].numero
+        AreaService.parseLocalizacao(areaData.localizacao)
+      },
+      getArea: function(){
+        AreaService.getAreaByID(this.$route.params.id).then(area => {
+          this.areaData = area.data;
+          this.fillForm(this.areaData)
+        })
+      },
       updateTalhao: function(){
         if(!this.grupoEconomico.isValid(this)){
           return;
@@ -132,11 +155,18 @@
         })
       },
       deleteTalhao: function(index) {
-        this.area.deleteTalhao(index)
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar esse talhão?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          this.area.deleteTalhao(index)
+        });
       },
       newTalhao: function(talhao) {
         if(talhao.isValid()){
-          this.area.newTalhao(talhao).then(value =>{
+          this.area.addTalhao(talhao).then(value =>{
             this.closeNovoTalhaoDialog()
           }).catch(value =>{
             this.$q.dialog({title:'Ops', message: 'Este nome já foi adicionado'})
@@ -181,12 +211,6 @@
             this.$root.$emit('refreshAreaList')
           }
         });
-      },
-      getArea: function(){
-        AreaService.getAddressByID(this.$route.params.id).then(area => {
-          console.log(area.data)
-          // this.area = area.data;
-        })
       },
       backAction: function () {
         this.$router.go(-1);

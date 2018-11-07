@@ -64,7 +64,13 @@
           <q-list v-if="area.talhoes.length > 0">
             <q-item>
               <q-item-main>
-                <q-chip v-for="(talhao, index) in area.talhoes" @hide="removeTalhao(index)" closable flat round color="primary" class="q-ma-xs">
+                <q-chip
+                  v-for="(talhao, index) in area.talhoes"
+                  :key="index"
+                  @hide="removeTalhao(index)"
+                  closable flat round
+                  color="primary" class="q-ma-xs"
+                >
                   {{talhao.nome.value}}
                 </q-chip>
               </q-item-main>
@@ -121,7 +127,6 @@
         novoTalhao: new Talhao(),
         area: new Area(),
         UnidadeMedidaOptions: [],
-        unidadeMedida: null
       }
     },
     methods:{
@@ -139,7 +144,14 @@
         })
       },
       removeTalhao: function(index) {
-        this.area.removeTalhao(index)
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar esse talhão?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          this.area.removeTalhao(index)
+        });
       },
       addTalhao: function(talhao) {
         if(talhao.isValid()){

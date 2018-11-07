@@ -61,7 +61,6 @@
         }
       },
       isNavigationVisible: function () {
-        console.log("isNavigationVisible")
         if(this.navigation_type === 'noneAndBack'){
           if(this.$q.screen.lt.md) {
             return true;
@@ -91,11 +90,9 @@
         }
 
         if(this.navigation_type === 'menu'){
-          console.log('enviar evento pra abrir menu')
           this.openLeftDrawer();
         }
 
-        console.log('navigation_clicked');
         this.$emit('navigation_clicked', this.navigation_type);
       },
       showSearchInput(){

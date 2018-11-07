@@ -310,7 +310,6 @@ export default {
         // })
 
       }).catch(error => {
-        console.log('Erro Ocorrido:');
         console.log(error)
       })
     },
@@ -323,29 +322,15 @@ export default {
         ok: 'Sair',
         cancel: 'Cancelar'
       }).then(() => {
-
-        console.log('pegando o token_id');
-
         vm.$axios.get('oauth/personal-access-tokens').then(response => {
           vm.token_id = response.data[0].id
-
         }).then(function (){
-
-          console.log('deletando o token');
-
           vm.$axios.delete('oauth/personal-access-tokens/' + vm.token_id).then(response => {
-
             if (response.status === 200){
               localStorage.removeItem('auth.token');
               localStorage.removeItem('auth.refresh_token');
-
               router.push('/login');
-
-              vm.$q.notify({
-                message: 'Até mais...',
-                type: 'positive',
-              })
-
+              vm.$q.notify({ message: 'Até mais...', type: 'positive', })
             }
           })
         })

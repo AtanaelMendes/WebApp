@@ -18,7 +18,7 @@
 
             <q-item>
               <q-item-main>
-                {{area.complemento}}
+                {{area.nome}}
               </q-item-main>
             </q-item>
 
@@ -28,7 +28,7 @@
                   Tamanho
                 </q-item-tile>
                 <q-item-tile>
-                  {{area.tamanho}}, {{area.unidade_medida}}
+                  {{area.tamanho}}, {{area.unidadeMedida[0].simbolo}}
                 </q-item-tile>
               </q-item-main>
             </q-item>
@@ -39,7 +39,7 @@
                   Endereço
                 </q-item-tile>
                 <q-item-tile>
-                  {{area.endereco}}
+                  {{area.localizacao[0].endereco}}
                 </q-item-tile>
               </q-item-main>
             </q-item>
@@ -50,7 +50,7 @@
                   numero
                 </q-item-tile>
                 <q-item-tile>
-                  {{area.numero}}
+                  {{area.localizacao[0].numero}}
                 </q-item-tile>
               </q-item-main>
             </q-item>
@@ -61,7 +61,7 @@
                   Bairro
                 </q-item-tile>
                 <q-item-tile>
-                  {{area.bairro}}
+                  {{area.localizacao[0].bairro}}
                 </q-item-tile>
               </q-item-main>
             </q-item>
@@ -72,7 +72,7 @@
                   Cidade
                 </q-item-tile>
                 <q-item-tile>
-                  {{area.cidade}}
+                  {{area.localizacao[0].cidade}}
                 </q-item-tile>
               </q-item-main>
             </q-item>
@@ -83,7 +83,7 @@
                   CEP
                 </q-item-tile>
                 <q-item-tile>
-                  {{area.cep}}
+                  {{area.localizacao[0].cep}}
                 </q-item-tile>
               </q-item-main>
             </q-item>
@@ -94,7 +94,7 @@
                   Estado
                 </q-item-tile>
                 <q-item-tile>
-                  {{area.estado}}
+                  {{area.localizacao[0].estado}}
                 </q-item-tile>
               </q-item-main>
             </q-item>
@@ -105,7 +105,7 @@
         <div class="col-6">
           <q-list class="q-pa-sm" no-border>
             <q-list-header>Talhões</q-list-header>
-              <q-chip class="q-ma-xs" v-for="talhao in area.talhoes" color="primary">{{talhao.nome}}</q-chip>
+              <q-chip class="q-ma-xs" v-for="(talhao, index) in area.talhoes" :key="index" color="primary">{{talhao.nome}}</q-chip>
           </q-list>
         </div>
       </div>
@@ -140,7 +140,7 @@
         this.$router.push({name: 'edit_area', params: {id:id}});
       },
       getArea: function(){
-        AreaService.getAddressByID(this.$route.params.id).then(area => {
+        AreaService.getAreaByID(this.$route.params.id).then(area => {
           this.area = area.data;
         })
       },

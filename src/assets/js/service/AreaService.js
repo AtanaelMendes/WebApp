@@ -10,7 +10,7 @@ export default {
           })
     });
   },
-  getAddressByID(id){
+  getAreaByID(id){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios({ url: 'area-detalhes', baseURL: 'http://demo3716022.mockable.io/' } ).then( response =>{
         // console.log(response)
@@ -49,8 +49,8 @@ export default {
       })
     });
   },
-  parseLocalizacao(gruposEconomicos) {
-    return gruposEconomicos.map(localizacao => {
+  parseLocalizacao(local) {
+    return local.map(localizacao => {
       return {
         label: localizacao.endereco + ', ' + localizacao.numero,
         sublabel: localizacao.cidade + ', ' + localizacao.estado,

@@ -11,7 +11,7 @@ export default {
       this.modalEditAddress = false,
       this.modalNewAddress = false
     },
-    getAddressByID: function (id) {
+    getAreaByID: function (id) {
       this.$axios( { url: 'pessoa/1/endereco/1', baseURL: 'http://demo3716022.mockable.io/' } ).then( response => {
         this.fillFormAddress(response.data)
         this.addressformLoaded = true
