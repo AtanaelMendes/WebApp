@@ -25,7 +25,7 @@
 
     <q-list highlight no-border sparse v-if="!isEmptyList">
 
-      <q-item link separator multiline @click.native="viewPessoa(pessoa.id)" v-for="(pessoa, key) in pessoas">
+      <q-item link separator multiline @click.native="viewPessoa(pessoa.id)" v-for="(pessoa, key) in pessoas" :key="key">
         <q-item-main >
           <q-item-tile>
             {{pessoa.nome}}
@@ -64,7 +64,6 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import pessoaService from 'assets/js/service/PessoaService'
-
   export default {
     name: "PessoasList",
     components: {

@@ -152,8 +152,6 @@ export default {
         Loading.hide()
         vm.$router.push( '/' )
       }).catch( error => {
-        // Mensagem de erro
-        console.log('Erro Login Ocorrido:')
         this.erro = true
         console.log(error)
         this.mensagem = error.response.data.mensagem

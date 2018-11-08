@@ -346,7 +346,7 @@
                     <q-card-separator/>
                     <q-card-actions align="end">
                       <q-btn flat color="primary" label="excluir" @click.native="deleteAddress(endereco.id)"/>
-                      <q-btn flat color="primary" label="editar" @click.native="getAddressByID(endereco.id)"/>
+                      <q-btn flat color="primary" label="editar" @click.native="getAreaByID(endereco.id)"/>
                     </q-card-actions>
                   </q-card>
 

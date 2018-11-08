@@ -105,7 +105,8 @@ module.exports = function (ctx) {
         'QAutocomplete',
         'QChipsInput',
         'QBtnToggle',
-        'QJumbotron'
+        'QJumbotron',
+        'QDialog'
       ],
       directives: [
         'Ripple',

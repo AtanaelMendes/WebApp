@@ -25,7 +25,7 @@
 
     <q-list highlight no-border sparse v-if="!isEmptyList">
 
-        <q-item link separator multiline @click.native="viewUser(user.id)" v-for="(user, key) in users">
+        <q-item link separator multiline @click.native="viewUser(user.id)" v-for="(user, key) in users" :key="key">
           <q-item-main >
             <q-item-tile>
               {{user.email}}

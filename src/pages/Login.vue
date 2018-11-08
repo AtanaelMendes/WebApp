@@ -69,7 +69,7 @@
       return {
         form: {
           email: {
-            value: 'danilo__oliveira@hotmail.com',
+            value: 'mendes@mendes.com',
             errorMessage: null
           },
           password: {
