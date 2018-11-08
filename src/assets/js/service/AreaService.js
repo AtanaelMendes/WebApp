@@ -38,6 +38,15 @@ export default {
       })
     });
   },
+  deleteTalhao(talhaoId, areaId){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios( { url: 'talhao-delete/'+ talhaoId + '/'+ areaId, baseURL: 'http://demo3716022.mockable.io/', method: 'delete' } ).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   searchLocalizacao(terms){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios(

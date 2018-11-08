@@ -1,7 +1,7 @@
 <template>
   <custom-page isChild>
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Editar Área">
-      <q-btn slot="action_itens" flat dense label="salvar" @click="saveArea()"/>
+      <q-btn slot="action_itens" flat dense label="salvar" @click="updateArea()"/>
     </toolbar>
 
     <form class="q-pa-md">
@@ -60,7 +60,7 @@
                 <q-chip
                   v-for="(talhao, index) in area.talhoes"
                   :key="index"
-                  @hide="deleteTalhao(index)"
+                  @hide="deleteTalhao(index, talhao.nome.id)"
                   closable flat round
                   color="primary" class="q-ma-xs">
                   {{talhao.nome.value}}
@@ -122,7 +122,7 @@
         this.area.nome.value = areaData.nome
         this.area.tamanho.value = areaData.tamanho
         areaData.talhoes.forEach(function (talhao) {
-          vm.area.talhoes.push({nome: {value: talhao.nome, errorMessage: null}})
+          vm.area.talhoes.push({nome: {value: talhao.nome, id: talhao.id}})
         })
         this.UnidadeMedidaOptions = areaData.unidadeMedida.map(unit => {
           vm.area.unidade_medida.value = unit.id
@@ -132,6 +132,7 @@
             sublabel: unit.descricao
           }
         })
+        this.area.localizacao.value = areaData.localizacao[0].id;
         this.localizacaoSearchTerms = areaData.localizacao[0].endereco + ', ' + areaData.localizacao[0].numero
         AreaService.parseLocalizacao(areaData.localizacao)
       },
@@ -141,20 +142,7 @@
           this.fillForm(this.areaData)
         })
       },
-      updateTalhao: function(){
-        if(!this.grupoEconomico.isValid(this)){
-          return;
-        }
-        AreaService.updateTalhao(this.area.getValues()).then(response => {
-          this.$q.notify({type: 'positive', message: 'Talhão criado com sucesso'});
-          this.closeNovoTalhaoDialog();
-        }).catch(error => {
-          if (error.response.status === 422){
-            this.$q.dialog({title:'Ops', message: 'Já existe um registro com esse nome'})
-          }
-        })
-      },
-      deleteTalhao: function(index) {
+      deleteTalhao: function(index, talhaoId) {
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente deseja apagar esse talhão?',
@@ -162,6 +150,13 @@
           color: 'primary'
         }).then(data => {
           this.area.deleteTalhao(index)
+          AreaService.deleteTalhao(talhaoId, this.areaData.id).then(response => {
+            this.$q.notify({type: 'positive', message: 'Talhão excluido sucesso'});
+          }).catch(error => {
+            if (error.response.status === 422){
+              this.$q.dialog({title:'Ops', message: 'Não foi possível excluir o talhão'})
+            }
+          })
         });
       },
       newTalhao: function(talhao) {
@@ -200,13 +195,13 @@
           })
         })
       },
-      saveArea: function(){
+      updateArea: function(){
         if(!this.area.isValid()){
           return;
         }
-        AreaService.saveArea(this.area.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Area criada com sucesso'});
+        AreaService.updateArea(this.area.getValues()).then(response => {
+          if(response.status === 200) {
+            this.$q.notify({type: 'positive', message: 'Area Atualizada com sucesso'});
             this.$router.push({name: 'areas'});
             this.$root.$emit('refreshAreaList')
           }

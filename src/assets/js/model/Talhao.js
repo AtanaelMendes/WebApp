@@ -1,11 +1,13 @@
 import { helpers} from 'vuelidate/lib/validators'
 export default class{
   nome = {
+    id: null,
     value: null,
     errorMessage: null
   };
   constructor(talhao){
     if(talhao !== undefined){
+      this.nome.id = talhao.nome.id;
       this.nome.value = talhao.nome.value;
       this.talhoes = talhao.talhoes;
     }
@@ -23,6 +25,7 @@ export default class{
   };
   getValues(){
     return{
+      id: this.nome.id,
       nome: this.nome.value,
       talhoes: this.talhoes
     }
