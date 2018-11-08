@@ -19,6 +19,7 @@
       placeholder: String,
       label: String,
       mask: String,
+      autofocus: String,
     },
     data: function () {
       return {
