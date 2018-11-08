@@ -2,13 +2,6 @@
   <custom-page isChild>
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Nova Pessoa">
       <q-btn slot="action_itens" flat dense label="salvar" @click="savePessoa()"/>
-
-      <!--<q-tabs slot="tabs" align="justify"  class="shadow-3" color="brand" text-color="brand" underline-color="deep-orange">
-        <q-tab slot="title" label="Informações" />
-        <q-tab slot="title" label="Contatos"/>
-        <q-tab slot="title" label="Localizações"/>
-      </q-tabs>-->
-
     </toolbar>
 
     <form class="q-pa-md">
@@ -21,8 +14,8 @@
       <q-field :error="pessoa.grupoEconomico.errorMessage != null" class="q-mb-sm" style="width: 50%; padding-right:20px">
         <q-item class="q-pa-none" >
           <q-item-main>
-            <q-input v-model="grupoEconomicoSearchTerms" placeholder="Grupo Econômico" :after="[{icon:'arrow_drop_down'}]">
-              <q-autocomplete @search="search" @selected="selected" :min-characters="0" :debounce="500" value-field="label"/>
+            <q-input v-model="grupoEconomicoSearchTerms" placeholder="Grupo Econômico" :after="[{icon:'arrow_drop_down'}]" @blur="checkGrupoEconomicoInput">
+              <q-autocomplete @search="search" @selected="setGrupoEconomico" :min-characters="0" :debounce="500" value-field="label"/>
             </q-input>
           </q-item-main>
 
@@ -86,6 +79,7 @@
   import GrupoEconomicoService from 'assets/js/service/GrupoEconomicoService'
   import Pessoa from 'assets/js/model/Pessoa'
   import GrupoEconomico from 'assets/js/model/GrupoEconomico'
+  import { filter } from 'quasar'
 
   export default {
     name: "PessoaAdd",
@@ -98,18 +92,12 @@
     data(){
       return {
         grupoEconomicoSearchTerms: '',
+        tempGrupoEconomicoList: [],
         newGrupoEconomicoDialog: false,
         pessoa: Pessoa,
         grupoEconomico: GrupoEconomico,
       }
     },
-    /*validations(){
-      if(this.newGrupoEconomicoDialog){
-        return this.grupoEconomico.getValidation();
-      }else {
-        return this.pessoa.getValidation();
-      }
-    },*/
     methods:{
       openNovoGrupoEconomicoDialog: function(){
         this.newGrupoEconomicoDialog = true;
@@ -172,12 +160,23 @@
       },
       search (terms, done) {
         GrupoEconomicoService.searchGrupoEconomico(terms).then(response => {
+          this.tempGrupoEconomicoList = response;
           done(response)
         });
       },
-      selected (item) {
+      setGrupoEconomico (item) {
         this.pessoa.grupoEconomico.value = item.id;
         this.pessoa.grupoEconomico.errorMessage = null;
+      },
+      checkGrupoEconomicoInput(){
+        let result = filter(this.grupoEconomicoSearchTerms, {field: 'label', list: this.tempGrupoEconomicoList});
+
+        if(result.length === 0){
+          this.grupoEconomicoSearchTerms = "";
+          this.pessoa.grupoEconomico.value = null;
+        }else{
+          this.setGrupoEconomico(result[0]);
+        }
       },
       backAction: function () {
         this.$router.push({name: 'pessoas'});
@@ -185,10 +184,7 @@
     },
     mounted(){},
     beforeDestroy(){
-      console.log('beforeDestroy')
-      console.log(this.pessoa)
       this.pessoa = null;
-      console.log(this.pessoa)
     }
   }
 </script>

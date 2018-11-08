@@ -8,14 +8,16 @@ const routes = [
         children: [
           { name: 'view_user', path: 'view/:id', component: () => import('pages/admin/users/UserView.vue') },
           { name: 'add_user', path: 'add', component: () => import('pages/admin/users/UserAdd.vue') },
-          { name: 'edit_user', path: 'edit/:id', component: () => import('pages/admin/users/UserEdit.vue') }
+          { name: 'edit_user', path: 'edit/:id', component: () => import('pages/admin/users/UserEdit.vue') },
         ]
       },
       { name: 'pessoas', path: 'pessoas', component: () => import('pages/admin/pessoas/PessoaList.vue'),
         children: [
           { name: 'view_pessoa', path: 'view/:id', component: () => import('pages/admin/pessoas/PessoaView.vue') },
           { name: 'add_pessoa', path: 'add', component: () => import('pages/admin/pessoas/PessoaAdd.vue') },
-          { name: 'edit_pessoa', path: 'edit/:id', component: () => import('pages/admin/pessoas/PessoaEdit.vue') }
+          { name: 'edit_pessoa', path: 'edit/:id', component: () => import('pages/admin/pessoas/PessoaEdit.vue') },
+
+          { name: 'add_contact', path: 'contatos/add', component: () => import('pages/admin/pessoas/contatos/ContatoAdd.vue') }
         ]
       },
       { name: 'areas', path: 'areas', component: () => import('pages/admin/areas/AreaList.vue'),
