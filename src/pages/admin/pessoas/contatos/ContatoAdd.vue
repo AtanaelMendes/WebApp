@@ -30,7 +30,7 @@
         <q-list no-border link>
           <q-list-header class="custom-header" inset>Telefones</q-list-header>
 
-          <q-item class="custom-item" v-for="(telefone, index) in contato.telefones"
+          <q-item class="custom-item" v-for="(telefone, index) in contato.telefones" :key="index"
                   @click.native="openEditPhoneDialog(telefone, index)">
             <q-item-side :icon="getTelefoneIcon(telefone.tipo)"
                          inverted color="light-green-4"  />
@@ -58,7 +58,7 @@
         <q-list no-border link>
           <q-list-header class="custom-header" inset>Emails</q-list-header>
 
-          <q-item class="custom-item" v-for="(email, index) in contato.emails"
+          <q-item class="custom-item" v-for="(email, index) in contato.emails" :key="index"
                   @click.native="openEditEmailDialog(email, index)">
             <q-item-side icon="email" inverted color="light-green-4" />
             <q-item-main>
