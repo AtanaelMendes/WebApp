@@ -74,9 +74,6 @@ export default class{
   removeTalhao(index){
     this.talhoes.splice(index, 1);
   }
-  deleteTalhao(index){
-    this.talhoes.splice(index, 1);
-  }
 }
  function talhaoExists(nome, talhoes) {
   for (var talhao of talhoes){

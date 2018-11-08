@@ -12,8 +12,8 @@
         </div>
         <div class="col-6">
           <q-field :error="area.localizacao.errorMessage != null" >
-            <q-input v-model="localizacaoSearchTerms" float-label="Localização">
-              <q-autocomplete @search="searchLocalizacao" @selected="selectedLocalizacao" :min-characters="3" value-field="label"/>
+            <q-input v-model="localizacaoSearchTerms" float-label="Localização" @blur="checkLocalizacaoInput">
+              <q-autocomplete :debounce="500" :min-characters="0" @search="searchLocalizacao" @selected="selectedLocalizacao" value-field="label"/>
             </q-input>
             <div class="q-field-bottom row no-wrap" style="height: 22px">
               <div class="q-field-error col" v-if="area.localizacao.errorMessage != null" >{{area.localizacao.errorMessage}}</div>
@@ -60,7 +60,7 @@
                 <q-chip
                   v-for="(talhao, index) in area.talhoes"
                   :key="index"
-                  @hide="deleteTalhao(index, talhao.nome.id)"
+                  @hide="deleteTalhao(index, talhao.id.value)"
                   closable flat round
                   color="primary" class="q-ma-xs">
                   {{talhao.nome.value}}
@@ -99,6 +99,7 @@
   import Talhao from 'assets/js/model/Talhao'
   import AreaService from 'assets/js/service/AreaService'
   import UnidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
+  import { filter } from 'quasar'
   export default {
     name: "AreaAdd",
     components: {
@@ -109,6 +110,7 @@
     data(){
       return {
         localizacaoSearchTerms: '',
+        tempLocalizacaoList: [],
         newTalhaoDialog: false,
         novoTalhao: new Talhao(),
         area: new Area(),
@@ -122,7 +124,7 @@
         this.area.nome.value = areaData.nome
         this.area.tamanho.value = areaData.tamanho
         areaData.talhoes.forEach(function (talhao) {
-          vm.area.talhoes.push({nome: {value: talhao.nome, id: talhao.id}})
+          vm.area.talhoes.push({nome: {value: talhao.nome}, id: {value: talhao.id}})
         })
         this.UnidadeMedidaOptions = areaData.unidadeMedida.map(unit => {
           vm.area.unidade_medida.value = unit.id
@@ -136,12 +138,6 @@
         this.localizacaoSearchTerms = areaData.localizacao[0].endereco + ', ' + areaData.localizacao[0].numero
         AreaService.parseLocalizacao(areaData.localizacao)
       },
-      getArea: function(){
-        AreaService.getAreaByID(this.$route.params.id).then(area => {
-          this.areaData = area.data;
-          this.fillForm(this.areaData)
-        })
-      },
       deleteTalhao: function(index, talhaoId) {
         this.$q.dialog({
           title: 'Atenção',
@@ -149,7 +145,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          this.area.deleteTalhao(index)
+          this.area.removeTalhao(index)
           AreaService.deleteTalhao(talhaoId, this.areaData.id).then(response => {
             this.$q.notify({type: 'positive', message: 'Talhão excluido sucesso'});
           }).catch(error => {
@@ -177,6 +173,7 @@
       },
       searchLocalizacao (terms, done) {
         AreaService.searchLocalizacao(terms).then(response => {
+          this.tempLocalizacaoList = response;
           done(response)
         });
       },
@@ -207,8 +204,23 @@
           }
         });
       },
+      checkLocalizacaoInput(){
+        let result = filter(this.localizacaoSearchTerms, {field: 'label', list: this.tempLocalizacaoList});
+        if(result.length === 0){
+          this.localizacaoSearchTerms = "";
+          this.area.localizacao.value = null;
+        }else{
+          this.selectedLocalizacao(result[0]);
+        }
+      },
       backAction: function () {
         this.$router.go(-1);
+      },
+      getArea: function(){
+        AreaService.getAreaByID(this.$route.params.id).then(area => {
+          this.areaData = area.data;
+          this.fillForm(this.areaData)
+        })
       },
     },
     mounted(){
