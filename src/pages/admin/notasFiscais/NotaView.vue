@@ -3,7 +3,7 @@
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction">
 
       <template slot="action_itens" v-if="pessoa">
-        <q-btn flat round dense icon="edit" @click.native="editUser(pessoa.id)"/>
+        <!--<q-btn flat round dense icon="edit" @click.native="editUser(pessoa.id)"/>-->
         <q-btn flat round dense icon="more_vert" >
           <q-popover anchor="bottom left">
             <q-list link>
@@ -27,51 +27,113 @@
     </toolbar>
     <swipe v-if="pessoa" ref="mySwiper" class="my-swipe" :continuous="false" :auto="0" :showIndicators="false" :disabled="true">
       <swipe-item >
-        <div class="q-pa-lg">
-          <div class="item">
-            <span class="label">Grupo Econômico</span>
-            <p class="field">{{pessoa.grupo_economico.nome}}</p>
+        <div class="q-pa-md row gutter-sm">
+          <div class="col-6">
+            <q-card>
+              <q-card-main>
+
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    Série
+                  </q-item-side>
+                  <q-item-main>
+                    1
+                  </q-item-main>
+                </q-item>
+
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    Número
+                  </q-item-side>
+                  <q-item-main>
+                    00342955
+                  </q-item-main>
+                </q-item>
+
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    Emissão
+                  </q-item-side>
+                  <q-item-main>
+                    09/11/2018 16:19:20
+                  </q-item-main>
+                </q-item>
+
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    Saída/Entrada
+                  </q-item-side>
+                  <q-item-main>
+                    09/11/2018 16:19:20
+                  </q-item-main>
+                </q-item>
+
+              </q-card-main>
+              <q-card-separator/>
+              <q-card-actions align="end">
+                <q-btn label="cancelar" color="negative" flat/>
+                <q-btn label="email" color="primary" flat/>
+                <q-btn label="danfe" color="primary" flat/>
+              </q-card-actions>
+            </q-card>
+
+          </div>
+          <div class="col-6">
+
+            <q-card>
+              <q-card-main>
+
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    Filial
+                  </q-item-side>
+                  <q-item-main>
+                    FAZENDA MIGLIORINI
+                  </q-item-main>
+                </q-item>
+
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    Natureza de Operação
+                  </q-item-side>
+                  <q-item-main>
+                    Venda - Saida
+                  </q-item-main>
+                </q-item>
+
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    Frete
+                  </q-item-side>
+                  <q-item-main>
+                    FOB
+                  </q-item-main>
+                </q-item>
+
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    Volumes
+                  </q-item-side>
+                  <q-item-main>
+                    0
+                  </q-item-main>
+                </q-item>
+
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    Pessoa
+                  </q-item-side>
+                  <q-item-main>
+                    BUNGE
+                  </q-item-main>
+                </q-item>
+
+              </q-card-main>
+            </q-card>
+
           </div>
 
-          <div style="display: flex;" class="item">
-            <div style="width: 50%">
-              <span class="label">Nome</span>
-              <p class="field">{{pessoa.nome}}</p>
-            </div>
-            <div v-if="pessoa.cpf" style="width: 50%">
-              <span class="label">CPF</span>
-              <p class="field">{{pessoa.cpf}}</p>
-            </div>
-            <div v-if="pessoa.cnpj" style="width: 50%">
-              <span class="label">CNPJ</span>
-              <p class="field">{{pessoa.cnpj}}</p>
-            </div>
-          </div>
-
-
-          <div v-if="pessoa.razao_social || pessoa.nome_fantasia" style="display: flex;" class="item">
-            <div v-if="pessoa.razao_social" style="width: 50%">
-              <span class="label">Razão Social</span>
-              <p class="field">{{pessoa.razao_social}}</p>
-            </div>
-            <div v-if="pessoa.nome_fantasia" style="width: 50%">
-              <span class="label">Nome Fantasia</span>
-              <p class="field">{{pessoa.nome_fantasia}}</p>
-            </div>
-          </div>
-
-          <div style="display: flex;" class="item">
-            <div v-if="pessoa.inscricao_estadual" style="width: 50%">
-              <span class="label">Inscrição Estadual</span>
-              <p class="field">{{pessoa.inscricao_estadual}}</p>
-            </div>
-            <div v-if="pessoa.inscricao_municipal" style="width: 50%">
-              <span class="label">Inscrição Municipal</span>
-              <p class="field">{{pessoa.inscricao_municipal}}</p>
-            </div>
-          </div>
         </div>
-
       </swipe-item>
 
       <swipe-item>
@@ -79,7 +141,7 @@
       </swipe-item>
 
       <swipe-item>
-        <span>Localizações</span>
+        <LocalizacaoList></LocalizacaoList>
       </swipe-item>
 
     </swipe>
@@ -88,13 +150,7 @@
       appear
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-      <q-btn key="contatos" v-if="isFabVisible"
-             @click="addContato"
-             round
-             color="deep-orange"
-             icon="add"
-             size="20px"
-      />
+      <q-btn key="contatos" v-if="isFabVisible" @click="addContato" round color="deep-orange" icon="add" size="20px"/>
       <!--<q-btn key="localizacoes" v-if="selectedTab === 'tab-localizacoes'"
            round
            color="red"
@@ -107,20 +163,19 @@
 </template>
 
 <script>
-
   require('vue-swipe/dist/vue-swipe.css');
-
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import PessoaService from 'assets/js/service/PessoaService'
   import ContatoList from 'pages/admin/pessoas/tabs/ContatoList'
+  import LocalizacaoList from 'pages/admin/pessoas/tabs/LocalizacaoList'
   import { Swipe, SwipeItem } from 'vue-swipe';
-
   export default {
     name: "PessoaView",
     components: {
       toolbar,
       customPage,
+      LocalizacaoList,
       ContatoList,
       Swipe,
       SwipeItem
@@ -168,7 +223,7 @@
       },
       backAction: function () {
         //this.$router.go(-1);
-        this.$router.push({name:'pessoas'})
+        this.$router.push({name:'notas-fiscais'})
       }
     },
     mounted(){

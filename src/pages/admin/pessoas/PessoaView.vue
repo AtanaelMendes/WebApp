@@ -79,7 +79,7 @@
       </swipe-item>
 
       <swipe-item>
-        <span>Localizações</span>
+        <LocalizacaoList></LocalizacaoList>
       </swipe-item>
 
     </swipe>
@@ -88,13 +88,7 @@
       appear
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
-      <q-btn key="contatos" v-if="isFabVisible"
-         @click="addContato"
-        round
-        color="deep-orange"
-        icon="add"
-        size="20px"
-      />
+      <q-btn key="contatos" v-if="isFabVisible" @click="addContato" round color="deep-orange" icon="add" size="20px"/>
       <!--<q-btn key="localizacoes" v-if="selectedTab === 'tab-localizacoes'"
            round
            color="red"
@@ -107,20 +101,19 @@
 </template>
 
 <script>
-
   require('vue-swipe/dist/vue-swipe.css');
-
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import PessoaService from 'assets/js/service/PessoaService'
   import ContatoList from 'pages/admin/pessoas/tabs/ContatoList'
+  import LocalizacaoList from 'pages/admin/pessoas/tabs/LocalizacaoList'
   import { Swipe, SwipeItem } from 'vue-swipe';
-
   export default {
     name: "PessoaView",
     components: {
       toolbar,
       customPage,
+      LocalizacaoList,
       ContatoList,
       Swipe,
       SwipeItem

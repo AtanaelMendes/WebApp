@@ -14,10 +14,9 @@
                     color="primary"
                     v-model="filter.type"
                     :options="[
-                                { label: 'Autorizadas', value: 100},
-                                { label: 'Canceladas', value: 102 },
-                                { label: 'Em digitacão', value: 104 },
-                                { label: 'Denegadas', value: 103 }
+                                { label: 'Autorizada', value: 100},
+                                { label: 'Cancelada', value: 102 },
+                                { label: 'Em digitacão', value: 104 }
                               ]"
                   />
                 </q-item-main>
@@ -49,19 +48,37 @@
 
     <q-list highlight inset-separator no-border link>
       <q-item v-for="notaFiscal in 10" :key="notaFiscal" @click.native="selectNotaFiscal(notaFiscal)">
-        <q-item-side icon="place"/>
+        <q-item-side icon="receipt"/>
         <q-item-main>
 
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                <div class="row">AGRORURAL PRODUTOS AGROPECUÁRIOS</div>
+                <div class="row">BUNGE</div>
                 <div class="row q-caption">
-                  <q-chip small color="green">51181104576775000322550010000218581000218583</q-chip>
+                  <q-chip small :color="(notaFiscal == 2)?'green':(notaFiscal == 3)?'red':(notaFiscal == 4)?'orange':'grey'" class="q-mt-xs q-ml-xs">
+                  N-1-55-00342955
+                  </q-chip>
+                  <q-chip small class="q-mt-xs q-ml-xs">
+                  R$ 10,999
+                  </q-chip>
                 </div>
             </div>
+
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                <div class="row q-caption">Emissão</div>
-                <div class="row">22 outubro 2018</div>
+              <div class="row">
+
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                  <div class="row">Sinop-MT</div>
+                  <div class="row">Venda</div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                  <div class="row q-caption text-faded">Emissão</div>
+                  <div class="row">22 outubro 2018</div>
+                  <div class="row">14:30:10</div>
+                </div>
+
+              </div>
             </div>
           </div>
 

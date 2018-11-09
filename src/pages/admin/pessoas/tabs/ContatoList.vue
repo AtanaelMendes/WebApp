@@ -25,7 +25,7 @@
           </q-card-title>
           <q-list no-border>
 
-            <q-item dense>
+            <q-item dense class="q-pa-sm">
               <q-item-main>
                 <q-chip small color="teal">Cobrança</q-chip>
                 <q-chip small color="teal">Fiscal</q-chip>
@@ -71,11 +71,9 @@
     padding: 5px 16px;
     min-height: 30px;
   }
-
   .q-chip{
     margin-right: 8px;
   }
-
   .q-card{
     background: white;
   }
