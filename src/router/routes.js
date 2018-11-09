@@ -20,6 +20,13 @@ const routes = [
           { name: 'add_contact', path: 'contatos/add', component: () => import('pages/admin/pessoas/contatos/ContatoAdd.vue') }
         ]
       },
+      { name: 'notas-fiscais', path: 'notas-fiscais', component: () => import('pages/admin/notasFiscais/NotaList.vue'),
+        children: [
+          { name: 'view_nota', path: 'view/:id', component: () => import('pages/admin/notasFiscais/NotaView.vue') },
+          { name: 'new_nota', path: 'new', component: () => import('pages/admin/notasFiscais/NotaGenerate.vue') }
+          // { name: 'edit_area', path: 'edit/:id', component: () => import('pages/admin/notasFiscais/AreaEdit.vue') }
+        ]
+      },
       { name: 'areas', path: 'areas', component: () => import('pages/admin/areas/AreaList.vue'),
         children: [
           { name: 'view_area', path: 'view/:id', component: () => import('pages/admin/areas/AreaView.vue') },

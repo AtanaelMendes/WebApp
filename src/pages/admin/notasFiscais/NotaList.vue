@@ -51,12 +51,26 @@
       <q-item v-for="notaFiscal in 10" :key="notaFiscal" @click.native="selectNotaFiscal(notaFiscal)">
         <q-item-side icon="place"/>
         <q-item-main>
-          <q-item-tile>
-            rrrrrrrrrrrrrrrrrrrrrrrr
-          </q-item-tile>
-          <q-item-tile sublabel>
-            dddddddddddddddddddddddddddd
-          </q-item-tile>
+
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                <div class="row">AGRORURAL PRODUTOS AGROPECUÁRIOS</div>
+                <div class="row q-caption">
+                  <q-chip small color="green">51181104576775000322550010000218581000218583</q-chip>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                <div class="row q-caption">Emissão</div>
+                <div class="row">22 outubro 2018</div>
+            </div>
+          </div>
+
+          <!--<q-item-tile>-->
+            <!--AGRORURAL PRODUTOS AGROPECUÁRIOS-->
+          <!--</q-item-tile>-->
+          <!--<q-item-tile sublabel>-->
+            <!--51181104576775000322550010000218581000218583-->
+          <!--</q-item-tile>-->
         </q-item-main>
       </q-item>
     </q-list>
@@ -104,11 +118,11 @@
         });
       },
       selectNotaFiscal: function(id) {
-        this.$router.push({name: 'view_notaFiscal', params: {id:id}});
+        this.$router.push({name: 'view_nota', params: {id:id}});
         // this.$router.push({name: 'add_pessoa'});
       },
       newNotaFiscal: function(){
-        this.$router.push({name: 'new_notaFiscal'});
+        this.$router.push({name: 'new_nota'});
       },
     },
     mounted () {
