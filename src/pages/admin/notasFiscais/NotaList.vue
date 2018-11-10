@@ -46,9 +46,8 @@
       <!--<span>Nenhum resultado encontrado.</span>-->
     <!--</div>-->
 
-    <q-list highlight inset-separator no-border link>
+    <q-list highlight separator no-border link>
       <q-item v-for="notaFiscal in 10" :key="notaFiscal" @click.native="selectNotaFiscal(notaFiscal)">
-        <q-item-side icon="receipt"/>
         <q-item-main>
 
           <div class="row">
@@ -75,7 +74,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
                   <div class="row q-caption text-faded">Emissão</div>
                   <div class="row">22 outubro 2018</div>
-                  <div class="row">14:30:10</div>
+                  <div class="row q-caption">14:30:10</div>
                 </div>
 
               </div>

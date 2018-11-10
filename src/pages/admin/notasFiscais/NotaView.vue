@@ -7,11 +7,14 @@
         <q-btn flat round dense icon="more_vert" >
           <q-popover anchor="bottom left">
             <q-list link>
-              <q-item dense @click.native="disablePessoa(pessoa.id)" v-if="!pessoa.deleted_at">
-                <q-item-main label="Inativar pessoa"  />
+              <q-item dense @click.native="danfeGenerate(notaFiscal.id)">
+                <q-item-main label="Danfe" class="text-primary" />
               </q-item>
-              <q-item dense @click.native="enablePessoa(pessoa.id)" v-if="pessoa.deleted_at">
-                <q-item-main label="Ativar pessoa"  />
+              <q-item dense @click.native="emailDanfe(notaFiscal.id)">
+                <q-item-main label="Email" class="text-primary" />
+              </q-item>
+              <q-item dense @click.native="cancelarNotaFiscal(notaFiscal.id)">
+                <q-item-main label="Cancelar" class="text-negative" />
               </q-item>
             </q-list>
           </q-popover>
@@ -27,113 +30,7 @@
     </toolbar>
     <swipe v-if="pessoa" ref="mySwiper" class="my-swipe" :continuous="false" :auto="0" :showIndicators="false" :disabled="true">
       <swipe-item >
-        <div class="q-pa-md row gutter-sm">
-          <div class="col-6">
-            <q-card>
-              <q-card-main>
-
-                <q-item class="q-px-none">
-                  <q-item-side class="q-caption">
-                    Série
-                  </q-item-side>
-                  <q-item-main>
-                    1
-                  </q-item-main>
-                </q-item>
-
-                <q-item class="q-px-none">
-                  <q-item-side class="q-caption">
-                    Número
-                  </q-item-side>
-                  <q-item-main>
-                    00342955
-                  </q-item-main>
-                </q-item>
-
-                <q-item class="q-px-none">
-                  <q-item-side class="q-caption">
-                    Emissão
-                  </q-item-side>
-                  <q-item-main>
-                    09/11/2018 16:19:20
-                  </q-item-main>
-                </q-item>
-
-                <q-item class="q-px-none">
-                  <q-item-side class="q-caption">
-                    Saída/Entrada
-                  </q-item-side>
-                  <q-item-main>
-                    09/11/2018 16:19:20
-                  </q-item-main>
-                </q-item>
-
-              </q-card-main>
-              <q-card-separator/>
-              <q-card-actions align="end">
-                <q-btn label="cancelar" color="negative" flat/>
-                <q-btn label="email" color="primary" flat/>
-                <q-btn label="danfe" color="primary" flat/>
-              </q-card-actions>
-            </q-card>
-
-          </div>
-          <div class="col-6">
-
-            <q-card>
-              <q-card-main>
-
-                <q-item class="q-px-none">
-                  <q-item-side class="q-caption">
-                    Filial
-                  </q-item-side>
-                  <q-item-main>
-                    FAZENDA MIGLIORINI
-                  </q-item-main>
-                </q-item>
-
-                <q-item class="q-px-none">
-                  <q-item-side class="q-caption">
-                    Natureza de Operação
-                  </q-item-side>
-                  <q-item-main>
-                    Venda - Saida
-                  </q-item-main>
-                </q-item>
-
-                <q-item class="q-px-none">
-                  <q-item-side class="q-caption">
-                    Frete
-                  </q-item-side>
-                  <q-item-main>
-                    FOB
-                  </q-item-main>
-                </q-item>
-
-                <q-item class="q-px-none">
-                  <q-item-side class="q-caption">
-                    Volumes
-                  </q-item-side>
-                  <q-item-main>
-                    0
-                  </q-item-main>
-                </q-item>
-
-                <q-item class="q-px-none">
-                  <q-item-side class="q-caption">
-                    Pessoa
-                  </q-item-side>
-                  <q-item-main>
-                    BUNGE
-                  </q-item-main>
-                </q-item>
-
-              </q-card-main>
-            </q-card>
-
-          </div>
-
-        </div>
+        <informacao></informacao>
       </swipe-item>
 
       <swipe-item>
@@ -167,6 +64,7 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import PessoaService from 'assets/js/service/PessoaService'
+  import informacao from 'pages/admin/notasFiscais/tabs/Informacao'
   import ContatoList from 'pages/admin/pessoas/tabs/ContatoList'
   import LocalizacaoList from 'pages/admin/pessoas/tabs/LocalizacaoList'
   import { Swipe, SwipeItem } from 'vue-swipe';
@@ -175,6 +73,7 @@
     components: {
       toolbar,
       customPage,
+      informacao,
       LocalizacaoList,
       ContatoList,
       Swipe,
