@@ -162,89 +162,25 @@
               <div class="col-6">
                 <q-item class="q-px-none">
                   <q-item-side class="q-caption">
-                    Série
+                    Produtos
                   </q-item-side>
                   <q-item-main class="text-right">
-                    1
+                    10,999
                   </q-item-main>
                 </q-item>
 
                 <q-item class="q-px-none">
                   <q-item-side class="q-caption">
-                    Modelo NFE
+                    Total
                   </q-item-side>
                   <q-item-main class="text-right">
-                    55 - NFe - Nota
+                    10,999
                   </q-item-main>
                 </q-item>
 
                 <q-item class="q-px-none">
                   <q-item-side class="q-caption">
-                    Número
-                  </q-item-side>
-                  <q-item-main class="text-right">
-                    00342955
-                  </q-item-main>
-                </q-item>
-
-                <q-item class="q-px-none">
-                  <q-item-side class="q-caption">
-                    Emissão
-                  </q-item-side>
-                  <q-item-main class="text-right">
-                    09/11/2018 16:19:20
-                  </q-item-main>
-                </q-item>
-
-                <q-item class="q-px-none">
-                  <q-item-side class="q-caption">
-                    Saída/Entrada
-                  </q-item-side>
-                  <q-item-main class="text-right">
-                    09/11/2018 16:19:20
-                  </q-item-main>
-                </q-item>
-              </div>
-              <div class="col-6">
-                <q-item class="q-px-none">
-                  <q-item-side class="q-caption">
-                    Filial
-                  </q-item-side>
-                  <q-item-main class="text-right">
-                    FAZENDA MIGLIORINI
-                  </q-item-main>
-                </q-item>
-
-                <q-item class="q-px-none">
-                  <q-item-side class="q-caption">
-                    Emitida
-                  </q-item-side>
-                  <q-item-main class="text-right">
-                    Pela Filial
-                  </q-item-main>
-                </q-item>
-
-                <q-item class="q-px-none">
-                  <q-item-side class="q-caption">
-                    Natureza de Operação
-                  </q-item-side>
-                  <q-item-main class="text-right">
-                    Venda - Saida
-                  </q-item-main>
-                </q-item>
-
-                <q-item class="q-px-none">
-                  <q-item-side class="q-caption">
-                    Frete
-                  </q-item-side>
-                  <q-item-main class="text-right">
-                    FOB
-                  </q-item-main>
-                </q-item>
-
-                <q-item class="q-px-none">
-                  <q-item-side class="q-caption">
-                    Volumes
+                    Desconto
                   </q-item-side>
                   <q-item-main class="text-right">
                     0
@@ -253,18 +189,94 @@
 
                 <q-item class="q-px-none">
                   <q-item-side class="q-caption">
-                    Pessoa
+                    Outras
                   </q-item-side>
                   <q-item-main class="text-right">
-                    BUNGE
+                    0
                   </q-item-main>
                 </q-item>
+
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    Frete
+                  </q-item-side>
+                  <q-item-main class="text-right">
+                    0
+                  </q-item-main>
+                </q-item>
+              </div>
+              <div class="col-6">
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    Seguro
+                  </q-item-side>
+                  <q-item-main class="text-right">
+                    0
+                  </q-item-main>
+                </q-item>
+
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    ICMS Base
+                  </q-item-side>
+                  <q-item-main class="text-right">
+                    0
+                  </q-item-main>
+                </q-item>
+
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    ICMS Valor
+                  </q-item-side>
+                  <q-item-main class="text-right">
+                    0
+                  </q-item-main>
+                </q-item>
+
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    ICMS ST Base
+                  </q-item-side>
+                  <q-item-main class="text-right">
+                    0
+                  </q-item-main>
+                </q-item>
+
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    ICMS ST Valor
+                  </q-item-side>
+                  <q-item-main class="text-right">
+                    0
+                  </q-item-main>
+                </q-item>
+
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    IPI Base
+                  </q-item-side>
+                  <q-item-main class="text-right">
+                    0
+                  </q-item-main>
+                </q-item>
+
+                <q-item class="q-px-none">
+                  <q-item-side class="q-caption">
+                    IPI Valor
+                  </q-item-side>
+                  <q-item-main class="text-right">
+                    0
+                  </q-item-main>
+                </q-item>
+
               </div>
             </div>
           </q-card-main>
         </q-card>
-      </div>
 
+        <br/><br/><br/><br/>
+        <br/><br/><br/><br/>
+      </div>
     </div>
 
   </q-scroll-area>

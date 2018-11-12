@@ -23,39 +23,25 @@
 
       <q-tabs slot="tabs" v-model="selectedTab" align="justify"  class="shadow-3" color="brand" text-color="brand" underline-color="deep-orange">
         <q-tab slot="title" name="tab-info" label="Informações" />
-        <q-tab slot="title" name="tab-contatos" label="Contatos"></q-tab>
-        <q-tab slot="title" name="tab-localizacoes" label="Localizações"/>
+        <q-tab slot="title" name="tab-produtos" label="Produtos" />
+        <q-tab slot="title" name="tab-complemento" label="Complemento"/>
       </q-tabs>
 
     </toolbar>
-    <swipe v-if="pessoa" ref="mySwiper" class="my-swipe" :continuous="false" :auto="0" :showIndicators="false" :disabled="true">
+    <swipe ref="mySwiper" class="my-swipe" :continuous="false" :auto="0" :showIndicators="false" :disabled="true">
       <swipe-item >
         <informacao></informacao>
       </swipe-item>
 
       <swipe-item>
-        <ContatoList></ContatoList>
+        <produtos></produtos>
       </swipe-item>
 
       <swipe-item>
-        <LocalizacaoList></LocalizacaoList>
+        <complementos></complementos>
       </swipe-item>
 
     </swipe>
-    <transition
-      slot="fab-container"
-      appear
-      enter-active-class="animated slideInUp faster"
-      leave-active-class="animated slideOutDown faster">
-      <q-btn key="contatos" v-if="isFabVisible" @click="addContato" round color="deep-orange" icon="add" size="20px"/>
-      <!--<q-btn key="localizacoes" v-if="selectedTab === 'tab-localizacoes'"
-           round
-           color="red"
-           icon="add"
-           size="20px"
-      />-->
-    </transition>
-
   </custom-page>
 </template>
 
@@ -63,19 +49,19 @@
   require('vue-swipe/dist/vue-swipe.css');
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import PessoaService from 'assets/js/service/PessoaService'
+  import NotaFiscalService from 'assets/js/service/NotaFiscalService'
   import informacao from 'pages/admin/notasFiscais/tabs/Informacao'
-  import ContatoList from 'pages/admin/pessoas/tabs/ContatoList'
-  import LocalizacaoList from 'pages/admin/pessoas/tabs/LocalizacaoList'
+  import produtos from 'pages/admin/notasFiscais/tabs/Products'
+  import complementos from 'pages/admin/notasFiscais/tabs/Complementos'
   import { Swipe, SwipeItem } from 'vue-swipe';
   export default {
-    name: "PessoaView",
+    name: "nota-View",
     components: {
       toolbar,
       customPage,
       informacao,
-      LocalizacaoList,
-      ContatoList,
+      produtos,
+      complementos,
       Swipe,
       SwipeItem
     },
@@ -90,10 +76,10 @@
           case 'tab-info':
             index = 0;
             break;
-          case 'tab-contatos':
+          case 'tab-produtos':
             index = 1;
             break;
-          case 'tab-localizacoes':
+          case 'tab-complemento':
             index = 2;
             break;
         }
@@ -106,19 +92,11 @@
         selectedTab: 'tab-info',
       }
     },
-    computed: {
-      isFabVisible: function () {
-        return this.selectedTab === 'tab-contatos' || this.selectedTab === 'tab-localizacoes';
-      }
-    },
     methods: {
-      getPessoa: function(){
-        PessoaService.getPessoa(this.$route.params.id).then(pessoa => {
-          this.pessoa = pessoa;
+      getNotaById: function(){
+        NotaFiscalService.getNotaById(this.$route.params.id).then(produtos => {
+          this.produtos = produtos;
         })
-      },
-      addContato: function(){
-        this.$router.push({name:'add_contact'});
       },
       backAction: function () {
         //this.$router.go(-1);
@@ -126,7 +104,7 @@
       }
     },
     mounted(){
-      this.getPessoa();
+      // this.getNotaById();
     }
   }
 </script>
