@@ -5,8 +5,8 @@
         background: '#dfdfdf',
         width: '8px',
         opacity: 1}">
-    <div class="row gutter-sm q-pa-md">
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-4" v-for="contato in 10">
+    <div class="row gutter-sm q-pa-md" v-if="!isEmptyList">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-4" v-for="(contato, key) in contatos">
         <q-card >
           <q-card-title class="q-pb-none q-pt-sm">
             Fulano
@@ -55,15 +55,38 @@
           </q-card-actions>
         </q-card>
       </div>
+    </div>
 
+    <div v-if="isEmptyList" class="no-result">
+      <img src="~/assets/sad_2.svg"/>
+      <span>Nenhum contato encontrado.</span>
     </div>
   </q-scroll-area>
 </template>
 
 <script>
-    export default {
-        name: "ContatoList"
+  import contatoService from 'assets/js/service/ContatoService';
+
+  export default {
+    name: "ContatoList",
+    data () {
+      return {
+        contatos: [],
+        isEmptyList: false
+      }
+    },
+    methods: {
+      listContatos: function(pessoaId) {
+        contatoService.listContatos(pessoaId).then(response => {
+          this.contatos = response.data;
+          this.isEmptyList = this.contatos.length === 0;
+        });
+      },
+    },
+    mounted () {
+      this.listContatos(this.$route.params.id);
     }
+  }
 </script>
 
 <style>
@@ -76,5 +99,25 @@
   }
   .q-card{
     background: white;
+  }
+
+
+
+  .no-result{
+    text-align: center;
+    padding-top: 150px;
+  }
+
+  .no-result img{
+    width: 120px;
+    height: auto;
+  }
+
+  .no-result span{
+    display: block;
+    margin-top: 30px;
+    font-size: 25px;
+    font-weight: 300;
+    color: #ababab;
   }
 </style>

@@ -46,4 +46,14 @@ export default class {
 
     return !hasError;
   }
+
+  getValues(){
+    return{
+      nome: this.nome.value,
+      is_cobranca: this.isCobranca,
+      is_fiscal: this.isFiscal,
+      telefones: this.telefones,
+      emails: this.emails,
+    }
+  }
 }

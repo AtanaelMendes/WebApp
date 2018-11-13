@@ -133,7 +133,7 @@
   import Contato from 'assets/js/model/contato/Contato'
   import Telefone from 'assets/js/model/contato/Telefone'
   import Email from 'assets/js/model/contato/Email'
-  import ContatoService from 'assets/js/service/ContatoService'
+  import contatoService from 'assets/js/service/ContatoService'
 
   export default {
     name: "ContatoAdd",
@@ -183,6 +183,13 @@
             })
           }
         }
+
+        contatoService.saveContato(this.$route.params.id, this.contato.getValues()).then( response => {
+
+        }).catch(error => {
+
+        })
+
       },
       openAddPhoneDialog: function(telefone){
         this.telefoneEditMode = (telefone !== undefined);
