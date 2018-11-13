@@ -26,50 +26,60 @@
 
     </toolbar>
     <swipe v-if="pessoa" ref="mySwiper" class="my-swipe" :continuous="false" :auto="0" :showIndicators="false" :disabled="true">
-      <swipe-item >
-        <div class="q-pa-lg">
-          <div class="item">
+      <swipe-item>
+        <div class="row q-pa-md gutter-sm">
+
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
             <span class="label">Grupo Econômico</span>
             <p class="field">{{pessoa.grupo_economico.nome}}</p>
           </div>
 
-          <div style="display: flex;" class="item">
-            <div style="width: 50%">
-              <span class="label">Nome</span>
-              <p class="field">{{pessoa.nome}}</p>
-            </div>
-            <div v-if="pessoa.cpf" style="width: 50%">
+
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <span class="label">Nome</span>
+            <p class="field">{{pessoa.nome}}</p>
+          </div>
+
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <div v-if="pessoa.cpf">
               <span class="label">CPF</span>
               <p class="field">{{pessoa.cpf}}</p>
             </div>
-            <div v-if="pessoa.cnpj" style="width: 50%">
+
+            <div v-if="pessoa.cnpj">
               <span class="label">CNPJ</span>
               <p class="field">{{pessoa.cnpj}}</p>
             </div>
           </div>
 
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <div v-if="pessoa.razao_social || pessoa.nome_fantasia">
 
-          <div v-if="pessoa.razao_social || pessoa.nome_fantasia" style="display: flex;" class="item">
-            <div v-if="pessoa.razao_social" style="width: 50%">
-              <span class="label">Razão Social</span>
-              <p class="field">{{pessoa.razao_social}}</p>
-            </div>
-            <div v-if="pessoa.nome_fantasia" style="width: 50%">
-              <span class="label">Nome Fantasia</span>
-              <p class="field">{{pessoa.nome_fantasia}}</p>
+              <div v-if="pessoa.razao_social">
+                <span class="label">Razão Social</span>
+                <p class="field">{{pessoa.razao_social}}</p>
+              </div>
+
+              <div v-if="pessoa.nome_fantasia">
+                <span class="label">Nome Fantasia</span>
+                <p class="field">{{pessoa.nome_fantasia}}</p>
+              </div>
+
             </div>
           </div>
 
-          <div style="display: flex;" class="item">
-            <div v-if="pessoa.inscricao_estadual" style="width: 50%">
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <div v-if="pessoa.inscricao_estadual">
               <span class="label">Inscrição Estadual</span>
               <p class="field">{{pessoa.inscricao_estadual}}</p>
             </div>
-            <div v-if="pessoa.inscricao_municipal" style="width: 50%">
+
+            <div v-if="pessoa.inscricao_municipal">
               <span class="label">Inscrição Municipal</span>
               <p class="field">{{pessoa.inscricao_municipal}}</p>
             </div>
           </div>
+
         </div>
 
       </swipe-item>
