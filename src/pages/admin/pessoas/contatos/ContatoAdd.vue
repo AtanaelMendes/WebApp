@@ -14,6 +14,7 @@
       <div class="row q-pa-md gutter-md">
         <div class="col-xs-12 col-md-6 col-lg-6">
 
+          <!--TOGGLE FISCAL COBRANCA-->
           <div class="row">
             <div class="col-6">
               <q-toggle color="deep-orange" label="Fiscal" v-model="contato.isFiscal" />
@@ -22,9 +23,12 @@
               <q-toggle color="deep-orange" label="Cobrança" v-model="contato.isCobranca" />
             </div>
           </div>
+          <!-- FIM TOGGLE FISCAL COBRANCA-->
 
           <form>
+            <!--IMPUT NOME-->
             <custom-input-text type="text" label="Nome" :model="contato.nome" />
+            <!-- FIM IMPUT NOME-->
 
             <!--IMPUT TELEFONE-->
             <q-list no-border link>
@@ -76,7 +80,6 @@
               </div>
             </q-list>
             <!--FIM IMPUT EMAIL-->
-
           </form>
         </div>
       </div>
@@ -87,22 +90,23 @@
     <q-dialog v-model="newPhoneDialog" prevent-close @show="onShowPhoneDialog">
       <span slot="title">{{dialogTitlePreffix}} Telefone</span>
       <div slot="body">
-
         <div class="row">
           <form @keyup.enter="addTelefone(telefone)">
-            <custom-input-text ref="telefoneRef" type="text" label="Número" mask="(##)####-####":model="telefone.numero"/>
 
-            <q-btn-dropdown class="full-width" flat :label="telefoneTipos.label" :icon="telefoneTipos.icon">
+            <custom-input-text key="tel" v-if="telefoneTipoSelected.type == 0 " ref="telefoneRef" type="text" label="Número" mask="(##)####-####" :model="telefone.numero"/>
+            <custom-input-text key="cel" v-if="telefoneTipoSelected.type == 1 " ref="telefoneRef" type="text" label="Número" mask="(##)#####-####" :model="telefone.numero"/>
+
+            <q-btn-dropdown class="full-width" flat :label="telefoneTipoSelected.label" :icon="telefoneTipoSelected.icon">
               <q-list link>
 
-                <q-item @click.native="phoneType(0)" v-close-overlay>
+                <q-item @click.native="setTelefoneTipo(0)" v-close-overlay>
                   <q-item-side icon="phone"/>
                   <q-item-main>
                     <q-item-tile label>Fixo</q-item-tile>
                   </q-item-main>
                 </q-item>
 
-                <q-item @click.native="phoneType(1)" v-close-overlay>
+                <q-item @click.native="setTelefoneTipo(1)" v-close-overlay>
                   <q-item-side icon="phone_iphone"/>
                   <q-item-main>
                     <q-item-tile label>Celular</q-item-tile>
@@ -113,7 +117,6 @@
             </q-btn-dropdown>
           </form>
         </div>
-
       </div>
 
       <template slot="buttons" slot-scope="props">
@@ -124,12 +127,13 @@
     </q-dialog>
     <!--FIM DIALOG TELEFONE-->
 
+    <!--DIALOG EMAIL-->
     <q-dialog v-model="newEmailDialog" prevent-close @show="onShowEmailDialog">
       <span slot="title">{{dialogTitlePreffix}} Email</span>
 
       <div slot="body">
         <form @keyup.enter="addEmail(email)">
-          <custom-input-text ref="emailRef" type="text" label="Email" :model="email.endereco"/>
+          <custom-input-text ref="emailRef" type="email" label="Email" :model="email.endereco"/>
         </form>
       </div>
 
@@ -139,6 +143,8 @@
         <q-btn flat @click="editEmail(email, emailEditedIndex)"  label="Atualizar" v-if="emailEditMode"/>
       </template>
     </q-dialog>
+    <!--FIM DIALOG EMAIL-->
+
   </custom-page>
 </template>
 
@@ -150,7 +156,6 @@
   import Telefone from 'assets/js/model/contato/Telefone'
   import Email from 'assets/js/model/contato/Email'
   import contatoService from 'assets/js/service/ContatoService'
-
   export default {
     name: "ContatoAdd",
     components: {
@@ -174,22 +179,25 @@
         emailEditMode: false,
         telefoneEditedIndex: null,
         emailEditedIndex: null,
-        telefoneTipos: {
+        telefoneTipoSelected: {
           icon: 'phone',
-          label: 'fixo'
+          label: 'fixo',
+          type: 0
         },
       }
     },
     methods:{
-      phoneType: function(type){
-        if(type == 0 ){
-          this.telefoneTipos.icon = 'phone'
-          this.telefoneTipos.label = 'fixo'
+      setTelefoneTipo: function(tipo){
+        if(tipo === 0 ){
+          this.telefoneTipoSelected.icon = 'phone'
+          this.telefoneTipoSelected.label = 'fixo'
+          this.telefoneTipoSelected.tipo = 0
           this.telefone.tipo = 0
         }
-        if(type == 1 ){
-          this.telefoneTipos.icon = 'phone_iphone'
-          this.telefoneTipos.label = 'celular'
+        if(tipo === 1 ){
+          this.telefoneTipoSelected.icon = 'phone_iphone'
+          this.telefoneTipoSelected.label = 'celular'
+          this.telefoneTipoSelected.tipo = 1
           this.telefone.tipo = 1
         }
       },
@@ -222,22 +230,6 @@
       onShowPhoneDialog: function(){
         this.$refs.telefoneRef.$children[0].$children[0].focus()
       },
-      openAddEmailDialog: function(email){
-        this.emailEditMode = (email !== undefined);
-        this.email = new Email(email);
-        this.newEmailDialog = true;
-      },
-      openEditEmailDialog: function(email, index){
-        this.openAddEmailDialog(email);
-        this.emailEditedIndex = index;
-      },
-      closeEmailDialog: function () {
-        this.newEmailDialog = false;
-      },
-      onShowEmailDialog: function(){
-        this.$refs.emailRef.$children[0].$children[0].focus()
-      },
-
       addTelefone: function(telefone){
         if(telefone.isValid()){
           this.contato.addTelefone(telefone);
@@ -259,6 +251,21 @@
         }).then(data => {
           this.contato.removeTelefone(index);
         });
+      },
+      openAddEmailDialog: function(email){
+        this.emailEditMode = (email !== undefined);
+        this.email = new Email(email);
+        this.newEmailDialog = true;
+      },
+      openEditEmailDialog: function(email, index){
+        this.openAddEmailDialog(email);
+        this.emailEditedIndex = index;
+      },
+      closeEmailDialog: function () {
+        this.newEmailDialog = false;
+      },
+      onShowEmailDialog: function(){
+        this.$refs.emailRef.$children[0].$children[0].focus()
       },
       addEmail: function(email){
         if(email.isValid()){

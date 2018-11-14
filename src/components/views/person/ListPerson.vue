@@ -545,7 +545,7 @@
               <!--CONTATO TIPO TELEFONE-->
               <q-item-side>
                 <q-btn-toggle
-                  dense v-model="formContact.phoneType"
+                  dense v-model="formContact.setTelefoneTipo"
                   toggle-color="secondary"
                   :options="[{label: 'celular', value: 1, icon: 'stay_primary_portrait'},
                              {label: 'Fixo', value: 2, icon: 'phone'}]"
@@ -620,7 +620,7 @@
               <!--CONTATO TIPO TELEFONE-->
               <q-item-side>
                 <q-btn-toggle
-                  dense v-model="formContact.phoneType"
+                  dense v-model="formContact.setTelefoneTipo"
                   toggle-color="secondary"
                   :options="[{label: 'celular', value: 1, icon: 'stay_primary_portrait'},
                            {label: 'Fixo', value: 2, icon: 'phone'}]"
@@ -681,7 +681,7 @@ export default {
         phone: null,
         isCelular: false,
         isFixo: false,
-        phoneType: 1,
+        setTelefoneTipo: 1,
       },
       formAddress: {
         endereco: null,
@@ -830,10 +830,10 @@ export default {
       this.formContact.isFixo = data.telefone[0].is_fixo
       this.formContact.isCelular = data.telefone[0].is_Celular
       if( data.telefone[0].is_celular == true ) {
-        this.formContact.phoneType = 1
+        this.formContact.setTelefoneTipo = 1
       }
       if( data.telefone[0].is_fixo == true) {
-        this.formContact.phoneType = 2
+        this.formContact.setTelefoneTipo = 2
       }
       this.modalEditContact = true
     },

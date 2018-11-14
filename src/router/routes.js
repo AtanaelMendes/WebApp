@@ -17,7 +17,7 @@ const routes = [
           { name: 'add_pessoa', path: 'add', component: () => import('pages/admin/pessoas/PessoaAdd.vue') },
           { name: 'edit_pessoa', path: 'edit/:id', component: () => import('pages/admin/pessoas/PessoaEdit.vue') },
 
-          { name: 'add_contact', path: 'contatos/add', component: () => import('pages/admin/pessoas/contatos/ContatoAdd.vue') }
+          { name: 'add_contact', path: ':id/contatos/add', component: () => import('pages/admin/pessoas/contatos/ContatoAdd.vue') }
         ]
       },
       { name: 'notas-fiscais', path: 'notas-fiscais', component: () => import('pages/admin/notasFiscais/NotaList.vue'),

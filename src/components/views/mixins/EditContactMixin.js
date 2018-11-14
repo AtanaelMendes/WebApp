@@ -8,7 +8,7 @@ export default {
       this.formContact.phone = null
       this.formContact.isCelular = false
       this.formContact.isFixo = false
-      this.formContact.phoneType = 1
+      this.formContact.setTelefoneTipo = 1
     },
     getPersonContactByID: function (id) {
       this.$axios( { url: 'pessoa/contato/1', baseURL: 'http://demo3716022.mockable.io/' } ).then( response => {
@@ -42,10 +42,10 @@ export default {
       }
       var fixo = false
       var celular = false
-      if(this.formContact.phoneType == 1){
+      if(this.formContact.setTelefoneTipo == 1){
         celular = true
       }
-      if(this.formContact.phoneType == 2){
+      if(this.formContact.setTelefoneTipo == 2){
         fixo = true
       }
       let params = {

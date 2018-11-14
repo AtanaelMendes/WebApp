@@ -40,17 +40,11 @@
 
     </swipe>
     <transition
-      slot="fab-container"
       appear
+      slot="fab-container"
       enter-active-class="animated slideInUp faster"
       leave-active-class="animated slideOutDown faster">
       <q-btn key="contatos" v-if="isFabVisible" @click="addContato" round color="deep-orange" icon="add" size="20px"/>
-      <!--<q-btn key="localizacoes" v-if="selectedTab === 'tab-localizacoes'"
-           round
-           color="red"
-           icon="add"
-           size="20px"
-      />-->
     </transition>
 
   </custom-page>

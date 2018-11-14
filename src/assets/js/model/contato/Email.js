@@ -25,4 +25,10 @@ export default class {
 
     return !hasError;
   };
+
+  getValues(){
+    return {
+      endereco: this.endereco.value
+    }
+  }
 }
