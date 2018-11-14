@@ -96,12 +96,14 @@
               <q-list link>
 
                 <q-item @click.native="phoneType(0)" v-close-overlay>
+                  <q-item-side icon="phone"/>
                   <q-item-main>
                     <q-item-tile label>Fixo</q-item-tile>
                   </q-item-main>
                 </q-item>
 
                 <q-item @click.native="phoneType(1)" v-close-overlay>
+                  <q-item-side icon="phone_iphone"/>
                   <q-item-main>
                     <q-item-tile label>Celular</q-item-tile>
                   </q-item-main>
