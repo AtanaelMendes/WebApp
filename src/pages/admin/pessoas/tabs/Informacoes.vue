@@ -82,6 +82,11 @@
         coluna: 'col-xs-12 col-sm-12 col-md-6 col-lg-6',
       }
     },
+    watch: {
+      '$route' (to, from) {
+        this.getPessoa()
+      }
+    },
     methods: {
       getPessoa: function(){
         PessoaService.getPessoa(this.$route.params.id).then(pessoa => {
