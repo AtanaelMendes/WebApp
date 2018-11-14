@@ -3,101 +3,115 @@
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Novo Contato">
       <q-btn slot="action_itens" flat dense label="salvar" @click="saveContato()"/>
     </toolbar>
-    <form class="q-pa-md">
-      <div style="width: 50%; float: left; padding-right: 20px">
-        <custom-input-text type="text" label="Nome" :model="contato.nome" />
 
-        <q-list no-border link>
-          <q-list-header class="custom-header">Finalidade</q-list-header>
-          <q-item class="custom-item" tag="label">
-            <q-item-main label="Cobrança" />
-            <q-item-side class="q-pr-sm">
-              <q-toggle color="deep-orange" v-model="contato.isCobranca" />
-            </q-item-side>
-          </q-item>
+    <q-scroll-area style="width: 100%; height: 100vh;" :thumb-style="{
+        right: '4px',
+        borderRadius: '5px',
+        background: '#dfdfdf',
+        width: '8px',
+        opacity: 1}">
 
-          <q-item class="custom-item" tag="label">
-            <q-item-main label="Fiscal" />
-            <q-item-side class="q-pr-sm">
-              <q-toggle color="deep-orange" v-model="contato.isFiscal" />
-            </q-item-side>
-          </q-item>
-        </q-list>
+      <div class="row q-pa-md gutter-md">
+        <div class="col-xs-12 col-md-6 col-lg-6">
 
+          <div class="row">
+            <div class="col-6">
+              <q-toggle color="deep-orange" label="Fiscal" v-model="contato.isFiscal" />
+            </div>
+            <div class="col-6">
+              <q-toggle color="deep-orange" label="Cobrança" v-model="contato.isCobranca" />
+            </div>
+          </div>
+
+          <form>
+            <custom-input-text type="text" label="Nome" :model="contato.nome" />
+
+            <!--IMPUT TELEFONE-->
+            <q-list no-border link>
+              <q-list-header inset>Telefones</q-list-header>
+
+              <q-item v-for="(telefone, index) in contato.telefones" :key="index"  @click.native="openEditPhoneDialog(telefone, index)">
+                <q-item-side :icon="getTelefoneIcon(telefone.tipo)" inverted color="light-green-4"  />
+                <q-item-main>
+                  <q-item-tile label>{{telefone.numero.value}}</q-item-tile>
+                  <q-item-tile sublabel>{{getTelefoneTipo(telefone.tipo)}}</q-item-tile>
+                </q-item-main>
+                <q-item-side>
+                  <q-btn rounded dense flat color="red" icon="close" @click.stop="removeTelefone(index)" />
+                </q-item-side>
+              </q-item>
+
+              <div v-if="contato.telefones.length === 0" class="list-empty">
+                <q-icon name="warning" />
+                <span>Nenhum telefone adicionado</span>
+              </div>
+
+              <div class="custom-footer" align="right">
+                <q-btn  color="deep-orange " label="Novo Telefone" @click="openAddPhoneDialog()" />
+              </div>
+            </q-list>
+            <!--FIM IMPUT TELEFONE-->
+
+            <!--IMPUT EMAIL-->
+            <q-list no-border link>
+              <q-list-header inset>Emails</q-list-header>
+
+              <q-item v-for="(email, index) in contato.emails" :key="index" @click.native="openEditEmailDialog(email, index)">
+                <q-item-side icon="email" inverted color="light-green-4" />
+                <q-item-main>
+                  <q-item-tile label>{{email.endereco.value}}</q-item-tile>
+                </q-item-main>
+                <q-item-side>
+                  <q-btn rounded dense flat color="red" icon="close" @click.stop="removeEmail(index)" />
+                </q-item-side>
+              </q-item>
+
+              <div v-if="contato.emails.length === 0" class="list-empty">
+                <q-icon name="warning" />
+                <span>Nenhum email adicionado</span>
+              </div>
+
+              <div class="custom-footer" align="right">
+                <q-btn  color="deep-orange " label="Novo Email" @click="openAddEmailDialog()" />
+              </div>
+            </q-list>
+            <!--FIM IMPUT EMAIL-->
+
+          </form>
+        </div>
       </div>
 
-      <div style="width:50%; float: right; padding-left: 20px">
-        <q-list no-border link>
-          <q-list-header class="custom-header" inset>Telefones</q-list-header>
+    </q-scroll-area>
 
-          <q-item class="custom-item" v-for="(telefone, index) in contato.telefones" :key="index"
-                  @click.native="openEditPhoneDialog(telefone, index)">
-            <q-item-side :icon="getTelefoneIcon(telefone.tipo)"
-                         inverted color="light-green-4"  />
-            <q-item-main>
-              <q-item-tile label>{{telefone.numero.value}}</q-item-tile>
-              <q-item-tile sublabel>{{getTelefoneTipo(telefone.tipo)}}</q-item-tile>
-            </q-item-main>
-            <q-item-side>
-              <q-btn rounded dense flat color="red" icon="close" @click.stop="removeTelefone(index)" />
-            </q-item-side>
-          </q-item>
-
-          <div v-if="contato.telefones.length === 0" class="list-empty">
-            <q-icon name="warning" />
-            <span>Nenhum telefone adicionado</span>
-          </div>
-
-          <div class="custom-footer" align="right">
-            <q-btn  color="deep-orange " label="Novo Telefone" @click="openAddPhoneDialog()" />
-          </div>
-        </q-list>
-
-
-
-        <q-list no-border link>
-          <q-list-header class="custom-header" inset>Emails</q-list-header>
-
-          <q-item class="custom-item" v-for="(email, index) in contato.emails" :key="index"
-                  @click.native="openEditEmailDialog(email, index)">
-            <q-item-side icon="email" inverted color="light-green-4" />
-            <q-item-main>
-              <q-item-tile label>{{email.endereco.value}}</q-item-tile>
-            </q-item-main>
-            <q-item-side>
-              <q-btn rounded dense flat color="red" icon="close" @click.stop="removeEmail(index)" />
-            </q-item-side>
-          </q-item>
-
-          <div v-if="contato.emails.length === 0" class="list-empty">
-            <q-icon name="warning" />
-            <span>Nenhum email adicionado</span>
-          </div>
-
-          <div class="custom-footer" align="right">
-            <q-btn  color="deep-orange " label="Novo Email" @click="openAddEmailDialog()" />
-          </div>
-        </q-list>
-      </div>
-    </form>
-
-
+    <!--DIALOG TELEFONE-->
     <q-dialog v-model="newPhoneDialog" prevent-close @show="onShowPhoneDialog">
       <span slot="title">{{dialogTitlePreffix}} Telefone</span>
-
       <div slot="body">
-        <form @keyup.enter="addTelefone(telefone)">
-          <div style="display: flex; align-items: baseline;">
-            <custom-input-text ref="telefoneRef" type="text" label="Número" mask="(##)####-####"
-                               :model="telefone.numero" style="width: 200px; margin-right: 30px" />
 
-            <q-select
-              v-model="telefone.tipo"
-              :options="telefoneTipos"
-              style="width: 120px"
-            />
-          </div>
-        </form>
+        <div class="row">
+          <form @keyup.enter="addTelefone(telefone)">
+            <custom-input-text ref="telefoneRef" type="text" label="Número" mask="(##)####-####":model="telefone.numero"/>
+
+            <q-btn-dropdown class="full-width" flat :label="telefoneTipos.label" :icon="telefoneTipos.icon">
+              <q-list link>
+
+                <q-item @click.native="phoneType(0)" v-close-overlay>
+                  <q-item-main>
+                    <q-item-tile label>Fixo</q-item-tile>
+                  </q-item-main>
+                </q-item>
+
+                <q-item @click.native="phoneType(1)" v-close-overlay>
+                  <q-item-main>
+                    <q-item-tile label>Celular</q-item-tile>
+                  </q-item-main>
+                </q-item>
+
+              </q-list>
+            </q-btn-dropdown>
+          </form>
+        </div>
+
       </div>
 
       <template slot="buttons" slot-scope="props">
@@ -106,14 +120,14 @@
         <q-btn flat @click="editTelefone(telefone, telefoneEditedIndex)"  label="Atualizar" v-if="telefoneEditMode"/>
       </template>
     </q-dialog>
-
+    <!--FIM DIALOG TELEFONE-->
 
     <q-dialog v-model="newEmailDialog" prevent-close @show="onShowEmailDialog">
       <span slot="title">{{dialogTitlePreffix}} Email</span>
 
       <div slot="body">
         <form @keyup.enter="addEmail(email)">
-          <custom-input-text ref="emailRef" type="text" label="Email" :model="email.endereco" style="width: 250px;" />
+          <custom-input-text ref="emailRef" type="text" label="Email" :model="email.endereco"/>
         </form>
       </div>
 
@@ -158,21 +172,25 @@
         emailEditMode: false,
         telefoneEditedIndex: null,
         emailEditedIndex: null,
-        telefoneTipos: [
-          {
-            label: 'Fixo',
-            icon: 'phone',
-            value: 0
-          },
-          {
-            label: 'Celular',
-            icon: 'phone_iphone',
-            value: 1
-          }
-        ]
+        telefoneTipos: {
+          icon: 'phone',
+          label: 'fixo'
+        },
       }
     },
     methods:{
+      phoneType: function(type){
+        if(type == 0 ){
+          this.telefoneTipos.icon = 'phone'
+          this.telefoneTipos.label = 'fixo'
+          this.telefone.tipo = 0
+        }
+        if(type == 1 ){
+          this.telefoneTipos.icon = 'phone_iphone'
+          this.telefoneTipos.label = 'celular'
+          this.telefone.tipo = 1
+        }
+      },
       saveContato: function(){
         if(this.contato.isValid()){
           if(this.contato.telefones.length === 0 && this.contato.emails.length === 0){
@@ -183,13 +201,9 @@
             })
           }
         }
-
         contatoService.saveContato(this.$route.params.id, this.contato.getValues()).then( response => {
-
         }).catch(error => {
-
         })
-
       },
       openAddPhoneDialog: function(telefone){
         this.telefoneEditMode = (telefone !== undefined);
@@ -206,7 +220,6 @@
       onShowPhoneDialog: function(){
         this.$refs.telefoneRef.$children[0].$children[0].focus()
       },
-
       openAddEmailDialog: function(email){
         this.emailEditMode = (email !== undefined);
         this.email = new Email(email);
@@ -257,7 +270,6 @@
           this.closeEmailDialog();
         }
       },
-
       removeEmail: function(index){
         this.$q.dialog({
           title: 'Atenção',
@@ -284,14 +296,8 @@
 </script>
 
 <style>
-  .custom-header{
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  .custom-item{
-    padding-left: 8px;
-    padding-right: 0;
+  .space-end{
+    margin-bottom: 150px;
   }
 
   .custom-footer{
