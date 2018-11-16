@@ -20,6 +20,15 @@ export default {
       })
     });
   },
+  getContato(pessoaId, contatoId){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get( 'pessoa/' + pessoaId + '/contato/' + contatoId ).then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   saveContato(pessoaId, params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.post('/pessoa/' + pessoaId + '/contato', params).then(response => {

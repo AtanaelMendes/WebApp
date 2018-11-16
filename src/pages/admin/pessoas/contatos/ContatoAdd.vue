@@ -1,10 +1,10 @@
 <template>
   <custom-page isChild>
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Novo Contato">
-      <q-btn slot="action_itens" flat dense label="salvar" @click="saveContato()"/>
+      <q-btn slot="action_itens" flat dense round icon="done" @click="saveContato()"/>
     </toolbar>
 
-    <q-scroll-area style="width: 100%; height: 100vh;" :thumb-style="{
+    <q-scroll-area style="height: 200vh" :thumb-style="{
         right: '4px',
         borderRadius: '5px',
         background: '#dfdfdf',
@@ -27,7 +27,7 @@
 
           <form>
             <!--IMPUT NOME-->
-            <custom-input-text type="text" label="Nome" :model="contato.nome" />
+            <custom-input-text class="capitalize" type="text" label="Nome" :model="contato.nome" />
             <!-- FIM IMPUT NOME-->
 
             <!--IMPUT TELEFONE-->
@@ -93,20 +93,20 @@
         <div class="row">
           <form @keyup.enter="addTelefone(telefone)">
 
-            <custom-input-text key="tel" v-if="telefoneTipoSelected.type == 0 " ref="telefoneRef" type="text" label="Número" mask="(##)####-####" :model="telefone.numero"/>
-            <custom-input-text key="cel" v-if="telefoneTipoSelected.type == 1 " ref="telefoneRef" type="text" label="Número" mask="(##)#####-####" :model="telefone.numero"/>
+            <custom-input-text key="fixo" v-if="telefoneTipoSelected.label == 'fixo' " ref="telefoneRef" type="text" label="Número" mask="(##)####-####" :model="telefone.numero"/>
+            <custom-input-text key="celular" v-if="telefoneTipoSelected.label == 'celular' " ref="telefoneRef" type="text" label="Número" mask="(##)#####-####" :model="telefone.numero"/>
 
             <q-btn-dropdown class="full-width" flat :label="telefoneTipoSelected.label" :icon="telefoneTipoSelected.icon">
               <q-list link>
 
-                <q-item @click.native="setTelefoneTipo(0)" v-close-overlay>
+                <q-item @click.native="setTelefoneTipo('fixo')" v-close-overlay>
                   <q-item-side icon="phone"/>
                   <q-item-main>
                     <q-item-tile label>Fixo</q-item-tile>
                   </q-item-main>
                 </q-item>
 
-                <q-item @click.native="setTelefoneTipo(1)" v-close-overlay>
+                <q-item @click.native="setTelefoneTipo('celular')" v-close-overlay>
                   <q-item-side icon="phone_iphone"/>
                   <q-item-main>
                     <q-item-tile label>Celular</q-item-tile>
@@ -182,22 +182,19 @@
         telefoneTipoSelected: {
           icon: 'phone',
           label: 'fixo',
-          type: 0
         },
       }
     },
     methods:{
       setTelefoneTipo: function(tipo){
-        if(tipo === 0 ){
+        if(tipo == 'fixo' ){
           this.telefoneTipoSelected.icon = 'phone'
           this.telefoneTipoSelected.label = 'fixo'
-          this.telefoneTipoSelected.tipo = 0
           this.telefone.tipo = 0
         }
-        if(tipo === 1 ){
+        if(tipo == 'celular' ){
           this.telefoneTipoSelected.icon = 'phone_iphone'
           this.telefoneTipoSelected.label = 'celular'
-          this.telefoneTipoSelected.tipo = 1
           this.telefone.tipo = 1
         }
       },
@@ -212,7 +209,10 @@
           }
         }
         contatoService.saveContato(this.$route.params.id, this.contato.getValues()).then( response => {
+          this.$q.notify({type: 'positive', message: 'Contato criado com sucesso'})
+          this.$router.go(-1);
         }).catch(error => {
+          this.$q.notify({type: 'negative', message: error})
         })
       },
       openAddPhoneDialog: function(telefone){
