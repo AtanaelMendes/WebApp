@@ -80,7 +80,6 @@
   import Pessoa from 'assets/js/model/Pessoa'
   import GrupoEconomico from 'assets/js/model/GrupoEconomico'
   import { filter } from 'quasar'
-
   export default {
     name: "PessoaAdd",
     components: {

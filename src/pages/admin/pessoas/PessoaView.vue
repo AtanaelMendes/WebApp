@@ -39,12 +39,42 @@
       </swipe-item>
 
     </swipe>
+    <!--<transition-->
+      <!--appear-->
+      <!--key="contato"-->
+      <!--slot="fab-container"-->
+      <!--enter-active-class="animated slideInUp faster"-->
+      <!--leave-active-class="animated slideOutDown faster">-->
+      <!--<q-btn-->
+        <!--icon="add"-->
+        <!--size="20px"-->
+        <!--key="contatos"-->
+        <!--@click="addContato"-->
+        <!--round color="deep-orange"-->
+        <!--v-if="isFabVisible && selectedTab == 'tab-contatos' "-->
+      <!--/>-->
+    <!--</transition>-->
     <transition
       appear
       slot="fab-container"
-      enter-active-class="animated slideInUp faster"
-      leave-active-class="animated slideOutDown faster">
-      <q-btn key="contatos" v-if="isFabVisible" @click="addContato" round color="deep-orange" icon="add" size="20px"/>
+      enter-active-class="animated zoomIn faster"
+      leave-active-class="animated zoomOut faster">
+      <q-btn
+      icon="add"
+      size="20px"
+      key="contatos"
+      @click="addContato"
+      round color="deep-orange"
+      v-if="isFabVisible && selectedTab == 'tab-contatos' "
+      />
+      <q-btn
+        icon="add"
+        size="20px"
+        key="localizacao"
+        @click="addLocalizacao"
+        round color="deep-orange"
+        v-if="isFabVisible && selectedTab == 'tab-localizacoes' "
+      />
     </transition>
 
   </custom-page>
@@ -104,6 +134,9 @@
     methods: {
       addContato: function(){
         this.$router.push({name:'add_contact'});
+      },
+      addLocalizacao: function(){
+        this.$router.push({name:'add_localizacao'});
       },
       backAction: function () {
         //this.$router.go(-1);

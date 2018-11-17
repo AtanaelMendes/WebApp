@@ -126,19 +126,9 @@
 
 <script>
   export default {
-    name: "LocalizacaoList"
+    name: "localizacao-list"
   }
 </script>
 
 <style>
-  .q-list-header{
-    padding: 5px 16px;
-    min-height: 30px;
-  }
-  .q-chip{
-    margin-right: 8px;
-  }
-  .q-card{
-    background: white;
-  }
 </style>
