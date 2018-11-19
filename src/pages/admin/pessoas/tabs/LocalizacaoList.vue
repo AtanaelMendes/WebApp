@@ -5,7 +5,7 @@
         background: '#dfdfdf',
         width: '8px',
         opacity: 1}">
-    <div class="row gutter-sm q-pa-md">
+    <div class="row gutter-sm q-pa-md space-end">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6" v-for="contato in 10">
         <q-card >
           <q-card-title class="q-pb-none ">
@@ -119,8 +119,6 @@
         </q-card>
       </div>
     </div>
-    <br/><br/><br/><br/><br/>
-    <br/><br/><br/><br/><br/>
   </q-scroll-area>
 </template>
 
@@ -131,4 +129,7 @@
 </script>
 
 <style>
+  .space-end{
+    margin-bottom: 150px;
+  }
 </style>

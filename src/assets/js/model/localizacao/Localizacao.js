@@ -46,11 +46,11 @@ export default class{
       this.cidadeId.value = localizacao.cidadeId.value;
       this.endereco.value = localizacao.endereco.value;
       this.numero.value = localizacao.numero.value;
-      this.complemento = localizacao.complemento.value;
-      this.bairro = localizacao.bairro.value;
-      this.cep = localizacao.cep.value;
-      this.isCobranca = localizacao.isCobranca.value;
-      this.isFiscal = localizacao.isFiscal.value;
+      this.complemento.value = localizacao.complemento.value;
+      this.bairro.value = localizacao.bairro.value;
+      this.cep.value = localizacao.cep.value;
+      this.isCobranca.value = localizacao.isCobranca.value;
+      this.isFiscal.value = localizacao.isFiscal.value;
 
     }
   };

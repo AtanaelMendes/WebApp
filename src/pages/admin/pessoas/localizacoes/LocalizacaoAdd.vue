@@ -4,7 +4,7 @@
       <q-btn slot="action_itens" flat dense round icon="done" @click="saveLocalizacao()"/>
     </toolbar>
 
-    <q-scroll-area style="height: 200vh" :thumb-style="{
+    <q-scroll-area style="height: 150vh" :thumb-style="{
         right: '4px',
         borderRadius: '5px',
         background: '#dfdfdf',
@@ -49,13 +49,13 @@
     </q-scroll-area>
   </custom-page>
 </template>
-
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import Localizacao from 'assets/js/model/localizacao/Localizacao'
   import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
+  import cidadeService from 'assets/js/service/localizacao/CidadeService'
   export default {
     name: "localizacao-add",
     components: {

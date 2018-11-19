@@ -74,7 +74,6 @@
   import NewAddressMixin from 'components/views/mixins/NewAddressMixin'
   import { required, minLength } from 'vuelidate/lib/validators'
   import AgroLayout from 'layouts/AgroLayout'
-
   export default {
     name: 'new-address',
     components: {
