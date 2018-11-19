@@ -2,15 +2,15 @@
   <custom-page isChild noScroll style="background: #fdfdfd">
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction">
 
-      <template slot="action_itens" v-if="pessoa">
-        <q-btn flat round dense icon="edit" @click.native="editUser(pessoa.id)"/>
+      <template slot="action_itens" v-if="pessoaData">
+        <q-btn flat round dense icon="edit" @click.native="editUser(pessoaData.id)"/>
         <q-btn flat round dense icon="more_vert" >
           <q-popover anchor="bottom left">
             <q-list link>
-              <q-item dense @click.native="disablePessoa(pessoa.id)" v-if="!pessoa.deleted_at">
-                <q-item-main label="Inativar pessoa"  />
+              <q-item dense @click.native="disablePessoa(pessoaData.id)" v-if="!pessoaData.deleted_at">
+                <q-item-main label="Inativar pessoaData"  />
               </q-item>
-              <q-item dense @click.native="enablePessoa(pessoa.id)" v-if="pessoa.deleted_at">
+              <q-item dense @click.native="enablePessoa(pessoaData.id)" v-if="pessoaData.deleted_at">
                 <q-item-main label="Ativar pessoa"  />
               </q-item>
             </q-list>
@@ -39,23 +39,9 @@
       </swipe-item>
 
     </swipe>
-    <!--<transition-->
-      <!--appear-->
-      <!--key="contato"-->
-      <!--slot="fab-container"-->
-      <!--enter-active-class="animated slideInUp faster"-->
-      <!--leave-active-class="animated slideOutDown faster">-->
-      <!--<q-btn-->
-        <!--icon="add"-->
-        <!--size="20px"-->
-        <!--key="contatos"-->
-        <!--@click="addContato"-->
-        <!--round color="deep-orange"-->
-        <!--v-if="isFabVisible && selectedTab == 'tab-contatos' "-->
-      <!--/>-->
-    <!--</transition>-->
     <transition
       appear
+      v-if="isFabVisible"
       slot="fab-container"
       enter-active-class="animated zoomIn faster"
       leave-active-class="animated zoomOut faster">
@@ -65,15 +51,23 @@
       key="contatos"
       @click="addContato"
       round color="deep-orange"
-      v-if="isFabVisible && selectedTab == 'tab-contatos' "
+      v-if="selectedTab == 'tab-contatos' "
       />
       <q-btn
         icon="add"
         size="20px"
-        key="localizacao"
+        key="localizacoes"
         @click="addLocalizacao"
         round color="deep-orange"
-        v-if="isFabVisible && selectedTab == 'tab-localizacoes' "
+        v-if="selectedTab == 'tab-localizacoes' "
+      />
+      <q-btn
+        icon="edit"
+        size="20px"
+        key="informacoes"
+        @click="editPessoa"
+        round color="deep-orange"
+        v-if="selectedTab == 'tab-info' "
       />
     </transition>
 
@@ -90,7 +84,7 @@
   import informacoes from 'pages/admin/pessoas/tabs/Informacoes'
   import { Swipe, SwipeItem } from 'vue-swipe';
   export default {
-    name: "PessoaView",
+    name: "pessoa-view",
     components: {
       toolbar,
       customPage,
@@ -122,16 +116,19 @@
     },
     data(){
       return{
-        pessoa: null,
+        pessoaData: null,
         selectedTab: 'tab-info',
       }
     },
     computed: {
       isFabVisible: function () {
-        return this.selectedTab === 'tab-contatos' || this.selectedTab === 'tab-localizacoes';
+        return this.selectedTab === 'tab-contatos' || this.selectedTab === 'tab-localizacoes' || this.selectedTab === 'tab-info';
       }
     },
     methods: {
+      editPessoa: function(){
+        this.$router.push({name:'edit_pessoa'});
+      },
       addContato: function(){
         this.$router.push({name:'add_contact'});
       },
@@ -147,29 +144,6 @@
 </script>
 
 <style>
-  .label{
-    color: #005f5f;
-    font-size: 14px;
-    text-transform: uppercase;
-  }
-  .text-brand {
-    color: #909090 !important;
-  }
-  .bg-brand {
-    background: #fcfcfc !important;
-  }
-  .q-tabs{
-    border-radius: unset;
-  }
-  .shadow-3{
-    box-shadow: 0 1px 8px rgba(0,0,0,0.05), 0 3px 4px rgba(0,0,0,0.04), 0 3px 3px -2px rgba(0,0,0,0.03);
-  }
-
-  .animated.faster {
-    -webkit-animation-duration: 200ms !important;
-    animation-duration: 200ms !important;
-  }
-
   .my-swipe {
     height: 100%;
   }

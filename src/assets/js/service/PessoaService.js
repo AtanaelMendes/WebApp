@@ -12,7 +12,6 @@ export default {
       })
     });
   },
-
   listPessoas(filter){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.get( 'pessoa?' + AgroUtils.serialize(filter) ).then( response => {
@@ -22,13 +21,12 @@ export default {
       })
     });
   },
-
   savePessoa(params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.post('/pessoa', params).then(response => {
         resolve(response)
       }).catch(error => {
-        reject(error)
+        reject(error.response)
       })
     });
   },
