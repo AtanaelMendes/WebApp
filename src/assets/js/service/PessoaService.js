@@ -30,4 +30,13 @@ export default {
       })
     });
   },
+  updatePessoa(id, params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('/pessoa/' + id, params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
 }

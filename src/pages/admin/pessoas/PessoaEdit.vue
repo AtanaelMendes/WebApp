@@ -111,30 +111,58 @@
       }
     },
     methods: {
-      fillForm: function(){
+      fillForm: function(data){
+        console.log(data)
+        if(data.cpf != null){
+          this.pessoa.pessoaType = 1
+        }
+        if(data.cnpj != null){
+          this.pessoa.pessoaType = 2
+        }
+        this.tempGrupoEconomicoList.id = data.grupo_economico.id
+        this.pessoa.grupoEconomico.value = data.grupo_economico.id
+        this.tempGrupoEconomicoList.label = data.grupo_economico.nome
+        this.grupoEconomicoSearchTerms = data.grupo_economico.nome
+        this.pessoa.nome.value = data.nome
+        this.pessoa.cpf.value = data.cpf
+        this.pessoa.cnpj.value = data.cnpj
+        this.pessoa.razaoSocial.value = data.razao_social
+        this.pessoa.nomeFantasia.value = data.nome_fantasia
+        this.pessoa.inscricaoEstadual.value = data.inscricao_estadual
+        this.pessoa.inscricaoMunicipal.value = data.inscricao_municipal
+
 
       },
       getPessoa: function(id){
-
+        PessoaService.getPessoa(id).then(pessoa => {
+          this.fillForm(pessoa)
+        })
       },
       updatePessoa: function(){
         if(!this.pessoa.isValid()){
           return;
         }
-        this.$q.notify({type: 'positive', message: 'Funcao update'})
-        // PessoaService.updatePessoa(this.pessoa.getValues()).then(response => {
-        //   if(response.status === 201) {
-        //     this.$q.notify({type: 'positive', message: 'Pessoa criada com sucesso'});
-        //     this.$router.push({name: 'pessoas'});
-        //     this.$root.$emit('refreshPessoaList')
-        //   }
-        // }).catch(error => {
-        //   this.$q.notify({type: 'negative', message: 'http:' + error.status + error.request.response})
-        // });
-
+        // this.$q.notify({type: 'positive', message: 'Funcao update'})
+        PessoaService.updatePessoa(this.$route.params.id, this.pessoa.getValues()).then(response => {
+          if(response.status === 200) {
+            this.$q.notify({type: 'positive', message: 'Pessoa atualizada com sucesso'});
+            this.$router.push({name: 'pessoas'});
+            this.$root.$emit('refreshPessoaList')
+          }
+        }).catch(error => {
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.request.response})
+        });
+      },
+      search (terms, done) {
+        GrupoEconomicoService.searchGrupoEconomico(terms).then(response => {
+          this.tempGrupoEconomicoList = response;
+          done(response)
+        });
       },
       pessoaTypeChanged: function(value){
         this.pessoa = new Pessoa(value)
+        this.grupoEconomicoSearchTerms = ''
+        this.tempGrupoEconomicoList = []
       },
       createGrupoEconomico: function(){
         if(!this.grupoEconomico.isValid(this)){
@@ -154,12 +182,6 @@
         this.newGrupoEconomicoDialog = false;
         this.grupoEconomico.nome.value = null;
         this.grupoEconomico.nome.errorMessage = null;
-      },
-      search (terms, done) {
-        GrupoEconomicoService.searchGrupoEconomico(terms).then(response => {
-          this.tempGrupoEconomicoList = response;
-          done(response)
-        });
       },
       setGrupoEconomico (item) {
         this.pessoa.grupoEconomico.value = item.id;

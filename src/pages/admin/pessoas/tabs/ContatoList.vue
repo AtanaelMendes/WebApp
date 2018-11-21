@@ -31,8 +31,8 @@
           <q-list no-border>
             <q-item dense class="q-pa-sm">
               <q-item-main>
-                <q-chip v-if="contato.is_cobranca" small color="teal">Cobrança</q-chip>
-                <q-chip v-if="contato.is_fiscal" small color="teal">Fiscal</q-chip>
+                <q-chip v-if="contato.is_cobranca" small color="teal" class="q-ma-xs">Cobrança</q-chip>
+                <q-chip v-if="contato.is_fiscal" small color="teal" class="q-ma-xs">Fiscal</q-chip>
               </q-item-main>
             </q-item>
             <q-item-separator />

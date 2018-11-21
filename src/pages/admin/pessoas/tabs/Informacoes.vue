@@ -84,18 +84,18 @@
     },
     watch: {
       '$route' (to, from) {
-        this.getPessoa()
+        this.getPessoa(this.$route.params.id)
       }
     },
     methods: {
-      getPessoa: function(){
-        PessoaService.getPessoa(this.$route.params.id).then(pessoa => {
+      getPessoa: function(id){
+        PessoaService.getPessoa(id).then(pessoa => {
           this.pessoa = pessoa;
         })
       },
     },
     mounted() {
-      this.getPessoa()
+      this.getPessoa(this.$route.params.id)
     }
   }
 </script>
