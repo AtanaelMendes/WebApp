@@ -1,46 +1,38 @@
 <template>
-  <q-field :error="model.errorMessage != null" class="q-mb-sm">
-
-    <q-input v-model="cidadeTerms" placeholder="Cidade" :after="[{icon:'arrow_drop_down'}]" @blur="checkCidadeInput">
-      <q-autocomplete @search="search" @selected="setCidade" :min-characters="0" :debounce="500" value-field="label"/>
-    </q-input>
-
-    <div class="q-field-bottom row no-wrap" style="height: 22px">
-      <div class="q-field-error col" v-if="model.errorMessage != null" >{{model.errorMessage}}</div>
-    </div>
-  </q-field>
+  <q-input :float-label="label" v-model="cidadeTerms" @blur="checkCidadeInput">
+    <q-autocomplete @search="search" @selected="selected" :min-characters="3" :debounce="500" value-field="label"/>
+  </q-input>
 </template>
-
 <script>
+  import CidadeService from 'assets/js/service/localizacao/CidadeService'
+  import { filter } from 'quasar'
   export default {
     name: "cidade-autocomplete",
-    // props: {
-    //   model: Object,
-    //   label: String,
-    // },
+    props: {
+      label: String
+    },
     data: function () {
       return {
         cidadeTerms: '',
         tempCidadeList: [],
-        clearErrorMessage: function () {
-          this.model.errorMessage = null
-        }
       }
     },
+    // watch: {
+    //   cidadeTerms: {
+    //     handler: function (val, oldVal) {
+    //       if (val.length === 0) {
+    //         this.$emit('input', null)
+    //       }
+    //     }
+    //   }
+    // },
     methods: {
       checkCidadeInput(){
-        let result = filter(this.cidadeTerms, {field: 'label', list: this.tempCidadeList});
-
+        let result = this.tempCidadeList.filter(item => ('' + item['label']).toLowerCase() === this.cidadeTerms.toLowerCase());
         if(result.length === 0){
-          this.cidadeTerms = "";
-          this.pessoa.cidade.value = null;
-        }else{
-          this.setCidade(result[0]);
+          this.cidadeTerms = '';
+          this.$emit('input', null)
         }
-      },
-      setCidade (item) {
-        this.pessoa.cidade.value = item.id;
-        this.pessoa.cidade.errorMessage = null;
       },
       search (terms, done) {
         CidadeService.searchCidade(terms).then(response => {
@@ -48,9 +40,9 @@
           done(response)
         });
       },
+      selected (item) {
+        this.$emit('input', item)
+      },
     }
   }
 </script>
-
-<style>
-</style>
