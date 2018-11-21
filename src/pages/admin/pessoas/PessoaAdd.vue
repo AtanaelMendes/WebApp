@@ -120,6 +120,8 @@
       },
       pessoaTypeChanged: function(value){
         this.pessoa = new Pessoa(value)
+        this.grupoEconomicoSearchTerms = ''
+        this.tempGrupoEconomicoList = []
       },
       savePessoa: function(){
         if(!this.pessoa.isValid()){
