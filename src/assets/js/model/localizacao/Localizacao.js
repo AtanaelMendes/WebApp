@@ -75,10 +75,6 @@ export default class{
       this.bairro.errorMessage = "Informe o bairro";
       hasError = true;
     }
-    if (!helpers.req(this.isCobranca.value || this.isFiscal.value )) {
-      this.localizacao.errorMessage = "Informe um tipo de endereço";
-      hasError = true;
-    }
     return !hasError;
   };
   getValues(){

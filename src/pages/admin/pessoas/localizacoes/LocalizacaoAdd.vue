@@ -22,10 +22,25 @@
             <div class="col-6">
               <q-toggle color="deep-orange" label="Cobrança"  v-model="localizacao.isCobranca.value"/>
             </div>
+            <div class="q-field-bottom row no-wrap">
+              <div class="q-field-error text-negative" v-if="typeError" >
+                {{typeError}}
+              </div>
+            </div>
           </div>
           <!-- FIM TOGGLE FISCAL COBRANCA-->
 
           <form>
+            <!--CIDADE-->
+            <q-field :error="localizacao.cidadeId.errorMessage != null" class="q-mt-sm">
+              <cidade-autocomplete label="Cidade" v-model="cidadeTerms"/>
+              <div class="q-field-bottom row no-wrap" >
+                <div class="q-field-error" v-if="localizacao.cidadeId.errorMessage != null" >
+                  {{localizacao.cidadeId.errorMessage}}
+                </div>
+              </div>
+            </q-field>
+
             <!--ENDERECO-->
             <custom-input-text class="capitalize" type="text" label="Endereço" :model="localizacao.endereco" />
 
@@ -39,7 +54,7 @@
             <custom-input-text class="capitalize" type="text" label="Bairro" :model="localizacao.bairro" />
 
             <!--CEP-->
-            <custom-input-text class="capitalize" type="text" label="CEP" mask="######-###" :model="localizacao.cep" />
+            <custom-input-text class="capitalize" type="text" label="CEP" mask="#####-###" :model="localizacao.cep" />
 
           </form>
 
@@ -53,15 +68,16 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
+  import cidadeAutocomplete from 'components/CidadeAutocomplete.vue'
   import Localizacao from 'assets/js/model/localizacao/Localizacao'
   import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
-  import cidadeService from 'assets/js/service/localizacao/CidadeService'
   export default {
     name: "localizacao-add",
     components: {
       toolbar,
       customPage,
-      customInputText,
+      cidadeAutocomplete,
+      customInputText
     },
     computed:{
       dialogTitlePreffix: function () {
@@ -70,20 +86,44 @@
     },
     data(){
       return {
+        cidadeTerms: null,
+        typeError: null,
         localizacao: new Localizacao(),
+      }
+    },
+    watch: {
+      cidadeTerms: function (val, old) {
+        this.setCidade(val)
       }
     },
     methods:{
       saveLocalizacao: function(){
-        if(this.localizacao.isValid()){
+        if(this.localizacao.isFiscal.value == false && this.localizacao.isCobranca.value == false){
+          this.typeError = 'Escolha ao menos um tipo de endereço'
+          return
+        }else{
+          this.typeError = null
+        }
+        if(!this.localizacao.isValid()){
           return
         }
         localizacaoService.saveLocalizacao(this.$route.params.id, this.localizacao.getValues()).then( response => {
-          this.$q.notify({type: 'positive', message: 'Localização criado com sucesso'})
+          this.$q.notify({type: 'positive', message: 'Localização criada com sucesso'})
           this.$router.go(-1);
         }).catch(error => {
-          this.$q.notify({type: 'negative', message: error})
+          this.$q.notify({type: 'negative', message: error.request.response})
         })
+      },
+      setCidade (item) {
+        if(item == null){
+          console.log(item)
+          this.localizacao.cidadeId.value = null;
+        }else{
+          this.localizacao.cidadeId.value = item.id;
+          this.localizacao.cidadeId.errorMessage = null;
+          console.log(item)
+        }
+
       },
       backAction: function () {
         this.$router.go(-1);
