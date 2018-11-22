@@ -5,7 +5,7 @@
         background: '#dfdfdf',
         width: '8px',
         opacity: 1}">
-    <div class="row gutter-sm q-pa-md final-space" v-if="!isEmptyList">
+    <div class="row gutter-sm q-pa-md space-end" v-if="!isEmptyList">
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-for="(contato, index) in contatos" :key="contato.nome">
         <q-card>
           <q-card-title class="q-pb-none q-pt-sm">
@@ -133,7 +133,7 @@
 </script>
 
 <style>
-  .final-space{
+  .space-end{
     margin-bottom: 150px;
   }
   .no-result{
