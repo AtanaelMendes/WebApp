@@ -4,7 +4,7 @@
       <q-page class="row justify-center">
         <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-6 text-center">
 
-          <h1 class="title">AgroProject</h1>
+          <h2 class="title">AgroProject</h2>
           <q-card class="login" color="white" text-color="black" inline>
             <q-card-title >
               Bem vindo ao AgroProject
