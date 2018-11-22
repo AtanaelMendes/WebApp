@@ -35,17 +35,19 @@
           </q-item-tile>
         </q-item-main>
 
-        <q-item-side right>
-          <q-item-tile stamp>{{ moment(pessoa.created_at).format('DD MMMM YYYY') }}</q-item-tile>
-          <q-item-tile v-if="pessoa.deleted_at" stamp>{{ moment(pessoa.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>
-        </q-item-side>
-      </q-item>
+            <q-item-side right>
+              <q-item-tile stamp>{{ moment(pessoa.created_at).format('DD MMMM YYYY') }}</q-item-tile>
+              <q-item-tile v-if="pessoa.deleted_at" stamp>{{ moment(pessoa.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>
+            </q-item-side>
+          </q-item>
+        </q-list>
 
-    </q-list>
+        <div v-if="isEmptyList" class="no-result">
+          <img src="~/assets/sad_2.svg"/>
+          <span>Nenhum resultado encontrado.</span>
+        </div>
 
-    <div v-if="isEmptyList" class="no-result">
-      <img src="~/assets/sad_2.svg"/>
-      <span>Nenhum resultado encontrado.</span>
+      </div>
     </div>
 
     <q-btn
