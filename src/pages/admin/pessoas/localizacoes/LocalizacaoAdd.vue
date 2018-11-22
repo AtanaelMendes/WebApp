@@ -79,14 +79,13 @@
       cidadeAutocomplete,
       customInputText
     },
-    computed:{
-      dialogTitlePreffix: function () {
-        return (this.telefoneEditMode || this.emailEditMode) ? "Editar" : "Novo"
-      }
-    },
     data(){
       return {
-        cidadeTerms: null,
+        cidadeTerms: {
+          id: null,
+          label: null,
+          sublabel: null
+        },
         typeError: null,
         localizacao: new Localizacao(),
       }
@@ -116,14 +115,11 @@
       },
       setCidade (item) {
         if(item == null){
-          console.log(item)
           this.localizacao.cidadeId.value = null;
         }else{
           this.localizacao.cidadeId.value = item.id;
           this.localizacao.cidadeId.errorMessage = null;
-          console.log(item)
         }
-
       },
       backAction: function () {
         this.$router.go(-1);

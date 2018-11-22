@@ -1,5 +1,5 @@
 <template>
-  <q-input :float-label="label" v-model="cidadeTerms" @blur="checkCidadeInput">
+  <q-input :float-label="label" v-model="value.label" @blur="checkCidadeInput">
     <q-autocomplete @search="search" @selected="selected" :min-characters="3" :debounce="500" value-field="label"/>
   </q-input>
 </template>
@@ -9,28 +9,20 @@
   export default {
     name: "cidade-autocomplete",
     props: {
-      label: String
+      label: String,
+      value: String
     },
     data: function () {
       return {
-        cidadeTerms: '',
+        // cidadeTerms: '',
         tempCidadeList: [],
       }
     },
-    // watch: {
-    //   cidadeTerms: {
-    //     handler: function (val, oldVal) {
-    //       if (val.length === 0) {
-    //         this.$emit('input', null)
-    //       }
-    //     }
-    //   }
-    // },
     methods: {
       checkCidadeInput(){
-        let result = this.tempCidadeList.filter(item => ('' + item['label']).toLowerCase() === this.cidadeTerms.toLowerCase());
+        let result = this.tempCidadeList.filter(item => ('' + item['label']).toLowerCase() === this.value.toLowerCase());
         if(result.length === 0){
-          this.cidadeTerms = '';
+          this.value = '';
           this.$emit('input', null)
         }
       },
