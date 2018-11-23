@@ -6,7 +6,7 @@
         width: '8px',
         opacity: 1}">
 
-    <div class="q-pa-md row gutter-sm">
+    <div class="q-pa-md row gutter-sm" style="margin-bottom: 100px">
 
       <div class="col-12">
         <q-card>
@@ -18,7 +18,7 @@
               </q-item-side>
               <q-item-main class="text-right">
                 <q-chip small color="positive" flat >Autorizada</q-chip>
-                Emissão normal (não em contingência)
+                Emissão normal
               </q-item-main>
             </q-item>
 
@@ -36,7 +36,7 @@
                 Autorização
               </q-item-side>
               <q-item-main class="text-right">
-                151180054933243 - 09/11/2018 16:19:09
+                151180054933243 - {{moment('09/11/2018 15:30').format('lll')}}
               </q-item-main>
             </q-item>
 
@@ -49,7 +49,7 @@
         <q-card>
           <q-card-main >
             <div class="row gutter-md">
-              <div class="col-6">
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                 <q-item class="q-px-none">
                   <q-item-side class="q-caption">
                     Série
@@ -82,7 +82,7 @@
                     Emissão
                   </q-item-side>
                   <q-item-main class="text-right">
-                    09/11/2018 16:19:20
+                    {{moment('09/11/2018 15:30').format('lll')}}
                   </q-item-main>
                 </q-item>
 
@@ -91,11 +91,11 @@
                     Saída/Entrada
                   </q-item-side>
                   <q-item-main class="text-right">
-                    09/11/2018 16:19:20
+                    {{moment('09/11/2018 16:20').format('lll')}}
                   </q-item-main>
                 </q-item>
               </div>
-              <div class="col-6">
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                 <q-item class="q-px-none">
                   <q-item-side class="q-caption">
                     Filial
@@ -165,7 +165,7 @@
                     Produtos
                   </q-item-side>
                   <q-item-main class="text-right">
-                    10,999
+                    1,000,999,00
                   </q-item-main>
                 </q-item>
 
@@ -174,7 +174,7 @@
                     Total
                   </q-item-side>
                   <q-item-main class="text-right">
-                    10,999
+                    100,999
                   </q-item-main>
                 </q-item>
 
@@ -238,7 +238,7 @@
                     ICMS ST Base
                   </q-item-side>
                   <q-item-main class="text-right">
-                    0
+                    10,000
                   </q-item-main>
                 </q-item>
 
@@ -273,9 +273,6 @@
             </div>
           </q-card-main>
         </q-card>
-
-        <br/><br/><br/><br/>
-        <br/><br/><br/><br/>
       </div>
     </div>
 
