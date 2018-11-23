@@ -49,7 +49,7 @@
 
             <q-item-side>
               <q-btn-toggle
-                dense v-model="form.phoneType"
+                dense v-model="form.setTelefoneTipo"
                 toggle-color="secondary"
                 :options="[{label: 'celular', value: 1, icon: 'stay_primary_portrait'},
                            {label: 'Fixo', value: 2, icon: 'phone'}]"
@@ -92,7 +92,7 @@
           nome: null,
           email: null,
           phone: null,
-          phoneType: 1,
+          setTelefoneTipo: 1,
         }
       }
     },

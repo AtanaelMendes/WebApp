@@ -48,7 +48,7 @@
 
             <q-item-side>
               <q-btn-toggle
-                dense v-model="formContact.phoneType"
+                dense v-model="formContact.setTelefoneTipo"
                 toggle-color="secondary"
                 :options="[{label: 'celular', value: 1, icon: 'stay_primary_portrait'},
                            {label: 'Fixo', value: 2, icon: 'phone'}]"
