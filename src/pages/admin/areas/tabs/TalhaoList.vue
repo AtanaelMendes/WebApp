@@ -6,101 +6,109 @@
         width: '8px',
         opacity: 1}">
 
-    <div v-if="pessoa" class="q-pa-md row gutter-sm">
-
+    <div class="row q-ma-sm gutter-xs space-end">
       <div class="col-12">
-        <q-item>
-          <q-item-side>
-            <q-icon name="account_circle" size="40px"/>
-          </q-item-side>
-          <q-item-main>
-            <q-item-tile class="q-title">{{pessoa.nome}}</q-item-tile>
-            <q-item-tile v-if="pessoa.cpf" sublabel>{{pessoa.cpf}}</q-item-tile>
-            <q-item-tile v-if="pessoa.cnpj" sublabel>{{pessoa.cnpj}}</q-item-tile>
-          </q-item-main>
-        </q-item>
-      </div>
 
+        <q-card>
+          <q-card-title>Talhão fundo 1</q-card-title>
+          <q-card-separator/>
 
-      <div :class="coluna">
-        <q-item>
-          <q-item-main inset>
-            <q-item-tile class="q-subheading title-color">Grupo econômico</q-item-tile>
-            <q-item-tile sublabel>{{pessoa.grupo_economico.nome}}</q-item-tile>
-          </q-item-main>
-        </q-item>
-      </div>
+          <q-card-main>
+            <div class="row">
+              <div class="col-4">
+                <span class="text-faded">Safra:</span>&nbsp<span class="q-body-1">2019</span>
+              </div>
+              <div class="col-4">
+                <span class="q-body-2">Soja</span>
+              </div>
+              <div class="col-4">
+                <div class="row">
+                  <span class="q-subtitle text-faded">Início:</span>&nbsp<span class="q-body-1">10 Novembro 2018</span>
+                </div>
+                <div class="row">
+                  <span class="q-subtitle text-faded">colheita:</span>&nbsp<span class="q-body-1">15 Janeiro 2019</span>
+                </div>
+              </div>
+            </div>
 
-      <div v-if="pessoa.razao_social" :class="coluna">
-        <q-item>
-          <q-item-main inset>
-            <q-item-tile class="q-subheading title-color">Razão social</q-item-tile>
-            <q-item-tile sublabel>{{pessoa.razao_social}}</q-item-tile>
-          </q-item-main>
-        </q-item>
-      </div>
-
-      <div v-if="pessoa.nome_fantasia" :class="coluna">
-        <q-item>
-          <q-item-main inset>
-            <q-item-tile class="q-subheading title-color">Nome fantasia</q-item-tile>
-            <q-item-tile sublabel>{{pessoa.nome_fantasia}}</q-item-tile>
-          </q-item-main>
-        </q-item>
-      </div>
-
-      <div :class="coluna">
-
-        <q-item v-if="pessoa.inscricao_estadual">
-          <q-item-main inset>
-            <q-item-tile class="q-subheading title-color">Inscrição estadual</q-item-tile>
-            <q-item-tile sublabel>
-              {{pessoa.inscricao_estadual}}
-            </q-item-tile>
-          </q-item-main>
-        </q-item>
-
-        <q-item v-if="pessoa.inscricao_municipal">
-          <q-item-main>
-            <q-item-tile class="q-subheading title-color">Inscrição municipal</q-item-tile>
-            <q-item-tile sublabel>{{pessoa.inscricao_municipal}}</q-item-tile>
-          </q-item-main>
-        </q-item>
+            <div class="row">
+              <div>
+                <span class="text-faded">Estimativa:</span>&nbsp<span class="q-body-1">50 sacos, Hectare</span>
+              </div>
+            </div>
+          </q-card-main>
+        </q-card>
 
       </div>
     </div>
+
+    <!--<div v-if="!isEmptyList" class="q-ma-lg space-end">-->
+      <!--<div class="row">-->
+        <!--<div class="col-12">-->
+          <!--Quase lá-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div v-if="isEmptyList" class="no-result">-->
+      <!--<img src="~/assets/sad_2.svg"/>-->
+      <!--<span>Nenhum resultado encontrado.</span>-->
+    <!--</div>-->
+
   </q-scroll-area>
 </template>
 
 <script>
-  import PessoaService from 'assets/js/service/PessoaService'
+  import talhaoService from 'assets/js/service/area/TalhaoService'
   export default {
-    name: "talhao-list",
+    name: "dashboard",
     data(){
       return{
-        pessoa: null,
-        coluna: 'col-xs-12 col-sm-12 col-md-6 col-lg-6',
+        isEmptyList: false,
+        talhoes: [],
       }
     },
     watch: {
       '$route' (to, from) {
-        this.getPessoa(this.$route.params.id)
+        this.listTalhao(this.$route.params.id)
       }
     },
     methods: {
-      getPessoa: function(id){
-        PessoaService.getPessoa(id).then(pessoa => {
-          this.pessoa = pessoa;
+      addtalhao: function(id){
+        this.$router.push({name: 'add_talhao', params: {id:id}});
+      },
+      listTalhao: function(id){
+        talhaoService.listTalhao(id).then(talhoes => {
+          this.talhoes = talhoes;
         })
       },
     },
     mounted() {
-      this.getPessoa(this.$route.params.id)
+      this.listTalhao(this.$route.params.id)
     }
   }
 </script>
 <style>
   .title-color{
     color: #005f5f;
+  }
+  .space-end{
+    margin-bottom: 150px;
+  }
+  .no-result{
+    text-align: center;
+    padding-top: 150px;
+  }
+
+  .no-result img{
+    width: 120px;
+    height: auto;
+  }
+
+  .no-result span{
+    display: block;
+    margin-top: 30px;
+    font-size: 25px;
+    font-weight: 300;
+    color: #ababab;
   }
 </style>

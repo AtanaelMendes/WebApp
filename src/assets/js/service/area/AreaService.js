@@ -1,19 +1,10 @@
 import Vue from 'vue'
+const produtorId = localStorage.getItem('account.produtor_id');
 export default {
   listAreas(filter){
-    let id = localStorage.getItem('account.produtor_id')
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/' + id + '/area' ).then( response => {
+      Vue.prototype.$axios.get( 'produtor/' + produtorId + '/area' ).then( response => {
         resolve(response);
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  },
-  getAreaById(id){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('/pessoa/' + id).then(response => {
-        resolve(response.data)
       }).catch(error => {
         reject(error)
       })
@@ -21,50 +12,48 @@ export default {
   },
   saveArea(params){
     return new Promise((resolve, reject) => {
-      let produtor_id = localStorage.getItem('account.produtor_id')
-      Vue.prototype.$axios.post('/produtor/'+ produtor_id + '/area', params).then(response => {
+      Vue.prototype.$axios.post('/produtor/'+ produtorId + '/area', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
       })
     });
   },
-  updateArea(params){
+  getAreaById(areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/pessoa/' + id, params).then(response => {
+      Vue.prototype.$axios.get('/produtor/' + produtorId + '/area/' + areaId).then(response => {
+        resolve(response.data)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  updateArea(areaId, params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('/produtor/' + produtorId + '/area/' + areaId, params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
       })
     });
   },
-  deleteTalhao(talhaoId, areaId){
+  deleteArea(areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios( { url: 'talhao-delete/'+ talhaoId + '/'+ areaId, baseURL: 'http://demo3716022.mockable.io/', method: 'delete' } ).then(response => {
+      Vue.prototype.$axios.put('/produtor/' + produtorId + '/area/' + areaId).then(response => {
         resolve(response)
       }).catch(error => {
-        reject(error)
+        reject(error.response)
       })
     });
   },
-  searchLocalizacao(terms){
+  restoreArea(areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios(
-        { url: 'busca-localizacao', baseURL: 'http://demo3716022.mockable.io/', method: 'get' }).then( response =>{
-        resolve(this.parseLocalizacao(response.data));
-        // console.log(response.data);
-      }).catch(error =>{
-        reject(error)
+      Vue.prototype.$axios.put('/produtor/' + this.produtorId + '/area/' + areaId + '/restore').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
       })
     });
   },
-  parseLocalizacao(local) {
-    return local.map(localizacao => {
-      return {
-        label: localizacao.endereco + ', ' + localizacao.numero,
-        sublabel: localizacao.cidade + ', ' + localizacao.estado,
-        id: localizacao.id
-      }
-    })
-  },
-}
+};
+

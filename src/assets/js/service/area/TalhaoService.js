@@ -1,18 +1,9 @@
 import Vue from 'vue'
 export default {
-  listTalhao(talhaoId, filter){
+  listTalhao(areaId, filter){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'area/' + talhaoId + '/talhao' ).then( response => {
+      Vue.prototype.$axios.get( 'area/' + areaId + '/talhao' ).then( response => {
         resolve(response);
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  },
-  getTalhaoById(areaId, talhaoId){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('area/' + areaId +'/talhao/' + talhaoId).then(response => {
-        resolve(response.data)
       }).catch(error => {
         reject(error)
       })
@@ -27,6 +18,15 @@ export default {
       })
     });
   },
+  getTalhaoById(areaId, talhaoId){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('area/' + areaId +'/talhao/' + talhaoId).then(response => {
+        resolve(response.data)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   updateTalhao(areaId, talhaoId, params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.put('/area/' + areaId + '/talhao/' + talhaoId, params).then(response => {
@@ -38,10 +38,19 @@ export default {
   },
   deleteTalhao(talhaoId, areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios( { url: 'talhao-delete/'+ talhaoId + '/'+ areaId, baseURL: 'http://demo3716022.mockable.io/', method: 'delete' } ).then(response => {
+      Vue.prototype.$axios.delete('/area/' + areaId + '/talhao/' + talhaoId).then(response => {
         resolve(response)
       }).catch(error => {
-        reject(error)
+        reject(error.response)
+      })
+    });
+  },
+  restoreTalhao(talhaoId, areaId){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.post('/area/' + areaId + '/talhao/' + talhaoId + '/restore').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
       })
     });
   },

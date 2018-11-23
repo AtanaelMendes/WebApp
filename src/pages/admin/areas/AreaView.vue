@@ -1,90 +1,113 @@
 <template>
-  <custom-page isChild>
-    <toolbar slot="toolbar" navigation_type="noneAndBack" @navigation_clicked="backAction">
-      <template slot="action_itens" v-if="area">
-        <q-btn flat round dense icon="edit" @click.native="editArea(area.id)"/>
-        <q-btn flat round dense icon="more_vert" >
-        </q-btn>
-      </template>
+  <custom-page isChild noScroll style="background: #fdfdfd">
+    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction">
+      <!--<template slot="action_itens" v-if="area">-->
+        <!--<q-btn flat round dense icon="edit" @click.native="editArea(area.id)"/>-->
+        <!--<q-btn flat round dense icon="more_vert" >-->
+        <!--</q-btn>-->
+      <!--</template>-->
 
+      <q-tabs slot="tabs" v-model="selectedTab" align="justify"  class="shadow-3" color="brand" text-color="brand" underline-color="deep-orange">
+        <q-tab slot="title" name="tab-talhoes" label="Talhões"/>
+        <q-tab slot="title" name="tab-info" label="Informações"/>
+      </q-tabs>
     </toolbar>
 
-    <div v-if="!isEmptyList" class="q-ma-lg space-end">
-      <div class="row">
-        <div class="col-12">
-          Quase lá
-        </div>
-      </div>
-    </div>
-    <div v-if="isEmptyList" class="no-result">
-      <img src="~/assets/sad_2.svg"/>
-      <span>Nenhum resultado encontrado.</span>
-    </div>
+    <swipe ref="mySwiper" class="my-swipe" :continuous="false" :auto="0" :showIndicators="false" :disabled="true">
 
-    <q-btn slot="fab-container" round color="primary" @click="addArea()" icon="add" size="20px" />
+      <swipe-item>
+        <dashboard></dashboard>
+      </swipe-item>
+
+      <swipe-item>
+        <area-info></area-info>
+      </swipe-item>
+
+    </swipe>
+    <transition
+      appear
+      slot="fab-container"
+      enter-active-class="animated zoomIn faster"
+      leave-active-class="animated zoomOut faster">
+      <q-btn
+        icon="add"
+        size="20px"
+        key="talhao"
+        @click="addtalhao"
+        round color="deep-orange"
+        v-if="selectedTab == 'tab-talhoes' "
+      />
+      <q-btn
+        icon="edit"
+        size="20px"
+        key="info"
+        @click="editArea"
+        round color="deep-orange"
+        v-if="selectedTab == 'tab-info' "
+      />
+    </transition>
   </custom-page>
 </template>
 
 <script>
+  require('vue-swipe/dist/vue-swipe.css');
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import talhaoService from 'assets/js/service/area/TalhaoService'
+  import dashboard from 'pages/admin/areas/tabs/TalhaoList'
+  import areaInfo from 'pages/admin/areas/tabs/AreaInfo'
+  import { Swipe, SwipeItem } from 'vue-swipe';
   export default {
     name: "area-view",
     components: {
+      areaInfo,
+      dashboard,
       toolbar,
       customPage,
+      Swipe,
+      SwipeItem
     },
     watch: {
       '$route' (to, from) {
-        this.listTalhao();
+        this.selectedTab ='tab-talhoes';
+      },
+      selectedTab: function (value) {
+        let index;
+        switch (value) {
+          case 'tab-talhoes':
+            index = 0;
+            break;
+          case 'tab-info':
+            index = 1;
+            break;
+        }
+        this.$refs.mySwiper.goto(index)
       }
     },
     data(){
       return{
-        talhoes: [],
-        isEmptyList: null,
+        selectedTab: 'tab-talhoes',
       }
     },
     methods: {
-      editArea: function(id){
-        this.$router.push({name: 'edit_area', params: {id:id}});
+      editArea: function(){
+        this.$router.push({name:'edit_area'});
       },
-      listTalhao: function(){
-        talhaoService.listTalhao(this.$route.params.id).then(area => {
-          this.area = area.data;
-          this.isEmptyList = this.areas.length === 0;
-        })
+      addtalhao: function(){
+        this.$router.push({name:'add_talhao'});
       },
       backAction: function () {
-        this.$router.go(-1);
+        // this.$router.go(-1);
+        this.$router.push({name:'areas'})
       }
     },
     mounted(){
-      this.listTalhao();
+
     }
   }
 </script>
 
 <style>
-  .space-end{
-    margin-bottom: 150px;
-  }
-  .no-result{
-    text-align: center;
-    padding-top: 150px;
-  }
-
-  .no-result img{
-    width: 120px;
-    height: auto;
-  }
-
-  .no-result span{
-    display: block;
-    margin-top: 30px;
-    font-size: 25px;
-    font-weight: 300;
-    color: #ababab;
+  .my-swipe {
+    height: 100%;
   }
 </style>
