@@ -52,8 +52,25 @@ export default class {
       nome: this.nome.value,
       is_cobranca: this.isCobranca,
       is_fiscal: this.isFiscal,
-      telefones: this.telefones,
-      emails: this.emails,
+      telefones: parseTelefones(this.telefones),
+      emails: parseEmails(this.emails),
     }
   }
 }
+
+function parseTelefones(telefones){
+  let telefonesParsed = [];
+  for(var telefone of telefones){
+    telefonesParsed.push(telefone.getValues())
+  }
+  return telefonesParsed;
+}
+
+function parseEmails(emails){
+  let emailsParsed = [];
+  for(var email of emails){
+    emailsParsed.push(email.getValues())
+  }
+  return emailsParsed;
+}
+

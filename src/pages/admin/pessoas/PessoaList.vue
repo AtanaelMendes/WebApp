@@ -1,5 +1,5 @@
 <template>
-  <custom-page widthInner="60%" isParent >
+  <custom-page widthInner="60%" isParent>
     <toolbar slot="toolbar" title="Pessoas" searchable navigation_type="menu" @search_changed="listBySearch">
       <template slot="action_itens">
         <q-btn flat round dense icon="tune" >
@@ -23,39 +23,45 @@
       </template>
     </toolbar>
 
-    <q-list highlight no-border sparse v-if="!isEmptyList">
+    <div class="space-end row">
+      <div class="col-12">
+        <q-list separator link highlight no-border  v-if="!isEmptyList">
 
-      <q-item link separator multiline @click.native="viewPessoa(pessoa.id)" v-for="(pessoa, key) in pessoas" :key="key">
-        <q-item-main >
-          <q-item-tile>
-            {{pessoa.nome}}
-            <q-chip v-if="pessoa.deleted_at" small square color="red">
-              INATIVO
-            </q-chip>
-          </q-item-tile>
-        </q-item-main>
+          <q-item sparse multiline @click.native="viewPessoa(pessoa.id)" v-for="(pessoa, key) in pessoas" :key="key">
+            <q-item-main >
+              <q-item-tile>
+                {{pessoa.nome}}
+                <q-chip v-if="pessoa.deleted_at" small square color="red">
+                  INATIVO
+                </q-chip>
+              </q-item-tile>
+            </q-item-main>
 
-        <q-item-side right>
-          <q-item-tile stamp>{{ moment(pessoa.created_at).format('DD MMMM YYYY') }}</q-item-tile>
-          <q-item-tile v-if="pessoa.deleted_at" stamp>{{ moment(pessoa.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>
-        </q-item-side>
-      </q-item>
+            <q-item-side right>
+              <q-item-tile stamp>{{ moment(pessoa.created_at).format('DD MMMM YYYY') }}</q-item-tile>
+              <q-item-tile v-if="pessoa.deleted_at" stamp>{{ moment(pessoa.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>
+            </q-item-side>
+          </q-item>
 
-    </q-list>
+          <!--<q-item sparse v-for="item in 20">-->
+            <!--<q-item-main>-->
+              <!--{{item}}FULANO DE TAL-->
+            <!--</q-item-main>-->
+          <!--</q-item>-->
 
-    <div v-if="isEmptyList" class="no-result">
-      <img src="~/assets/sad_2.svg"/>
-      <span>Nenhum resultado encontrado.</span>
+        </q-list>
+
+        <div v-if="isEmptyList" class="no-result">
+          <img src="~/assets/sad_2.svg"/>
+          <span>Nenhum resultado encontrado.</span>
+        </div>
+
+      </div>
     </div>
 
-    <q-btn
-      slot="fab-container"
-      round
-      color="primary"
-      @click="addPessoa"
-      icon="add"
-      size="20px"
-    />
+    <div slot="fab-container">
+      <q-btn round color="primary" @click="addPessoa" icon="add" size="20px" />
+    </div>
 
   </custom-page>
 </template>
@@ -117,6 +123,9 @@
 </script>
 
 <style scoped>
+  .space-end{
+    margin-bottom: 150px;
+  }
   .no-result{
     text-align: center;
     padding-top: 150px;

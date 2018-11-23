@@ -2,15 +2,15 @@
   <custom-page isChild noScroll style="background: #fdfdfd">
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction">
 
-      <template slot="action_itens" v-if="pessoa">
-        <q-btn flat round dense icon="edit" @click.native="editUser(pessoa.id)"/>
+      <template slot="action_itens" v-if="pessoaData">
+        <q-btn flat round dense icon="edit" @click.native="editUser(pessoaData.id)"/>
         <q-btn flat round dense icon="more_vert" >
           <q-popover anchor="bottom left">
             <q-list link>
-              <q-item dense @click.native="disablePessoa(pessoa.id)" v-if="!pessoa.deleted_at">
-                <q-item-main label="Inativar pessoa"  />
+              <q-item dense @click.native="disablePessoa(pessoaData.id)" v-if="!pessoaData.deleted_at">
+                <q-item-main label="Inativar pessoaData"  />
               </q-item>
-              <q-item dense @click.native="enablePessoa(pessoa.id)" v-if="pessoa.deleted_at">
+              <q-item dense @click.native="enablePessoa(pessoaData.id)" v-if="pessoaData.deleted_at">
                 <q-item-main label="Ativar pessoa"  />
               </q-item>
             </q-list>
@@ -25,76 +25,50 @@
       </q-tabs>
 
     </toolbar>
-    <swipe v-if="pessoa" ref="mySwiper" class="my-swipe" :continuous="false" :auto="0" :showIndicators="false" :disabled="true">
-      <swipe-item >
-        <div class="q-pa-lg">
-          <div class="item">
-            <span class="label">Grupo Econômico</span>
-            <p class="field">{{pessoa.grupo_economico.nome}}</p>
-          </div>
-
-          <div style="display: flex;" class="item">
-            <div style="width: 50%">
-              <span class="label">Nome</span>
-              <p class="field">{{pessoa.nome}}</p>
-            </div>
-            <div v-if="pessoa.cpf" style="width: 50%">
-              <span class="label">CPF</span>
-              <p class="field">{{pessoa.cpf}}</p>
-            </div>
-            <div v-if="pessoa.cnpj" style="width: 50%">
-              <span class="label">CNPJ</span>
-              <p class="field">{{pessoa.cnpj}}</p>
-            </div>
-          </div>
-
-
-          <div v-if="pessoa.razao_social || pessoa.nome_fantasia" style="display: flex;" class="item">
-            <div v-if="pessoa.razao_social" style="width: 50%">
-              <span class="label">Razão Social</span>
-              <p class="field">{{pessoa.razao_social}}</p>
-            </div>
-            <div v-if="pessoa.nome_fantasia" style="width: 50%">
-              <span class="label">Nome Fantasia</span>
-              <p class="field">{{pessoa.nome_fantasia}}</p>
-            </div>
-          </div>
-
-          <div style="display: flex;" class="item">
-            <div v-if="pessoa.inscricao_estadual" style="width: 50%">
-              <span class="label">Inscrição Estadual</span>
-              <p class="field">{{pessoa.inscricao_estadual}}</p>
-            </div>
-            <div v-if="pessoa.inscricao_municipal" style="width: 50%">
-              <span class="label">Inscrição Municipal</span>
-              <p class="field">{{pessoa.inscricao_municipal}}</p>
-            </div>
-          </div>
-        </div>
-
+    <swipe ref="mySwiper" class="my-swipe" :continuous="false" :auto="0" :showIndicators="false" :disabled="true">
+      <swipe-item>
+        <informacoes></informacoes>
       </swipe-item>
 
       <swipe-item>
-        <ContatoList></ContatoList>
+        <contatoList></contatoList>
       </swipe-item>
 
       <swipe-item>
-        <LocalizacaoList></LocalizacaoList>
+        <localizacaoList></localizacaoList>
       </swipe-item>
 
     </swipe>
     <transition
-      slot="fab-container"
       appear
-      enter-active-class="animated slideInUp faster"
-      leave-active-class="animated slideOutDown faster">
-      <q-btn key="contatos" v-if="isFabVisible" @click="addContato" round color="deep-orange" icon="add" size="20px"/>
-      <!--<q-btn key="localizacoes" v-if="selectedTab === 'tab-localizacoes'"
-           round
-           color="red"
-           icon="add"
-           size="20px"
-      />-->
+      v-if="isFabVisible"
+      slot="fab-container"
+      enter-active-class="animated zoomIn faster"
+      leave-active-class="animated zoomOut faster">
+      <q-btn
+      icon="add"
+      size="20px"
+      key="contatos"
+      @click="addContato"
+      round color="deep-orange"
+      v-if="selectedTab == 'tab-contatos' "
+      />
+      <q-btn
+        icon="add"
+        size="20px"
+        key="localizacoes"
+        @click="addLocalizacao"
+        round color="deep-orange"
+        v-if="selectedTab == 'tab-localizacoes' "
+      />
+      <q-btn
+        icon="edit"
+        size="20px"
+        key="informacoes"
+        @click="editPessoa"
+        round color="deep-orange"
+        v-if="selectedTab == 'tab-info' "
+      />
     </transition>
 
   </custom-page>
@@ -105,22 +79,23 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import PessoaService from 'assets/js/service/PessoaService'
-  import ContatoList from 'pages/admin/pessoas/tabs/ContatoList'
-  import LocalizacaoList from 'pages/admin/pessoas/tabs/LocalizacaoList'
+  import contatoList from 'pages/admin/pessoas/tabs/ContatoList'
+  import localizacaoList from 'pages/admin/pessoas/tabs/LocalizacaoList'
+  import informacoes from 'pages/admin/pessoas/tabs/Informacoes'
   import { Swipe, SwipeItem } from 'vue-swipe';
   export default {
-    name: "PessoaView",
+    name: "pessoa-view",
     components: {
       toolbar,
       customPage,
-      LocalizacaoList,
-      ContatoList,
+      informacoes,
+      localizacaoList,
+      contatoList,
       Swipe,
       SwipeItem
     },
     watch: {
       '$route' (to, from) {
-        this.getPessoa();
         this.selectedTab ='tab-info';
       },
       selectedTab: function (value) {
@@ -141,70 +116,34 @@
     },
     data(){
       return{
-        pessoa: null,
+        pessoaData: null,
         selectedTab: 'tab-info',
       }
     },
     computed: {
       isFabVisible: function () {
-        return this.selectedTab === 'tab-contatos' || this.selectedTab === 'tab-localizacoes';
+        return this.selectedTab === 'tab-contatos' || this.selectedTab === 'tab-localizacoes' || this.selectedTab === 'tab-info';
       }
     },
     methods: {
-      getPessoa: function(){
-        PessoaService.getPessoa(this.$route.params.id).then(pessoa => {
-          this.pessoa = pessoa;
-        })
+      editPessoa: function(){
+        this.$router.push({name:'edit_pessoa'});
       },
       addContato: function(){
         this.$router.push({name:'add_contact'});
+      },
+      addLocalizacao: function(){
+        this.$router.push({name:'add_localizacao'});
       },
       backAction: function () {
         //this.$router.go(-1);
         this.$router.push({name:'pessoas'})
       }
-    },
-    mounted(){
-      this.getPessoa();
     }
   }
 </script>
 
 <style>
-  .label{
-    color: #005f5f;
-    font-size: 14px;
-    text-transform: uppercase;
-  }
-  .field{
-    font-size: 18px;
-    font-weight: 400;
-    margin-top: 6px;
-    margin-bottom: 0px;
-    color: #333333;
-  }
-  .item{
-    margin-bottom: 26px;
-  }
-
-  .text-brand {
-    color: #909090 !important;
-  }
-  .bg-brand {
-    background: #fcfcfc !important;
-  }
-  .q-tabs{
-    border-radius: unset;
-  }
-  .shadow-3{
-    box-shadow: 0 1px 8px rgba(0,0,0,0.05), 0 3px 4px rgba(0,0,0,0.04), 0 3px 3px -2px rgba(0,0,0,0.03);
-  }
-
-  .animated.faster {
-    -webkit-animation-duration: 200ms !important;
-    animation-duration: 200ms !important;
-  }
-
   .my-swipe {
     height: 100%;
   }

@@ -19,7 +19,6 @@ export default {
       })
     });
   },
-
   parseGruposEconomicos(gruposEconomicos) {
     return gruposEconomicos.map(grupoEconomico => {
       return {

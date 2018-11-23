@@ -1,40 +1,52 @@
 import { helpers} from 'vuelidate/lib/validators'
 
-export default{
-  pessoaType: 1,
-  nome: {
+export default class{
+  pessoaType = 1;
+  nome= {
     value: null,
     errorMessage: null
-  },
-  grupoEconomico: {
+  };
+  grupoEconomico= {
     value: null,
     errorMessage: null
-  },
-  cpf: {
+  };
+  cpf= {
     value: null,
     errorMessage: null
-  },
-  cnpj: {
+  };
+  cnpj= {
     value: null,
     errorMessage: null
-  },
-  inscricaoEstadual: {
+  };
+  inscricaoEstadual= {
     value: null,
     errorMessage: null
-  },
-  inscricaoMunicipal: {
+  };
+  inscricaoMunicipal= {
     value: null,
     errorMessage: null
-  },
-  razaoSocial: {
+  };
+  razaoSocial= {
     value: null,
     errorMessage: null
-  },
-  nomeFantasia: {
+  };
+  nomeFantasia= {
     value: null,
     errorMessage: null
-  },
-
+  };
+  constructor(pessoaType, pessoa ){
+    this.pessoaType = pessoaType
+    if(pessoa !== undefined || pessoa != null){
+      this.nome.value = pessoa.nome.value;
+      this.grupoEconomico.value = pessoa.grupoEconomico.value;
+      this.cpf.value = pessoa.cpf.value;
+      this.cnpj.value = pessoa.cnpj.value;
+      this.inscricaoEstadual.value = pessoa.inscricaoEstadual.value;
+      this.inscricaoMunicipal.value = pessoa.inscricaoMunicipal.value;
+      this.nomeFantasia.value = pessoa.nomeFantasia.value;
+      this.razaoSocial.value = pessoa.razaoSocial.value;
+    }
+  };
   isValid(){
     let hasError = false;
 
@@ -74,7 +86,7 @@ export default{
     }
 
     return !hasError;
-  },
+  };
 
   getValues(){
     return{
@@ -87,6 +99,6 @@ export default{
       razao_social: this.razaoSocial.value,
       nome_fantasia: this.nomeFantasia.value
     }
-  }
+  };
 
 }
