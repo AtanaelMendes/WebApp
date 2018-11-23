@@ -1,7 +1,6 @@
 <template>
   <custom-page isChild>
     <toolbar slot="toolbar" navigation_type="noneAndBack" @navigation_clicked="backAction">
-
       <template slot="action_itens" v-if="area">
         <q-btn flat round dense icon="edit" @click.native="editArea(area.id)"/>
         <q-btn flat round dense icon="more_vert" >
@@ -15,10 +14,15 @@
       </q-tabs>
     </toolbar>
 
-    <div v-if="area" class="q-ma-lg">
-      <div class="row">
+    <q-scroll-area style="width: 100%; height: 100vh;" :thumb-style="{
+        right: '4px',
+        borderRadius: '5px',
+        background: '#dfdfdf',
+        width: '8px',
+        opacity: 1}">
 
-        <div class="col-6">
+      <div v-if="area" class="row q-ma-lg" style="margin-bottom: 100px">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
           <q-list no-border>
             <q-list-header>Informações da área</q-list-header>
 
@@ -108,14 +112,16 @@
           </q-list>
         </div>
 
-        <div class="col-6">
-          <q-list class="q-pa-sm" no-border>
-            <q-list-header>Talhões</q-list-header>
-              <q-chip class="q-ma-xs" v-for="(talhao, index) in area.talhoes" :key="index" color="primary">{{talhao.nome}}</q-chip>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+          <q-list-header>Talhões</q-list-header>
+          <q-list class="q-pa-sm">
+            <q-chip class="q-ma-xs" v-for="(talhao, index) in area.talhoes" :key="index" color="primary">{{talhao.nome}}</q-chip>
           </q-list>
         </div>
       </div>
-    </div>
+    </q-scroll-area>
+
+
   </custom-page>
 </template>
 

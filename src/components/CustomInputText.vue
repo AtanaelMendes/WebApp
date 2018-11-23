@@ -1,6 +1,13 @@
 <template>
   <q-field :error="model.errorMessage != null" class="q-mb-sm">
-    <q-input v-model="model.value" v-on:input="clearErrorMessage()" :type="type" :float-label="label" :placeholder="placeholder" v-mask="mask" :autofocus="autofocus" />
+    <q-input
+      v-mask="mask"
+      v-model="model.value"
+      :autofocus="autofocus"
+      :placeholder="placeholder"
+      v-on:input="clearErrorMessage()"
+      :type="type" :float-label="label"
+    />
     <div class="q-field-bottom row no-wrap" style="height: 22px">
       <div class="q-field-error col" v-if="model.errorMessage != null" >{{model.errorMessage}}</div>
     </div>
@@ -31,6 +38,5 @@
   }
 </script>
 
-<style scoped>
-
+<style>
 </style>

@@ -4,7 +4,7 @@
 
       <slot name="toolbar"></slot>
 
-      <q-scroll-area v-if="!noScroll" style="width: 100%; height: 100%; z-index: 2" :class="{'shadow-4': isParent}" :thumb-style="{
+      <q-scroll-area v-if="!noScroll" style="width: 100%; height: 100vh; z-index: 2" :class="{'shadow-4': isParent}" :thumb-style="{
         right: '4px',
         borderRadius: '5px',
         background: '#dfdfdf',
@@ -105,7 +105,7 @@
 
   .fab-container{
     position: absolute;
-    bottom: 18px;
+    top: 71%;
     right: 18px;
     z-index: 1000;
   }

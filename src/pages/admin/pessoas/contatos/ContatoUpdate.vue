@@ -1,7 +1,7 @@
 <template>
   <custom-page isChild>
-    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Novo Contato">
-      <q-btn slot="action_itens" flat dense round icon="done" @click="saveContato()"/>
+    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Editar contato">
+      <q-btn slot="action_itens" flat dense icon="done" @click="updateContato()"/>
     </toolbar>
 
     <q-scroll-area style="height: 200vh" :thumb-style="{
@@ -27,14 +27,14 @@
 
           <form>
             <!--IMPUT NOME-->
-            <custom-input-text class="capitalize" type="text" label="Nome" :model="contato.nome" />
+            <custom-input-text type="text" label="Nome" :model="contato.nome" />
             <!-- FIM IMPUT NOME-->
 
             <!--IMPUT TELEFONE-->
             <q-list no-border link>
               <q-list-header inset>Telefones</q-list-header>
 
-              <q-item v-for="(telefone, index) in contato.telefones" :key="index"  @click.native="openEditPhoneDialog(telefone, index)">
+              <q-item v-for="(telefone, index) in contato.telefones" :key="telefone.id"  @click.native="openEditPhoneDialog(telefone, index)">
                 <q-item-side :icon="getTelefoneIcon(telefone.tipo)" inverted color="light-green-4"  />
                 <q-item-main>
                   <q-item-tile label>{{telefone.numero.value}}</q-item-tile>
@@ -186,6 +186,27 @@
       }
     },
     methods:{
+      fillForm: function(data){
+        let vm = this
+        this.contato.isFiscal = data.is_fiscal
+        this.contato.isCobranca = data.is_cobranca
+        this.contato.nome.value = data.nome
+        data.telefones.forEach(function (telefone) {
+          let telefoneConverted = {tipo: telefone.is_celular ? 1 : 0, numero: {value: telefone.numero}};
+          vm.contato.addTelefone(new Telefone(telefoneConverted))
+        })
+        data.emails.forEach(function (email) {
+          let emailConverted = {endereco: {value: email.endereco}};
+          vm.contato.addEmail(new Email(emailConverted))
+        })
+      },
+      getContato: function(){
+        let pessoaId = this.$route.params.id
+        let contatoId = this.$route.params.contatoId
+        contatoService.getContato(pessoaId, contatoId).then(response => {
+          this.fillForm(response.data)
+        });
+      },
       setTelefoneTipo: function(tipo){
         if(tipo == 'fixo' ){
           this.telefoneTipoSelected.icon = 'phone'
@@ -198,7 +219,7 @@
           this.telefone.tipo = 1
         }
       },
-      saveContato: function(){
+      updateContato: function(){
         if(this.contato.isValid()){
           if(this.contato.telefones.length === 0 && this.contato.emails.length === 0){
             this.$q.dialog({
@@ -208,7 +229,7 @@
             })
           }
         }
-        contatoService.saveContato(this.$route.params.id, this.contato.getValues()).then( response => {
+        contatoService.updateContato(this.$route.params.id, this.contato.getValues()).then( response => {
           this.$q.notify({type: 'positive', message: 'Contato criado com sucesso'})
           this.$router.go(-1);
         }).catch(error => {
@@ -300,11 +321,18 @@
       backAction: function () {
         this.$router.go(-1);
       }
+    },
+    mounted(){
+      this.getContato()
     }
   }
 </script>
 
 <style>
+  .space-end{
+    margin-bottom: 150px;
+  }
+
   .custom-footer{
     padding: 6px;
     border-top: 1px solid #cccccc;

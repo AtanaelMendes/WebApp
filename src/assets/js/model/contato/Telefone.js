@@ -27,4 +27,11 @@ export default class {
 
     return !hasError;
   };
+
+  getValues(){
+    return {
+      numero: this.numero.value,
+      is_celular: this.tipo === 1,
+    }
+  }
 }

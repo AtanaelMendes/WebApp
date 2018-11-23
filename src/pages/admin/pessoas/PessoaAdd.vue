@@ -1,55 +1,68 @@
 <template>
   <custom-page isChild>
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Nova Pessoa">
-      <q-btn slot="action_itens" flat dense label="salvar" @click="savePessoa()"/>
+      <q-btn slot="action_itens" flat dense round icon="done" @click="savePessoa()"/>
     </toolbar>
 
-    <form class="q-pa-md">
+    <q-scroll-area style="height: 150vh" :thumb-style="{
+        right: '4px',
+        borderRadius: '5px',
+        background: '#dfdfdf',
+        width: '8px',
+        opacity: 1}">
+      <div class="row q-pa-md">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+          <form>
 
-      <q-field class="q-mb-sm" style="text-align: center; margin-bottom: 40px">
-        <q-btn-toggle v-model="pessoa.pessoaType" toggle-color="primary" inverted @input="pessoaTypeChanged"
-                      :options="[{label: 'Física', value: 1},{label: 'Jurídica', value: 2}]"/>
-      </q-field>
+            <q-field>
+              <q-btn-toggle
+                v-model="pessoa.pessoaType"
+                toggle-color="primary"
+                inverted
+                @input="pessoaTypeChanged"
+                :options="[{label: 'Física', value: 1},{label: 'Jurídica', value: 2}]"
+              />
+            </q-field>
 
-      <q-field :error="pessoa.grupoEconomico.errorMessage != null" class="q-mb-sm" style="width: 50%; padding-right:20px">
-        <q-item class="q-pa-none" >
-          <q-item-main>
-            <q-input v-model="grupoEconomicoSearchTerms" placeholder="Grupo Econômico" :after="[{icon:'arrow_drop_down'}]" @blur="checkGrupoEconomicoInput">
-              <q-autocomplete @search="search" @selected="setGrupoEconomico" :min-characters="0" :debounce="500" value-field="label"/>
-            </q-input>
-          </q-item-main>
+            <q-field :error="pessoa.grupoEconomico.errorMessage != null" class="q-mt-sm">
+              <q-item class="q-px-none">
+                <q-item-main>
+                  <q-input v-model="grupoEconomicoSearchTerms" placeholder="Grupo Econômico" :after="[{icon:'arrow_drop_down'}]" @blur="checkGrupoEconomicoInput">
+                    <q-autocomplete @search="search" @selected="setGrupoEconomico" :min-characters="0" :debounce="500" value-field="label"/>
+                  </q-input>
+                </q-item-main>
 
-          <q-item-side>
-            <q-btn color="deep-orange" rounded size="md" icon="add" @click.native="openNovoGrupoEconomicoDialog()" class="q-px-sm"/>
-          </q-item-side>
-        </q-item>
+                <q-item-side>
+                  <q-btn color="deep-orange" rounded size="md" icon="add" @click.native="openNovoGrupoEconomicoDialog()" class="q-px-sm"/>
+                </q-item-side>
+              </q-item>
 
-        <div class="q-field-bottom row no-wrap" style="height: 22px">
-          <div class="q-field-error col" v-if="pessoa.grupoEconomico.errorMessage != null" >{{pessoa.grupoEconomico.errorMessage}}</div>
+              <div class="q-field-bottom row no-wrap" >
+                <div class="q-field-error col" v-if="pessoa.grupoEconomico.errorMessage != null" >{{pessoa.grupoEconomico.errorMessage}}</div>
+              </div>
+            </q-field>
+
+            <custom-input-text type="text" label="Nome" :model="pessoa.nome" maxlength="20"/>
+
+            <custom-input-text key="cpf" type="text" label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1"/>
+
+            <custom-input-text key="cnpj" type="text" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2"/>
+
+            <div v-if="pessoa.pessoaType === 2">
+              <custom-input-text type="text" label="Razão Social" :model="pessoa.razaoSocial"/>
+
+              <custom-input-text type="text" label="Nome Fantasia" :model="pessoa.nomeFantasia"/>
+            </div>
+
+            <custom-input-text type="text" label="Inscrição Estadual" :model="pessoa.inscricaoEstadual"/>
+
+            <custom-input-text type="text" label="Inscrição Municipal" :model="pessoa.inscricaoMunicipal"/>
+
+          </form>
         </div>
-      </q-field>
-
-      <div style="display: flex">
-        <custom-input-text type="text" label="Nome" :model="pessoa.nome" maxlength="20" style="flex-grow: 1; margin-right: 20px" />
-
-        <custom-input-text key="cpf" type="text" label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1" style="flex-grow: 1; margin-left: 20px" />
-
-        <custom-input-text key="cnpj" type="text" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2" style="flex-grow: 1; margin-left: 20px" />
       </div>
+    </q-scroll-area>
 
-      <div style="display: flex" v-if="pessoa.pessoaType === 2">
-        <custom-input-text type="text" label="Razão Social" :model="pessoa.razaoSocial" style="flex-grow: 1; margin-right: 20px" />
-
-        <custom-input-text type="text" label="Nome Fantasia" :model="pessoa.nomeFantasia" style="flex-grow: 1; margin-left: 20px" />
-      </div>
-
-      <div style="display: flex">
-        <custom-input-text type="text" label="Inscrição Estadual" :model="pessoa.inscricaoEstadual" style="flex-grow: 1; margin-right: 20px" />
-
-        <custom-input-text type="text" label="Inscrição Municipal" :model="pessoa.inscricaoMunicipal" style="flex-grow: 1; margin-left: 20px" />
-      </div>
-
-    </form>
 
 
     <q-dialog v-model="newGrupoEconomicoDialog" prevent-close>
@@ -80,7 +93,6 @@
   import Pessoa from 'assets/js/model/Pessoa'
   import GrupoEconomico from 'assets/js/model/GrupoEconomico'
   import { filter } from 'quasar'
-
   export default {
     name: "PessoaAdd",
     components: {
@@ -88,13 +100,12 @@
       customPage,
       customInputText,
     },
-    //mixins: [FormMixin],
     data(){
       return {
         grupoEconomicoSearchTerms: '',
         tempGrupoEconomicoList: [],
         newGrupoEconomicoDialog: false,
-        pessoa: Pessoa,
+        pessoa: new Pessoa(1),
         grupoEconomico: GrupoEconomico,
       }
     },
@@ -108,37 +119,23 @@
         this.grupoEconomico.nome.errorMessage = null;
       },
       pessoaTypeChanged: function(value){
-        this.pessoa.grupoEconomico.errorMessage = null;
-        this.pessoa.nome.errorMessage = null;
-
-        switch (value) {
-          case 1:
-            this.pessoa.cpf.value = null;
-            this.pessoa.cpf.errorMessage = null;
-            break;
-          case 2:
-            this.pessoa.cnpj.value = null;
-            this.pessoa.cnpj.errorMessage = null;
-            this.pessoa.razaoSocial.value = null;
-            this.pessoa.razaoSocial.errorMessage = null;
-            this.pessoa.nomeFantasia.value = null;
-            this.pessoa.nomeFantasia.errorMessage = null;
-            break;
-        }
+        this.pessoa = new Pessoa(value)
+        this.grupoEconomicoSearchTerms = ''
+        this.tempGrupoEconomicoList = []
       },
       savePessoa: function(){
         if(!this.pessoa.isValid()){
           return;
         }
-
         PessoaService.savePessoa(this.pessoa.getValues()).then(response => {
+          console.log(response.status)
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Pessoa criada com sucesso'});
-
-            //  this.setFormObj(this.form);
             this.$router.push({name: 'pessoas'});
             this.$root.$emit('refreshPessoaList')
           }
+        }).catch(error => {
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.request.response})
         });
 
       },
@@ -190,16 +187,4 @@
 </script>
 
 <style>
-  .text-brand {
-    color: #909090 !important;
-  }
-  .bg-brand {
-    background: #fcfcfc !important;
-  }
-  .q-tabs{
-    border-radius: unset;
-  }
-  .shadow-3{
-    box-shadow: 0 1px 8px rgba(0,0,0,0.05), 0 3px 4px rgba(0,0,0,0.04), 0 3px 3px -2px rgba(0,0,0,0.03);
-  }
 </style>
