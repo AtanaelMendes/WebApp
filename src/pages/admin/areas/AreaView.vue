@@ -7,153 +7,53 @@
         </q-btn>
       </template>
 
-      <q-tabs slot="tabs" align="justify"  class="shadow-3" color="brand" text-color="brand" underline-color="deep-orange">
-        <q-tab slot="title" label="Informações" />
-        <q-tab slot="title" label="Contatos"/>
-        <q-tab slot="title" label="Localizações"/>
-      </q-tabs>
     </toolbar>
 
-    <q-scroll-area style="width: 100%; height: 100vh;" :thumb-style="{
-        right: '4px',
-        borderRadius: '5px',
-        background: '#dfdfdf',
-        width: '8px',
-        opacity: 1}">
-
-      <div v-if="area" class="row q-ma-lg" style="margin-bottom: 100px">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-          <q-list no-border>
-            <q-list-header>Informações da área</q-list-header>
-
-            <q-item>
-              <q-item-main>
-                {{area.nome}}
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile sublabel>
-                  Tamanho
-                </q-item-tile>
-                <q-item-tile>
-                  {{area.tamanho}}, {{area.unidadeMedida[0].simbolo}}
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile sublabel>
-                  Endereço
-                </q-item-tile>
-                <q-item-tile>
-                  {{area.localizacao[0].endereco}}
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile sublabel>
-                  numero
-                </q-item-tile>
-                <q-item-tile>
-                  {{area.localizacao[0].numero}}
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile sublabel>
-                  Bairro
-                </q-item-tile>
-                <q-item-tile>
-                  {{area.localizacao[0].bairro}}
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile sublabel>
-                  Cidade
-                </q-item-tile>
-                <q-item-tile>
-                  {{area.localizacao[0].cidade}}
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile sublabel>
-                  CEP
-                </q-item-tile>
-                <q-item-tile>
-                  {{area.localizacao[0].cep}}
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile sublabel>
-                  Estado
-                </q-item-tile>
-                <q-item-tile>
-                  {{area.localizacao[0].estado}}
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-          </q-list>
-        </div>
-
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-          <q-list-header>Talhões</q-list-header>
-          <q-list class="q-pa-sm">
-            <q-chip class="q-ma-xs" v-for="(talhao, index) in area.talhoes" :key="index" color="primary">{{talhao.nome}}</q-chip>
-          </q-list>
+    <div v-if="!isEmptyList" class="q-ma-lg space-end">
+      <div class="row">
+        <div class="col-12">
+          Quase lá
         </div>
       </div>
-    </q-scroll-area>
+    </div>
+    <div v-if="isEmptyList" class="no-result">
+      <img src="~/assets/sad_2.svg"/>
+      <span>Nenhum resultado encontrado.</span>
+    </div>
 
-
+    <q-btn slot="fab-container" round color="primary" @click="addArea()" icon="add" size="20px" />
   </custom-page>
 </template>
 
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import areaService from 'assets/js/service/area/AreaService'
+  import talhaoService from 'assets/js/service/area/TalhaoService'
   export default {
-    name: "AreaView",
+    name: "area-view",
     components: {
       toolbar,
       customPage,
     },
     watch: {
       '$route' (to, from) {
-        this.getArea();
-        this.selectedTab ='tab-info';
+        this.listTalhao();
       }
     },
     data(){
       return{
-        area: null,
-        selectedTab: 'tab-info',
+        talhoes: [],
+        isEmptyList: null,
       }
     },
     methods: {
       editArea: function(id){
         this.$router.push({name: 'edit_area', params: {id:id}});
       },
-      getArea: function(){
-        areaService.getAreaById(this.$route.params.id).then(area => {
+      listTalhao: function(){
+        talhaoService.listTalhao(this.$route.params.id).then(area => {
           this.area = area.data;
+          this.isEmptyList = this.areas.length === 0;
         })
       },
       backAction: function () {
@@ -161,10 +61,30 @@
       }
     },
     mounted(){
-      this.getArea();
+      this.listTalhao();
     }
   }
 </script>
 
 <style>
+  .space-end{
+    margin-bottom: 150px;
+  }
+  .no-result{
+    text-align: center;
+    padding-top: 150px;
+  }
+
+  .no-result img{
+    width: 120px;
+    height: auto;
+  }
+
+  .no-result span{
+    display: block;
+    margin-top: 30px;
+    font-size: 25px;
+    font-weight: 300;
+    color: #ababab;
+  }
 </style>
