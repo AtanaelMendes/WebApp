@@ -25,9 +25,14 @@
         <q-item @click.native="$router.push({name:'areas'})">
           <q-item-side icon="place" />
           <q-item-main label="Áreas" />
-        </q-item><q-item @click.native="$router.push({name:'notas-fiscais'})">
+        </q-item>
+        <!--<q-item @click.native="$router.push({name:'notas-fiscais'})">
           <q-item-side icon="receipt" />
           <q-item-main label="Notas Fiscais" />
+        </q-item>-->
+        <q-item @click.native="$router.push({name:'safras'})">
+          <q-item-side><i class="fab fa-pagelines q-headline"></i></q-item-side>
+          <q-item-main label="Safras" />
         </q-item>
       </q-list>
     </q-layout-drawer>
