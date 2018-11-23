@@ -1,37 +1,35 @@
 import Vue from 'vue'
 export default {
-  listAreas(filter){
-    let id = localStorage.getItem('account.produtor_id')
+  listTalhao(talhaoId, filter){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/' + id + '/area' ).then( response => {
+      Vue.prototype.$axios.get( 'area/' + talhaoId + '/talhao' ).then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
       })
     });
   },
-  getAreaById(id){
+  getTalhaoById(areaId, talhaoId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('/pessoa/' + id).then(response => {
+      Vue.prototype.$axios.get('area/' + areaId +'/talhao/' + talhaoId).then(response => {
         resolve(response.data)
       }).catch(error => {
         reject(error)
       })
     });
   },
-  saveArea(params){
+  saveTalhao(areaId, params){
     return new Promise((resolve, reject) => {
-      let produtor_id = localStorage.getItem('account.produtor_id')
-      Vue.prototype.$axios.post('/produtor/'+ produtor_id + '/area', params).then(response => {
+      Vue.prototype.$axios.post('/area/'+ areaId + '/area', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
       })
     });
   },
-  updateArea(params){
+  updateTalhao(areaId, talhaoId, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/pessoa/' + id, params).then(response => {
+      Vue.prototype.$axios.put('/area/' + areaId + '/talhao/' + talhaoId, params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
@@ -46,25 +44,5 @@ export default {
         reject(error)
       })
     });
-  },
-  searchLocalizacao(terms){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios(
-        { url: 'busca-localizacao', baseURL: 'http://demo3716022.mockable.io/', method: 'get' }).then( response =>{
-        resolve(this.parseLocalizacao(response.data));
-        // console.log(response.data);
-      }).catch(error =>{
-        reject(error)
-      })
-    });
-  },
-  parseLocalizacao(local) {
-    return local.map(localizacao => {
-      return {
-        label: localizacao.endereco + ', ' + localizacao.numero,
-        sublabel: localizacao.cidade + ', ' + localizacao.estado,
-        id: localizacao.id
-      }
-    })
   },
 }
