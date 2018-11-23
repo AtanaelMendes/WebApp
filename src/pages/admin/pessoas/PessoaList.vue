@@ -42,13 +42,6 @@
               <q-item-tile v-if="pessoa.deleted_at" stamp>{{ moment(pessoa.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>
             </q-item-side>
           </q-item>
-
-          <!--<q-item sparse v-for="item in 20">-->
-            <!--<q-item-main>-->
-              <!--{{item}}FULANO DE TAL-->
-            <!--</q-item-main>-->
-          <!--</q-item>-->
-
         </q-list>
 
         <div v-if="isEmptyList" class="no-result">

@@ -110,13 +110,13 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
-  import Area from 'assets/js/model/Area'
-  import Talhao from 'assets/js/model/Talhao'
-  import AreaService from 'assets/js/service/AreaService'
+  import area from 'assets/js/model/area/Area'
+  import talhao from 'assets/js/model/area/Talhao'
+  import areaService from 'assets/js/service/area/AreaService'
   import UnidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import { filter } from 'quasar'
   export default {
-    name: "AreaAdd",
+    name: "area-add",
     components: {
       toolbar,
       customPage,
@@ -127,8 +127,8 @@
         localizacaoSearchTerms: '',
         tempLocalizacaoList: [],
         newTalhaoDialog: false,
-        novoTalhao: new Talhao(),
-        area: new Area(),
+        novoTalhao: new talhao(),
+        area: new area(),
         areaData: null,
         UnidadeMedidaOptions: [],
       }
@@ -151,7 +151,7 @@
         })
         this.area.localizacao.value = areaData.localizacao[0].id;
         this.localizacaoSearchTerms = areaData.localizacao[0].endereco + ', ' + areaData.localizacao[0].numero
-        AreaService.parseLocalizacao(areaData.localizacao)
+        areaService.parseLocalizacao(areaData.localizacao)
       },
       deleteTalhao: function(index, talhaoId) {
         this.$q.dialog({
@@ -161,7 +161,7 @@
           color: 'primary'
         }).then(data => {
           this.area.removeTalhao(index)
-          AreaService.deleteTalhao(talhaoId, this.areaData.id).then(response => {
+          areaService.deleteTalhao(talhaoId, this.areaData.id).then(response => {
             this.$q.notify({type: 'positive', message: 'Talhão excluido sucesso'});
           }).catch(error => {
             if (error.response.status === 422){
@@ -180,14 +180,14 @@
         }
       },
       openNovoTalhaoDialog: function(){
-        this.novoTalhao = new Talhao()
+        this.novoTalhao = new talhao()
         this.newTalhaoDialog = true;
       },
       closeNovoTalhaoDialog: function(){
         this.newTalhaoDialog = false;
       },
       searchLocalizacao (terms, done) {
-        AreaService.searchLocalizacao(terms).then(response => {
+        areaService.searchLocalizacao(terms).then(response => {
           this.tempLocalizacaoList = response;
           done(response)
         });
@@ -211,7 +211,7 @@
         if(!this.area.isValid()){
           return;
         }
-        AreaService.updateArea(this.area.getValues()).then(response => {
+        areaService.updateArea(this.area.getValues()).then(response => {
           if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Area Atualizada com sucesso'});
             this.$router.push({name: 'areas'});
@@ -232,7 +232,7 @@
         this.$router.go(-1);
       },
       getArea: function(){
-        AreaService.getAreaByID(this.$route.params.id).then(area => {
+        areaService.getAreaById(this.$route.params.id).then(area => {
           this.areaData = area.data;
           this.fillForm(this.areaData)
         })

@@ -2,22 +2,14 @@
   <custom-page isChild>
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Nova Área">
       <q-btn slot="action_itens" flat dense label="salvar" @click="saveArea()"/>
-
-      <!--<q-tabs slot="tabs" align="justify"  class="shadow-3" color="brand" text-color="brand" underline-color="deep-orange">
-        <q-tab slot="title" label="Informações" />
-        <q-tab slot="title" label="Contatos"/>
-        <q-tab slot="title" label="Localizações"/>
-      </q-tabs>-->
-
     </toolbar>
 
     <form class="q-pa-md">
 
       <div class="row">
-        <div class="col-6">
-          <custom-input-text type="text" label="Nome" :model="area.nome" maxlength="20" style="flex-grow: 1; margin-right: 20px" />
-        </div>
-        <div class="col-6">
+        <div class="col-sm-12 col-lg-6">
+          <custom-input-text type="text" label="Nome" :model="area.nome" maxlength="20"/>
+
           <q-field :error="area.localizacao.errorMessage != null" class="q-mb-sm q-mt-md">
             <q-input v-model="localizacaoSearchTerms" placeholder="Localização">
               <q-autocomplete @search="searchLocalizacao" @selected="selectedLocalizacao" :min-characters="3" value-field="label"/>
@@ -26,14 +18,9 @@
               <div class="q-field-error col" v-if="area.localizacao.errorMessage != null" >{{area.localizacao.errorMessage}}</div>
             </div>
           </q-field>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="col-6">
-          <custom-input-text type="number" label="tamanho" :model="area.tamanho" style="flex-grow: 1; margin-right: 20px" />
-        </div>
-        <div class="col-6">
+          <custom-input-text type="number" label="tamanho" :model="area.tamanho"/>
+
           <q-field :error="area.unidade_medida.errorMessage != null">
             <q-select
               @click.native="buscaUnidadeMedida()"
@@ -45,6 +32,7 @@
               <div class="q-field-error col" v-if="area.unidade_medida.errorMessage != null" >{{area.unidade_medida.errorMessage}}</div>
             </div>
           </q-field>
+
         </div>
       </div>
     </form>
@@ -109,12 +97,12 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
-  import Area from 'assets/js/model/area/Area'
-  import Talhao from 'assets/js/model/area/Talhao'
-  import AreaService from 'assets/js/service/area/AreaService'
-  import UnidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
+  import area from 'assets/js/model/area/Area'
+  import talhao from 'assets/js/model/area/Talhao'
+  import areaService from 'assets/js/service/area/AreaService'
+  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   export default {
-    name: "AreaAdd",
+    name: "area-add",
     components: {
       toolbar,
       customPage,
@@ -124,8 +112,8 @@
       return {
         localizacaoSearchTerms: '',
         newTalhaoDialog: false,
-        novoTalhao: new Talhao(),
-        area: new Area(),
+        novoTalhao: new talhao(),
+        area: new area(),
         UnidadeMedidaOptions: [],
       }
     },
@@ -134,7 +122,7 @@
         if(!this.grupoEconomico.isValid(this)){
           return;
         }
-        AreaService.createTalhao(this.area.getValues()).then(response => {
+        areaService.createTalhao(this.area.getValues()).then(response => {
           this.$q.notify({type: 'positive', message: 'Talhão criado com sucesso'});
           this.closeNovoTalhaoDialog();
         }).catch(error => {
@@ -163,14 +151,14 @@
         }
       },
       openNovoTalhaoDialog: function(){
-        this.novoTalhao = new Talhao()
+        this.novoTalhao = new talhao()
         this.newTalhaoDialog = true;
       },
       closeNovoTalhaoDialog: function(){
         this.newTalhaoDialog = false;
       },
       searchLocalizacao (terms, done) {
-        AreaService.searchLocalizacao(terms).then(response => {
+        areaService.searchLocalizacao(terms).then(response => {
           done(response)
         });
       },
@@ -179,7 +167,7 @@
         this.area.localizacao.errorMessage = null;
       },
       buscaUnidadeMedida: function(){
-        UnidadeMedidaService.options().then(response => {
+        unidadeMedidaService.options().then(response => {
           this.UnidadeMedidaOptions = response.map(unit => {
             return {
               value: unit.id,
@@ -193,7 +181,7 @@
         if(!this.area.isValid()){
           return;
         }
-        AreaService.saveArea(this.area.getValues()).then(response => {
+        areaService.saveArea(this.area.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Area criada com sucesso'});
             this.$router.push({name: 'areas'});

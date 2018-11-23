@@ -10,9 +10,18 @@ export default {
       })
     });
   },
-  listLocalizacoes(pessoaId){
+  listLocalizacoes(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'pessoa/' + pessoaId + '/localizacao' ).then( response => {
+      Vue.prototype.$axios.get( 'pessoa/' + id + '/localizacao' ).then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  listLocalizacoesByProdutor(id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get( 'produtor/' + id + '/localizacao' ).then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
@@ -22,15 +31,6 @@ export default {
   getLocalizacao(pessoaId, localizacaoId){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.get( 'pessoa/' + pessoaId + '/localizacao/' + localizacaoId ).then( response => {
-        resolve(response);
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  },
-  listLocalizacao(pessoaId){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'pessoa/' + pessoaId + '/localizacao' ).then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)

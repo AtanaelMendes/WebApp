@@ -16,7 +16,7 @@ export default {
         localStorage.setItem('auth.token', response.data.access_token)
         localStorage.setItem('auth.refresh_token', response.data.refresh_token)
         window.location.reload()
-        console.log('token atualizado')
+        // console.log('token atualizado')
         // let method = resource.config.method.toLowerCase()
         // return window.axios[method](resource.config.url, resource.config.params)
       } else {

@@ -6,6 +6,12 @@
         <q-btn flat round dense icon="more_vert" >
         </q-btn>
       </template>
+
+      <q-tabs slot="tabs" align="justify"  class="shadow-3" color="brand" text-color="brand" underline-color="deep-orange">
+        <q-tab slot="title" label="Informações" />
+        <q-tab slot="title" label="Contatos"/>
+        <q-tab slot="title" label="Localizações"/>
+      </q-tabs>
     </toolbar>
 
     <q-scroll-area style="width: 100%; height: 100vh;" :thumb-style="{
@@ -122,7 +128,7 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import AreaService from 'assets/js/service/AreaService'
+  import areaService from 'assets/js/service/area/AreaService'
   export default {
     name: "AreaView",
     components: {
@@ -146,7 +152,7 @@
         this.$router.push({name: 'edit_area', params: {id:id}});
       },
       getArea: function(){
-        AreaService.getAreaByID(this.$route.params.id).then(area => {
+        areaService.getAreaById(this.$route.params.id).then(area => {
           this.area = area.data;
         })
       },

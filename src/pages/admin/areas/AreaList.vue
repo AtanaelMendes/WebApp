@@ -24,20 +24,25 @@
       </template>
     </toolbar>
 
-    <q-list highlight inset-separator no-border v-if="areas" link>
-      <q-item v-for="area in areas" :key="area.id" @click.native="selectArea(area.id)">
-        <q-item-side icon="place"/>
-        <q-item-main>
-          <q-item-tile>
-            {{area.complemento}}
-          </q-item-tile>
-          <q-item-tile sublabel>
-            {{area.endereco}} - {{area.cidade}}
-          </q-item-tile>
-        </q-item-main>
-      </q-item>
-    </q-list>
-    <div v-else class="no-result">
+    <template v-if="!isEmptyList">
+      <q-list highlight inset-separator no-border v-if="areas" link>
+
+        <q-item v-for="area in areas" :key="area.id" @click.native="selectArea(area.id)">
+          <q-item-side icon="place"/>
+          <q-item-main>
+            <q-item-tile>
+              {{area.nome}}
+            </q-item-tile>
+            <q-item-tile sublabel>
+              {{area.endereco}} - {{area.cidade}}
+            </q-item-tile>
+          </q-item-main>
+        </q-item>
+
+      </q-list>
+    </template>
+
+    <div v-if="isEmptyList" class="no-result">
       <img src="~/assets/sad_2.svg"/>
       <span>Nenhum resultado encontrado.</span>
     </div>
@@ -50,9 +55,9 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import areaService from 'assets/js/service/AreaService'
+  import areaService from 'assets/js/service/area/AreaService'
   export default {
-    name: "AreasList",
+    name: "area-list",
     components: {
       toolbar,
       customPage
@@ -79,7 +84,7 @@
     methods: {
       list: function(filter) {
         areaService.listAreas(filter).then(response => {
-          // console.log(response.data)
+          console.log(response.data)
           this.areas = response.data;
           this.isEmptyList = this.areas.length === 0;
         });
@@ -101,6 +106,19 @@
   }
 </script>
 <style>
+  .space-end{
+    margin-bottom: 150px;
+  }
+  .no-result{
+    text-align: center;
+    padding-top: 150px;
+  }
+
+  .no-result img{
+    width: 120px;
+    height: auto;
+  }
+
   .no-result span{
     display: block;
     margin-top: 30px;
