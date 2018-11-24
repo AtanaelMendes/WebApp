@@ -17,4 +17,13 @@ export default class{
     value: null,
     errorMessage: null
   };
+
+  getValues(){
+    return{
+      produto_id: this.produto.value.id,
+      tamanho: this.tamanho.value,
+      estimativa: this.estimativa.value,
+      estimativa_unidade_medida_id: this.estimativaUnidadeMedida.value.id
+    }
+  }
 }

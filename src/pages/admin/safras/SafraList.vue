@@ -10,10 +10,10 @@
           <q-item sparse multiline @click.native="viewSafra(safra.id)" v-for="(safra, key) in safras" :key="key">
             <q-item-main >
               <q-item-tile>
-                {{safra.nome}}
-                <q-chip v-if="safra.deleted_at" small square color="red">
-                  INATIVO
-                </q-chip>
+                Período: {{safra.ano_inicio}}/{{safra.ano_inicio}}
+              </q-item-tile>
+              <q-item-tile>
+                Culturas: Soja, Milho
               </q-item-tile>
             </q-item-main>
 
@@ -62,6 +62,7 @@
         listSafras: function() {
           safraService.listSafras().then(response => {
             this.safras = response.data;
+            console.log(this.safras);
             this.isEmptyList = this.safras.length === 0;
           });
         },

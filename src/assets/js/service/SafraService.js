@@ -22,16 +22,17 @@ export default {
       })
     });
   },
-  /*savePessoa(params){
+  saveSafra(params){
+    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('/pessoa', params).then(response => {
+      Vue.prototype.$axios.post('produtor/' + produtor_id + '/safra', params).then(response => {
         resolve(response)
       }).catch(error => {
-        reject(error.response)
+        reject(error)
       })
     });
   },
-  updatePessoa(id, params){
+  /*updatePessoa(id, params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.put('/pessoa/' + id, params).then(response => {
         resolve(response)
