@@ -1,59 +1,57 @@
 import Vue from 'vue'
-const produtorId = localStorage.getItem('account.produtor_id');
 export default {
-  listAreas(filter){
+  listTalhao(areaId, filter){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/' + produtorId + '/area' ).then( response => {
+      Vue.prototype.$axios.get( 'area/' + areaId + '/talhao' ).then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
       })
     });
   },
-  saveArea(params){
+  saveTalhao(areaId, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('/produtor/'+ produtorId + '/area', params).then(response => {
+      Vue.prototype.$axios.post('/area/'+ areaId + '/area', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
       })
     });
   },
-  getAreaById(areaId){
+  getTalhaoById(areaId, talhaoId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('/produtor/' + produtorId + '/area/' + areaId).then(response => {
+      Vue.prototype.$axios.get('area/' + areaId +'/talhao/' + talhaoId).then(response => {
         resolve(response.data)
       }).catch(error => {
         reject(error)
       })
     });
   },
-  updateArea(areaId, params){
+  updateTalhao(areaId, talhaoId, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/produtor/' + produtorId + '/area/' + areaId, params).then(response => {
+      Vue.prototype.$axios.put('/area/' + areaId + '/talhao/' + talhaoId, params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
       })
     });
   },
-  deleteArea(areaId){
+  deleteTalhao(talhaoId, areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/produtor/' + produtorId + '/area/' + areaId).then(response => {
+      Vue.prototype.$axios.delete('/area/' + areaId + '/talhao/' + talhaoId).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
       })
     });
   },
-  restoreArea(areaId){
+  restoreTalhao(talhaoId, areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/produtor/' + this.produtorId + '/area/' + areaId + '/restore').then(response => {
+      Vue.prototype.$axios.post('/area/' + areaId + '/talhao/' + talhaoId + '/restore').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
       })
     });
   },
-};
-
+}

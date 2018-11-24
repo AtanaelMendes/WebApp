@@ -24,23 +24,25 @@
       </template>
     </toolbar>
 
-    <template v-if="!isEmptyList">
-      <q-list highlight inset-separator no-border v-if="areas" link>
+    <div v-if="!isEmptyList" class="space-end row">
+      <div class="col-12">
+        <q-list highlight no-border sparse>
 
-        <q-item v-for="area in areas" :key="area.id" @click.native="selectArea(area.id)">
-          <q-item-side icon="place"/>
-          <q-item-main>
-            <q-item-tile>
-              {{area.nome}}
-            </q-item-tile>
-            <q-item-tile sublabel>
-              {{area.endereco}} - {{area.cidade}}
-            </q-item-tile>
-          </q-item-main>
-        </q-item>
+          <q-item separator multiline link v-for="area in areas" :key="area.id" @click.native="selectArea(area.id)">
+            <q-item-main>
+              <q-item-tile>
+                {{area.nome}}
+              </q-item-tile>
+              <q-item-tile sublabel>
+                {{area.localizacao.bairro}},&nbsp{{area.localizacao.cidade.nome}}-{{area.localizacao.cidade.estado.sigla}}
+              </q-item-tile>
+            </q-item-main>
+          </q-item>
 
-      </q-list>
-    </template>
+        </q-list>
+      </div>
+    </div>
+
 
     <div v-if="isEmptyList" class="no-result">
       <img src="~/assets/sad_2.svg"/>
@@ -75,7 +77,6 @@
     watch: {
       filter: {
         handler: function(val, oldval) {
-          // var filter = {type: val.type, email:(val.email.length > 2 ? val.email : '')};
           // this.list(filter)
         },
         deep: true,
@@ -84,7 +85,6 @@
     methods: {
       list: function(filter) {
         areaService.listAreas(filter).then(response => {
-          console.log(response.data)
           this.areas = response.data;
           this.isEmptyList = this.areas.length === 0;
         });
@@ -99,9 +99,9 @@
     },
     mounted () {
       this.list(this.filter);
-      // this.$root.$on('refreshPessoaList', () => {
-      //
-      // });
+      this.$root.$on('refreshAreaList', () => {
+        this.list(this.filter);
+      });
     },
   }
 </script>

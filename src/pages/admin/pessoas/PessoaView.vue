@@ -2,21 +2,21 @@
   <custom-page isChild noScroll style="background: #fdfdfd">
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction">
 
-      <template slot="action_itens" v-if="pessoaData">
-        <q-btn flat round dense icon="edit" @click.native="editUser(pessoaData.id)"/>
-        <q-btn flat round dense icon="more_vert" >
-          <q-popover anchor="bottom left">
-            <q-list link>
-              <q-item dense @click.native="disablePessoa(pessoaData.id)" v-if="!pessoaData.deleted_at">
-                <q-item-main label="Inativar pessoaData"  />
-              </q-item>
-              <q-item dense @click.native="enablePessoa(pessoaData.id)" v-if="pessoaData.deleted_at">
-                <q-item-main label="Ativar pessoa"  />
-              </q-item>
-            </q-list>
-          </q-popover>
-        </q-btn>
-      </template>
+      <!--<template slot="action_itens" v-if="pessoaData">-->
+        <!--<q-btn flat round dense icon="edit" @click.native="editUser(pessoaData.id)"/>-->
+        <!--<q-btn flat round dense icon="more_vert" >-->
+          <!--<q-popover anchor="bottom left">-->
+            <!--<q-list link>-->
+              <!--<q-item dense @click.native="disablePessoa(pessoaData.id)" v-if="!pessoaData.deleted_at">-->
+                <!--<q-item-main label="Inativar pessoaData"  />-->
+              <!--</q-item>-->
+              <!--<q-item dense @click.native="enablePessoa(pessoaData.id)" v-if="pessoaData.deleted_at">-->
+                <!--<q-item-main label="Ativar pessoa"  />-->
+              <!--</q-item>-->
+            <!--</q-list>-->
+          <!--</q-popover>-->
+        <!--</q-btn>-->
+      <!--</template>-->
 
       <q-tabs slot="tabs" v-model="selectedTab" align="justify"  class="shadow-3" color="brand" text-color="brand" underline-color="deep-orange">
         <q-tab slot="title" name="tab-info" label="Informações" />
@@ -116,7 +116,6 @@
     },
     data(){
       return{
-        pessoaData: null,
         selectedTab: 'tab-info',
       }
     },
