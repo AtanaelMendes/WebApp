@@ -106,7 +106,8 @@ module.exports = function (ctx) {
         'QChipsInput',
         'QBtnToggle',
         'QJumbotron',
-        'QDialog'
+        'QDialog',
+        'QSlider'
       ],
       directives: [
         'Ripple',

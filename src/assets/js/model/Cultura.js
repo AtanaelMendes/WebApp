@@ -1,22 +1,20 @@
 import { helpers} from 'vuelidate/lib/validators'
 
 export default class{
-  inicio = {
+  produto = {
     value: null,
     errorMessage: null
   };
-  fim = {
+  tamanho = {
     value: null,
     errorMessage: null
   };
-  area = {
+  estimativa = {
     value: null,
     errorMessage: null
   };
-  talhao = {
+  estimativaUnidadeMedida = {
     value: null,
     errorMessage: null
   };
-
-  culturas = []
 }
