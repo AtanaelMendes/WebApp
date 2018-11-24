@@ -92,7 +92,6 @@
     },
     watch: {
       cidadeTerms: function (val, old) {
-        console.log(val)
         this.setCidade(val)
       }
     },
@@ -108,8 +107,6 @@
         this.localizacao.complemento.value = data.complemento
         this.localizacao.bairro.value = data.bairro
         this.localizacao.cep.value = data.cep
-        console.log(data)
-
       },
       getLocalizacao: function(){
         let pessoaId = this.$route.params.id

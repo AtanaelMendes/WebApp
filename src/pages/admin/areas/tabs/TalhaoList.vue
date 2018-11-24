@@ -6,53 +6,41 @@
         width: '8px',
         opacity: 1}">
 
-    <div class="row q-ma-sm gutter-xs space-end">
-      <div class="col-12">
-
+    <div v-if="!isEmptyList" class="row q-ma-sm gutter-xs space-end">
+      <div class="col-6" v-for="talhao in talhoes" :key="talhao.id">
         <q-card>
-          <q-card-title>Talhão fundo 1</q-card-title>
+          <q-card-title>
+            {{talhao.nome}}
+            <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
+              <q-popover>
+                <q-list class="no-border">
+                  <q-item v-close-overlay>
+                    <q-item-main @click.native="updateTalhao(talhao.id)">
+                      <q-btn dense flat label="editar"/>
+                    </q-item-main>
+                  </q-item>
+                  <q-item v-close-overlay>
+                    <q-item-main @click.native="deleteTalhao(talhao.id)">
+                      <q-btn dense flat label="apagar"/>
+                    </q-item-main>
+                  </q-item>
+                </q-list>
+              </q-popover>
+            </q-btn>
+          </q-card-title>
           <q-card-separator/>
-
           <q-card-main>
             <div class="row">
-              <div class="col-4">
-                <span class="text-faded">Safra:</span>&nbsp<span class="q-body-1">2019</span>
-              </div>
-              <div class="col-4">
-                <span class="q-body-2">Soja</span>
-              </div>
-              <div class="col-4">
-                <div class="row">
-                  <span class="q-subtitle text-faded">Início:</span>&nbsp<span class="q-body-1">10 Novembro 2018</span>
-                </div>
-                <div class="row">
-                  <span class="q-subtitle text-faded">colheita:</span>&nbsp<span class="q-body-1">15 Janeiro 2019</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div>
-                <span class="text-faded">Estimativa:</span>&nbsp<span class="q-body-1">50 sacos, Hectare</span>
-              </div>
+              <div>{{talhao.tamanho}},&nbsp{{talhao.unidade.nome}}</div>
             </div>
           </q-card-main>
         </q-card>
-
       </div>
     </div>
-
-    <!--<div v-if="!isEmptyList" class="q-ma-lg space-end">-->
-      <!--<div class="row">-->
-        <!--<div class="col-12">-->
-          <!--Quase lá-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<div v-if="isEmptyList" class="no-result">-->
-      <!--<img src="~/assets/sad_2.svg"/>-->
-      <!--<span>Nenhum resultado encontrado.</span>-->
-    <!--</div>-->
+    <div v-if="isEmptyList" class="no-result">
+      <img src="~/assets/sad_2.svg"/>
+      <span>Nenhum resultado encontrado.</span>
+    </div>
 
   </q-scroll-area>
 </template>
@@ -73,12 +61,18 @@
       }
     },
     methods: {
+      updateTalhao: function(talhaoId){
+        let areaId = this.$route.params.id
+        this.$router.push({name: 'edit_talhao', params: {id:areaId, talhaoId: talhaoId}});
+      },
+      deleteTalhao: function(){},
       addtalhao: function(id){
         this.$router.push({name: 'add_talhao', params: {id:id}});
       },
       listTalhao: function(id){
         talhaoService.listTalhao(id).then(talhoes => {
-          this.talhoes = talhoes;
+          this.talhoes = talhoes.data;
+          this.isEmptyList = this.talhoes.length === 0;
         })
       },
     },
@@ -88,9 +82,6 @@
   }
 </script>
 <style>
-  .title-color{
-    color: #005f5f;
-  }
   .space-end{
     margin-bottom: 150px;
   }

@@ -94,6 +94,7 @@
       },
       addtalhao: function(){
         this.$router.push({name:'add_talhao'});
+        // this.$router.push({name: 'view_area', params: {id:id}});
       },
       backAction: function () {
         // this.$router.go(-1);

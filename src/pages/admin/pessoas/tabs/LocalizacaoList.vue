@@ -104,7 +104,7 @@
     },
     watch: {
       '$route' (to, from) {
-        this.listLocalizacao(this.$route.params.id)
+        this.listLocalizacoes(this.$route.params.id)
       }
     },
     methods:{
@@ -120,13 +120,13 @@
         }).then(data => {
           localizacaoService.deleteLocalizacao(this.$route.params.id, localizacaoId).then(response => {
             this.$q.notify({type: 'positive', message: 'Endereço excluido com sucesso'})
-            this.listLocalizacao(this.$route.params.id)
+            this.listLocalizacoes(this.$route.params.id)
           });
         });
 
       },
-      listLocalizacao: function(pessoaId) {
-        localizacaoService.listLocalizacao(pessoaId).then(response => {
+      listLocalizacoes: function(pessoaId) {
+        localizacaoService.listLocalizacoes(pessoaId).then(response => {
           this.localizacoes = response.data
           this.isEmptyList = this.localizacoes.length === 0
         });
@@ -136,7 +136,7 @@
       }
     },
     mounted () {
-      this.listLocalizacao(this.$route.params.id);
+      this.listLocalizacoes(this.$route.params.id);
     }
   }
 </script>
