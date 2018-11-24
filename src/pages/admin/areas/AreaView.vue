@@ -1,170 +1,113 @@
 <template>
-  <custom-page isChild>
-    <toolbar slot="toolbar" navigation_type="noneAndBack" @navigation_clicked="backAction">
-      <template slot="action_itens" v-if="area">
-        <q-btn flat round dense icon="edit" @click.native="editArea(area.id)"/>
-        <q-btn flat round dense icon="more_vert" >
-        </q-btn>
-      </template>
+  <custom-page isChild noScroll style="background: #fdfdfd">
+    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction">
+      <!--<template slot="action_itens" v-if="area">-->
+        <!--<q-btn flat round dense icon="edit" @click.native="editArea(area.id)"/>-->
+        <!--<q-btn flat round dense icon="more_vert" >-->
+        <!--</q-btn>-->
+      <!--</template>-->
 
-      <q-tabs slot="tabs" align="justify"  class="shadow-3" color="brand" text-color="brand" underline-color="deep-orange">
-        <q-tab slot="title" label="Informações" />
-        <q-tab slot="title" label="Contatos"/>
-        <q-tab slot="title" label="Localizações"/>
+      <q-tabs slot="tabs" v-model="selectedTab" align="justify"  class="shadow-3" color="brand" text-color="brand" underline-color="deep-orange">
+        <q-tab slot="title" name="tab-talhoes" label="Talhões"/>
+        <q-tab slot="title" name="tab-info" label="Informações"/>
       </q-tabs>
     </toolbar>
 
-    <q-scroll-area style="width: 100%; height: 100vh;" :thumb-style="{
-        right: '4px',
-        borderRadius: '5px',
-        background: '#dfdfdf',
-        width: '8px',
-        opacity: 1}">
+    <swipe ref="mySwiper" class="my-swipe" :continuous="false" :auto="0" :showIndicators="false" :disabled="true">
 
-      <div v-if="area" class="row q-ma-lg" style="margin-bottom: 100px">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-          <q-list no-border>
-            <q-list-header>Informações da área</q-list-header>
+      <swipe-item>
+        <dashboard></dashboard>
+      </swipe-item>
 
-            <q-item>
-              <q-item-main>
-                {{area.nome}}
-              </q-item-main>
-            </q-item>
+      <swipe-item>
+        <area-info></area-info>
+      </swipe-item>
 
-            <q-item>
-              <q-item-main>
-                <q-item-tile sublabel>
-                  Tamanho
-                </q-item-tile>
-                <q-item-tile>
-                  {{area.tamanho}}, {{area.unidadeMedida[0].simbolo}}
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile sublabel>
-                  Endereço
-                </q-item-tile>
-                <q-item-tile>
-                  {{area.localizacao[0].endereco}}
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile sublabel>
-                  numero
-                </q-item-tile>
-                <q-item-tile>
-                  {{area.localizacao[0].numero}}
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile sublabel>
-                  Bairro
-                </q-item-tile>
-                <q-item-tile>
-                  {{area.localizacao[0].bairro}}
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile sublabel>
-                  Cidade
-                </q-item-tile>
-                <q-item-tile>
-                  {{area.localizacao[0].cidade}}
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile sublabel>
-                  CEP
-                </q-item-tile>
-                <q-item-tile>
-                  {{area.localizacao[0].cep}}
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-            <q-item>
-              <q-item-main>
-                <q-item-tile sublabel>
-                  Estado
-                </q-item-tile>
-                <q-item-tile>
-                  {{area.localizacao[0].estado}}
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-
-          </q-list>
-        </div>
-
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-          <q-list-header>Talhões</q-list-header>
-          <q-list class="q-pa-sm">
-            <q-chip class="q-ma-xs" v-for="(talhao, index) in area.talhoes" :key="index" color="primary">{{talhao.nome}}</q-chip>
-          </q-list>
-        </div>
-      </div>
-    </q-scroll-area>
-
-
+    </swipe>
+    <transition
+      appear
+      slot="fab-container"
+      enter-active-class="animated zoomIn faster"
+      leave-active-class="animated zoomOut faster">
+      <q-btn
+        icon="add"
+        size="20px"
+        key="talhao"
+        @click="addtalhao"
+        round color="deep-orange"
+        v-if="selectedTab == 'tab-talhoes' "
+      />
+      <q-btn
+        icon="edit"
+        size="20px"
+        key="info"
+        @click="editArea"
+        round color="deep-orange"
+        v-if="selectedTab == 'tab-info' "
+      />
+    </transition>
   </custom-page>
 </template>
 
 <script>
+  require('vue-swipe/dist/vue-swipe.css');
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import areaService from 'assets/js/service/area/AreaService'
+  import dashboard from 'pages/admin/areas/tabs/TalhaoList'
+  import areaInfo from 'pages/admin/areas/tabs/AreaInfo'
+  import { Swipe, SwipeItem } from 'vue-swipe';
   export default {
-    name: "AreaView",
+    name: "area-view",
     components: {
+      areaInfo,
+      dashboard,
       toolbar,
       customPage,
+      Swipe,
+      SwipeItem
     },
     watch: {
       '$route' (to, from) {
-        this.getArea();
-        this.selectedTab ='tab-info';
+        this.selectedTab ='tab-talhoes';
+      },
+      selectedTab: function (value) {
+        let index;
+        switch (value) {
+          case 'tab-talhoes':
+            index = 0;
+            break;
+          case 'tab-info':
+            index = 1;
+            break;
+        }
+        this.$refs.mySwiper.goto(index)
       }
     },
     data(){
       return{
-        area: null,
-        selectedTab: 'tab-info',
+        selectedTab: 'tab-talhoes',
       }
     },
     methods: {
-      editArea: function(id){
-        this.$router.push({name: 'edit_area', params: {id:id}});
+      editArea: function(){
+        this.$router.push({name:'edit_area'});
       },
-      getArea: function(){
-        areaService.getAreaById(this.$route.params.id).then(area => {
-          this.area = area.data;
-        })
+      addtalhao: function(){
+        this.$router.push({name:'add_talhao'});
       },
       backAction: function () {
-        this.$router.go(-1);
+        // this.$router.go(-1);
+        this.$router.push({name:'areas'})
       }
     },
     mounted(){
-      this.getArea();
+
     }
   }
 </script>
 
 <style>
+  .my-swipe {
+    height: 100%;
+  }
 </style>
