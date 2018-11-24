@@ -2,6 +2,7 @@
   <q-field :error="model.errorMessage != null" class="q-mb-sm">
     <q-input
       v-mask="mask"
+      :maxlength="maxlength"
       v-model="model.value"
       :autofocus="autofocus"
       :placeholder="placeholder"
@@ -24,6 +25,7 @@
       model: Object,
       type: String,
       placeholder: String,
+      maxlength: String,
       label: String,
       mask: String,
       autofocus: String,
