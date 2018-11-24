@@ -8,7 +8,10 @@
 
     <div class="row gutter-xs">
       <div class="col-12">
-        <h1>AREA INFO</h1>
+        <div class="no-result">
+          <img src="~/assets/sad_2.svg"/>
+          <span>Nenhum resultado encontrado.</span>
+        </div>
       </div>
     </div>
 
@@ -45,9 +48,6 @@
   }
 </script>
 <style>
-  .title-color{
-    color: #005f5f;
-  }
   .space-end{
     margin-bottom: 150px;
   }

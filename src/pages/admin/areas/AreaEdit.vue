@@ -124,89 +124,10 @@
     },
     data(){
       return {
-        localizacaoSearchTerms: '',
-        tempLocalizacaoList: [],
-        newTalhaoDialog: false,
-        novoTalhao: new talhao(),
         area: new area(),
-        areaData: null,
-        UnidadeMedidaOptions: [],
       }
     },
     methods:{
-      fillForm: function(areaData){
-        let vm = this
-        this.area.nome.value = areaData.nome
-        this.area.tamanho.value = areaData.tamanho
-        areaData.talhoes.forEach(function (talhao) {
-          vm.area.talhoes.push({nome: {value: talhao.nome}, id: {value: talhao.id}})
-        })
-        this.UnidadeMedidaOptions = areaData.unidadeMedida.map(unit => {
-          vm.area.unidade_medida.value = unit.id
-          return {
-            value: unit.id,
-            label: unit.simbolo,
-            sublabel: unit.descricao
-          }
-        })
-        this.area.localizacao.value = areaData.localizacao[0].id;
-        this.localizacaoSearchTerms = areaData.localizacao[0].endereco + ', ' + areaData.localizacao[0].numero
-        areaService.parseLocalizacao(areaData.localizacao)
-      },
-      deleteTalhao: function(index, talhaoId) {
-        this.$q.dialog({
-          title: 'Atenção',
-          message: 'Realmente deseja apagar esse talhão?',
-          ok: 'Sim', cancel: 'Não',
-          color: 'primary'
-        }).then(data => {
-          this.area.removeTalhao(index)
-          areaService.deleteTalhao(talhaoId, this.areaData.id).then(response => {
-            this.$q.notify({type: 'positive', message: 'Talhão excluido sucesso'});
-          }).catch(error => {
-            if (error.response.status === 422){
-              this.$q.dialog({title:'Ops', message: 'Não foi possível excluir o talhão'})
-            }
-          })
-        });
-      },
-      newTalhao: function(talhao) {
-        if(talhao.isValid()){
-          this.area.addTalhao(talhao).then(value =>{
-            this.closeNovoTalhaoDialog()
-          }).catch(value =>{
-            this.$q.dialog({title:'Ops', message: 'Este nome já foi adicionado'})
-          })
-        }
-      },
-      openNovoTalhaoDialog: function(){
-        this.novoTalhao = new talhao()
-        this.newTalhaoDialog = true;
-      },
-      closeNovoTalhaoDialog: function(){
-        this.newTalhaoDialog = false;
-      },
-      searchLocalizacao (terms, done) {
-        areaService.searchLocalizacao(terms).then(response => {
-          this.tempLocalizacaoList = response;
-          done(response)
-        });
-      },
-      selectedLocalizacao (item) {
-        this.area.localizacao.value = item.id;
-        this.area.localizacao.errorMessage = null;
-      },
-      buscaUnidadeMedida: function(){
-        UnidadeMedidaService.options().then(response => {
-          this.UnidadeMedidaOptions = response.map(unit => {
-            return {
-              value: unit.id,
-              label: unit.simbolo,
-              sublabel: unit.descricao
-            }
-          })
-        })
-      },
       updateArea: function(){
         if(!this.area.isValid()){
           return;
@@ -219,19 +140,10 @@
           }
         });
       },
-      checkLocalizacaoInput(){
-        let result = filter(this.localizacaoSearchTerms, {field: 'label', list: this.tempLocalizacaoList});
-        if(result.length === 0){
-          this.localizacaoSearchTerms = "";
-          this.area.localizacao.value = null;
-        }else{
-          this.selectedLocalizacao(result[0]);
-        }
-      },
       backAction: function () {
         this.$router.go(-1);
       },
-      getArea: function(){
+      getAreaById: function(){
         areaService.getAreaById(this.$route.params.id).then(area => {
           this.areaData = area.data;
           this.fillForm(this.areaData)
@@ -239,7 +151,7 @@
       },
     },
     mounted(){
-      this.getArea();
+      this.getAreaById();
     }
   }
 </script>
