@@ -41,11 +41,11 @@
 
             <div class="row">
               <div class="col-6">Área ocupada:</div>
-              <div class="col-6 text-right">{{tamanhoRestante}}</div>
+              <div class="col-6 text-right">{{porcentagemAreaOcupada}}%</div>
             </div>
           </q-list-header>
           <q-item dense>
-            <q-progress :percentage="50" style="height: 16px" stripe animate color="blue" />
+            <q-progress :percentage="porcentagemAreaOcupada" style="height: 16px" stripe animate color="blue" />
           </q-item>
           <q-list-header>Culturas</q-list-header>
 
@@ -96,11 +96,40 @@
               </div>
             </q-field>
 
-
-            <q-field  class="q-mt-sm" label="Tamanho" label-width="12">
+            <q-field :error="culturaTemp.estimativa.errorMessage != null || culturaTemp.estimativaUnidadeMedida.errorMessage != null" class="q-mb-sm">
               <q-item class="q-px-none">
                 <q-item-main>
-                    <q-slider v-model="culturaTemp.tamanho.value" :min="1" v-if="safra.talhao.value != null" :max="parseInt(safra.talhao.value.tamanho)"
+                  <q-input v-model="culturaTemp.estimativa.value" placeholder="Estimativa" v-on:input="culturaTemp.estimativa.errorMessage = null" />
+                </q-item-main>
+                <q-item-side >
+                  <q-select float-label="Und. de Medida" v-model="culturaTemp.estimativaUnidadeMedida.value"
+                            :options="unidadesMedida" style="width: 150px" class="unidade-medida-select" @input="culturaTemp.estimativaUnidadeMedida.errorMessage = null"/>
+                </q-item-side>
+              </q-item>
+              <div class="q-field-bottom">
+                <div class="q-field-error" v-if="culturaTemp.estimativa.errorMessage != null" >{{culturaTemp.estimativa.errorMessage}}</div>
+                <div class="q-field-error" v-if="culturaTemp.estimativaUnidadeMedida.errorMessage != null" >{{culturaTemp.estimativaUnidadeMedida.errorMessage}}</div>
+              </div>
+            </q-field>
+
+            <q-field>
+              <q-item class="q-px-none">
+                <q-item-main>
+                  <q-item-tile label>Plantar em toda área</q-item-tile>
+                </q-item-main>
+                <q-item-side right>
+                  <q-toggle v-model="culturaTempAreaTotal" />
+                </q-item-side>
+              </q-item>
+            </q-field>
+
+
+            <q-field  class="q-mt-sm" label="Tamanho" label-width="12" v-if="!culturaTempAreaTotal">
+              <q-item class="q-px-none">
+                <q-item-main>
+                    <q-slider v-model="culturaTemp.tamanho.value"
+                              :min="1" v-if="safra.talhao.value != null"
+                              :max="areaLivre"
                               label :label-value="`${culturaTemp.tamanho.value} ha`" />
                 </q-item-main>
 
@@ -110,21 +139,7 @@
               </q-item>
             </q-field>
 
-            <q-field :error="culturaTemp.estimativa.errorMessage != null || culturaTemp.estimativaUnidadeMedida.errorMessage != null" class="q-mb-sm">
-              <q-item class="q-px-none">
-                <q-item-main>
-                  <q-input v-model="culturaTemp.estimativa.value" placeholder="Estimativa" />
-                </q-item-main>
-                <q-item-side >
-                  <q-select float-label="Unidade de Medida" v-model="culturaTemp.estimativaUnidadeMedida.value" :options="unidadesMedida" style="width: 150px" class="q-pt-sm"/>
-                </q-item-side>
 
-                <div class="q-field-bottom row no-wrap" style="height: 22px">
-                  <div class="q-field-error col" v-if="culturaTemp.estimativa.errorMessage != null" >{{culturaTemp.estimativa.errorMessage}}</div>
-                  <div class="q-field-error col" v-if="culturaTemp.estimativaUnidadeMedida.errorMessage != null" >{{culturaTemp.estimativaUnidadeMedida.errorMessage}}</div>
-                </div>
-              </q-item>
-            </q-field>
 
 
             <q-btn
@@ -179,6 +194,7 @@
         areas: [],
         talhoes: [],
         culturaTemp: new Cultura(),
+        culturaTempAreaTotal: true,
         tempProdutoList: [],
         searchProdutosTerms: "",
         openedCulturaModal: false,
@@ -189,15 +205,26 @@
       /*tamanhoPercentual: function(){
         return (this.culturaTemp.tamanho.value / this.safra.talhao.value.tamanho * 100) | 0;
       }*/
-      tamanhoRestante: function(){
-        //return this.safra.talhao.value.;
-        return '12%'
+      porcentagemAreaOcupada: function(){
+        //return this.safra.talhao.value.tamanho;
+        if(!this.safra.talhao.value){
+          return;
+        }
+
+        let areaTotal = parseInt(this.safra.talhao.value.tamanho);
+        /*let restante = areaTotal - this.getCulturasTamanhoTotal();
+        return areaTotal / this.getCulturasTamanhoTotal();*/
+        return this.getCulturasTamanhoTotal() / areaTotal * 100;
+      },
+      areaLivre: function(){
+        let areaTotal = parseInt(this.safra.talhao.value.tamanho);
+        return areaTotal - this.getCulturasTamanhoTotal();
       }
     },
     methods:{
       getCulturasTamanhoTotal: function(){
         let tamanho = 0;
-        for(cultura of this.safra.culturas){
+        for(var cultura of this.safra.culturas){
           tamanho += cultura.tamanho.value;
         }
         return tamanho;
@@ -297,15 +324,39 @@
 
       },
       openAddCulturaModal(){
+        if(this.areaLivre === 0){
+          this.$q.dialog({
+            title: 'Atenção',
+            message: 'Não há mais espaço para o plantio de outra cultura.',
+            color: 'primary'
+          });
+          return;
+        }
+
         this.culturaTemp = new Cultura();
+        this.culturaTemp.tamanho.value = this.areaLivre;
         this.openedCulturaModal = true;
       },
       closeCulturaModal(){
+        this.tempProdutoList= [];
+        this.searchProdutosTerms= "";
         this.openedCulturaModal = false;
       },
       saveCultura(culturaTemp){
-        this.safra.culturas.push(culturaTemp);
-        this.closeCulturaModal();
+        if(culturaTemp.isValid()){
+          this.safra.addCultura(culturaTemp);
+          this.closeCulturaModal();
+        }
+      },
+      removeCultura(index){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar essa cultura?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          this.safra.removeCultura(index);
+        });
       },
       goToNextStep(){
         if(!this.safra.isValid()){
@@ -348,5 +399,9 @@
     color: #ffb500;
     font-size: 20px;
     margin-right: 6px;
+  }
+
+  .unidade-medida-select{
+    padding-top: 8px !important;
   }
 </style>

@@ -17,8 +17,21 @@ export default class{
     value: null,
     errorMessage: null
   };
-
   culturas = [];
+
+  constructor(){
+
+  }
+
+  addCultura(cultura){
+    this.culturas.push(cultura);
+  };
+  editCultura(cultura, index){
+    this.culturas[index] = cultura;
+  };
+  removeCultura(index){
+    this.culturas.splice(index, 1);
+  };
 
   isValid(){
     let hasError = false;

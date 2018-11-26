@@ -18,6 +18,34 @@ export default class{
     errorMessage: null
   };
 
+  constructor(){
+
+  }
+
+  isValid(){
+    let hasError = false;
+    if(!helpers.req(this.produto.value)){
+      this.produto.errorMessage = "Selecione um produto.";
+      hasError = true;
+    }
+
+    if(!helpers.req(this.tamanho.value)){
+      this.tamanho.errorMessage = "Digite um tamanho.";
+      hasError = true;
+    }
+
+    if (!helpers.req(this.estimativa.value)) {
+      this.estimativa.errorMessage = "Digite uma estimativa.";
+      hasError = true;
+    }
+
+    if (!helpers.req(this.estimativaUnidadeMedida.value)) {
+      this.estimativaUnidadeMedida.errorMessage = "Selecione a unidade de medida da estimativa.";
+      hasError = true;
+    }
+    return !hasError;
+  };
+
   getValues(){
     return{
       produto_id: this.produto.value.id,
