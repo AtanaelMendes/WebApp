@@ -65,7 +65,6 @@
         listSafras: function() {
           safraService.listSafras().then(response => {
             this.safras = response.data;
-            console.log(this.safras);
             this.isEmptyList = this.safras.length === 0;
           });
         },

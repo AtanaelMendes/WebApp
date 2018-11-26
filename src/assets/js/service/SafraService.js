@@ -3,15 +3,16 @@ import { Loading, Dialog } from 'quasar'
 import AgroUtils from 'assets/js/AgroUtils'
 
 export default {
-  /*getPessoa(id){
+  getSafra(id){
+    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('/pessoa/' + id).then(response => {
-        resolve(response.data)
+      Vue.prototype.$axios.get('produtor/' + produtor_id + '/safra/' + id).then( response => {
+        resolve(response)
       }).catch(error => {
         reject(error)
       })
     });
-  },*/
+  },
   listSafras(){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
@@ -32,6 +33,26 @@ export default {
       })
     });
   },
+  deleteSafra(id){
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.delete('produtor/' + produtor_id + '/safra/' + id).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  restoreSafra(id){
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('produtor/' + produtor_id + '/safra/' + id + '/restore').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  }
   /*updatePessoa(id, params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.put('/pessoa/' + id, params).then(response => {
