@@ -1,9 +1,9 @@
 <template>
   <q-field :error="model.errorMessage != null" class="q-mb-sm">
     <q-select
+      :options="options"
       :float-label="label"
       v-model="model.value"
-      :options="options"
       v-on:input="clearErrorMessage()"
     />
     <div class="q-field-bottom row no-wrap" style="height: 22px">
@@ -12,7 +12,6 @@
   </q-field>
 </template>
 <script>
-
   import { filter } from 'quasar'
   export default {
     name: "unidade-area-select",
