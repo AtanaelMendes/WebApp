@@ -99,6 +99,8 @@
         });
       },
       updateLocalizacao: function(){
+        let pessoaId = this.$route.params.id
+        let localizacaoId = this.$route.params.localizacaoId
         if(this.localizacao.isFiscal.value == false && this.localizacao.isCobranca.value == false){
           this.typeError = 'Escolha ao menos um tipo de endereço'
           return
@@ -108,8 +110,8 @@
         if(!this.localizacao.isValid()){
           return
         }
-        localizacaoService.updateLocalizacao(this.$route.params.id, this.localizacao.getValues()).then( response => {
-          this.$q.notify({type: 'positive', message: 'Contato criado com sucesso'})
+        localizacaoService.updateLocalizacao(pessoaId, localizacaoId, this.localizacao.getValues()).then( response => {
+          this.$q.notify({type: 'positive', message: 'Localizacão atualizada com sucesso'})
           this.$router.go(-1);
         }).catch(error => {
           this.$q.notify({type: 'negative', message: error})

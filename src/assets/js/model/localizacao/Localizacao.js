@@ -1,19 +1,12 @@
 import { helpers} from 'vuelidate/lib/validators'
 export default class{
-  pessoaId = {
-    value: null,
-    errorMessage: null
-  };
   nome = {
     value: null,
     errorMessage: null
   };
   cidadeId = {
     value: null,
-    errorMessage: null,
-    id: null,
-    label: null,
-    sublabel: null
+    errorMessage: null
   };
   endereco = {
     value: null,
@@ -45,7 +38,6 @@ export default class{
   };
   constructor(localizacao){
     if(localizacao !== undefined){
-      this.pessoaId.value = localizacao.pessoaId.value;
       this.cidadeId.value = localizacao.cidadeId.value;
       this.endereco.value = localizacao.endereco.value;
       this.numero.value = localizacao.numero.value;
@@ -82,7 +74,6 @@ export default class{
   };
   getValues(){
     return{
-      pessoa_id: this.pessoaId.value,
       cidade_id: this.cidadeId.value,
       endereco: this.endereco.value,
       numero: this.numero.value,

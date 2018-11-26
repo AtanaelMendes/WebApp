@@ -1,6 +1,7 @@
 <template>
   <q-field :error="model.errorMessage != null" class="q-mb-sm">
-    <q-input v-on:input="clearErrorMessage()" :float-label="label" v-model="model.label" @blur="checkCidadeInput">
+    <!--<q-input v-on:input="clearErrorMessage()" :float-label="label" v-model="model.value" @blur="checkCidadeInput">-->
+    <q-input v-on:input="clearErrorMessage()" :float-label="label" v-model="cidadeTerms" @blur="checkCidadeInput">
       <q-autocomplete @search="search" @selected="selected" :min-characters="3" :debounce="500" value-field="label"/>
     </q-input>
     <div class="q-field-bottom row no-wrap" style="height: 22px">
@@ -15,16 +16,11 @@
     name: "cidade-autocomplete",
     props: {
       label: String,
-      model: {
-        value: null,
-        errorMessage: null,
-        id: null,
-        label: null,
-        sublabel: null
-      }
+      model: Object
     },
     data: function () {
       return {
+        cidadeTerms: '',
         tempCidadeList: [],
         clearErrorMessage: function () {
           this.model.errorMessage = null
@@ -33,10 +29,16 @@
     },
     methods: {
       checkCidadeInput(){
-        let result = this.tempCidadeList.filter(item => ('' + item['label']).toLowerCase() === this.model.label.toLowerCase());
+        //console.log(this.model);
+        let result = this.tempCidadeList.filter(item => ('' + item['label']).toLowerCase() === this.cidadeTerms.toLowerCase());
         if(result.length === 0){
-          this.model.label = '';
-          this.$emit('input', null)
+          console.log("nada")
+          this.cidadeTerms = '';
+          this.$emit('input', '')
+          this.clearErrorMessage();
+        }else{
+          console.log("encontrou")
+          this.$emit('input', result[0])
         }
       },
       search (terms, done) {
