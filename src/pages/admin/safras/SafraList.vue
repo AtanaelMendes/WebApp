@@ -10,10 +10,13 @@
           <q-item sparse multiline @click.native="viewSafra(safra.id)" v-for="(safra, key) in safras" :key="key">
             <q-item-main >
               <q-item-tile>
-                Período: {{safra.ano_inicio}}/{{safra.ano_inicio}}
+                Período: {{safra.inicio}}/{{safra.fim}}
               </q-item-tile>
               <q-item-tile>
-                Culturas: Soja, Milho
+                Culturas: {{safra.culturas.join(', ')}}
+              </q-item-tile>
+              <q-item-tile>
+                Area: {{safra.area}} / Talhao: {{safra.talhao}}
               </q-item-tile>
             </q-item-main>
 

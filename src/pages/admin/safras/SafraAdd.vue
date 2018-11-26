@@ -45,7 +45,7 @@
             </div>
           </q-list-header>
           <q-item dense>
-            <q-progress :percentage="porcentagemAreaOcupada" style="height: 16px" stripe animate color="blue" />
+            <q-progress :percentage="porcentagemAreaOcupada" style="height: 10px; border-radius: 5px;" color="deep-orange" stripe animate />
           </q-item>
           <q-list-header>Culturas</q-list-header>
 
@@ -139,9 +139,6 @@
               </q-item>
             </q-field>
 
-
-
-
             <q-btn
               color="deep-orange" class="full-width q-mt-md"
               @click="saveCultura(culturaTemp)"
@@ -150,18 +147,6 @@
           </div>
         </q-modal>
       </q-step>
-
-      <q-stepper-navigation v-if="false">
-        <q-btn
-          flat
-          @click="$refs.stepper.previous()"
-          label="Back"
-        />
-        <q-btn
-          @click="$refs.stepper.next()"
-          label="Next"
-        />
-      </q-stepper-navigation>
     </q-stepper>
 
   </custom-page>
@@ -337,10 +322,17 @@
         this.culturaTemp.tamanho.value = this.areaLivre;
         this.openedCulturaModal = true;
       },
+      openEditCulturaModal(cultura){
+        console.log(cultura);
+        this.culturaTemp = cultura;
+        this.openedCulturaModal = true;
+        this.culturaTempAreaTotal = false;
+      },
       closeCulturaModal(){
         this.tempProdutoList= [];
         this.searchProdutosTerms= "";
         this.openedCulturaModal = false;
+        this.culturaTempAreaTotal = true;
       },
       saveCultura(culturaTemp){
         if(culturaTemp.isValid()){
