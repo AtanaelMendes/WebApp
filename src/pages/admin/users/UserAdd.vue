@@ -1,48 +1,46 @@
 <template>
   <custom-page isChild>
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Novo Unuário">
-      <q-btn slot="action_itens" flat dense label="salvar" @click="saveAccount()"/>
+      <q-btn slot="action_itens" flat dense round icon="done" @click="saveAccount()"/>
     </toolbar>
 
-    <form class="q-pa-md">
+    <div class="row q-ma-md gutter-sm space-end" @keyup.enter="saveAccount()">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <form>
 
-      <div style="display: flex">
-        <div style="width: 50%;">
           <q-list-header class="q-pa-none">Informações Básicas</q-list-header>
+
           <custom-input-text type="email" label="Email" :model="form.email" />
 
           <custom-input-text type="password" label="Senha" :model="form.password" />
 
           <custom-input-text type="password" label="Confirmar senha" :model="form.repeatPassword" />
-        </div>
 
-        <div style="width: 50%; margin-left: 20px">
-          <q-list-header class="q-pa-none">Funções</q-list-header>
-          <q-field :error="form.selectedRoles.errorMessage != null">
-            <q-list id="chip_container"
-                    v-if="form.selectedRoles.value"
-                    class="chip-container"
-                    :class="{ 'chip-container-error': form.selectedRoles.errorMessage != null }">
-              <q-item v-for="role in form.selectedRoles.value" :key="role.id" class="chip-inline">
-                <q-chip class="q-ma-xs" @hide="removeRole(role)" closable color="secondary" text-color="white">{{role.name}}</q-chip>
-              </q-item>
-            </q-list>
-            <div class="q-field-bottom row no-wrap q-field-no-input-fix" style="height: 22px">
-              <div class="q-field-error col" v-if="form.selectedRoles.errorMessage != null" >{{form.selectedRoles.errorMessage}}</div>
-            </div>
-          </q-field>
-
-          <q-btn class="full-width q-mt-md" color="deep-orange" rounded @click="openRolesDialog()" label="Adicionar Função"/>
-        </div>
-
+        </form>
       </div>
 
-    </form>
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-list-header class="q-pa-none">Funções</q-list-header>
+        <q-field :error="form.selectedRoles.errorMessage != null">
+          <q-list id="chip_container"
+                  v-if="form.selectedRoles.value"
+                  class="chip-container"
+                  :class="{ 'chip-container-error': form.selectedRoles.errorMessage != null }">
+            <q-item v-for="role in form.selectedRoles.value" :key="role.id" class="chip-inline">
+              <q-chip class="q-ma-xs" @hide="removeRole(role)" closable color="secondary" text-color="white">{{role.name}}</q-chip>
+            </q-item>
+          </q-list>
+          <div class="q-field-bottom row no-wrap q-field-no-input-fix" style="height: 22px">
+            <div class="q-field-error col" v-if="form.selectedRoles.errorMessage != null" >{{form.selectedRoles.errorMessage}}</div>
+          </div>
+        </q-field>
 
+        <q-btn class="full-width q-mt-md" color="deep-orange" rounded @click="openRolesDialog()" label="Adicionar Função"/>
+      </div>
+    </div>
 
   </custom-page>
 </template>
-
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
@@ -50,9 +48,8 @@
   import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
   import UserService from 'assets/js/service/UserService'
   import FormMixin from 'components/mixins/FormMixin'
-
   export default {
-    name: "UserAdd",
+    name: "user-add",
     components: {
       toolbar,
       customPage,
@@ -171,6 +168,9 @@
 </script>
 
 <style scoped>
+  .space-end{
+    margin-bottom: 150px;
+  }
   .chip-container {
     min-height: 150px ;
     padding: 10px 8px;
