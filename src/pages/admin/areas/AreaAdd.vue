@@ -37,7 +37,6 @@
       return {
         localizacaoSearchTerms: '',
         area: new area(),
-        UnidadeMedidaOptions: [],
       }
     },
     methods:{

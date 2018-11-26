@@ -11,7 +11,7 @@ export default {
   },
   saveTalhao(areaId, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('/area/'+ areaId + '/area', params).then(response => {
+      Vue.prototype.$axios.post('/area/'+ areaId + '/talhao', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
@@ -47,7 +47,7 @@ export default {
   },
   restoreTalhao(talhaoId, areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('/area/' + areaId + '/talhao/' + talhaoId + '/restore').then(response => {
+      Vue.prototype.$axios.put('/area/' + areaId + '/talhao/' + talhaoId + '/restore').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)

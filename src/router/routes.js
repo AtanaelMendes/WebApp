@@ -35,7 +35,10 @@ const routes = [
         children: [
           { name: 'view_area', path: 'view/:id', component: () => import('pages/admin/areas/AreaView.vue') },
           { name: 'add_area', path: 'add', component: () => import('pages/admin/areas/AreaAdd.vue') },
-          { name: 'edit_area', path: 'edit/:id', component: () => import('pages/admin/areas/AreaEdit.vue') }
+          { name: 'edit_area', path: 'edit/:id', component: () => import('pages/admin/areas/AreaEdit.vue') },
+          // { name: 'list_talhao', path: 'list/:id', component: () => import('pages/admin/areas/TalhaoList.vue') },
+          { name: 'add_talhao', path: 'add/:id', component: () => import('pages/admin/areas/talhao/TalhaoAdd.vue') },
+          { name: 'edit_talhao', path: ':id/edit/:talhaoId', component: () => import('pages/admin/areas/talhao/TalhaoEdit.vue') }
         ]
       },
       { name: 'safras', path: 'safras', component: () => import('pages/admin/safras/SafraList.vue'),
