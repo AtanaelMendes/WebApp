@@ -49,7 +49,7 @@
           </q-item>
           <q-list-header>Culturas</q-list-header>
 
-          <q-item v-for="(cultura, index) in safra.culturas" @click.native="openEditCulturaModal(cultura, index)">
+          <q-item v-for="(cultura, index) in safra.culturas" :key="cultura.produto.value.label" @click.native="openEditCulturaModal(cultura, index)">
             <q-item-main>
               <q-item-tile label>{{cultura.produto.value.label}}</q-item-tile>
               <q-item-tile sublabel>Estimativa: {{cultura.estimativa.value + " " + cultura.estimativaUnidadeMedida.value.nome}}</q-item-tile>
