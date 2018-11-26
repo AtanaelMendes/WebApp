@@ -32,14 +32,7 @@
 
           <form>
             <!--CIDADE-->
-            <q-field :error="localizacao.cidadeId.errorMessage != null" class="q-mt-sm">
-              <cidade-autocomplete label="Cidade" v-model="cidadeTerms"/>
-              <div class="q-field-bottom row no-wrap" >
-                <div class="q-field-error" v-if="localizacao.cidadeId.errorMessage != null" >
-                  {{localizacao.cidadeId.errorMessage}}
-                </div>
-              </div>
-            </q-field>
+            <cidade-autocomplete label="Cidade" :model="localizacao.cidadeId"/>
 
             <!--ENDERECO-->
             <custom-input-text class="capitalize" type="text" label="Endereço" :model="localizacao.endereco" />

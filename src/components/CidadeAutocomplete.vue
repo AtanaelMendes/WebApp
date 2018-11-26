@@ -1,7 +1,12 @@
 <template>
-  <q-input :float-label="label" v-model="value.label" @blur="checkCidadeInput">
-    <q-autocomplete @search="search" @selected="selected" :min-characters="3" :debounce="500" value-field="label"/>
-  </q-input>
+  <q-field :error="model.errorMessage != null" class="q-mb-sm">
+    <q-input v-on:input="clearErrorMessage()" :float-label="label" v-model="model.label" @blur="checkCidadeInput">
+      <q-autocomplete @search="search" @selected="selected" :min-characters="3" :debounce="500" value-field="label"/>
+    </q-input>
+    <div class="q-field-bottom row no-wrap" style="height: 22px">
+      <div class="q-field-error col" v-if="model.errorMessage != null" >{{model.errorMessage}}</div>
+    </div>
+  </q-field>
 </template>
 <script>
   import CidadeService from 'assets/js/service/localizacao/CidadeService'
@@ -10,19 +15,27 @@
     name: "cidade-autocomplete",
     props: {
       label: String,
-      value: String
+      model: {
+        value: null,
+        errorMessage: null,
+        id: null,
+        label: null,
+        sublabel: null
+      }
     },
     data: function () {
       return {
-        // cidadeTerms: '',
         tempCidadeList: [],
+        clearErrorMessage: function () {
+          this.model.errorMessage = null
+        }
       }
     },
     methods: {
       checkCidadeInput(){
-        let result = this.tempCidadeList.filter(item => ('' + item['label']).toLowerCase() === this.value.toLowerCase());
+        let result = this.tempCidadeList.filter(item => ('' + item['label']).toLowerCase() === this.model.label.toLowerCase());
         if(result.length === 0){
-          this.value = '';
+          this.model.label = '';
           this.$emit('input', null)
         }
       },

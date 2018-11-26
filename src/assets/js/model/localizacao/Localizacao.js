@@ -10,7 +10,10 @@ export default class{
   };
   cidadeId = {
     value: null,
-    errorMessage: null
+    errorMessage: null,
+    id: null,
+    label: null,
+    sublabel: null
   };
   endereco = {
     value: null,
