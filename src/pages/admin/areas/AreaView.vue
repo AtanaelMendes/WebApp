@@ -9,7 +9,7 @@
 
       <q-tabs slot="tabs" v-model="selectedTab" align="justify"  class="shadow-3" color="brand" text-color="brand" underline-color="deep-orange">
         <q-tab slot="title" name="tab-talhoes" label="Talhões"/>
-        <q-tab slot="title" name="tab-info" label="Informações"/>
+        <q-tab slot="title" name="tab-info" label="Área"/>
       </q-tabs>
     </toolbar>
 

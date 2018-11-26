@@ -6,13 +6,38 @@
         width: '8px',
         opacity: 1}">
 
-    <div class="row gutter-xs">
+
+    <div v-if="area" class="q-pa-md row gutter-sm">
+
       <div class="col-12">
-        <div class="no-result">
-          <img src="~/assets/sad_2.svg"/>
-          <span>Nenhum resultado encontrado.</span>
-        </div>
+        <q-item>
+          <q-item-side>
+            <q-icon name="place" size="40px"/>
+          </q-item-side>
+          <q-item-main>
+            <q-item-tile class="q-title">{{area.nome}}</q-item-tile>
+          </q-item-main>
+        </q-item>
       </div>
+
+
+      <div :class="coluna">
+        <q-item>
+          <q-item-main inset>
+            <q-item-tile class="q-subheading">
+              {{area.localizacao.endereco}},&nbsp{{area.localizacao.numero}}
+            </q-item-tile>
+            <q-item-tile sublabel>
+              {{area.localizacao.cidade.nome}},&nbsp{{area.localizacao.cidade.estado.nome}}
+            </q-item-tile>
+          </q-item-main>
+        </q-item>
+      </div>
+
+    </div>
+    <div class="no-result" v-else>
+      <img src="~/assets/sad_2.svg"/>
+      <span>Nenhum resultado encontrado.</span>
     </div>
 
   </q-scroll-area>
@@ -24,7 +49,8 @@
     name: "area-info",
     data(){
       return{
-        area: [],
+        area: null,
+        coluna: 'col-xs-12 col-sm-12 col-md-6 col-lg-6',
       }
     },
     watch: {
@@ -33,9 +59,9 @@
       }
     },
     methods: {
-      getAreaById: function(routeAreaId){
-        areaService.getAreaById(routeAreaId).then(area => {
-          this.area = area.data;
+      getAreaById: function(areaId){
+        areaService.getAreaById(areaId).then(area => {
+          this.area = area
         })
       },
       editArea: function(id){
