@@ -51,12 +51,6 @@
         this.talhao.nome.value = data.nome
         this.talhao.tamanho.value = data.tamanho
         this.talhao.unidadeAreaId.value = data.unidade.id
-        /*this.unidadeAreaOptions.push(
-          {
-            value: data.unidade.id,
-            label: data.unidade.nome +', '+ data.unidade.sigla,
-            sublabel: data.unidade.descricao
-          })*/
       },
       getTalhaoById: function(){
         talhaoService.getTalhaoById(this.areaId, this.talhaoId).then(data => {
