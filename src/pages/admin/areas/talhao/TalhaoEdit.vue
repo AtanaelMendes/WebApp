@@ -13,7 +13,7 @@
 
           <custom-input-text type="number" label="Tamanho" :model="talhao.tamanho" maxlength="20"/>
 
-          <unidade-area-select label="Unidade da Área" :model="talhao.unidadeAreaId"/>
+          <unidade-area-select label="Unidade da Área" :model="talhao.unidadeAreaId" :options="unidadeAreaOptions" />
 
         </div>
       </div>
@@ -28,6 +28,8 @@
   import unidadeAreaSelect from 'components/UnidadeAreaSelect.vue'
   import talhao from 'assets/js/model/area/Talhao'
   import talhaoService from 'assets/js/service/area/TalhaoService'
+  //import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
+
   export default {
     name: "talhao-add",
     components: {
@@ -38,6 +40,7 @@
     },
     data(){
       return {
+        unidadeAreaOptions: [],
         talhao: new talhao(),
         areaId: this.$route.params.id,
         talhaoId: this.$route.params.talhaoId
@@ -47,7 +50,13 @@
       fillForm: function(data){
         this.talhao.nome.value = data.nome
         this.talhao.tamanho.value = data.tamanho
-        //this.talhao.unidadeAreaId.value = data.unidade
+        this.talhao.unidadeAreaId.value = data.unidade.id
+        /*this.unidadeAreaOptions.push(
+          {
+            value: data.unidade.id,
+            label: data.unidade.nome +', '+ data.unidade.sigla,
+            sublabel: data.unidade.descricao
+          })*/
       },
       getTalhaoById: function(){
         talhaoService.getTalhaoById(this.areaId, this.talhaoId).then(data => {
@@ -67,11 +76,18 @@
           }
         });
       },
+      listUnidadesArea: function(){
+        talhaoService.listUnidadesArea().then(response => {
+          this.unidadeAreaOptions = response;
+        })
+      },
       backAction: function () {
         this.$router.go(-1);
       }
+
     },
     mounted(){
+      this.listUnidadesArea();
       this.getTalhaoById()
     }
   }

@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
+
 export default {
   listTalhao(areaId, filter){
     return new Promise((resolve, reject) => {
@@ -26,6 +28,22 @@ export default {
         reject(error)
       })
     });
+  },
+  listUnidadesArea: function(){
+    return new Promise((resolve, reject) => {
+      unidadeMedidaService.listUnidadesArea().then(response => {
+        let unidadeAreaOptions = response.data.map(unidade => {
+          return {
+            value: unidade.id,
+            label: unidade.nome +', '+ unidade.sigla,
+            sublabel: unidade.descricao
+          }
+        });
+        resolve(unidadeAreaOptions)
+      }).catch(error => {
+        reject(error)
+      })
+    })
   },
   updateTalhao(areaId, talhaoId, params){
     return new Promise((resolve, reject) => {
