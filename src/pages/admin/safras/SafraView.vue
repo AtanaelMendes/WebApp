@@ -20,21 +20,37 @@
     <div>
       <q-list no-border>
         <q-list-header class="q-title">Informações</q-list-header>
-        <q-item>
-          <q-item-main>
-            <q-item-tile class="q-subheading">Local</q-item-tile>
-            <q-item-tile sublabel>{{safra.area.nome}}</q-item-tile>
-            <q-item-tile sublabel>{{safra.area.localizacao}}</q-item-tile>
-          </q-item-main>
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <q-item>
+              <q-item-main>
+                <q-item-tile class="q-subheading">Local</q-item-tile>
+                <q-item-tile sublabel>{{safra.area.nome}}</q-item-tile>
+                <q-item-tile sublabel>{{safra.area.localizacao}}</q-item-tile>
+              </q-item-main>
+            </q-item>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <q-item>
+              <q-item-main>
+                <q-item-tile class="q-subheading">Talhão</q-item-tile>
+                <q-item-tile sublabel>{{safra.talhao.nome}} ({{pluralize(safra.talhao.tamanho, safra.talhao.unidade_area)}})</q-item-tile>
+                <q-item-tile sublabel>{{pluralize(safra.culturas.length, 'cultura')}} para o plantio</q-item-tile>
+              </q-item-main>
+            </q-item>
+          </div>
+        </div>
+
+        <q-list-header style="padding-bottom: 4px;min-height: unset;">
+          <div class="row">
+            <div class="col-6">Área ocupada:</div>
+            <div class="col-6 text-right">{{Number(porcentagemAreaOcupada).toLocaleString(undefined, {maximumFractionDigits:1})}}%</div>
+          </div>
+        </q-list-header>
+        <q-item dense>
+          <q-progress :percentage="porcentagemAreaOcupada" style="height: 10px; border-radius: 5px;" color="deep-orange" stripe animate />
         </q-item>
 
-        <q-item>
-          <q-item-main>
-            <q-item-tile class="q-subheading">Talhão</q-item-tile>
-            <q-item-tile sublabel>{{safra.talhao.nome}} ({{pluralize(safra.talhao.tamanho, safra.talhao.unidade_area)}})</q-item-tile>
-            <q-item-tile sublabel>{{pluralize(safra.culturas.length, 'cultura')}} para o plantio</q-item-tile>
-          </q-item-main>
-        </q-item>
         <q-list-header class="q-title">Culturas</q-list-header>
         <q-item v-for="cultura in safra.culturas">
           <q-item-main>
@@ -65,12 +81,25 @@
         safra: null,
       }
     },
+    computed:{
+      porcentagemAreaOcupada: function(){
+        let areaTotal = parseInt(this.safra.talhao.tamanho);
+        return this.getCulturasTamanhoTotal() / areaTotal * 100;
+      },
+    },
     watch: {
       '$route' (to, from) {
         this.getSafraById(to.params.id)
       }
     },
     methods:{
+      getCulturasTamanhoTotal: function(){
+        let tamanho = 0;
+        for(var cultura of this.safra.culturas){
+          tamanho += cultura.tamanho;
+        }
+        return tamanho;
+      },
       pluralize: function(amount, word){
         return amount + ' ' + word + (amount > 1 ? 's' : '');
       },
