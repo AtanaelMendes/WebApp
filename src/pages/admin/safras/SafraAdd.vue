@@ -9,10 +9,14 @@
         <div class="row q-pa-md">
           <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
             <form>
-              <custom-input-text type="text" label="Início" :model="safra.inicio" maxlength="4" mask="####"/>
-
-              <custom-input-text type="text" label="Fim" :model="safra.fim" maxlength="4" mask="####"/>
-
+              <div class="row gutter-sm">
+                  <div class="col-6">
+                  <custom-input-text type="text" label="Início" :model="safra.inicio" maxlength="4" mask="####"/>
+                </div>
+                <div class="col-6">
+                  <custom-input-text type="text" label="Fim" :model="safra.fim" maxlength="4" mask="####"/>
+                </div>
+              </div>
               <q-field :error="safra.area.errorMessage != null" class="q-mb-sm">
                 <q-select float-label="Área" v-model="safra.area.value" :options="areas" @input="onAreasSelectInput(safra.area.value)"/>
                 <div class="q-field-bottom row no-wrap" style="height: 22px">
