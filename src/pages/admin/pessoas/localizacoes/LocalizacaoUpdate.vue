@@ -32,7 +32,7 @@
 
           <form>
             <!--CIDADE-->
-            <cidade-autocomplete label="Cidade" :model="localizacao.cidadeId"/>
+            <cidade-autocomplete label="Cidade" @input="selected" :model="localizacao.cidadeId" :terms="cidadeTerms"/>
 
             <!--ENDERECO-->
             <custom-input-text type="text" label="Endereço" :model="localizacao.endereco" />
@@ -65,7 +65,7 @@
   import Localizacao from 'assets/js/model/localizacao/Localizacao'
   import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
   export default {
-    name: "ContatoAdd",
+    name: "localizacao-update",
     components: {
       toolbar,
       customPage,
@@ -74,15 +74,27 @@
     },
     data(){
       return {
+        cidadeTerms: null,
         typeError: null,
         localizacao: new Localizacao(),
       }
     },
+    watch: {
+      localizacao:{
+        handler: function (val) {
+          console.log(this.localizacao.cidadeId)
+        },
+        deep: true
+      }
+    },
     methods:{
+      selected: function(value = null){
+        this.localizacao.cidadeId.value = value.id;
+      },
       fillForm: function(data){
-        this.localizacao.cidadeId.id = data.cidade.cidade_id
-        this.localizacao.cidadeId.label = data.cidade.nome
-        this.localizacao.cidadeId.sublabel = data.cidade.estado.nome
+        this.cidadeTerms = data.cidade.nome
+
+        this.localizacao.cidadeId.value = data.cidade_id
         this.localizacao.isCobranca.value = data.is_cobranca
         this.localizacao.isFiscal.value = data.is_fiscal
         this.localizacao.endereco.value = data.endereco

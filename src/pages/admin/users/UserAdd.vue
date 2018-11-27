@@ -7,18 +7,19 @@
     <div class="row q-ma-md gutter-sm space-end" @keyup.enter="saveAccount()">
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
         <form>
-
           <q-list-header class="q-pa-none">Informações Básicas</q-list-header>
+
+          <produtor-select @click.native="listProdutor" label="Produtor" :model="form.produtor" :options="produtorOptions"/>
 
           <custom-input-text type="email" label="Email" :model="form.email" />
 
           <custom-input-text type="password" label="Senha" :model="form.password" />
 
           <custom-input-text type="password" label="Confirmar senha" :model="form.repeatPassword" />
-
         </form>
       </div>
 
+      <!--LIST ROLES-->
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
         <q-list-header class="q-pa-none">Funções</q-list-header>
         <q-field :error="form.selectedRoles.errorMessage != null">
@@ -37,7 +38,26 @@
 
         <q-btn class="full-width q-mt-md" color="deep-orange" rounded @click="openRolesDialog()" label="Adicionar Função"/>
       </div>
+      <!--FIM LIST ROLES-->
     </div>
+
+    <!--PRODUTOR DIALOG-->
+    <q-dialog v-model="newProdutorDialog" prevent-close>
+      <span slot="title">Novo Produtor</span>
+      <span slot="message">Crie um Produtor preenchendo o campo abaixo</span>
+
+      <div slot="body">
+        <form @keyup.enter="saveProdutor()">
+          <custom-input-text type="text" label="Produtor" :model="produtor.nome" />
+        </form>
+      </div>
+
+      <template slot="buttons" slot-scope="props">
+        <q-btn flat @click="closeNewProdutorDialog"  label="Cancelar"/>
+        <q-btn flat @click="saveProdutor()"  label="Salvar"/>
+      </template>
+    </q-dialog>
+    <!--FIM PRODUTOR DIALOG-->
 
   </custom-page>
 </template>
@@ -46,21 +66,33 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
-  import UserService from 'assets/js/service/UserService'
+  import userService from 'assets/js/service/UserService'
+  import produtor from 'assets/js/model/produtor/Produtor'
+  import produtorSelect from 'components/ProdutorSelect.vue'
   import FormMixin from 'components/mixins/FormMixin'
   export default {
     name: "user-add",
     components: {
       toolbar,
       customPage,
+      produtorSelect,
       customInputText
     },
     mixins: [FormMixin],
     data(){
       return {
         roles: null,
+        produtorSearchTerms: '',
+        tempProdutorList: [],
+        newProdutorDialog: false,
+        produtor: new produtor(),
+        produtorOptions: [],
         form: {
           email: {
+            value: null,
+            errorMessage: null
+          },
+          produtor: {
             value: null,
             errorMessage: null
           },
@@ -91,20 +123,19 @@
     },
     methods:{
       openRolesDialog: function(){
-        UserService.openRolesDialog(this.form.selectedRoles.value, this.roles).then(roles =>{
+        userService.openRolesDialog(this.form.selectedRoles.value, this.roles).then(roles =>{
           this.form.selectedRoles.errorMessage = null;
           this.form.selectedRoles.value = roles;
         })
       },
       removeRole: function(role){
-        UserService.removeRole(this.form.selectedRoles.value, role);
+        userService.removeRole(this.form.selectedRoles.value, role);
       },
       listRoles: function(){
-        UserService.listRoles().then(roles => {this.roles = roles})
+        userService.listRoles().then(roles => {this.roles = roles})
       },
       saveAccount: function () {
         this.$v.form.$touch();
-
         if ( this.$v.form.$error ) {
           if(!this.$v.form.email.value.required){
             this.form.email.errorMessage = "Digite um email"
@@ -117,26 +148,21 @@
           }else if(!this.$v.form.password.value.minLength){
             this.form.password.errorMessage = "A senha deve ter no mínimo 8 caracteres"
           }
-
           if(!this.$v.form.repeatPassword.value.required){
             this.form.repeatPassword.errorMessage = "As senhas não são iguais"
           }
-
           if(!this.$v.form.selectedRoles.value.required){
             this.form.selectedRoles.errorMessage = "Adicione ao menos uma função"
           }
-
           return;
         }
-
         let params = {
           email: this.form.email.value,
           password: this.form.password.value,
-          roles: UserService.getIdsByRoles(this.form.selectedRoles.value).join()
+          roles: userService.getIdsByRoles(this.form.selectedRoles.value).join()
 
         };
-
-        UserService.saveAccount(params).then(response => {
+        userService.saveAccount(params).then(response => {
           this.$q.notify({
             type: 'positive',
             message: 'Cadastro criado com sucesso'
@@ -154,6 +180,32 @@
           }
         })
       },
+      listProdutor: function(){
+        userService.listProdutor().then(response => {
+          this.produtorOptions = response;
+        })
+      },
+      openNewProdutorDialog: function(){
+        this.newProdutorDialog = true;
+      },
+      closeNewProdutorDialog: function(){
+        this.newProdutorDialog = false;
+        this.produtor.nome.value = null;
+        this.produtor.nome.errorMessage = null;
+      },
+      saveProdutor: function(){
+        if(!this.produtor.isValid(this)){
+          return;
+        }
+        userService.saveProdutor(this.produtor.getValues()).then(response => {
+          this.$q.notify({type: 'positive', message: 'Grupo Econômico criado com sucesso'});
+          this.closeNewProdutorDialog();
+        }).catch(error => {
+          if (error.response.status === 422){
+            this.$q.dialog({title:'Ops', message: 'Já existe um registro com esse nome'})
+          }
+        })
+      },
       backAction: function () {
         this.$router.push({name: 'users'});
       }
@@ -161,7 +213,7 @@
     mounted(){
       this.routeName = 'add_user';
       this.setFormObj(this.form);
-      this.listRoles()
+      this.listRoles();
     },
 
   }

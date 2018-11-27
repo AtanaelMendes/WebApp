@@ -33,7 +33,7 @@
                     :after="[{icon:'arrow_drop_down'}]"
                     v-model="grupoEconomicoSearchTerms"
                   >
-                    <q-autocomplete @search="search" @selected="setGrupoEconomico" :min-characters="0" :debounce="500" value-field="label"/>
+                    <q-autocomplete @search="searchGrupoEconomico" @selected="setGrupoEconomico" :min-characters="0" :debounce="500" value-field="label"/>
                   </q-input>
                 </q-item-main>
 
@@ -69,7 +69,6 @@
     </q-scroll-area>
 
 
-
     <q-dialog v-model="newGrupoEconomicoDialog" prevent-close>
       <span slot="title">Novo Grupo Econômico</span>
       <span slot="message">Crie um novo Grupo Econômico preenchendo o campo abaixo</span>
@@ -99,7 +98,7 @@
   import GrupoEconomico from 'assets/js/model/GrupoEconomico'
   import { filter } from 'quasar'
   export default {
-    name: "PessoaAdd",
+    name: "pessoa-add",
     components: {
       toolbar,
       customPage,
@@ -110,19 +109,11 @@
         grupoEconomicoSearchTerms: '',
         tempGrupoEconomicoList: [],
         newGrupoEconomicoDialog: false,
-        pessoa: new Pessoa(1),
         grupoEconomico: GrupoEconomico,
+        pessoa: new Pessoa(1),
       }
     },
     methods:{
-      openNovoGrupoEconomicoDialog: function(){
-        this.newGrupoEconomicoDialog = true;
-      },
-      closeNovoGrupoEconomicoDialog: function(){
-        this.newGrupoEconomicoDialog = false;
-        this.grupoEconomico.nome.value = null;
-        this.grupoEconomico.nome.errorMessage = null;
-      },
       pessoaTypeChanged: function(value){
         this.pessoa = new Pessoa(value)
         this.grupoEconomicoSearchTerms = ''
@@ -144,23 +135,28 @@
         });
 
       },
+      openNovoGrupoEconomicoDialog: function(){
+        this.newGrupoEconomicoDialog = true;
+      },
+      closeNovoGrupoEconomicoDialog: function(){
+        this.newGrupoEconomicoDialog = false;
+        this.grupoEconomico.nome.value = null;
+        this.grupoEconomico.nome.errorMessage = null;
+      },
       createGrupoEconomico: function(){
         if(!this.grupoEconomico.isValid(this)){
           return;
         }
-
         GrupoEconomicoService.saveGrupoEconomico(this.grupoEconomico.getValues()).then(response => {
           this.$q.notify({type: 'positive', message: 'Grupo Econômico criado com sucesso'});
-
           this.closeNovoGrupoEconomicoDialog();
-
         }).catch(error => {
           if (error.response.status === 422){
             this.$q.dialog({title:'Ops', message: 'Já existe um registro com esse nome'})
           }
         })
       },
-      search (terms, done) {
+      searchGrupoEconomico (terms, done) {
         GrupoEconomicoService.searchGrupoEconomico(terms).then(response => {
           this.tempGrupoEconomicoList = response;
           done(response)
@@ -184,9 +180,8 @@
         this.$router.push({name: 'pessoas'});
       }
     },
-    mounted(){},
     beforeDestroy(){
-      this.pessoa = null;
+      this.pessoa = new Pessoa(1)
     }
   }
 </script>

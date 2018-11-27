@@ -64,7 +64,7 @@ export default {
   },
   saveLocalizacao(pessoaId, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('/pessoa/' + pessoaId + '/localizacaor', params).then(response => {
+      Vue.prototype.$axios.post('/pessoa/' + pessoaId + '/localizacao', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)

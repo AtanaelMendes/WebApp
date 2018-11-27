@@ -32,7 +32,7 @@
 
           <form>
             <!--CIDADE-->
-            <cidade-autocomplete label="Cidade" :model="localizacao.cidadeId" @input="teste"/>
+            <cidade-autocomplete label="Cidade" :model="localizacao.cidadeId" @input="selected"/>
 
             <!--ENDERECO-->
             <custom-input-text class="capitalize" type="text" label="Endereço" :model="localizacao.endereco" />
@@ -84,9 +84,7 @@
       }
     },*/
     methods:{
-      teste: function(value = null){
-        console.log("emit")
-        console.log(value)
+      selected: function(value = null){
         this.localizacao.cidadeId.value = value.id;
       },
       saveLocalizacao: function(){

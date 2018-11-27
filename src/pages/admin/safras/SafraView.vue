@@ -52,7 +52,7 @@
         </q-item>
 
         <q-list-header class="q-title">Culturas</q-list-header>
-        <q-item v-for="cultura in safra.culturas">
+        <q-item v-for="cultura in safra.culturas" :key="cultura.id">
           <q-item-main>
             <q-item-tile class="q-subheading">{{cultura.nome}}</q-item-tile>
             <!--<q-item-tile sublabel>Tamanho ocupado: {{pluralize(cultura.tamanho, safra.talhao.unidade_area)}} ({{'~'+fixPercent(cultura.tamanho / safra.talhao.tamanho * 100)}}%)</q-item-tile>-->

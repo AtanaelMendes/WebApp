@@ -61,7 +61,7 @@
         </q-item>
 
         <q-item v-if="pessoa.inscricao_municipal">
-          <q-item-main>
+          <q-item-main inset>
             <q-item-tile class="q-subheading title-color">Inscrição municipal</q-item-tile>
             <q-item-tile sublabel>{{pessoa.inscricao_municipal}}</q-item-tile>
           </q-item-main>
