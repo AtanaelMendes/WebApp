@@ -9,12 +9,31 @@
         <div class="row q-pa-md">
           <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
             <form>
-              <div class="row gutter-sm">
+              <div class="row gutter-lg">
                   <div class="col-6">
-                  <custom-input-text type="text" label="Início" :model="safra.inicio" maxlength="4" mask="####"/>
+                  <!--<custom-input-text type="text" label="Início" :model="safra.inicio" maxlength="4" mask="####"/>-->
+                    <q-input v-model="safra.inicio.value"
+                      :value="safra.inicio.value"
+                      @change="setAnoInicio"
+                    />
                 </div>
                 <div class="col-6">
-                  <custom-input-text type="text" label="Fim" :model="safra.fim" maxlength="4" mask="####"/>
+                  <!--<custom-input-text type="text" label="Fim" :model="safra.fim" maxlength="4" mask="####"/>-->
+
+
+                  <q-item >
+                    <q-item-main>
+                      <q-item-tile label style="font-size: 0.75rem; color:#979797">Fim</q-item-tile>
+                      <q-item-tile sublabel>
+                        <q-btn-toggle v-model="selectedAnoFim" toggle-color="primary" class="custom-toggle" @input="setAnoFim" dense
+                                      :options="[
+                                        {label: safra.inicio.value, value: safra.inicio.value},
+                                        {label: safra.inicio.value + 1, value: safra.inicio.value + 1}
+                                      ]"
+                        />
+                      </q-item-tile>
+                    </q-item-main>
+                  </q-item>
                 </div>
               </div>
               <q-field :error="safra.area.errorMessage != null" class="q-mb-sm">
@@ -188,6 +207,7 @@
         openedCulturaModal: false,
         unidadesMedida: [],
         selectedTalhao: null,
+        selectedAnoFim: null,
       }
     },
     computed:{
@@ -238,6 +258,18 @@
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
 
+      },
+      setAnoInicio: function(value){
+        console.log('set ano inicio')
+        if(value.toString().length < 4){
+          this.safra.inicio.value = 2018;
+          return
+        }
+        this.safra.inicio.value = parseInt(value);
+        this.selectedAnoFim = parseInt(value);
+      },
+      setAnoFim: function(value){
+        this.safra.fim.value = parseInt(value);
       },
       getAreas: function(){
         areaService.listAreas().then(response => {
@@ -363,6 +395,9 @@
       }
     },
     mounted () {
+      this.safra.inicio.value = 2018;
+      this.safra.fim.value = 2018;
+      this.selectedAnoFim = this.safra.fim.value;
       this.getAreas();
       this.getUnidadesMedida();
     },
@@ -397,5 +432,10 @@
 
   .unidade-medida-select{
     padding-top: 8px !important;
+  }
+
+  .custom-toggle button{
+    padding-left: 24px;
+    padding-right: 24px;
   }
 </style>
