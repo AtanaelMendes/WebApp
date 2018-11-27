@@ -10,7 +10,7 @@
         <div class="col-sm-12 col-lg-6">
           <custom-input-text type="text" label="Nome" :model="area.nome" maxlength="20"/>
 
-          <localizacao-select label="Localização" :model="area.localizacao"/>
+          <localizacao-select label="Localização" :model="area.localizacao" :options="localizacaoOptions"/>
 
         </div>
       </div>
@@ -25,6 +25,7 @@
   import localizacaoSelect from 'components/LocalizacaoSelect.vue'
   import area from 'assets/js/model/area/Area'
   import areaService from 'assets/js/service/area/AreaService'
+  import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
   export default {
     name: "area-add",
     components: {
@@ -35,19 +36,15 @@
     },
     data(){
       return {
-        localizacaoSearchTerms: '',
+        localizacaoOptions: [],
         area: new area(),
       }
     },
     methods:{
-      searchLocalizacao (terms, done) {
-        areaService.searchLocalizacao(terms).then(response => {
-          done(response)
-        });
-      },
-      selectedLocalizacao (item) {
-        this.area.localizacao.value = item.id;
-        this.area.localizacao.errorMessage = null;
+      listLocalizacao: function(){
+        localizacaoService.listLocalizacao().then(response => {
+          this.localizacaoOptions = response;
+        })
       },
       saveArea: function(){
         if(!this.area.isValid()){
@@ -64,6 +61,9 @@
       backAction: function () {
         this.$router.go(-1);
       }
+    },
+    mounted(){
+      this.listLocalizacao();
     }
   }
 </script>

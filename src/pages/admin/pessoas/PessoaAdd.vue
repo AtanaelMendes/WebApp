@@ -12,7 +12,7 @@
         opacity: 1}">
       <div class="row q-pa-md">
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-          <form>
+          <form @keyup.enter="savePessoa()">
 
             <q-field>
               <q-btn-toggle
@@ -27,7 +27,12 @@
             <q-field :error="pessoa.grupoEconomico.errorMessage != null" class="q-mt-sm">
               <q-item class="q-px-none">
                 <q-item-main>
-                  <q-input v-model="grupoEconomicoSearchTerms" placeholder="Grupo Econômico" :after="[{icon:'arrow_drop_down'}]" @blur="checkGrupoEconomicoInput">
+                  <q-input
+                    placeholder="Grupo Econômico"
+                    @blur="checkGrupoEconomicoInput"
+                    :after="[{icon:'arrow_drop_down'}]"
+                    v-model="grupoEconomicoSearchTerms"
+                  >
                     <q-autocomplete @search="search" @selected="setGrupoEconomico" :min-characters="0" :debounce="500" value-field="label"/>
                   </q-input>
                 </q-item-main>

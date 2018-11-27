@@ -1,7 +1,7 @@
 <template>
   <custom-page isChild>
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Editar localizacao">
-      <q-btn slot="action_itens" flat dense icon="done" @click="updateLocalizacao()"/>
+      <q-btn slot="action_itens" flat dense icon="done" round @click="updateLocalizacao()"/>
     </toolbar>
 
     <q-scroll-area style="height: 200vh" :thumb-style="{
@@ -32,29 +32,22 @@
 
           <form>
             <!--CIDADE-->
-            <q-field :error="localizacao.cidadeId.errorMessage != null" class="q-mt-sm">
-              <cidade-autocomplete label="Cidade" :value="cidadeTerms"/>
-              <div class="q-field-bottom row no-wrap" >
-                <div class="q-field-error" v-if="localizacao.cidadeId.errorMessage != null" >
-                  {{localizacao.cidadeId.errorMessage}}
-                </div>
-              </div>
-            </q-field>
+            <cidade-autocomplete label="Cidade" :model="localizacao.cidadeId"/>
 
             <!--ENDERECO-->
-            <custom-input-text class="capitalize" type="text" label="Endereço" :model="localizacao.endereco" />
+            <custom-input-text type="text" label="Endereço" :model="localizacao.endereco" />
 
             <!--NUMERO-->
-            <custom-input-text class="capitalize" type="number" label="numero" :model="localizacao.numero" />
+            <custom-input-text type="number" label="numero" :model="localizacao.numero" />
 
             <!--COMPLEMENTO-->
-            <custom-input-text class="capitalize" type="text" label="Complemento" :model="localizacao.complemento" />
+            <custom-input-text type="text" label="Complemento" :model="localizacao.complemento" />
 
             <!--BAIRRO-->
-            <custom-input-text class="capitalize" type="text" label="Bairro" :model="localizacao.bairro" />
+            <custom-input-text type="text" label="Bairro" :model="localizacao.bairro" />
 
             <!--CEP-->
-            <custom-input-text class="capitalize" type="text" label="CEP" mask="#####-###" :model="localizacao.cep" />
+            <custom-input-text type="text" label="CEP" mask="#####-###" :model="localizacao.cep" />
 
           </form>
 
@@ -81,25 +74,15 @@
     },
     data(){
       return {
-        cidadeTerms: {
-          id: null,
-          label: null,
-          sublabel: null
-        },
         typeError: null,
         localizacao: new Localizacao(),
       }
     },
-    watch: {
-      cidadeTerms: function (val, old) {
-        this.setCidade(val)
-      }
-    },
     methods:{
       fillForm: function(data){
-        this.cidadeTerms.id = data.cidade.cidade_id
-        this.cidadeTerms.label = data.cidade.nome
-        this.cidadeTerms.sublabel = data.cidade.estado.nome
+        this.localizacao.cidadeId.id = data.cidade.cidade_id
+        this.localizacao.cidadeId.label = data.cidade.nome
+        this.localizacao.cidadeId.sublabel = data.cidade.estado.nome
         this.localizacao.isCobranca.value = data.is_cobranca
         this.localizacao.isFiscal.value = data.is_fiscal
         this.localizacao.endereco.value = data.endereco
@@ -116,6 +99,8 @@
         });
       },
       updateLocalizacao: function(){
+        let pessoaId = this.$route.params.id
+        let localizacaoId = this.$route.params.localizacaoId
         if(this.localizacao.isFiscal.value == false && this.localizacao.isCobranca.value == false){
           this.typeError = 'Escolha ao menos um tipo de endereço'
           return
@@ -125,21 +110,12 @@
         if(!this.localizacao.isValid()){
           return
         }
-        localizacaoService.updateLocalizacao(this.$route.params.id, this.localizacao.getValues()).then( response => {
-          this.$q.notify({type: 'positive', message: 'Contato criado com sucesso'})
+        localizacaoService.updateLocalizacao(pessoaId, localizacaoId, this.localizacao.getValues()).then( response => {
+          this.$q.notify({type: 'positive', message: 'Localizacão atualizada com sucesso'})
           this.$router.go(-1);
         }).catch(error => {
           this.$q.notify({type: 'negative', message: error})
         })
-      },
-      setCidade (item) {
-        if(item == null){
-          this.localizacao.cidadeId.value = null;
-        }else{
-          this.localizacao.cidadeId.value = item.id;
-          this.localizacao.cidadeId.errorMessage = null;
-        }
-
       },
       backAction: function () {
         this.$router.go(-1);
@@ -155,28 +131,21 @@
   .space-end{
     margin-bottom: 150px;
   }
-
-  .custom-footer{
-    padding: 6px;
-    border-top: 1px solid #cccccc;
-  }
-
-  .list-empty{
-    height: 55px;
+  .no-result{
     text-align: center;
-    padding-top: 15px;
+    padding-top: 150px;
   }
 
-  .list-empty span{
-    color: #8c8c8c;
+  .no-result img{
+    width: 120px;
+    height: auto;
+  }
+
+  .no-result span{
+    display: block;
+    margin-top: 30px;
+    font-size: 25px;
     font-weight: 300;
-    font-size: 15px;
+    color: #ababab;
   }
-
-  .list-empty i{
-    color: #ffb500;
-    font-size: 20px;
-    margin-right: 6px;
-  }
-
 </style>

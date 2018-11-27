@@ -13,7 +13,7 @@
 
           <custom-input-text type="number" label="Tamanho" :model="talhao.tamanho" maxlength="20"/>
 
-          <unidade-area-select label="Unidade da Área" :model="talhao.unidadeAreaId"/>
+          <unidade-area-select label="Unidade da Área" :model="talhao.unidadeAreaId" :options="unidadeAreaOptions" />
 
         </div>
       </div>
@@ -28,6 +28,8 @@
   import unidadeAreaSelect from 'components/UnidadeAreaSelect.vue'
   import talhao from 'assets/js/model/area/Talhao'
   import talhaoService from 'assets/js/service/area/TalhaoService'
+  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
+
   export default {
     name: "talhao-add",
     components: {
@@ -38,6 +40,7 @@
     },
     data(){
       return {
+        unidadeAreaOptions: [],
         talhao: new talhao(),
       }
     },
@@ -54,9 +57,17 @@
           }
         });
       },
+      listUnidadesArea: function(){
+        talhaoService.listUnidadesArea().then(response => {
+          this.unidadeAreaOptions = response;
+        })
+      },
       backAction: function () {
         this.$router.go(-1);
       }
+    },
+    mounted(){
+      this.listUnidadesArea();
     }
   }
 </script>

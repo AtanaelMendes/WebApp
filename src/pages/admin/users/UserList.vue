@@ -23,25 +23,30 @@
       </template>
     </toolbar>
 
-    <q-list highlight no-border sparse v-if="!isEmptyList">
+    <div class="row">
+      <div class="col-12">
+        <q-list highlight no-border sparse v-if="!isEmptyList">
 
-        <q-item link separator multiline @click.native="viewUser(user.id)" v-for="(user, key) in users" :key="key">
-          <q-item-main >
-            <q-item-tile>
-              {{user.email}}
-              <q-chip v-if="user.deleted_at" small square color="red">
-                INATIVO
-              </q-chip>
-            </q-item-tile>
-          </q-item-main>
+          <q-item link separator multiline @click.native="viewUser(user.id)" v-for="(user, key) in users" :key="key">
+            <q-item-main >
+              <q-item-tile>
+                {{user.email}}
+                <q-chip v-if="user.deleted_at" small square color="red">
+                  INATIVO
+                </q-chip>
+              </q-item-tile>
+            </q-item-main>
 
-          <q-item-side right>
-            <q-item-tile stamp>{{ moment(user.created_at).format('DD MMMM YYYY') }}</q-item-tile>
-            <q-item-tile v-if="user.deleted_at" stamp>{{ moment(user.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>
-          </q-item-side>
-        </q-item>
+            <q-item-side right>
+              <q-item-tile stamp>{{ moment(user.created_at).format('DD MMMM YYYY') }}</q-item-tile>
+              <q-item-tile v-if="user.deleted_at" stamp>{{ moment(user.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>
+            </q-item-side>
+          </q-item>
 
-    </q-list>
+        </q-list>
+      </div>
+    </div>
+
 
     <div v-if="isEmptyList" class="no-result">
       <img src="~/assets/sad_2.svg"/>

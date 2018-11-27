@@ -32,14 +32,7 @@
 
           <form>
             <!--CIDADE-->
-            <q-field :error="localizacao.cidadeId.errorMessage != null" class="q-mt-sm">
-              <cidade-autocomplete label="Cidade" v-model="cidadeTerms"/>
-              <div class="q-field-bottom row no-wrap" >
-                <div class="q-field-error" v-if="localizacao.cidadeId.errorMessage != null" >
-                  {{localizacao.cidadeId.errorMessage}}
-                </div>
-              </div>
-            </q-field>
+            <cidade-autocomplete label="Cidade" :model="localizacao.cidadeId" @input="teste"/>
 
             <!--ENDERECO-->
             <custom-input-text class="capitalize" type="text" label="Endereço" :model="localizacao.endereco" />
@@ -81,21 +74,21 @@
     },
     data(){
       return {
-        cidadeTerms: {
-          id: null,
-          label: null,
-          sublabel: null
-        },
         typeError: null,
         localizacao: new Localizacao(),
       }
     },
-    watch: {
+    /*watch: {
       cidadeTerms: function (val, old) {
         this.setCidade(val)
       }
-    },
+    },*/
     methods:{
+      teste: function(value = null){
+        console.log("emit")
+        console.log(value)
+        this.localizacao.cidadeId.value = value.id;
+      },
       saveLocalizacao: function(){
         if(this.localizacao.isFiscal.value == false && this.localizacao.isCobranca.value == false){
           this.typeError = 'Escolha ao menos um tipo de endereço'
@@ -113,14 +106,14 @@
           this.$q.notify({type: 'negative', message: error.request.response})
         })
       },
-      setCidade (item) {
+      /*setCidade (item) {
         if(item == null){
           this.localizacao.cidadeId.value = null;
         }else{
           this.localizacao.cidadeId.value = item.id;
           this.localizacao.cidadeId.errorMessage = null;
         }
-      },
+      },*/
       backAction: function () {
         this.$router.go(-1);
       }

@@ -10,6 +10,22 @@ export default {
       })
     });
   },
+  listLocalizacao: function(){
+    return new Promise((resolve, reject) => {
+      this.listLocalizacoesByProdutor(localStorage.getItem('account.produtor_id')).then(response => {
+        let localizacaoOptions = response.data.map(local => {
+          return {
+            value: local.id,
+            label: local.endereco +', '+ local.numero,
+            sublabel: local.bairro +', '+ local.cidade.nome +'-'+ local.cidade.estado.sigla
+          }
+        });
+        resolve(localizacaoOptions)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   listLocalizacoes(id){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.get( 'pessoa/' + id + '/localizacao' ).then( response => {
@@ -37,9 +53,18 @@ export default {
       })
     });
   },
+  updateLocalizacao(pessoaId, localizacaoId, params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('/pessoa/' + pessoaId + '/localizacao/'+ localizacaoId, params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   saveLocalizacao(pessoaId, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('/pessoa/' + pessoaId + '/localizacao', params).then(response => {
+      Vue.prototype.$axios.post('/pessoa/' + pessoaId + '/localizacaor', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)

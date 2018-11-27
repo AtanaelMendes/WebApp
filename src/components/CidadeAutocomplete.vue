@@ -1,7 +1,13 @@
 <template>
-  <q-input :float-label="label" v-model="value.label" @blur="checkCidadeInput">
-    <q-autocomplete @search="search" @selected="selected" :min-characters="3" :debounce="500" value-field="label"/>
-  </q-input>
+  <q-field :error="model.errorMessage != null" class="q-mb-sm">
+    <!--<q-input v-on:input="clearErrorMessage()" :float-label="label" v-model="model.value" @blur="checkCidadeInput">-->
+    <q-input v-on:input="clearErrorMessage()" :float-label="label" v-model="cidadeTerms" @blur="checkCidadeInput">
+      <q-autocomplete @search="search" @selected="selected" :min-characters="3" :debounce="500" value-field="label"/>
+    </q-input>
+    <div class="q-field-bottom row no-wrap" style="height: 22px">
+      <div class="q-field-error col" v-if="model.errorMessage != null" >{{model.errorMessage}}</div>
+    </div>
+  </q-field>
 </template>
 <script>
   import CidadeService from 'assets/js/service/localizacao/CidadeService'
@@ -10,20 +16,29 @@
     name: "cidade-autocomplete",
     props: {
       label: String,
-      value: String
+      model: Object
     },
     data: function () {
       return {
-        // cidadeTerms: '',
+        cidadeTerms: '',
         tempCidadeList: [],
+        clearErrorMessage: function () {
+          this.model.errorMessage = null
+        }
       }
     },
     methods: {
       checkCidadeInput(){
-        let result = this.tempCidadeList.filter(item => ('' + item['label']).toLowerCase() === this.value.toLowerCase());
+        //console.log(this.model);
+        let result = this.tempCidadeList.filter(item => ('' + item['label']).toLowerCase() === this.cidadeTerms.toLowerCase());
         if(result.length === 0){
-          this.value = '';
-          this.$emit('input', null)
+          console.log("nada")
+          this.cidadeTerms = '';
+          this.$emit('input', '')
+          this.clearErrorMessage();
+        }else{
+          console.log("encontrou")
+          this.$emit('input', result[0])
         }
       },
       search (terms, done) {
