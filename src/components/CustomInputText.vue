@@ -2,9 +2,10 @@
   <q-field :error="model.errorMessage != null" class="q-mb-sm">
     <q-input
       v-mask="mask"
-      :maxlength="maxlength"
+      autocomplete="foo"
       v-model="model.value"
       :autofocus="autofocus"
+      :maxlength="maxlength"
       :placeholder="placeholder"
       v-on:input="clearErrorMessage()"
       :type="type" :float-label="label"

@@ -28,7 +28,7 @@
         <q-list highlight no-border sparse v-if="!isEmptyList">
 
           <q-item link separator multiline @click.native="viewUser(user.id)" v-for="(user, key) in users" :key="key">
-            <q-item-main >
+            <q-item-main style="overflow: hidden">
               <q-item-tile>
                 {{user.email}}
                 <q-chip v-if="user.deleted_at" small square color="red">
