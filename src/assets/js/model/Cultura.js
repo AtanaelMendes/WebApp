@@ -1,6 +1,7 @@
 import { helpers} from 'vuelidate/lib/validators'
 
 export default class{
+  id= null;
   produto = {
     value: null,
     errorMessage: null
@@ -20,6 +21,7 @@ export default class{
 
   constructor(cultura){
     if(cultura !== undefined || cultura != null){
+      this.id = cultura.id;
       this.produto.value = {'id':cultura.produto_id, 'label':cultura.nome};
       this.tamanho.value = cultura.tamanho;
       this.estimativa.value = cultura.estimativa;
@@ -53,6 +55,7 @@ export default class{
 
   getValues(){
     return{
+      id: this.id,
       produto_id: this.produto.value.id,
       tamanho: this.tamanho.value,
       estimativa: this.estimativa.value,
