@@ -1,4 +1,5 @@
 import { helpers} from 'vuelidate/lib/validators'
+import Cultura from "./Cultura";
 
 export default class{
   inicio = {
@@ -19,8 +20,18 @@ export default class{
   };
   culturas = [];
 
-  constructor(){
+  constructor(safra){
+    if(safra !== undefined || safra != null){
+      console.log(safra)
+      this.inicio.value = safra.inicio;
+      this.fim.value = safra.fim;
+      this.area.value = safra.area.id;
+      this.talhao.value = safra.talhao.id;
 
+      for(var cultura of safra['culturas']){
+        this.culturas.push(new Cultura(cultura));
+      }
+    }
   }
 
   addCultura(cultura){
@@ -68,7 +79,7 @@ export default class{
       ano_inicio: this.inicio.value,
       ano_fim: this.fim.value,
       area_id: this.area.value,
-      talhao_id: this.talhao.value.id,
+      talhao_id: this.talhao.value,
       culturas: this.parseCulturas(this.culturas)
 
     }

@@ -18,9 +18,6 @@
       </template>
     </toolbar>
     <div>
-
-
-
       <q-list no-border>
         <q-list-header class="q-title">Informações</q-list-header>
         <q-item>

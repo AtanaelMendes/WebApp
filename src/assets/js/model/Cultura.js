@@ -18,8 +18,13 @@ export default class{
     errorMessage: null
   };
 
-  constructor(){
-
+  constructor(cultura){
+    if(cultura !== undefined || cultura != null){
+      this.produto.value = {'id':cultura.produto_id, 'label':cultura.nome};
+      this.tamanho.value = cultura.tamanho;
+      this.estimativa.value = cultura.estimativa;
+      this.estimativaUnidadeMedida.value = {'id':cultura.estimativa_unidade_medida_id, 'nome':cultura.estimativa_unidade_medida};
+    }
   }
 
   isValid(){

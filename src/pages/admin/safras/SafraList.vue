@@ -9,20 +9,12 @@
 
           <q-item sparse multiline @click.native="viewSafra(safra.id)" v-for="(safra, key) in safras" :key="key">
             <q-item-main >
-              <q-item-tile>
-                Período: {{safra.inicio}}/{{safra.fim}}
-              </q-item-tile>
-              <q-item-tile>
-                Culturas: {{safra.culturas.join(', ')}}
-              </q-item-tile>
-              <q-item-tile>
-                Area: {{safra.area}} / Talhao: {{safra.talhao}}
-              </q-item-tile>
+              <q-item-tile label>{{safra.culturas.join(', ')}}</q-item-tile>
+              <q-item-tile sublabel><span>Area:</span> {{safra.area}}<span> - Talhao:</span> {{safra.talhao}}</q-item-tile>
             </q-item-main>
 
             <q-item-side right>
-              <q-item-tile stamp>{{ moment(safra.created_at).format('DD MMMM YYYY') }}</q-item-tile>
-              <q-item-tile v-if="safra.deleted_at" stamp>{{ moment(safra.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>
+              <q-item-tile stamp>{{safra.inicio}}/{{safra.fim}}</q-item-tile>
             </q-item-side>
           </q-item>
         </q-list>

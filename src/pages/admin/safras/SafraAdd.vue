@@ -21,7 +21,7 @@
               </q-field>
 
               <q-field :error="safra.talhao.errorMessage != null" class="q-mb-sm">
-                <q-select float-label="Talhão" v-model="safra.talhao.value" :options="talhoes" :disable="safra.area.value === null" @input="onTalhaoSelectInput"/>
+                <q-select float-label="Talhão" v-model="safra.talhao.value" :options="parseTalhoes(talhoes)" :disable="safra.area.value === null" @input="onTalhaoSelectInput"/>
                 <div class="q-field-bottom row no-wrap" style="height: 22px">
                   <div class="q-field-error col" v-if="safra.talhao.errorMessage != null" >{{safra.talhao.errorMessage}}</div>
                 </div>
@@ -41,7 +41,7 @@
 
             <div class="row">
               <div class="col-6">Área ocupada:</div>
-              <div class="col-6 text-right">{{porcentagemAreaOcupada}}%</div>
+              <div class="col-6 text-right">{{Number(porcentagemAreaOcupada).toLocaleString(undefined, {maximumFractionDigits:1})}}%</div>
             </div>
           </q-list-header>
           <q-item dense>
@@ -61,7 +61,7 @@
 
           <div v-if="safra.culturas.length === 0" class="list-empty">
             <q-icon name="warning" />
-            <span>Nenhuma cultuta adicionada</span>
+            <span>Nenhuma cultura adicionada</span>
           </div>
 
           <q-item dense>
@@ -139,11 +139,8 @@
               </q-item>
             </q-field>
 
-            <q-btn
-              color="deep-orange" class="full-width q-mt-md"
-              @click="saveCultura(culturaTemp)"
-              label="salvar"
-            />
+            <q-btn color="deep-orange" class="full-width q-mt-md" v-if="!culturaEditMode" @click="addCultura(culturaTemp)" label="salvar"/>
+            <q-btn color="deep-orange" class="full-width q-mt-md" v-if="culturaEditMode" @click="editCultura(culturaTemp, culturaTempEditIndex)" label="Atualizar"/>
           </div>
         </q-modal>
       </q-step>
@@ -180,30 +177,31 @@
         talhoes: [],
         culturaTemp: new Cultura(),
         culturaTempAreaTotal: true,
+        culturaEditMode: false,
+        culturaTempEditIndex: null,
         tempProdutoList: [],
         searchProdutosTerms: "",
         openedCulturaModal: false,
         unidadesMedida: [],
+        selectedTalhao: null,
       }
     },
     computed:{
-      /*tamanhoPercentual: function(){
-        return (this.culturaTemp.tamanho.value / this.safra.talhao.value.tamanho * 100) | 0;
-      }*/
       porcentagemAreaOcupada: function(){
-        //return this.safra.talhao.value.tamanho;
-        if(!this.safra.talhao.value){
+        if(!this.selectedTalhao){
           return;
         }
 
-        let areaTotal = parseInt(this.safra.talhao.value.tamanho);
-        /*let restante = areaTotal - this.getCulturasTamanhoTotal();
-        return areaTotal / this.getCulturasTamanhoTotal();*/
+        let areaTotal = parseInt(this.selectedTalhao.tamanho);
         return this.getCulturasTamanhoTotal() / areaTotal * 100;
       },
       areaLivre: function(){
-        let areaTotal = parseInt(this.safra.talhao.value.tamanho);
-        return areaTotal - this.getCulturasTamanhoTotal();
+        let areaTotal = parseInt(this.selectedTalhao.tamanho);
+        let culturasTotal = this.getCulturasTamanhoTotal();
+        if(this.culturaEditMode){
+          culturasTotal = culturasTotal - this.culturaTemp.tamanho.value;
+        }
+        return areaTotal - culturasTotal;
       }
     },
     methods:{
@@ -235,16 +233,6 @@
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
-        /*PessoaService.savePessoa(this.pessoa.getValues()).then(response => {
-          console.log(response.status)
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Pessoa criada com sucesso'});
-            this.$router.push({name: 'pessoas'});
-            this.$root.$emit('refreshPessoaList')
-          }
-        }).catch(error => {
-          this.$q.notify({type: 'negative'', message: 'http:' + error.status + error.request.response})
-        });*/
 
       },
       getAreas: function(){
@@ -257,21 +245,25 @@
           })
         })
       },
+      parseTalhoes:function(talhoes){
+        return talhoes.map(talhao => {
+          return {
+            label: talhao.nome,
+            value: talhao.id,
+          }
+        })
+      },
       onAreasSelectInput: function(value){
         this.safra.area.errorMessage = null;
         this.getTalhoesByArea(value)
       },
-      onTalhaoSelectInput: function(){
+      onTalhaoSelectInput: function(value){
+        this.selectedTalhao = this.talhoes.filter(item => item['id'] === value)[0];
         this.safra.talhao.errorMessage = null;
       },
       getTalhoesByArea: function(area_id){
         talhaoService.listTalhoes(area_id).then(response => {
-          this.talhoes = response.data.map(talhao => {
-            return {
-              label: talhao.nome,
-              value: talhao
-            }
-          })
+          this.talhoes = response.data;
         })
       },
       getUnidadesMedida:function(){
@@ -305,9 +297,6 @@
           this.setProduto(result[0]);
         }
       },
-      openNovoProdutoDialog(){
-
-      },
       openAddCulturaModal(){
         if(this.areaLivre === 0){
           this.$q.dialog({
@@ -318,12 +307,15 @@
           return;
         }
 
+        this.culturaEditMode = false;
         this.culturaTemp = new Cultura();
         this.culturaTemp.tamanho.value = this.areaLivre;
         this.openedCulturaModal = true;
       },
-      openEditCulturaModal(cultura){
+      openEditCulturaModal(cultura, index){
         console.log(cultura);
+        this.culturaEditMode = true;
+        this.culturaTempEditIndex = index;
         this.culturaTemp = cultura;
         this.openedCulturaModal = true;
         this.culturaTempAreaTotal = false;
@@ -334,9 +326,15 @@
         this.openedCulturaModal = false;
         this.culturaTempAreaTotal = true;
       },
-      saveCultura(culturaTemp){
+      addCultura(culturaTemp){
         if(culturaTemp.isValid()){
           this.safra.addCultura(culturaTemp);
+          this.closeCulturaModal();
+        }
+      },
+      editCultura: function(cultura, index){
+        if(cultura.isValid()){
+          this.safra.editCultura(cultura, index);
           this.closeCulturaModal();
         }
       },
