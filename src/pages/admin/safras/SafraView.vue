@@ -1,6 +1,6 @@
 <template>
   <custom-page isChild>
-    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Safra">
+    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" :title="'Safra ' + safra.inicio + '/' + safra.fim">
       <template slot="action_itens" v-if="safra">
         <q-btn flat round dense icon="edit" @click.native="editSafra(safra.id)"/>
         <q-btn flat round dense icon="more_vert" >
@@ -18,7 +18,36 @@
       </template>
     </toolbar>
     <div>
-      ss
+
+
+
+      <q-list no-border>
+        <q-list-header class="q-title">Informações</q-list-header>
+        <q-item>
+          <q-item-main>
+            <q-item-tile class="q-subheading">Local</q-item-tile>
+            <q-item-tile sublabel>{{safra.area.nome}}</q-item-tile>
+            <q-item-tile sublabel>{{safra.area.localizacao}}</q-item-tile>
+          </q-item-main>
+        </q-item>
+
+        <q-item>
+          <q-item-main>
+            <q-item-tile class="q-subheading">Talhão</q-item-tile>
+            <q-item-tile sublabel>{{safra.talhao.nome}} ({{pluralize(safra.talhao.tamanho, safra.talhao.unidade_area)}})</q-item-tile>
+            <q-item-tile sublabel>{{pluralize(safra.culturas.length, 'cultura')}} para o plantio</q-item-tile>
+          </q-item-main>
+        </q-item>
+        <q-list-header class="q-title">Culturas</q-list-header>
+        <q-item v-for="cultura in safra.culturas">
+          <q-item-main>
+            <q-item-tile class="q-subheading">{{cultura.nome}}</q-item-tile>
+            <!--<q-item-tile sublabel>Tamanho ocupado: {{pluralize(cultura.tamanho, safra.talhao.unidade_area)}} ({{'~'+fixPercent(cultura.tamanho / safra.talhao.tamanho * 100)}}%)</q-item-tile>-->
+            <q-item-tile sublabel>Tamanho ocupado: <span>{{pluralize(cultura.tamanho, safra.talhao.unidade_area)}}</span></q-item-tile>
+            <q-item-tile sublabel>Estimativa de colheita:  <span>{{pluralize(cultura.estimativa, cultura.estimativa_unidade_medida)}}</span></q-item-tile>
+          </q-item-main>
+        </q-item>
+      </q-list>
     </div>
   </custom-page>
 </template>
@@ -39,11 +68,20 @@
         safra: null,
       }
     },
+    watch: {
+      '$route' (to, from) {
+        this.getSafraById(to.params.id)
+      }
+    },
     methods:{
-      getSafraById: function(){
-        safraService.getSafra(this.$route.params.id).then(response => {
-          //this.areaData = area.data;
-          //this.fillForm(this.areaData)
+      pluralize: function(amount, word){
+        return amount + ' ' + word + (amount > 1 ? 's' : '');
+      },
+      fixPercent(value){
+        return Number(value).toLocaleString(undefined, {maximumFractionDigits:1})
+      },
+      getSafraById: function(id){
+        safraService.getSafra(id).then(response => {
           this.safra = response.data;
         })
       },
@@ -51,7 +89,7 @@
         this.$router.push({name: 'edit_safra', params: {id:id}});
       },
       enableSafra: function(id){
-        safraService.deleteSafra(id).then(response => {
+        safraService.restoreSafra(id).then(response => {
           if(response.status === 200) {
             this.$root.$emit('refreshSafraList')
           }
@@ -69,7 +107,7 @@
       }
     },
     mounted(){
-      this.getSafraById();
+      this.getSafraById(this.$route.params.id);
     }
   }
 
