@@ -10,8 +10,8 @@
 
         <q-card >
           <q-card-title class=" relative-position">
-            <q-chip small color="teal" class="q-mx-xs">Cobrança</q-chip>
-            <q-chip small color="teal" class="q-mx-xs">Fiscal</q-chip>
+            <q-chip small color="teal" class="q-mx-xs" v-if="localizacao.is_cobranca">Cobrança</q-chip>
+            <q-chip small color="teal" class="q-mx-xs" v-if="localizacao.is_fiscal">Fiscal</q-chip>
             <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
               <q-popover>
                 <q-list class="no-border">
@@ -55,9 +55,6 @@
 
               <q-item v-if="localizacao.complemento">
                 <q-item-main>
-                  <q-item-tile sublabel>
-                    Complemento
-                  </q-item-tile>
                   <q-item-tile>
                     {{localizacao.complemento}}
                   </q-item-tile>
