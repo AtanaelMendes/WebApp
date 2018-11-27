@@ -1,8 +1,46 @@
 import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
 import AgroUtils from 'assets/js/AgroUtils'
-
+const produtorId = localStorage.getItem('account.produtor_id');
 export default {
+  listProdutor: function(){
+    return new Promise((resolve, reject) => {
+      this.getListProdutor(produtorId).then(response => {
+        let produtorOptions = response.data.map(data => {
+          return {
+            value: data.id,
+            label: data.nome
+          }
+        });
+        resolve(produtorOptions)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getListProdutor(id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get( 'produtor' ).then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  saveProdutor(params){
+    return new Promise((resolve, reject) => {
+      Loading.show();
+      Vue.prototype.$axios.post('produtor', params).then(response => {
+        if (response.status === 201) {
+          Loading.hide();
+          resolve(response)
+        }
+      }).catch(error => {
+        Loading.hide();
+        reject(error)
+      })
+    });
+  },
   listAccounts(filter){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.get( 'account?' + AgroUtils.serialize(filter) ).then( response => {
@@ -12,7 +50,6 @@ export default {
       })
     });
   },
-
   getAccount(accountId){
     return new Promise((resolve, reject) => {
       Loading.show();
@@ -26,45 +63,34 @@ export default {
       })
     });
   },
-
   saveAccount(params){
     return new Promise((resolve, reject) => {
       Loading.show();
-
       Vue.prototype.$axios.post('account', params).then(response => {
         if (response.status === 201) {
           Loading.hide();
-
           resolve(response)
-
         }
       }).catch(error => {
         Loading.hide();
         reject(error)
       })
-
     });
   },
-
   updateAccount(params, accountId){
     return new Promise((resolve, reject) => {
       Loading.show();
-
       Vue.prototype.$axios.put('account/' + accountId, params).then(response => {
         if (response.status === 200) {
           Loading.hide();
-
           resolve(response)
-
         }
       }).catch(error => {
         Loading.hide();
         reject(error)
       })
-
     });
   },
-
   openRolesDialog(selectedRoles, roles){
     return new Promise((resolve, reject) => {
       Dialog.create({
@@ -85,7 +111,6 @@ export default {
       })
     });
   },
-
   removeRole(selectedRoles, role){
     return new Promise((resolve, reject) => {
       Dialog.create({
@@ -104,7 +129,6 @@ export default {
       })
     });
   },
-
   listRoles(){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.get('role').then(response => {
@@ -114,9 +138,7 @@ export default {
       })
     });
   },
-
 }
-
 function parseRolesToItems(roles) {
   var items = [];
   roles.forEach(function (role) {
@@ -127,7 +149,6 @@ function parseRolesToItems(roles) {
   });
   return items
 }
-
 function getIdsByRoles(roles) {
   let rolesIds = [];
   roles.forEach(function (role) {
@@ -135,7 +156,6 @@ function getIdsByRoles(roles) {
   });
   return rolesIds
 }
-
 function getRolesById(roles, ids) {
   let selectedRoles = [];
   for(let i = 0; i < ids.length; i++) {
@@ -147,5 +167,3 @@ function getRolesById(roles, ids) {
   }
   return selectedRoles;
 }
-
-
