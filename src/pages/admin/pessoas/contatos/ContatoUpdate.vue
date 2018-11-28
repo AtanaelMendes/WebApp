@@ -1,7 +1,7 @@
 <template>
   <custom-page isChild>
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Editar contato">
-      <q-btn slot="action_itens" flat dense icon="done" @click="updateContato()"/>
+      <q-btn slot="action_itens" flat dense icon="done" round @click="updateContato()"/>
     </toolbar>
 
     <q-scroll-area style="height: 200vh" :thumb-style="{
@@ -170,6 +170,7 @@
     },
     data(){
       return {
+        contatoId: null,
         contato: new Contato(),
         telefone: new Telefone(),
         email: new Email(),
@@ -188,6 +189,7 @@
     methods:{
       fillForm: function(data){
         let vm = this
+        this.contatoId = data.id
         this.contato.isFiscal = data.is_fiscal
         this.contato.isCobranca = data.is_cobranca
         this.contato.nome.value = data.nome
@@ -229,7 +231,7 @@
             })
           }
         }
-        contatoService.updateContato(this.$route.params.id, this.contato.getValues()).then( response => {
+        contatoService.updateContato(this.$route.params.id, this.contatoId, this.contato.getValues()).then( response => {
           this.$q.notify({type: 'positive', message: 'Contato criado com sucesso'})
           this.$router.go(-1);
         }).catch(error => {

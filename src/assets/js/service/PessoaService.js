@@ -39,4 +39,22 @@ export default {
       })
     });
   },
+  inactivePessoa(id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('/pessoa/' + id).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
+  activePessoa(id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.delete('/pessoa/' + id + '/restore').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
 }

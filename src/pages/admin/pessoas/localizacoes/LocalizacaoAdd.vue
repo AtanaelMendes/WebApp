@@ -50,9 +50,6 @@
             <!--BAIRRO-->
             <custom-input-text class="capitalize" type="text" label="Bairro" :model="localizacao.bairro" />
 
-            <!--CEP-->
-            <custom-input-text class="capitalize" type="text" label="CEP" mask="#####-###" :model="localizacao.cep" />
-
           </form>
 
         </div>
