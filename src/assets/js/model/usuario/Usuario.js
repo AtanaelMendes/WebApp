@@ -91,8 +91,12 @@ export default class{
       email: this.email.value,
       produtor_id: this.produtor.value,
       password: this.password.value,
-      selectedRoles: this.selectedRoles.value,
+      roles: getRolesIds(this.selectedRoles.value).join(',')
     }
   };
-
+}
+function getRolesIds(roles){
+  return roles.map(function (role) {
+    return role.id;
+  })
 }

@@ -23,7 +23,7 @@
       </template>
     </toolbar>
 
-    <div class="row">
+    <div class="row space-end">
       <div class="col-12">
         <q-list highlight no-border sparse v-if="!isEmptyList">
 
@@ -124,6 +124,9 @@
 </script>
 
 <style scoped>
+  .space-end{
+    margin-bottom: 150px;
+  }
   .no-result{
     text-align: center;
     padding-top: 150px;
