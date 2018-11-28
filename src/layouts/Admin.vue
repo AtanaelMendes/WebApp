@@ -4,7 +4,7 @@
 
     <q-layout-drawer v-model="leftDrawerOpen" class="layout-drawer">
       <div class="navigation-header">
-        <img src="~assets/person-profile-image.jpg" class="profile-image shadow-1"/>
+        <img src="~assets/person-profile-image.jpg" class="profile-image shadow-1" style="opacity: 0"/>
         <span class="profile-name">{{currentAccount.name}}</span>
         <span class="profile-email">{{currentAccount.email}}</span>
         <q-btn flat round dense class="settings_icon">
@@ -12,9 +12,9 @@
 
           <q-popover>
             <q-list link class="scroll" style="min-width: 200px">
-              <q-item @click.native="">
+              <!--<q-item @click.native="">
                 <q-item-main label="Minha conta" />
-              </q-item>
+              </q-item>-->
               <q-item @click.native="logout()">
                 <q-item-main label="Sair" />
               </q-item>
