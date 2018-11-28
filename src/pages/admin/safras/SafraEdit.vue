@@ -9,12 +9,30 @@
         <div class="row q-pa-md" v-if="safra">
           <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
             <form>
-              <div class="row gutter-sm">
+              <div class="row gutter-lg">
                 <div class="col-6">
-                  <custom-input-text type="text" label="Início" :model="safra.inicio" maxlength="4" mask="####"/>
+                  <q-field :error="safra.inicio.errorMessage != null" class="q-mb-sm">
+                    <q-select float-label="Inicio" v-model="safra.inicio.value" :options="yearsList" filter @input="setAnoInicio"/>
+                    <div class="q-field-bottom row no-wrap" style="height: 22px">
+                      <div class="q-field-error col" v-if="safra.inicio.errorMessage != null" >{{safra.inicio.errorMessage}}</div>
+                    </div>
+                  </q-field>
                 </div>
+
                 <div class="col-6">
-                  <custom-input-text type="text" label="Fim" :model="safra.fim" maxlength="4" mask="####"/>
+                  <q-item >
+                    <q-item-main>
+                      <q-item-tile label style="font-size: 0.75rem; color:#979797">Fim</q-item-tile>
+                      <q-item-tile sublabel>
+                        <q-btn-toggle v-model="selectedAnoFim" toggle-color="primary" class="custom-toggle" @input="setAnoFim" dense
+                                      :options="[
+                                        {label: safra.inicio.value.toString(), value: safra.inicio.value},
+                                        {label: parseInt(safra.inicio.value) + 1, value: (parseInt(safra.inicio.value) + 1).toString()}
+                                      ]"
+                        />
+                      </q-item-tile>
+                    </q-item-main>
+                  </q-item>
                 </div>
               </div>
 
@@ -188,6 +206,8 @@
         openedCulturaModal: false,
         unidadesMedida: [],
         selectedTalhao: null,
+        selectedAnoFim: null,
+        yearsList: []
       }
     },
     computed:{
@@ -209,11 +229,32 @@
       }
     },
     methods:{
+      getCurrentYear: function(){
+        return new Date().getFullYear().toString();
+      },
+      makeYearsList: function(referenceYear){
+        this.yearsList = [];
+        var listSize = 8;
+        var startYear = referenceYear - (listSize / 2);
+        for(var i = startYear; i < (startYear + listSize); i++){
+          this.yearsList.push({'label': i.toString(), 'value': i.toString()});
+        }
+      },
       getSafraById: function(id){
         safraService.getSafra(id).then(response => {
           this.safra = new Safra(response.data);
           this.getTalhoesByArea(this.safra.area.value)
         })
+
+        return new Promise((resolve, reject) => {
+          safraService.getSafra(id).then(response => {
+            this.safra = new Safra(response.data);
+            this.getTalhoesByArea(this.safra.area.value)
+            resolve();
+          }).catch(error => {
+            reject();
+          })
+        });
       },
       getCulturasTamanhoTotal: function(){
         let tamanho = 0;
@@ -244,6 +285,13 @@
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
 
+      },
+      setAnoInicio: function(value){
+        this.safra.fim.value = value.toString();
+        this.selectedAnoFim = value.toString();
+      },
+      setAnoFim: function(value){
+        this.safra.fim.value = value.toString();
       },
       getAreas: function(){
         areaService.listAreas().then(response => {
@@ -323,7 +371,6 @@
         this.openedCulturaModal = true;
       },
       openEditCulturaModal(cultura, index){
-        console.log(cultura);
         this.culturaEditMode = true;
         this.culturaTempEditIndex = index;
         this.culturaTemp = cultura;
@@ -370,15 +417,22 @@
       }
     },
     mounted(){
+
+      //this.safra.inicio.value = this.getCurrentYear();
+      //this.safra.fim.value = this.getCurrentYear();
+
       this.getAreas();
       this.getUnidadesMedida();
-      this.getSafraById(this.$route.params.id);
+      this.getSafraById(this.$route.params.id).then(()=>{
+        this.makeYearsList(this.safra.inicio.value.toString());
+        this.selectedAnoFim = this.safra.fim.value.toString();
+      })
     }
   }
 
 </script>
 
-<style scoped>
+<style>
   .q-stepper{
     box-shadow: unset !important;
   }
@@ -406,5 +460,10 @@
 
   .unidade-medida-select{
     padding-top: 8px !important;
+  }
+
+  .custom-toggle button{
+    padding-left: 24px;
+    padding-right: 24px;
   }
 </style>
