@@ -38,4 +38,13 @@ export default {
       })
     });
   },
+  updateContato(pessoaId, contatoId, params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('/pessoa/' + pessoaId + '/contato/' + contatoId, params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
 }
