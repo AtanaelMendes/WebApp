@@ -30,11 +30,12 @@
           <q-item link separator multiline @click.native="viewUser(user.id)" v-for="(user, key) in users" :key="key">
             <q-item-main style="overflow: hidden">
               <q-item-tile>
-                {{user.email}}
+                {{user.nome}}
                 <q-chip v-if="user.deleted_at" small square color="red">
                   INATIVO
                 </q-chip>
               </q-item-tile>
+              <q-item-tile sublabel>{{user.email}}</q-item-tile>
             </q-item-main>
 
             <q-item-side right>
