@@ -1,94 +1,135 @@
 <template>
-  <custom-page isChild noScroll style="background: #fdfdfd">
+  <custom-page isChild style="background: #fdfdfd">
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction">
-      <!--<template slot="action_itens" v-if="area">-->
-        <!--<q-btn flat round dense icon="edit" @click.native="editArea(area.id)"/>-->
-        <!--<q-btn flat round dense icon="more_vert" >-->
-        <!--</q-btn>-->
-      <!--</template>-->
-
-      <q-tabs slot="tabs" v-model="selectedTab" align="justify"  class="shadow-3" color="brand" text-color="brand" underline-color="deep-orange">
-        <q-tab slot="title" name="tab-talhoes" label="Talhões"/>
-        <q-tab slot="title" name="tab-info" label="Área"/>
-      </q-tabs>
+      <template slot="action_itens" v-if="area">
+        <q-btn flat round dense icon="edit" @click.native="editArea(area.id)"/>
+      </template>
     </toolbar>
 
-    <swipe ref="mySwiper" class="my-swipe" :continuous="false" :auto="0" :showIndicators="false" :disabled="true">
+    <div class="row space-end">
+      <div class="col-12">
 
-      <swipe-item>
-        <dashboard></dashboard>
-      </swipe-item>
+        <!--INFORMACOES-->
+        <div v-if="area" class="row gutter-sm q-mb-lg">
 
-      <swipe-item>
-        <area-info></area-info>
-      </swipe-item>
+          <div class="col-12">
+            <q-item>
+              <q-item-side>
+                <q-icon name="place" size="40px"/>
+              </q-item-side>
+              <q-item-main>
+                <q-item-tile class="q-title">{{area.nome}}</q-item-tile>
+              </q-item-main>
+            </q-item>
+          </div>
 
-    </swipe>
-    <transition
-      appear
-      slot="fab-container"
-      enter-active-class="animated zoomIn faster"
-      leave-active-class="animated zoomOut faster">
-      <q-btn
-        icon="add"
-        size="20px"
-        key="talhao"
-        @click="addtalhao"
-        round color="deep-orange"
-        v-if="selectedTab == 'tab-talhoes' "
-      />
-      <q-btn
-        icon="edit"
-        size="20px"
-        key="info"
-        @click="editArea"
-        round color="deep-orange"
-        v-if="selectedTab == 'tab-info' "
-      />
-    </transition>
+          <div :class="coluna">
+            <q-item>
+              <q-item-main inset>
+                <q-item-tile class="q-subheading">
+                  {{area.localizacao.endereco}},&nbsp{{area.localizacao.numero}}
+                </q-item-tile>
+                <q-item-tile sublabel>
+                  {{area.localizacao.cidade.nome}},&nbsp{{area.localizacao.cidade.estado.nome}}
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+          </div>
+
+        </div>
+        <!--FIM INFORMACOES-->
+
+        <!--TALHOES-->
+        <div class="row q-px-md gutter-sm">
+          <div class="col-12">
+            <q-item class="custom-header">
+              <q-item-main class="q-title">
+                Talhões
+              </q-item-main>
+              <q-item-side>
+                <q-btn round size="md" icon="add" @click="addtalhao" color="deep-orange"/>
+              </q-item-side>
+            </q-item>
+          </div>
+          <div class="col-6" v-for="talhao in talhoes" :key="talhao.id">
+            <q-card color="white" text-color="black">
+              <q-card-title>
+                {{talhao.nome}}
+                <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
+                  <q-popover>
+                    <q-list link  style="min-width: 120px">
+                      <q-item v-close-overlay @click.native="updateTalhao(talhao.id)">
+                        <q-item-main label="Editar"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="deleteTalhao(talhao.id)">
+                        <q-item-main label="Apagar"/>
+                      </q-item>
+                    </q-list>
+                  </q-popover>
+                </q-btn>
+              </q-card-title>
+              <q-card-separator/>
+              <q-card-main>
+                <div class="row">
+                  <div>{{talhao.tamanho}},&nbsp{{talhao.unidade.nome}}</div>
+                </div>
+              </q-card-main>
+            </q-card>
+          </div>
+        </div>
+        <!--FIM TALHOES-->
+      </div>
+    </div>
   </custom-page>
 </template>
 
 <script>
-  require('vue-swipe/dist/vue-swipe.css');
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import dashboard from 'pages/admin/areas/tabs/TalhaoList'
-  import areaInfo from 'pages/admin/areas/tabs/AreaInfo'
-  import { Swipe, SwipeItem } from 'vue-swipe';
+  import talhaoService from 'assets/js/service/area/TalhaoService'
+  import areaService from 'assets/js/service/area/AreaService'
   export default {
     name: "area-view",
     components: {
-      areaInfo,
-      dashboard,
       toolbar,
       customPage,
-      Swipe,
-      SwipeItem
     },
     watch: {
       '$route' (to, from) {
-        this.selectedTab ='tab-talhoes';
+        this.listTalhao(this.$route.params.id);
+        this.getAreaById(this.$route.params.id);
       },
-      selectedTab: function (value) {
-        let index;
-        switch (value) {
-          case 'tab-talhoes':
-            index = 0;
-            break;
-          case 'tab-info':
-            index = 1;
-            break;
-        }
-        this.$refs.mySwiper.goto(index)
-      }
     },
     data(){
       return{
-        selectedTab: 'tab-talhoes',
+        area: null,
+        talhoes: [],
+        coluna: 'col-xs-12 col-sm-12 col-md-6 col-lg-6',
       }
     },
     methods: {
+      getAreaById: function(areaId){
+        areaService.getAreaById(areaId).then(area => {
+          this.area = area
+        })
+      },
+      editArea: function(id){
+        this.$router.push({name: 'edit_area', params: {id:id}});
+      },
+      updateTalhao: function(talhaoId){
+        let areaId = this.$route.params.id
+        this.$router.push({name: 'edit_talhao', params: {id:areaId, talhaoId: talhaoId}});
+      },
+      deleteTalhao: function(){},
+      addtalhao: function(id){
+        this.$router.push({name: 'add_talhao', params: {id:id}});
+      },
+      listTalhao: function(id){
+        talhaoService.listTalhao(id).then(talhoes => {
+          this.talhoes = talhoes.data;
+          this.isEmptyList = this.talhoes.length === 0;
+        })
+      },
       editArea: function(){
         this.$router.push({name:'edit_area'});
       },
@@ -102,13 +143,34 @@
       }
     },
     mounted(){
-
+      this.listTalhao(this.$route.params.id);
+      this.getAreaById(this.$route.params.id);
     }
   }
 </script>
 
 <style>
-  .my-swipe {
-    height: 100%;
+  .space-end{
+    margin-bottom: 150px;
+  }
+  .custom-header{
+    border-top: 1px solid #c5c5c5;
+  }
+  .no-result{
+    text-align: center;
+    padding-top: 150px;
+  }
+
+  .no-result img{
+    width: 120px;
+    height: auto;
+  }
+
+  .no-result span{
+    display: block;
+    margin-top: 30px;
+    font-size: 25px;
+    font-weight: 300;
+    color: #ababab;
   }
 </style>
