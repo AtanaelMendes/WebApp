@@ -69,11 +69,11 @@
       return {
         form: {
           email: {
-            value: 'mendes@mendes.com',
+            value: null,
             errorMessage: null
           },
           password: {
-            value: '12345678',
+            value: null,
             errorMessage: null
           },
         },
@@ -127,7 +127,6 @@
           }
           return;
         }
-        //TODO: Implementar a lógica aqui
       },
       login: function () {
         this.$v.form.$touch();

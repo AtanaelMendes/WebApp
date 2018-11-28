@@ -66,7 +66,7 @@ export default {
     openURL,
     getAccountInfo: function(){
       this.$axios.get( 'account/info').then( response => {
-        this.currentAccount.name = 'Fulano da Silva';
+        // this.currentAccount.name = 'Fulano da Silva';
         this.currentAccount.email = response.data.email;
         localStorage.setItem( 'account.produtor_id', response.data.produtor_id);
       })
