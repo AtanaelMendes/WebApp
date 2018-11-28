@@ -1,4 +1,4 @@
-import { helpers} from 'vuelidate/lib/validators'
+import {email, helpers} from 'vuelidate/lib/validators'
 export default class{
   email = {
     value: null,
@@ -33,6 +33,9 @@ export default class{
     let hasError = false;
     if(!helpers.req(this.email.value)){
       this.email.errorMessage = "Digite um email";
+      hasError = true;
+    }else if(!email(this.email.value)){
+      this.email.errorMessage = "O formato do email não é válido";
       hasError = true;
     }
 
