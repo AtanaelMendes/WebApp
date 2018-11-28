@@ -101,7 +101,6 @@
                 <q-btn round size="md" icon="add" @click="addContato" color="deep-orange"/>
               </q-item-side>
             </q-item>
-
           </div>
 
           <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-for="(contato, index) in contatos" :key="contato.nome">
@@ -410,7 +409,6 @@
     font-weight: 300;
     color: #ababab;
   }
-
   .custom-header{
     border-top: 1px solid #c5c5c5;
   }
