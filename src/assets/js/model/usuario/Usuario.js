@@ -1,5 +1,9 @@
 import {email, helpers} from 'vuelidate/lib/validators'
 export default class{
+  nome = {
+    value: null,
+    errorMessage: null
+  };
   email = {
     value: null,
     errorMessage: null
@@ -22,6 +26,7 @@ export default class{
   };
   constructor(usuario){
     if(usuario !== undefined){
+      this.nome.value = usuario.nome.value;
       this.email.value = usuario.email.value;
       this.produtor.value = usuario.produtor.value;
       this.password.value = usuario.password.value;
@@ -31,6 +36,15 @@ export default class{
   };
   isValid(){
     let hasError = false;
+
+    if(!helpers.req(this.nome.value)){
+      this.nome.errorMessage = "Digite um nome";
+      hasError = true;
+    }else if(helpers.len(this.nome.value) < 3){
+      this.nome.errorMessage = "O nome deve ter no mínimo 3 caracteres";
+      hasError = true;
+    }
+
     if(!helpers.req(this.email.value)){
       this.email.errorMessage = "Digite um email";
       hasError = true;
@@ -73,6 +87,7 @@ export default class{
 
   getValues(){
     return{
+      nome: this.nome.value,
       email: this.email.value,
       produtor_id: this.produtor.value,
       password: this.password.value,
