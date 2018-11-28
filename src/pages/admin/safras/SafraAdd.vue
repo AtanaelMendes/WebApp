@@ -11,8 +11,6 @@
             <form>
               <div class="row gutter-lg">
                 <div class="col-6">
-                  <!--<custom-input-text type="text" label="Início" :model="safra.inicio" maxlength="4" mask="####"/>-->
-                    <!--<q-input v-model="safra.inicio.value" @change="setAnoInicio" />-->
                   <q-field :error="safra.inicio.errorMessage != null" class="q-mb-sm">
                     <q-select float-label="Inicio" v-model="safra.inicio.value" :options="yearsList" filter @input="setAnoInicio"/>
                     <div class="q-field-bottom row no-wrap" style="height: 22px">
@@ -20,10 +18,8 @@
                     </div>
                   </q-field>
                 </div>
+
                 <div class="col-6">
-                  <!--<custom-input-text type="text" label="Fim" :model="safra.fim" maxlength="4" mask="####"/>-->
-
-
                   <q-item >
                     <q-item-main>
                       <q-item-tile label style="font-size: 0.75rem; color:#979797">Fim</q-item-tile>
@@ -236,10 +232,10 @@
       getCurrentYear: function(){
         return new Date().getFullYear().toString();
       },
-      makeYearsList: function(){
+      makeYearsList: function(referenceYear){
         this.yearsList = [];
         var listSize = 8;
-        var startYear = this.getCurrentYear() - (listSize / 2);
+        var startYear = referenceYear - (listSize / 2);
         for(var i = startYear; i < (startYear + listSize); i++){
           this.yearsList.push({'label': i.toString(), 'value': i.toString()});
         }
@@ -275,16 +271,10 @@
 
       },
       setAnoInicio: function(value){
-       console.log('set ano inicio')
-         /*if(value.toString().length < 4){
-          this.safra.inicio.value = 2018;
-          return
-        }*/
         this.safra.fim.value = value.toString();
         this.selectedAnoFim = value.toString();
       },
       setAnoFim: function(value){
-        console.log('set ano fim')
         this.safra.fim.value = value.toString();
       },
       getAreas: function(){
@@ -411,7 +401,7 @@
       }
     },
     mounted () {
-      this.makeYearsList();
+      this.makeYearsList(this.getCurrentYear());
       this.safra.inicio.value = this.getCurrentYear();
       this.safra.fim.value = this.getCurrentYear();
       this.selectedAnoFim = this.safra.fim.value.toString();

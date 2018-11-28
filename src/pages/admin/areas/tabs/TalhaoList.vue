@@ -8,21 +8,17 @@
 
     <div v-if="!isEmptyList" class="row q-ma-sm gutter-xs space-end">
       <div class="col-6" v-for="talhao in talhoes" :key="talhao.id">
-        <q-card>
+        <q-card color="white" text-color="black">
           <q-card-title>
             {{talhao.nome}}
             <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
               <q-popover>
-                <q-list class="no-border">
-                  <q-item v-close-overlay>
-                    <q-item-main @click.native="updateTalhao(talhao.id)">
-                      <q-btn dense flat label="editar"/>
-                    </q-item-main>
+                <q-list link  style="min-width: 120px">
+                  <q-item v-close-overlay @click.native="updateTalhao(talhao.id)">
+                    <q-item-main label="Editar"/>
                   </q-item>
-                  <q-item v-close-overlay>
-                    <q-item-main @click.native="deleteTalhao(talhao.id)">
-                      <q-btn dense flat label="apagar"/>
-                    </q-item-main>
+                  <q-item v-close-overlay @click.native="deleteTalhao(talhao.id)">
+                    <q-item-main label="Apagar"/>
                   </q-item>
                 </q-list>
               </q-popover>

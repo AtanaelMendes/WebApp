@@ -18,7 +18,7 @@
       </template>
     </toolbar>
     <div>
-      <q-list no-border>
+      <q-list no-border inset-separator>
         <q-list-header class="q-title">Informações</q-list-header>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
@@ -53,6 +53,9 @@
 
         <q-list-header class="q-title">Culturas</q-list-header>
         <q-item v-for="cultura in safra.culturas" :key="cultura.id">
+          <q-item-side>
+            <q-item-tile inverted letter color="secondary">{{cultura.nome.charAt(0,1).toUpperCase()}}</q-item-tile>
+          </q-item-side>
           <q-item-main>
             <q-item-tile class="q-subheading">{{cultura.nome}}</q-item-tile>
             <!--<q-item-tile sublabel>Tamanho ocupado: {{pluralize(cultura.tamanho, safra.talhao.unidade_area)}} ({{'~'+fixPercent(cultura.tamanho / safra.talhao.tamanho * 100)}}%)</q-item-tile>-->

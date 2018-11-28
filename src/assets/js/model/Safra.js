@@ -23,8 +23,8 @@ export default class{
   constructor(safra){
     if(safra !== undefined || safra != null){
       console.log(safra)
-      this.inicio.value = safra.inicio;
-      this.fim.value = safra.fim;
+      this.inicio.value = safra.inicio.toString();
+      this.fim.value = safra.fim.toString();
       this.area.value = safra.area.id;
       this.talhao.value = safra.talhao.id;
 
