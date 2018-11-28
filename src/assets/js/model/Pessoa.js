@@ -1,5 +1,4 @@
 import { helpers} from 'vuelidate/lib/validators'
-
 export default class{
   pessoaType = 1;
   nome= {
