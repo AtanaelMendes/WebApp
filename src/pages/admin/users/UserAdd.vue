@@ -18,6 +18,8 @@
             </q-item-side>
           </q-item>
 
+          <custom-input-text label="Nome" :model="usuario.nome" />
+
           <custom-input-text type="email" label="Email" :model="usuario.email" />
 
           <custom-input-text type="password" label="Senha" :model="usuario.password" />
@@ -75,8 +77,8 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import userService from 'assets/js/service/UserService'
-  import produtor from 'assets/js/model/produtor/Produtor'
-  import user from 'assets/js/model/usuario/Usuario'
+  import Produtor from 'assets/js/model/produtor/Produtor'
+  import User from 'assets/js/model/usuario/Usuario'
   import produtorSelect from 'components/ProdutorSelect.vue'
   export default {
     name: "user-add",
@@ -92,9 +94,9 @@
         produtorSearchTerms: '',
         tempProdutorList: [],
         newProdutorDialog: false,
-        produtor: new produtor(),
+        produtor: new Produtor(),
         produtorOptions: [],
-        usuario: new user()
+        usuario: new User()
       }
     },
     methods:{

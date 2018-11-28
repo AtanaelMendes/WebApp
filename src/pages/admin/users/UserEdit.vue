@@ -9,6 +9,9 @@
       <div style="display: flex">
         <div style="width: 50%;">
           <q-list-header class="q-pa-none">Informações Básicas</q-list-header>
+
+          <custom-input-text label="Nome" :model="form.nome" />
+
           <custom-input-text type="email" label="Email" :model="form.email" />
 
           <custom-input-text type="password" label="Senha" :model="form.password" />
@@ -64,6 +67,10 @@
         roles: null,
         accountId: null,
         form: {
+          nome: {
+            value: null,
+            errorMessage: null
+          },
           email: {
             value: null,
             errorMessage: null
@@ -85,6 +92,7 @@
     },
     validations: {
       form: {
+        nome: { value: {required, minLength: minLength(3) } },
         email: { value: { required, email } },
         password: { value: {minLength: minLength(8) } },
         repeatPassword: { value: {function () {
@@ -99,6 +107,7 @@
           let account = response.data;
 
           this.accountId = account.id;
+          this.form.nome.value = account.nome;
           this.form.email.value = account.email;
           this.form.selectedRoles.value = account.roles;
 
@@ -121,6 +130,12 @@
         this.$v.form.$touch();
 
         if ( this.$v.form.$error ) {
+
+          if(!this.$v.form.nome.value.required){
+            this.form.nome.errorMessage = "Digite um nome";
+          }else if(!this.$v.form.nome.value.minLength){
+            this.form.nome.errorMessage = "O nome deve ter no mínimo 3 caracteres";
+          }
 
           if(!this.$v.form.email.value.required){
             this.form.email.errorMessage = "Digite um email"

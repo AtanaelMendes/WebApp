@@ -4,10 +4,24 @@
 
     <q-layout-drawer v-model="leftDrawerOpen" class="layout-drawer">
       <div class="navigation-header">
-        <img src="~assets/person-profile-image.jpg" class="profile-image shadow-1"/>
+        <img src="~assets/person-profile-image.jpg" class="profile-image shadow-1" style="opacity: 0"/>
         <span class="profile-name">{{currentAccount.name}}</span>
         <span class="profile-email">{{currentAccount.email}}</span>
-        <q-btn flat round dense icon="settings" class="settings_icon" v-on:click="getAccountInfo" />
+        <q-btn flat round dense class="settings_icon">
+          <q-icon name="settings" />
+
+          <q-popover>
+            <q-list link class="scroll" style="min-width: 200px">
+              <!--<q-item @click.native="">
+                <q-item-main label="Minha conta" />
+              </q-item>-->
+              <q-item @click.native="logout()">
+                <q-item-main label="Sair" />
+              </q-item>
+            </q-list>
+          </q-popover>
+        </q-btn>
+
       </div>
       <q-list no-border link inset-delimiter>
         <q-item @click.native="$router.push('/admin')">
@@ -44,8 +58,7 @@
 </template>
 
 <script>
-import { openURL } from 'quasar'
-
+  import accountService from 'assets/js/service/AccountService'
 export default {
   name: 'Admin',
   data () {
@@ -57,13 +70,12 @@ export default {
       }
     }
   },
-  created(){
+  mounted(){
     this.getAccountInfo();
 
     this.$root.$on('toogleLeftDrawer', this.toogleLeftDrawer)
   },
   methods: {
-    openURL,
     getAccountInfo: function(){
       this.$axios.get( 'account/info').then( response => {
         // this.currentAccount.name = 'Fulano da Silva';
@@ -73,6 +85,21 @@ export default {
     },
     toogleLeftDrawer() {
       this.leftDrawerOpen = !this.leftDrawerOpen;
+    },
+    logout(){
+
+      this.$q.dialog({
+        title: 'Sair do sistema',
+        message: 'Tem certeza que deseja sair?',
+        ok: 'Sair',
+        cancel: 'Cancelar'
+      }).then(data => {
+        accountService.logout().then(()=>{
+          this.$router.push('/login');
+        })
+      });
+
+
     }
   }
 }
