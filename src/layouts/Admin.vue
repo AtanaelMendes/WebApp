@@ -78,7 +78,7 @@ export default {
   methods: {
     getAccountInfo: function(){
       this.$axios.get( 'account/info').then( response => {
-        this.currentAccount.name = 'Fulano da Silva';
+        this.currentAccount.name = response.data.nome;
         this.currentAccount.email = response.data.email;
         localStorage.setItem( 'account.produtor_id', response.data.produtor_id);
       })
