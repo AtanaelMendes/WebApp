@@ -38,7 +38,7 @@
                 </q-item-main>
 
                 <q-item-side>
-                  <q-btn color="deep-orange" rounded size="md" icon="add" @click.native="openNovoGrupoEconomicoDialog()" class="q-px-sm"/>
+                  <q-btn color="deep-orange" round size="md" icon="add" @click.native="openNovoGrupoEconomicoDialog()" class="q-px-sm"/>
                 </q-item-side>
               </q-item>
 

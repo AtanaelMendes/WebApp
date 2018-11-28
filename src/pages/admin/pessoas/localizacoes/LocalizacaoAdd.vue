@@ -31,6 +31,9 @@
           <!-- FIM TOGGLE FISCAL COBRANCA-->
 
           <form>
+            <!--CEP-->
+            <custom-input-text class="capitalize" type="text" label="CEP" mask="#####-###" :model="localizacao.cep" />
+
             <!--CIDADE-->
             <cidade-autocomplete label="Cidade" :model="localizacao.cidadeId" @input="selected"/>
 
@@ -45,9 +48,6 @@
 
             <!--BAIRRO-->
             <custom-input-text class="capitalize" type="text" label="Bairro" :model="localizacao.bairro" />
-
-            <!--CEP-->
-            <custom-input-text class="capitalize" type="text" label="CEP" mask="#####-###" :model="localizacao.cep" />
 
           </form>
 
