@@ -9,6 +9,8 @@
       :placeholder="placeholder"
       v-on:input="clearErrorMessage()"
       :type="type" :float-label="label"
+      :loading="loading"
+      @blur="$emit('blur', model.value)"
     />
     <div class="q-field-bottom row no-wrap" style="height: 22px">
       <div class="q-field-error col" v-if="model.errorMessage != null" >{{model.errorMessage}}</div>
@@ -30,6 +32,10 @@
       label: String,
       mask: String,
       autofocus: String,
+      loading: Boolean,
+    },
+    model:{
+      event: 'blur',
     },
     data: function () {
       return {
