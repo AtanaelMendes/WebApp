@@ -357,7 +357,7 @@
           })
         });
       },
-      archiveContato: function(){
+      archiveContato: function(contatoId){
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente deseja arquivar esse contato?',

@@ -175,6 +175,8 @@
           areaService.deleteArea(this.areaId).then(response => {
             this.$q.notify({type: 'positive', message: 'Área excluida'})
             this.$router.push({name:'areas'})
+
+            this.$root.$emit('refreshAreaList')
           })
         });
       },
