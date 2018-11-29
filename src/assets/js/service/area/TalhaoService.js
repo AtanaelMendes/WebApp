@@ -63,9 +63,18 @@ export default {
       })
     });
   },
+  archiveTalhao(talhaoId, areaId){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('/area/' + areaId + '/talhao/' + talhaoId + '/archive').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
   restoreTalhao(talhaoId, areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/area/' + areaId + '/talhao/' + talhaoId + '/restore').then(response => {
+      Vue.prototype.$axios.delete('/area/' + areaId + '/talhao/' + talhaoId + '/restore').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
