@@ -15,7 +15,7 @@
         <div class="col-xs-12 col-md-6 col-lg-6">
 
           <!--TOGGLE FISCAL COBRANCA-->
-          <div class="row">
+          <div class="row q-mb-md">
             <div class="col-6">
               <q-toggle color="deep-orange" label="Fiscal"  v-model="localizacao.isFiscal.value"/>
             </div>
@@ -32,10 +32,11 @@
 
           <form>
             <!--CEP-->
-            <custom-input-text class="capitalize" type="text" label="CEP" mask="#####-###" :model="localizacao.cep" />
+            <custom-input-text type="text" label="CEP" mask="#####-###"
+                               :model="localizacao.cep" @blur="getLocationByCEP" :loading="isLoadingAddress" />
 
             <!--CIDADE-->
-            <cidade-autocomplete label="Cidade" :model="localizacao.cidadeId" @input="selected"/>
+            <cidade-autocomplete label="Cidade" :model="localizacao.cidadeId" :terms="cidadeTerms" @input="selected"/>
 
             <!--ENDERECO-->
             <custom-input-text class="capitalize" type="text" label="Endereço" :model="localizacao.endereco" />
@@ -76,13 +77,10 @@
       return {
         typeError: null,
         localizacao: new Localizacao(),
+        isLoadingAddress: false,
+        cidadeTerms: '',
       }
     },
-    /*watch: {
-      cidadeTerms: function (val, old) {
-        this.setCidade(val)
-      }
-    },*/
     methods:{
       selected: function(value = null){
         this.localizacao.cidadeId.value = value.id;
@@ -104,14 +102,19 @@
           this.$q.notify({type: 'negative', message: error.request.response})
         })
       },
-      /*setCidade (item) {
-        if(item == null){
-          this.localizacao.cidadeId.value = null;
-        }else{
-          this.localizacao.cidadeId.value = item.id;
-          this.localizacao.cidadeId.errorMessage = null;
-        }
-      },*/
+      getLocationByCEP: function(cep){
+        this.isLoadingAddress = true;
+        localizacaoService.getAddressByCEP(cep).then(address => {
+          this.localizacao.endereco.value = address.endereco;
+          this.localizacao.bairro.value = address.bairro;
+          this.localizacao.cidadeId.value = address.cidade.id;
+          this.cidadeTerms = address.cidade.nome;
+
+          this.isLoadingAddress = false;
+        }).catch(() => {
+          this.isLoadingAddress = false;
+        })
+      },
       backAction: function () {
         this.$router.go(-1);
       }
