@@ -1,10 +1,18 @@
 import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
-
 export default {
   deleteContato(contatoId, pessoaId){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.delete('/pessoa/' + pessoaId + '/contato/' + contatoId).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  archiveContato(contatoId, pessoaId){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('/pessoa/' + pessoaId + '/contato/' + contatoId + '/archive').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)

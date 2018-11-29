@@ -211,7 +211,7 @@
         }
         contatoService.saveContato(this.$route.params.id, this.contato.getValues()).then( response => {
           this.$q.notify({type: 'positive', message: 'Contato criado com sucesso'})
-          this.$router.go(-1);
+          this.$router.push({name:'view_pessoa'})
         }).catch(error => {
           this.$q.notify({type: 'negative', message: error})
         })

@@ -4,18 +4,21 @@
 
       <template slot="action_itens" v-if="pessoa">
         <q-btn flat round dense icon="edit" @click.native="editPessoa(pessoa.id)"/>
-        <!--<q-btn flat round dense icon="more_vert" >-->
-          <!--<q-popover anchor="bottom left">-->
-            <!--<q-list link>-->
-              <!--<q-item dense @click.native="disablePessoa(pessoa.id)" v-if="!pessoa.deleted_at">-->
-                <!--<q-item-main label="Inativar pessoa"  />-->
-              <!--</q-item>-->
-              <!--<q-item dense @click.native="enablePessoa(pessoa.id)" v-if="pessoa.deleted_at">-->
-                <!--<q-item-main label="Ativar pessoa"  />-->
-              <!--</q-item>-->
-            <!--</q-list>-->
-          <!--</q-popover>-->
-        <!--</q-btn>-->
+        <q-btn flat round dense icon="more_vert" >
+          <q-popover anchor="bottom left">
+            <q-list link>
+              <q-item dense @click.native="archivePessoa(pessoa.id)" v-if="!pessoa.deleted_at">
+                <q-item-main label="Arquivar pessoa"  />
+              </q-item>
+              <q-item dense @click.native="deletePessoa(pessoa.id)">
+                <q-item-main label="Excluir pessoa"  />
+              </q-item>
+              <q-item dense @click.native="restorePessoa(pessoa.id)" v-if="pessoa.deleted_at">
+                <q-item-main label="Ativar pessoa"  />
+              </q-item>
+            </q-list>
+          </q-popover>
+        </q-btn>
       </template>
 
     </toolbar>
@@ -109,16 +112,15 @@
                 {{contato.nome}}
                 <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
                   <q-popover>
-                    <q-list class="no-border">
+                    <q-list link class="no-border">
                       <q-item v-close-overlay>
-                        <q-item-main @click.native="updateContato(contato.id)">
-                          <q-btn dense flat label="editar"/>
-                        </q-item-main>
+                        <q-item-main @click.native="updateContato(contato.id)" label="Editar" />
                       </q-item>
                       <q-item v-close-overlay>
-                        <q-item-main @click.native="deleteContato(contato.id)">
-                          <q-btn dense flat label="apagar"/>
-                        </q-item-main>
+                        <q-item-main @click.native="archiveContato(contato.id)" label="Arquivar"/>
+                      </q-item>
+                      <q-item v-close-overlay>
+                        <q-item-main @click.native="deleteContato(contato.id)" label="Excluir"/>
                       </q-item>
                     </q-list>
                   </q-popover>
@@ -187,16 +189,15 @@
                 <q-chip small color="teal" class="q-mx-xs" v-if="localizacao.is_fiscal">Fiscal</q-chip>
                 <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
                   <q-popover>
-                    <q-list class="no-border">
+                    <q-list link class="no-border">
                       <q-item v-close-overlay>
-                        <q-item-main @click.native="updateLocalizacao(localizacao.id)">
-                          <q-btn dense flat label="editar"/>
-                        </q-item-main>
+                        <q-item-main @click.native="updateLocalizacao(localizacao.id)" label="Editar"/>
                       </q-item>
                       <q-item v-close-overlay>
-                        <q-item-main @click.native="deleteLocalizacao(localizacao.id)">
-                          <q-btn dense flat label="apagar"/>
-                        </q-item-main>
+                        <q-item-main @click.native="archiveLocalizacao(localizacao.id)" label="Arquivar"/>
+                      </q-item>
+                      <q-item v-close-overlay>
+                        <q-item-main @click.native="deleteLocalizacao(localizacao.id)" label="Excluir"/>
                       </q-item>
                     </q-list>
                   </q-popover>
@@ -256,7 +257,7 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import PessoaService from 'assets/js/service/PessoaService'
+  import pessoaService from 'assets/js/service/PessoaService'
   import contatoService from 'assets/js/service/ContatoService'
   import customInputText from 'components/CustomInputText.vue'
   import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
@@ -284,34 +285,49 @@
     },
     methods: {
       getPessoa: function(id){
-        PessoaService.getPessoa(id).then(pessoa => {
+        pessoaService.getPessoa(id).then(pessoa => {
           this.pessoa = pessoa;
         })
       },
       editPessoa: function(){
         this.$router.push({name:'edit_pessoa'});
       },
-      disablePessoa:function(){
+      deletePessoa:function(){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente inativar essa pessoa?',
+          message: 'Realmente excluir essa pessoa?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          pessoaService.inactivePessoa(this.$route.params.id).then(response => {
-            this.$q.notify({type: 'positive', message: 'Pessoa Inativada'})
-            this.getPessoa(this.$route.params.id);
+          pessoaService.deletePessoa(this.$route.params.id).then(response => {
+            this.$q.notify({type: 'positive', message: 'Pessoa Excluir com sucesso'})
+            this.$router.push({name:'pessoas'});
+            this.$root.$emit('refreshPessoaList');
           })
         });
       },
-      enablePessoa:function(){
+      archivePessoa:function(){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente arquivar essa pessoa?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          pessoaService.archivePessoa(this.$route.params.id).then(response => {
+            this.$q.notify({type: 'positive', message: 'Pessoa Arquivada com sucesso'})
+            this.getPessoa(this.$route.params.id);
+            this.$root.$emit('refreshPessoaList');
+          })
+        });
+      },
+      restorePessoa:function(){
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente ativar essa pessoa?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          pessoaService.activePessoa(this.$route.params.id).then(response => {
+          pessoaService.restorePessoa(this.$route.params.id).then(response => {
             this.$q.notify({type: 'positive', message: 'Pessoa Ativada'})
             this.getPessoa(this.$route.params.id);
           })
@@ -331,12 +347,25 @@
       deleteContato: function(contatoId) {
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente deseja apagar esse contato?',
+          message: 'Realmente deseja excluir esse contato?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
           contatoService.deleteContato(contatoId, this.$route.params.id).then(response => {
             this.$q.notify({type: 'positive', message: 'Contato excluido'})
+            this.listContatos(this.$route.params.id);
+          })
+        });
+      },
+      archiveContato: function(){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja arquivar esse contato?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          contatoService.archiveContato(contatoId, this.$route.params.id).then(response => {
+            this.$q.notify({type: 'positive', message: 'Contato arquivado'})
             this.listContatos(this.$route.params.id);
           })
         });
@@ -369,12 +398,23 @@
             this.listLocalizacoes(this.$route.params.id)
           });
         });
-
+      },
+      archiveLocalizacao: function(localizacaoId) {
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja arquivar essa localizaçao?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          localizacaoService.archiveLocalizacao(this.$route.params.id, localizacaoId).then(response => {
+            this.$q.notify({type: 'positive', message: 'Endereço Arquivado com sucesso'})
+            this.listLocalizacoes(this.$route.params.id)
+          });
+        });
       },
       listLocalizacoes: function(pessoaId) {
         localizacaoService.listLocalizacoes(pessoaId).then(response => {
           this.localizacoes = response.data
-          this.isEmptyList = this.localizacoes.length === 0
         });
       },
       backAction: function () {
