@@ -113,4 +113,7 @@
   .q-popover .q-list-link > .q-item:hover{
     background: #f5f5f5;
   }
+  .q-popover .q-item-label {
+    white-space: nowrap;
+  }
 </style>
