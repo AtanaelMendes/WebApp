@@ -57,7 +57,7 @@ export default {
   },
   restoreArea(areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('/produtor/' + this.produtorId + '/area/' + areaId + '/restore').then(response => {
+      Vue.prototype.$axios.put('/produtor/' + this.produtorId + '/area/' + areaId + '/restore').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)

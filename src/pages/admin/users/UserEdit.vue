@@ -1,15 +1,13 @@
 <template>
   <custom-page isChild>
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Editar Unuário">
-      <q-btn slot="action_itens" flat dense label="salvar" @click="updateAccount()"/>
+      <q-btn slot="action_itens" flat dense round icon="done" @click="updateAccount()"/>
     </toolbar>
 
-    <form class="q-pa-md">
-
-      <div style="display: flex">
-        <div style="width: 50%;">
-          <q-list-header class="q-pa-none">Informações Básicas</q-list-header>
-
+    <div class="row gutter-sm q-pa-md">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-list-header class="q-pa-none">Informações Básicas</q-list-header>
+        <form>
           <custom-input-text label="Nome" :model="form.nome" />
 
           <custom-input-text type="email" label="Email" :model="form.email" />
@@ -17,31 +15,28 @@
           <custom-input-text type="password" label="Senha" :model="form.password" />
 
           <custom-input-text type="password" label="Confirmar senha" :model="form.repeatPassword" />
-        </div>
-
-        <div style="width: 50%; margin-left: 20px">
-          <q-list-header class="q-pa-none">Funções</q-list-header>
-          <q-field :error="form.selectedRoles.errorMessage != null">
-            <q-list id="chip_container"
-                    v-if="form.selectedRoles.value"
-                    class="chip-container"
-                    :class="{ 'chip-container-error': form.selectedRoles.errorMessage != null }">
-              <q-item v-for="role in form.selectedRoles.value" :key="role.id" class="chip-inline">
-                <q-chip class="q-ma-xs" @hide="removeRole(role)" closable color="secondary" text-color="white">{{role.name}}</q-chip>
-              </q-item>
-            </q-list>
-            <div class="q-field-bottom row no-wrap q-field-no-input-fix" style="height: 22px">
-              <div class="q-field-error col" v-if="form.selectedRoles.errorMessage != null" >{{form.selectedRoles.errorMessage}}</div>
-            </div>
-          </q-field>
-
-          <q-btn class="full-width q-mt-md" color="deep-orange" rounded @click="openRolesDialog()" label="Adicionar Função"/>
-        </div>
-
+        </form>
       </div>
 
-    </form>
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-list-header class="q-pa-none">Funções</q-list-header>
 
+        <q-field :error="form.selectedRoles.errorMessage != null">
+          <q-list id="chip_container"
+                  v-if="form.selectedRoles.value"
+                  class="chip-container"
+                  :class="{ 'chip-container-error': form.selectedRoles.errorMessage != null }">
+            <q-item v-for="role in form.selectedRoles.value" :key="role.id" class="chip-inline">
+              <q-chip class="q-ma-xs" @hide="removeRole(role)" closable color="secondary" text-color="white">{{role.name}}</q-chip>
+            </q-item>
+          </q-list>
+          <div class="q-field-bottom row no-wrap q-field-no-input-fix" style="height: 22px">
+            <div class="q-field-error col" v-if="form.selectedRoles.errorMessage != null" >{{form.selectedRoles.errorMessage}}</div>
+          </div>
+        </q-field>
+        <q-btn class="full-width q-mt-md" color="deep-orange" rounded @click="openRolesDialog()" label="Adicionar Função"/>
+      </div>
+    </div>
 
   </custom-page>
 </template>
@@ -51,9 +46,8 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
-  import UserService from 'assets/js/service/UserService'
+  import userService from 'assets/js/service/UserService'
   import FormMixin from 'components/mixins/FormMixin'
-
   export default {
     name: "UserEdit",
     components: {
@@ -103,7 +97,7 @@
     },
     methods:{
       getUser: function(id) {
-        UserService.getAccount(id).then(response => {
+        userService.getAccount(id).then(response => {
           let account = response.data;
 
           this.accountId = account.id;
@@ -115,16 +109,16 @@
         })
       },
       openRolesDialog: function(){
-        UserService.openRolesDialog(this.form.selectedRoles.value, this.roles).then(roles =>{
+        userService.openRolesDialog(this.form.selectedRoles.value, this.roles).then(roles =>{
           this.form.selectedRoles.error = false;
           this.form.selectedRoles.value = roles;
         })
       },
       removeRole: function(role){
-        UserService.removeRole(this.form.selectedRoles.value, role);
+        userService.removeRole(this.form.selectedRoles.value, role);
       },
       listRoles: function(){
-        UserService.listRoles().then(roles => {this.roles = roles})
+        userService.listRoles().then(roles => {this.roles = roles})
       },
       updateAccount: function () {
         this.$v.form.$touch();
@@ -161,10 +155,10 @@
         let params = {
           email: this.form.email.value,
           password: this.form.password.value,
-          roles: UserService.getIdsByRoles(this.form.selectedRoles.value).join()
+          roles: userService.getIdsByRoles(this.form.selectedRoles.value).join()
         };
 
-        UserService.updateAccount(params, this.accountId).then(response => {
+        userService.updateAccount(params, this.accountId).then(response => {
           this.$q.notify({
             type: 'positive',
             message: 'Cadastro atualizado com sucesso'
@@ -184,7 +178,7 @@
 
       },
       backAction: function () {
-        this.$router.push({name: 'users'});
+        this.$router.go(-1);
       }
     },
     mounted(){

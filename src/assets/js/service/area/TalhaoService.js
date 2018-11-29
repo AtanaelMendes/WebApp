@@ -2,9 +2,9 @@ import Vue from 'vue'
 import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
 
 export default {
-  listTalhao(areaId, filter){
+  listTalhoes(area_id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'area/' + areaId + '/talhao' ).then( response => {
+      Vue.prototype.$axios.get('area/' + area_id + '/talhao').then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
@@ -74,7 +74,7 @@ export default {
   },
   restoreTalhao(talhaoId, areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('/area/' + areaId + '/talhao/' + talhaoId + '/restore').then(response => {
+      Vue.prototype.$axios.put('/area/' + areaId + '/talhao/' + talhaoId + '/restore').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)

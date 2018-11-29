@@ -117,7 +117,7 @@
     },
     watch: {
       '$route' (to, from) {
-        this.listTalhao(this.$route.params.id);
+        this.listTalhoes(this.$route.params.id);
         this.getAreaById(this.$route.params.id);
         this.areaId = this.$route.params.id;
       },
@@ -178,8 +178,8 @@
           })
         });
       },
-      listTalhao: function(id){
-        talhaoService.listTalhao(id).then(talhoes => {
+      listTalhoes: function(id){
+        talhaoService.listTalhoes(id).then(talhoes => {
           this.talhoes = talhoes.data;
         })
       },
@@ -234,7 +234,7 @@
       }
     },
     mounted(){
-      this.listTalhao(this.$route.params.id);
+      this.listTalhoes(this.$route.params.id);
       this.getAreaById(this.$route.params.id);
     }
   }
