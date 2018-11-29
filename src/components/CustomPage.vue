@@ -91,7 +91,7 @@
     }
 </script>
 
-<style scoped>
+<style>
   .father{
     box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 0 5px 8px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.12);
   }
@@ -108,5 +108,9 @@
     top: 71%;
     right: 18px;
     z-index: 1000;
+  }
+
+  .q-popover .q-list-link > .q-item:hover{
+    background: #f5f5f5;
   }
 </style>
