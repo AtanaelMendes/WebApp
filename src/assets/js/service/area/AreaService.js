@@ -39,7 +39,16 @@ export default {
   },
   deleteArea(areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/produtor/' + produtorId + '/area/' + areaId).then(response => {
+      Vue.prototype.$axios.delete('/produtor/' + produtorId + '/area/' + areaId).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
+  archiveArea(areaId){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('/produtor/' + produtorId + '/area/' + areaId + '/archive').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
@@ -48,7 +57,7 @@ export default {
   },
   restoreArea(areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/produtor/' + this.produtorId + '/area/' + areaId + '/restore').then(response => {
+      Vue.prototype.$axios.delete('/produtor/' + this.produtorId + '/area/' + areaId + '/restore').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
