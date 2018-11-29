@@ -39,16 +39,25 @@ export default {
       })
     });
   },
-  inactivePessoa(id){
+  deletePessoa(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/pessoa/' + id).then(response => {
+      Vue.prototype.$axios.delete('/pessoa/' + id).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
       })
     });
   },
-  activePessoa(id){
+  archivePessoa(id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('/pessoa/' + id + '/archive').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
+  restorePessoa(id){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.delete('/pessoa/' + id + '/restore').then(response => {
         resolve(response)
@@ -57,4 +66,5 @@ export default {
       })
     });
   },
+
 }

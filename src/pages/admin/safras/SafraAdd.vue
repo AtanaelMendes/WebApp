@@ -178,7 +178,7 @@
   import Safra from 'assets/js/model/Safra'
   import Cultura from 'assets/js/model/Cultura'
   import areaService from 'assets/js/service/area/AreaService'
-  import talhaoService from 'assets/js/service/TalhaoService'
+  import talhaoService from 'assets/js/service/area/TalhaoService'
   import produtoService from 'assets/js/service/ProdutoService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import safraService from 'assets/js/service/SafraService'

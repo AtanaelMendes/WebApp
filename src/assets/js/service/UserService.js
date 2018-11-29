@@ -98,7 +98,7 @@ export default {
         message: 'Selecione as funções do usuário.',
         options: {
           type: 'checkbox',
-          model: getIdsByRoles(selectedRoles),
+          model: this.getIdsByRoles(selectedRoles),
           items: parseRolesToItems(roles)
         },
         cancel: true,
@@ -138,6 +138,13 @@ export default {
       })
     });
   },
+  getIdsByRoles(roles) {
+    let rolesIds = [];
+    roles.forEach(function (role) {
+      rolesIds.push(role.id)
+    });
+    return rolesIds
+  }
 }
 function parseRolesToItems(roles) {
   var items = [];
@@ -149,13 +156,7 @@ function parseRolesToItems(roles) {
   });
   return items
 }
-function getIdsByRoles(roles) {
-  let rolesIds = [];
-  roles.forEach(function (role) {
-    rolesIds.push(role.id)
-  });
-  return rolesIds
-}
+
 function getRolesById(roles, ids) {
   let selectedRoles = [];
   for(let i = 0; i < ids.length; i++) {

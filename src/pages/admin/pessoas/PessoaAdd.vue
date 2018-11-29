@@ -4,86 +4,98 @@
       <q-btn slot="action_itens" flat dense round icon="done" @click="savePessoa()"/>
     </toolbar>
 
-    <q-scroll-area style="height: 150vh" :thumb-style="{
-        right: '4px',
-        borderRadius: '5px',
-        background: '#dfdfdf',
-        width: '8px',
-        opacity: 1}">
-      <div class="row q-pa-md">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-          <form @keyup.enter="savePessoa()">
-
-            <q-field>
-              <q-btn-toggle
-                v-model="pessoa.pessoaType"
-                toggle-color="primary"
-                inverted
-                @input="pessoaTypeChanged"
-                :options="[{label: 'Física', value: 1},{label: 'Jurídica', value: 2}]"
-              />
-            </q-field>
-
-            <q-field :error="pessoa.grupoEconomico.errorMessage != null" class="q-mt-sm">
-              <q-item class="q-px-none">
-                <q-item-main>
-                  <q-input
-                    placeholder="Grupo Econômico"
-                    @blur="checkGrupoEconomicoInput"
-                    :after="[{icon:'arrow_drop_down'}]"
-                    v-model="grupoEconomicoSearchTerms"
-                  >
-                    <q-autocomplete @search="searchGrupoEconomico" @selected="setGrupoEconomico" :min-characters="0" :debounce="500" value-field="label"/>
-                  </q-input>
-                </q-item-main>
-
-                <q-item-side>
-                  <q-btn color="deep-orange" round size="md" icon="add" @click.native="openNovoGrupoEconomicoDialog()" class="q-px-sm"/>
-                </q-item-side>
-              </q-item>
-
-              <div class="q-field-bottom row no-wrap" >
-                <div class="q-field-error col" v-if="pessoa.grupoEconomico.errorMessage != null" >{{pessoa.grupoEconomico.errorMessage}}</div>
-              </div>
-            </q-field>
-
-            <custom-input-text type="text" label="Nome" :model="pessoa.nome" maxlength="20"/>
-
-            <custom-input-text key="cpf" type="text" label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1"/>
-
-            <custom-input-text key="cnpj" type="text" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2"/>
-
-            <div v-if="pessoa.pessoaType === 2">
-              <custom-input-text type="text" label="Razão Social" :model="pessoa.razaoSocial"/>
-
-              <custom-input-text type="text" label="Nome Fantasia" :model="pessoa.nomeFantasia"/>
-            </div>
-
-            <custom-input-text type="text" label="Inscrição Estadual" :model="pessoa.inscricaoEstadual"/>
-
-            <custom-input-text type="text" label="Inscrição Municipal" :model="pessoa.inscricaoMunicipal"/>
-
-          </form>
-        </div>
+    <!--INFORMACOES BASICAS-->
+    <div class="row q-pa-md">
+      <div class="col-12">
+        <q-item class="custom-header q-title q-px-none">
+          Informaçẽs básicas
+        </q-item>
       </div>
-    </q-scroll-area>
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 
+        <form @keyup.enter="savePessoa()">
+          <q-field>
+            <q-btn-toggle
+              v-model="pessoa.pessoaType"
+              toggle-color="primary"
+              inverted
+              @input="pessoaTypeChanged"
+              :options="[{label: 'Física', value: 1},{label: 'Jurídica', value: 2}]"
+            />
+          </q-field>
 
+          <q-field :error="pessoa.grupoEconomico.errorMessage != null" class="q-mt-sm">
+            <q-item class="q-px-none">
+              <q-item-main>
+                <q-input
+                  placeholder="Grupo Econômico"
+                  @blur="checkGrupoEconomicoInput"
+                  :after="[{icon:'arrow_drop_down'}]"
+                  v-model="grupoEconomicoSearchTerms"
+                >
+                  <q-autocomplete @search="searchGrupoEconomico" @selected="setGrupoEconomico" :min-characters="0" :debounce="500" value-field="label"/>
+                </q-input>
+              </q-item-main>
+
+              <q-item-side>
+                <q-btn color="deep-orange" round size="md" icon="add" @click.native="openNovoGrupoEconomicoDialog()" class="q-px-sm"/>
+              </q-item-side>
+            </q-item>
+
+            <div class="q-field-bottom row no-wrap" >
+              <div class="q-field-error col" v-if="pessoa.grupoEconomico.errorMessage != null" >{{pessoa.grupoEconomico.errorMessage}}</div>
+            </div>
+          </q-field>
+
+          <custom-input-text type="text" label="Nome" :model="pessoa.nome" maxlength="20"/>
+
+          <custom-input-text key="cpf" type="text" label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1"/>
+
+          <custom-input-text key="cnpj" type="text" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2"/>
+
+          <div v-if="pessoa.pessoaType === 2">
+            <custom-input-text type="text" label="Razão Social" :model="pessoa.razaoSocial"/>
+
+            <custom-input-text type="text" label="Nome Fantasia" :model="pessoa.nomeFantasia"/>
+          </div>
+
+          <custom-input-text type="text" label="Inscrição Estadual" :model="pessoa.inscricaoEstadual"/>
+
+          <custom-input-text type="text" label="Inscrição Municipal" :model="pessoa.inscricaoMunicipal"/>
+
+        </form>
+      </div>
+    </div>
+    <!--FIM INFORMACOES BASICAS-->
+
+    <!--CONTATO-->
+    <!--<div class="row q-pa-md">-->
+      <!--<div class="col-12">-->
+        <!--<q-item class="custom-header q-title q-px-none">-->
+          <!--Contato-->
+        <!--</q-item>-->
+      <!--</div>-->
+      <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">-->
+
+      <!--</div>-->
+    <!--</div>-->
+    <!--FIM CONTATO-->
+
+    <!--DIALOG NEW GRUPO ECONOMICO-->
     <q-dialog v-model="newGrupoEconomicoDialog" prevent-close>
       <span slot="title">Novo Grupo Econômico</span>
       <span slot="message">Crie um novo Grupo Econômico preenchendo o campo abaixo</span>
-
       <div slot="body">
         <form @keyup.enter="createGrupoEconomico()">
           <custom-input-text type="text" label="Grupo Econômico" :model="grupoEconomico.nome" />
         </form>
       </div>
-
       <template slot="buttons" slot-scope="props">
         <q-btn flat @click="closeNovoGrupoEconomicoDialog"  label="Cancelar"/>
         <q-btn flat @click="createGrupoEconomico()"  label="Salvar"/>
       </template>
     </q-dialog>
+    <!--FIM DIALOG NEW GRUPO ECONOMICO-->
 
   </custom-page>
 </template>
@@ -187,4 +199,25 @@
 </script>
 
 <style>
+  .space-end{
+    margin-bottom: 150px;
+  }
+  .no-result{
+    text-align: center;
+    padding-top: 150px;
+  }
+  .no-result img{
+    width: 120px;
+    height: auto;
+  }
+  .no-result span{
+    display: block;
+    margin-top: 30px;
+    font-size: 25px;
+    font-weight: 300;
+    color: #ababab;
+  }
+  .custom-header{
+    border-top: 1px solid #c5c5c5;
+  }
 </style>

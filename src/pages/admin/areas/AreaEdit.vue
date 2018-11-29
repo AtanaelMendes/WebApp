@@ -1,6 +1,6 @@
 <template>
   <custom-page isChild>
-    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Nova Área">
+    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Editar área">
       <q-btn slot="action_itens" flat icon="done" dense @click="saveArea()"/>
     </toolbar>
 

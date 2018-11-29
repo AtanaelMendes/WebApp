@@ -1,4 +1,5 @@
-import { helpers} from 'vuelidate/lib/validators'
+import { helpers} from 'vuelidate/lib/validators';
+import CPF from 'gerador-validador-cpf';
 export default class{
   pessoaType = 1;
   nome= {
@@ -66,10 +67,16 @@ export default class{
       if(!helpers.req(this.cpf.value)){
         this.cpf.errorMessage = "Digite um CPF";
         hasError = true;
+      }else if(!CPF.validate(this.cpf.value)){
+        this.cpf.errorMessage = "O CPF é inválido";
+        hasError = true;
       }
     }else if(this.pessoaType === 2) {
       if (!helpers.req(this.cnpj.value)) {
         this.cnpj.errorMessage = "Digite um CNPJ";
+        hasError = true;
+      }else if(!isValidCnpj(this.cnpj.value)){
+        this.cnpj.errorMessage = "O CNPJ é inválido.";
         hasError = true;
       }
 
@@ -99,5 +106,23 @@ export default class{
       nome_fantasia: this.nomeFantasia.value
     }
   };
+};
 
-}
+function isValidCnpj(cnpj) {
+  var b = [6,5,4,3,2,9,8,7,6,5,4,3,2];
+  if((cnpj = cnpj.replace(/[^\d]/g,"")).length != 14){
+    return false;
+  }
+  if(/0{14}/.test(cnpj)){
+    return false;
+  }
+  for (var i = 0, n = 0; i < 12; n += cnpj[i] * b[++i]);
+  if(cnpj[12] != (((n %= 11) < 2) ? 0 : 11 - n)){
+    return false;
+  }
+  for (var i = 0, n = 0; i <= 12; n += cnpj[i] * b[i++]);
+  if(cnpj[13] != (((n %= 11) < 2) ? 0 : 11 - n)){
+    return false;
+  }
+  return true;
+};

@@ -199,7 +199,7 @@
         }
       },
       backAction: function () {
-        this.$router.push({name: 'pessoas'});
+        this.$router.go(-1);
       }
     },
     mounted(){
