@@ -219,6 +219,7 @@ export default {
         return
       }
       let vm = this
+
       var validatedCpf = null
       if (vm.formPerson.cpf != null) {
         validatedCpf = vm.formatCpf(vm.formPerson.cpf)
