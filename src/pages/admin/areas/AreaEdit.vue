@@ -1,7 +1,7 @@
 <template>
   <custom-page isChild>
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Editar área">
-      <q-btn slot="action_itens" flat icon="done" dense @click="saveArea()"/>
+      <q-btn slot="action_itens" flat icon="done" round dense @click="updateArea()"/>
     </toolbar>
 
     <form class="q-pa-md">
@@ -64,11 +64,11 @@
         if(!this.area.isValid()){
           return;
         }
-        areaService.updateArea(this.area.getValues()).then(response => {
-          if(response.status === 201) {
+        areaService.updateArea(this.$route.params.id, this.area.getValues()).then(response => {
+          if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Area atualizada com sucesso'});
-            this.$router.push({name: 'areas'});
-            this.$root.$emit('refreshAreaList')
+            this.$root.$emit('refreshAreaList');
+            this.$router.go(-1);
           }
         });
       },

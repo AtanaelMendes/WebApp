@@ -54,7 +54,7 @@ export default {
       })
     });
   },
-  deleteTalhao(talhaoId, areaId){
+  deleteTalhao(areaId, talhaoId){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.delete('/area/' + areaId + '/talhao/' + talhaoId).then(response => {
         resolve(response)
@@ -63,7 +63,7 @@ export default {
       })
     });
   },
-  archiveTalhao(talhaoId, areaId){
+  archiveTalhao(areaId, talhaoId){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.put('/area/' + areaId + '/talhao/' + talhaoId + '/archive').then(response => {
         resolve(response)
@@ -72,7 +72,7 @@ export default {
       })
     });
   },
-  restoreTalhao(talhaoId, areaId){
+  restoreTalhao(areaId, talhaoId){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.put('/area/' + areaId + '/talhao/' + talhaoId + '/restore').then(response => {
         resolve(response)

@@ -185,8 +185,8 @@
           this.talhoes = talhoes.data;
         })
       },
-      addtalhao: function(id){
-        this.$router.push({name: 'add_talhao', params: {id:id}});
+      addtalhao: function(){
+        this.$router.push({name: 'add_talhao', params: {id: this.$route.params.id}});
       },
       updateTalhao: function(talhaoId){
         this.$router.push({name: 'edit_talhao', params: {id: this.areaId, talhaoId: talhaoId}});
@@ -199,8 +199,8 @@
           color: 'primary'
         }).then(data => {
           talhaoService.archiveTalhao(this.areaId, talhaoId).then(response => {
-            this.$q.notify({type: 'positive', message: 'Talhão arquivado com sucesso'})
-            this.getAreaById(this.$route.params.id);
+            this.$q.notify({type: 'positive', message: 'Talhão arquivado com sucesso'});
+            this.listTalhoes(this.$route.params.id);
           })
         });
       },
@@ -213,7 +213,7 @@
         }).then(data => {
           talhaoService.restoreTalhao(this.areaId, talhaoId).then(response => {
             this.$q.notify({type: 'positive', message: 'Talhão ativado com suceso'})
-            this.getAreaById(this.$route.params.id);
+            this.listTalhoes(this.$route.params.id);
           })
         });
       },
@@ -226,11 +226,11 @@
         }).then(data => {
           talhaoService.deleteTalhao(this.areaId, talhaoId).then(response => {
             this.$q.notify({type: 'positive', message: 'Talhão excluido com sucesso'})
-            this.getAreaById(this.$route.params.id);
+            this.listTalhoes(this.$route.params.id);
           })
         });
       },
-      backAction: function (talhaoId) {
+      backAction: function () {
         // this.$router.go(-1);
         this.$router.push({name:'areas'})
       }
