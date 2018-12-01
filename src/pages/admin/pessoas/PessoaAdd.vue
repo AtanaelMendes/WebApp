@@ -59,7 +59,15 @@
             <custom-input-text type="text" label="Nome Fantasia" :model="pessoa.nomeFantasia"/>
           </div>
 
-          <custom-input-text type="text" label="Inscrição Estadual" :model="pessoa.inscricaoEstadual"/>
+          <q-item class="q-px-none">
+            <q-item-main>
+              <custom-input-text type="text" label="Inscrição Estadual" maxlength="14" :model="pessoa.inscricaoEstadual"/>
+            </q-item-main>
+            <q-item-side>
+              <estado-sigla-select label="UF" :model="pessoa.uf"/>
+              <q-btn label="Testar" @click="testaInscricoesEstaduais" />
+            </q-item-side>
+          </q-item>
 
           <custom-input-text type="text" label="Inscrição Municipal" :model="pessoa.inscricaoMunicipal"/>
 
@@ -108,13 +116,16 @@
   import GrupoEconomicoService from 'assets/js/service/GrupoEconomicoService'
   import Pessoa from 'assets/js/model/Pessoa'
   import GrupoEconomico from 'assets/js/model/GrupoEconomico'
+  import estadoSiglaSelect from 'components/EstadoSiglaSelect.vue'
   import { filter } from 'quasar'
+  import inscricaoEstadualValidator from 'assets/js/InscricaoEstadualValidator';
   export default {
     name: "pessoa-add",
     components: {
       toolbar,
       customPage,
       customInputText,
+      estadoSiglaSelect,
     },
     data(){
       return {
@@ -126,6 +137,12 @@
       }
     },
     methods:{
+      testaInscricoesEstaduais: function(){
+        console.log("inciado testes...")
+        inscricaoEstadualValidator.testaInscricoesEstaduais();
+        console.log("finalizado testes.")
+
+      },
       pessoaTypeChanged: function(value){
         this.pessoa = new Pessoa(value)
         this.grupoEconomicoSearchTerms = ''

@@ -1,5 +1,6 @@
 let uf = null;
 let ie = null;
+// inscricaoEstadualValidator
 export default {
   validar(UF, IE){
     uf = UF.toUpperCase();
@@ -7,65 +8,157 @@ export default {
 
     switch(uf){
       case "AC":
-        return this.validateAC();
+        return validateAC();
       case "AL":
-        return this.validateAL();
+        return validateAL();
       case "AP":
-        return this.validateAP();
+        return validateAP();
       case "AM":
-        return this.validateAM();
+        return validateAM();
       case "BA":
-        return this.validateBA();
+        return validateBA();
       case "CE":
-        return this.validateCE();
+        return validateCE();
       case "DF":
-        return this.validateDF();
+        return validateDF();
       case "ES":
-        return this.validateES();
+        return validateES();
       case "GO":
-        return this.validateGO();
+        return validateGO();
       case "MA":
-        return this.validateMA();
+        return validateMA();
       case "MT":
-        return this.validateMT();
+        return validateMT();
       case "MS":
-        return this.validateMS();
+        return validateMS();
       case "MG":
-        return this.validateMG();
+        return validateMG();
       case "PA":
-        return this.validatePA();
+        return validatePA();
       case "PB":
-        return this.validatePB();
+        return validatePB();
       case "PR":
-        return this.validatePR();
+        return validatePR();
       case "PE":
-        return this.validatePE();
+        return validatePE();
       case "PI":
-        return this.validatePI();
+        return validatePI();
       case "RJ":
-        return this.validateRJ();
+        return validateRJ();
       case "RN":
-        return this.validateRN();
+        return validateRN();
       case "RS":
-        return this.validateRS();
+        return validateRS();
       case "RO":
-        return this.validateRO();
+        return validateRO();
       case "RR":
-        return this.validateRR();
+        return validateRR();
       case "SC":
-        return this.validateSC();
+        return validateSC();
       case "SP":
-        return this.validateSP();
+        return validateSP();
       case "SE":
-        return this.validateSE();
+        return validateSE();
       case "TO":
-        return this.validateTO();
+        return validateTO();
     }
-  }//end validar()
+  },//end validar()
+
+
+  testaInscricoesEstaduais(){
+    let validos = [
+      ['0198293945680', 'AC'],
+      ['248619365', 'AL'],
+      ['035248815', 'AP'],
+      ['765758156', 'AM'],
+      ['05460212', 'BA'],
+      //['05460212', 'BA'],//TODO: Falta validar o de 9 digitos
+      ['156865505', 'CE'],
+      ['0761045000189', 'DF'],
+      ['662569857', 'ES'],
+      ['153683180', 'GO'],
+      ['123358019', 'MA'],
+      ['88743069688', 'MT'],//['123456789', 'MT'],//Não devia validar
+      //['88743069688', 'MT'], //TODO:Falta validar o de 8 digitos
+      ['288252128', 'MS'],
+      ['0418145586081', 'MG'],
+      ['152338284', 'PA'],
+      ['136814620', 'PB'],
+      ['7348032431', 'PR'],
+      ['963975943', 'PE'],
+      //['963975943', 'PE'],//TODO: Falta validar o de 14 digitos
+      ['055790810', 'PI'],
+      ['08088284', 'RJ'],
+      ['208437800', 'RN'],
+      //['208437800', 'RN'],//TODO:Falta validar o de 10 digitos
+      ['9994822344', 'RS'],
+      ['70946458251850', 'RO'],
+      //['70946458251850', 'RO'],//TODO:Falta validar o de 9 digitos
+      ['247651415', 'RR'],//DANDO ERRO
+      ['602235951280', 'SP'],
+      //['602235951280', 'SP'],//TODO:Falta validar o Rural
+      ['030078830', 'SC'],
+      ['317085034', 'SE'],
+      ['36038217094', 'TO'],
+      //['36038217094', 'TO'],//TODO: Falta validar o de 9 digitos
+    ];
+
+    let invalidos = [
+      ['0198293945681', 'AC'],
+      ['248619366', 'AL'],
+      ['035248816', 'AP'],
+      ['765758157', 'AM'],
+      ['05460213', 'BA'],
+      //['05460212', 'BA'],//TODO: Falta validar o de 9 digitos
+      ['156865506', 'CE'],
+      ['0761045000180', 'DF'],
+      ['662569858', 'ES'],
+      ['153683181', 'GO'],//Dando erro
+      ['123358010', 'MA'],
+      ['91286329101', 'MT'],
+      //['88743069688', 'MT'], //TODO:Falta validar o de 8 digitos
+      ['288252129', 'MS'],
+      ['0418145586082', 'MG'],
+      ['152338285', 'PA'],
+      ['136814621', 'PB'],
+      ['7348032432', 'PR'],
+      ['963975944', 'PE'],
+      //['963975943', 'PE'],//TODO: Falta validar o de 14 digitos
+      ['055790811', 'PI'],
+      ['08088285', 'RJ'],
+      ['208437801', 'RN'],
+      //['208437800', 'RN'],//TODO:Falta validar o de 10 digitos
+      ['9994822345', 'RS'],
+      ['70946458251851', 'RO'],
+      //['70946458251850', 'RO'],//TODO:Falta validar o de 9 digitos
+      ['240067652', 'RR'],
+      ['602235951281', 'SP'],
+      //['602235951280', 'SP'],//TODO:Falta validar o Rural
+      ['262869004', 'SC'],//DANDO ERRO no site
+      ['317085035', 'SE'],
+      ['36038217095', 'TO'],
+      //['36038217094', 'TO'],//TODO: Falta validar o de 9 digitos
+    ]
+
+    console.log("testando os validos:")
+    for(var inscr of validos){
+      if(!this.validar(inscr[1], inscr[0])){
+        console.log("falhou em: " + inscr[1])
+      }
+    }
+
+    console.log("testando os inválidos:")
+    for(var inscr of invalidos){
+      if(this.validar(inscr[1], inscr[0])){
+        console.log("falhou em: " + inscr[1])
+      }
+    }
+
+  }
 }
 function validateAC (){
   /* * VERIFICAÇÃO 1 * onze dígitos mais dois dígitos verificadores  */
-  if(ie.length !==13){
+  if(ie.length !=13){
     return false;
   }
   let caracteres = ie.split('');
@@ -74,7 +167,7 @@ function validateAC (){
   let dv_01 = caracteres[11];
   let dv_02 = caracteres[12];
   /*  * VERIFICAÇÃO 2 * os dois primeiros dígitos são sempre 01 (número do estado)  */
-  if(number_01!==0 || number_02!==1){
+  if(number_01!=0 || number_02!=1){
     return false;
   }
   let remontagem_01 = caracteres[0]+caracteres[1]+caracteres[2];
@@ -98,7 +191,7 @@ function validateAC (){
     dv_01_obtido = 0;
   }
   /* * VERIFICAÇÃO 3 * dígitos devem coincidir  */
-  if(dv_01!==dv_01_obtido){
+  if(dv_01!=dv_01_obtido){
     return false;
   }
   let remontagem_03 = caracteres[0]+caracteres[1]+caracteres[2]+caracteres[3];
@@ -122,17 +215,17 @@ function validateAC (){
     dv_02_obtido = 0;
   }
   /* * VERIFICAÇÃO 4  * dígitos devem coincidir   */
-  if(dv_02!==dv_02_obtido){
+  if(dv_02!=dv_02_obtido){
     return false;
   }
   return true;
 };
 function validateAL (){
   // /*  * VERIFICAÇÃO 1 * nove dígitos */
-  if(ie.length !=9){
+  if(ie.length != 9){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var number_01 = caracteres[0];
   var number_02 = caracteres[1];
   var tipoEmpresa = caracteres[2];
@@ -167,7 +260,7 @@ function validateAP(){
   if(ie.length != 9){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var number_01 = caracteres[0];
   var number_02 = caracteres[1];
   var dv = caracteres[8];
@@ -219,7 +312,7 @@ function validateAM(){
   if(ie.length != 9){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv= caracteres[8];
   var remontagem = caracteres[0]+caracteres[1]+caracteres[2]+caracteres[3]+caracteres[4]+caracteres[5]+caracteres[6]+caracteres[7];
   var caracteresRemontagem = remontagem.split('');
@@ -255,28 +348,28 @@ function validateBA(){
   if(ie.length != 8 && ie.length != 9){
     return false;
   }
-  return ie.length == 8 ? this.validateBA_8D() : this.validateBA_9D();
+  return ie.length == 8 ? validateBA_8D() : validateBA_9D();
 };
 function validateBA_8D(){
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   if(caracteres[0] == 0 || caracteres[0] == 1 || caracteres[0] == 2 || caracteres[0] == 3 || caracteres[0] == 4 || caracteres[0] == 5 || caracteres[0] == 8){
     //Para Inscrições cujo primeiro dígito da I.E. é 0,1,2,3,4,5,8 cálculo pelo módulo 10:
-    return this.validateBA_8D_Modulo(10, caracteres);
+    return validateBA_8D_Modulo(10, caracteres);
   }
   else{
     //Para Inscrições cujo primeiro dígito da I.E. é 6,7,9 cálculo pelo módulo 11:
-    return this.validateBA_8D_Modulo(11, caracteres);
+    return validateBA_8D_Modulo(11, caracteres);
   }
 };
 function validateBA_9D(){
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   if(caracteres[1] == 0 || caracteres[1] == 1 || caracteres[1] == 2 || caracteres[1] == 3 || caracteres[1] == 4 || caracteres[1] == 5 || caracteres[1] == 8){
     //Para Inscrições cujo primeiro dígito da I.E. é 0,1,2,3,4,5,8 cálculo pelo módulo 10:
-    return this.validateBA_9D_Modulo(10, caracteres);
+    return validateBA_9D_Modulo(10, caracteres);
   }
   else{
     //Para Inscrições cujo primeiro dígito da I.E. é 6,7,9 cálculo pelo módulo 11:
-    return this.validateBA_9D_Modulo(11, caracteres);
+    return validateBA_9D_Modulo(11, caracteres);
   }
   return true;
 };
@@ -327,7 +420,7 @@ function validateBA_9D_Modulo(modulo, caracteres){
   var dv_01 = caracteres[7];
   var dv_02 = caracteres[8];
   var remontagem_01 = caracteres[0]+caracteres[1]+caracteres[2]+caracteres[3]+caracteres[4]+caracteres[5]+caracteres[6];
-  var caracteresRemontagem_01 = str_split(remontagem_01);
+  var caracteresRemontagem_01 = remontagem_01.split('');
   var i = 0;
    var soma = 0;
   for(var j = 8; j > 1; j--){
@@ -368,7 +461,7 @@ function validateCE(){
   if(ie.length != 9){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv = caracteres[8];
   var remontagem = caracteres[0]+caracteres[1]+caracteres[2]+caracteres[3]+caracteres[4]+caracteres[5]+caracteres[6]+caracteres[7];
   var caracteresRemontagem = remontagem.split('');
@@ -394,14 +487,14 @@ function validateDF(){
   if(ie.length != 13){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   /* VERIFICAÇÃO 2 campos fixos (07) */
   if(caracteres[0] != 0 && caracteres[1] != 7){
     return false;
   }
   var dv_01 = caracteres[11];
   var remontagem_01 = caracteres[0]+caracteres[1]+caracteres[2];
-  var caracteresRemontagem_01 = str_split(remontagem_01);
+  var caracteresRemontagem_01 = remontagem_01.split('');
   var i = 0;
   var soma = 0;
   for(var j = 4; j > 1; j--){
@@ -456,7 +549,7 @@ function validateES(){
   if(ie.length != 9){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv = caracteres[8];
   var remontagem = caracteres[0]+caracteres[1]+caracteres[2]+caracteres[3]+caracteres[4]+caracteres[5]+caracteres[6]+caracteres[7];
   var caracteresRemontagem = remontagem.split('');
@@ -484,7 +577,7 @@ function validateGO(){
   if(ie.length !=9){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var ab = caracteres[0]+caracteres[1];
   /* VERIFICAÇÃO 2: dois primeiros dígitos devem ser 10, 11 ou 15 */
   if(ab != 10 && ab != 11 && ab != 15){
@@ -525,7 +618,7 @@ function validateMA(){
   if(ie.length != 9){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var number_01 = caracteres[0];
   var number_02 = caracteres[1];
   /* VERIFICAÇÃO 1 número fixo do estado: 12 */
@@ -560,14 +653,14 @@ function validateMT(){
     return false;
   }
   if(ie.length == 11){
-    return this.validateMT_11D();
+    return validateMT_11D();
   }
   if(ie.length == 9){
-    return this.validateMT_9D();
+    return validateMT_9D();
   }
 };
 function validateMT_11D(){
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv = caracteres[10];
   var remontagem_01 = caracteres[0]+caracteres[1];
   var caracteresRemontagem_01 = remontagem_01.split('');
@@ -598,7 +691,7 @@ function validateMT_11D(){
   return true;
 };
 function validateMT_9D(){
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv = caracteres[8];
   var remontagem = caracteres[0]+caracteres[1]+caracteres[2]+caracteres[3]+caracteres[4]+caracteres[5]+caracteres[6]+caracteres[7];
   var caracteresRemontagem = remontagem.split('');
@@ -625,7 +718,7 @@ function validateMS(){
   if(ie.length != 9){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var number_01 = caracteres[0];
   var number_02 = caracteres[1];
   /* VERIFICAÇÃO 1 número fixo do estado: 28 */
@@ -634,7 +727,7 @@ function validateMS(){
   }
   var dv = caracteres[8];
   var remontagem = caracteres[0]+caracteres[1]+caracteres[2]+caracteres[3]+caracteres[4]+caracteres[5]+caracteres[6]+caracteres[7];
-  var caracteresRemontagem = remontagem.length;
+  var caracteresRemontagem = remontagem.split('');
   var i = 0;
   var soma = 0;
   for(var j = 9; j > 1; j--){
@@ -665,14 +758,14 @@ function validateMG(){
   if(ie.length != 13){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv_01 = caracteres[11];
   var dv_02 = caracteres[12];
   var remontagem_01 = caracteres[0]+caracteres[1]+caracteres[2]+"0"+caracteres[3]+caracteres[4]+caracteres[5]+caracteres[6]+caracteres[7]+caracteres[8]+caracteres[9]+caracteres[10];
   var caracteresRemontagem_01 = remontagem_01.split('');
   var concat = "";
   var i = 1;
-  for(var j = 0; j < count(caracteresRemontagem_01); j++){
+  for(var j = 0; j < caracteresRemontagem_01.length; j++){
     concat += i * caracteresRemontagem_01[j];
     if(i == 1){
       i = 2;
@@ -683,9 +776,9 @@ function validateMG(){
   var caracteres_concat= concat.split('');
   var soma = 0;
   for(i=0; i < concat.length; i++){
-    soma += caracteres_concat[i];
+    soma += parseInt(caracteres_concat[i]);
   }
-  var caracteresSoma = soma.split('');
+  var caracteresSoma = soma.toString().split('');
   var dezena = caracteresSoma[0]+1;
   dezena += "0";
   var dv_01_obtido = dezena - soma;
@@ -730,7 +823,7 @@ function validatePA(){
   if(ie.length != 9){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var number_01 = caracteres[0];
   var number_02 = caracteres[1];
 
@@ -765,7 +858,7 @@ function validatePB(){
   if(ie.length != 9){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv = caracteres[8];
   var i = 0;
   var soma = 0;
@@ -789,7 +882,7 @@ function validatePR(){
   if(ie.length != 10){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv_01 = caracteres[8];
   var dv_02 = caracteres[9];
   var remontagem_01 = caracteres[0]+caracteres[1];
@@ -845,17 +938,17 @@ function validatePR(){
 function validatePE(){
   /** VERIFICAÇÃO 1: inscrição estadual do e-Fisco: 9 dígitos inscrição antiga: 14 dígitos */
   if(ie.length == 9){
-    return this.validatePE_9D();
+    return validatePE_9D();
   }
   else if(ie.length == 14){
-    return this.validatePE_14D();
+    return validatePE_14D();
   }
   else{
     return false;
   }
 };
 function validatePE_9D(){
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv_01 = caracteres[7];
   var dv_02 = caracteres[8];
   var remontagem_01 = caracteres[0]+caracteres[1]+caracteres[2]+caracteres[3]+caracteres[4]+caracteres[5]+caracteres[6];
@@ -900,7 +993,7 @@ function validatePE_9D(){
   return true;
 };
 function validatePE_14D(){
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv = caracteres[13];
   var remontagem_01 = caracteres[0]+caracteres[1]+caracteres[2]+caracteres[3]+caracteres[4];
   var caracteresRemontagem_01 = remontagem_01.split('');
@@ -934,7 +1027,7 @@ function validatePI(){
   if(ie.length != 9){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv = caracteres[8];
 
   var remontagem_01 = caracteres[0]+caracteres[1]+caracteres[2]+caracteres[3]+caracteres[4]+caracteres[5]+caracteres[6]+caracteres[7];
@@ -961,7 +1054,7 @@ function validateRJ(){
   if(ie.length != 8){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv = caracteres[7];
   var remontagem = ie.substring(0, -1);
   var caracteresRemontagem = remontagem.split('');
@@ -987,15 +1080,15 @@ function validateRJ(){
 function validateRN(){
   /* * VERIFICAÇÃO 1:*/
   if(ie.length == 9){
-    return this.validateRN_9D();
+    return validateRN_9D();
   }
   else if(ie.length == 10){
-    return this.validateRN_10D();
+    return validateRN_10D();
   }
   else return false;
 };
 function validateRN_9D(){
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var number_01 = caracteres[0];
   var number_02 = caracteres[1];
   /* VERIFICAÇÃO 1: número do estado: 20 */
@@ -1026,7 +1119,7 @@ function validateRN_9D(){
   return true;
 };
 function validateRN_10D(){
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var number_01 = caracteres[0];
   var number_02 = caracteres[1];
   /* VERIFICAÇÃO 1: número do estado: 20*/
@@ -1061,7 +1154,7 @@ function validateRS(){
   if(ie.length != 10){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv = caracteres[9];
   var remontagem = ie.substring(0, -1);
   var caracteresRemontagem = remontagem.split('');
@@ -1085,14 +1178,14 @@ function validateRS(){
 function validateRO(){
   /* VERIFICACAO 1*/
   if(ie.length == 9){
-    return this.validateRO_9D();
+    return validateRO_9D();
   }
   else if(ie.length == 14){
-    return this.validateRO_14D();
+    return validateRO_14D();
   }
 };
 function validateRO_9D(){
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv = caracteres[8];
   var remontagem = caracteres[3]+caracteres[4]+caracteres[5]+caracteres[6]+caracteres[7];
   var caracteresRemontagem = remontagem.split('');
@@ -1114,7 +1207,7 @@ function validateRO_9D(){
   return true;
 };
 function validateRO_14D(){
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv = caracteres[13];
   var remontagem_01 = caracteres[0]+caracteres[1]+caracteres[2]+caracteres[3]+caracteres[4];
   var caracteresRemontagem_01 = remontagem_01.split('');
@@ -1195,14 +1288,14 @@ function validateSP(){
   * determinar o tipo de validação a ser feita.
   */
   var caracteres = ie.split('');
-  return caracteres[0] == "P" ? this.validateSpRural() : this.validateSpIndustrial();
+  return caracteres[0] == "P" ? validateSpRural() : validateSpIndustrial();
 };
 function validateSpIndustrial(){
   /* VERIFICAÇÃO 1: doze dígitos */
   if(ie.length != 12){
     return false;
   }
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv_01 = caracteres[8];
   var dv_02 = caracteres[11];
   var remontagem_01 = caracteres[1]+caracteres[2]+caracteres[3]+caracteres[4]+caracteres[5]+caracteres[6];
@@ -1298,15 +1391,15 @@ function validateSE(){
 function validateTO(){
   /* No Tocantins pode-se ou não informar os dígitos que determinam o tipo de empresa*/
   if(ie.length == 11){
-    return this.validateTO_11D();
+    return validateTO_11D();
   }
   else if(ie.length == 9){
-    return this.validateTO_9D();
+    return validateTO_9D();
   }
   else return false;
 };
 function validateTO_11D(){
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var digitos_34 = caracteres[2]+caracteres[3];
   var dv = caracteres[10];
   var remontagem = caracteres[0]+caracteres[1]+caracteres[4]+caracteres[5]+caracteres[6]+caracteres[7]+caracteres[8]+caracteres[9];
@@ -1340,7 +1433,7 @@ function validateTO_11D(){
   return true;
 };
 function validateTO_9D(){
-  var caracteres = ie.split('');
+  let caracteres = ie.split('');
   var dv = caracteres[8];
   var remontagem = caracteres[0]+caracteres[1]+caracteres[2]+caracteres[3]+caracteres[4]+caracteres[5]+caracteres[6]+caracteres[7];
   var caracteresRemontagem = remontagem.split('');
