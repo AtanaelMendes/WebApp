@@ -11,7 +11,7 @@
 
           <q-item class="q-px-none">
             <q-item-main>
-              <produtor-select @click.native="listProdutor" label="Produtor" :model="usuario.produtor" :options="produtorOptions"/>
+              <produtor-select label="Produtor" :model="usuario.produtor" :options="produtorOptions"/>
             </q-item-main>
             <q-item-side>
               <q-btn color="deep-orange" round icon="add" @click.native="openNewProdutorDialog"/>
@@ -144,8 +144,10 @@
           return;
         }
         userService.saveProdutor(this.produtor.getValues()).then(response => {
-          this.$q.notify({type: 'positive', message: 'Grupo Econômico criado com sucesso'});
+          this.$q.notify({type: 'positive', message: 'Produtor criado com sucesso'});
           this.closeNewProdutorDialog();
+          this.usuario.produtor.value = response.data.id;
+          this.listProdutor();
         }).catch(error => {
           if (error.response.status === 422){
             this.$q.dialog({title:'Ops', message: 'Já existe um registro com esse nome'})
@@ -158,6 +160,7 @@
     },
     mounted(){
       this.listRoles();
+      this.listProdutor();
     },
 
   }

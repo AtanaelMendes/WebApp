@@ -6,8 +6,18 @@
 
     <div class="row gutter-sm q-pa-md">
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-        <q-list-header class="q-pa-none">Informações Básicas</q-list-header>
         <form>
+          <q-list-header class="q-pa-none">Informações Básicas</q-list-header>
+
+          <q-item class="q-px-none">
+            <q-item-main>
+              <produtor-select label="Produtor" :model="form.produtor" :options="produtorOptions"/>
+            </q-item-main>
+            <q-item-side>
+              <q-btn color="deep-orange" round icon="add" @click.native="openNewProdutorDialog"/>
+            </q-item-side>
+          </q-item>
+
           <custom-input-text label="Nome" :model="form.nome" />
 
           <custom-input-text type="email" label="Email" :model="form.email" />
@@ -38,6 +48,24 @@
       </div>
     </div>
 
+    <!--PRODUTOR DIALOG-->
+    <q-dialog v-model="newProdutorDialog" prevent-close>
+      <span slot="title">Novo Produtor</span>
+      <span slot="message">Crie um Produtor preenchendo o campo abaixo</span>
+
+      <div slot="body">
+        <form @keyup.enter="saveProdutor()">
+          <custom-input-text type="text" label="Nome" :model="produtor.nome" />
+        </form>
+      </div>
+
+      <template slot="buttons" slot-scope="props">
+        <q-btn flat @click="closeNewProdutorDialog"  label="Cancelar"/>
+        <q-btn flat @click="saveProdutor()"  label="Salvar"/>
+      </template>
+    </q-dialog>
+    <!--FIM PRODUTOR DIALOG-->
+
   </custom-page>
 </template>
 
@@ -48,19 +76,30 @@
   import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
   import userService from 'assets/js/service/UserService'
   import FormMixin from 'components/mixins/FormMixin'
+  import produtorSelect from 'components/ProdutorSelect.vue'
+  import Produtor from 'assets/js/model/produtor/Produtor'
+
   export default {
     name: "UserEdit",
     components: {
       toolbar,
       customPage,
-      customInputText
+      customInputText,
+      produtorSelect,
     },
     mixins: [FormMixin],
     data(){
       return {
         roles: null,
         accountId: null,
+        produtorOptions: [],
+        newProdutorDialog: false,
+        produtor: new Produtor(),
         form: {
+          produtor : {
+            value: null,
+            errorMessage: null
+          },
           nome: {
             value: null,
             errorMessage: null
@@ -86,6 +125,7 @@
     },
     validations: {
       form: {
+        produtor: {value: {required}},
         nome: { value: {required, minLength: minLength(3) } },
         email: { value: { required, email } },
         password: { value: {minLength: minLength(8) } },
@@ -104,6 +144,7 @@
           this.form.nome.value = account.nome;
           this.form.email.value = account.email;
           this.form.selectedRoles.value = account.roles;
+          this.form.produtor.value = account.produtor_id;
 
           this.setFormObj(this.form);
         })
@@ -120,10 +161,42 @@
       listRoles: function(){
         userService.listRoles().then(roles => {this.roles = roles})
       },
+      listProdutor: function(){
+        userService.listProdutor().then(response => {
+          this.produtorOptions = response;
+        })
+      },
+      openNewProdutorDialog: function(){
+        this.newProdutorDialog = true;
+      },
+      closeNewProdutorDialog: function(){
+        this.newProdutorDialog = false;
+        this.produtor.nome.value = null;
+        this.produtor.nome.errorMessage = null;
+      },
+      saveProdutor: function(){
+        if(!this.produtor.isValid(this)){
+          return;
+        }
+        userService.saveProdutor(this.produtor.getValues()).then(response => {
+          this.$q.notify({type: 'positive', message: 'Produtor criado com sucesso'});
+          this.closeNewProdutorDialog();
+          this.form.produtor.value = response.data.id;
+          this.listProdutor();
+        }).catch(error => {
+          if (error.response.status === 422){
+            this.$q.dialog({title:'Ops', message: 'Já existe um registro com esse nome'})
+          }
+        })
+      },
       updateAccount: function () {
         this.$v.form.$touch();
 
         if ( this.$v.form.$error ) {
+
+          if(!this.$v.form.produtor.value.required){
+            this.form.produtor.errorMessage = "Selecione um Produtor";
+          }
 
           if(!this.$v.form.nome.value.required){
             this.form.nome.errorMessage = "Digite um nome";
@@ -184,6 +257,7 @@
     mounted(){
       this.routeName = 'edit_user';
       this.listRoles();
+      this.listProdutor();
       this.getUser(this.$route.params.id);
     },
   }
