@@ -32,8 +32,12 @@
         </q-item-side>
       </q-item>
       <q-list-header>Informações Básicas</q-list-header>
+      <q-item v-if="account.produtor">
+        <q-item-main>
+          {{account.produtor.nome}}
+        </q-item-main>
+      </q-item>
       <q-item>
-        <q-item-side icon="contact_mail"/>
         <q-item-main>
           {{account.email}}
         </q-item-main>
