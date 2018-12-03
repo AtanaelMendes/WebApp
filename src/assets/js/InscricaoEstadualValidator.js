@@ -64,7 +64,6 @@ export default {
     }
   },//end validar()
 
-
   testaInscricoesEstaduais(){
     let validos = [
       ['0198293945680', 'AC'],
@@ -773,13 +772,13 @@ function validateMG(){
       i=1;
     }
   }
-  var caracteres_concat= concat.split('');
+  var caracteres_concat = concat.split('');
   var soma = 0;
   for(i=0; i < concat.length; i++){
     soma += parseInt(caracteres_concat[i]);
   }
   var caracteresSoma = soma.toString().split('');
-  var dezena = caracteresSoma[0]+1;
+  var dezena = parseInt(caracteresSoma[0])+1;
   dezena += "0";
   var dv_01_obtido = dezena - soma;
   //correção bug
@@ -1056,7 +1055,7 @@ function validateRJ(){
   }
   let caracteres = ie.split('');
   var dv = caracteres[7];
-  var remontagem = ie.substring(0, -1);
+  var remontagem = ie.substring(0, ie.length - 1);
   var caracteresRemontagem = remontagem.split('');
   var i = 1;
   var soma = (caracteres[0] * 2);
@@ -1096,7 +1095,7 @@ function validateRN_9D(){
     return false;
   }
   var dv = caracteres[8];
-  var remontagem = ie.substring(0, -1);
+  var remontagem = ie.substring(0, ie.length - 1);
   var caracteresRemontagem = remontagem.split('');
   var i = 0;
   var soma = 0;
@@ -1156,7 +1155,7 @@ function validateRS(){
   }
   let caracteres = ie.split('');
   var dv = caracteres[9];
-  var remontagem = ie.substring(0, -1);
+  var remontagem = ie.substring(0, ie.length-1);
   var caracteresRemontagem = remontagem.split('');
   var i = 1;
   var soma = (caracteres[0] * 2);
@@ -1240,8 +1239,8 @@ function validateRR(){
   if(ie.length != 9){
     return false;
   }
-  var remontagem = ie.substring(0, -1);
-  var dv = ie.substring(-1);
+  var remontagem = ie.substring(0, ie.length-1);
+  var dv = ie.slice(-1);
   var caracteresRemontagem = remontagem.split('');
   var soma = 0;
   for(var i = 0; i < caracteresRemontagem.length; i++){
@@ -1259,8 +1258,8 @@ function validateSC(){
   if(ie.length != 9){
     return false;
   }
-  var remontagem = ie.substring(0, -1);
-  var dv = ie.substring(-1);
+  var remontagem = ie.substring(0, ie.length-1);
+  var dv = ie.slice(-1);
   var caracteresRemontagem = remontagem.split('');
   var i = 0;
   var soma = 0;
@@ -1366,8 +1365,8 @@ function validateSE(){
   if(ie.length != 9){
     return false;
   }
-  var remontagem = ie.substring(0, -1);
-  var dv = ie.substring(-1);
+  var remontagem = ie.substring(0, ie.length-1);
+  var dv = ie.slice(-1);
   var caracteresRemontagem = remontagem.split('');
   var i = 0;
   var soma = 0;
