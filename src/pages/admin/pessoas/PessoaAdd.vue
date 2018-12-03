@@ -60,12 +60,14 @@
           </div>
 
           <q-item class="q-px-none">
+            <!--<q-item-side>-->
+              <!--<q-btn label="Testar" @click="testaInscricoesEstaduais" />-->
+            <!--</q-item-side>-->
             <q-item-main>
               <custom-input-text type="text" label="Inscrição Estadual" maxlength="14" :model="pessoa.inscricaoEstadual"/>
             </q-item-main>
             <q-item-side>
               <estado-sigla-select label="UF" :model="pessoa.uf"/>
-              <q-btn label="Testar" @click="testaInscricoesEstaduais" />
             </q-item-side>
           </q-item>
 
