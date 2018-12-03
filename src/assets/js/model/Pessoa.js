@@ -95,19 +95,21 @@ export default class{
         this.nomeFantasia.errorMessage = "Digite um nome fantasia";
         hasError = true;
       }
-    }
 
-    if (!helpers.req(this.uf.value)) {
-      this.uf.errorMessage = "Selecione um estado.";
-      hasError = true;
-    }else{
-      console.log('quase')
-      if (!inscricaoEstadualValidator.validar(this.uf.value, this.inscricaoEstadual.value)) {
-        console.log('aqui')
-        this.inscricaoEstadual.errorMessage = "Inscrição Inválida";
+      if (!helpers.req(this.uf.value)) {
+        this.uf.errorMessage = "Selecione um estado.";
         hasError = true;
+      }else{
+        console.log('quase')
+        if (!inscricaoEstadualValidator.validar(this.uf.value, this.inscricaoEstadual.value)) {
+          console.log('aqui')
+          this.inscricaoEstadual.errorMessage = "Inscrição Inválida";
+          hasError = true;
+        }
       }
     }
+
+
 
 
 
@@ -121,6 +123,7 @@ export default class{
       cpf: this.cpf.value,
       cnpj: this.cnpj.value,
       inscricao_estadual: this.inscricaoEstadual.value,
+      uf: this.uf.value,
       inscricao_municipal: this.inscricaoMunicipal.value,
       razao_social: this.razaoSocial.value,
       nome_fantasia: this.nomeFantasia.value
