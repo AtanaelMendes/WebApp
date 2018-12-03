@@ -5,7 +5,7 @@
     </toolbar>
 
     <!--INFORMACOES BASICAS-->
-    <div class="row q-pa-md">
+    <div class="row q-pa-md space-end">
       <div class="col-12">
         <q-item class="custom-header q-title q-px-none">
           Informaçẽs básicas

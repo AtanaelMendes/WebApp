@@ -281,6 +281,7 @@
         this.getPessoa(this.$route.params.id);
         this.listContatos(this.$route.params.id);
         this.listLocalizacoes(this.$route.params.id);
+        this.pessoa = null;
       }
     },
     methods: {
