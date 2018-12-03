@@ -23,7 +23,7 @@ export default {
   },
   savePessoa(params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('/pessoa', params).then(response => {
+      Vue.prototype.$axios.post('/pessoasdsdsd', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)

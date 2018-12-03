@@ -1,5 +1,6 @@
 import { helpers} from 'vuelidate/lib/validators';
 import CPF from 'gerador-validador-cpf';
+import inscricaoEstadualValidator from 'assets/js/InscricaoEstadualValidator';
 export default class{
   pessoaType = 1;
   nome= {
@@ -19,6 +20,10 @@ export default class{
     errorMessage: null
   };
   inscricaoEstadual= {
+    value: null,
+    errorMessage: null
+  };
+  uf= {
     value: null,
     errorMessage: null
   };
@@ -42,6 +47,7 @@ export default class{
       this.cpf.value = pessoa.cpf.value;
       this.cnpj.value = pessoa.cnpj.value;
       this.inscricaoEstadual.value = pessoa.inscricaoEstadual.value;
+      this.uf.value = pessoa.uf.value;
       this.inscricaoMunicipal.value = pessoa.inscricaoMunicipal.value;
       this.nomeFantasia.value = pessoa.nomeFantasia.value;
       this.razaoSocial.value = pessoa.razaoSocial.value;
@@ -90,6 +96,20 @@ export default class{
         hasError = true;
       }
     }
+
+    if (!helpers.req(this.uf.value)) {
+      this.uf.errorMessage = "Selecione um estado.";
+      hasError = true;
+    }else{
+      console.log('quase')
+      if (!inscricaoEstadualValidator.validar(this.uf.value, this.inscricaoEstadual.value)) {
+        console.log('aqui')
+        this.inscricaoEstadual.errorMessage = "Inscrição Inválida";
+        hasError = true;
+      }
+    }
+
+
 
     return !hasError;
   };

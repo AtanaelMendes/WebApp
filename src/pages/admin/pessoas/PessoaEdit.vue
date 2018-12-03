@@ -54,7 +54,14 @@
               <custom-input-text type="text" label="Nome Fantasia" :model="pessoa.nomeFantasia"/>
             </div>
 
-            <custom-input-text type="text" label="Inscrição Estadual" :model="pessoa.inscricaoEstadual"/>
+            <q-item class="q-px-none">
+              <q-item-main>
+                <custom-input-text type="text" label="Inscrição Estadual" maxlength="14" :model="pessoa.inscricaoEstadual"/>
+              </q-item-main>
+              <q-item-side>
+                <estado-sigla-select label="UF" :model="pessoa.uf"/>
+              </q-item-side>
+            </q-item>
 
             <custom-input-text type="text" label="Inscrição Municipal" :model="pessoa.inscricaoMunicipal"/>
 
@@ -91,6 +98,7 @@
   import PessoaService from 'assets/js/service/PessoaService'
   import GrupoEconomicoService from 'assets/js/service/GrupoEconomicoService'
   import Pessoa from 'assets/js/model/Pessoa'
+  import estadoSiglaSelect from 'components/EstadoSiglaSelect.vue'
   import GrupoEconomico from 'assets/js/model/GrupoEconomico'
   import { filter } from 'quasar'
   export default {
@@ -99,6 +107,7 @@
       toolbar,
       customPage,
       customInputText,
+      estadoSiglaSelect,
     },
     data(){
       return {
@@ -130,6 +139,7 @@
         this.pessoa.razaoSocial.value = data.razao_social
         this.pessoa.nomeFantasia.value = data.nome_fantasia
         this.pessoa.inscricaoEstadual.value = data.inscricao_estadual
+        this.pessoa.uf.value = data.uf
         this.pessoa.inscricaoMunicipal.value = data.inscricao_municipal
 
 
