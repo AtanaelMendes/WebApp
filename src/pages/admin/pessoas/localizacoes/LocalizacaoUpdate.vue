@@ -31,6 +31,10 @@
           <!-- FIM TOGGLE FISCAL COBRANCA-->
 
           <form>
+            <!--CEP-->
+            <custom-input-text type="text" label="CEP" mask="#####-###"
+                               :model="localizacao.cep" @blur="getLocationByCEP" :loading="isLoadingAddress"/>
+
             <!--CIDADE-->
             <cidade-autocomplete label="Cidade" @input="selected" :model="localizacao.cidadeId" :terms="cidadeTerms"/>
 
@@ -45,9 +49,6 @@
 
             <!--BAIRRO-->
             <custom-input-text type="text" label="Bairro" :model="localizacao.bairro" />
-
-            <!--CEP-->
-            <custom-input-text type="text" label="CEP" mask="#####-###" :model="localizacao.cep" />
 
           </form>
 
@@ -75,6 +76,7 @@
     data(){
       return {
         cidadeTerms: null,
+        isLoadingAddress: false,
         typeError: null,
         localizacao: new Localizacao(),
       }
@@ -127,6 +129,19 @@
           this.$router.go(-1);
         }).catch(error => {
           this.$q.notify({type: 'negative', message: error})
+        })
+      },
+      getLocationByCEP: function(cep){
+        this.isLoadingAddress = true;
+        localizacaoService.getAddressByCEP(cep).then(address => {
+          this.localizacao.endereco.value = address.endereco;
+          this.localizacao.bairro.value = address.bairro;
+          this.localizacao.cidadeId.value = address.cidade.id;
+          this.cidadeTerms = address.cidade.nome;
+
+          this.isLoadingAddress = false;
+        }).catch(() => {
+          this.isLoadingAddress = false;
         })
       },
       backAction: function () {

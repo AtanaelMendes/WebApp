@@ -39,7 +39,7 @@
   import customPage from 'components/CustomPage.vue'
   import safraService from 'assets/js/service/SafraService'
     export default {
-      name: "SafraList",
+      name: "safra-list",
       components: {
         toolbar,
         customPage

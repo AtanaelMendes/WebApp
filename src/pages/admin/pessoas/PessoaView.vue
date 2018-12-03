@@ -317,6 +317,7 @@
             this.$q.notify({type: 'positive', message: 'Pessoa Arquivada com sucesso'})
             this.getPessoa(this.$route.params.id);
             this.$root.$emit('refreshPessoaList');
+            this.$router.push({name:'pessoas'});
           })
         });
       },
@@ -330,6 +331,7 @@
           pessoaService.restorePessoa(this.$route.params.id).then(response => {
             this.$q.notify({type: 'positive', message: 'Pessoa Ativada'})
             this.getPessoa(this.$route.params.id);
+            this.$root.$emit('refreshPessoaList');
           })
         });
       },
@@ -357,7 +359,7 @@
           })
         });
       },
-      archiveContato: function(){
+      archiveContato: function(contatoId){
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente deseja arquivar esse contato?',

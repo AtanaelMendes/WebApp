@@ -1,7 +1,7 @@
 <template>
   <custom-page isChild>
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Nova Área">
-      <q-btn slot="action_itens" flat icon="done" dense @click="saveArea()"/>
+      <q-btn slot="action_itens" flat icon="done" dense round @click="saveArea()"/>
     </toolbar>
 
     <form class="q-pa-md">

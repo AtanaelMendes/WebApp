@@ -23,7 +23,7 @@ export default {
   },
   savePessoa(params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('/pessoa', params).then(response => {
+      Vue.prototype.$axios.post('/pessoasdsdsd', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
@@ -59,7 +59,7 @@ export default {
   },
   restorePessoa(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('/pessoa/' + id + '/restore').then(response => {
+      Vue.prototype.$axios.put('/pessoa/' + id + '/restore').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)

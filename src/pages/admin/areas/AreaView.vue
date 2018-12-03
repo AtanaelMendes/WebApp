@@ -2,7 +2,22 @@
   <custom-page isChild style="background: #fdfdfd">
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction">
       <template slot="action_itens" v-if="area">
-        <q-btn flat round dense icon="edit" @click.native="editArea(area.id)"/>
+        <q-btn flat round dense icon="edit" @click.native="updateArea"/>
+        <q-btn flat round dense icon="more_vert" >
+          <q-popover anchor="bottom left">
+            <q-list link>
+              <q-item dense @click.native="archiveArea(area.id)" v-if="!area.deleted_at">
+                <q-item-main label="Arquivar area"  />
+              </q-item>
+              <q-item dense @click.native="deleteArea(area.id)">
+                <q-item-main label="Excluir area"  />
+              </q-item>
+              <q-item dense @click.native="restoreArea(area.id)" v-if="area.deleted_at">
+                <q-item-main label="Ativar area"  />
+              </q-item>
+            </q-list>
+          </q-popover>
+        </q-btn>
       </template>
     </toolbar>
 
@@ -57,9 +72,15 @@
                 {{talhao.nome}}
                 <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
                   <q-popover>
-                    <q-list link  style="min-width: 120px">
+                    <q-list link>
                       <q-item v-close-overlay @click.native="updateTalhao(talhao.id)">
                         <q-item-main label="Editar"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="archiveTalhao(talhao.id)" v-if="!talhao.deleted_at">
+                        <q-item-main label="Arquivar"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="restoreTalhao(talhao.id)" v-if="talhao.deleted_at">
+                        <q-item-main label="Ativar"/>
                       </q-item>
                       <q-item v-close-overlay @click.native="deleteTalhao(talhao.id)">
                         <q-item-main label="Apagar"/>
@@ -96,14 +117,16 @@
     },
     watch: {
       '$route' (to, from) {
-        this.listTalhao(this.$route.params.id);
+        this.listTalhoes(this.$route.params.id);
         this.getAreaById(this.$route.params.id);
+        this.areaId = this.$route.params.id;
       },
     },
     data(){
       return{
         area: null,
         talhoes: [],
+        areaId: this.$route.params.id,
         coluna: 'col-xs-12 col-sm-12 col-md-6 col-lg-6',
       }
     },
@@ -113,29 +136,99 @@
           this.area = area
         })
       },
-      editArea: function(id){
-        this.$router.push({name: 'edit_area', params: {id:id}});
+      updateArea: function(){
+        this.$router.push({name: 'edit_area', params: {id: this.areaId}});
       },
-      updateTalhao: function(talhaoId){
-        let areaId = this.$route.params.id
-        this.$router.push({name: 'edit_talhao', params: {id:areaId, talhaoId: talhaoId}});
+      archiveArea: function(){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja arquivar esta área?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          areaService.archiveArea(this.areaId).then(response => {
+            this.$q.notify({type: 'positive', message: 'Área arquivada'})
+            this.$router.push({name:'areas'})
+          })
+        });
       },
-      deleteTalhao: function(){},
-      addtalhao: function(id){
-        this.$router.push({name: 'add_talhao', params: {id:id}});
+      restoreArea: function(){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente Ativar essa área?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          areaService.restoreArea(this.areaId).then(response => {
+            this.$q.notify({type: 'positive', message: 'Área ativada'})
+            this.getAreaById(this.$route.params.id);
+          })
+        });
       },
-      listTalhao: function(id){
-        talhaoService.listTalhao(id).then(talhoes => {
+      deleteArea: function(){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja excluir essa área?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          areaService.deleteArea(this.areaId).then(response => {
+            this.$q.notify({type: 'positive', message: 'Área excluida'})
+            this.$router.push({name:'areas'})
+
+            this.$root.$emit('refreshAreaList')
+          })
+        });
+      },
+      listTalhoes: function(id){
+        talhaoService.listTalhoes(id).then(talhoes => {
           this.talhoes = talhoes.data;
-          this.isEmptyList = this.talhoes.length === 0;
         })
       },
-      editArea: function(){
-        this.$router.push({name:'edit_area'});
-      },
       addtalhao: function(){
-        this.$router.push({name:'add_talhao'});
-        // this.$router.push({name: 'view_area', params: {id:id}});
+        this.$router.push({name: 'add_talhao', params: {id: this.$route.params.id}});
+      },
+      updateTalhao: function(talhaoId){
+        this.$router.push({name: 'edit_talhao', params: {id: this.areaId, talhaoId: talhaoId}});
+      },
+      archiveTalhao: function(talhaoId){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja arquivar este talhão?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          talhaoService.archiveTalhao(this.areaId, talhaoId).then(response => {
+            this.$q.notify({type: 'positive', message: 'Talhão arquivado com sucesso'});
+            this.listTalhoes(this.$route.params.id);
+          })
+        });
+      },
+      restoreTalhao: function(talhaoId){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja ativar este talhão?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          talhaoService.restoreTalhao(this.areaId, talhaoId).then(response => {
+            this.$q.notify({type: 'positive', message: 'Talhão ativado com suceso'})
+            this.listTalhoes(this.$route.params.id);
+          })
+        });
+      },
+      deleteTalhao: function(talhaoId){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja excluir este talhão?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          talhaoService.deleteTalhao(this.areaId, talhaoId).then(response => {
+            this.$q.notify({type: 'positive', message: 'Talhão excluido com sucesso'})
+            this.listTalhoes(this.$route.params.id);
+          })
+        });
       },
       backAction: function () {
         // this.$router.go(-1);
@@ -143,7 +236,7 @@
       }
     },
     mounted(){
-      this.listTalhao(this.$route.params.id);
+      this.listTalhoes(this.$route.params.id);
       this.getAreaById(this.$route.params.id);
     }
   }

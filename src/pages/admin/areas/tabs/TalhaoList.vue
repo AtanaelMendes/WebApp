@@ -53,7 +53,7 @@
     },
     watch: {
       '$route' (to, from) {
-        this.listTalhao(this.$route.params.id)
+        this.listTalhoes(this.$route.params.id)
       }
     },
     methods: {
@@ -65,15 +65,15 @@
       addtalhao: function(id){
         this.$router.push({name: 'add_talhao', params: {id:id}});
       },
-      listTalhao: function(id){
-        talhaoService.listTalhao(id).then(talhoes => {
+      listTalhoes: function(id){
+        talhaoService.listTalhoes(id).then(talhoes => {
           this.talhoes = talhoes.data;
           this.isEmptyList = this.talhoes.length === 0;
         })
       },
     },
     mounted() {
-      this.listTalhao(this.$route.params.id)
+      this.listTalhoes(this.$route.params.id)
     }
   }
 </script>

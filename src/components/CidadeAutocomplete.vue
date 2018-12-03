@@ -32,7 +32,6 @@
       checkCidadeInput(){
         let result = this.tempCidadeList.filter(item => ('' + item['label']).toLowerCase() === this.terms.toLowerCase());
         if(result.length === 0){
-          console.log("nada")
           this.terms = '';
           this.$emit('input', '')
           this.clearErrorMessage();

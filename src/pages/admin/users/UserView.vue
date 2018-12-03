@@ -6,11 +6,14 @@
         <q-btn flat round dense icon="more_vert" >
           <q-popover anchor="bottom left">
             <q-list link>
-              <q-item dense @click.native="disableAccount(account.id)" v-if="!account.deleted_at">
-                <q-item-main label="Inativar usuário"  />
+              <q-item dense @click.native="archiveAccount(account.id)" v-if="!account.deleted_at">
+                <q-item-main label="Arquivar usuário"/>
               </q-item>
-              <q-item dense @click.native="enableAccount(account.id)" v-if="account.deleted_at">
-                <q-item-main label="Ativar usuário"  />
+              <q-item dense @click.native="activateAccount(account.id)" v-if="account.deleted_at">
+                <q-item-main label="Ativar usuário"/>
+              </q-item>
+              <q-item dense @click.native="deleteAccount(account.id)">
+                <q-item-main label="Excluir usuário"/>
               </q-item>
             </q-list>
           </q-popover>
@@ -54,7 +57,6 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import { Loading } from 'quasar'
-
     export default {
       name: "UserView",
       components: {
@@ -73,22 +75,17 @@
       },
       methods:{
         getUser: function(id) {
-          //let vm = this
           this.$axios.get( 'account/'+ id).then( response => {
             this.account = response.data;
-            //vm.form.selectedRoles = vm.userData.roles
-            //vm.form.email = vm.userData.email
-          }).catch( error => {
-
           })
         },
         editUser: function(id){
           this.$router.push({name: 'edit_user', params: {id:id}});
         },
-        disableAccount: function(id) {
+        deleteAccount:function(id){
           this.$q.dialog({
             title: 'Atenção',
-            message: 'Realmente deseja desativar esta conta?',
+            message: 'Realmente deseja excluir esta conta permanentemente?',
             ok: 'Sim',
             cancel: 'Não',
             preventClose: true,
@@ -96,7 +93,27 @@
           }).then(data => {
             Loading.show();
             this.$axios.delete( 'account/'+ id).then( response => {
-              this.$root.$emit('refreshUserList')
+              this.$root.$emit('refreshUserList');
+              this.$q.notify({type: 'positive', message: 'Conta excluida com sucesso'});
+              Loading.hide();
+            }).catch( error => {
+              Loading.hide();
+            })
+          })
+        },
+        archiveAccount: function(id) {
+          this.$q.dialog({
+            title: 'Atenção',
+            message: 'Realmente deseja arquivar esta conta?',
+            ok: 'Sim',
+            cancel: 'Não',
+            preventClose: true,
+            color: 'primary'
+          }).then(data => {
+            Loading.show();
+            this.$axios.put( 'account/'+ id + '/archive').then( response => {
+              this.$root.$emit('refreshUserList');
+              this.$q.notify({type: 'positive', message: 'Conta arquivada com sucesso'});
               Loading.hide();
               if(response.status === 200){
                 this.account.deleted_at = new Date();
@@ -106,7 +123,7 @@
             })
           })
         },
-        enableAccount: function(id) {
+        activateAccount: function(id) {
           this.$q.dialog({
             title: 'Atenção',
             message: 'Realmente deseja ativar esta conta?',
