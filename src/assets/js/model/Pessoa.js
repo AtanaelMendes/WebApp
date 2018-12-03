@@ -108,21 +108,30 @@ export default class{
   };
 };
 
-function isValidCnpj(cnpj) {
-  var b = [6,5,4,3,2,9,8,7,6,5,4,3,2];
-  if((cnpj = cnpj.replace(/[^\d]/g,"")).length != 14){
+function isValidCnpj(value) {
+
+  value = value.replace(/[^0-9]/g, '');
+  if (value.length != 14) {
     return false;
   }
-  if(/0{14}/.test(cnpj)){
+
+  let soma = 0;
+  for (let i = 0, j = 5; i < 12; i++) {
+    soma += value.charAt(i) * j;
+    j = (j == 2) ? 9 : j - 1;
+  }
+
+  let resto = soma % 11;
+  if (value.charAt(12) != (resto < 2 ? 0 : 11 - resto)) {
     return false;
   }
-  for (var i = 0, n = 0; i < 12; n += cnpj[i] * b[++i]);
-  if(cnpj[12] != (((n %= 11) < 2) ? 0 : 11 - n)){
-    return false;
+
+  soma = 0;
+  for (let i = 0, j = 6; i < 13; i++) {
+    soma += value.charAt(i) * j;
+    j = (j == 2) ? 9 : j - 1;
   }
-  for (var i = 0, n = 0; i <= 12; n += cnpj[i] * b[i++]);
-  if(cnpj[13] != (((n %= 11) < 2) ? 0 : 11 - n)){
-    return false;
-  }
-  return true;
+
+  resto = soma % 11;
+  return value.charAt(13) == (resto < 2 ? 0 : 11 - resto);
 };
