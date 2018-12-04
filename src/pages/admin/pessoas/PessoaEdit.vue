@@ -171,9 +171,9 @@
         });
       },
       pessoaTypeChanged: function(value){
-        this.pessoa = new Pessoa(value)
-        this.grupoEconomicoSearchTerms = ''
-        this.tempGrupoEconomicoList = []
+        //this.pessoa = new Pessoa(value)
+        //this.grupoEconomicoSearchTerms = ''
+        //this.tempGrupoEconomicoList = []
       },
       createGrupoEconomico: function(){
         if(!this.grupoEconomico.isValid(this)){

@@ -113,15 +113,28 @@ export default class{
   };
 
   getValues(){
-    return{
-      nome: this.nome.value,
-      grupo_economico_id: this.grupoEconomico.value,
-      cpf: this.cpf.value,
-      cnpj: this.cnpj.value,
-      inscricao_estadual: this.inscricaoEstadual.value,
-      inscricao_municipal: this.inscricaoMunicipal.value,
-      razao_social: this.razaoSocial.value,
-      nome_fantasia: this.nomeFantasia.value
+    if(this.pessoaType === 1){
+      return{
+        nome: this.nome.value,
+        grupo_economico_id: this.grupoEconomico.value,
+        cpf: this.cpf.value,
+        cnpj: null,
+        inscricao_estadual: this.inscricaoEstadual.value,
+        inscricao_municipal: this.inscricaoMunicipal.value,
+        razao_social: null,
+        nome_fantasia: null
+      }
+    }else if(this.pessoaType === 2){
+      return{
+        nome: this.nome.value,
+        grupo_economico_id: this.grupoEconomico.value,
+        cpf: null,
+        cnpj: this.cnpj.value,
+        inscricao_estadual: this.inscricaoEstadual.value,
+        inscricao_municipal: this.inscricaoMunicipal.value,
+        razao_social: this.razaoSocial.value,
+        nome_fantasia: this.nomeFantasia.value
+      }
     }
   };
 };
