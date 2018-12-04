@@ -3,34 +3,77 @@
     <toolbar slot="toolbar" title="Safras" searchable navigation_type="menu" >
     </toolbar>
 
-    <div class="space-end row">
+    <div class="space-end row q-pa-md">
+      <div class="col-8 offset-2 q-title text-right">
+        Safra 2018 - 2019
+      </div>
       <div class="col-12">
-        <q-list separator link highlight no-border  v-if="!isEmptyList">
+        <div class="row">
+          <div class="col-xs-2 col-sm-2 col-md-1 col-lg-1">
+            <img src="/assets/soja-icon.jpg" class="responsive round"/>
+          </div>
+          <div class="col-xs-8 col-sm-8 col-md-10 col-lg-10 offset-1 q-title self-center">
+            Soja RR
+          </div>
+        </div>
 
-          <q-item sparse multiline @click.native="viewSafra(safra.id)" v-for="(safra, key) in safras" :key="key">
-            <q-item-main >
-              <q-item-tile label>{{safra.culturas.join(', ')}}</q-item-tile>
-              <q-item-tile sublabel><span>Area:</span> {{safra.area}}<span> - Talhao:</span> {{safra.talhao}}</q-item-tile>
-            </q-item-main>
+        <div class="row gutter-sm">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="item in 4" :key="item">
+            <q-card>
+              <q-card-media>
+                <img src="/assets/talhao1.jpeg" class="responsive"/>
+              </q-card-media>
+              <q-card-separator/>
+              <q-card-title>
+                Talhao fundo
+                <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
+                  <q-popover>
+                    <q-list link class="no-border">
+                      <q-item v-close-overlay>
+                        <!--<q-item-main @click.native="updateContato(contato.id)" label="Editar" />-->
+                        <q-item-main label="ação 1" />
+                      </q-item>
+                      <q-item v-close-overlay >
+                        <q-item-main label="ação 2"/>
+                      </q-item>
+                      <q-item v-close-overlay>
+                        <q-item-main label="ação 3"/>
+                      </q-item>
+                    </q-list>
+                  </q-popover>
+                </q-btn>
+              </q-card-title>
+              <q-card-separator/>
+              <q-card-main class="gutter-xs">
+                <div class="row">
+                  <div class="col-6">
+                    5/10 <span class="text-faded">Hectare</span>
+                  </div>
+                  <div class="col-6 text-right text-faded q-caption">
+                    10 Hectare
+                  </div>
+                </div>
 
-            <q-item-side right>
-              <q-item-tile stamp>{{safra.inicio}}/{{safra.fim}}</q-item-tile>
-            </q-item-side>
-          </q-item>
-        </q-list>
+                <div class="row">
+                  <q-progress :percentage="progressBuffer"style="height: 4px"/>
+                  <q-tooltip>Colhido 70%</q-tooltip>
+                </div>
 
-        <div v-if="isEmptyList" class="no-result">
-          <img src="~/assets/sad_2.svg"/>
-          <span>Nenhum resultado encontrado.</span>
+                <div class="row">
+                  <div class="col-12">60 Sacos</div>
+                </div>
+
+                <div class="row">
+                  <div class="col-12">120 Sacos</div>
+                </div>
+
+              </q-card-main>
+            </q-card>
+          </div>
         </div>
 
       </div>
     </div>
-
-    <div slot="fab-container">
-      <q-btn round color="primary" @click="addSafra" icon="add" size="20px" />
-    </div>
-
   </custom-page>
 </template>
 
@@ -46,8 +89,7 @@
       },
       data () {
         return {
-          safras: [],
-          isEmptyList: false
+          progressBuffer: 70
         }
       },
       methods: {
@@ -94,5 +136,9 @@
     font-size: 25px;
     font-weight: 300;
     color: #ababab;
+  }
+
+  .round{
+    border-radius: 50%;
   }
 </style>
