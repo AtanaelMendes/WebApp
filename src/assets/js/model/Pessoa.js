@@ -95,7 +95,6 @@ export default class{
         this.nomeFantasia.errorMessage = "Digite um nome fantasia";
         hasError = true;
       }
-    }
 
     if(this.inscricaoEstadual.value != null){
       if (!helpers.req(this.uf.value)) {

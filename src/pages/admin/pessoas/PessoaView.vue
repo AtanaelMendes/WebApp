@@ -42,6 +42,11 @@
               <q-item-side>
               </q-item-side>
             </q-item>
+            <q-item class="bg-negative" v-if="pessoa.delete_at">
+              <q-item-main class="text-white">
+                Pessoa Inativa
+              </q-item-main>
+            </q-item>
           </div>
 
           <div :class="coluna">
@@ -281,6 +286,7 @@
         this.getPessoa(this.$route.params.id);
         this.listContatos(this.$route.params.id);
         this.listLocalizacoes(this.$route.params.id);
+        this.pessoa = null;
       }
     },
     methods: {
