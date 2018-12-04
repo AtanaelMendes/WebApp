@@ -19,6 +19,15 @@ export default {
       })
     });
   },
+  restoreContato(contatoId, pessoaId){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('/pessoa/' + pessoaId + '/contato/' + contatoId + '/restore').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   listContatos(pessoaId){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.get( 'pessoa/' + pessoaId + '/contato' ).then( response => {

@@ -90,6 +90,11 @@
                 </q-btn>
               </q-card-title>
               <q-card-separator/>
+              <q-item v-if="talhao.deleted_at" class="bg-negative text-white" dense inset>
+                <q-item-main class="text-center">
+                  Talhão Inativo
+                </q-item-main>
+              </q-item>
               <q-card-main>
                 <div class="row">
                   <div>{{talhao.tamanho}},&nbsp{{talhao.unidade.nome}}</div>

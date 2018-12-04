@@ -121,8 +121,11 @@
                       <q-item v-close-overlay>
                         <q-item-main @click.native="updateContato(contato.id)" label="Editar" />
                       </q-item>
-                      <q-item v-close-overlay>
-                        <q-item-main @click.native="archiveContato(contato.id)" label="Arquivar"/>
+                      <q-item v-close-overlay v-if="!contato.deleted_at">
+                        <q-item-main @click.native="archiveContato(contato.id)"  label="Arquivar"/>
+                      </q-item>
+                      <q-item v-close-overlay v-if="contato.deleted_at">
+                        <q-item-main @click.native="restoreContato(contato.id)"  label="Ativar"/>
                       </q-item>
                       <q-item v-close-overlay>
                         <q-item-main @click.native="deleteContato(contato.id)" label="Excluir"/>
@@ -132,8 +135,15 @@
                 </q-btn>
               </q-card-title>
 
+              <q-item v-if="contato.deleted_at" class="bg-negative text-white" dense inset>
+                <q-item-main class="text-center">
+                  Contato Inativo
+                </q-item-main>
+              </q-item>
+
               <q-list no-border>
-                <q-item dense class="q-pa-sm">
+
+                <q-item dense >
                   <q-item-main>
                     <q-chip v-if="contato.is_cobranca" small color="teal" class="q-ma-xs">Cobrança</q-chip>
                     <q-chip v-if="contato.is_fiscal" small color="teal" class="q-ma-xs">Fiscal</q-chip>
@@ -158,7 +168,6 @@
                     </q-item-tile>
                   </q-item-main>
                 </q-item>
-
 
                 <q-item v-for="(email, index) in contato.emails" :key="email.endereco">
                   <q-item-side class="q-pa-none" icon="email" color="deep-orange" v-if="index === 0"/>
@@ -374,6 +383,19 @@
         }).then(data => {
           contatoService.archiveContato(contatoId, this.$route.params.id).then(response => {
             this.$q.notify({type: 'positive', message: 'Contato arquivado'})
+            this.listContatos(this.$route.params.id);
+          })
+        });
+      },
+      restoreContato: function(contatoId){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja ativar esse contato?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          contatoService.restoreContato(contatoId, this.$route.params.id).then(response => {
+            this.$q.notify({type: 'positive', message: 'Contato ativado'})
             this.listContatos(this.$route.params.id);
           })
         });
