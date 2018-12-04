@@ -81,8 +81,12 @@ export default {
     });
   },
   getAddressByCEP(cep){
-    cep = cep.replace('-','');
     return new Promise((resolve, reject) => {
+      if(!cep){
+        reject();
+        return
+      }
+      cep = cep.replace('-','');
       Vue.prototype.$axios.get('/utils/getaddressbycep/' + cep).then(response => {
         resolve(response.data)
       }).catch(error => {
