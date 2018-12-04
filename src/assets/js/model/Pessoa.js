@@ -110,9 +110,9 @@ export default class {
           }
         }
       }
-
-      return !hasError;
+      
     }
+    return !hasError;
   };
 
   getValues(){
