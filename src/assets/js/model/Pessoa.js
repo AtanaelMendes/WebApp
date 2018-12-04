@@ -97,19 +97,17 @@ export default class{
       }
     }
 
-    if (!helpers.req(this.uf.value)) {
-      this.uf.errorMessage = "Selecione um estado.";
-      hasError = true;
-    }else{
-      console.log('quase')
-      if (!inscricaoEstadualValidator.validar(this.uf.value, this.inscricaoEstadual.value)) {
-        console.log('aqui')
-        this.inscricaoEstadual.errorMessage = "Inscrição Inválida";
+    if(this.inscricaoEstadual.value != null){
+      if (!helpers.req(this.uf.value)) {
+        this.uf.errorMessage = "Selecione um estado.";
         hasError = true;
+      }else{
+        if (!inscricaoEstadualValidator.validar(this.uf.value, this.inscricaoEstadual.value)) {
+          this.inscricaoEstadual.errorMessage = "Inscrição Inválida";
+          hasError = true;
+        }
       }
     }
-
-
 
     return !hasError;
   };
