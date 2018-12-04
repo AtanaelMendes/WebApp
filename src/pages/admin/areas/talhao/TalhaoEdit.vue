@@ -48,6 +48,7 @@
     },
     methods:{
       fillForm: function(data){
+        this.talhao.areaId = this.areaId
         this.talhao.nome.value = data.nome
         this.talhao.tamanho.value = data.tamanho
         this.talhao.unidadeAreaId.value = data.unidade.id
@@ -62,8 +63,8 @@
         if(!this.talhao.isValid()){
           return;
         }
-        talhaoService.updatetalhao(this.areaId, this.talhaoId, this.talhao.getValues()).then(response => {
-          if(response.status === 201) {
+        talhaoService.updateTalhao(this.areaId, this.talhaoId, this.talhao.getValues()).then(response => {
+          if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Talhão atualizado com sucesso'});
             this.$router.push({name: 'areas'});
             this.$root.$emit('refreshAreaList')
