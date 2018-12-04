@@ -182,6 +182,8 @@
         GrupoEconomicoService.saveGrupoEconomico(this.grupoEconomico.getValues()).then(response => {
           this.$q.notify({type: 'positive', message: 'Grupo Econômico criado com sucesso'});
           this.closeNovoGrupoEconomicoDialog();
+          this.grupoEconomicoSearchTerms = response.data.nome;
+          this.pessoa.grupoEconomico.value = response.data.id;
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.request.response})
         })

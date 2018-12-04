@@ -31,8 +31,7 @@
                   placeholder="Grupo Econômico"
                   @blur="checkGrupoEconomicoInput"
                   :after="[{icon:'arrow_drop_down'}]"
-                  v-model="grupoEconomicoSearchTerms"
-                >
+                  v-model="grupoEconomicoSearchTerms">
                   <q-autocomplete @search="searchGrupoEconomico" @selected="setGrupoEconomico" :min-characters="0" :debounce="500" value-field="label"/>
                 </q-input>
               </q-item-main>
@@ -181,6 +180,8 @@
         GrupoEconomicoService.saveGrupoEconomico(this.grupoEconomico.getValues()).then(response => {
           this.$q.notify({type: 'positive', message: 'Grupo Econômico criado com sucesso'});
           this.closeNovoGrupoEconomicoDialog();
+          this.grupoEconomicoSearchTerms = response.data.nome;
+          this.pessoa.grupoEconomico.value = response.data.id;
         }).catch(error => {
           if (error.response.status === 422){
             this.$q.dialog({title:'Ops', message: 'Já existe um registro com esse nome'})
