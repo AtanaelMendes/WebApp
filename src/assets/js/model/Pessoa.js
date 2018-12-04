@@ -1,47 +1,49 @@
 import { helpers} from 'vuelidate/lib/validators';
 import CPF from 'gerador-validador-cpf';
 import inscricaoEstadualValidator from 'assets/js/InscricaoEstadualValidator';
-export default class{
+
+export default class {
   pessoaType = 1;
-  nome= {
+  nome = {
     value: null,
     errorMessage: null
   };
-  grupoEconomico= {
+  grupoEconomico = {
     value: null,
     errorMessage: null
   };
-  cpf= {
+  cpf = {
     value: null,
     errorMessage: null
   };
-  cnpj= {
+  cnpj = {
     value: null,
     errorMessage: null
   };
-  inscricaoEstadual= {
+  inscricaoEstadual = {
     value: null,
     errorMessage: null
   };
-  uf= {
+  uf = {
     value: null,
     errorMessage: null
   };
-  inscricaoMunicipal= {
+  inscricaoMunicipal = {
     value: null,
     errorMessage: null
   };
-  razaoSocial= {
+  razaoSocial = {
     value: null,
     errorMessage: null
   };
-  nomeFantasia= {
+  nomeFantasia = {
     value: null,
     errorMessage: null
   };
-  constructor(pessoaType, pessoa ){
+
+  constructor(pessoaType, pessoa) {
     this.pessoaType = pessoaType
-    if(pessoa !== undefined || pessoa != null){
+    if (pessoa !== undefined || pessoa != null) {
       this.nome.value = pessoa.nome.value;
       this.grupoEconomico.value = pessoa.grupoEconomico.value;
       this.cpf.value = pessoa.cpf.value;
@@ -53,35 +55,36 @@ export default class{
       this.razaoSocial.value = pessoa.razaoSocial.value;
     }
   };
-  isValid(){
+
+  isValid() {
     let hasError = false;
 
-    if(!helpers.req(this.nome.value)){
+    if (!helpers.req(this.nome.value)) {
       this.nome.errorMessage = "Digite um nome";
       hasError = true;
-    }else if(helpers.len(this.nome.value) < 3){
+    } else if (helpers.len(this.nome.value) < 3) {
       this.nome.errorMessage = "O nome deve ter no mínimo 3 caracteres";
       hasError = true;
     }
 
-    if(!helpers.req(this.grupoEconomico.value)){
+    if (!helpers.req(this.grupoEconomico.value)) {
       this.grupoEconomico.errorMessage = "Selecione um Grupo Econòmico";
       hasError = true;
     }
 
-    if(this.pessoaType === 1){
-      if(!helpers.req(this.cpf.value)){
+    if (this.pessoaType === 1) {
+      if (!helpers.req(this.cpf.value)) {
         this.cpf.errorMessage = "Digite um CPF";
         hasError = true;
-      }else if(!CPF.validate(this.cpf.value)){
+      } else if (!CPF.validate(this.cpf.value)) {
         this.cpf.errorMessage = "O CPF é inválido";
         hasError = true;
       }
-    }else if(this.pessoaType === 2) {
+    } else if (this.pessoaType === 2) {
       if (!helpers.req(this.cnpj.value)) {
         this.cnpj.errorMessage = "Digite um CNPJ";
         hasError = true;
-      }else if(!isValidCnpj(this.cnpj.value)){
+      } else if (!isValidCnpj(this.cnpj.value)) {
         this.cnpj.errorMessage = "O CNPJ é inválido.";
         hasError = true;
       }
@@ -96,24 +99,25 @@ export default class{
         hasError = true;
       }
 
-    if(this.inscricaoEstadual.value != null){
-      if (!helpers.req(this.uf.value)) {
-        this.uf.errorMessage = "Selecione um estado.";
-        hasError = true;
-      }else{
-        if (!inscricaoEstadualValidator.validar(this.uf.value, this.inscricaoEstadual.value)) {
-          this.inscricaoEstadual.errorMessage = "Inscrição Inválida";
+      if (this.inscricaoEstadual.value != null) {
+        if (!helpers.req(this.uf.value)) {
+          this.uf.errorMessage = "Selecione um estado.";
           hasError = true;
+        } else {
+          if (!inscricaoEstadualValidator.validar(this.uf.value, this.inscricaoEstadual.value)) {
+            this.inscricaoEstadual.errorMessage = "Inscrição Inválida";
+            hasError = true;
+          }
         }
       }
-    }
 
-    return !hasError;
+      return !hasError;
+    }
   };
 
   getValues(){
-    if(this.pessoaType === 1){
-      return{
+    if (this.pessoaType === 1) {
+      return {
         nome: this.nome.value,
         grupo_economico_id: this.grupoEconomico.value,
         cpf: this.cpf.value,
@@ -123,8 +127,8 @@ export default class{
         razao_social: null,
         nome_fantasia: null
       }
-    }else if(this.pessoaType === 2){
-      return{
+    } else if (this.pessoaType === 2) {
+      return {
         nome: this.nome.value,
         grupo_economico_id: this.grupoEconomico.value,
         cpf: null,
@@ -136,7 +140,7 @@ export default class{
       }
     }
   };
-};
+}
 
 function isValidCnpj(value) {
 
