@@ -121,7 +121,6 @@
     },
     methods: {
       fillForm: function(data){
-        console.log(data)
         if(data.cpf != null){
           this.pessoa.pessoaType = 1
         }
