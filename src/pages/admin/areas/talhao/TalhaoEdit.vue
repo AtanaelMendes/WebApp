@@ -64,7 +64,7 @@
         }
         talhaoService.updatetalhao(this.areaId, this.talhaoId, this.talhao.getValues()).then(response => {
           if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Area criada com sucesso'});
+            this.$q.notify({type: 'positive', message: 'Talhão atualizado com sucesso'});
             this.$router.push({name: 'areas'});
             this.$root.$emit('refreshAreaList')
           }
