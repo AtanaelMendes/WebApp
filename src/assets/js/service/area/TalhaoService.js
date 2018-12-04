@@ -35,7 +35,7 @@ export default {
         let unidadeAreaOptions = response.data.map(unidade => {
           return {
             value: unidade.id,
-            label: unidade.nome +', '+ unidade.sigla,
+            label: unidade.nome +(unidade.sigla ? (', '+ unidade.sigla) : ""),
             sublabel: unidade.descricao
           }
         });
