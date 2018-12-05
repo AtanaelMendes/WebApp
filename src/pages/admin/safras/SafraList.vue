@@ -1,32 +1,104 @@
 <template>
   <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Safras" searchable navigation_type="menu" >
+    <toolbar slot="toolbar" title="Safras 2018 - 2019" searchable navigation_type="menu" >
     </toolbar>
 
-    <div class="space-end row q-pa-md">
-      <div class="col-8 offset-2 q-title text-right">
-        Safra 2018 - 2019
-      </div>
+    <div class="row q-pa-md">
       <div class="col-12">
-        <div class="row">
-          <div class="col-xs-2 col-sm-2 col-md-1 col-lg-1">
-            <img src="/assets/soja-icon.jpg" class="responsive round"/>
-          </div>
-          <div class="col-xs-8 col-sm-8 col-md-10 col-lg-10 offset-1 q-title self-center">
-            Soja RR
-          </div>
-        </div>
 
-        <div class="row gutter-sm">
+        <q-card class="q-mb-md">
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+              <div style="max-height: 200px; overflow: hidden">
+                <img src="assets/Soja800x500.png" style="max-width: 100%"/>
+              </div>
+
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+              <div class="row gutter-y-xs q-pa-md">
+
+                <div class="col-12 text-faded">
+                  Plantio total em 500 hectares (100%)
+                </div>
+
+                <div class="col-12">
+                  <div class="row">
+
+                    <div class="col-12 q-caption text-faded">
+                      Negociado
+                    </div>
+
+                    <div class="col-6">
+                      10.000 Sacas
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="row">
+
+                    <div class="col-12 q-caption text-faded">
+                      Estimativa
+                    </div>
+
+                    <div class="col-6">
+                      55 Sc/Ha
+                    </div>
+
+                    <div class="col-6">
+                      27.500 Sacas
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="row">
+
+                    <div class="col-12 q-mb-xs">
+                      <div class="row">
+                        <div class="col-6 text-faded">
+                          Colhido 53,9%
+                        </div>
+                        <div class="col-6 self-center">
+                          <q-progress color="deep-orange" :percentage="progressBuffer"/>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="col-6">
+                      32 Sc/Ha
+                    </div>
+
+                    <div class="col-6">
+                      16.000 Sacas
+                    </div>
+
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </q-card>
+
+        <div class="row gutter-xs">
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="item in 4" :key="item">
             <q-card>
+
               <q-card-media>
-                <img src="/assets/talhao1.jpeg" class="responsive"/>
+                <img src="/assets/talhao1.jpeg"/>
               </q-card-media>
               <q-card-separator/>
-              <q-card-title>
-                Talhao fundo
-                <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
+
+              <q-card-title class="q-py-sm">
+                Talhão subida
+                <q-btn round flat dense icon="more_vert" slot="right">
                   <q-popover>
                     <q-list link class="no-border">
                       <q-item v-close-overlay>
@@ -44,27 +116,69 @@
                 </q-btn>
               </q-card-title>
               <q-card-separator/>
+
               <q-card-main class="gutter-xs">
+
+                <!--CULTURA TALHAO-->
                 <div class="row">
-                  <div class="col-6">
-                    5/10 <span class="text-faded">Hectare</span>
+                  <div class="col-12 text-faded q-caption">
+                    180 de 200 Hectares (90%)
                   </div>
-                  <div class="col-6 text-right text-faded q-caption">
-                    10 Hectare
+
+                  <div class="col-xs-10 col-sm-10 col-md-9 col-lg-9 self-center">
+                    <span class="q-subheading">98Y70</span>
+                  </div>
+
+                  <div class="col-xs-2 col-sm-2 col-md-3 col-lg-3">
+                    <img src="/assets/pioneer.jpg" class="responsive"/>
                   </div>
                 </div>
 
+                <!--ESTIMATIVA  TALHAO-->
                 <div class="row">
-                  <q-progress :percentage="progressBuffer"style="height: 4px"/>
-                  <q-tooltip>Colhido 70%</q-tooltip>
+                  <div class="col-12">
+                    <div class="row">
+
+                      <div class="col-12 q-caption text-faded">
+                        Estimativa
+                      </div>
+
+                      <div class="col-6">
+                        55 Sc/Ha
+                      </div>
+
+                      <div class="col-6 text-right">
+                        9.900 Sacas
+                      </div>
+
+                    </div>
+                  </div>
                 </div>
 
-                <div class="row">
-                  <div class="col-12">60 Sacos</div>
-                </div>
+                <!--COLHIDO POR TALHAO-->
+                <div clas="row">
+                  <div class="col-12 gutter-y-xs">
 
-                <div class="row">
-                  <div class="col-12">120 Sacos</div>
+                    <div class="row">
+                      <div class="col-6 text-faded">
+                        Colhido 53,9%
+                      </div>
+                      <div class="col-6 self-center">
+                        <q-progress color="deep-orange" :percentage="progressBuffer"/>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-6">
+                        29.67 Sc/Ha
+                      </div>
+
+                      <div class="col-6 text-right">
+                        5.342 Sacas
+                      </div>
+                    </div>
+
+                  </div>
                 </div>
 
               </q-card-main>
@@ -72,6 +186,14 @@
           </div>
         </div>
 
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
       </div>
     </div>
   </custom-page>
@@ -80,7 +202,7 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import safraService from 'assets/js/service/SafraService'
+  // import safraService from 'assets/js/service/SafraService'
     export default {
       name: "safra-list",
       components: {
@@ -89,56 +211,16 @@
       },
       data () {
         return {
-          progressBuffer: 70
+          progressBuffer: 53.9
         }
       },
-      methods: {
-        /*listBySearch: function(val){
-          this.filter.email = val;
-        },*/
-        listSafras: function() {
-          safraService.listSafras().then(response => {
-            this.safras = response.data;
-            this.isEmptyList = this.safras.length === 0;
-          });
-        },
-        viewSafra: function(id) {
-          this.$router.push({name: 'view_safra', params: {id:id}});
-        },
-        addSafra: function(){
-          this.$router.push({name: 'add_safra'});
-        },
-      },
+      methods: {},
       mounted () {
-        this.listSafras();
-
-        this.$root.$on('refreshSafraList', () => {
-          this.listSafras();
-        });
+        // this.$root.$on('refreshSafraList', () => {
+        //   this.listSafras();
+        // });
       },
     }
 </script>
-
-<style scoped>
-  .no-result{
-    text-align: center;
-    padding-top: 150px;
-  }
-
-  .no-result img{
-    width: 120px;
-    height: auto;
-  }
-
-  .no-result span{
-    display: block;
-    margin-top: 30px;
-    font-size: 25px;
-    font-weight: 300;
-    color: #ababab;
-  }
-
-  .round{
-    border-radius: 50%;
-  }
+<style>
 </style>
