@@ -41,13 +41,17 @@ const routes = [
           { name: 'edit_talhao', path: ':id/edit/:talhaoId', component: () => import('pages/admin/areas/talhao/TalhaoEdit.vue') }
         ]
       },
-      { name: 'safras', path: 'safras', component: () => import('pages/admin/safras/SafraList.vue'),
-        children: [
-          { name: 'view_safra', path: 'view/:id', component: () => import('pages/admin/safras/SafraView.vue') },
-          { name: 'add_safra', path: 'add', component: () => import('pages/admin/safras/SafraAdd.vue') },
-          { name: 'edit_safra', path: 'edit/:id', component: () => import('pages/admin/safras/SafraEdit.vue') }
-        ]
-      },
+      { name: 'safras', path: 'safras', component: () => import('pages/admin/safras/SafraList.vue')},
+      { name: 'add_safra', path: 'add', component: () => import('pages/admin/safras/SafraAdd.vue') },
+      { name: 'view_cultura_safra', path: 'cultura/safra/view/:id', component: () => import('pages/admin/safras/safraCultura/SafraCulturaView.vue') },
+      { name: 'add_cultura_safra', path: 'cultura/safra/:id/add', component: () => import('pages/admin/safras/safraCultura/SafraCulturaAdd.vue') },
+
+        // children: [
+        //   { name: 'cultura_safra', path: 'view/:id', component: () => import('pages/admin/safras/cultura/SafraCultura.vue') },
+        //   { name: 'add_safra', path: 'add', component: () => import('pages/admin/safras/SafraAdd.vue') },
+        //   { name: 'edit_safra', path: 'edit/:id', component: () => import('pages/admin/safras/SafraEdit.vue') }
+        // ]
+      // },
       { path: 'teste', component: () => import('pages/admin/TestFather.vue'),
         children: [
           { path: 'child', component: () => import('pages/admin/TestChild.vue') }

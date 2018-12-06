@@ -176,7 +176,7 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
-  import Safra from 'assets/js/model/Safra'
+  import Safra from 'assets/js/model//safra/Safra'
   import Cultura from 'assets/js/model/Cultura'
   import areaService from 'assets/js/service/area/AreaService'
   import talhaoService from 'assets/js/service/area/TalhaoService'
