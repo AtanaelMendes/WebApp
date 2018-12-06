@@ -1,7 +1,7 @@
 const routes = [
   { path: '/', component: () => import('pages/Index.vue') },
   { path: '/login', component: () => import('pages/Login.vue') },
-  { path: '/admin', component: () => import('layouts/Admin.vue'),
+  { path: '/admin', component: () => import('layouts/Admin3.vue'),
     children: [
       { path: '', component: () => import('pages/admin/Dashboard.vue')},
       { name: 'users', path: 'usuarios', component: () => import('pages/admin/users/UserList.vue'),
