@@ -10,7 +10,7 @@
 
         </q-toolbar-title>
         <q-btn flat round dense  @click="rightDrawerOpen = !rightDrawerOpen">
-          <img src="~/assets/timeline-text-outline.svg"/>
+          <img src="~/assets/video-input-antenna.svg"/>
           <q-chip floating color="red">1</q-chip>
         </q-btn>
       </q-toolbar>
@@ -22,7 +22,7 @@
         <span class="profile-name">Danilo</span>
         <span class="profile-email">danilo@oliveira.com</span>
         <q-btn flat round dense class="settings_icon">
-          <q-icon name="settings" />
+          <q-icon name="account_circle" />
 
           <q-popover>
             <q-list link class="scroll" style="min-width: 200px">
@@ -108,9 +108,9 @@
         </swipe-item>
       </swipe>
 
-      <q-tabs inverted align="justify" v-model="selectedTab" position="bottom" class="ap-tabs-drawer transparent">
-        <q-tab default count="5" slot="title" name="tab-1" icon="message" />
-        <q-tab slot="title" name="tab-2" icon="fingerprint" />
+      <q-tabs inverted align="justify" v-model="selectedTab" position="bottom"  class="ap-tabs-drawer transparent">
+        <q-tab default slot="title" name="tab-1" icon="chat_bubble_outline" />
+        <q-tab slot="title" name="tab-2" icon="settings" />
       </q-tabs>
     </q-layout-drawer>
 

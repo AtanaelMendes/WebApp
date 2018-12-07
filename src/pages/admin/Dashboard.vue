@@ -1,8 +1,7 @@
 <template>
 <custom-page>
 
-  <toolbar slot="toolbar" title="Nova Safra">
-    <q-btn slot="action_itens" flat dense round icon="done" @click="saveSafra()"/>
+  <toolbar slot="toolbar" >
   </toolbar>
 
 
