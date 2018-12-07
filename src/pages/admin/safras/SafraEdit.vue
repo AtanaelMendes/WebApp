@@ -180,10 +180,9 @@
   import Cultura from 'assets/js/model/Cultura'
   import areaService from 'assets/js/service/area/AreaService'
   import talhaoService from 'assets/js/service/area/TalhaoService'
-  import produtoService from 'assets/js/service/ProdutoService'
+  import culturaService from 'assets/js/service/safra/CulturaService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
-  import safraService from 'assets/js/service/SafraService'
-
+  import safraService from 'assets/js/service/safra/SafraService'
   export default {
     name: "SafraEdit",
     components: {

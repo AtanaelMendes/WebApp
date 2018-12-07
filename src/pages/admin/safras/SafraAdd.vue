@@ -58,7 +58,7 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import safra from 'assets/js/model/safra/Safra'
-  import safraService from 'assets/js/service/SafraService'
+  import safraService from 'assets/js/service/safra/SafraService'
   import { filter } from 'quasar'
   export default {
     name: "safra-add",

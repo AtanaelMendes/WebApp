@@ -3,6 +3,16 @@ import { Loading, Dialog } from 'quasar'
 import AgroUtils from 'assets/js/AgroUtils'
 
 export default {
+  favoriteSafra(id, value){
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('produtor/' + produtor_id + '/safra/' + id + '/favorite?value=' + value).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   getSafra(id){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {

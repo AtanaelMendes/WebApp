@@ -1,5 +1,4 @@
 import Vue from 'vue'
-
 export default {
   /*saveGrupoEconomico(grupoEconomico){
     return new Promise((resolve, reject) => {
@@ -10,23 +9,22 @@ export default {
       })
     });
   },*/
-  searchProdutos(terms){
+  listCulturas(){
     let produtor_id = localStorage.getItem('account.produtor_id');
-
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtor_id + '/produto?nome=' + terms).then(response => {
-        resolve(this.parseProdutos(response.data))
+      Vue.prototype.$axios.get('produtor/' + produtor_id + '/cultura').then(response => {
+        resolve(response.data);
       }).catch(error => {
         reject(error)
       })
     });
   },
-  parseProdutos(produtos) {
-    return produtos.map(produto => {
-      return {
-        label: produto.nome,
-        id: produto.id
-      }
-    })
-  },
+  // parseProdutos(produtos) {
+  //   return produtos.map(produto => {
+  //     return {
+  //       label: produto.nome,
+  //       id: produto.id
+  //     }
+  //   })
+  // },
 }

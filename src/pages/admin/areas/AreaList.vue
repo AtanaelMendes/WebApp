@@ -85,7 +85,7 @@
     methods: {
       list: function(filter) {
         areaService.listAreas(filter).then(response => {
-          this.areas = response.data;
+          this.areas = response;
           this.isEmptyList = this.areas.length === 0;
         });
       },

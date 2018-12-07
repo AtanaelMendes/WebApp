@@ -9,12 +9,21 @@
         <div class="row gutter-y-lg" >
           <div class="col-12" v-for="safra in safras" :key="safra.id">
 
-            <div class="row q-display-1 q-pa-lg q-mb-md bg-blue-grey-1">
-              <div class="col-6">
+            <div class="row q-title q-pa-md q-mb-md bg-blue-grey-1">
+              <div class="col-9 self-center">
+                <span v-if="!safra.is_safrinha">Safra</span>
+                <span v-if="safra.is_safrinha">Safrinha</span>
                 {{safra.inicio}} - {{safra.fim}}
               </div>
-              <div class="col-6" align="end">
-                <q-btn icon="edit" color="primary" @click="addSafraCultura(safra.id)" round/>
+              <div class="col-3" align="end">
+                <q-checkbox
+                  @input="favoriteSafra(safra.id, safra.is_favorite)"
+                  color="deep-orange"
+                  checked-icon="flag"
+                  v-model="safra.is_favorite"
+                  unchecked-icon="outlined_flag"
+                />
+                <q-btn icon="add" color="primary" @click="addSafraCultura(safra.id)" flat round/>
               </div>
 
             </div>
@@ -117,19 +126,12 @@
             </div>
 
             <!--LISTA VAZIA-->
-            <div class="row" v-else>
-              <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                <q-card>
-                  <q-card-title>
-                    Não há informaçôes sobre essa safra
-                  </q-card-title>
-                  <q-card-separator/>
-                  <q-card-media>
-                    <img src="assets/sad_2.svg"/>
-                  </q-card-media>
-                </q-card>
+            <div class="row q-mt-xl" v-else>
+              <div class="col-12 q-title text-center text-faded">
+                <q-icon name="warning" color="warning" size="30px"/> Não há informaçôes sobre essa safra
               </div>
             </div>
+
           </div>
         </div>
 
@@ -144,7 +146,7 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import safraService from 'assets/js/service/SafraService'
+  import safraService from 'assets/js/service/safra/SafraService'
     export default {
       name: "safra-list",
       components: {
@@ -153,18 +155,28 @@
       },
       data () {
         return {
+          isFavorite: false,
           safras: [],
           progressBuffer: 75
         }
       },
+      // watch: {
+      //   isFavorite: function (val) {
+      //     console.log(val)
+      //   }
+      // },
       methods: {
+        favoriteSafra: function(id, pin){
+          safraService.favoriteSafra(id, pin).then(response => {
+            this.listSafras()
+          })
+        },
         addSafraCultura: function(id){
           this.$router.push({name: 'add_cultura_safra', params: {id:id}});
         },
         listSafras: function(){
           safraService.listSafras().then(response => {
             this.safras = response.data;
-            console.log(this.safras);
           })
         },
         viewSafraCultura: function (id) {

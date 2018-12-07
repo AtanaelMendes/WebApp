@@ -1,22 +1,34 @@
 import { helpers} from 'vuelidate/lib/validators'
 export default class{
-  culturas = [];
-  constructor(culturas){
-    if(culturas !== undefined || culturas != null){
-      this.culturas.value = safra.culturas.id;
-    }
+
+  cultura_id = null;
+  talhoes = [];
+
+
+  // constructor(culturas){
+  //   if(culturas !== undefined || culturas != null){
+  //     this.culturas.value = safra.culturas.id;
+  //   }
+  // }
+
+
+  addTalhao(safraCulturaTalhao){
+    this.talhoes.push(safraCulturaTalhao);
   }
-  isValid(){
-    let hasError = false;
-    if(helpers.len(this.culturas.value) > 1){
-      this.culturas.errorMessage = "Selecione ao menos uma cultura.";
-      hasError = true;
-    }
-    return !hasError;
-  };
+
+  removeTalhao(index){
+    this.talhoes.splice(index, 1);
+  }
+
+  existsTalhaoById(id){
+    return this.talhoes.map(talhao => talhao.id).indexOf(id);
+  }
+
+  getTalhaoById(id){
+    return this.talhoes[this.existsTalhaoById(id)]
+  }
+
   getValues(){
-    return{
-      culturas: this.culturas.value
-    }
+    return this
   }
 }

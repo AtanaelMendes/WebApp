@@ -4,7 +4,7 @@ export default {
   listAreas(filter){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.get( 'produtor/' + produtorId + '/area' ).then( response => {
-        resolve(response);
+        resolve(response.data);
       }).catch(error => {
         reject(error)
       })
