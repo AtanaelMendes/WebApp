@@ -154,7 +154,7 @@
       data () {
         return {
           safras: [],
-          progressBuffer: 53.9
+          progressBuffer: 75
         }
       },
       methods: {
