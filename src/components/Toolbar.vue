@@ -1,6 +1,26 @@
 <template>
-  <div style="overflow: hidden" class="shadow-3">
-    <q-toolbar color="primary"  >
+
+  <q-toolbar slot="toolbar" class="ap-page-container-toolbar">
+    <!--<q-toolbar-title>
+      Teste
+    </q-toolbar-title>
+    <q-btn flat round dense icon="search"/>
+    <q-btn flat round dense icon="more_vert"/>-->
+
+    <q-toolbar-title>
+      <span v-if="!searchIsVisible">{{title}}</span>
+      <q-search v-if="searchIsVisible" v-model="searchValue"
+                placeholder="Pesquisar..."
+                inverted class="no-shadow q-pa-none"
+                style="font-size: 18px; font-weight: 500;"
+                no-icon hide-underline autofocus dark/>
+    </q-toolbar-title>
+
+    <q-btn flat round dense icon="search" v-if="searchable && searchButtonIsVisible" @click="showSearchInput"  />
+    <slot name="action_itens"></slot>
+  </q-toolbar>
+
+    <!--<q-toolbar color="primary"  >
       <q-btn flat round dense :icon="navigation_icon" v-if="isNavigationVisible" v-on:click="navigationClicked" />
       <q-toolbar-title>
         <span v-if="!searchIsVisible">{{title}}</span>
@@ -14,10 +34,7 @@
       <q-btn flat round dense icon="search" v-if="searchable && searchButtonIsVisible" @click="showSearchInput"  />
       <slot name="action_itens"></slot>
 
-    </q-toolbar>
-
-    <slot name="tabs"></slot>
-  </div>
+    </q-toolbar>-->
 </template>
 
 <script>

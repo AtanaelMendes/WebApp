@@ -1,12 +1,9 @@
 <template>
 <custom-page>
-  <q-toolbar slot="toolbar" class="ap-page-container-toolbar">
-    <q-toolbar-title>
-      Teste
-    </q-toolbar-title>
-    <q-btn flat round dense icon="search"/>
-    <q-btn flat round dense icon="more_vert"/>
-  </q-toolbar>
+
+  <toolbar slot="toolbar" title="Nova Safra">
+    <q-btn slot="action_itens" flat dense round icon="done" @click="saveSafra()"/>
+  </toolbar>
 
 
   <div class="row">
@@ -223,7 +220,7 @@
   </div>
 
 
-  <div slot="fab-container">
+  <!--<div slot="fab-container">
     <q-fab
       color="purple"
       icon="keyboard_arrow_up"
@@ -240,7 +237,7 @@
         icon="alarm"
       />
     </q-fab>
-  </div>
+  </div>-->
 
 </custom-page>
 
@@ -248,7 +245,7 @@
 
 <script>
   import toolbar from 'components/Toolbar.vue'
-  import customPage from 'components/CustomPage2.vue'
+  import customPage from 'components/CustomPage.vue'
 
     export default {
       name: "Dashboard",

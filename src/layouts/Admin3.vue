@@ -11,6 +11,7 @@
         </q-toolbar-title>
         <q-btn flat round dense  @click="rightDrawerOpen = !rightDrawerOpen">
           <img src="~/assets/timeline-text-outline.svg"/>
+          <q-chip floating color="red">1</q-chip>
         </q-btn>
       </q-toolbar>
     </q-layout-header>
@@ -77,35 +78,104 @@
 
 
     <q-layout-drawer side="right" v-model="rightDrawerOpen" class="ap-timeline-drawer">
-        <q-timeline  color="deep-orange" style="padding: 100px 24px;">
-          <q-timeline-entry heading><h5>Timeline (3 media breakpoints)</h5></q-timeline-entry>
+      <!--<q-tabs slot="tabs" v-model="selectedTab" align="justify"  class="shadow-3" color="brand" text-color="brand" underline-color="deep-orange">-->
 
-          <q-timeline-entry v-for="i of 10"
-            title="Event Title"
-            subtitle="February 22, 1986"
-            side="right">
-            <div>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            </div>
-          </q-timeline-entry>
-        </q-timeline>
+
+      <swipe ref="mySwiper" class="my-swipe" :continuous="false" :auto="0" :showIndicators="false" :disabled="true">
+        <swipe-item>
+          <q-scroll-area  style="width: 100%; height: 100%; min-height: 300px;" :thumb-style="{
+              right: '4px',
+              borderRadius: '5px',
+              background: '#dfdfdf',
+              width: '8px',
+              opacity: 1}">
+            <q-timeline  color="deep-orange" style="padding: 0px 24px;">
+
+              <q-timeline-entry v-for="i of 10"
+                                title="Event Title"
+                                subtitle="February 22, 1986"
+                                side="right">
+                <div>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                </div>
+              </q-timeline-entry>
+            </q-timeline>
+          </q-scroll-area>
+        </swipe-item>
+
+        <swipe-item>
+          <span>aaaa</span>
+        </swipe-item>
+      </swipe>
+
+      <q-tabs inverted align="justify" v-model="selectedTab" position="bottom" class="ap-tabs-drawer transparent">
+        <q-tab default count="5" slot="title" name="tab-1" icon="message" />
+        <q-tab slot="title" name="tab-2" icon="fingerprint" />
+      </q-tabs>
     </q-layout-drawer>
 
   </q-layout>
 </template>
 
 <script>
-
+  require('vue-swipe/dist/vue-swipe.css');
+  import { Swipe, SwipeItem } from 'vue-swipe';
+  import accountService from 'assets/js/service/AccountService'
     export default {
         name: "Admin3",
+      components: {
+        Swipe,
+        SwipeItem
+      },
+      watch: {
+        selectedTab: function (value) {
+          let index;
+          switch (value) {
+            case 'tab-1':
+              index = 0;
+              break;
+            case 'tab-2':
+              index = 1;
+              break;
+          }
+          this.$refs.mySwiper.goto(index)
+        }
+      },
       data () {
         return {
           leftDrawerOpen: false,
-          rightDrawerOpen: false
+          rightDrawerOpen: false,
+          selectedTab: 'tab-1',
         }
       },
       methods:{
-      }
+        getAccountInfo: function(){
+          this.$axios.get( 'account/info').then( response => {
+            this.currentAccount.name = response.data.nome;
+            this.currentAccount.email = response.data.email;
+            localStorage.setItem( 'account.produtor_id', response.data.produtor_id);
+          })
+        },
+
+        logout(){
+
+          this.$q.dialog({
+            title: 'Sair do sistema',
+            message: 'Tem certeza que deseja sair?',
+            ok: 'Sair',
+            cancel: 'Cancelar'
+          }).then(data => {
+            accountService.logout().then(()=>{
+              this.$router.push('/login');
+            })
+          });
+        }
+      },
+      mounted(){
+        this.getAccountInfo();
+
+        this.$root.$on('toogleLeftDrawer', this.toogleLeftDrawer)
+      },
     }
 </script>
 
@@ -116,7 +186,7 @@
 
   .q-layout{
     /*background-color: #fcfcfc;*/
-    background: url("~/assets/image (1).jpg");
+    background: url("~/assets/background.jpg");
   }
 
   .ap-layout-header{
@@ -229,6 +299,20 @@
   .ap-timeline-drawer .q-layout-drawer{
     box-shadow: inset 0 0px 5px -1px rgba(0,0,0,0.2), inset 0 0 5px 0px rgba(0,0,0,0.14), inset 2px 0px 8px rgba(0,0,0,0.12);
     background: #fcfcfc;
+  }
+
+  .ap-tabs-drawer{
+    bottom: 0;
+    width: 100%;
+    position: fixed;
+  }
+
+  .ap-tabs-drawer > .q-tabs-head{
+    background: transparent !important;
+  }
+
+  .my-swipe{
+    padding-bottom: 48px;
   }
 
 
