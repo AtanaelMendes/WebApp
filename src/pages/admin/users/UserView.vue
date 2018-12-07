@@ -1,6 +1,6 @@
 <template>
   <custom-page isChild style="background: #fdfdfd">
-    <toolbar slot="toolbar" navigation_type="noneAndBack" @navigation_clicked="backAction">
+    <toolbar slot="toolbar" navigation_type="back" @navigation_clicked="backAction">
       <template slot="action_itens" v-if="account">
         <q-btn flat round dense icon="edit" @click.native="editUser(account.id)"/>
         <q-btn flat round dense icon="more_vert" >

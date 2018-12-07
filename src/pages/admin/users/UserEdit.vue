@@ -1,7 +1,7 @@
 <template>
   <custom-page isChild>
-    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Editar Unuário">
-      <q-btn slot="action_itens" flat dense round icon="done" @click="updateAccount()"/>
+    <toolbar slot="toolbar" navigation_type="back" @navigation_clicked="backAction" title="Editar Unuário">
+      <q-btn slot="action_itens" flat dense label="salvar" @click="updateAccount()"/>
     </toolbar>
 
     <div class="row gutter-sm q-pa-md">

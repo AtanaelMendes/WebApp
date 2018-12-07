@@ -6,14 +6,14 @@
     </q-toolbar-title>
     <q-btn flat round dense icon="search"/>
     <q-btn flat round dense icon="more_vert"/>-->
-
+    <q-btn flat round dense :icon="navigation_icon" v-if="isNavigationVisible" v-on:click="navigationClicked" />
     <q-toolbar-title>
       <span v-if="!searchIsVisible">{{title}}</span>
       <q-search v-if="searchIsVisible" v-model="searchValue"
                 placeholder="Pesquisar..."
                 inverted class="no-shadow q-pa-none"
-                style="font-size: 18px; font-weight: 500;"
-                no-icon hide-underline autofocus dark/>
+                style="font-size: 18px; font-weight: 500;" color="grey-4"
+                no-icon hide-underline autofocus />
     </q-toolbar-title>
 
     <q-btn flat round dense icon="search" v-if="searchable && searchButtonIsVisible" @click="showSearchInput"  />
@@ -78,6 +78,9 @@
         }
       },
       isNavigationVisible: function () {
+        if(!this.navigation_type && !this.searchIsVisible){
+          return false;
+        }
         if(this.navigation_type === 'noneAndBack'){
           if(this.$q.screen.lt.md) {
             return true;
@@ -85,6 +88,8 @@
           return false;
         }
         return true;
+
+        //return this.searchIsVisible;
       }
     },
     watch: {
@@ -95,9 +100,6 @@
       }
     },
     methods: {
-      openLeftDrawer() {
-        this.$root.$emit("toogleLeftDrawer");
-      },
       navigationClicked (){
         if(this.searchIsVisible){
           this.searchIsVisible = false;
@@ -106,9 +108,9 @@
           return
         }
 
-        if(this.navigation_type === 'menu'){
+        /*if(this.navigation_type === 'menu'){
           this.openLeftDrawer();
-        }
+        }*/
 
         this.$emit('navigation_clicked', this.navigation_type);
       },
@@ -120,3 +122,17 @@
     }
   }
 </script>
+<style scoped>
+  .q-toolbar-title{
+    font-weight: 400;
+  }
+
+  .q-toolbar-title .q-search.bg-primary{
+    background: #e2e2e2 !important;
+  }
+
+  .q-toolbar-title .q-search.bg-primary input{
+    margin-left: 10px;
+    color: black;
+  }
+</style>

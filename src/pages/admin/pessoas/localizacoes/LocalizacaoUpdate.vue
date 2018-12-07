@@ -1,6 +1,6 @@
 <template>
   <custom-page isChild>
-    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Editar localizacao">
+    <toolbar slot="toolbar" navigation_type="back" @navigation_clicked="backAction" title="Editar localizacao">
       <q-btn slot="action_itens" flat dense icon="done" round @click="updateLocalizacao()"/>
     </toolbar>
 

@@ -30,14 +30,18 @@
   }
 </script>
 
-<style scoped>
+<style >
   .ap-page-container-toolbar{
     height: 64px;
     background-color: #f5f5f5 !important;
     color: #777777 !important;
   }
 
-  .ap-page-container-toolbar .q-toolbar-title{
-    font-weight: 400;
+  .ap-sticky-area > button .q-focus-helper{
+    width: inherit;
+    height: inherit;
+    right: inherit;
+    left: inherit;
+    top: 18px;
   }
 </style>
