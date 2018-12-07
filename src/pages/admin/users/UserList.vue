@@ -1,6 +1,6 @@
 <template >
   <custom-page widthInner="60%" isParent >
-    <toolbar slot="toolbar" title="Usuários" searchable  @search_changed="listBySearch">
+    <toolbar slot="toolbar" title="Usuários" navigation_type="menu" searchable  @search_changed="listBySearch">
       <template slot="action_itens">
         <q-btn flat round dense icon="tune" >
           <q-popover anchor="bottom left">

@@ -1,7 +1,7 @@
 <template>
   <custom-page widthInner="60%" isParent >
     <!--<toolbar slot="toolbar" title="Áreas" searchable navigation_type="menu" @search_changed="listBySearch">-->
-    <toolbar slot="toolbar" title="Áreas">
+    <toolbar slot="toolbar" navigation_type="menu" title="Áreas">
       <template slot="action_itens">
         <q-btn flat round dense icon="tune" >
           <q-popover anchor="bottom left">

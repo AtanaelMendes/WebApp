@@ -1,6 +1,6 @@
 <template>
   <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Safras" searchable  >
+    <toolbar slot="toolbar" navigation_type="menu"  title="Safras" searchable  >
     </toolbar>
 
     <div class="row q-pa-md space_end">

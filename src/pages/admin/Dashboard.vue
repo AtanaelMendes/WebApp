@@ -1,7 +1,11 @@
 <template>
 <custom-page>
 
-  <toolbar slot="toolbar" >
+  <toolbar slot="toolbar" navigation_type="menu">
+    <q-btn flat round dense  slot="action_itens" v-if="this.$q.screen.lt.md" @click="toggleRightDrawer">
+      <img src="~/assets/video-input-antenna.svg"/>
+      <q-chip floating color="red">1</q-chip>
+    </q-btn>
   </toolbar>
 
 
@@ -260,6 +264,9 @@
         customPage
       },
       methods: {
+        toggleRightDrawer: function(){
+          this.$root.$emit("toogleRightDrawer");
+        },
         test: function(){
 
         }

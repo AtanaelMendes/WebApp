@@ -169,12 +169,19 @@
               this.$router.push('/login');
             })
           });
-        }
+        },
+        toogleLeftDrawer() {
+          this.leftDrawerOpen = !this.leftDrawerOpen;
+        },
+        toogleRightDrawer() {
+          this.rightDrawerOpen = !this.rightDrawerOpen;
+        },
       },
       mounted(){
         this.getAccountInfo();
 
-        this.$root.$on('toogleLeftDrawer', this.toogleLeftDrawer)
+        this.$root.$on('toogleLeftDrawer', this.toogleLeftDrawer);
+        this.$root.$on('toogleRightDrawer', this.toogleRightDrawer);
       },
     }
 </script>
@@ -326,6 +333,35 @@
 
   .ap-sticky-area > button{
     position: static;
+  }
+
+  @media (max-width: 1440px){
+    .ap-page-container .q-card-outter{
+      /*margin-top: -64px;*/
+      max-width: 1000px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .ap-layout-header{
+      display: none;
+    }
+
+    .ap-page-container{
+      top: 0;
+    }
+
+    .ap-page-container-card{
+      margin: 0;
+    }
+
+    .ap-page-container-toolbar{
+      background-color: #005f5f !important;
+    }
+    .ap-page-container-toolbar button,
+    .ap-page-container-toolbar .q-toolbar-title{
+      color: white;
+    }
   }
 
 

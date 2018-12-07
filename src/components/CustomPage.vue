@@ -33,7 +33,6 @@
 <style >
   .ap-page-container-toolbar{
     height: 64px;
-    background-color: #f5f5f5 !important;
     color: #777777 !important;
   }
 
@@ -43,5 +42,11 @@
     right: inherit;
     left: inherit;
     top: 18px;
+  }
+
+  @media (min-width: 768px) {
+    .ap-page-container-toolbar{
+      background-color: #f5f5f5 !important;
+    }
   }
 </style>

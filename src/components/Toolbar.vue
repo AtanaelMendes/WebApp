@@ -60,7 +60,7 @@
 
         switch (this.navigation_type) {
           case 'menu':
-            return 'menu';
+            return  this.$q.screen.lt.md ? 'menu' : '';
           case 'back':
             return 'arrow_back';
           case 'close':
@@ -81,6 +81,11 @@
         if(!this.navigation_type && !this.searchIsVisible){
           return false;
         }
+
+        if(this.navigation_type === 'menu' && !this.$q.screen.lt.md){
+          return false;
+        }
+
         if(this.navigation_type === 'noneAndBack'){
           if(this.$q.screen.lt.md) {
             return true;
@@ -100,6 +105,9 @@
       }
     },
     methods: {
+      openLeftDrawer() {
+        this.$root.$emit("toogleLeftDrawer");
+      },
       navigationClicked (){
         if(this.searchIsVisible){
           this.searchIsVisible = false;
@@ -111,6 +119,10 @@
         /*if(this.navigation_type === 'menu'){
           this.openLeftDrawer();
         }*/
+
+        if(this.navigation_type === 'menu' && this.$q.screen.lt.md){
+          this.openLeftDrawer();
+        }
 
         this.$emit('navigation_clicked', this.navigation_type);
       },
@@ -134,5 +146,11 @@
   .q-toolbar-title .q-search.bg-primary input{
     margin-left: 10px;
     color: black;
+  }
+
+  @media (max-width: 768px) {
+    .q-toolbar .q-search{
+      background: #005353 !important;
+    }
   }
 </style>
