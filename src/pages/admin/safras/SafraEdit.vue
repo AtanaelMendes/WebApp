@@ -1,6 +1,6 @@
 <template>
   <custom-page isChild>
-    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Editar Safra">
+    <toolbar slot="toolbar" navigation_type="back" @navigation_clicked="backAction" title="Editar Safra">
       <q-btn slot="action_itens" flat dense round icon="done" @click="updateSafra()" v-if="currentStep === 'culturas'"/>
     </toolbar>
 

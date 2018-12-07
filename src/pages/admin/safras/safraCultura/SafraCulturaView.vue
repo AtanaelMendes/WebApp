@@ -1,6 +1,6 @@
 <template>
   <custom-page isParent>
-    <toolbar slot="toolbar" title="Safras 2018 - 2019" searchable navigation_type="menu" >
+    <toolbar slot="toolbar" title="Safras 2018 - 2019" searchable navigation_type="back" >
     </toolbar>
 
     <div class="row q-pa-md">
