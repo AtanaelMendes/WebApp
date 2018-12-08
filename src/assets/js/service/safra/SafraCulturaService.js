@@ -19,6 +19,16 @@ export default {
       })
     });
   },
+  listMarcas(){
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('produtor/' + produtor_id + '/marca').then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   // parseProdutos(produtos) {
   //   return produtos.map(produto => {
   //     return {

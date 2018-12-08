@@ -108,7 +108,8 @@ module.exports = function (ctx) {
         'QJumbotron',
         'QDialog',
         'QSlider',
-        'QParallax'
+        'QParallax',
+        'QModalLayout'
       ],
       directives: [
         'Ripple',

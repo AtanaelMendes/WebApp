@@ -5,6 +5,7 @@ export default class{
   estimativa_unidade_medida_id = null;
   tamanho = null;
   cultivar_id = null;
+  unidade = null;
 
   constructor(talhao){
       if(talhao !== undefined || talhao != null){

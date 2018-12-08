@@ -1,7 +1,7 @@
 <template>
   <custom-page isChild>
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Nova Safra">
-      <q-btn slot="action_itens" flat dense round icon="done" @click="saveSafraCultura()" v-if="currentStep === 'talhoes'"/>
+      <q-btn slot="action_itens" flat dense round icon="done" @click="saveSafraCultura()" v-if="currentStep === 'cultivar'"/>
     </toolbar>
 
     <q-stepper ref="stepper" contractable color="positive" v-model="currentStep" class="no-shadow">
@@ -28,7 +28,7 @@
       </q-step>
 
       <!--PASSO 2 ADICIONAR AREA-->
-      <q-step title="Selecionar Área" name="area">
+      <q-step title="Área" name="area">
         <q-list separator link no-border class="space-end">
           <div class="row gutter-sm">
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3" v-for="area in areas" :key="area.id">
@@ -50,22 +50,43 @@
 
       <!--PASSO 3 ADICIONAR TALHOES-->
       <q-step title=" Selecionar Talhões" name="talhoes">
+        <div align="end">
+          <q-btn @click.native="selectedTalhao()" label="Próximo" color="primary"/>
+        </div>
         <q-list separator link no-border class="space-end">
           <div class="row gutter-sm">
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3" v-for="talhao in talhoes" :key="talhao.id">
               <q-card>
                 <q-card-media overlay-position="full" @click.native="toggleTalhao(talhao)">
                   <img src="assets/talhao2-250x250.jpg"/>
-                  <q-card-title slot="overlay" align="end" v-if="safraCultura.existsTalhaoById(talhao.id) >= 0">
+                  <q-card-title slot="overlay" align="end" v-if="safraCultura.getTalhaoById(talhao.id).tamanho > 0">
                     <q-icon name="check_circle" size="30px" color="positive"/>
                   </q-card-title>
                 </q-card-media>
                 <q-card-title class="q-py-xs">
                   {{talhao.nome}}
                 </q-card-title>
+                <q-card-separator/>
                 <q-card-main>
                   <div v-if="safraCultura.existsTalhaoById(talhao.id) >= 0">
-                    <q-slider v-model="safraCultura.getTalhaoById(talhao.id).tamanho" :min="0" :max="talhao.tamanho" :step="2" label snap/>
+                    <div>
+                      <q-input
+
+                        @blur="checkInputMaxSize(safraCultura.getTalhaoById(talhao.id).tamanho, talhao)"
+                        type="number"
+                        hide-underline
+                        :suffix="talhao.unidade"
+                        v-model="safraCultura.getTalhaoById(talhao.id).tamanho"
+                      />
+                    </div>
+                    <q-slider
+                      snap
+                      label
+                      :min="0"
+                      :step="2"
+                      v-model="safraCultura.getTalhaoById(talhao.id).tamanho"
+                      :max="talhao.tamanho"
+                    />
                   </div>
                 </q-card-main>
               </q-card>
@@ -80,37 +101,34 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import customInputText from 'components/CustomInputText.vue'
   import SafraCultura from 'assets/js/model/safra/SafraCultura'
   import SafraCulturaTalhao from 'assets/js/model/safra/SafraCulturaTalhao'
   import areaService from 'assets/js/service/area/AreaService'
   import talhaoService from 'assets/js/service/area/TalhaoService'
   import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
-  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
-  import safraService from 'assets/js/service/safra/SafraService'
-  import { filter } from 'quasar'
   export default {
     name: "cultura-safra-add",
     components: {
       toolbar,
       customPage,
-      customInputText,
     },
     data(){
       return {
         currentStep: 'cultura',
         safraCultura: new SafraCultura(),
-        areas: [],
         selectedAreaId: null,
         selectedTalhaoId: null,
-        //selectedTalhoes: [],
+        areas: [],
         talhoes: [],
         culturas: [],
-        unidadesMedida: [],
-        //areaTalhao: null,
       }
     },
     methods:{
+      checkInputMaxSize: function(value, talhao){
+        if(value > talhao.tamanho){
+          this.safraCultura.getTalhaoById(talhao.id).tamanho = talhao.tamanho
+        }
+      },
       listCulturas() {
         safraCulturaService.listCulturas().then(response => {
           this.culturas = response;
@@ -139,38 +157,25 @@
             this.talhoes.push({
               id: talhao.id,
               nome: talhao.nome,
-              tamanho: parseFloat(talhao.tamanho)
-            })
+              tamanho: parseFloat(talhao.tamanho),
+              unidade: talhao.unidade.nome
+            });
             this.safraCultura.addTalhao(new SafraCulturaTalhao(talhao))
           },this)
         })
       },
       toggleTalhao:function(talhao){
-        let index = this.safraCultura.existsTalhaoById(talhao.id);
-        console.log(index)
-        if(index >= 0){
-          this.safraCultura.removeTalhao(index);
+        let tal = this.safraCultura.getTalhaoById(talhao.id);
+        if(tal.tamanho === 0){
+          tal.tamanho = talhao.tamanho
         }else{
-          this.safraCultura.addTalhao(new SafraCulturaTalhao(talhao));
+          tal.tamanho = 0
         }
-        // let index = this.selectedTalhoes.indexOf(id);
-        // console.log(index);
-        // if(index >= 0){
-        //   this.selectedTalhoes.splice(index, 1)
-        // }else{
-        //   this.selectedTalhoes.push(id)
-        // }
       },
-      getUnidadesMedida:function(){
-        unidadeMedidaService.listUnidadesMedida().then(response => {
-          this.unidadesMedida = response.data.map(unidade => {
-            return {
-              label: unidade.nome,
-              value: unidade
-            }
-          })
-        })
+      selectedTalhao: function(){
+        this.goToNextStep();
       },
+      saveSafraCultura: function(){},
       goToNextStep(){
         this.$refs.stepper.next()
       },
@@ -181,7 +186,6 @@
     mounted () {
       this.listCulturas();
       this.getAreas();
-      this.getUnidadesMedida();
     },
   }
 </script>
