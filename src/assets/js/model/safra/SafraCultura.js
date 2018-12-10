@@ -28,7 +28,16 @@ export default class{
     return this.talhoes[this.existsTalhaoById(id)]
   }
 
+  getNotEmptyTalhoes(){
+    return this.talhoes.filter(function(talhao){
+      return talhao.tamanho > 0;
+    })
+  }
+
   getValues(){
-    return this
+    return {
+      cultura_id: this.cultura_id,
+      talhoes: this.getNotEmptyTalhoes()
+    }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <custom-page isParent>
-    <toolbar slot="toolbar" title="Safras 2018 - 2019" searchable navigation_type="menu" >
+    <toolbar slot="toolbar" :title="safraCultura.inicio + '/' + safraCultura.fim" navigation_type="back" @navigation_clicked="backAction" >
     </toolbar>
 
     <div class="row q-pa-md">
@@ -20,7 +20,7 @@
               <div class="row gutter-y-xs q-pa-md">
 
                 <div class="col-12 text-faded">
-                  Plantio total em 500 hectares (100%)
+                  Plantio total em {{getSafraCulturaTotalArea()}} hectares (100%)
                 </div>
 
                 <!--NEGOCIADO-->
@@ -99,7 +99,7 @@
         </q-card>
 
         <div class="row gutter-xs">
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="item in 4" :key="item">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="culturaTalhao in safraCultura.cultura_talhoes" :key="culturaTalhao.id">
             <q-card>
 
               <q-card-media>
@@ -108,7 +108,7 @@
               <q-card-separator/>
 
               <q-card-title class="q-py-sm">
-                Talhão subida
+                {{culturaTalhao.talhao.nome}}
                 <q-btn round flat dense icon="more_vert" slot="right">
                   <q-popover>
                     <q-list link class="no-border">
@@ -133,7 +133,7 @@
                 <!--CULTURA TALHAO-->
                 <div class="row">
                   <div class="col-12 text-faded q-caption">
-                    180 de 200 Hectares (90%)
+                    {{formatCulturaTalhaoTamanhoLabel(culturaTalhao)}}
                   </div>
 
                   <div class="col-xs-10 col-sm-10 col-md-9 col-lg-9 self-center">
@@ -155,11 +155,11 @@
                       </div>
 
                       <div class="col-6">
-                        55 Sc/Ha
+                        {{culturaTalhao.estimativa}} {{culturaTalhao.estimativa_unidade_medida.sigla}}/{{culturaTalhao.talhao.tamanho_unidade_area.sigla}}
                       </div>
 
                       <div class="col-6 text-right">
-                        9.900 Sacas
+                        {{culturaTalhao.estimativa * culturaTalhao.tamanho}} {{culturaTalhao.estimativa_unidade_medida.nome}}
                       </div>
 
                     </div>
@@ -213,7 +213,7 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  // import safraService from 'assets/js/service/SafraService'
+  import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
   export default {
     name: "safra-cultura",
     components: {
@@ -222,14 +222,38 @@
     },
     data () {
       return {
+        safraCultura: null,
         progressBuffer: 53.9
       }
     },
-    methods: {},
+    methods: {
+      getSafraCultura: function(safra_id, id){
+        safraCulturaService.getSafraCultura(safra_id, id).then(response => {
+          this.safraCultura = response.data;
+        })
+      },
+      formatCulturaTalhaoTamanhoLabel: function(culturaTalhao){
+        if(culturaTalhao.tamanho === culturaTalhao.talhao.tamanho){
+          return culturaTalhao.tamanho + ' ' + culturaTalhao.talhao.tamanho_unidade_area.nome + ' (100%)'
+        }else{
+          let porcentagem = culturaTalhao.tamanho / culturaTalhao.talhao.tamanho * 100;
+          return culturaTalhao.tamanho + ' de ' + culturaTalhao.talhao.tamanho + ' ' + culturaTalhao.talhao.tamanho_unidade_area.nome +  ' (' + porcentagem + '%)';
+        }
+      },
+      getSafraCulturaTotalArea: function () {
+        return this.safraCultura.cultura_talhoes.map(function (culturaTalhao) {
+          return culturaTalhao.talhao.tamanho;
+        }).reduce((a, b) => a + b);
+      },
+      backAction: function () {
+        this.$router.push({name: 'safras'});
+      }
+    },
     mounted () {
       // this.$root.$on('refreshSafraList', () => {
       //   this.listSafras();
       // });
+      this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id)
     },
   }
 </script>

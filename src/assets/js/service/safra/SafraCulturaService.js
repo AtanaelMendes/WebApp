@@ -1,14 +1,50 @@
 import Vue from 'vue'
 export default {
-  /*saveGrupoEconomico(grupoEconomico){
+  getSafraCultura(safra_id, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('grupo_economico', grupoEconomico).then(response => {
+      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
       })
     });
-  },*/
+  },
+  saveSafraCultura(safra_id, safraCultura){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.post('safra/' + safra_id + '/safra_cultura', safraCultura).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  archiveSafraCultura(safra_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('/safra/' + safra_id + '/safra_cultura/' + id + '/archive').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  restoreSafraCultura(safra_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('/safra/' + safra_id + '/safra_cultura/' + id + '/restore').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  deleteSafraCultura(safra_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.delete('/safra/' + safra_id + '/safra_cultura/' + id).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   listCulturas(){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
@@ -29,12 +65,5 @@ export default {
       })
     });
   },
-  // parseProdutos(produtos) {
-  //   return produtos.map(produto => {
-  //     return {
-  //       label: produto.nome,
-  //       id: produto.id
-  //     }
-  //   })
-  // },
+
 }

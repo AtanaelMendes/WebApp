@@ -134,7 +134,7 @@
           this.culturas = response;
         });
       },
-      selectedCultura: function(id){
+      setCultura: function(id){
         this.safraCultura.cultura_id = id;
         this.goToNextStep();
       },
@@ -143,7 +143,7 @@
           this.areas = response;
         })
       },
-      selectedArea: function(id){
+      setArea: function(id){
         this.selectedAreaId = id;
         this.getTalhoesByArea(id)
         this.goToNextStep();
