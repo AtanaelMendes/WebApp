@@ -59,6 +59,7 @@ module.exports = function (ctx) {
         'QItemSeparator',
 
         // adicionado
+        'QTable',
         'QBtnDropdown',
         'QInfiniteScroll',
         'QLayoutFooter',

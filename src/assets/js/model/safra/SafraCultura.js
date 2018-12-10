@@ -2,7 +2,10 @@ import { helpers} from 'vuelidate/lib/validators'
 export default class{
 
   cultura_id = null;
+  culturaNome = null;
   talhoes = [];
+  view_unidade_medida_id = null;
+  view_unidade_area_id = null;
 
 
   // constructor(culturas){
@@ -37,7 +40,9 @@ export default class{
   getValues(){
     return {
       cultura_id: this.cultura_id,
-      talhoes: this.getNotEmptyTalhoes()
+      talhoes: this.getNotEmptyTalhoes(),
+      view_unidade_medida_id: this.view_unidade_medida_id,
+      view_unidade_area_id: this.view_unidade_area_id
     }
   }
 }

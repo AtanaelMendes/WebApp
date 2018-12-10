@@ -3,20 +3,21 @@
     <toolbar slot="toolbar" title="Safras" searchable navigation_type="menu" >
     </toolbar>
 
-    <div class="row q-pa-md space_end">
+    <div class="row space_end">
       <div class="col-12">
 
         <div class="row gutter-y-lg" >
           <div class="col-12" v-for="safra in safras" :key="safra.id">
 
-            <div class="row q-title q-pa-md q-mb-md bg-blue-grey-1">
-              <div class="col-9 self-center">
+            <!--HEADER-->
+            <div class="row q-title  q-pa-md bg-blue-grey-1">
+              <div class="col-8 self-center">
                 {{safra.inicio}}/{{safra.fim}} -
                 <span v-if="!safra.is_safrinha">Safra</span>
                 <span v-if="safra.is_safrinha">Safrinha</span>
               </div>
-              <div class="col-3" align="end">
-                <q-btn icon="add" color="primary" @click="addSafraCultura(safra.id)" flat round/>
+              <div class="col-4" align="end">
+                <q-btn icon="add" dense color="primary" @click="addSafraCultura(safra.id)" flat round/>
                 <q-checkbox
                   @input="favoriteSafra(safra.id, safra.is_favorite)"
                   color="deep-orange"
@@ -24,7 +25,7 @@
                   v-model="safra.is_favorite"
                   unchecked-icon="outlined_flag"
                 />
-                <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
+                <q-btn round flat dense icon="more_vert">
                   <q-popover>
                     <q-list link class="no-border">
                       <q-item v-close-overlay>
@@ -43,7 +44,7 @@
             </div>
 
             <!--LISTA DE SAFRA CULTURAS-->
-            <div class="row gutter-sm" v-if="safra.safra_culturas.length > 0">
+            <div class="row gutter-sm q-ma-sm" v-if="safra.safra_culturas.length > 0">
               <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" v-for="safraCultura in safra.safra_culturas" :key="safraCultura.id">
                 <q-card>
                   <q-card-title class="q-py-xs">
@@ -171,54 +172,70 @@
     </div>
 
     <!--MODAL SAFRA CULTURA-->
-    <q-modal v-model="modalSafraCultura"  content-css="minWidth: '50vw'">
-      <q-modal-layout >
+    <q-modal v-model="modalSafraCultura" maximized>
 
         <q-stepper ref="stepper" contractable color="positive" v-model="currentStep" class="no-shadow" >
 
-
           <!--PASSO 1 ADICIONAR CULTURAS-->
           <q-step default title="Culturas" name="cultura">
-            <div  class="row gutter-sm ">
-              <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2" v-for="cultura in culturas" :key="cultura.id">
-                <q-card @click.native="setCultura(cultura.id)">
+            <div style="min-height: 80vh" class="row items-center gutter-sm justify-center">
+              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in culturas" :key="cultura.id">
+                <q-card @click.native="setCultura(cultura)">
                   <q-card-media overlay-position="full">
                     <img src="assets/soja250x250.jpg"/>
                     <q-card-title slot="overlay" align="end" v-if="cultura.id === safraCultura.cultura_id">
                       <q-icon name="check_circle" size="30px" color="positive"/>
                     </q-card-title>
                   </q-card-media>
-                  <q-card-title class="q-py-xs">
+                  <q-card-title>
                     {{cultura.nome}}
                   </q-card-title>
                 </q-card>
               </div>
             </div>
+
+          </q-step>
+
+          <!--PASSO 2 INFORMAR UNIDADES -->
+          <q-step default title="Unidades" name="unidades">
+              <!--ESCOLHER UNIDADES-->
+              <div style="min-height: 80vh" class="row items-center justify-center gutter-sm">
+                <div class="col-xs-12 col-md-6 col-lg-3">
+                  <div>
+                    <q-select key="qtd" v-model="safraCultura.view_unidade_medida_id" :options="selectUnidadesMedida" float-label="Controlar quantidades em"/>
+                  </div>
+                  <div>
+                    <q-select key="area" v-model="safraCultura.view_unidade_area_id" :options="selectUnidadesArea" float-label="Mostrar área em"/>
+                  </div>
+                </div>
+              </div>
           </q-step>
 
           <!--PASSO 2 ADICIONAR AREA-->
           <q-step title="Área" name="area">
-            <div class="row gutter-sm space_end">
-              <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="area in areas" :key="area.id">
-                <q-card @click.native="setArea(area.id)">
+            <div style="min-height:80vh" class="row gutter-sm justify-center items-center">
+              <div class="col-xs-6 col-sm-5 col-md-4 col-lg-3" v-for="area in areas" :key="area.id">
+                <q-card @click.native="setArea(area)">
                   <q-card-media overlay-position="full">
                     <img src="assets/confinamento250x250.jpg"/>
-                    <q-card-title slot="overlay" align="end" v-if="area.id === selectedAreaId">
+                    <q-card-title slot="overlay" align="end" v-if="area.id === selectedArea.id">
                       <q-icon name="check_circle" size="30px" color="positive"/>
                     </q-card-title>
                   </q-card-media>
-                  <q-card-title class="q-py-xs">
+                  <q-card-title>
                     {{area.nome}}
                   </q-card-title>
                 </q-card>
+                <br>
+                &nbsp
               </div>
             </div>
           </q-step>
 
           <!--PASSO 3 ADICIONAR TALHOES-->
           <q-step title=" Selecionar Talhões" name="talhoes">
-            <div class="row gutter-sm">
-              <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="talhao in talhoes" :key="talhao.id">
+              <div style="min-height:80vh" class="row gutter-sm justify-center items-center">
+              <div class="col-xs-6 col-sm-5 col-md-4 col-lg-3" v-for="talhao in talhoes" :key="talhao.id">
                 <q-card>
                   <q-card-media overlay-position="full" @click.native="toggleTalhao(talhao)">
                     <img src="assets/talhao2-250x250.jpg"/>
@@ -226,53 +243,86 @@
                       <q-icon name="check_circle" size="30px" color="positive"/>
                     </q-card-title>
                   </q-card-media>
-                  <q-card-title class="q-py-xs">
+                  <q-card-title>
                     {{talhao.nome}}
                   </q-card-title>
-                  <q-card-separator/>
+                  <!--<q-card-separator/>-->
                   <q-card-main class="q-px-none">
-
-                    <q-list no-border dense class="q-py-none">
-                      <q-list-header>Estimativa</q-list-header>
-                      <q-item dense>
-                        <q-item-main>
-                          <q-input v-model="safraCultura.getTalhaoById(talhao.id).estimativa" :suffix="'/'+talhao.unidade.nome" />
-                        </q-item-main>
-                        <q-item-side >
-                          <q-select float-label="Und. de Medida" v-model="safraCultura.getTalhaoById(talhao.id).estimativa_unidade_medida_id"
-                                    :options="unidadesMedida"  class="unidade-medida-select"/>
-                        </q-item-side>
-                      </q-item>
-                      <q-list-header>Tamanho</q-list-header>
-                      <q-item dense >
-                        <q-item-main>
+                    <q-list-header>Área à ser utilizada</q-list-header>
+                    <q-item dense >
+                      <div class="row gutter-x-sm">
+                        <div class="col-8 self-center">
                           <q-slider v-model="safraCultura.getTalhaoById(talhao.id).tamanho"
                                     :min="0"
                                     :max="talhao.tamanho"
                                     label :label-value="`${safraCultura.getTalhaoById(talhao.id).tamanho} ha`" />
-                        </q-item-main>
 
-                        <q-item-side>
+                        </div>
+                        <div class="col-4">
                           <q-input @blur="checkInputMaxSize(safraCultura.getTalhaoById(talhao.id).tamanho, talhao)"
-                                   v-model="safraCultura.getTalhaoById(talhao.id).tamanho"
-                                   :suffix="talhao.unidade.sigla" style="width: 50px; padding-bottom: 0 !important" />
-                        </q-item-side>
+                                   v-model="safraCultura.getTalhaoById(talhao.id).tamanho" type="number"
+                                   :suffix="talhao.unidade.sigla" style="!important" class="text-right" />
+
+                        </div>
+                      </div>
+                    </q-item>
+
+                    <q-list no-border dense class="q-py-none">
+                      <q-list-header>Estimativa por {{ talhao.unidade.nome }}</q-list-header>
+                      <q-item dense>
+                        <div class="row gutter-x-sm">
+                          <div class="col-3">
+                            <q-input type="number" v-model="safraCultura.getTalhaoById(talhao.id).estimativa" />
+                          </div>
+                          <div class="col-9 self-center">
+                            label de unidade
+                          </div>
+                        </div>
                       </q-item>
                     </q-list>
                   </q-card-main>
                 </q-card>
+                <br>
+                <br>
+                <br>
               </div>
             </div>
           </q-step>
 
+          <!--PASSO 4  RESUMO E FINALIZAR-->
+          <q-step default title="Finalizar" name="finalizar">
+              <div style="min-height: 80vh" class="row items-center justify-center gutter-sm">
+
+              <!--RESUMO-->
+              <div class="col-xs-12 col-md-6 col-lg-3">
+                <q-list link>
+                  <q-list-header>{{safraCultura.culturaNome}}</q-list-header>
+                  <q-item>
+                    <q-item-main label>
+                      {{selectedArea.nome}}
+                    </q-item-main>
+                  </q-item>
+                  <q-item-separator/>
+                  <q-item v-for="talhao in safraCultura.talhoes" separator dense>
+                    <q-item-main>
+                      <div class="row">
+                        <div class="col-6">{{talhao.nome}}</div>
+                        <div class="col-6">{{talhao.tamanho}},&nbsp<span class="text-faded q-caption">{{talhao.unidade.plural}}</span></div>
+                      </div>
+                    </q-item-main>
+                  </q-item>
+                </q-list>
+              </div>
+
+            </div>
+          </q-step>
+
         </q-stepper>
-
-        <div  slot="footer" class="q-pa-sm" >
-          <q-btn @click.native="closeNewSafraCulturaModal()" label="Cancelar" color="primary" flat/>
-          <q-btn @click="saveSafraCultura()" label="Salvar" color="deep-orange" v-if="currentStep === 'talhoes'" class="float-right"/>
-        </div>
-      </q-modal-layout>
-
+        <q-page-sticky position="bottom-right" :offset="[18, 18]">
+          <q-btn @click.native="closeNewSafraCulturaModal()" label="Cancelar" color="primary" class="q-mr-xs"/>
+          <q-btn @click.native="finalStep" label="próximo" color="primary"  class="q-mr-xs" v-if="currentStep === 'talhoes' || currentStep === 'unidades'"/>
+          <q-btn @click="saveSafraCultura()" label="Salvar" color="deep-orange" v-if="currentStep === 'finalizar'" class="float-right"/>
+        </q-page-sticky>
 
     </q-modal>
   </custom-page>
@@ -306,12 +356,20 @@
           modalSafraCultura: false,
           currentStep: 'cultura',
           safraCultura: new SafraCultura(),
-          selectedAreaId: null,
+          selectedArea: {
+            id: null,
+            nome: null,
+          },
           areas: [],
           talhoes: [],
           culturas: [],
-          unidadesMedida: [],
           selectedSafraId: null,
+
+          // SELECT UNIDADES
+          selectUnidadesArea: [],
+          setUnidadeArea: [],
+          selectUnidadesMedida: [],
+          setUnidadeMedida: null,
         }
       },
       methods: {
@@ -333,12 +391,37 @@
           this.$router.push({name: 'add_safra'});
         },
 
+        // UNIDADE MEDIDA
+        getUnidadesMedida:function(){
+          unidadeMedidaService.listUnidadesMedida().then(response => {
+            this.selectUnidadesMedida = response.data.map(unidadeMed => {
+              return {
+                label: unidadeMed.nome,
+                value: unidadeMed.id
+              }
+            });
+          })
+        },
+        getUnidadesArea:function(){
+          unidadeMedidaService.listUnidadesArea().then(response => {
+            this.selectUnidadesArea = response.data.map(unidadeAre => {
+              return {
+                label: unidadeAre.nome,
+                value: unidadeAre.id
+              }
+            });
+          })
+        },
+
         // CREATE SAFRA CULTURA
+        finalStep: function(){
+          this.goToNextStep();
+        },
         closeNewSafraCulturaModal: function(){
           this.modalSafraCultura = false;
           this.currentStep = 'cultura';
           this.safraCultura = new SafraCultura();
-          this.selectedAreaId = null;
+          this.selectedArea = [];
           this.areas = [];
           this.talhoes = [];
           this.culturas = [];
@@ -355,50 +438,47 @@
             this.safraCultura.getTalhaoById(talhao.id).tamanho = talhao.tamanho
           }
         },
+
         listCulturas() {
           safraCulturaService.listCulturas().then(response => {
             this.culturas = response;
           });
         },
-        setCultura: function(id){
-          this.safraCultura.cultura_id = id;
+        setCultura: function(cultura){
+          this.safraCultura.cultura_id = cultura.id;
+          this.safraCultura.culturaNome = cultura.nome;
           this.goToNextStep();
         },
+
         getAreas: function(){
           areaService.listAreas().then(response => {
             this.areas = response;
           })
         },
-        setArea: function(id){
-          this.selectedAreaId = id;
-          this.getTalhoesByArea(id);
+        setArea: function(area){
+          this.selectedArea.id = area.id;
+          this.selectedArea.nome = area.nome;
+          this.getTalhoesByArea(area.id);
           this.goToNextStep();
         },
+
         getTalhoesByArea: function(area_id){
           talhaoService.listTalhoes(area_id).then(response => {
             this.talhoes = [];
+            this.safraCultura.talhoes = [];
             response.data.forEach(function(talhao){
               this.talhoes.push({
                 id: talhao.id,
                 nome: talhao.nome,
                 tamanho: parseFloat(talhao.tamanho),
                 unidade: {
-                  'nome': talhao.unidade.nome,
-                  'sigla': talhao.unidade.sigla,
+                  nome: talhao.unidade.nome,
+                  plural: talhao.unidade.plural,
+                  sigla: talhao.unidade.sigla,
                 }
               });
               this.safraCultura.addTalhao(new SafraCulturaTalhao(talhao))
             },this)
-          })
-        },
-        getUnidadesMedida:function(){
-          unidadeMedidaService.listUnidadesMedida().then(response => {
-            this.unidadesMedida = response.data.map(unidade => {
-              return {
-                label: unidade.nome +  (unidade.sigla ?  ' (' + unidade.sigla + ')' : ''),
-                value: unidade.id
-              }
-            })
           })
         },
         toggleTalhao:function(talhao){
@@ -409,8 +489,8 @@
             tal.tamanho = 0
           }
         },
+
         saveSafraCultura: function(){
-          console.log(this.safraCultura.getValues())
           safraCulturaService.saveSafraCultura(this.selectedSafraId, this.safraCultura.getValues()).then(response => {
             this.$q.notify({type: 'positive', message: 'Cultura criada com sucesso'});
             this.closeNewSafraCulturaModal();
@@ -442,6 +522,7 @@
       mounted () {
         this.listSafras()
         this.getUnidadesMedida();
+        this.getUnidadesArea();
         // this.$root.$on('refreshSafraList', () => {
         //   this.listSafras();
         // });
@@ -449,7 +530,7 @@
     }
 </script>
 <style>
-  .space_end{
+  .space-end{
     margin-bottom: 150px;
   }
 
