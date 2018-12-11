@@ -1,6 +1,6 @@
 <template>
   <custom-page isParent>
-    <toolbar slot="toolbar" :title="safraCultura.inicio + '/' + safraCultura.fim" navigation_type="back" @navigation_clicked="backAction" >
+    <toolbar slot="toolbar" v-if="safraCultura" :title="safraCultura.inicio + '/' + safraCultura.fim" navigation_type="back" @navigation_clicked="backAction" >
     </toolbar>
 
     <div class="row q-pa-md">
@@ -11,7 +11,7 @@
 
             <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
               <div style="max-height: 200px; overflow: hidden">
-                <img src="assets/soja2.jpg" style="max-width: 100%"/>
+                <img src="assets/images/soja2.jpg" style="max-width: 100%"/>
               </div>
 
             </div>
@@ -20,7 +20,7 @@
               <div class="row gutter-y-xs q-pa-md">
 
                 <div class="col-12 text-faded">
-                  Plantio total em {{getSafraCulturaTotalArea()}} hectares (100%)
+                  <!--Plantio total em {{getSafraCulturaTotalArea()}} hectares (100%)-->
                 </div>
 
                 <!--NEGOCIADO-->
@@ -98,12 +98,12 @@
           </div>
         </q-card>
 
-        <div class="row gutter-xs">
+        <div class="row gutter-xs" v-if="safraCultura">
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="culturaTalhao in safraCultura.cultura_talhoes" :key="culturaTalhao.id">
             <q-card>
 
               <q-card-media>
-                <img src="/assets/talhao1.jpeg"/>
+                <img src="/assets/images/talhao1.jpeg"/>
               </q-card-media>
               <q-card-separator/>
 
@@ -141,7 +141,7 @@
                   </div>
 
                   <div class="col-xs-2 col-sm-2 col-md-3 col-lg-3">
-                    <img src="/assets/pioneer.jpg" class="responsive"/>
+                    <img src="/assets/images/pioneer.jpg" class="responsive"/>
                   </div>
                 </div>
 
@@ -155,11 +155,11 @@
                       </div>
 
                       <div class="col-6">
-                        {{culturaTalhao.estimativa}} {{culturaTalhao.estimativa_unidade_medida.sigla}}/{{culturaTalhao.talhao.tamanho_unidade_area.sigla}}
+                        <!--{{culturaTalhao.estimativa}} {{culturaTalhao.estimativa_unidade_medida.sigla}}/{{culturaTalhao.talhao.tamanho_unidade_area.sigla}}-->
                       </div>
 
                       <div class="col-6 text-right">
-                        {{culturaTalhao.estimativa * culturaTalhao.tamanho}} {{culturaTalhao.estimativa_unidade_medida.nome}}
+                        <!--{{culturaTalhao.estimativa * culturaTalhao.tamanho}} {{culturaTalhao.estimativa_unidade_medida.nome}}-->
                       </div>
 
                     </div>

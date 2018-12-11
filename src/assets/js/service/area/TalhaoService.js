@@ -11,6 +11,15 @@ export default {
       })
     });
   },
+  listFreeTalhoes(area_id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('area/' + area_id + '/talhao_free').then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   saveTalhao(areaId, params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.post('/area/'+ areaId + '/talhao', params).then(response => {

@@ -13,7 +13,7 @@
             <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in culturas" :key="cultura.id">
               <q-card @click.native="selectedCultura(cultura.id)">
                 <q-card-media overlay-position="full">
-                  <img src="assets/soja250x250.jpg"/>
+                  <img src="assets/images/soja250x250.jpg"/>
                   <q-card-title slot="overlay" align="end" v-if="cultura.id === safraCultura.cultura_id">
                     <q-icon name="check_circle" size="30px" color="positive"/>
                   </q-card-title>
@@ -34,7 +34,7 @@
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3" v-for="area in areas" :key="area.id">
               <q-card @click.native="selectedArea(area.id)">
                 <q-card-media overlay-position="full">
-                  <img src="assets/confinamento250x250.jpg"/>
+                  <img src="assets/images/confinamento250x250.jpg"/>
                   <q-card-title slot="overlay" align="end" v-if="area.id === selectedAreaId">
                     <q-icon name="check_circle" size="30px" color="positive"/>
                   </q-card-title>
@@ -58,7 +58,7 @@
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3" v-for="talhao in talhoes" :key="talhao.id">
               <q-card>
                 <q-card-media overlay-position="full" @click.native="toggleTalhao(talhao)">
-                  <img src="assets/talhao2-250x250.jpg"/>
+                  <img src="assets/images/talhao2-250x250.jpg"/>
                   <q-card-title slot="overlay" align="end" v-if="safraCultura.getTalhaoById(talhao.id).tamanho > 0">
                     <q-icon name="check_circle" size="30px" color="positive"/>
                   </q-card-title>

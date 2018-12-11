@@ -63,6 +63,16 @@ export default {
       })
     });
   },
+  archiveSafra(id){
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('produtor/' + produtor_id + '/safra/' + id + '/archive').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   updateSafra(id, params){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {

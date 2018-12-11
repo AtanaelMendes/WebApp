@@ -117,6 +117,7 @@
       setAnoFim: function(value){
         this.safra.fim.value = value.toString();
       },
+
       backAction: function () {
         this.$router.push({name: 'safras'});
       }
