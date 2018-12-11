@@ -36,7 +36,7 @@
 
     </div>
     <div class="no-result" v-else>
-      <img src="~/assets/sad_2.svg"/>
+      <img src="~/assets/images/sad_2.svg"/>
       <span>Nenhum resultado encontrado.</span>
     </div>
 

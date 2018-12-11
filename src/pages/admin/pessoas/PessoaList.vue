@@ -45,7 +45,7 @@
         </q-list>
 
         <div v-if="isEmptyList" class="no-result">
-          <img src="~/assets/sad_2.svg"/>
+          <img src="~/assets/images/sad_2.svg"/>
           <span>Nenhum resultado encontrado.</span>
         </div>
 

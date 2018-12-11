@@ -9,7 +9,7 @@
 
         <q-card inline class="bigger q-ma-sm">
           <q-card-media>
-            <img src="~assets/soja.jpg">
+            <img src="~assets/images/soja.jpg">
           </q-card-media>
           <q-card-title class="relative-position">
             <q-btn fab color="primary" icon="place" class="absolute" style="top: 0; right: 8px; transform: translateY(-50%);" />
@@ -36,7 +36,7 @@
 
         <q-card inline class="q-ma-sm">
           <q-card-media overlay-position="top">
-            <img src="~/assets/milho.jpg">
+            <img src="~/assets/images/milho.jpg">
 
             <q-card-title slot="overlay">
               Title
@@ -51,7 +51,7 @@
 
         <q-card inline class="q-ma-sm">
           <q-card-media>
-            <img src="~/assets/milho.jpg">
+            <img src="~/assets/images/milho.jpg">
           </q-card-media>
           <q-list>
             <q-item>
@@ -92,7 +92,7 @@
 
         <q-card inline class="q-ma-sm">
           <q-card-media>
-            <img src="~/assets/milho.jpg">
+            <img src="~/assets/images/milho.jpg">
             <q-card-title slot="overlay">
               Title
             </q-card-title>
@@ -101,7 +101,7 @@
 
         <q-card inline class="q-ma-sm">
           <q-card-media>
-            <img src="~/assets/milho.jpg">
+            <img src="~/assets/images/milho.jpg">
             <q-card-title slot="overlay">
               Title
               <span slot="subtitle">Subtitle</span>
@@ -143,7 +143,7 @@
 
         <q-card inline class="q-ma-sm">
           <q-card-media>
-            <img src="~/assets/soja.jpg">
+            <img src="~/assets/images/soja.jpg">
           </q-card-media>
           <q-card-title>
             Title
