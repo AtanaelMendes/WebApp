@@ -49,6 +49,21 @@
             <q-card>
               <q-card-title class="q-py-xs">
                 {{safraCultura.nome}}
+                <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
+                  <q-popover>
+                    <q-list link class="no-border">
+                      <q-item v-close-overlay v-if="!safraCultura.deleted_at">
+                        <q-item-main @click.native="archiveSafraCultura(safra.id, safraCultura.id)" label="Arquivar"/>
+                      </q-item>
+                      <q-item v-close-overlay v-if="safraCultura.deleted_at">
+                        <q-item-main @click.native="restoreSafraCultura(safra.id, safraCultura.id)" label="Ativar"/>
+                      </q-item>
+                      <q-item v-close-overlay>
+                        <q-item-main @click.native="deleteSafraCultura(safra.id, safraCultura.id)" label="Excluir"/>
+                      </q-item>
+                    </q-list>
+                  </q-popover>
+                </q-btn>
               </q-card-title>
               <q-card-separator/>
 
