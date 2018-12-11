@@ -3,9 +3,10 @@
     <toolbar slot="toolbar" v-if="safraCultura" :title="safraCultura.inicio + '/' + safraCultura.fim" navigation_type="back" @navigation_clicked="backAction" >
     </toolbar>
 
-    <div class="row q-pa-md">
-      <div class="col-12">
+    <div class="row q-pa-md gutter-sm space-end" v-if="safraCultura">
 
+      <!--HEADER-->
+      <div class="col-12">
         <q-card class="q-mb-md">
           <div class="row">
 
@@ -97,114 +98,106 @@
             </div>
           </div>
         </q-card>
+      </div>
 
-        <div class="row gutter-xs" v-if="safraCultura">
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="culturaTalhao in safraCultura.cultura_talhoes" :key="culturaTalhao.id">
-            <q-card>
+      <!--INOFORMAÇOES-->
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="culturaTalhao in safraCultura.cultura_talhoes" :key="culturaTalhao.id">
 
-              <q-card-media>
-                <img src="/assets/images/talhao1.jpeg"/>
-              </q-card-media>
-              <q-card-separator/>
+        <q-card>
 
-              <q-card-title class="q-py-sm">
-                {{culturaTalhao.talhao.nome}}
-                <q-btn round flat dense icon="more_vert" slot="right">
-                  <q-popover>
-                    <q-list link class="no-border">
-                      <q-item v-close-overlay>
-                        <!--<q-item-main @click.native="updateContato(contato.id)" label="Editar" />-->
-                        <q-item-main label="ação 1" />
-                      </q-item>
-                      <q-item v-close-overlay >
-                        <q-item-main label="ação 2"/>
-                      </q-item>
-                      <q-item v-close-overlay>
-                        <q-item-main label="ação 3"/>
-                      </q-item>
-                    </q-list>
-                  </q-popover>
-                </q-btn>
-              </q-card-title>
-              <q-card-separator/>
+          <q-card-media>
+            <img src="/assets/images/talhao1.jpeg"/>
+          </q-card-media>
+          <q-card-separator/>
 
-              <q-card-main class="gutter-xs">
+          <q-card-title class="q-py-sm">
+            {{culturaTalhao.talhao.nome}}
+            <q-btn round flat dense icon="more_vert" slot="right">
+              <q-popover>
+                <q-list link class="no-border">
+                  <q-item v-close-overlay>
+                    <!--<q-item-main @click.native="updateContato(contato.id)" label="Editar" />-->
+                    <q-item-main label="Informar cultivar" @click.native="addCultivar"/>
+                  </q-item>
+                  <q-item v-close-overlay >
+                    <q-item-main label="editar" @click.native="editSafraCulturaTalhao"/>
+                  </q-item>
+                  <q-item v-close-overlay>
+                    <q-item-main label="Excluir" @click.native="deleteSafraCulturaTalhao"/>
+                  </q-item>
+                </q-list>
+              </q-popover>
+            </q-btn>
+          </q-card-title>
+          <q-card-separator/>
 
-                <!--CULTURA TALHAO-->
+          <q-card-main class="gutter-xs">
+
+            <!--CULTURA TALHAO-->
+            <!--<div class="row">-->
+              <!--<div class="col-12 text-faded q-caption">-->
+                <!--{{formatCulturaTalhaoTamanhoLabel(culturaTalhao)}}-->
+              <!--</div>-->
+
+              <!--<div class="col-xs-10 col-sm-10 col-md-9 col-lg-9 self-center">-->
+                <!--<span class="q-subheading">98Y70</span>-->
+              <!--</div>-->
+
+              <!--<div class="col-xs-2 col-sm-2 col-md-3 col-lg-3">-->
+                <!--<img src="/assets/images/pioneer.jpg" class="responsive"/>-->
+              <!--</div>-->
+            <!--</div>-->
+
+            <!--ESTIMATIVA  TALHAO-->
+            <div class="row">
+              <div class="col-12">
                 <div class="row">
-                  <div class="col-12 text-faded q-caption">
-                    {{formatCulturaTalhaoTamanhoLabel(culturaTalhao)}}
+
+                  <div class="col-12 q-caption text-faded">
+                    Estimativa
                   </div>
 
-                  <div class="col-xs-10 col-sm-10 col-md-9 col-lg-9 self-center">
-                    <span class="q-subheading">98Y70</span>
+                  <div class="col-6">
+                    <!--{{culturaTalhao.estimativa}} {{culturaTalhao.estimativa_unidade_medida.sigla}}/{{culturaTalhao.talhao.tamanho_unidade_area.sigla}}-->
                   </div>
 
-                  <div class="col-xs-2 col-sm-2 col-md-3 col-lg-3">
-                    <img src="/assets/images/pioneer.jpg" class="responsive"/>
+                  <div class="col-6 text-right">
+                    <!--{{culturaTalhao.estimativa * culturaTalhao.tamanho}} {{culturaTalhao.estimativa_unidade_medida.nome}}-->
                   </div>
+
                 </div>
+              </div>
+            </div>
 
-                <!--ESTIMATIVA  TALHAO-->
+            <!--COLHIDO POR TALHAO-->
+            <div clas="row">
+              <div class="col-12 gutter-y-xs">
+
                 <div class="row">
-                  <div class="col-12">
-                    <div class="row">
-
-                      <div class="col-12 q-caption text-faded">
-                        Estimativa
-                      </div>
-
-                      <div class="col-6">
-                        <!--{{culturaTalhao.estimativa}} {{culturaTalhao.estimativa_unidade_medida.sigla}}/{{culturaTalhao.talhao.tamanho_unidade_area.sigla}}-->
-                      </div>
-
-                      <div class="col-6 text-right">
-                        <!--{{culturaTalhao.estimativa * culturaTalhao.tamanho}} {{culturaTalhao.estimativa_unidade_medida.nome}}-->
-                      </div>
-
-                    </div>
+                  <div class="col-6 text-faded">
+                    Colhido 53,9%
+                  </div>
+                  <div class="col-6 self-center">
+                    <q-progress color="deep-orange" :percentage="progressBuffer"/>
                   </div>
                 </div>
 
-                <!--COLHIDO POR TALHAO-->
-                <div clas="row">
-                  <div class="col-12 gutter-y-xs">
+                <div class="row">
+                  <div class="col-6">
+                    29.67 Sc/Ha
+                  </div>
 
-                    <div class="row">
-                      <div class="col-6 text-faded">
-                        Colhido 53,9%
-                      </div>
-                      <div class="col-6 self-center">
-                        <q-progress color="deep-orange" :percentage="progressBuffer"/>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-6">
-                        29.67 Sc/Ha
-                      </div>
-
-                      <div class="col-6 text-right">
-                        5.342 Sacas
-                      </div>
-                    </div>
-
+                  <div class="col-6 text-right">
+                    5.342 Sacas
                   </div>
                 </div>
 
-              </q-card-main>
-            </q-card>
-          </div>
-        </div>
+              </div>
+            </div>
 
+          </q-card-main>
+        </q-card>
 
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
       </div>
     </div>
   </custom-page>
@@ -227,6 +220,9 @@
       }
     },
     methods: {
+      addCultivar: function(){},
+      editSafraCulturaTalhao: function(){},
+      deleteSafraCulturaTalhao: function(){},
       getSafraCultura: function(safra_id, id){
         safraCulturaService.getSafraCultura(safra_id, id).then(response => {
           this.safraCultura = response.data;
@@ -258,4 +254,7 @@
   }
 </script>
 <style>
+  .space-end{
+    margin-bottom: 200px;
+  }
 </style>
