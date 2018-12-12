@@ -75,5 +75,14 @@ export default {
       })
     });
   },
+  deleteSafraCulturaTalhao(safra_cultura_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.delete('/safra_cultura/' + safra_cultura_id + '/safra_cultura_talhao/' + id).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  }
 
 }

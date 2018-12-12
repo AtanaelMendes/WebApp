@@ -22,7 +22,8 @@
               <div class="row gutter-y-xs q-pa-md">
 
                 <div class="col-12 text-faded" v-if="loaded">
-                  Plantio total em {{getSafraCulturaTotalArea()}} hectares (100%)
+                  <!--Plantio total em {{getSafraCulturaTotalArea()}} hectares (100%)-->
+                  Plantio total em 100 hectares (100%)
                 </div>
 
                 <!--NEGOCIADO-->
@@ -319,15 +320,15 @@
         });
       },
       deleteSafraCulturaTalhao: function(data){
-        safraCulturaService.deleteSafraCultura(safra_id, data.talhao.id).then(response => {
+        safraCulturaService.deleteSafraCulturaTalhao(this.$route.params.id, data.talhao.id).then(response => {
           this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
         });
       },
-      getSafraCulturaTotalArea: function () {
-        return this.safraCultura.cultura_talhoes.map(function (culturaTalhao) {
-          return culturaTalhao.talhao.tamanho;
-        }).reduce((a, b) => a + b);
-      },
+      // getSafraCulturaTotalArea: function () {
+      //   return this.safraCultura.cultura_talhoes.map(function (culturaTalhao) {
+      //     return culturaTalhao.talhao.tamanho;
+      //   }).reduce((a, b) => a + b);
+      // },
       checkInputMaxSize: function(newVal, oldVal){
         if(newVal > oldVal.talhao.tamanho){
           this.safraCulturaTalhao.tamanho.value = oldVal.talhao.tamanho
