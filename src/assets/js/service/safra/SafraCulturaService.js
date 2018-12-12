@@ -66,4 +66,14 @@ export default {
     });
   },
 
+  updateSafraCulturaTalhao(safra_cultura_id, id, params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('safra_cultura/' + safra_cultura_id + '/safra_cultura_talhao/'+ id, params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
 }

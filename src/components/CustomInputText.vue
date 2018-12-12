@@ -6,6 +6,7 @@
       v-model="model.value"
       :autofocus="autofocus"
       :maxlength="maxlength"
+      :suffix="suffix"
       :placeholder="placeholder"
       v-on:input="clearErrorMessage()"
       :type="type" :float-label="label"
@@ -29,6 +30,7 @@
       type: String,
       placeholder: String,
       maxlength: String,
+      suffix: String,
       label: String,
       mask: String,
       autofocus: String,

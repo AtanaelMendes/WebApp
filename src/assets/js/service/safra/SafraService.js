@@ -83,4 +83,13 @@ export default {
       })
     });
   },
+  listFreeTalhoes(area_id, safra_id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('safra/' + safra_id + '/talhao_free/' + area_id).then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
 }

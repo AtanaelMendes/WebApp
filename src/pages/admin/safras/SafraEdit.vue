@@ -242,13 +242,13 @@
       getSafraById: function(id){
         safraService.getSafra(id).then(response => {
           this.safra = new Safra(response.data);
-          this.getTalhoesByArea(this.safra.area.value)
+          this.getTalhoesBySafraAndArea(this.safra.area.value)
         })
 
         return new Promise((resolve, reject) => {
           safraService.getSafra(id).then(response => {
             this.safra = new Safra(response.data);
-            this.getTalhoesByArea(this.safra.area.value)
+            this.getTalhoesBySafraAndArea(this.safra.area.value)
             resolve();
           }).catch(error => {
             reject();
@@ -312,13 +312,13 @@
       },
       onAreasSelectInput: function(value){
         this.safra.area.errorMessage = null;
-        this.getTalhoesByArea(value)
+        this.getTalhoesBySafraAndArea(value)
       },
       onTalhaoSelectInput: function(value){
         this.selectedTalhao = this.talhoes.filter(item => item['id'] === value)[0];
         this.safra.talhao.errorMessage = null;
       },
-      getTalhoesByArea: function(area_id){
+      getTalhoesBySafraAndArea: function(area_id){
         talhaoService.listTalhoes(area_id).then(response => {
           this.talhoes = response.data;
         })

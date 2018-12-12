@@ -145,10 +145,10 @@
       },
       setArea: function(id){
         this.selectedAreaId = id;
-        this.getTalhoesByArea(id)
+        this.getTalhoesBySafraAndArea(id)
         this.goToNextStep();
       },
-      getTalhoesByArea: function(area_id){
+      getTalhoesBySafraAndArea: function(area_id){
         talhaoService.listTalhoes(area_id).then(response => {
           //this.talhoes = response.data;
           //this.selectedTalhoes = this.talhoes.map(function (talhao) { return talhao.id });
