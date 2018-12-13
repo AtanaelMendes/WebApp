@@ -298,7 +298,7 @@
         </q-step>
 
         <!--PASSO 2 ESCOLHER TIPO-->
-        <q-step title="Tipo" name="tipo">
+        <q-step title="Cultivar" name="cultivar">
           <div class="row q-ma-md gutter-xs justify-center" style="min-height: 80vh">
             <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultivar in cultivares" :key="cultivar.id">
               <q-card @click.native="chooseCultivar(cultivar.id)">
@@ -327,7 +327,7 @@
       </q-stepper>
       <q-page-sticky position="bottom-right" :offset="[18, 18]">
         <q-btn class="q-mr-xs" color="primary" @click="modalAddCultivarInfo = false" label="cancelar" />
-        <q-btn v-if="currentStep === 'tipo' " color="primary" @click="saveCultivarToSafraCulturaTalhao()" label="salvar" />
+        <q-btn v-if="currentStep === 'cultivar' " color="primary" @click="saveCultivarToSafraCulturaTalhao()" label="salvar" />
       </q-page-sticky>
     </q-modal>
 
@@ -396,6 +396,10 @@
         }
       },
       saveCultivarToSafraCulturaTalhao: function(){
+        if(this.selectedCultivarId == null ){
+          this.$q.notify({type: 'negative', message: 'Escolha um cultivar para salvar'});
+          return
+        }
         let safraCulturaTalhaoId = this.selectedSafraCulturaTalhao.talhao.id;
         let cultivarId = this.selectedCultivarId;
         safraCulturaService.saveCultivarToSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhaoId, cultivarId).then(response => {
