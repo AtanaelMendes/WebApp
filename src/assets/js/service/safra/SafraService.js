@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
-import AgroUtils from 'assets/js/AgroUtils'
-
 export default {
   favoriteSafra(id, value){
     let produtor_id = localStorage.getItem('account.produtor_id');
