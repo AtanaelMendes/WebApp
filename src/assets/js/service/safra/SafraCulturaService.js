@@ -83,6 +83,15 @@ export default {
         reject(error)
       })
     });
+  },
+  addCultivarToSafraCulturaTalhao(safra_cultura_id, safra_cultura_talhao_id, cultivar_id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.post('/safra_cultura/' + safra_cultura_id + '/safra_cultura_talhao/' + safra_cultura_talhao_id + '/add_cultivar/' + cultivar_id).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
   }
 
 }

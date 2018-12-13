@@ -115,19 +115,19 @@
           </q-card-media>
           <q-card-separator/>
 
-          <q-card-title class="q-py-sm">
+          <q-card-title class="q-py-sm q-px-none q-pl-md">
             {{culturaTalhao.talhao.nome}}
             <q-btn round flat dense icon="more_vert" slot="right">
               <q-popover>
                 <q-list link class="no-border">
-                  <!--<q-item v-close-overlay>-->
-                    <!--<q-item-main label="Informar cultivar" @click.native="addCultivar"/>-->
-                  <!--</q-item>-->
-                  <q-item v-close-overlay >
-                    <q-item-main label="Editar" @click.native="editSafraCulturaTalhao(culturaTalhao)"/>
-                  </q-item>
                   <q-item v-close-overlay>
-                    <q-item-main label="Excluir" @click.native="deleteSafraCulturaTalhao(culturaTalhao)"/>
+                    <q-item-main label="Informar cultivar" @click.native="addCultivarModal(culturaTalhao.talhao.id)"/>
+                  </q-item>
+                  <q-item v-close-overlay @click.native="editSafraCulturaTalhao(culturaTalhao)">
+                    <q-item-main label="Editar"/>
+                  </q-item>
+                  <q-item v-close-overlay @click.native="deleteSafraCulturaTalhao(culturaTalhao)">
+                    <q-item-main label="Excluir"/>
                   </q-item>
                 </q-list>
               </q-popover>
@@ -138,19 +138,28 @@
           <q-card-main class="gutter-xs">
 
             <!--CULTURA TALHAO-->
-            <!--<div class="row">-->
-              <!--<div class="col-12 text-faded q-caption">-->
-                <!--{{formatCulturaTalhaoTamanhoLabel(culturaTalhao)}}-->
-              <!--</div>-->
+            <div class="">
+              <div class="col-12 text-faded q-caption">
+                {{formatCulturaTalhaoTamanhoLabel(culturaTalhao)}}
+              </div>
 
-              <!--<div class="col-xs-10 col-sm-10 col-md-9 col-lg-9 self-center">-->
-                <!--<span class="q-subheading">98Y70</span>-->
-              <!--</div>-->
+              <div class="cultivar-container">
+                <div class="cultivar-item row" v-if="culturaTalhao.cultivar">
+                  <div class="col-xs-10 col-sm-10 col-md-9 col-lg-9 self-center">
+                    <span class="q-subheading">{{culturaTalhao.cultivar.nome}}</span>
+                  </div>
 
-              <!--<div class="col-xs-2 col-sm-2 col-md-3 col-lg-3">-->
-                <!--<img src="/assets/images/pioneer.jpg" class="responsive"/>-->
-              <!--</div>-->
-            <!--</div>-->
+                  <div class="col-xs-2 col-sm-2 col-md-3 col-lg-3">
+                    <img src="/assets/images/pioneer.jpg" class="responsive"/>
+                  </div>
+                </div>
+
+                <div class="cultivar-empty"  v-if="!culturaTalhao.cultivar">
+                  <q-icon name="warning" />
+                  <span>Nenhum cultivar adicionado ainda</span>
+                </div>
+              </div>
+            </div>
 
             <!--ESTIMATIVA  TALHAO-->
             <div class="row">
@@ -162,11 +171,11 @@
                   </div>
 
                   <div class="col-6">
-                    {{culturaTalhao.estimativa}} Sc/Ha
+                    {{culturaTalhao.estimativa}} {{safraCultura.cultura.estimativa_unidade_medida.sigla}}/{{culturaTalhao.talhao.tamanho_unidade_area.sigla}}
                   </div>
 
                   <div class="col-6 text-right">
-                    {{culturaTalhao.tamanho * culturaTalhao.estimativa}} Sacas
+                    {{culturaTalhao.tamanho * culturaTalhao.estimativa}} {{safraCultura.cultura.estimativa_unidade_medida.nome}}
                   </div>
 
                 </div>
@@ -207,8 +216,8 @@
 
     <q-modal minimized no-backdrop-dismiss v-model="modalEditSafraCulturaTalhao" v-if="selectedSafraCulturaTalhao">
       <form @keyup.enter="updadeSafraCulturatalhao()">
-        <div class="column q-ma-md items-center">
-          <div class="col-6 q-title">
+        <div class="column q-ma-md">
+          <div class="col-6 q-title q-mb-md">
             {{selectedSafraCulturaTalhao.talhao.nome}}
           </div>
           <div class="col-6 text-justify">
@@ -222,11 +231,11 @@
                     :min="0"
                     :max="selectedSafraCulturaTalhao.talhao.tamanho"
                     v-model="safraCulturaTalhao.tamanho.value"
-                    :label-value="`${safraCulturaTalhao.tamanho.value} ha`"
+                    :label-value="safraCulturaTalhao.tamanho.value + ' ' + selectedSafraCulturaTalhao.talhao.tamanho_unidade_area.sigla"
                   />
                 </div>
                 <div class="col-4">
-                  <custom-input-text  type="number" suffix="ha." :model="safraCulturaTalhao.tamanho"
+                  <custom-input-text  type="number" :suffix="selectedSafraCulturaTalhao.talhao.tamanho_unidade_area.sigla" :model="safraCulturaTalhao.tamanho"
                                       @blur="checkInputMaxSize(safraCulturaTalhao.tamanho.value, selectedSafraCulturaTalhao)"
                   />
                 </div>
@@ -234,7 +243,7 @@
             </q-item>
 
             <q-list no-border dense class="q-py-none">
-              <q-list-header>Estimativa por Hectare</q-list-header>
+              <q-list-header>Estimativa por {{selectedSafraCulturaTalhao.talhao.tamanho_unidade_area.nome}}</q-list-header>
               <q-item dense>
                 <div class="row gutter-x-sm">
                   <div class="col-3">
@@ -242,7 +251,7 @@
                   </div>
                   <div class="col-9 self-center">
                     <!--label de unidade-->
-                    Sacas (60kg)
+                    {{safraCultura.cultura.estimativa_unidade_medida.nome}}
                   </div>
                 </div>
               </q-item>
@@ -253,8 +262,8 @@
 
         <div class="row" position="bottom-right" :offset="[30, 30]">
           <div class="col-12 q-pa-sm" align="end">
-            <q-btn color="primary" @click.native="modalEditSafraCulturaTalhao = false" label="cancelar" class="q-mr-sm"/>
-            <q-btn color="primary" @click.native="updadeSafraCulturatalhao" label="salvar"/>
+            <q-btn color="primary" @click.native="modalEditSafraCulturaTalhao = false" flat label="cancelar" class="q-mr-sm"/>
+            <q-btn color="primary" @click.native="updadeSafraCulturatalhao" flat label="salvar"/>
           </div>
         </div>
 
@@ -279,7 +288,7 @@
     data () {
       return {
         loaded: false,
-        safraCultura: [],
+        safraCultura: null,
         safraCulturaTalhao: new SafraCulturaTalhaoEdit(),
         progressBuffer: 100,
         selectedSafraCulturaTalhao: null,
@@ -293,13 +302,17 @@
           this.loaded = true;
         })
       },
-      addCultivar: function(){},
+      addCultivarModal: function(safraCulturaTalhaoId){
+
+        let cultivarId = 67; //TODO: Apagar isso e pegar o id do cultivar que o usuario selecionou
+        this.addCultivarToSafraCulturaTalhao(safraCulturaTalhaoId, cultivarId);
+      },
       editSafraCulturaTalhao: function(data){
         this.selectedSafraCulturaTalhao = data;
-        this.fillSafraculturaTalhaoForm(data);
+        this.fillSafraCulturaTalhaoForm(data);
         this.modalEditSafraCulturaTalhao = true;
       },
-      fillSafraculturaTalhaoForm: function(data){
+      fillSafraCulturaTalhaoForm: function(data){
         this.safraCulturaTalhao.estimativa.value = data.estimativa;
         this.safraCulturaTalhao.tamanho.value = data.tamanho;
       },
@@ -319,10 +332,27 @@
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.request.response})
         });
       },
-      deleteSafraCulturaTalhao: function(data){
-        safraCulturaService.deleteSafraCulturaTalhao(this.$route.params.id, data.talhao.id).then(response => {
-          this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
-        });
+      deleteSafraCulturaTalhao: function(safraCulturaTalhao){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar esse talhão?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          safraCulturaService.deleteSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhao.talhao.id).then(response => {
+            this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
+          });
+        }).catch(()=>{});
+      },
+      addCultivarToSafraCulturaTalhao: function(safraCulturaTalhaoId, cultivarId){
+        safraCulturaService.addCultivarToSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhaoId, cultivarId).then(response => {
+          if(response.status === 200){
+            console.log(safraCulturaTalhaoId)
+            console.log(this.safraCultura.cultura_talhoes);
+            let talhao = this.safraCultura.cultura_talhoes[this.safraCultura.cultura_talhoes.map(cultura_talhao => cultura_talhao.talhao.id).indexOf(safraCulturaTalhaoId)];
+            talhao.cultivar = response.data;
+          }
+        })
       },
       // getSafraCulturaTotalArea: function () {
       //   return this.safraCultura.cultura_talhoes.map(function (culturaTalhao) {
@@ -332,6 +362,14 @@
       checkInputMaxSize: function(newVal, oldVal){
         if(newVal > oldVal.talhao.tamanho){
           this.safraCulturaTalhao.tamanho.value = oldVal.talhao.tamanho
+        }
+      },
+      formatCulturaTalhaoTamanhoLabel: function(culturaTalhao) {
+        if (culturaTalhao.tamanho === culturaTalhao.talhao.tamanho) {
+          return culturaTalhao.tamanho + ' ' + culturaTalhao.talhao.tamanho_unidade_area.nome + ' (100%)'
+        } else {
+          let porcentagem = culturaTalhao.tamanho / culturaTalhao.talhao.tamanho * 100;
+          return culturaTalhao.tamanho + ' de ' + culturaTalhao.talhao.tamanho + ' ' + culturaTalhao.talhao.tamanho_unidade_area.nome + ' (' + porcentagem + '%)';
         }
       },
       backAction: function () {
@@ -349,5 +387,21 @@
 <style>
   .space-end{
     margin-bottom: 200px;
+  }
+
+  .cultivar-empty{
+    height: 55px;
+    text-align: center;
+    padding-top: 15px;
+  }
+  .cultivar-empty span{
+    color: #8c8c8c;
+    font-weight: 300;
+    font-size: 15px;
+  }
+  .cultivar-empty i{
+    color: #ffb500;
+    font-size: 20px;
+    margin-right: 6px;
   }
 </style>

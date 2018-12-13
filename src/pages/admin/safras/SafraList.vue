@@ -25,17 +25,17 @@
             <q-btn round flat dense icon="more_vert">
               <q-popover>
                 <q-list link class="no-border">
-                  <q-item v-close-overlay>
-                    <q-item-main @click.native="editSafra(safra)" label="Editar"/>
+                  <q-item v-close-overlay @click.native="editSafra(safra)">
+                    <q-item-main label="Editar"/>
                   </q-item>
-                  <q-item v-close-overlay v-if="!safra.deleted_at">
-                    <q-item-main @click.native="archiveSafra(safra.id)" label="Arquivar"/>
+                  <q-item v-close-overlay v-if="!safra.deleted_at" @click.native="archiveSafra(safra.id)" >
+                    <q-item-main label="Arquivar"/>
                   </q-item>
-                  <q-item v-close-overlay v-if="safra.deleted_at">
-                    <q-item-main @click.native="restoreSafra(safra.id)" label="Ativar"/>
+                  <q-item v-close-overlay v-if="safra.deleted_at" @click.native="restoreSafra(safra.id)">
+                    <q-item-main label="Ativar"/>
                   </q-item>
-                  <q-item v-close-overlay>
-                    <q-item-main @click.native="deleteSafra(safra.id)" label="Excluir"/>
+                  <q-item v-close-overlay @click.native="deleteSafra(safra.id)">
+                    <q-item-main label="Excluir"/>
                   </q-item>
                 </q-list>
               </q-popover>
@@ -52,14 +52,14 @@
                 <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
                   <q-popover>
                     <q-list link class="no-border">
-                      <q-item v-close-overlay v-if="!safraCultura.deleted_at">
-                        <q-item-main @click.native="archiveSafraCultura(safra.id, safraCultura.id)" label="Arquivar"/>
+                      <q-item v-close-overlay v-if="!safraCultura.deleted_at" @click.native="archiveSafraCultura(safra.id, safraCultura.id)">
+                        <q-item-main label="Arquivar"/>
                       </q-item>
-                      <q-item v-close-overlay v-if="safraCultura.deleted_at">
-                        <q-item-main @click.native="restoreSafraCultura(safra.id, safraCultura.id)" label="Ativar"/>
+                      <q-item v-close-overlay v-if="safraCultura.deleted_at" @click.native="restoreSafraCultura(safra.id, safraCultura.id)">
+                        <q-item-main label="Ativar"/>
                       </q-item>
-                      <q-item v-close-overlay>
-                        <q-item-main @click.native="deleteSafraCultura(safra.id, safraCultura.id)" label="Excluir"/>
+                      <q-item v-close-overlay @click.native="deleteSafraCultura(safra.id, safraCultura.id)">
+                        <q-item-main label="Excluir"/>
                       </q-item>
                     </q-list>
                   </q-popover>
@@ -592,7 +592,7 @@
           }
           safraService.updateSafra(this.selectedSafra, this.safra.getValues()).then(response => {
             if(response.status === 200) {
-              this.$q.notify({type: 'positive', message: 'Safra atualizada com sucesso'});
+              this.$q.notify({type: 'positive', message: 'Safra atualizada com sucesso!'});
               this.listSafras();
               this.closeSafraModal();
               this.safra.inicio.value = this.getCurrentYear();
@@ -612,6 +612,7 @@
         },
         archiveSafra: function(id){
           safraService.archiveSafra(id).then(response => {
+            this.$q.notify({type: 'positive', message: 'Safra arquivda com sucesso!'});
             this.listSafras()
           })
         },
@@ -621,9 +622,24 @@
           })
         },
         deleteSafra: function(id){
-          safraService.deleteSafra(id).then(response => {
-            this.listSafras()
-          })
+          this.$q.dialog({
+            title: 'Atenção',
+            message: 'Realmente deseja apagar essa safra?',
+            ok: 'Sim', cancel: 'Não',
+            color: 'primary'
+          }).then(data => {
+            safraService.deleteSafra(id).then(response => {
+              this.listSafras()
+            }).catch(error => {
+              if(error.response.status){
+                this.$q.dialog({
+                  title: 'Atenção',
+                  message: 'Esta safra possui talhões dentro! Apague-os primeiro.',
+                  color: 'primary'
+                })
+              }
+            })
+          }).catch(()=>{});
         },
 
         // CREATE SAFRA CULTURA
@@ -649,7 +665,6 @@
           }
         },
         isNextButtomVisible: function(){
-          console.log('aqui')
           if(this.currentStep === 'talhoes' && this.talhoes.length > 0){
             return true
           }
@@ -766,9 +781,17 @@
           })
         },
         deleteSafraCultura: function(safra_id, id){
-          safraCulturaService.deleteSafraCultura(safra_id, id).then(response => {
-            this.listSafras()
-          })
+          this.$q.dialog({
+            title: 'Atenção',
+            message: 'Realmente deseja apagar esse talhão?',
+            ok: 'Sim', cancel: 'Não',
+            color: 'primary'
+          }).then(data => {
+            safraCulturaService.deleteSafraCultura(safra_id, id).then(response => {
+              this.listSafras()
+            })
+          }).catch(()=>{});
+
         },
       },
       mounted () {
