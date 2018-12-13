@@ -46,6 +46,8 @@ const routes = [
       { name: 'view_safra_cultura', path: 'safras/:safra_id/safra_cultura/view/:id', component: () => import('pages/admin/safras/safraCultura/SafraCulturaView.vue') },
       { name: 'add_safra_cultura', path: 'safras/:safra_id/safra_cultura/:id/add', component: () => import('pages/admin/safras/safraCultura/SafraCulturaAdd.vue') },
 
+      { name: 'culturas', path: 'culturas', component: () => import('pages/admin/culturas/CulturaListView.vue')},
+
         // children: [
         //   { name: 'cultura_safra', path: 'view/:id', component: () => import('pages/admin/safras/cultura/SafraCultura.vue') },
         //   { name: 'add_safra', path: 'add', component: () => import('pages/admin/safras/SafraAdd.vue') },

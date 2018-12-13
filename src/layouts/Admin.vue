@@ -48,6 +48,10 @@
           <q-item-side><i class="fab fa-pagelines q-headline"></i></q-item-side>
           <q-item-main label="Safras" />
         </q-item>
+        <q-item @click.native="$router.push({name:'culturas'})">
+          <q-item-side><i class="fab fa-pagelines q-headline"></i></q-item-side>
+          <q-item-main label="Cultivares" />
+        </q-item>
       </q-list>
     </q-layout-drawer>
 
