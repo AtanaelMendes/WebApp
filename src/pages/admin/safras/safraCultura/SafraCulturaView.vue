@@ -27,7 +27,7 @@
                 </div>
 
                 <!--NEGOCIADO-->
-                <!--<div class="col-12">-->
+                <div class="col-12">
                   <!--<div class="row">-->
 
                     <!--<div class="col-6 q-caption text-faded">-->
@@ -50,7 +50,7 @@
                     <!--</div>-->
 
                   <!--</div>-->
-                <!--</div>-->
+                </div>
 
                 <!--ESTIMATIVA TOTAL-->
                 <div class="col-12">
@@ -74,7 +74,7 @@
                 </div>
 
                 <!--TOTAL COLHIDO-->
-                <!--<div class="col-12">-->
+                <div class="col-12">
                   <!--<div class="row">-->
 
                     <!--<div class="col-12 q-mb-xs">-->
@@ -98,7 +98,7 @@
                     <!--</div>-->
 
                   <!--</div>-->
-                <!--</div>-->
+                </div>
 
               </div>
             </div>
@@ -106,7 +106,7 @@
         </q-card>
       </div>
 
-      <!--INOFORMAÇOES-->
+      <!--CARD DOS TALHOES-->
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="culturaTalhao in safraCultura.cultura_talhoes" :key="culturaTalhao.id">
         <q-card>
 
@@ -120,8 +120,8 @@
             <q-btn round flat dense icon="more_vert" slot="right">
               <q-popover>
                 <q-list link class="no-border">
-                  <q-item v-close-overlay>
-                    <q-item-main label="Informar cultivar" @click.native="addCultivarModal(culturaTalhao.talhao.id)"/>
+                  <q-item v-close-overlay @click.native="addCultivarModal(culturaTalhao)">
+                    <q-item-main label="Informar cultivar"/>
                   </q-item>
                   <q-item v-close-overlay @click.native="editSafraCulturaTalhao(culturaTalhao)">
                     <q-item-main label="Editar"/>
@@ -183,7 +183,7 @@
             </div>
 
             <!--COLHIDO POR TALHAO-->
-            <!--<div clas="row">-->
+            <div clas="row">
               <!--<div class="col-12 gutter-y-xs">-->
 
                 <!--<div class="row">-->
@@ -206,7 +206,7 @@
                 <!--</div>-->
 
               <!--</div>-->
-            <!--</div>-->
+            </div>
 
           </q-card-main>
         </q-card>
@@ -214,6 +214,7 @@
       </div>
     </div>
 
+    <!--MODAL UPDATE SAFRA CULTURA-->
     <q-modal minimized no-backdrop-dismiss v-model="modalEditSafraCulturaTalhao" v-if="selectedSafraCulturaTalhao">
       <form @keyup.enter="updadeSafraCulturatalhao()">
         <div class="column q-ma-md">
@@ -269,6 +270,67 @@
 
       </form>
     </q-modal>
+
+    <!--MODAL ADD CULTIVAR INFO-->
+    <q-modal v-model="modalAddCultivarInfo" maximized>
+      <q-stepper ref="stepper" contractable color="positive" v-model="currentStep" class="no-shadow">
+
+        <!--ESCOLHER MARCA-->
+        <q-step default title="Marca" name="marca">
+
+          <div class="row q-ma-md gutter-xs justify-center" style="min-height: 80vh">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="marca in marcas" :key="marca.id">
+              <q-card @click.native="chooseMarca(marca.id)">
+                <q-card-media overlay-position="full">
+                  <img src="assets/images/monsoy.jpg">
+                  <q-card-title slot="overlay" align="end" v-if="marca.id === selectedMarcaId">
+                    <q-icon name="check_circle" size="30px" color="positive"/>
+                  </q-card-title>
+                </q-card-media>
+                <q-card-separator/>
+                <q-card-title>
+                  {{marca.nome}}
+                </q-card-title>
+              </q-card>
+            </div>
+          </div>
+
+        </q-step>
+
+        <!--PASSO 2 ESCOLHER TIPO-->
+        <q-step title="Tipo" name="tipo">
+          <div class="row q-ma-md gutter-xs justify-center" style="min-height: 80vh">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultivar in cultivares" :key="cultivar.id">
+              <q-card @click.native="chooseCultivar(cultivar.id)">
+                <q-card-title class="text-center">
+                  {{cultivar.nome}}
+                  <div slot="right" v-if="cultivar.id === selectedCultivarId">
+                    <q-btn icon="done" round color="positive" dense/>
+                  </div>
+                </q-card-title>
+                <q-card-separator/>
+                <q-card-main>
+                  <div class="row">
+                    <div class="col-12 text-center text-faded">
+                      {{cultivar.tipo}}
+                    </div>
+                    <div class="col-12 text-center">
+                      Ciclo {{cultivar.ciclo}} {{cultivar.ciclo_dias}} dias.
+                    </div>
+                  </div>
+                </q-card-main>
+              </q-card>
+            </div>
+          </div>
+        </q-step>
+
+      </q-stepper>
+      <q-page-sticky position="bottom-right" :offset="[18, 18]">
+        <q-btn class="q-mr-xs" color="primary" @click="modalAddCultivarInfo = false" label="cancelar" />
+        <q-btn v-if="currentStep === 'tipo' " color="primary" @click="saveCultivarToSafraCulturaTalhao()" label="salvar" />
+      </q-page-sticky>
+    </q-modal>
+
   </custom-page>
 </template>
 
@@ -287,25 +349,82 @@
     },
     data () {
       return {
+        currentStep: 'marca',
+        marcas: [],
+        cultivares: [],
+        selectedMarcaId: null,
+        selectedCultivarId: null,
+        selecteTipoId: null,
         loaded: false,
         safraCultura: null,
         safraCulturaTalhao: new SafraCulturaTalhaoEdit(),
         progressBuffer: 100,
         selectedSafraCulturaTalhao: null,
-        modalEditSafraCulturaTalhao: false
+        modalEditSafraCulturaTalhao: false,
+        modalAddCultivarInfo: false,
+
       }
     },
     methods: {
+      // ADD CULTIVAR
+      listMarcas: function(){
+        safraCulturaService.listMarcas().then(response => {
+          this.marcas = response.data;
+          this.loaded = true;
+        })
+      },
+      listCultivar: function(marcaId){
+        safraCulturaService.listCultivares(marcaId, this.safraCultura.cultura.id).then(response => {
+          this.cultivares = response.data;
+        })
+      },
+      addCultivarModal: function(safraCulturaTalhao){
+        this.listMarcas();
+        this.modalAddCultivarInfo = true;
+        this.selectedSafraCulturaTalhao = safraCulturaTalhao;
+      },
+      chooseMarca: function(id){
+        this.selectedMarcaId = id;
+        this.listCultivar(id);
+        this.goToNextStep();
+      },
+      chooseCultivar: function(id){
+        if(this.selectedCultivarId === id){
+          this.selectedCultivarId = null
+        }else{
+          this.selectedCultivarId = id;
+        }
+      },
+      saveCultivarToSafraCulturaTalhao: function(){
+        let safraCulturaTalhaoId = this.selectedSafraCulturaTalhao.talhao.id;
+        let cultivarId = this.selectedCultivarId;
+        safraCulturaService.saveCultivarToSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhaoId, cultivarId).then(response => {
+          if(response.status === 200){
+            let talhao = this.safraCultura.cultura_talhoes[this.safraCultura.cultura_talhoes.map(cultura_talhao => cultura_talhao.talhao.id).indexOf(safraCulturaTalhaoId)];
+            talhao.cultivar = response.data;
+            this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
+            this.selectedSafraCulturaTalhao = null;
+            this.$q.notify({type: 'positive', message: 'Salvo com sucesso.'});
+            this.modalAddCultivarInfo = false;
+            this.currentStep = 'marca';
+            this.marcas = [];
+            this.cultivares = [];
+            this.selectedMarcaId = null;
+            this.selectedCultivarId = null;
+            this.selecteTipoId = null;
+          }
+        })
+      },
+      goToNextStep(){
+        this.$refs.stepper.next()
+      },
+
+      // CRUD SAFRA CULTURA TALHAO
       getSafraCultura: function(safra_id, id){
         safraCulturaService.getSafraCultura(safra_id, id).then(response => {
           this.safraCultura = response.data;
           this.loaded = true;
         })
-      },
-      addCultivarModal: function(safraCulturaTalhaoId){
-
-        let cultivarId = 67; //TODO: Apagar isso e pegar o id do cultivar que o usuario selecionou
-        this.addCultivarToSafraCulturaTalhao(safraCulturaTalhaoId, cultivarId);
       },
       editSafraCulturaTalhao: function(data){
         this.selectedSafraCulturaTalhao = data;
@@ -344,21 +463,6 @@
           });
         }).catch(()=>{});
       },
-      addCultivarToSafraCulturaTalhao: function(safraCulturaTalhaoId, cultivarId){
-        safraCulturaService.addCultivarToSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhaoId, cultivarId).then(response => {
-          if(response.status === 200){
-            console.log(safraCulturaTalhaoId)
-            console.log(this.safraCultura.cultura_talhoes);
-            let talhao = this.safraCultura.cultura_talhoes[this.safraCultura.cultura_talhoes.map(cultura_talhao => cultura_talhao.talhao.id).indexOf(safraCulturaTalhaoId)];
-            talhao.cultivar = response.data;
-          }
-        })
-      },
-      // getSafraCulturaTotalArea: function () {
-      //   return this.safraCultura.cultura_talhoes.map(function (culturaTalhao) {
-      //     return culturaTalhao.talhao.tamanho;
-      //   }).reduce((a, b) => a + b);
-      // },
       checkInputMaxSize: function(newVal, oldVal){
         if(newVal > oldVal.talhao.tamanho){
           this.safraCulturaTalhao.tamanho.value = oldVal.talhao.tamanho
@@ -372,6 +476,11 @@
           return culturaTalhao.tamanho + ' de ' + culturaTalhao.talhao.tamanho + ' ' + culturaTalhao.talhao.tamanho_unidade_area.nome + ' (' + porcentagem + '%)';
         }
       },
+      // getSafraCulturaTotalArea: function () {
+      //   return this.safraCultura.cultura_talhoes.map(function (culturaTalhao) {
+      //     return culturaTalhao.talhao.tamanho;
+      //   }).reduce((a, b) => a + b);
+      // },
       backAction: function () {
         this.$router.push({name: 'safras'});
       }
