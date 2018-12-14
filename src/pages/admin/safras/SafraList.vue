@@ -216,7 +216,7 @@
         </q-step>
 
         <!--PASSO 2 INFORMAR UNIDADES -->
-        <q-step default title="Unidades" name="unidades">
+        <q-step title="Unidades" name="unidades">
             <!--ESCOLHER UNIDADES-->
             <div style="min-height: 80vh" class="row items-center justify-center gutter-sm">
               <div class="col-xs-12 col-md-6 col-lg-3">
@@ -351,12 +351,12 @@
         </q-step>
 
       </q-stepper>
+
       <q-page-sticky position="bottom-right" :offset="[18, 18]">
         <q-btn @click.native="closeNewSafraCulturaModal()" label="Cancelar" color="primary" class="q-mr-xs"/>
         <q-btn @click.native="goToNextStep" label="próximo" color="primary"  class="q-mr-xs" v-if="isNextButtomVisible()"/>
         <q-btn @click="saveSafraCultura()" label="Salvar" color="deep-orange" v-if="currentStep === 'finalizar'" class="float-right"/>
       </q-page-sticky>
-
     </q-modal>
 
     <!--MODAL NEW SAFRA-->
@@ -777,10 +777,7 @@
             this.$q.notify({type: 'positive', message: 'Cultura criada com sucesso'});
             this.closeNewSafraCulturaModal();
             this.listSafras()
-          }).catch(error => {
-
-          });
-
+          }).catch(error => { });
         },
         viewSafraCultura: function (safra_id, id) {
           this.$router.push({name: 'view_safra_cultura', params: {safra_id:safra_id, id:id}});

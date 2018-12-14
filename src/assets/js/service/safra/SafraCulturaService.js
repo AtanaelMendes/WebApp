@@ -65,6 +65,15 @@ export default {
       })
     });
   },
+  listCultivares(marcaId, culturaId){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('cultivar?marca_id='+ marcaId +'&cultura_id='+ culturaId).then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
 
   updateSafraCulturaTalhao(safra_cultura_id, id, params){
     return new Promise((resolve, reject) => {
@@ -84,7 +93,7 @@ export default {
       })
     });
   },
-  addCultivarToSafraCulturaTalhao(safra_cultura_id, safra_cultura_talhao_id, cultivar_id){
+  saveCultivarToSafraCulturaTalhao(safra_cultura_id, safra_cultura_talhao_id, cultivar_id){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.post('/safra_cultura/' + safra_cultura_id + '/safra_cultura_talhao/' + safra_cultura_talhao_id + '/add_cultivar/' + cultivar_id).then(response => {
         resolve(response)
