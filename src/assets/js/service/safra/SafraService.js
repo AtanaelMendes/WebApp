@@ -83,9 +83,12 @@ export default {
       })
     });
   },
-  listFreeTalhoes(area_id, safra_id){
+  listFreeTalhoes(area_id, safra_id, unidade_area_id, unidade_medida_id, cultura_id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('safra/' + safra_id + '/talhao_free/' + area_id).then( response => {
+      Vue.prototype.$axios.get('safra/' + safra_id + '/talhao_free/' + area_id
+        + '?unidade_area_id=' + unidade_area_id
+        + '&unidade_medida_id=' + unidade_medida_id
+        + '&cultura_id=' + cultura_id).then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
