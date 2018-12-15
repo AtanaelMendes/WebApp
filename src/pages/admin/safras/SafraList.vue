@@ -341,7 +341,7 @@
                 <q-item-main>
                   <div class="row">
                     <div class="col-6">{{talhao.nome}}</div>
-                    <div class="col-6">{{talhao.tamanho}},&nbsp<span class="text-faded q-caption">plural</span></div>
+                    <div class="col-6">{{talhao.tamanho}},&nbsp<span class="text-faded q-caption">{{getUnidadeAreaById(safraCultura.view_unidade_area_id).plural}}</span></div>
                   </div>
                 </q-item-main>
               </q-item>

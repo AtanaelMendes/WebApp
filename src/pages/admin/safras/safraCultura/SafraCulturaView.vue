@@ -23,7 +23,7 @@
 
                 <div class="col-12 text-faded" v-if="loaded">
                   <!--Plantio total em {{getSafraCulturaTotalArea()}} hectares (100%)-->
-                  Plantio total em 100 hectares (100%)
+                  Plantio total em {{safraCultura.plantioTotal}} {{safraCultura.cultura.estimativa_unidade_area.plural}} ({{Math.round((safraCultura.plantioTotal / safraCultura.area_total) * 100)}}%)
                 </div>
 
                 <!--NEGOCIADO-->
@@ -62,12 +62,12 @@
 
                     <!--ESTIMATIVA TOTAL DE SACAS POR HECTARE-->
                     <div class="col-6">
-                      000 Sc/Ha
+                      {{safraCultura.estimativa}} {{safraCultura.cultura.estimativa_unidade_medida.sigla}}/{{safraCultura.cultura.estimativa_unidade_area.sigla}}
                     </div>
 
                     <!--ESTIMATIVA TOTAL DE SACAS-->
                     <div class="col-6">
-                      00000 Sacas
+                      {{safraCultura.estimativa_total}} {{safraCultura.cultura.estimativa_unidade_medida.plural}}
                     </div>
 
                   </div>
@@ -171,7 +171,7 @@
                   </div>
 
                   <div class="col-6">
-                    {{culturaTalhao.estimativa}} {{safraCultura.cultura.estimativa_unidade_medida.sigla}}/{{culturaTalhao.talhao.tamanho_unidade_area.sigla}}
+                    {{culturaTalhao.estimativa}} {{safraCultura.cultura.estimativa_unidade_medida.sigla}}/{{safraCultura.cultura.estimativa_unidade_area.plural}}
                   </div>
 
                   <div class="col-6 text-right">
@@ -232,11 +232,11 @@
                     :min="0"
                     :max="selectedSafraCulturaTalhao.talhao.tamanho"
                     v-model="safraCulturaTalhao.tamanho.value"
-                    :label-value="safraCulturaTalhao.tamanho.value + ' ' + selectedSafraCulturaTalhao.talhao.tamanho_unidade_area.sigla"
+                    :label-value="safraCulturaTalhao.tamanho.value + ' ' + safraCultura.cultura.estimativa_unidade_area.sigla"
                   />
                 </div>
                 <div class="col-4">
-                  <custom-input-text  type="number" :suffix="selectedSafraCulturaTalhao.talhao.tamanho_unidade_area.sigla" :model="safraCulturaTalhao.tamanho"
+                  <custom-input-text  type="number" :suffix="safraCultura.cultura.estimativa_unidade_area.sigla" :model="safraCulturaTalhao.tamanho"
                                       @blur="checkInputMaxSize(safraCulturaTalhao.tamanho.value, selectedSafraCulturaTalhao)"
                   />
                 </div>
@@ -474,10 +474,10 @@
       },
       formatCulturaTalhaoTamanhoLabel: function(culturaTalhao) {
         if (culturaTalhao.tamanho === culturaTalhao.talhao.tamanho) {
-          return culturaTalhao.tamanho + ' ' + culturaTalhao.talhao.tamanho_unidade_area.nome + ' (100%)'
+          return culturaTalhao.tamanho + ' ' + this.safraCultura.cultura.estimativa_unidade_area.plural + ' (100%)'
         } else {
-          let porcentagem = culturaTalhao.tamanho / culturaTalhao.talhao.tamanho * 100;
-          return culturaTalhao.tamanho + ' de ' + culturaTalhao.talhao.tamanho + ' ' + culturaTalhao.talhao.tamanho_unidade_area.nome + ' (' + porcentagem + '%)';
+          let porcentagem = Math.round(culturaTalhao.tamanho / culturaTalhao.talhao.tamanho * 100);
+          return culturaTalhao.tamanho + ' de ' + culturaTalhao.talhao.tamanho + ' ' + this.safraCultura.cultura.estimativa_unidade_area.nome + ' (' + porcentagem + '%)';
         }
       },
       // getSafraCulturaTotalArea: function () {
