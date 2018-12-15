@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
 export default {
+
+  // CULTURAS
   listCulturas(){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
@@ -62,6 +64,7 @@ export default {
     });
   },
 
+  // MARCAS
   listMarcas(){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
@@ -123,6 +126,7 @@ export default {
     });
   },
 
+  // CULTIVARES
   listCultivar(){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
