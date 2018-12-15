@@ -544,7 +544,6 @@
         },
         addSafra: function () {
           this.modalNewSafra = true;
-          console.log(this.safra)
         },
         getCurrentYear: function(){
           return new Date().getFullYear().toString();
