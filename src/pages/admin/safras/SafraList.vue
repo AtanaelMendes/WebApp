@@ -71,7 +71,7 @@
                 <div class="row gutter-y-xs q-pa-md">
 
                   <div class="col-12 text-faded">
-                    Total 500 hectares
+                    Total {{safraCultura.area.plantado + " " + safraCultura.view_unidade_area.plural}}
                   </div>
 
                   <div class="col-12">
@@ -82,11 +82,13 @@
                       </div>
 
                       <div class="col-6">
-                        55 Sc/Ha
+                        <!--55 Sc/Ha-->
+                        {{safraCultura.estimativa.valor  + " " + safraCultura.view_unidade_medida.sigla + "/" + safraCultura.view_unidade_area.sigla}}
                       </div>
 
                       <div class="col-6">
-                        27.500 Sacas
+                        <!--27.500 Sacas-->
+                        {{safraCultura.estimativa.total + " " + safraCultura.view_unidade_medida.plural}}
                       </div>
 
                     </div>
@@ -221,10 +223,10 @@
             <div style="min-height: 80vh" class="row items-center justify-center gutter-sm">
               <div class="col-xs-12 col-md-6 col-lg-3">
                 <div>
-                  <q-select key="qtd" v-model="safraCultura.view_unidade_medida_id" :options="unidadesMedida" float-label="Controlar quantidades em"/>
+                  <q-select key="qtd" v-model="safraCultura.view_unidade_medida_id" :options="parsedUnidades(unidadesMedida)" float-label="Controlar quantidades em"/>
                 </div>
                 <div>
-                  <q-select key="area" v-model="safraCultura.view_unidade_area_id" :options="unidadesArea" float-label="Mostrar área em"/>
+                  <q-select key="area" v-model="safraCultura.view_unidade_area_id" :options="parsedUnidades(unidadesArea)" float-label="Mostrar área em"/>
                 </div>
               </div>
             </div>
@@ -267,23 +269,22 @@
                 </q-card-title>
                 <!--<q-card-separator/>-->
                 <q-card-main class="q-px-none">
-                  <q-list-header>Área à ser utilizada</q-list-header>
+                  <q-list-header>{{getUnidadeAreaById(safraCultura.view_unidade_area_id).plural}} à serem utilizados</q-list-header>
                   <q-item dense >
-                    <div class="row gutter-x-sm">
-                      <div class="col-8 self-center">
+                    <div class="row full-width">
+                      <div class="col-9 self-center">
                         <q-slider
                           label
                           :min="0"
                           :max="talhao.tamanho"
                           v-model="safraCultura.getTalhaoById(talhao.id).tamanho"
-                          :label-value="`${safraCultura.getTalhaoById(talhao.id).tamanho} ha`"
+                          :label-value="`${safraCultura.getTalhaoById(talhao.id).tamanho} ${getUnidadeAreaById(safraCultura.view_unidade_area_id).sigla}`"
                         />
                       </div>
-                      <div class="col-4">
+                      <div class="col-3 q-pl-sm">
                         <q-input
                           type="number"
-                          class="text-right"
-                          :suffix="talhao.unidade.sigla"
+                          align="center"
                           v-model="safraCultura.getTalhaoById(talhao.id).tamanho"
                           @blur="checkInputMaxSize(safraCultura.getTalhaoById(talhao.id).tamanho, talhao)"
                         />
@@ -292,15 +293,16 @@
                   </q-item>
 
                   <q-list no-border dense class="q-py-none">
-                    <q-list-header>Estimativa por {{ talhao.unidade.nome }}</q-list-header>
+                    <q-list-header>Estimativa</q-list-header>
                     <q-item dense>
                       <div class="row gutter-x-sm">
                         <div class="col-3">
-                          <q-input type="number" v-model="safraCultura.getTalhaoById(talhao.id).estimativa" />
+                          <q-input type="number" align="center" v-model="safraCultura.getTalhaoById(talhao.id).estimativa" />
                         </div>
                         <div class="col-9 self-center">
                           <!--label de unidade-->
-                          {{unidadesMedida.filter(unidadeMedida => unidadeMedida.value === safraCultura.view_unidade_medida_id)[0].label}}
+                          {{getUnidadeMedidaById(safraCultura.view_unidade_medida_id).sigla}} por {{getUnidadeAreaById(safraCultura.view_unidade_area_id).nome}}
+                          <!--{{unidadesMedida.filter(unidadeMedida => unidadeMedida.value === safraCultura.view_unidade_medida_id)[0].label}}-->
                         </div>
                       </div>
                     </q-item>
@@ -341,7 +343,7 @@
                 <q-item-main>
                   <div class="row">
                     <div class="col-6">{{talhao.nome}}</div>
-                    <div class="col-6">{{talhao.tamanho}},&nbsp<span class="text-faded q-caption">{{talhao.unidade.plural}}</span></div>
+                    <div class="col-6">{{talhao.tamanho}},&nbsp<span class="text-faded q-caption">{{getUnidadeAreaById(safraCultura.view_unidade_area_id).plural}}</span></div>
                   </div>
                 </q-item-main>
               </q-item>
@@ -353,8 +355,9 @@
       </q-stepper>
 
       <q-page-sticky position="bottom-right" :offset="[18, 18]">
-        <q-btn @click.native="closeNewSafraCulturaModal()" label="Cancelar" color="primary" class="q-mr-xs"/>
-        <q-btn @click.native="goToNextStep" label="próximo" color="primary"  class="q-mr-xs" v-if="isNextButtomVisible()"/>
+        <q-btn @click="closeNewSafraCulturaModal()" label="Cancelar" color="primary" class="q-mr-md"/>
+        <q-btn @click="goToPreviousStep" label="voltar" color="primary"  class="q-mr-xs" v-if="this.currentStep !== 'cultura'"/>
+        <q-btn @click="goToNextStep" label="próximo" color="primary"  class="q-mr-xs" :disable="!isNextButtomEnabled()" v-if="this.currentStep !== 'finalizar'"/>
         <q-btn @click="saveSafraCultura()" label="Salvar" color="deep-orange" v-if="currentStep === 'finalizar'" class="float-right"/>
       </q-page-sticky>
     </q-modal>
@@ -664,7 +667,7 @@
             this.safraCultura.getTalhaoById(talhao.id).tamanho = talhao.tamanho
           }
         },
-        isNextButtomVisible: function(){
+        isNextButtomEnabled: function(){
           if(this.currentStep === 'talhoes' && this.talhoes.length > 0){
             return true
           }
@@ -691,25 +694,40 @@
         // PASSO 2 UNIDADE MEDIDA
         getUnidadesMedida:function(){
           unidadeMedidaService.listUnidadesMedida().then(response => {
-            this.unidadesMedida = response.data.map(unidadeMed => {
-              return {
-                label: unidadeMed.nome,
-                value: unidadeMed.id
-              }
-            });
+            this.unidadesMedida = response.data;
+            // this.unidadesMedida = response.data.map(unidadeMed => {
+            //   return {
+            //     label: unidadeMed.nome,
+            //     value: unidadeMed.id
+            //   }
+            // });
           })
         },
         getUnidadesArea:function(){
           unidadeMedidaService.listUnidadesArea().then(response => {
-            this.unidadesArea = response.data.map(unidadeAre => {
-              return {
-                label: unidadeAre.nome,
-                value: unidadeAre.id
-              }
-            });
+            this.unidadesArea = response.data;
+            // this.unidadesArea = response.data.map(unidadeAre => {
+            //   return {
+            //     label: unidadeAre.nome,
+            //     value: unidadeAre.id
+            //   }
+            // });
           })
         },
-
+        getUnidadeMedidaById: function(id){
+          return this.unidadesMedida.filter(unidade => unidade.id === id)[0];
+        },
+        getUnidadeAreaById: function(id){
+          return this.unidadesArea.filter(unidade => unidade.id === id)[0];
+        },
+        parsedUnidades: function(unidades){
+          return unidades.map(unidade => {
+              return {
+                label: unidade.nome,
+                value: unidade.id
+              }
+          })
+        },
         // PASSO 3 AREA
         getAreas: function(){
           areaService.listAreas().then(response => {
@@ -725,7 +743,7 @@
 
         // PASSO 4 TALHOES
         getTalhoesBySafraAndArea: function(area_id){
-          safraService.listFreeTalhoes(area_id, this.selectedSafraId).then(response => {
+          safraService.listFreeTalhoes(area_id, this.selectedSafraId, this.safraCultura.view_unidade_area_id, this.safraCultura.view_unidade_medida_id, this.safraCultura.cultura_id).then(response => {
             this.talhoes = [];
             this.safraCultura.talhoes = [];
             response.data.forEach(function(talhao){
@@ -733,11 +751,11 @@
                 id: talhao.id,
                 nome: talhao.nome,
                 tamanho: parseFloat(talhao.tamanho),
-                unidade: {
+                /*unidade: {
                   nome: talhao.unidade.nome,
                   plural: talhao.unidade.plural,
                   sigla: talhao.unidade.sigla,
-                }
+                }*/
               });
               this.safraCultura.addTalhao(new SafraCulturaTalhao(talhao))
             },this)
@@ -754,6 +772,9 @@
 
         goToNextStep(){
           this.$refs.stepper.next()
+        },
+        goToPreviousStep(){
+          this.$refs.stepper.previous()
         },
 
         // SAFRA CULTURA VIEW CRUD
