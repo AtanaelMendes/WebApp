@@ -52,7 +52,7 @@ export default class{
   isValid(){
     let hasError = false;
     if(!helpers.req(this.nome.value)){
-      this.nome.errorMessage = "Informe um nome";
+      this.nome.errorMessage = "Informe o nome do cultivar";
       hasError = true;
     }
 
@@ -66,7 +66,7 @@ export default class{
       hasError = true;
     }
 
-    if(this.cicloDias.value < 30){
+    if(this.cicloDias.value != null && this.cicloDias.value < 30){
       this.cicloDias.errorMessage = "Ciclo de dias muito curto";
       hasError = true;
     }
