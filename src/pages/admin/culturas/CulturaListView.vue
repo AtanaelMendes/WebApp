@@ -319,14 +319,89 @@
           </q-step>
 
           <!--PASSO 3 ESCOLHER O TIPO CULTIVAR-->
-          <q-step title="Tipo" name="tipo"></q-step>
+          <q-step title="Tipo" name="tipo">
+            <div class="row justify-center">
+              <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                <q-list>
+                  <q-item>
+                    <q-item-main>Convencional</q-item-main>
+                    <q-item-side>
+                      <q-btn-toggle v-model="isConvencional" toggle-color="primary"
+                                    :options="[ {label: 'Sim', value: true}, {label: 'Não', value: false} ]"
+                      />
+                    </q-item-side>
+                  </q-item>
+                  <div v-if="!isConvencional">
+                    <q-item>
+                      <q-item-main>RR</q-item-main>
+                      <q-item-side>
+                        <q-toggle v-model="cultivar.isRoundupReady.value"/>
+                      </q-item-side>
+                    </q-item>
+                    <q-item>
+                      <q-item-main>Inox</q-item-main>
+                      <q-item-side>
+                        <q-toggle v-model="cultivar.isInox.value"/>
+                      </q-item-side>
+                    </q-item>
+                    <q-item>
+                      <q-item-main>Intacta</q-item-main>
+                      <q-item-side>
+                        <q-toggle v-model="cultivar.isIntacta.value"/>
+                      </q-item-side>
+                    </q-item>
+                  </div>
+                </q-list>
+              </div>
+            </div>
+          </q-step>
 
           <!--PASSO 4 ADICIONAR INFORMACOEA-->
-          <q-step title="Informações" name="informacoes"></q-step>
+          <q-step title="Informações" name="informacoes">
+            <div class="row">
+              <div class="col-12">
+
+                <div class="row justify-center">
+                  <div class="col-xs-10 col-sm-6 col-md-4 col-lg-3">
+                    <custom-input-text label="Nome" :model="cultivar.nome" />
+                  </div>
+                </div>
+
+                <div class="row justify-center gutter-sm">
+                  <div class="col-xs-5 col-sm-3 col-md-3 col-lg-2">
+                    <q-field :error="cultivar.ciclo.errorMessage != null">
+                      <q-select
+                        float-label="Ciclo"
+                        @input="clearErrorMessage"
+                        v-model="cultivar.ciclo.value"
+                        :options="cultivarCicloOptions"
+                      />
+                    </q-field>
+                    <div class="q-field-bottom row">
+                      <div class="text-negative" v-if="cultivar.ciclo.errorMessage != null" >
+                        {{cultivar.ciclo.errorMessage}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-xs-5 col-sm-3 col-md-1 col-lg-1">
+                    <custom-input-text label="Dias" :model="cultivar.cicloDias" type="number"/>
+                  </div>
+                </div>
+
+                <div class="row justify-center">
+                  <div class="col-xs-10 col-sm-6 col-md-4 col-lg-3">
+                    <q-input v-model="cultivar.observacoes.value" type="textarea" float-label="Observações"/>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </q-step>
 
         </q-stepper>
 
-        <q-page-sticky position="bottom-right" :offset="[18, 18]">
+        <q-page-sticky position="bottom-right" :offset="[30, 30]">
           <q-btn label="cancelar" color="primary" @click="closeModalAddCultivar" class="q-mr-sm"/>
           <q-btn label="próximo" color="primary" @click="goToNextStepNewCultivar" :disable="isNext" v-if="stepper != 'informacoes' "/>
           <q-btn label="salvar" color="primary" @click="saveCultivar" v-if="stepper == 'informacoes' "/>
@@ -404,7 +479,44 @@
           cultivar: new Cultivar(),
           selectedCultivar: null,
           unidadeMedidaOptions: [],
+          cultivarCicloOptions: [
+            {
+              label: 'Superprecoce',
+              value: 'Superprecoce'
+            },
+            {
+              label: 'Precoce',
+              value: 'Precoce'
+            },
+            {
+              label: 'Médio-Precoce',
+              value: 'Médio-Precoce'
+            },
+            {
+              label: 'Médio',
+              value: 'Médio'
+            },
+            {
+              label: 'Médio-Tardio',
+              value: 'Médio-Tardio'
+            },
+            {
+              label: 'Tardio',
+              value: 'Tardio'
+            }
+          ],
           unidadeAreaOptions: [],
+          isConvencional: false,
+        }
+      },
+      watch: {
+        isConvencional: function (val) {
+          this.choiseTypeValidation()
+        },
+        stepper: function (val) {
+          if(val != 'informacoes' || val != 'tipo'){
+            this.isConvencional = false;
+          }
         }
       },
       methods: {
@@ -594,6 +706,8 @@
           this.goToNextStepNewCultivar();
         },
         closeModalAddCultivar: function(){
+          this.isConvencional = false;
+          this.stepper = 'cultura';
           this.cultivar = new Cultivar();
           this.modalNewCultivar = false;
         },
@@ -673,6 +787,18 @@
           culturaService.selectUnidadeArea().then(response => {
             this.unidadeAreaOptions = response;
           })
+        },
+        clearErrorMessage: function(){
+          this.cultivar.ciclo.errorMessage = null;
+        },
+        choiseTypeValidation: function(){
+          if(this.isConvencional === true){
+            this.cultivar.isConvencional.value = true;
+            this.cultivar.isRoundupReady.value = false;
+            this.cultivar.isInox.value = false;
+            this.cultivar.isIntacta.value = false;
+            this.goToNextStepNewCultivar();
+          }
         },
         goToNextStepNewCultivar(){
           if(this.stepper === 'tipo'){
