@@ -355,8 +355,9 @@
       </q-stepper>
 
       <q-page-sticky position="bottom-right" :offset="[18, 18]">
-        <q-btn @click.native="closeNewSafraCulturaModal()" label="Cancelar" color="primary" class="q-mr-xs"/>
-        <q-btn @click.native="goToNextStep" label="próximo" color="primary"  class="q-mr-xs" v-if="isNextButtomVisible()"/>
+        <q-btn @click="closeNewSafraCulturaModal()" label="Cancelar" color="primary" class="q-mr-md"/>
+        <q-btn @click="goToPreviousStep" label="voltar" color="primary"  class="q-mr-xs" v-if="this.currentStep !== 'cultura'"/>
+        <q-btn @click="goToNextStep" label="próximo" color="primary"  class="q-mr-xs" :disable="!isNextButtomEnabled()" v-if="this.currentStep !== 'finalizar'"/>
         <q-btn @click="saveSafraCultura()" label="Salvar" color="deep-orange" v-if="currentStep === 'finalizar'" class="float-right"/>
       </q-page-sticky>
     </q-modal>
@@ -666,7 +667,7 @@
             this.safraCultura.getTalhaoById(talhao.id).tamanho = talhao.tamanho
           }
         },
-        isNextButtomVisible: function(){
+        isNextButtomEnabled: function(){
           if(this.currentStep === 'talhoes' && this.talhoes.length > 0){
             return true
           }
@@ -771,6 +772,9 @@
 
         goToNextStep(){
           this.$refs.stepper.next()
+        },
+        goToPreviousStep(){
+          this.$refs.stepper.previous()
         },
 
         // SAFRA CULTURA VIEW CRUD
