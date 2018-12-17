@@ -71,7 +71,7 @@
                 <div class="row gutter-y-xs q-pa-md">
 
                   <div class="col-12 text-faded">
-                    Total 500 hectares
+                    Total {{safraCultura.area.plantado + " " + safraCultura.view_unidade_area.plural}}
                   </div>
 
                   <div class="col-12">
@@ -82,11 +82,13 @@
                       </div>
 
                       <div class="col-6">
-                        55 Sc/Ha
+                        <!--55 Sc/Ha-->
+                        {{safraCultura.estimativa.valor  + " " + safraCultura.view_unidade_medida.sigla + "/" + safraCultura.view_unidade_area.sigla}}
                       </div>
 
                       <div class="col-6">
-                        27.500 Sacas
+                        <!--27.500 Sacas-->
+                        {{safraCultura.estimativa.total + " " + safraCultura.view_unidade_medida.plural}}
                       </div>
 
                     </div>
