@@ -463,7 +463,15 @@
           color: 'primary'
         }).then(data => {
           safraCulturaService.deleteSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhao.talhao.id).then(response => {
-            this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
+            //this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
+            if(response.status === 200){
+              let talhaoIndex = this.safraCultura.cultura_talhoes.map(talhao => talhao.id).indexOf(safraCulturaTalhao.talhao.id);
+              this.safraCultura.cultura_talhoes.splice(talhaoIndex, 1);
+
+              if(this.safraCultura.cultura_talhoes.length === 0){
+                this.$router.push({name: 'safras'});
+              }
+            }
           });
         }).catch(()=>{});
       },
