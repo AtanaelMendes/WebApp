@@ -3,47 +3,46 @@
     <toolbar slot="toolbar" title="Cultivares" searchable navigation_type="menu" >
     </toolbar>
 
-    <!--HEADER CULTURA-->
-    <div class="row gutter-y-sm q-pa-md bg-blue-grey-1">
+    <template v-for="cultura in 4">
 
-      <div class="col-6 q-title self-center">
-        Soja
+      <!--HEADER CULTURA-->
+      <div :key="cultura" class="row q-pa-md q-mt-sm bg-blue-grey-1">
+
+        <div class="col-6 q-title">
+          Soja
+        </div>
+
+        <div class="col-6" align="end">
+          <q-btn icon="edit" @click.native="editCultura(1)" flat round color="primary"/>
+          <q-btn round flat dense icon="more_vert">
+            <q-popover>
+              <q-list link class="no-border">
+                <q-item v-close-overlay @click.native="addFotoCultura(1)">
+                  <q-item-main label="Atualizar Foto"/>
+                </q-item>
+                <q-item v-close-overlay @click.native="archiveCultura(1)">
+                  <q-item-main label="Arquivar"/>
+                </q-item>
+                <q-item v-close-overlay @click.native="restoreCultura(1)">
+                  <q-item-main label="Ativar"/>
+                </q-item>
+                <q-item v-close-overlay @click.native="deleteCultura(1)">
+                  <q-item-main label="Excluir"/>
+                </q-item>
+              </q-list>
+            </q-popover>
+          </q-btn>
+        </div>
       </div>
-      <div class="col-6" align="end">
-        <q-btn icon="edit" flat round color="primary"/>
-        <q-btn round flat dense icon="more_vert">
-          <q-popover>
-            <q-list link class="no-border">
-              <q-item v-close-overlay @click.native="addFotoCultura(1)">
-                <q-item-main label="Atualizar Foto"/>
-              </q-item>
-              <q-item v-close-overlay @click.native="editCultura(1)">
-                <q-item-main label="Editar"/>
-              </q-item>
-              <q-item v-close-overlay @click.native="archiveCultura(1)">
-                <q-item-main label="Arquivar"/>
-              </q-item>
-              <q-item v-close-overlay @click.native="restoreCultura(1)">
-                <q-item-main label="Ativar"/>
-              </q-item>
-              <q-item v-close-overlay @click.native="deleteCultura(1)">
-                <q-item-main label="Excluir"/>
-              </q-item>
-            </q-list>
-          </q-popover>
-        </q-btn>
-      </div>
-    </div>
 
-    <div class="row q-ma-md gutter-xs space-end">
+      <div class="row gutter-xs space-end justify-center">
 
-      <!--MARCA-->
-      <div class="col-2">
-        <q-card>
-          <q-card-main class="q-px-sm">
-            <q-item class="q-pa-none">
-              <q-item-main>Monsoy</q-item-main>
-              <q-item-side>
+        <!--MARCA-->
+        <div class="q-ma-sm col-xs-9 col-sm-6 col-md-4 col-lg-3">
+          <q-card>
+            <q-card-title>
+              Monsoy
+              <div slot="right">
                 <q-btn round flat dense icon="more_vert">
                   <q-popover>
                     <q-list link class="no-border">
@@ -65,67 +64,73 @@
                     </q-list>
                   </q-popover>
                 </q-btn>
-              </q-item-side>
-            </q-item>
-          </q-card-main>
-          <q-card-media>
-            <img src="assets/images/no-image.png"/>
-          </q-card-media>
-        </q-card>
-      </div>
+              </div>
+            </q-card-title>
+            <q-card-separator/>
+            <q-card-media>
+              <img src="assets/images/no-image.png"/>
+            </q-card-media>
+          </q-card>
+        </div>
 
-      <!--CULTIVARES-->
-      <div class="col-10">
-        <div class="row gutter-y-xs" v-for="cultivar in 10">
-          <div class="col-12">
-            <q-list separator>
-              <q-item>
-                <q-item-main>M8644 IPRO</q-item-main>
-                <q-item-side>
-
-                  <q-btn round flat dense icon="more_vert">
-                    <q-popover>
-                      <q-list link class="no-border">
-                        <q-item v-close-overlay @click.native="changeType(1)">
-                          <q-item-main label="Atualizar Foto"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="editCultivar(1)">
-                          <q-item-main label="Editar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="archiveCultivar(1)">
-                          <q-item-main label="Arquivar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="restoreCultivar(1)">
-                          <q-item-main label="Ativar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="deleteCultivar(1)">
-                          <q-item-main label="Excluir"/>
-                        </q-item>
-                      </q-list>
-                    </q-popover>
-                  </q-btn>
-                </q-item-side>
-              </q-item>
-            </q-list>
+        <!--CULTIVARES-->
+        <div class="q-mt-sm col-xs-12 col-sm-12 col-md-7 col-lg-8">
+          <div class="row gutter-y-xs" v-for="cultivar in 4">
+            <div class="col-12">
+              <q-list separator>
+                <q-item>
+                  <q-item-main>
+                    <div class="row">
+                      <div class="col-6">M8644 IPRO</div>
+                      <div class="col-6">Ciclo Médio 90 dias</div>
+                    </div>
+                  </q-item-main>
+                  <q-item-side>
+                    <q-btn round flat dense icon="more_vert">
+                      <q-popover>
+                        <q-list link class="no-border">
+                          <q-item v-close-overlay @click.native="editCultivar(1)">
+                            <q-item-main label="Editar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="changeType(1)">
+                            <q-item-main label="Alterar tipo"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="archiveCultivar(1)">
+                            <q-item-main label="Arquivar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="restoreCultivar(1)">
+                            <q-item-main label="Ativar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="deleteCultivar(1)">
+                            <q-item-main label="Excluir"/>
+                          </q-item>
+                        </q-list>
+                      </q-popover>
+                    </q-btn>
+                  </q-item-side>
+                </q-item>
+              </q-list>
+            </div>
           </div>
         </div>
-      </div>
 
-    </div>
+      </div>
+    </template>
+
 
     <!--EMPTY LIST-->
-    <!--<div class="column q-ma-xl items-center" v-if="culturas.length <= 0">-->
-      <!--<div class="col-6">-->
-        <!--<img src="assets/images/sad_2.svg" class="responsive"/>-->
-      <!--</div>-->
-      <!--<div class="col-6 text-justify">-->
-        <!--<span>Nenhum resultado encontrado.</span>-->
-      <!--</div>-->
-    <!--</div>-->
+    <div class="column q-ma-xl items-center" v-if="culturas.length <= 0">
+      <div class="col-6">
+        <img src="assets/images/sad_2.svg" class="responsive"/>
+      </div>
+      <div class="col-6 text-justify">
+        <span>Nenhum resultado encontrado.</span>
+      </div>
+    </div>
 
-    <q-page-sticky position="bottom-right" :offset="[30, 30]">
+    <q-page-sticky position="bottom-right" :offset="[35, 35]">
       <q-fab icon="add" direction="up" color="primary" >
-        <q-btn rounded color="primary" @click="newCultura" label="cultura"/>
+        <q-btn v-close-overlay rounded color="primary" @click="newCultura" label="cultura"/>
         <q-btn rounded color="primary" @click="newMarca" label="marca"/>
         <q-btn rounded color="primary" @click="newCultivar" label="cultivar"/>
       </q-fab>
@@ -133,53 +138,84 @@
 
     <!--MODAIS-->
     <template>
-      <!--MODAL ADD CULTIVAR-->
-      <q-modal v-model="modalAddCultivar" maximized>
-
-        <q-stepper ref="stepper" contractable color="positive" v-model="currentStep" class="no-shadow" >
-
-          <!--PASSO 1 ESCOLHER CULTURA-->
-          <q-step default title="Culturas" name="cultura"></q-step>
-
-          <!--PASSO 2 ESCOLHER A MARCA -->
-          <q-step title="Marca" name="marca"></q-step>
-
-          <!--PASSO 3 ESCOLHER O TIPO CULTIVAR-->
-          <q-step title="Tipo" name="tipo"></q-step>
-
-          <!--PASSO 4 ADICIONAR INFORMACOEA-->
-          <q-step title="Informações" name="informacoes"></q-step>
-
-        </q-stepper>
-
-        <q-page-sticky position="bottom-right" :offset="[18, 18]">
-          <q-btn label="cancelar" color="primary" @click="closeModalAddCultivar"/>
-        </q-page-sticky>
-      </q-modal>
-
       <!--MODAL NEW CULTURA-->
-      <q-modal v-model="modalNewCultura" maximized >
-        <div class="row justify-center q-pt-lg">
-          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center">
-            MODAL NEW CULTURA
+      <q-modal v-model="modalNewCultura" minimized no-backdrop-dismiss>
+        <div class="row q-ma-lg">
+          <div class="col-12">
+
+            <!--NOME-->
+            <div class="row justify-around">
+              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                <custom-input-text label="Nome" :model="cultura.nome" />
+              </div>
+              <div class="col-sm-6 col-lg-6"/>
+            </div>
+
+            <div class="row gutter-xs justify-around">
+
+              <!--ESTIMATIVA-->
+              <div class="col-xs-4 col-sm-6 col-md-2 col-lg-3">
+                <custom-input-text type="number" label="Estimativa" :model="cultura.defaultEstimativa" />
+              </div>
+
+              <!--SELECT UNIDADE MEDIDA-->
+              <div class="col-xs-8 col-sm-6 col-md-4 col-lg-4">
+                <q-field :error="cultura.defaultUnidadeMedidaId.errorMessage != null">
+                  <q-select
+                    float-label="Unidade Medida"
+                    :options="unidadeMedidaOptions"
+                    v-model="cultura.defaultUnidadeMedidaId.value"
+                  />
+                </q-field>
+                <div class="q-field-bottom row">
+                  <div class="text-negative" v-if="cultura.defaultUnidadeMedidaId.errorMessage != null" >
+                    {{cultura.defaultUnidadeMedidaId.errorMessage}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-xs-4 col-sm-1 col-md-1 col-lg-1 self-center">
+                Por
+              </div>
+
+              <!--SELECT UNIDADE AREA-->
+              <div class="col-xs-8 col-sm-6 col-md-4 col-lg-4">
+                <q-field :error="cultura.defaultUnidadeAreaId.errorMessage != null">
+                  <q-select
+                    float-label="Unidade área"
+                    :options="unidadeAreaOptions"
+                    v-model="cultura.defaultUnidadeAreaId.value"
+                  />
+                </q-field>
+                <div class="q-field-bottom row">
+                  <div class="text-negative" v-if="cultura.defaultUnidadeAreaId.errorMessage != null" >
+                    {{cultura.defaultUnidadeAreaId.errorMessage}}
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
-        <div class="row justify-center content-center" style="min-height: 80vh"></div>
-        <q-page-sticky position="bottom-right" :offset="[18, 18]">
-          <q-btn @click.native="closeModalNewCultura" color="primary" label="Cancelar" class="q-mr-xs"/>
-        </q-page-sticky>
+        <!--<div class="row justify-center content-center" style="min-height: 80vh"></div>-->
+        <div class="row q-ma-sm">
+          <div class="col-12" align="end">
+            <q-btn @click.native="closeModalNewCultura" color="primary" label="Cancelar" class="q-mr-xs"/>
+            <q-btn @click.native="saveCultura" color="primary" label="Salvar"/>
+          </div>
+        </div>
       </q-modal>
 
-      <!--MODAL NEW MARCA-->
-      <q-modal v-model="modalNewMarca" maximized >
+      <!--MODAL EDIT CULTURA-->
+      <q-modal v-model="modalEditCultura" maximized >
         <div class="row justify-center q-pt-lg">
           <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center">
-            MODAL NEW MARCA
+            MODAL EDIT CULTURA
           </div>
         </div>
         <div class="row justify-center content-center" style="min-height: 80vh"></div>
         <q-page-sticky position="bottom-right" :offset="[18, 18]">
-          <q-btn @click.native="closeModalNewMarca" color="primary" label="Cancelar" class="q-mr-xs"/>
+          <q-btn @click.native="closeModalEditCultura" color="primary" label="Cancelar" class="q-mr-xs"/>
         </q-page-sticky>
       </q-modal>
 
@@ -192,7 +228,140 @@
         </div>
         <div class="row justify-center content-center" style="min-height: 80vh"></div>
         <q-page-sticky position="bottom-right" :offset="[18, 18]">
-          <q-btn @click.native="closeModalNewMarca" color="primary" label="Cancelar" class="q-mr-xs"/>
+          <q-btn @click.native="closeModalAddFotoCultura" color="primary" label="Cancelar" class="q-mr-xs"/>
+        </q-page-sticky>
+      </q-modal>
+
+      <!--MODAL NEW MARCA-->
+      <q-modal v-model="modalNewMarca" minimized >
+        <div class="row justify-center q-ma-lg">
+          <div class="col-12">
+            <custom-input-text label="Nome" :model="marca.nome" />
+          </div>
+        </div>
+        <div class="row q-ma-sm">
+          <div class="col-12" align="end">
+            <q-btn @click.native="closeModalNewMarca" color="primary" label="Cancelar" class="q-mr-xs"/>
+            <q-btn @click.native="saveMarca" color="primary" label="Salvar"/>
+          </div>
+        </div>
+      </q-modal>
+
+      <!--MODAL EDIT MARCA-->
+      <q-modal v-model="modalEditMarca" maximized >
+        <div class="row justify-center q-pt-lg">
+          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center">
+            MODAL EDIT MARCA
+          </div>
+        </div>
+        <div class="row justify-center content-center" style="min-height: 80vh"></div>
+        <q-page-sticky position="bottom-right" :offset="[18, 18]">
+          <q-btn @click.native="closeModalEditMarca" color="primary" label="Cancelar" class="q-mr-xs"/>
+        </q-page-sticky>
+      </q-modal>
+
+      <!--MODAL ADD FOTO MARCA-->
+      <q-modal v-model="modalAddFotoMarca" maximized >
+        <div class="row justify-center q-pt-lg">
+          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center">
+            MODAL ADD FOTO MARCA
+          </div>
+        </div>
+        <div class="row justify-center content-center" style="min-height: 80vh"></div>
+        <q-page-sticky position="bottom-right" :offset="[18, 18]">
+          <q-btn @click.native="closeModalAddFotoMarca" color="primary" label="Cancelar" class="q-mr-xs"/>
+        </q-page-sticky>
+      </q-modal>
+
+      <!--MODAL NEW CULTIVAR-->
+      <q-modal v-model="modalNewCultivar" maximized>
+
+        <q-stepper ref="stepperNewCultivar" contractable color="positive" v-model="stepper" class="no-shadow" >
+
+          <!--PASSO 1 ESCOLHER CULTURA-->
+          <q-step default title="Culturas" name="cultura">
+            <div class="row justify-center gutter-sm" style="min-height: 80vh">
+              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in 5" :key="cultura">
+                <q-card @click.native="selectCultura(cultura)">
+                  <q-card-media overlay-position="full">
+                    <img src="assets/images/no-image.png"/>
+                    <q-card-title slot="overlay" align="end" v-if="cultura === cultivar.culturaId">
+                      <q-icon name="check_circle" size="30px" color="positive"/>
+                    </q-card-title>
+                  </q-card-media>
+                  <q-card-separator/>
+                  <q-card-title class="text-center">
+                    Soja
+                  </q-card-title>
+                </q-card>
+              </div>
+            </div>
+          </q-step>
+
+          <!--PASSO 2 ESCOLHER A MARCA -->
+          <q-step title="Marca" name="marca">
+            <div class="row justify-center gutter-sm" style="min-height: 80vh">
+              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="marca in 6" :key="marca">
+                <q-card @click.native="selectMarca(marca)">
+                  <q-card-media overlay-position="full">
+                    <img src="assets/images/no-image.png"/>
+                    <q-card-title slot="overlay" align="end" v-if="marca === cultivar.marcaId">
+                      <q-icon name="check_circle" size="30px" color="positive"/>
+                    </q-card-title>
+                  </q-card-media>
+                  <q-card-separator/>
+                  <q-card-title class="text-center">
+                    Monsoy
+                  </q-card-title>
+                </q-card>
+              </div>
+            </div>
+          </q-step>
+
+          <!--PASSO 3 ESCOLHER O TIPO CULTIVAR-->
+          <q-step title="Tipo" name="tipo"></q-step>
+
+          <!--PASSO 4 ADICIONAR INFORMACOEA-->
+          <q-step title="Informações" name="informacoes"></q-step>
+
+        </q-stepper>
+
+        <q-page-sticky position="bottom-right" :offset="[18, 18]">
+          <q-btn label="cancelar" color="primary" @click="closeModalAddCultivar" class="q-mr-sm"/>
+          <q-btn label="próximo" color="primary" @click="goToNextStepNewCultivar" :disable="isNext" v-if="stepper != 'informacoes' "/>
+          <q-btn label="salvar" color="primary" @click="saveCultivar" v-if="stepper == 'informacoes' "/>
+        </q-page-sticky>
+      </q-modal>
+
+      <!--MODAL EDIT CULTIVAR-->
+      <q-modal v-model="modalEditCultivar" maximized>
+
+        <q-stepper ref="stepper" contractable color="positive" class="no-shadow" >
+
+          <!--PASSO 1 ADICIONAR INFORMACOEA-->
+          <q-step default title="Informações" name="informacoes"></q-step>
+
+        </q-stepper>
+
+        <q-page-sticky position="bottom-right" :offset="[18, 18]">
+          <q-btn class="q-mr-sm" label="cancelar" color="primary" @click="closeModalEditCultivar"/>
+          <q-btn label="salvar" color="primary" @click="updateCultivar"/>
+        </q-page-sticky>
+      </q-modal>
+
+      <!--MODAL CHANGE TYPE CULTIVAR-->
+      <q-modal v-model="modalChangeTypeCultivar" maximized>
+
+        <q-stepper ref="stepper" contractable color="positive" class="no-shadow" >
+
+          <!--PASSO 1 ADICIONAR INFORMACOEA-->
+          <q-step default title="Tipo" name="tipo"></q-step>
+
+        </q-stepper>
+
+        <q-page-sticky position="bottom-right" :offset="[18, 18]">
+          <q-btn class="q-mr-sm" label="cancelar" color="primary" @click="closeModalEditCultivar"/>
+          <q-btn label="salvar" color="primary" @click="updateCultivar"/>
         </q-page-sticky>
       </q-modal>
     </template>
@@ -202,60 +371,103 @@
 <script>
     import toolbar from 'components/Toolbar.vue'
     import customPage from 'components/CustomPage.vue'
-    import Cultura from 'assets/js/model/safra/SafraCulturaTalhao'
-    import Marca from 'assets/js/model/safra/SafraCulturaTalhao'
-    import Cultivar from 'assets/js/model/safra/SafraCulturaTalhao'
+    import customInputText from 'components/CustomInputText.vue'
+    import Cultura from 'assets/js/model/cultura/Cultura'
+    import Marca from 'assets/js/model/cultura/Marca'
+    import Cultivar from 'assets/js/model/cultura/Cultivar'
     import culturaService from 'assets/js/service/cultura/CulturaService'
     export default {
       name: "cultura-list-view",
       components: {
         toolbar,
         customPage,
+        customInputText
       },
       data () {
         return {
-          currentStep: 'cultura',
+          stepper: 'cultura',
+          isNext: true,
           modalNewCultura: false,
           modalEditCultura: false,
           modalAddFotoCulura: false,
           modalNewMarca: false,
           modalEditMarca: false,
           modalAddFotoMarca: false,
-          modalAddCultivar: false,
+          modalNewCultivar: false,
           modalEditCultivar: false,
+          modalChangeTypeCultivar: false,
           culturas: [],
           cultura: new Cultura(),
+          selectedCultura: null,
           marca: new Marca(),
+          selectedMarca: null,
           cultivar: new Cultivar(),
+          selectedCultivar: null,
+          unidadeMedidaOptions: [],
+          unidadeAreaOptions: [],
         }
       },
       methods: {
-        closeModalNewCultura: function(){
-          this.modalNewCultura = false;
-        },
-        closeModalAddCultivar: function(){
-          this.modalAddCultivar = false;
-        },
-        closeModalNewMarca: function(){
-          this.modalNewMarca = false;
-        },
-
         // CRUD CULTURA
         listCulturas: function(){
           let fake = 'soja';
-          this.culturas.push({
-            name: fake
+          this.culturas.push({ name: fake });
+          culturaService.listCulturas().then(response => {
+            this.culturas = response.data;
           })
-
         },
         newCultura: function(){
           this.modalNewCultura = true;
         },
-        saveCultura: function(){},
-        editCultura: function(){},
-        addFotoCultura: function(){},
-        editCultura: function(){},
-        updateCultura: function(){},
+        closeModalNewCultura: function(){
+          this.cultura = new Cultura();
+          this.modalNewCultura = false;
+        },
+        saveCultura: function(){
+          if(!this.cultura.isValid()){
+            return;
+          }
+          culturaService.saveCultura(this.cultura.getValues()).then(response => {
+            if(response.status === 201) {
+              this.$q.notify({type: 'positive', message: 'Cultura criada com sucesso'});
+              this.listCulturas();
+              this.closeModalNewCultura();
+            }
+          }).catch(error => {
+            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          });
+        },
+        editCultura: function(data){
+          this.selectedCultura = data;
+          this.fillFormCultura(data);
+          this.modalEditCultura = true;
+        },
+        fillFormCultura: function(data){},
+        addFotoCultura: function(id){
+          this.modalAddFotoCulura = true;
+        },
+        closeModalAddFotoCultura: function(){
+          this.modalAddFotoCulura = false;
+        },
+        updateCultura: function(){
+          if(!this.cultura.isValid()){
+            return;
+          }
+          culturaService.updateCultura(this.selectedCultura, this.cultura.getValues()).then(response => {
+            if(response.status === 200) {
+              this.$q.notify({type: 'positive', message: 'Cultura atualizada com sucesso!'});
+              this.listCulturas();
+              this.closeModalEditCultura();
+            }
+          }).catch(error => {
+            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          });
+        },
+        closeModalEditCultura: function(){
+          this.modalEditCultura = false;
+          this.selectedCultura = null;
+          this.cultura = new Cultura();
+        },
         archiveCultura: function(id){
           culturaService.archiveCultura(id).then(response => {
             this.listCulturas()
@@ -288,30 +500,74 @@
           })
 
         },
-        saveMarca: function(){},
+        newMarca: function(){
+          this.modalNewMarca = true;
+        },
+        closeModalNewMarca: function(){
+          this.modalNewMarca = false;
+        },
+        saveMarca: function(){
+          if(!this.marca.isValid()){
+            return;
+          }
+          culturaService.saveMarca(this.marca.getValues()).then(response => {
+            if(response.status === 201) {
+              this.$q.notify({type: 'positive', message: 'Cultura criada com sucesso'});
+              this.listCulturas();
+              this.closeModalNewCultura();
+            }
+          }).catch(error => {
+            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          });
+        },
         addFotoMarca: function(){
           this.modalAddFotoMarca = true;
         },
-        editMarca: function(){},
-        updateMarca: function(){},
+        closeModalAddFotoMarca: function(){
+          this.modalAddFotoMarca = false;
+        },
+        editMarca: function(data){
+          this.selectedMarca = data;
+          this.fillFormMarca(data);
+          this.modalEditMarca = true;
+        },
+        fillFormMarca: function(){},
+        closeModalEditMarca: function(){
+          this.marca = new Marca();
+          this.modalEditMarca = false;
+        },
+        updateMarca: function(){
+          if(!this.marca.isValid()){
+            return;
+          }
+          culturaService.updateMarca(this.selectedMarca, this.marca.getValues()).then(response => {
+            if(response.status === 200) {
+              this.$q.notify({type: 'positive', message: 'Cultura atualizada com sucesso!'});
+              this.listCulturas();
+              this.closeModalEditCultura();
+            }
+          }).catch(error => {
+            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          });
+        },
         archiveMarca: function(id){
-          culturaService.archiveCultura(id).then(response => {
+          culturaService.archiveMarca(id).then(response => {
             this.listCulturas()
           })
         },
         restoreMarca: function(id){
-          culturaService.restoreCultura(id).then(response => {
+          culturaService.restoreMarca(id).then(response => {
             this.listCulturas()
           })
         },
         deleteMarca: function(id){
           this.$q.dialog({
             title: 'Atenção',
-            message: 'Realmente deseja apagar esta cultura?',
+            message: 'Realmente deseja apagar esta marca?',
             ok: 'Sim', cancel: 'Não',
             color: 'primary'
           }).then(data => {
-            culturaService.deleteCultura(id).then(response => {
+            culturaService.deleteMarca(id).then(response => {
               this.listCulturas()
             })
           }).catch(()=>{});
@@ -326,40 +582,111 @@
           })
 
         },
-        saveCultivar: function(){},
-        changeType: function(){},
-        editCultivar: function(){},
-        updateCultivar: function(){},
+        newCultivar: function(){
+          this.modalNewCultivar = true;
+        },
+        selectCultura: function(id){
+          this.cultivar.culturaId = id;
+          this.goToNextStepNewCultivar();
+        },
+        selectMarca: function(id){
+          this.cultivar.marcaId = id;
+          this.goToNextStepNewCultivar();
+        },
+        closeModalAddCultivar: function(){
+          this.cultivar = new Cultivar();
+          this.modalNewCultivar = false;
+        },
+        saveCultivar: function(){
+          if(!this.cultivar.isValid()){
+            return;
+          }
+          culturaService.saveCultivar(this.cultivar.getValues()).then(response => {
+            if(response.status === 201) {
+              this.$q.notify({type: 'positive', message: 'Cultivar criado com sucesso'});
+              this.listCulturas();
+              this.closeModalNewCultura();
+            }
+          }).catch(error => {
+            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          });
+        },
+        changeType: function(){
+          this.modalChangeTypeCultivar = true;
+          this.closeModalAddCultivar();
+        },
+        editCultivar: function(data){
+          this.selectedCultivar = data;
+          this.modalEditCultivar = true;
+          this.fillFormEditCultivar(data);
+        },
+        fillFormEditCultivar: function(data){},
+        closeModalEditCultivar: function(){
+          this.modalEditCultivar = false;
+          this.cultivar = new Cultivar();
+        },
+        updateCultivar: function(){
+          if(!this.cultivar.isValid()){
+            return;
+          }
+          culturaService.updateMarca(this.selectedCultivar, this.cultivar.getValues()).then(response => {
+            if(response.status === 200) {
+              this.$q.notify({type: 'positive', message: 'Cultivar atualizado com sucesso!'});
+              this.listCulturas();
+              this.closeModalEditCultura();
+            }
+          }).catch(error => {
+            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          });
+        },
         archiveCultivar: function(id){
-          culturaService.archiveCultura(id).then(response => {
+          culturaService.archiveCultivar(id).then(response => {
             this.listCulturas()
           })
         },
         restoreCultivar: function(id){
-          culturaService.restoreCultura(id).then(response => {
+          culturaService.restoreCultivar(id).then(response => {
             this.listCulturas()
           })
         },
         deleteCultivar: function(id){
           this.$q.dialog({
             title: 'Atenção',
-            message: 'Realmente deseja apagar esta cultura?',
+            message: 'Realmente deseja apagar esta cultivar?',
             ok: 'Sim', cancel: 'Não',
             color: 'primary'
           }).then(data => {
-            culturaService.deleteCultura(id).then(response => {
+            culturaService.deleteCultivar(id).then(response => {
               this.listCulturas()
             })
           }).catch(()=>{});
 
         },
 
-        goToNextStep(){
-          this.$refs.stepper.next()
+        // OUTROS
+        selectUnidadeMedida: function(){
+          culturaService.selectUnidadeMedida().then(response => {
+            this.unidadeMedidaOptions = response;
+          })
+        },
+        selectUnidadeArea: function(){
+          culturaService.selectUnidadeArea().then(response => {
+            this.unidadeAreaOptions = response;
+          })
+        },
+        goToNextStepNewCultivar(){
+          if(this.stepper === 'tipo'){
+            this.isNext = false
+          }else{
+            this.isNext = true
+          }
+          this.$refs.stepperNewCultivar.next()
         },
       },
       mounted () {
         this.listCulturas();
+        this.selectUnidadeMedida();
+        this.selectUnidadeArea();
         // this.$root.$on('refreshSafraList', () => {
         //   this.listSafras();
         // });

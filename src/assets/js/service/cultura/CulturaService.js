@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
 export default {
+
+  // CULTURAS
   listCulturas(){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
@@ -62,6 +64,7 @@ export default {
     });
   },
 
+  // MARCAS
   listMarcas(){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
@@ -123,6 +126,7 @@ export default {
     });
   },
 
+  // CULTIVARES
   listCultivar(){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
@@ -183,5 +187,59 @@ export default {
       })
     });
   },
+
+  // OUTROS
+  selectUnidadeArea: function(){
+    return new Promise((resolve, reject) => {
+      this.getUnidadeArea().then(response => {
+        let unidadeAreaOptions = response.data.map(unit => {
+          return {
+            value: unit.id,
+            label: unit.nome,
+            sublabel: unit.descricao
+          }
+        });
+        resolve(unidadeAreaOptions)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getUnidadeArea(id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get( 'unidade?type=area' ).then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
+  selectUnidadeMedida: function(){
+    return new Promise((resolve, reject) => {
+      this.getUnidadeMedida().then(response => {
+        let unidadeMediaOptions = response.data.map(unit => {
+          return {
+            value: unit.id,
+            label: unit.nome,
+            sublabel: unit.descricao
+          }
+        });
+        resolve(unidadeMediaOptions)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  getUnidadeMedida(){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get( 'unidade?type=medida' ).then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
 
 }
