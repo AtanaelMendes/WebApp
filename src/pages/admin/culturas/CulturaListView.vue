@@ -95,13 +95,13 @@
                           <q-item v-close-overlay @click.native="changeType(cultivar.id)">
                             <q-item-main label="Alterar tipo"/>
                           </q-item>
-                          <q-item v-close-overlay @click.native="archiveCultivar(cultivar.id)" v-if="!cultivar.deleted_at">
+                          <q-item v-close-overlay @click.native="archiveCultivar(cultura.id, cultivar.id)">
                             <q-item-main label="Arquivar"/>
                           </q-item>
-                          <q-item v-close-overlay @click.native="restoreCultivar(cultivar.id)" v-if="cultivar.deleted_at">
+                          <q-item v-close-overlay @click.native="restoreCultivar(cultura.id, cultivar.id)">
                             <q-item-main label="Ativar"/>
                           </q-item>
-                          <q-item v-close-overlay @click.native="deleteCultivar(cultivar.id)">
+                          <q-item v-close-overlay @click.native="deleteCultivar(cultura.id, cultivar.id)">
                             <q-item-main label="Excluir"/>
                           </q-item>
                         </q-list>
@@ -838,24 +838,24 @@
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           });
         },
-        archiveCultivar: function(id){
-          culturaService.archiveCultivar(id).then(response => {
+        archiveCultivar: function(cultura_id, id){
+          culturaService.archiveCultivar(cultura_id, id).then(response => {
             this.listCulturas()
           })
         },
-        restoreCultivar: function(id){
-          culturaService.restoreCultivar(id).then(response => {
+        restoreCultivar: function(cultura_id, id){
+          culturaService.restoreCultivar(cultura_id, id).then(response => {
             this.listCulturas()
           })
         },
-        deleteCultivar: function(id){
+        deleteCultivar: function(cultura_id, id){
           this.$q.dialog({
             title: 'Atenção',
             message: 'Realmente deseja apagar esta cultivar?',
             ok: 'Sim', cancel: 'Não',
             color: 'primary'
           }).then(data => {
-            culturaService.deleteCultivar(id).then(response => {
+            culturaService.deleteCultivar(cultura_id, id).then(response => {
               this.listCulturas()
             })
           }).catch(()=>{});

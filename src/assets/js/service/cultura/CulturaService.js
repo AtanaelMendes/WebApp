@@ -88,7 +88,7 @@ export default {
   deleteMarca(id){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('cultura/' + id + '/produtor/' + produtor_id).then(response => {
+      Vue.prototype.$axios.delete('produtor/' + produtor_id + '/marca/' + id).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
@@ -98,7 +98,7 @@ export default {
   restoreMarca(id){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('cultura/' + id + '/produtor/' + produtor_id + '/restore').then(response => {
+      Vue.prototype.$axios.put('produtor/' + produtor_id + '/marca/' + id + '/restore').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
@@ -108,7 +108,7 @@ export default {
   archiveMarca(id){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('cultura/' + id + '/produtor/' + produtor_id + '/archive').then(response => {
+      Vue.prototype.$axios.put('produtor/' + produtor_id + '/marca/' + id + '/archive').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
@@ -118,7 +118,7 @@ export default {
   updateMarca(id, params){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('cultura/' + id + '/produtor/' + produtor_id, params).then(response => {
+      Vue.prototype.$axios.put('produtor/' + produtor_id + '/marca/' + id, params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
@@ -147,30 +147,30 @@ export default {
       })
     });
   },
-  deleteCultivar(id){
-    let produtor_id = localStorage.getItem('account.produtor_id');
+  deleteCultivar(cultura_id, id){
+    //let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('cultura/' + id + '/produtor/' + produtor_id).then(response => {
+      Vue.prototype.$axios.delete('cultura/' + cultura_id + '/cultivar/' + id).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
       })
     });
   },
-  restoreCultivar(id){
-    let produtor_id = localStorage.getItem('account.produtor_id');
+  restoreCultivar(cultura_id, id){
+    //let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('cultura/' + id + '/produtor/' + produtor_id + '/restore').then(response => {
+      Vue.prototype.$axios.put('cultura/' + cultura_id + '/cultivar/' + id + '/restore').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
       })
     });
   },
-  archiveCultivar(id){
-    let produtor_id = localStorage.getItem('account.produtor_id');
+  archiveCultivar(cultura_id, id){
+    //let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('cultura/' + id + '/produtor/' + produtor_id + '/archive').then(response => {
+      Vue.prototype.$axios.put('cultura/' + cultura_id + '/cultivar/' + id + '/archive').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
