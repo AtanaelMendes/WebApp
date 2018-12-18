@@ -501,19 +501,52 @@
       </q-modal>
 
       <!--MODAL EDIT CULTIVAR-->
-      <q-modal v-model="modalEditCultivar" maximized>
+      <q-modal v-model="modalEditCultivar" minimized no-backdrop-dismiss>
+        <div class="row justify-center q-ma-lg">
+          <div class="col-12">
 
-        <q-stepper ref="stepper" contractable color="positive" class="no-shadow" >
+            <div class="row justify-center">
+              <div class="col-12">
+                <custom-input-text label="Nome" :model="cultivar.nome" />
+              </div>
+            </div>
 
-          <!--PASSO 1 ADICIONAR INFORMACOEA-->
-          <q-step default title="Informações" name="informacoes"></q-step>
+            <div class="row justify-center gutter-sm">
+              <div class="col-6">
+                <q-field :error="cultivar.ciclo.errorMessage != null">
+                  <q-select
+                    float-label="Ciclo"
+                    @input="clearErrorMessage"
+                    v-model="cultivar.ciclo.value"
+                    :options="cultivarCicloOptions"
+                  />
+                </q-field>
+                <div class="q-field-bottom row">
+                  <div class="text-negative" v-if="cultivar.ciclo.errorMessage != null" >
+                    {{cultivar.ciclo.errorMessage}}
+                  </div>
+                </div>
+              </div>
 
-        </q-stepper>
+              <div class="col-6">
+                <custom-input-text label="Dias" :model="cultivar.cicloDias" type="number"/>
+              </div>
+            </div>
 
-        <q-page-sticky position="bottom-right" :offset="[18, 18]">
-          <q-btn class="q-mr-sm" label="cancelar" color="primary" @click="closeModalEditCultivar"/>
-          <q-btn label="salvar" color="primary" @click="updateInfoCultivar"/>
-        </q-page-sticky>
+            <div class="row justify-center">
+              <div class="col-12">
+                <q-input v-model="cultivar.observacoes.value" type="textarea" float-label="Observações"/>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="row q-ma-sm">
+          <div class="col-12" align="end">
+            <q-btn class="q-mr-sm" label="cancelar" color="primary" @click="closeModalEditCultivar"/>
+            <q-btn label="salvar" color="primary" @click="updateInfoCultivar"/>
+          </div>
+        </div>
       </q-modal>
 
       <!--MODAL CHANGE TYPE CULTIVAR-->
@@ -659,11 +692,6 @@
           unidadeAreaOptions: [],
           //isConvencional: true,
         }
-      },
-      watch: {
-        // isConvencional: function (val) {
-        //   this.choiseTypeValidation()
-        // },
       },
       methods: {
         // CRUD CULTURA
@@ -874,30 +902,36 @@
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           });
         },
-        editCultivar: function(data){
-          this.selectedCultivar = data;
+        editCultivar: function(culturaId, cultivar){
+          this.selectedCultura = culturaId;
+          this.selectedCultivar = cultivar.id;
           this.modalEditCultivar = true;
-          this.fillFormEditCultivar(data);
+          this.fillFormEditCultivar(cultivar);
         },
-        fillFormEditCultivar: function(data){},
+        fillFormEditCultivar: function(cultivar){
+          this.cultivar.culturaId = cultivar.cultura_id;
+          this.cultivar.marcaId = cultivar.marca_id;
+          this.cultivar.nome.value = cultivar.nome;
+          this.cultivar.ciclo.value = cultivar.ciclo;
+          this.cultivar.cicloDias.value = cultivar.ciclo_dias;
+          this.cultivar.observacoes.value = cultivar.observacoes;
+        },
         updateInfoCultivar: function(){
           if(!this.cultivar.isValid()){
             return;
           }
-          culturaService.updateMarca(this.selectedCultivar, this.cultivar.getValues()).then(response => {
+          culturaService.updateCultivar(this.selectedCultivar, this.cultivar.getValues()).then(response => {
             if(response.status === 200) {
               this.$q.notify({type: 'positive', message: 'Cultivar atualizado com sucesso!'});
               this.listCulturas();
-              this.selectedCultura = null;
-              this.selectedCultivar = null;
-              this.closeModalEditCultura();
+              this.closeModalEditCultivar();
             }
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           });
         },
         closeModalEditCultivar: function(){
-          this.modalChangeTypeCultivar = false;
+          this.modalEditCultivar = false;
           this.selectedCultura = null;
           this.selectedCultivar = null;
           this.cultivar = new Cultivar();
