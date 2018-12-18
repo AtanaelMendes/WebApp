@@ -619,7 +619,7 @@
         <div class="row q-ma-md">
           <div class="col-12" align="end">
             <q-btn class="q-mr-sm" label="cancelar" color="primary" @click="closeModalchangeTypeCultivar"/>
-            <q-btn label="Salvar" color="primary" @click="updateTypeCultivar"/>
+            <q-btn label="Salvar" color="primary" @click="updateTypeCultivar(cultura.id)"/>
           </div>
         </div>
       </q-modal>
@@ -661,7 +661,7 @@
           marca: new Marca(),
           selectedMarca: null,
           cultivar: new Cultivar(),
-          selectedCultivar: null,
+          selectedCultivarId: null,
           unidadeMedidaOptions: [],
           cultivarCicloOptions: [
             {
@@ -830,9 +830,9 @@
           }
           culturaService.updateMarca(this.selectedMarca, this.marca.getValues()).then(response => {
             if(response.status === 200) {
-              this.$q.notify({type: 'positive', message: 'Cultura atualizada com sucesso!'});
+              this.$q.notify({type: 'positive', message: 'Marca atualizada com sucesso!'});
               this.listCulturas();
-              this.closeModalEditCultura();
+              this.closeModalEditMarca();
             }
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -933,12 +933,12 @@
         closeModalEditCultivar: function(){
           this.modalEditCultivar = false;
           this.selectedCultura = null;
-          this.selectedCultivar = null;
+          this.selectedCultivarId = null;
           this.cultivar = new Cultivar();
         },
         editTypeCultivar: function(culturaId, cultivar){
           this.selectedCultura = culturaId;
-          this.selectedCultivar = cultivar.id;
+          this.selectedCultivarId = cultivar.id;
           this.modalChangeTypeCultivar = true;
           this.fillFormEditTypeCultivar(cultivar);
         },
@@ -948,7 +948,7 @@
           this.cultivar.isInox.value = cultivar.is_inox;
           this.cultivar.isIntacta.value = cultivar.is_intacta;
         },
-        updateTypeCultivar: function(){
+        updateTypeCultivar: function(culturaId){
           if(!this.cultivar.isConvencional.value){
             if(!this.cultivar.isRoundupReady.value && !this.cultivar.isInox.value && !this.cultivar.isIntacta.value){
               this.$q.dialog({
@@ -960,7 +960,7 @@
               return;
             }
           }
-          culturaService.updateTypeCultivar(this.selectedCultivar, this.cultivar.getValues()).then(response => {
+          culturaService.updateTypeCultivar(culturaId, this.selectedCultivarId, this.cultivar.getValues()).then(response => {
             if(response.status === 200) {
               this.$q.notify({type: 'positive', message: 'Cultivar atualizado com sucesso!'});
               this.listCulturas();
@@ -972,7 +972,7 @@
         },
         closeModalchangeTypeCultivar: function(){
           this.selectedCultura = null;
-          this.selectedCultivar = null;
+          this.selectedCultivarId = null;
           this.cultivar = new Cultivar();
           this.modalChangeTypeCultivar = false;
         },
