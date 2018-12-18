@@ -1,125 +1,125 @@
 
-        choiseTypeValidation: function(){
-          if(this.isConvencional === true){
-            this.cultivar.isConvencional.value = true;
-            this.cultivar.isRoundupReady.value = false;
-            this.cultivar.isInox.value = false;
-            this.cultivar.isIntacta.value = false;
-            this.goToNextStepNewCultivar();
-          }
-        },
-        goToNextStepNewCultivar(){
-          if(this.stepper === 'tipo'){
-            this.isNext = false
-          }else{
-            this.isNext = true
-          }
-          this.$refs.stepperNewCultivar.next()
-        },
-      },
-      mounted () {
-        this.listCulturas();
-        this.selectUnidadeMedida();
-        this.selectUnidadeArea();
-        // this.$root.$on('refreshSafraList', () => {
-        //   this.listSafras();
-        // });
-      },
-    }
-  </script>
-<style>
-  .space-end{
-    margin-bottom: 100px;
-  }
-</style>
+    <div class="space-end">
+      <template v-for="cultura in culturas">
 
-                <q-item v-close-overlay @click.native="archiveCultura(1)" v-if="!cultura.deleted_at">
-                <q-item v-close-overlay @click.native="restoreCultura(1)" v-if="cultura.deleted_at">
-        </div>
-      </div>
+        <!--HEADER CULTURA-->
+        <div :key="cultura.id" class="row q-pa-md q-mt-sm bg-blue-grey-1">
 
-      <div class="row gutter-xs justify-center space-end" v-for="marca in cultura.marcas">
+          <div class="col-6 q-title">
+            {{cultura.nome}}
+          </div>
 
-        <!--MARCA-->
-        <div class="q-ma-sm col-xs-9 col-sm-6 col-md-4 col-lg-3">
-          <q-card>
-            <q-card-title>
-              {{marca.nome}}
-              <div slot="right">
-                <q-btn round flat dense icon="more_vert">
-                  <q-popover>
-                    <q-list link class="no-border">
-                      <q-item v-close-overlay @click.native="addFotoMarca(marca.id)">
-                        <q-item-main label="Atualizar Foto"/>
-                      </q-item>
-                      <q-item v-close-overlay @click.native="editMarca(marca)">
-                        <q-item-main label="Editar"/>
-                      </q-item>
-                      <q-item v-close-overlay @click.native="archiveMarca(marca.id)" v-if="!marca.deleted_at">
-                        <q-item-main label="Arquivar"/>
-                      </q-item>
-                      <q-item v-close-overlay @click.native="restoreMarca(marca.id)" v-if="marca.deleted_at">
-                        <q-item-main label="Ativar"/>
-                      </q-item>
-                      <q-item v-close-overlay @click.native="deleteMarca(marca.id)">
-                        <q-item-main label="Excluir"/>
-                      </q-item>
-                    </q-list>
-                  </q-popover>
-                </q-btn>
-              </div>
-            </q-card-title>
-            <q-card-separator/>
-            <q-card-media>
-              <img src="assets/images/no-image.png"/>
-            </q-card-media>
-          </q-card>
-        </div>
-
-        <!--CULTIVARES-->
-        <div class="q-mt-sm col-xs-12 col-sm-12 col-md-7 col-lg-8">
-          <div class="row gutter-y-xs" v-for="cultivar in marca.cultivares">
-            <div class="col-12">
-              <q-list separator>
-                <q-item>
-                  <q-item-main>
-                    <div class="row">
-                      <div class="col-6">{{cultivar.nome}}</div>
-                      <div class="col-6">Ciclo {{cultivar.ciclo}} {{cultivar.ciclo_dias}} dias</div>
-                    </div>
-                  </q-item-main>
-                  <q-item-side>
-                    <q-btn round flat dense icon="more_vert">
-                      <q-popover>
-                        <q-list link class="no-border">
-                          <q-item v-close-overlay @click.native="editCultivar(cultivar.id)">
-                            <q-item-main label="Editar"/>
-                          </q-item>
-                          <q-item v-close-overlay @click.native="changeType(cultivar.id)">
-                            <q-item-main label="Alterar tipo"/>
-                          </q-item>
-                          <q-item v-close-overlay @click.native="archiveCultivar(cultura.id, cultivar.id)">
-                            <q-item-main label="Arquivar"/>
-                          </q-item>
-                          <q-item v-close-overlay @click.native="restoreCultivar(cultura.id, cultivar.id)">
-                            <q-item-main label="Ativar"/>
-                          </q-item>
-                          <q-item v-close-overlay @click.native="deleteCultivar(cultura.id, cultivar.id)">
-                            <q-item-main label="Excluir"/>
-                          </q-item>
-                        </q-list>
-                      </q-popover>
-                    </q-btn>
-                  </q-item-side>
-                </q-item>
-              </q-list>
-            </div>
+          <div class="col-6" align="end">
+            <q-btn icon="edit" @click.native="editCultura(cultura)" flat round color="primary"/>
+            <q-btn round flat dense icon="more_vert">
+              <q-popover>
+                <q-list link class="no-border">
+                  <q-item v-close-overlay @click.native="addFotoCultura(1)">
+                    <q-item-main label="Atualizar Foto"/>
+                  </q-item>
+                  <q-item v-close-overlay @click.native="archiveCultura(1)" v-if="!cultura.deleted_at">
+                    <q-item-main label="Arquivar"/>
+                  </q-item>
+                  <q-item v-close-overlay @click.native="restoreCultura(1)" v-if="cultura.deleted_at">
+                    <q-item-main label="Ativar"/>
+                  </q-item>
+                  <q-item v-close-overlay @click.native="deleteCultura(1)">
+                    <q-item-main label="Excluir"/>
+                  </q-item>
+                </q-list>
+              </q-popover>
+            </q-btn>
           </div>
         </div>
 
-      </div>
-    </template>
+        <div class="row gutter-xs justify-center" v-for="marca in cultura.marcas">
 
+          <!--MARCA-->
+          <div class="q-ma-sm col-xs-9 col-sm-6 col-md-4 col-lg-3">
+            <q-card>
+              <q-card-title>
+                {{marca.nome}}
+                <div slot="right">
+                  <q-btn round flat dense icon="more_vert">
+                    <q-popover>
+                      <q-list link class="no-border">
+                        <q-item v-close-overlay @click.native="addFotoMarca(marca.id)">
+                          <q-item-main label="Atualizar Foto"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="editMarca(marca)">
+                          <q-item-main label="Editar"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="archiveMarca(marca.id)" v-if="!marca.deleted_at">
+                          <q-item-main label="Arquivar"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="restoreMarca(marca.id)" v-if="marca.deleted_at">
+                          <q-item-main label="Ativar"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="deleteMarca(marca.id)">
+                          <q-item-main label="Excluir"/>
+                        </q-item>
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
+                </div>
+              </q-card-title>
+              <q-card-separator/>
+              <q-card-media>
+                <img src="assets/images/no-image.png"/>
+              </q-card-media>
+            </q-card>
+          </div>
+
+          <!--CULTIVARES-->
+          <div class="q-mt-sm col-xs-12 col-sm-12 col-md-7 col-lg-8">
+            <div class="row gutter-y-xs" v-for="cultivar in marca.cultivares">
+              <div class="col-12">
+                <q-list separator>
+                  <q-item class="q-py-xs">
+                    <q-item-main>
+                      <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">{{cultivar.nome}}</div>
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                          <q-chip color="primary" small v-if="cultivar.is_convencional">Convencional</q-chip>
+                          <q-chip class="q-ma-xs" color="primary" small v-if="cultivar.is_rr">RR</q-chip>
+                          <q-chip class="q-ma-xs" color="primary" small v-if="cultivar.is_inox">Inox</q-chip>
+                          <q-chip class="q-ma-xs" color="primary" small v-if="cultivar.is_intacta">Intacta</q-chip>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-12 col-lg-5">Ciclo {{cultivar.ciclo}} {{cultivar.ciclo_dias}} dias</div>
+                      </div>
+                    </q-item-main>
+                    <q-item-side>
+                      <q-btn round flat dense icon="more_vert">
+                        <q-popover>
+                          <q-list link class="no-border">
+                            <q-item v-close-overlay @click.native="editCultivar(cultura.id, cultivar)">
+                              <q-item-main label="Editar"/>
+                            </q-item>
+                            <q-item v-close-overlay @click.native="editTypeCultivar(cultura.id, cultivar)">
+                              <q-item-main label="Alterar tipo"/>
+                            </q-item>
+                            <q-item v-close-overlay @click.native="archiveCultivar(cultura.id, cultivar.id)">
+                              <q-item-main label="Arquivar"/>
+                            </q-item>
+                            <q-item v-close-overlay @click.native="restoreCultivar(cultura.id, cultivar.id)">
+                              <q-item-main label="Ativar"/>
+                            </q-item>
+                            <q-item v-close-overlay @click.native="deleteCultivar(cultura.id, cultivar.id)">
+                              <q-item-main label="Excluir"/>
+                            </q-item>
+                          </q-list>
+                        </q-popover>
+                      </q-btn>
+                    </q-item-side>
+                  </q-item>
+                </q-list>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </template>
+    </div>
 
     <!--EMPTY LIST-->
     <div class="column q-ma-xl items-center" v-if="culturas.length <= 0">
@@ -275,7 +275,7 @@
         <div class="row q-ma-sm">
           <div class="col-12" align="end">
             <q-btn @click.native="closeModalEditCultura" color="primary" label="Cancelar" class="q-mr-xs"/>
-            <q-btn @click.native="updateCultura" color="primary" label="Atualizar"/>
+            <q-btn @click.native="updateCultura" color="primary" label="Salvar"/>
           </div>
         </div>
       </q-modal>
@@ -318,7 +318,7 @@
         <div class="row q-ma-sm">
           <div class="col-12" align="end">
             <q-btn @click.native="closeModalEditMarca" color="primary" label="Cancelar" class="q-mr-xs"/>
-            <q-btn @click.native="updateMarca" color="primary" label="Atualizar"/>
+            <q-btn @click.native="updateMarca" color="primary" label="Salvar"/>
           </div>
         </div>
       </q-modal>
@@ -508,24 +508,83 @@
 
         <q-page-sticky position="bottom-right" :offset="[18, 18]">
           <q-btn class="q-mr-sm" label="cancelar" color="primary" @click="closeModalEditCultivar"/>
-          <q-btn label="salvar" color="primary" @click="updateCultivar"/>
+          <q-btn label="salvar" color="primary" @click="updateInfoCultivar"/>
         </q-page-sticky>
       </q-modal>
 
       <!--MODAL CHANGE TYPE CULTIVAR-->
-      <q-modal v-model="modalChangeTypeCultivar" maximized>
+      <q-modal v-model="modalChangeTypeCultivar" minimized no-backdrop-dismiss>
+        <div class="row q-ma-lg">
+          <div class="col-12">
 
-        <q-stepper ref="stepper" contractable color="positive" class="no-shadow" >
+            <div class="row">
+              <div class="col-12">
+                <q-list no-border>
 
-          <!--PASSO 1 ADICIONAR INFORMACOEA-->
-          <q-step default title="Tipo" name="tipo"></q-step>
+                  <!--CONVENCIONAL-->
+                  <q-item>
+                    <q-item-main>Convencional</q-item-main>
+                    <q-item-side>
+                      <q-btn-toggle
+                        v-model="cultivar.isConvencional.value"
+                        toggle-color="primary"
+                        @input="choiseTypeValidation"
+                        :options="[ {label: 'Sim', value: true}, {label: 'Não', value: false} ]"
+                      />
+                    </q-item-side>
+                  </q-item>
 
-        </q-stepper>
+                  <!--RR-->
+                  <q-item>
+                    <q-item-main :class="(cultivar.isConvencional.value)?'text-faded':'text-black'">RR</q-item-main>
+                    <q-item-side>
+                      <q-btn-toggle
+                        toggle-color="primary"
+                        :disable="cultivar.isConvencional.value"
+                        v-model="cultivar.isRoundupReady.value"
+                        :options="[ {label: 'Sim', value: true}, {label: 'Não', value: false} ]"
+                      />
+                    </q-item-side>
+                  </q-item>
 
-        <q-page-sticky position="bottom-right" :offset="[18, 18]">
-          <q-btn class="q-mr-sm" label="cancelar" color="primary" @click="closeModalEditCultivar"/>
-          <q-btn label="salvar" color="primary" @click="updateCultivar"/>
-        </q-page-sticky>
+                  <!--INOX-->
+                  <q-item>
+                    <q-item-main :class="(cultivar.isConvencional.value)?'text-faded':'text-black'">Inox</q-item-main>
+                    <q-item-side>
+                      <q-btn-toggle
+                        toggle-color="primary"
+                        :disable="cultivar.isConvencional.value"
+                        v-model="cultivar.isInox.value"
+                        :options="[ {label: 'Sim', value: true}, {label: 'Não', value: false} ]"
+                      />
+                    </q-item-side>
+                  </q-item>
+
+                  <!--INTACTA-->
+                  <q-item>
+                    <q-item-main :class="(cultivar.isConvencional.value)?'text-faded':'text-black'">Intacta</q-item-main>
+                    <q-item-side>
+                      <q-btn-toggle
+                        toggle-color="primary"
+                        :disable="cultivar.isConvencional.value"
+                        v-model="cultivar.isIntacta.value"
+                        :options="[ {label: 'Sim', value: true}, {label: 'Não', value: false} ]"
+                      />
+                    </q-item-side>
+                  </q-item>
+
+                </q-list>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="row q-ma-md">
+          <div class="col-12" align="end">
+            <q-btn class="q-mr-sm" label="cancelar" color="primary" @click="closeModalchangeTypeCultivar"/>
+            <q-btn label="Salvar" color="primary" @click="updateTypeCultivar"/>
+          </div>
+        </div>
       </q-modal>
     </template>
 
@@ -755,21 +814,13 @@
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           });
         },
-        changeType: function(){
-          this.modalChangeTypeCultivar = true;
-          this.closeModalAddCultivar();
-        },
         editCultivar: function(data){
           this.selectedCultivar = data;
           this.modalEditCultivar = true;
           this.fillFormEditCultivar(data);
         },
         fillFormEditCultivar: function(data){},
-        closeModalEditCultivar: function(){
-          this.modalEditCultivar = false;
-          this.cultivar = new Cultivar();
-        },
-        updateCultivar: function(){
+        updateInfoCultivar: function(){
           if(!this.cultivar.isValid()){
             return;
           }
@@ -777,11 +828,59 @@
             if(response.status === 200) {
               this.$q.notify({type: 'positive', message: 'Cultivar atualizado com sucesso!'});
               this.listCulturas();
+              this.selectedCultura = null;
+              this.selectedCultivar = null;
               this.closeModalEditCultura();
             }
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           });
+        },
+        closeModalEditCultivar: function(){
+          this.modalChangeTypeCultivar = false;
+          this.selectedCultura = null;
+          this.selectedCultivar = null;
+          this.cultivar = new Cultivar();
+        },
+        editTypeCultivar: function(culturaId, cultivar){
+          this.selectedCultura = culturaId;
+          this.selectedCultivar = cultivar.id;
+          this.modalChangeTypeCultivar = true;
+          this.fillFormEditTypeCultivar(cultivar);
+        },
+        fillFormEditTypeCultivar: function(cultivar){
+          this.cultivar.isConvencional.value = cultivar.is_convencional;
+          this.cultivar.isRoundupReady.value = cultivar.is_rr;
+          this.cultivar.isInox.value = cultivar.is_inox;
+          this.cultivar.isIntacta.value = cultivar.is_intacta;
+        },
+        updateTypeCultivar: function(){
+          if(!this.cultivar.isConvencional.value){
+            if(!this.cultivar.isRoundupReady.value && !this.cultivar.isInox.value && !this.cultivar.isIntacta.value){
+              this.$q.dialog({
+                noBackdropDismiss: true,
+                title: 'Oops!',
+                message: 'Escolha ao menos um tipo',
+                ok: 'OK'
+              });
+              return;
+            }
+          }
+          culturaService.updateTypeCultivar(this.selectedCultivar, this.cultivar.getValues()).then(response => {
+            if(response.status === 200) {
+              this.$q.notify({type: 'positive', message: 'Cultivar atualizado com sucesso!'});
+              this.listCulturas();
+              this.closeModalchangeTypeCultivar();
+            }
+          }).catch(error => {
+            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          });
+        },
+        closeModalchangeTypeCultivar: function(){
+          this.selectedCultura = null;
+          this.selectedCultivar = null;
+          this.cultivar = new Cultivar();
+          this.modalChangeTypeCultivar = false;
         },
         archiveCultivar: function(cultura_id, id){
           culturaService.archiveCultivar(cultura_id, id).then(response => {
@@ -851,7 +950,7 @@
               }
             }
           }
-          this.$refs.stepperNewCultivar.next()
+          this.$refs.stepperNewCultivar.next();
         },
       },
       mounted () {
@@ -866,6 +965,6 @@
   </script>
 <style>
   .space-end{
-    margin-bottom: 100px;
+    margin-bottom: 200px;
   }
 </style>
