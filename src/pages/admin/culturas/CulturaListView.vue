@@ -1,3 +1,7 @@
+<template>
+  <custom-page widthInner="60%" isParent>
+    <toolbar slot="toolbar" title="Cultivares" searchable navigation_type="menu" >
+    </toolbar>
 
     <div class="space-end">
       <template v-for="cultura in culturas">
@@ -663,10 +667,32 @@
       },
       methods: {
         // CRUD CULTURA
-        listCulturas: function(){
+        listCulturas: function() {
           culturaService.listCulturas().then(response => {
             this.culturas = response.data;
           })
+        },
+        newCultura: function(){
+          this.modalNewCultura = true;
+        },
+        closeModalNewCultura: function(){
+          this.cultura = new Cultura();
+          this.modalNewCultura = false;
+        },
+        saveCultura: function(){
+          if(!this.cultura.isValid()){
+            return;
+          }
+          culturaService.saveCultura(this.cultura.getValues()).then(response => {
+            if(response.status === 201) {
+              this.$q.notify({type: 'positive', message: 'Cultura criada com sucesso'});
+              this.listCulturas();
+              this.closeModalNewCultura();
+            }
+          }).catch(error => {
+            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          });
+        },
         editCultura: function(cultura){
           this.selectedCultura = cultura.id;
           this.fillFormCultura(cultura);
@@ -684,29 +710,63 @@
         closeModalAddFotoCultura: function(){
           this.modalAddFotoCulura = false;
         },
-        updateCultura: function(){
-          if(!this.cultura.isValid()){
+        updateCultura: function() {
+          if (!this.cultura.isValid()) {
             return;
           }
           culturaService.updateCultura(this.selectedCultura, this.cultura.getValues()).then(response => {
-            if(response.status === 200) {
+            if (response.status === 200) {
               this.$q.notify({type: 'positive', message: 'Cultura atualizada com sucesso!'});
               this.listCulturas();
               this.closeModalEditCultura();
-        choiseTypeValidation: function(){
-          if(this.isConvencional === true){
-            this.cultivar.isConvencional.value = true;
-            this.cultivar.isRoundupReady.value = false;
-            this.cultivar.isInox.value = false;
-            this.cultivar.isIntacta.value = false;
-            this.goToNextStepNewCultivar();
-          }
+            }
+          })
         },
-        goToNextStepNewCultivar(){
-          if(this.stepper === 'tipo'){
-            this.isNext = false
-          }else{
-            this.isNext = true
+        closeModalEditCultura: function(){
+          this.modalEditCultura = false;
+          this.selectedCultura = null;
+          this.cultura = new Cultura();
+        },
+        archiveCultura: function(id){
+          culturaService.archiveCultura(id).then(response => {
+            this.listCulturas()
+          })
+        },
+        restoreCultura: function(id){
+          culturaService.restoreCultura(id).then(response => {
+            this.listCulturas()
+          })
+        },
+        deleteCultura: function(id){
+          this.$q.dialog({
+            title: 'Atenção',
+            message: 'Realmente deseja apagar esta cultura?',
+            ok: 'Sim', cancel: 'Não',
+            color: 'primary'
+          }).then(data => {
+            culturaService.deleteCultura(id).then(response => {
+              this.listCulturas()
+            })
+          }).catch(()=>{});
+
+        },
+
+        // CRUD MARCA
+        listMarcas: function(){
+          culturaService.listMarcas().then(response => {
+            this.marcas = response.data;
+          })
+
+        },
+        newMarca: function(){
+          this.modalNewMarca = true;
+        },
+        closeModalNewMarca: function(){
+          this.modalNewMarca = false;
+        },
+        saveMarca: function(){
+          if(!this.marca.isValid()){
+            return;
           }
           culturaService.saveMarca(this.marca.getValues()).then(response => {
             if(response.status === 201) {
