@@ -420,7 +420,7 @@
         })
       },
       goToNextStep(){
-        this.$refs.currentStep.next()
+        this.$refs.stepper.next()
       },
 
       // CRUD SAFRA CULTURA TALHAO

@@ -619,7 +619,7 @@
         <div class="row q-ma-md">
           <div class="col-12" align="end">
             <q-btn class="q-mr-sm" label="cancelar" color="primary" @click="closeModalchangeTypeCultivar"/>
-            <q-btn label="Salvar" color="primary" @click="updateTypeCultivar(cultura.id)"/>
+            <q-btn label="Salvar" color="primary" @click="updateTypeCultivar"/>
           </div>
         </div>
       </q-modal>
@@ -656,7 +656,7 @@
           modalChangeTypeCultivar: false,
           culturas: [],
           cultura: new Cultura(),
-          selectedCultura: null,
+          selectedCulturaId: null,
           marcas: [],
           marca: new Marca(),
           selectedMarca: null,
@@ -722,7 +722,7 @@
           });
         },
         editCultura: function(cultura){
-          this.selectedCultura = cultura.id;
+          this.selectedCulturaId = cultura.id;
           this.fillFormCultura(cultura);
           this.modalEditCultura = true;
         },
@@ -742,7 +742,7 @@
           if (!this.cultura.isValid()) {
             return;
           }
-          culturaService.updateCultura(this.selectedCultura, this.cultura.getValues()).then(response => {
+          culturaService.updateCultura(this.selectedCulturaId, this.cultura.getValues()).then(response => {
             if (response.status === 200) {
               this.$q.notify({type: 'positive', message: 'Cultura atualizada com sucesso!'});
               this.listCulturas();
@@ -752,7 +752,7 @@
         },
         closeModalEditCultura: function(){
           this.modalEditCultura = false;
-          this.selectedCultura = null;
+          this.selectedCulturaId = null;
           this.cultura = new Cultura();
         },
         archiveCultura: function(id){
@@ -903,7 +903,7 @@
           });
         },
         editCultivar: function(culturaId, cultivar){
-          this.selectedCultura = culturaId;
+          this.selectedCulturaId = culturaId;
           this.selectedCultivar = cultivar.id;
           this.modalEditCultivar = true;
           this.fillFormEditCultivar(cultivar);
@@ -932,12 +932,12 @@
         },
         closeModalEditCultivar: function(){
           this.modalEditCultivar = false;
-          this.selectedCultura = null;
+          this.selectedCulturaId = null;
           this.selectedCultivarId = null;
           this.cultivar = new Cultivar();
         },
         editTypeCultivar: function(culturaId, cultivar){
-          this.selectedCultura = culturaId;
+          this.selectedCulturaId = culturaId;
           this.selectedCultivarId = cultivar.id;
           this.modalChangeTypeCultivar = true;
           this.fillFormEditTypeCultivar(cultivar);
@@ -948,7 +948,8 @@
           this.cultivar.isInox.value = cultivar.is_inox;
           this.cultivar.isIntacta.value = cultivar.is_intacta;
         },
-        updateTypeCultivar: function(culturaId){
+        updateTypeCultivar: function(){
+
           if(!this.cultivar.isConvencional.value){
             if(!this.cultivar.isRoundupReady.value && !this.cultivar.isInox.value && !this.cultivar.isIntacta.value){
               this.$q.dialog({
@@ -960,7 +961,15 @@
               return;
             }
           }
-          culturaService.updateTypeCultivar(culturaId, this.selectedCultivarId, this.cultivar.getValues()).then(response => {
+          let cultivar = this.cultivar.getValues();
+          //cultivar
+          delete cultivar.nome;
+          delete cultivar.marca_id;
+          delete cultivar.ciclo;
+          delete cultivar.ciclo_dias;
+          delete cultivar.observacoes;
+
+          culturaService.updateCultivar(this.selectedCulturaId, this.selectedCultivarId, cultivar).then(response => {
             if(response.status === 200) {
               this.$q.notify({type: 'positive', message: 'Cultivar atualizado com sucesso!'});
               this.listCulturas();
@@ -971,7 +980,7 @@
           });
         },
         closeModalchangeTypeCultivar: function(){
-          this.selectedCultura = null;
+          this.selectedCulturaId = null;
           this.selectedCultivarId = null;
           this.cultivar = new Cultivar();
           this.modalChangeTypeCultivar = false;

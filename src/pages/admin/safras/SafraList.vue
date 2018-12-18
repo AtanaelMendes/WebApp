@@ -770,10 +770,10 @@
         },
 
         goToNextStep(){
-          this.$refs.currentStep.next()
+          this.$refs.stepper.next()
         },
         goToPreviousStep(){
-          this.$refs.currentStep.previous()
+          this.$refs.stepper.previous()
         },
 
         // SAFRA CULTURA VIEW CRUD

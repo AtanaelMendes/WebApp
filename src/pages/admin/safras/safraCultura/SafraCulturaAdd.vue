@@ -11,7 +11,7 @@
         <q-list separator link no-border class="space-end">
           <div class="row gutter-sm">
             <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in culturas" :key="cultura.id">
-              <q-card @click.native="selectedCultura(cultura.id)">
+              <q-card @click.native="selectedCulturaId(cultura.id)">
                 <q-card-media overlay-position="full">
                   <img src="assets/images/soja250x250.jpg"/>
                   <q-card-title slot="overlay" align="end" v-if="cultura.id === safraCultura.cultura_id">

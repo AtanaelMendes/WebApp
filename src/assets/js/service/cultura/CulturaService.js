@@ -177,13 +177,14 @@ export default {
       })
     });
   },
-  updateCultivar(culturaId, id, params){
+  updateCultivar(cultura_id, id, params){
+    console.log('updateCultivar')
     //let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.put('cultura/' + cultura_id + '/cultivar/' + id, params).then(response => {
         resolve(response)
       }).catch(error => {
-        reject(error.response)
+        reject(error)
       })
     });
   },
