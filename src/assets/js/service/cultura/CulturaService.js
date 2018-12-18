@@ -6,7 +6,7 @@ export default {
   listCulturas(){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('cultura/' + produtor_id).then( response => {
+      Vue.prototype.$axios.get('produtor/' + produtor_id + '/cultura').then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
