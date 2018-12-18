@@ -471,6 +471,9 @@
       </q-page-sticky>
     </q-modal>
 
+    <!--MODAL EDIT SAFRA CULTURA-->
+    <q-modal v-model="modalEditSafraCultura" maximized ></q-modal>
+
   </custom-page>
 </template>
 <script>
@@ -500,6 +503,7 @@
           safras: [],
           modalNewSafra: false,
           modalEditSafra: false,
+          modalEditSafraCultura: false,
           safra: new safra(),
           selectedAnoFim: null,
           selectedSafra: null,
@@ -727,6 +731,7 @@
               }
           })
         },
+
         // PASSO 3 AREA
         getAreas: function(){
           areaService.listAreas().then(response => {
@@ -768,7 +773,6 @@
             tal.tamanho = 0
           }
         },
-
         goToNextStep(){
           this.$refs.stepper.next()
         },
