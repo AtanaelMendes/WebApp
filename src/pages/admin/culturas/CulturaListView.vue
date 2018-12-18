@@ -738,9 +738,9 @@
           }
           culturaService.updateMarca(this.selectedMarca, this.marca.getValues()).then(response => {
             if(response.status === 200) {
-              this.$q.notify({type: 'positive', message: 'Cultura atualizada com sucesso!'});
+              this.$q.notify({type: 'positive', message: 'Marca atualizada com sucesso!'});
               this.listCulturas();
-              this.closeModalEditCultura();
+              this.closeModalEditMarca();
             }
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
