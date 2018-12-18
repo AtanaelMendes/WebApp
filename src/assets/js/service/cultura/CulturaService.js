@@ -26,7 +26,7 @@ export default {
   deleteCultura(id){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('cultura/' + id + '/produtor/' + produtor_id).then(response => {
+      Vue.prototype.$axios.delete('produtor/' + produtor_id + '/cultura/' + id).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
@@ -36,7 +36,7 @@ export default {
   restoreCultura(id){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('cultura/' + id + '/produtor/' + produtor_id + '/restore').then(response => {
+      Vue.prototype.$axios.put('produtor/' + produtor_id + '/cultura/' + id + '/restore').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
@@ -46,7 +46,7 @@ export default {
   archiveCultura(id){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('cultura/' + id + '/produtor/' + produtor_id + '/archive').then(response => {
+      Vue.prototype.$axios.put('produtor/' + produtor_id + '/cultura/' + id + '/archive').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
@@ -56,7 +56,7 @@ export default {
   updateCultura(id, params){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('cultura/' + id + '/produtor/' + produtor_id, params).then(response => {
+      Vue.prototype.$axios.put('produtor/' + produtor_id + '/cultura/' + id, params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
