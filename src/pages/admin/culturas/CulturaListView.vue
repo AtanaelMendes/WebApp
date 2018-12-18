@@ -281,17 +281,17 @@
           <!--PASSO 1 ESCOLHER CULTURA-->
           <q-step default title="Culturas" name="cultura">
             <div class="row justify-center gutter-sm" style="min-height: 80vh">
-              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in 5" :key="cultura">
-                <q-card @click.native="selectCultura(cultura)">
+              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in culturas" :key="cultura.id">
+                <q-card @click.native="selectCultura(cultura.id)">
                   <q-card-media overlay-position="full">
                     <img src="assets/images/no-image.png"/>
-                    <q-card-title slot="overlay" align="end" v-if="cultura === cultivar.culturaId">
+                    <q-card-title slot="overlay" align="end" v-if="cultura.id === cultivar.culturaId">
                       <q-icon name="check_circle" size="30px" color="positive"/>
                     </q-card-title>
                   </q-card-media>
                   <q-card-separator/>
                   <q-card-title class="text-center">
-                    Soja
+                    {{cultura.nome}}
                   </q-card-title>
                 </q-card>
               </div>
@@ -301,17 +301,17 @@
           <!--PASSO 2 ESCOLHER A MARCA -->
           <q-step title="Marca" name="marca">
             <div class="row justify-center gutter-sm" style="min-height: 80vh">
-              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="marca in 6" :key="marca">
-                <q-card @click.native="selectMarca(marca)">
+              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="marca in marcas" :key="marca.id">
+                <q-card @click.native="selectMarca(marca.id)">
                   <q-card-media overlay-position="full">
                     <img src="assets/images/no-image.png"/>
-                    <q-card-title slot="overlay" align="end" v-if="marca === cultivar.marcaId">
+                    <q-card-title slot="overlay" align="end" v-if="marca.id === cultivar.marcaId">
                       <q-icon name="check_circle" size="30px" color="positive"/>
                     </q-card-title>
                   </q-card-media>
                   <q-card-separator/>
                   <q-card-title class="text-center">
-                    Monsoy
+                    {{marca.nome}}
                   </q-card-title>
                 </q-card>
               </div>
@@ -474,6 +474,7 @@
           culturas: [],
           cultura: new Cultura(),
           selectedCultura: null,
+          marcas: [],
           marca: new Marca(),
           selectedMarca: null,
           cultivar: new Cultivar(),
@@ -604,9 +605,8 @@
 
         // CRUD MARCA
         listMarcas: function(){
-          let fake = 'soja';
-          this.culturas.push({
-            name: fake
+          culturaService.listMarcas().then(response => {
+            this.marcas = response.data;
           })
 
         },
@@ -622,9 +622,9 @@
           }
           culturaService.saveMarca(this.marca.getValues()).then(response => {
             if(response.status === 201) {
-              this.$q.notify({type: 'positive', message: 'Cultura criada com sucesso'});
+              this.$q.notify({type: 'positive', message: 'Marca criada com sucesso'});
               this.listCulturas();
-              this.closeModalNewCultura();
+              this.closeModalNewMarca();
             }
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -694,6 +694,7 @@
         },
         newCultivar: function(){
           this.modalNewCultivar = true;
+          this.listMarcas();
         },
         selectCultura: function(id){
           this.cultivar.culturaId = id;
@@ -713,11 +714,11 @@
           if(!this.cultivar.isValid()){
             return;
           }
-          culturaService.saveCultivar(this.cultivar.getValues()).then(response => {
+          culturaService.saveCultivar(this.cultivar.culturaId, this.cultivar.getValues()).then(response => {
             if(response.status === 201) {
               this.$q.notify({type: 'positive', message: 'Cultivar criado com sucesso'});
               this.listCulturas();
-              this.closeModalNewCultura();
+              this.closeModalAddCultivar();
             }
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})

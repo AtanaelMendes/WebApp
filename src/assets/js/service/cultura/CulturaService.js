@@ -16,7 +16,7 @@ export default {
   saveCultura(params){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('cultura/' + produtor_id, params).then(response => {
+      Vue.prototype.$axios.post('produtor/' + produtor_id + '/cultura', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
@@ -68,7 +68,7 @@ export default {
   listMarcas(){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('cultura/' + produtor_id).then( response => {
+      Vue.prototype.$axios.get('produtor/' + produtor_id + '/marca').then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
@@ -78,7 +78,7 @@ export default {
   saveMarca(params){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('cultura/' + produtor_id, params).then(response => {
+      Vue.prototype.$axios.post('produtor/' + produtor_id + '/marca', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
@@ -137,10 +137,10 @@ export default {
       })
     });
   },
-  saveCultivar(params){
-    let produtor_id = localStorage.getItem('account.produtor_id');
+  saveCultivar(cultura_id, params){
+    //let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('cultura/' + produtor_id, params).then(response => {
+      Vue.prototype.$axios.post('cultura/' + cultura_id + '/cultivar', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)

@@ -76,6 +76,7 @@ export default class{
   getValues(){
     return{
     nome: this.nome.value,
+    marca_id: this.marcaId,
     ciclo: this.ciclo.value,
     ciclo_dias: this.cicloDias.value,
     is_convencional: this.isConvencional.value,
