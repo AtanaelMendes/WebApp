@@ -123,6 +123,51 @@
 
         </div>
       </template>
+
+      <!--MARCAS SEM CULTIVARES-->
+      <div v-if="marcasSemCultivares">
+        <div class="row q-pa-lg q-mt-md bg-blue-grey-1">
+          <div class="col-12 q-title">
+            Marcas sem Cultivares
+          </div>
+        </div>
+        <div class="row gutter-sm q-pa-md">
+          <div class="col-xs-9 col-sm-6 col-md-4 col-lg-3" v-for="marca in 5" :key="marca">
+            <q-card>
+              <q-card-title>
+                Marca nome
+                <div slot="right">
+                  <q-btn round flat dense icon="more_vert">
+                    <q-popover>
+                      <q-list link class="no-border">
+                        <q-item v-close-overlay @click.native="addFotoMarca(1)">
+                          <q-item-main label="Atualizar Foto"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="editMarca(1)">
+                          <q-item-main label="Editar"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="archiveMarca(1)">
+                          <q-item-main label="Arquivar"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="restoreMarca(1)">
+                          <q-item-main label="Ativar"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="deleteMarca(1)">
+                          <q-item-main label="Excluir"/>
+                        </q-item>
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
+                </div>
+              </q-card-title>
+              <q-card-separator/>
+              <q-card-media>
+                <img src="assets/images/no-image.png"/>
+              </q-card-media>
+            </q-card>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!--EMPTY LIST-->
@@ -658,6 +703,7 @@
           cultura: new Cultura(),
           selectedCulturaId: null,
           marcas: [],
+          marcasSemCultivares: [],
           marca: new Marca(),
           selectedMarca: null,
           cultivar: new Cultivar(),
@@ -862,6 +908,13 @@
 
         },
 
+        // MARCA SEM CULTIVAR
+        listMarcasSemCultivares: function(){
+          this.marcasSemCultivares.push({
+            nome: 'fake data'
+          })
+        },
+
         // CRUD CULTIVAR
         listCultivar: function(){
           let fake = 'soja';
@@ -1058,8 +1111,9 @@
       },
       mounted () {
         this.listCulturas();
-        this.selectUnidadeMedida();
         this.selectUnidadeArea();
+        this.selectUnidadeMedida();
+        this.listMarcasSemCultivares();
         // this.$root.$on('refreshSafraList', () => {
         //   this.listSafras();
         // });
