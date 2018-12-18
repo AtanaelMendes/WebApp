@@ -214,7 +214,6 @@ export default {
       })
     });
   },
-
   selectUnidadeMedida: function(){
     return new Promise((resolve, reject) => {
       this.getUnidadeMedida().then(response => {

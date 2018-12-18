@@ -15,7 +15,7 @@ export default class{
     errorMessage: null
   };
   isConvencional = {
-    value: false,
+    value: true,
     errorMessage: null
   };
   isRoundupReady = {

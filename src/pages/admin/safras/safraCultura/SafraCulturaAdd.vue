@@ -177,7 +177,7 @@
       },
       saveSafraCultura: function(){},
       goToNextStep(){
-        this.$refs.stepper.next()
+        this.$refs.currentStep.next()
       },
       backAction: function () {
         this.$router.push({name: 'safras'});

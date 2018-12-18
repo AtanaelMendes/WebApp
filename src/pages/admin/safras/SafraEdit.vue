@@ -409,7 +409,7 @@
           return;
         }
         this.selectedTalhao = this.talhoes.filter(item => item['id'] === this.safra.talhao.value)[0];
-        this.$refs.stepper.next()
+        this.$refs.currentStep.next()
       },
       backAction: function () {
         this.$router.push({name: 'safras'});

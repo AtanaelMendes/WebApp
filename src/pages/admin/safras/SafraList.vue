@@ -357,7 +357,7 @@
       <q-page-sticky position="bottom-right" :offset="[18, 18]">
         <q-btn @click="closeNewSafraCulturaModal()" label="Cancelar" color="primary" class="q-mr-md"/>
         <q-btn @click="goToPreviousStep" label="voltar" color="primary"  class="q-mr-xs" v-if="this.currentStep !== 'cultura'"/>
-        <q-btn @click="goToNextStep" label="próximo" color="primary"  class="q-mr-xs" :disable="!isNextButtomEnabled()" v-if="this.currentStep !== 'finalizar'"/>
+        <q-btn @click="goToNextStep" label="próximo" color="primary"  class="q-mr-xs" :disable="!isNextButtomEnabled()" v-if="currentStep !== 'finalizar'"/>
         <q-btn @click="saveSafraCultura()" label="Salvar" color="deep-orange" v-if="currentStep === 'finalizar'" class="float-right"/>
       </q-page-sticky>
     </q-modal>
@@ -770,10 +770,10 @@
         },
 
         goToNextStep(){
-          this.$refs.stepper.next()
+          this.$refs.currentStep.next()
         },
         goToPreviousStep(){
-          this.$refs.stepper.previous()
+          this.$refs.currentStep.previous()
         },
 
         // SAFRA CULTURA VIEW CRUD
