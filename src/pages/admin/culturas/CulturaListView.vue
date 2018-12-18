@@ -14,16 +14,16 @@
             <q-btn round flat dense icon="more_vert">
               <q-popover>
                 <q-list link class="no-border">
-                  <q-item v-close-overlay @click.native="addFotoCultura(1)">
+                  <q-item v-close-overlay @click.native="addFotoCultura(cultura.id)">
                     <q-item-main label="Atualizar Foto"/>
                   </q-item>
-                  <q-item v-close-overlay @click.native="archiveCultura(1)" v-if="!cultura.deleted_at">
+                  <q-item v-close-overlay @click.native="archiveCultura(cultura.id)" v-if="!cultura.deleted_at">
                     <q-item-main label="Arquivar"/>
                   </q-item>
-                  <q-item v-close-overlay @click.native="restoreCultura(1)" v-if="cultura.deleted_at">
+                  <q-item v-close-overlay @click.native="restoreCultura(cultura.id)" v-if="cultura.deleted_at">
                     <q-item-main label="Ativar"/>
                   </q-item>
-                  <q-item v-close-overlay @click.native="deleteCultura(1)">
+                  <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
                     <q-item-main label="Excluir"/>
                   </q-item>
                 </q-list>
