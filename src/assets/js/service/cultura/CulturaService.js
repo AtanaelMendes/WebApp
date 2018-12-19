@@ -75,6 +75,16 @@ export default {
       })
     });
   },
+  listMarcasSemCultivares(){
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('produtor/' + produtor_id + '/marca?filter=has-no-cultivares').then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   saveMarca(params){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {

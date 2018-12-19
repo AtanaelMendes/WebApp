@@ -102,10 +102,10 @@
                             <q-item v-close-overlay @click.native="editTypeCultivar(cultura.id, cultivar)">
                               <q-item-main label="Alterar tipo"/>
                             </q-item>
-                            <q-item v-close-overlay @click.native="archiveCultivar(cultura.id, cultivar.id)">
+                            <q-item v-close-overlay @click.native="archiveCultivar(cultura.id, cultivar.id)"  v-if="!cultivar.deleted_at">
                               <q-item-main label="Arquivar"/>
                             </q-item>
-                            <q-item v-close-overlay @click.native="restoreCultivar(cultura.id, cultivar.id)">
+                            <q-item v-close-overlay @click.native="restoreCultivar(cultura.id, cultivar.id)"  v-if="cultivar.deleted_at">
                               <q-item-main label="Ativar"/>
                             </q-item>
                             <q-item v-close-overlay @click.native="deleteCultivar(cultura.id, cultivar.id)">
@@ -125,34 +125,34 @@
       </template>
 
       <!--MARCAS SEM CULTIVARES-->
-      <div v-if="marcasSemCultivares">
+      <div v-if="marcasSemCultivares.length > 0">
         <div class="row q-pa-lg q-mt-md bg-blue-grey-1">
           <div class="col-12 q-title">
             Marcas sem Cultivares
           </div>
         </div>
         <div class="row gutter-sm q-pa-md">
-          <div class="col-xs-9 col-sm-6 col-md-4 col-lg-3" v-for="marca in 5" :key="marca">
+          <div class="col-xs-9 col-sm-6 col-md-4 col-lg-3" v-for="marca in marcasSemCultivares" :key="marca.id">
             <q-card>
               <q-card-title>
-                Marca nome
+                {{marca.nome}}
                 <div slot="right">
                   <q-btn round flat dense icon="more_vert">
                     <q-popover>
                       <q-list link class="no-border">
-                        <q-item v-close-overlay @click.native="addFotoMarca(1)">
+                        <q-item v-close-overlay @click.native="addFotoMarca(marca.id)">
                           <q-item-main label="Atualizar Foto"/>
                         </q-item>
-                        <q-item v-close-overlay @click.native="editMarca(1)">
+                        <q-item v-close-overlay @click.native="editMarca(marca)">
                           <q-item-main label="Editar"/>
                         </q-item>
-                        <q-item v-close-overlay @click.native="archiveMarca(1)">
+                        <q-item v-close-overlay @click.native="archiveMarca(marca.id)" v-if="!marca.deleted_at">
                           <q-item-main label="Arquivar"/>
                         </q-item>
-                        <q-item v-close-overlay @click.native="restoreMarca(1)">
+                        <q-item v-close-overlay @click.native="restoreMarca(marca.id)" v-if="marca.deleted_at">
                           <q-item-main label="Ativar"/>
                         </q-item>
-                        <q-item v-close-overlay @click.native="deleteMarca(1)">
+                        <q-item v-close-overlay @click.native="deleteMarca(marca.id)">
                           <q-item-main label="Excluir"/>
                         </q-item>
                       </q-list>
@@ -171,7 +171,7 @@
     </div>
 
     <!--EMPTY LIST-->
-    <div class="column q-ma-xl items-center" v-if="culturas.length <= 0">
+    <div class="column q-ma-xl items-center" v-if="culturas.length === 0 && marcasSemCultivares.length === 0">
       <div class="col-6">
         <img src="assets/images/sad_2.svg" class="responsive"/>
       </div>
@@ -407,6 +407,13 @@
                   </q-card-title>
                 </q-card>
               </div>
+              <div v-if="culturas.length === 0" class="text-center">
+                <p>Nenhuma cultura criada! Crie uma para continuar.</p>
+                <q-btn
+                  color="deep-orange"
+                  @click="newCultura"
+                  label="Criar Cultura"/>
+              </div>
             </div>
           </q-step>
 
@@ -426,6 +433,13 @@
                     {{marca.nome}}
                   </q-card-title>
                 </q-card>
+              </div>
+              <div v-if="marcas.length === 0" class="text-center">
+                <p>Nenhuma marca criada! Crie uma para continuar.</p>
+                <q-btn
+                  color="deep-orange"
+                  @click="newMarca"
+                  label="Criar Marca"/>
               </div>
             </div>
           </q-step>
@@ -846,6 +860,8 @@
             if(response.status === 201) {
               this.$q.notify({type: 'positive', message: 'Marca criada com sucesso'});
               this.listCulturas();
+              this.listMarcas();
+              this.listMarcasSemCultivares();
               this.closeModalNewMarca();
             }
           }).catch(error => {
@@ -878,6 +894,8 @@
             if(response.status === 200) {
               this.$q.notify({type: 'positive', message: 'Marca atualizada com sucesso!'});
               this.listCulturas();
+              this.listMarcasSemCultivares();
+              this.listMarcas();
               this.closeModalEditMarca();
             }
           }).catch(error => {
@@ -887,11 +905,13 @@
         archiveMarca: function(id){
           culturaService.archiveMarca(id).then(response => {
             this.listCulturas()
+            this.listMarcas();
           })
         },
         restoreMarca: function(id){
           culturaService.restoreMarca(id).then(response => {
             this.listCulturas()
+            this.listMarcas();
           })
         },
         deleteMarca: function(id){
@@ -902,7 +922,9 @@
             color: 'primary'
           }).then(data => {
             culturaService.deleteMarca(id).then(response => {
-              this.listCulturas()
+              this.listCulturas();
+              this.listMarcasSemCultivares();
+              this.listMarcas();
             })
           }).catch(()=>{});
 
@@ -910,19 +932,11 @@
 
         // MARCA SEM CULTIVAR
         listMarcasSemCultivares: function(){
-          this.marcasSemCultivares.push({
-            nome: 'fake data'
+          culturaService.listMarcasSemCultivares().then(response => {
+            this.marcasSemCultivares = response.data;
           })
         },
 
-        // CRUD CULTIVAR
-        listCultivar: function(){
-          let fake = 'soja';
-          this.culturas.push({
-            name: fake
-          })
-
-        },
         newCultivar: function(){
           this.modalNewCultivar = true;
           this.listMarcas();
@@ -949,6 +963,7 @@
             if(response.status === 201) {
               this.$q.notify({type: 'positive', message: 'Cultivar criado com sucesso'});
               this.listCulturas();
+              this.listMarcasSemCultivares();
               this.closeModalAddCultivar();
             }
           }).catch(error => {
@@ -973,7 +988,7 @@
           if(!this.cultivar.isValid()){
             return;
           }
-          culturaService.updateCultivar(this.selectedCultivar, this.cultivar.getValues()).then(response => {
+          culturaService.updateCultivar(this.selectedCulturaId, this.selectedCultivar, this.cultivar.getValues()).then(response => {
             if(response.status === 200) {
               this.$q.notify({type: 'positive', message: 'Cultivar atualizado com sucesso!'});
               this.listCulturas();
@@ -1057,6 +1072,7 @@
           }).then(data => {
             culturaService.deleteCultivar(cultura_id, id).then(response => {
               this.listCulturas()
+              this.listMarcasSemCultivares();
             })
           }).catch(()=>{});
 
