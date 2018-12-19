@@ -183,13 +183,13 @@
     <!--PAGE STICKY BUTTOMS-->
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
       <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
-        <q-fab-action color="grey-1" text-color="grey-7" @click="newCultura" icon="mail">
+        <q-fab-action color="grey-1" text-color="grey-7" @click="newCultura" icon="add">
           <span>Cultura</span>
         </q-fab-action>
-        <q-fab-action color="grey-1" text-color="grey-7" @click="newMarca" icon="alarm">
+        <q-fab-action color="grey-1" text-color="grey-7" @click="newMarca" icon="add">
           <span>Marca</span>
         </q-fab-action>
-        <q-fab-action color="grey-1" text-color="grey-7" @click="newCultivar" icon="alarm">
+        <q-fab-action color="grey-1" text-color="grey-7" @click="newCultivar" icon="add">
           <span>Cultivar</span>
         </q-fab-action>
         <!--<q-btn v-close-overlay rounded color="primary" @click="newCultura" label="cultura"/>-->

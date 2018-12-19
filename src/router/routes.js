@@ -48,6 +48,8 @@ const routes = [
 
       { name: 'culturas', path: 'culturas', component: () => import('pages/admin/culturas/CulturaListView.vue')},
 
+      { name: 'negocios', path: 'negocios', component: () => import('pages/admin/negocios/NegociosList.vue')},
+      { name: 'contratos', path: 'contratos', component: () => import('pages/admin/negocios/Contratos.vue')},
         // children: [
         //   { name: 'cultura_safra', path: 'view/:id', component: () => import('pages/admin/safras/cultura/SafraCultura.vue') },
         //   { name: 'add_safra', path: 'add', component: () => import('pages/admin/safras/SafraAdd.vue') },
