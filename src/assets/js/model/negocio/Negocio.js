@@ -1,8 +1,13 @@
 import { helpers} from 'vuelidate/lib/validators'
+const moment = require('moment');
 export default class{
   tipoNegocioId = null; // TIPOS DE NEGOCIO = compra, venda, troca, balcao
-  emissao = {
+  pessoaId = {
     value: null,
+    errorMessage: null
+  };
+  emissao = {
+    value: moment(new Date()).format('YYYY-MM-DD'),
     errorMessage: null
   };
   numeroPedido = {
@@ -20,6 +25,7 @@ export default class{
   constructor(contrato){
     if(contrato !== undefined || contrato != null){
       this.tipoNegocioId = contrato.tipoNegocioId;
+      this.pessoaId.value = contrato.pessoaId.value;
       this.emissao.value = contrato.emissao.value;
       this.numeroPedido.value = contrato.numeroPedido.value;
       this.numeroContrato.value = contrato.numeroContrato.value;
@@ -31,6 +37,11 @@ export default class{
     let hasError = false;
     if(!helpers.req(this.emissao.value)){
       this.emissao.errorMessage = "Informe data do negócio";
+      hasError = true;
+    }
+
+    if(!helpers.req(this.pessoaId.value)){
+      this.pessoaId.errorMessage = "Informe o negociante";
       hasError = true;
     }
 
@@ -48,10 +59,11 @@ export default class{
 
   getValues(){
     return{
-      tipoNegocioId: this.tipoNegocioId,
+      tipo_negocio_id: this.tipoNegocioId,
+      pessoa_id: this.pessoaId.value,
       emissao: this.emissao.value,
-      numeroPedido: this.numeroPedido.value,
-      numeroContrato: this.numeroContrato.value,
+      numero_pedido: this.numeroPedido.value,
+      numero_contrato: this.numeroContrato.value,
       observacoes: this.observacoes.value
     }
   }

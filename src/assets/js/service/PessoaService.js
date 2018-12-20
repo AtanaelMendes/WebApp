@@ -21,6 +21,31 @@ export default {
       })
     });
   },
+  listPessoasByProdutorId(filter){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get( 'pessoa?' + AgroUtils.serialize(filter) ).then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  searchPessoa: function(){
+    return new Promise((resolve, reject) => {
+      this.listPessoasByProdutorId().then(response => {
+        let pessoaOptions = response.data.map(pessoa => {
+          return {
+            value: pessoa.id,
+            label: pessoa.nome,
+            sublabel: pessoa.cpf ? pessoa.cpf : pessoa.cnpj
+          }
+        });
+        resolve(pessoaOptions)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   savePessoa(params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.post('/pessoa', params).then(response => {
