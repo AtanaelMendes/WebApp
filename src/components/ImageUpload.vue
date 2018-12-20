@@ -1,6 +1,5 @@
 <template>
   <div >
-
       <q-btn-group class="row" flat >
         <q-btn flat  color="primary" icon="rotate_left" @click="croppa.rotate(-1)"/>
         <q-btn flat  color="primary" icon="rotate_right" @click="croppa.rotate(1)"/>
@@ -50,6 +49,9 @@
             this.$emit('on_upload_error', error.response);
           })
         })
+      },
+      clear(){
+        this.croppa.remove();
       }
     }
   }

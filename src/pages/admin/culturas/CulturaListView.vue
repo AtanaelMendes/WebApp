@@ -69,7 +69,8 @@
               </q-card-title>
               <q-card-separator/>
               <q-card-media>
-                <img src="assets/images/no-image.png"/>
+                <img src="assets/images/no-image.png" v-if="!marca.image"/>
+                <img :src="marca.image" v-if="marca.image"/>
               </q-card-media>
             </q-card>
           </div>
@@ -390,9 +391,9 @@
         </div>
         <div class="row justify-center content-center" style="min-height: 80vh">
           <imape-upload ref="imageUpload"
-                        url="photo"
+                        :url="marcaImageUrl"
                         v-on:on_error="uploadFotoMarcaError"
-                        v-on:on_upload_success="closeModalAddFotoMarca"
+                        v-on:on_upload_success="uploadFotoMarcaSuccess"
                         v-on:on_upload_error="uploadFotoMarcaError" />
         </div>
         <q-page-sticky position="bottom-right" :offset="[18, 18]">
@@ -738,7 +739,7 @@
           marcas: [],
           marcasSemCultivares: [],
           marca: new Marca(),
-          selectedMarca: null,
+          selectedMarcaId: null,
           cultivar: new Cultivar(),
           selectedCultivarId: null,
           unidadeMedidaOptions: [],
@@ -770,6 +771,12 @@
           ],
           unidadeAreaOptions: [],
           //isConvencional: true,
+        }
+      },
+      computed: {
+        marcaImageUrl: function(){
+          let produtor_id = localStorage.getItem('account.produtor_id');
+          return '/produtor/' + produtor_id + '/marca/' + this.selectedMarcaId + '/image';
         }
       },
       methods: {
@@ -887,14 +894,16 @@
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           });
         },
-        addFotoMarca: function(){
+        addFotoMarca: function(id){
+          this.selectedMarcaId = id;
           this.modalAddFotoMarca = true;
         },
         closeModalAddFotoMarca: function(){
           this.modalAddFotoMarca = false;
+          this.$refs.imageUpload.clear();
         },
         editMarca: function(marca){
-          this.selectedMarca = marca.id;
+          this.selectedMarcaId = marca.id;
           this.fillFormMarca(marca);
           this.modalEditMarca = true;
         },
@@ -909,7 +918,7 @@
           if(!this.marca.isValid()){
             return;
           }
-          culturaService.updateMarca(this.selectedMarca, this.marca.getValues()).then(response => {
+          culturaService.updateMarca(this.selectedMarcaId, this.marca.getValues()).then(response => {
             if(response.status === 200) {
               this.$q.notify({type: 'positive', message: 'Marca atualizada com sucesso!'});
               this.listCulturas();
@@ -950,6 +959,11 @@
         },
         uploadFotoMarca: function(){
           this.$refs.imageUpload.uploadImage();
+        },
+        uploadFotoMarcaSuccess: function(response){
+          this.closeModalAddFotoMarca();
+          this.listCulturas()
+          this.listMarcasSemCultivares();
         },
         uploadFotoMarcaError: function(error){
           if(error.data){
