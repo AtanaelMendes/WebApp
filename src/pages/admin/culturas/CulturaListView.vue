@@ -69,7 +69,8 @@
               </q-card-title>
               <q-card-separator/>
               <q-card-media>
-                <img src="assets/images/no-image.png"/>
+                <img src="assets/images/no-image.png" v-if="!marca.image"/>
+                <img :src="marca.image" v-if="marca.image"/>
               </q-card-media>
             </q-card>
           </div>
@@ -382,15 +383,22 @@
       </q-modal>
 
       <!--MODAL ADD FOTO MARCA-->
-      <q-modal v-model="modalAddFotoMarca" maximized no-backdrop-dismiss>
+      <q-modal v-model="modalAddFotoMarca"  no-backdrop-dismiss maximized >
         <div class="row justify-center q-pt-lg">
           <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center">
-            MODAL ADD FOTO MARCA
+
           </div>
         </div>
-        <div class="row justify-center content-center" style="min-height: 80vh"></div>
+        <div class="row justify-center content-center" style="min-height: 80vh">
+          <imape-upload ref="imageUpload"
+                        :url="marcaImageUrl"
+                        v-on:on_error="uploadFotoMarcaError"
+                        v-on:on_upload_success="uploadFotoMarcaSuccess"
+                        v-on:on_upload_error="uploadFotoMarcaError" />
+        </div>
         <q-page-sticky position="bottom-right" :offset="[18, 18]">
           <q-btn @click.native="closeModalAddFotoMarca" color="primary" label="Cancelar" class="q-mr-xs"/>
+          <q-btn @click.native="uploadFotoMarca" color="deep-orange" label="Salvar"/>
         </q-page-sticky>
       </q-modal>
 
@@ -703,12 +711,15 @@
     import Marca from 'assets/js/model/cultura/Marca'
     import Cultivar from 'assets/js/model/cultura/Cultivar'
     import culturaService from 'assets/js/service/cultura/CulturaService'
+    import imapeUpload from 'components/ImageUpload'
+
     export default {
       name: "cultura-list-view",
       components: {
         toolbar,
         customPage,
-        customInputText
+        customInputText,
+        imapeUpload
       },
       data () {
         return {
@@ -728,7 +739,7 @@
           marcas: [],
           marcasSemCultivares: [],
           marca: new Marca(),
-          selectedMarca: null,
+          selectedMarcaId: null,
           cultivar: new Cultivar(),
           selectedCultivarId: null,
           unidadeMedidaOptions: [],
@@ -760,6 +771,12 @@
           ],
           unidadeAreaOptions: [],
           //isConvencional: true,
+        }
+      },
+      computed: {
+        marcaImageUrl: function(){
+          let produtor_id = localStorage.getItem('account.produtor_id');
+          return '/produtor/' + produtor_id + '/marca/' + this.selectedMarcaId + '/image';
         }
       },
       methods: {
@@ -877,14 +894,16 @@
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           });
         },
-        addFotoMarca: function(){
+        addFotoMarca: function(id){
+          this.selectedMarcaId = id;
           this.modalAddFotoMarca = true;
         },
         closeModalAddFotoMarca: function(){
           this.modalAddFotoMarca = false;
+          this.$refs.imageUpload.clear();
         },
         editMarca: function(marca){
-          this.selectedMarca = marca.id;
+          this.selectedMarcaId = marca.id;
           this.fillFormMarca(marca);
           this.modalEditMarca = true;
         },
@@ -899,7 +918,7 @@
           if(!this.marca.isValid()){
             return;
           }
-          culturaService.updateMarca(this.selectedMarca, this.marca.getValues()).then(response => {
+          culturaService.updateMarca(this.selectedMarcaId, this.marca.getValues()).then(response => {
             if(response.status === 200) {
               this.$q.notify({type: 'positive', message: 'Marca atualizada com sucesso!'});
               this.listCulturas();
@@ -937,6 +956,21 @@
             })
           }).catch(()=>{});
 
+        },
+        uploadFotoMarca: function(){
+          this.$refs.imageUpload.uploadImage();
+        },
+        uploadFotoMarcaSuccess: function(response){
+          this.closeModalAddFotoMarca();
+          this.listCulturas()
+          this.listMarcasSemCultivares();
+        },
+        uploadFotoMarcaError: function(error){
+          if(error.data){
+            this.$q.notify({type: 'negative', message: error.data.image[0]})
+          }else{
+            this.$q.dialog({noBackdropDismiss: true, title: 'Oops!', message: error, ok: 'OK'});
+          }
         },
 
         // MARCA SEM CULTIVAR
@@ -1153,9 +1187,10 @@
   .custom-fab .q-fab-actions .q-btn  span{
     position: absolute;
     color: white;
-    background: rgba(0, 0, 0, 0.16);
+    background: rgba(0, 0, 0, 0.30);
     right: 46px;
-    border-radius: 6px;
-    padding: 7px 10px;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
   }
 </style>
