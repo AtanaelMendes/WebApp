@@ -382,15 +382,22 @@
       </q-modal>
 
       <!--MODAL ADD FOTO MARCA-->
-      <q-modal v-model="modalAddFotoMarca" maximized no-backdrop-dismiss>
+      <q-modal v-model="modalAddFotoMarca"  no-backdrop-dismiss maximized >
         <div class="row justify-center q-pt-lg">
           <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center">
-            MODAL ADD FOTO MARCA
+
           </div>
         </div>
-        <div class="row justify-center content-center" style="min-height: 80vh"></div>
+        <div class="row justify-center content-center" style="min-height: 80vh">
+          <imape-upload ref="imageUpload"
+                        url="photo"
+                        v-on:on_error="uploadFotoMarcaError"
+                        v-on:on_upload_success="closeModalAddFotoMarca"
+                        v-on:on_upload_error="uploadFotoMarcaError" />
+        </div>
         <q-page-sticky position="bottom-right" :offset="[18, 18]">
           <q-btn @click.native="closeModalAddFotoMarca" color="primary" label="Cancelar" class="q-mr-xs"/>
+          <q-btn @click.native="uploadFotoMarca" color="deep-orange" label="Salvar"/>
         </q-page-sticky>
       </q-modal>
 
@@ -703,12 +710,15 @@
     import Marca from 'assets/js/model/cultura/Marca'
     import Cultivar from 'assets/js/model/cultura/Cultivar'
     import culturaService from 'assets/js/service/cultura/CulturaService'
+    import imapeUpload from 'components/ImageUpload'
+
     export default {
       name: "cultura-list-view",
       components: {
         toolbar,
         customPage,
-        customInputText
+        customInputText,
+        imapeUpload
       },
       data () {
         return {
@@ -938,6 +948,16 @@
           }).catch(()=>{});
 
         },
+        uploadFotoMarca: function(){
+          this.$refs.imageUpload.uploadImage();
+        },
+        uploadFotoMarcaError: function(error){
+          if(error.data){
+            this.$q.notify({type: 'negative', message: error.data.image[0]})
+          }else{
+            this.$q.dialog({noBackdropDismiss: true, title: 'Oops!', message: error, ok: 'OK'});
+          }
+        },
 
         // MARCA SEM CULTIVAR
         listMarcasSemCultivares: function(){
@@ -1153,9 +1173,10 @@
   .custom-fab .q-fab-actions .q-btn  span{
     position: absolute;
     color: white;
-    background: rgba(0, 0, 0, 0.16);
+    background: rgba(0, 0, 0, 0.30);
     right: 46px;
-    border-radius: 6px;
-    padding: 7px 10px;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
   }
 </style>

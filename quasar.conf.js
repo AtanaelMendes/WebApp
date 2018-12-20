@@ -8,7 +8,8 @@ module.exports = function (ctx) {
       'axios',
       'vuelidate',
       'moment',
-      'numeral'
+      'numeral',
+      'croppa'
     ],
     css: [
       'app.styl'
@@ -110,7 +111,8 @@ module.exports = function (ctx) {
         'QDialog',
         'QSlider',
         'QParallax',
-        'QModalLayout'
+        'QModalLayout',
+        'QBtnGroup'
       ],
       directives: [
         'Ripple',
