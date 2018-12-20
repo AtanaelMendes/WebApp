@@ -24,34 +24,56 @@
 
       </div>
       <q-list no-border link inset-delimiter>
+
+        <!--DASHBOARD-->
         <q-item @click.native="$router.push('/admin')">
           <q-item-side icon="dashboard" />
           <q-item-main label="Dashboard" />
         </q-item>
+
+        <!--USUARIOS-->
         <q-item @click.native="$router.push({name:'users'})">
           <q-item-side icon="group" />
           <q-item-main label="Usuários" />
         </q-item>
+
+        <!--PESSOAS-->
         <q-item @click.native="$router.push({name:'pessoas'})">
           <q-item-side icon="group" />
           <q-item-main label="Pessoas" />
         </q-item>
+
+        <!--AREAS-->
         <q-item @click.native="$router.push({name:'areas'})">
           <q-item-side icon="place" />
           <q-item-main label="Áreas" />
         </q-item>
+
+        <!--NOTAS FISCAIS-->
         <!--<q-item @click.native="$router.push({name:'notas-fiscais'})">
           <q-item-side icon="receipt" />
           <q-item-main label="Notas Fiscais" />
         </q-item>-->
+
+        <!--SAFRAS-->
         <q-item @click.native="$router.push({name:'safras'})">
-          <q-item-side><i class="fab fa-pagelines q-headline"></i></q-item-side>
+          <!--<q-item-side><i class="fab fa-pagelines q-headline"></i></q-item-side>-->
+          <q-item-side icon="spa"/>
           <q-item-main label="Safras" />
         </q-item>
+
+        <!--CULTURAS-->
         <q-item @click.native="$router.push({name:'culturas'})">
-          <q-item-side><i class="fab fa-pagelines q-headline"></i></q-item-side>
+          <q-item-side icon="spa"/>
           <q-item-main label="Cultivares" />
         </q-item>
+
+        <!--CONTRATOS-->
+        <q-item @click.native="$router.push({name:'negocios'})">
+          <q-item-side icon="work"/>
+          <q-item-main label="Negócios" />
+        </q-item>
+
       </q-list>
     </q-layout-drawer>
 

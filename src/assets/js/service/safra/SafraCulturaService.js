@@ -18,6 +18,15 @@ export default {
       })
     });
   },
+  updateSafraCultura(safra_id, safra_cultura_id, safraCultura){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('safra/' + safra_id + '/safra_cultura/' + safra_cultura_id, safraCultura).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   archiveSafraCultura(safra_id, id){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.put('/safra/' + safra_id + '/safra_cultura/' + id + '/archive').then(response => {

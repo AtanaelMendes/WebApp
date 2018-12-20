@@ -52,6 +52,9 @@
                 <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
                   <q-popover>
                     <q-list link class="no-border">
+                      <q-item v-close-overlay v-if="!safraCultura.deleted_at" @click.native="editSafraCultura(safra.id, safraCultura)">
+                        <q-item-main label="Editar"/>
+                      </q-item>
                       <q-item v-close-overlay v-if="!safraCultura.deleted_at" @click.native="archiveSafraCultura(safra.id, safraCultura.id)">
                         <q-item-main label="Arquivar"/>
                       </q-item>
@@ -354,7 +357,7 @@
 
       </q-stepper>
 
-      <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-page-sticky position="bottom-right" :offset="[30, 30]">
         <q-btn @click="closeNewSafraCulturaModal()" label="Cancelar" color="primary" class="q-mr-md"/>
         <q-btn @click="goToPreviousStep" label="voltar" color="primary"  class="q-mr-xs" v-if="this.currentStep !== 'cultura'"/>
         <q-btn @click="goToNextStep" label="próximo" color="primary"  class="q-mr-xs" :disable="!isNextButtomEnabled()" v-if="currentStep !== 'finalizar'"/>
@@ -472,7 +475,22 @@
     </q-modal>
 
     <!--MODAL EDIT SAFRA CULTURA-->
-    <q-modal v-model="modalEditSafraCultura" maximized ></q-modal>
+    <q-modal v-model="modalEditSafraCultura" minimized no-backdrop-dismiss>
+
+      <div class="row justify-center q-ma-lg">
+        <div class="col-12">
+          <q-select key="qtd" v-model="formEditSafraCultura.view_unidade_medida_id" :options="parsedUnidades(unidadesMedida)" float-label="Controlar quantidades em"/>
+          <q-select key="area" v-model="formEditSafraCultura.view_unidade_area_id" :options="parsedUnidades(unidadesArea)" float-label="Mostrar área em"/>
+        </div>
+      </div>
+
+      <div class="row q-ma-sm">
+        <div class="col-12" align="end">
+          <q-btn label="cancelar" color="primary" @click.native="closeNewSafraCulturaModal" class="q-mr-xs"/>
+          <q-btn label="salvar" color="primary" @click.native="updateSafraCultura"/>
+        </div>
+      </div>
+    </q-modal>
 
   </custom-page>
 </template>
@@ -507,6 +525,7 @@
           safra: new safra(),
           selectedAnoFim: null,
           selectedSafra: null,
+          selectedSafraId: null,
           yearsList: [],
           progressBuffer: 75,
 
@@ -518,10 +537,14 @@
             id: null,
             nome: null,
           },
+          formEditSafraCultura: {
+            view_unidade_medida_id: null,
+            view_unidade_area_id: null,
+          },
           areas: [],
           talhoes: [],
           culturas: [],
-          selectedSafraId: null,
+          selectedSafraCulturaId: null,
 
           // UNIDADES
           unidadesArea: [],
@@ -649,7 +672,35 @@
         },
 
         // CREATE SAFRA CULTURA
+        addSafraCultura: function(id){
+          this.selectedSafraId = id;
+          this.modalSafraCultura = true;
+          this.listCulturas();
+          this.getAreas();
+        },
+        editSafraCultura: function(safraId, safraCultura){
+          this.selectedSafraId = safraId;
+          this.selectedSafraCulturaId = safraCultura.id;
+          this.modalEditSafraCultura = true;
+          this.fillFormEditSafraCultura(safraCultura);
+        },
+        fillFormEditSafraCultura: function(safraCultura){
+          this.formEditSafraCultura.view_unidade_area_id = safraCultura.view_unidade_area.id;
+          this.formEditSafraCultura.view_unidade_medida_id = safraCultura.view_unidade_medida.id;
+        },
+        updateSafraCultura: function(){
+          safraCulturaService.updateSafraCultura(this.selectedSafraId, this.selectedSafraCulturaId, this.formEditSafraCultura).then(response => {
+            if(response.status === 200) {
+              this.$q.notify({type: 'positive', message: 'Safra cultura atualizada com sucesso!'});
+              this.listSafras();
+              this.closeNewSafraCulturaModal();
+            }
+          }).catch(error => {
+            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          });
+        },
         closeNewSafraCulturaModal: function(){
+          this.modalEditSafraCultura = false;
           this.modalSafraCultura = false;
           this.currentStep = 'cultura';
           this.safraCultura = new SafraCultura();
@@ -658,12 +709,6 @@
           this.talhoes = [];
           this.culturas = [];
           this.selectedSafraId = null;
-        },
-        addSafraCultura: function(id){
-          this.selectedSafraId = id;
-          this.modalSafraCultura = true;
-          this.listCulturas();
-          this.getAreas();
         },
         checkInputMaxSize: function(value, talhao){
           if(value > talhao.tamanho){
@@ -698,23 +743,11 @@
         getUnidadesMedida:function(){
           unidadeMedidaService.listUnidadesMedida().then(response => {
             this.unidadesMedida = response.data;
-            // this.unidadesMedida = response.data.map(unidadeMed => {
-            //   return {
-            //     label: unidadeMed.nome,
-            //     value: unidadeMed.id
-            //   }
-            // });
           })
         },
         getUnidadesArea:function(){
           unidadeMedidaService.listUnidadesArea().then(response => {
             this.unidadesArea = response.data;
-            // this.unidadesArea = response.data.map(unidadeAre => {
-            //   return {
-            //     label: unidadeAre.nome,
-            //     value: unidadeAre.id
-            //   }
-            // });
           })
         },
         getUnidadeMedidaById: function(id){
