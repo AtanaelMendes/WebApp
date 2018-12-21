@@ -13,7 +13,8 @@
             <!--IMAGEM HEADER-->
             <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
               <div style="max-height: 200px; overflow: hidden">
-                <img src="assets/images/soja2.jpg" class="responsive"/>
+                <img src="assets/images/icon-no-image.svg" class="responsive" style="margin-top:-200px" v-if="!safraCultura.cultura.image"/>
+                <img :src="safraCultura.cultura.image" class="responsive" v-if="safraCultura.cultura.image"/>
               </div>
             </div>
 

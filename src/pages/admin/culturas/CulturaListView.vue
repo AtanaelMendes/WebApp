@@ -342,13 +342,20 @@
       <!--MODAL ADD FOTO CULTURA-->
       <q-modal v-model="modalAddFotoCulura" maximized no-backdrop-dismiss>
         <div class="row justify-center q-pt-lg">
-          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center">
-            MODAL ADD FOTO
-          </div>
+          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center"></div>
         </div>
-        <div class="row justify-center content-center" style="min-height: 80vh"></div>
+
+        <div class="row justify-center content-center" style="min-height: 80vh">
+          <imape-upload ref="culturaImageUpload"
+                        :url="culturaImageUrl"
+                        v-on:on_error="uploadFotoError"
+                        v-on:on_upload_success="uploadFotoSuccess"
+                        v-on:on_upload_error="uploadFotoError" />
+        </div>
+
         <q-page-sticky position="bottom-right" :offset="[18, 18]">
           <q-btn @click.native="closeModalAddFotoCultura" color="primary" label="Cancelar" class="q-mr-xs"/>
+          <q-btn @click.native="uploadFotoCultura" color="deep-orange" label="Salvar"/>
         </q-page-sticky>
       </q-modal>
 
@@ -385,16 +392,14 @@
       <!--MODAL ADD FOTO MARCA-->
       <q-modal v-model="modalAddFotoMarca"  no-backdrop-dismiss maximized >
         <div class="row justify-center q-pt-lg">
-          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center">
-
-          </div>
+          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center"></div>
         </div>
         <div class="row justify-center content-center" style="min-height: 80vh">
-          <imape-upload ref="imageUpload"
+          <imape-upload ref="marcaImageUpload"
                         :url="marcaImageUrl"
-                        v-on:on_error="uploadFotoMarcaError"
-                        v-on:on_upload_success="uploadFotoMarcaSuccess"
-                        v-on:on_upload_error="uploadFotoMarcaError" />
+                        v-on:on_error="uploadFotoError"
+                        v-on:on_upload_success="uploadFotoSuccess"
+                        v-on:on_upload_error="uploadFotoError" />
         </div>
         <q-page-sticky position="bottom-right" :offset="[18, 18]">
           <q-btn @click.native="closeModalAddFotoMarca" color="primary" label="Cancelar" class="q-mr-xs"/>
@@ -777,6 +782,10 @@
         marcaImageUrl: function(){
           let produtor_id = localStorage.getItem('account.produtor_id');
           return '/produtor/' + produtor_id + '/marca/' + this.selectedMarcaId + '/image';
+        },
+        culturaImageUrl: function(){
+          let produtor_id = localStorage.getItem('account.produtor_id');
+          return '/produtor/' + produtor_id + '/cultura/' + this.selectedCulturaId + '/image';
         }
       },
       methods: {
@@ -819,10 +828,12 @@
           this.cultura.defaultUnidadeAreaId.value = cultura.default_unidade_area_id;
         },
         addFotoCultura: function(id){
+          this.selectedCulturaId = id;
           this.modalAddFotoCulura = true;
         },
         closeModalAddFotoCultura: function(){
           this.modalAddFotoCulura = false;
+          this.$refs.culturaImageUpload.clear();
         },
         updateCultura: function() {
           if (!this.cultura.isValid()) {
@@ -900,7 +911,7 @@
         },
         closeModalAddFotoMarca: function(){
           this.modalAddFotoMarca = false;
-          this.$refs.imageUpload.clear();
+          this.$refs.marcaImageUpload.clear();
         },
         editMarca: function(marca){
           this.selectedMarcaId = marca.id;
@@ -958,14 +969,18 @@
 
         },
         uploadFotoMarca: function(){
-          this.$refs.imageUpload.uploadImage();
+          this.$refs.marcaImageUpload.uploadImage();
         },
-        uploadFotoMarcaSuccess: function(response){
+        uploadFotoCultura: function(){
+          this.$refs.culturaImageUpload.uploadImage();
+        },
+        uploadFotoSuccess: function(response){
           this.closeModalAddFotoMarca();
+          this.closeModalAddFotoCultura();
           this.listCulturas()
           this.listMarcasSemCultivares();
         },
-        uploadFotoMarcaError: function(error){
+        uploadFotoError: function(error){
           if(error.data){
             this.$q.notify({type: 'negative', message: error.data.image[0]})
           }else{
