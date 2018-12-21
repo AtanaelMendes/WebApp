@@ -41,35 +41,35 @@
           <!--MARCA-->
           <div class="q-ma-sm col-xs-9 col-sm-6 col-md-4 col-lg-3">
             <q-card>
-              <q-card-title>
-                {{marca.nome}}
-                <div slot="right">
-                  <q-btn round flat dense icon="more_vert">
-                    <q-popover>
-                      <q-list link class="no-border">
-                        <q-item v-close-overlay @click.native="addFotoMarca(marca.id)">
-                          <q-item-main label="Atualizar Foto"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="editMarca(marca)">
-                          <q-item-main label="Editar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="archiveMarca(marca.id)" v-if="!marca.deleted_at">
-                          <q-item-main label="Arquivar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="restoreMarca(marca.id)" v-if="marca.deleted_at">
-                          <q-item-main label="Ativar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="deleteMarca(marca.id)">
-                          <q-item-main label="Excluir"/>
-                        </q-item>
-                      </q-list>
-                    </q-popover>
-                  </q-btn>
-                </div>
-              </q-card-title>
-              <q-card-separator/>
-              <q-card-media>
-                <img src="assets/images/no-image.png" v-if="!marca.image"/>
+              <q-card-media overlay-position="top">
+                <q-card-title slot="overlay">
+                  {{marca.nome}}
+                  <div slot="right">
+                    <q-btn round flat dense icon="more_vert" color="white">
+                      <q-popover>
+                        <q-list link class="no-border">
+                          <q-item v-close-overlay @click.native="addFotoMarca(marca.id)">
+                            <q-item-main label="Atualizar Foto"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="editMarca(marca)">
+                            <q-item-main label="Editar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="archiveMarca(marca.id)" v-if="!marca.deleted_at">
+                            <q-item-main label="Arquivar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="restoreMarca(marca.id)" v-if="marca.deleted_at">
+                            <q-item-main label="Ativar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="deleteMarca(marca.id)">
+                            <q-item-main label="Excluir"/>
+                          </q-item>
+                        </q-list>
+                      </q-popover>
+                    </q-btn>
+                  </div>
+                </q-card-title>
+
+                <img src="assets/images/icon-no-image.svg" v-if="!marca.image"/>
                 <img :src="marca.image" v-if="marca.image"/>
               </q-card-media>
             </q-card>
@@ -135,35 +135,35 @@
         <div class="row gutter-sm q-pa-md">
           <div class="col-xs-9 col-sm-6 col-md-4 col-lg-3" v-for="marca in marcasSemCultivares" :key="marca.id">
             <q-card>
-              <q-card-title>
-                {{marca.nome}}
-                <div slot="right">
-                  <q-btn round flat dense icon="more_vert">
-                    <q-popover>
-                      <q-list link class="no-border">
-                        <q-item v-close-overlay @click.native="addFotoMarca(marca.id)">
-                          <q-item-main label="Atualizar Foto"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="editMarca(marca)">
-                          <q-item-main label="Editar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="archiveMarca(marca.id)" v-if="!marca.deleted_at">
-                          <q-item-main label="Arquivar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="restoreMarca(marca.id)" v-if="marca.deleted_at">
-                          <q-item-main label="Ativar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="deleteMarca(marca.id)">
-                          <q-item-main label="Excluir"/>
-                        </q-item>
-                      </q-list>
-                    </q-popover>
-                  </q-btn>
-                </div>
-              </q-card-title>
-              <q-card-separator/>
-              <q-card-media>
-                <img src="assets/images/no-image.png"/>
+              <q-card-media overlay-position="top">
+                <q-card-title slot="overlay">
+                  {{marca.nome}}
+                  <div slot="right">
+                    <q-btn round flat dense icon="more_vert" color="white">
+                      <q-popover>
+                        <q-list link class="no-border">
+                          <q-item v-close-overlay @click.native="addFotoMarca(marca.id)">
+                            <q-item-main label="Atualizar Foto"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="editMarca(marca)">
+                            <q-item-main label="Editar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="archiveMarca(marca.id)" v-if="!marca.deleted_at">
+                            <q-item-main label="Arquivar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="restoreMarca(marca.id)" v-if="marca.deleted_at">
+                            <q-item-main label="Ativar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="deleteMarca(marca.id)">
+                            <q-item-main label="Excluir"/>
+                          </q-item>
+                        </q-list>
+                      </q-popover>
+                    </q-btn>
+                  </div>
+                </q-card-title>
+                <img src="assets/images/icon-no-image.svg" v-if="!marca.image"/>
+                <img :src="marca.image" v-if="marca.image"/>
               </q-card-media>
             </q-card>
           </div>
