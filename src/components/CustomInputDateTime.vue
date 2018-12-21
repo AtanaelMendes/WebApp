@@ -3,6 +3,7 @@
     <q-input
       :type="type"
       align="center"
+      :disable="disable"
       :stack-label="label"
       v-model="model.value"
       v-on:input="clearErrorMessage()"
@@ -24,6 +25,7 @@
       model: Object,
       type: String,
       label: String,
+      disable: Boolean,
     },
     model:{
       event: 'blur',

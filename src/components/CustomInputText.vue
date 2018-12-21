@@ -3,6 +3,7 @@
     <q-input
       v-mask="mask"
       autocomplete="foo"
+      :readonly="readonly"
       v-model="model.value"
       :autofocus="autofocus"
       :maxlength="maxlength"
@@ -34,6 +35,7 @@
       label: String,
       mask: String,
       autofocus: String,
+      readonly: Boolean,
       loading: Boolean,
     },
     model:{

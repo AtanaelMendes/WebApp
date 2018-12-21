@@ -8,7 +8,7 @@
       <div class="col-xs-12 col-sm-6 col-md- 4 col-lg-3" v-for="contrato in 10" :key="contrato">
 
         <q-card>
-          <q-card-title @click.native="viewContrato(contrato)">
+          <q-card-title @click.native="viewNegocio(contrato)">
             Negocio{{contrato}}
             <div slot="right">
               <q-btn round flat dense icon="more_vert" @click.stop>
@@ -363,8 +363,8 @@
       goToNextStep(){
         this.$refs.stepperNegocio.next();
       },
-      viewContrato: function(id){
-        this.$router.push({name: 'contrato_view', params: {id:id}});
+      viewNegocio: function(id){
+        this.$router.push({name: 'negocio_view', params: {id:id}});
       },
     },
     mounted () {
