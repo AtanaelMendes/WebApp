@@ -13,7 +13,8 @@
             <!--IMAGEM HEADER-->
             <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
               <div style="max-height: 200px; overflow: hidden">
-                <img src="assets/images/soja2.jpg" class="responsive"/>
+                <img src="assets/images/icon-no-image.svg" class="responsive" style="margin-top:-200px" v-if="!safraCultura.cultura.image"/>
+                <img :src="safraCultura.cultura.image" class="responsive" v-if="safraCultura.cultura.image"/>
               </div>
             </div>
 
@@ -111,7 +112,8 @@
         <q-card>
 
           <q-card-media>
-            <img src="/assets/images/talhao1.jpeg"/>
+            <img src="assets/images/icon-no-image.svg" v-if="!culturaTalhao.talhao.image"/>
+            <img :src="culturaTalhao.talhao.image" v-if="culturaTalhao.talhao.image"/>
           </q-card-media>
           <q-card-separator/>
 
@@ -150,7 +152,7 @@
                   </div>
 
                   <div class="col-xs-2 col-sm-2 col-md-3 col-lg-3">
-                    <img src="/assets/images/pioneer.jpg" class="responsive"/>
+                    <img :src="culturaTalhao.cultivar.image_path" class="responsive" v-if="culturaTalhao.cultivar.image_path"/>
                   </div>
                 </div>
 
@@ -244,7 +246,7 @@
             </q-item>
 
             <q-list no-border dense class="q-py-none">
-              <q-list-header>Estimativa por {{selectedSafraCulturaTalhao.talhao.tamanho_unidade_area.nome}}</q-list-header>
+              <q-list-header>Estimativa por {{safraCultura.cultura.estimativa_unidade_area.nome}}</q-list-header>
               <q-item dense>
                 <div class="row gutter-x-sm">
                   <div class="col-3">
@@ -282,7 +284,8 @@
             <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="marca in marcas" :key="marca.id">
               <q-card @click.native="chooseMarca(marca.id)">
                 <q-card-media overlay-position="full">
-                  <img src="assets/images/monsoy.jpg">
+                  <img src="assets/images/icon-no-image.svg" v-if="!marca.image_path"/>
+                  <img :src="marca.image_path" v-if="marca.image_path"/>
                   <q-card-title slot="overlay" align="end" v-if="marca.id === selectedMarcaId">
                     <q-icon name="check_circle" size="30px" color="positive"/>
                   </q-card-title>

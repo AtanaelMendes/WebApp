@@ -41,35 +41,35 @@
           <!--MARCA-->
           <div class="q-ma-sm col-xs-9 col-sm-6 col-md-4 col-lg-3">
             <q-card>
-              <q-card-title>
-                {{marca.nome}}
-                <div slot="right">
-                  <q-btn round flat dense icon="more_vert">
-                    <q-popover>
-                      <q-list link class="no-border">
-                        <q-item v-close-overlay @click.native="addFotoMarca(marca.id)">
-                          <q-item-main label="Atualizar Foto"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="editMarca(marca)">
-                          <q-item-main label="Editar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="archiveMarca(marca.id)" v-if="!marca.deleted_at">
-                          <q-item-main label="Arquivar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="restoreMarca(marca.id)" v-if="marca.deleted_at">
-                          <q-item-main label="Ativar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="deleteMarca(marca.id)">
-                          <q-item-main label="Excluir"/>
-                        </q-item>
-                      </q-list>
-                    </q-popover>
-                  </q-btn>
-                </div>
-              </q-card-title>
-              <q-card-separator/>
-              <q-card-media>
-                <img src="assets/images/no-image.png" v-if="!marca.image"/>
+              <q-card-media overlay-position="top">
+                <q-card-title slot="overlay">
+                  {{marca.nome}}
+                  <div slot="right">
+                    <q-btn round flat dense icon="more_vert" color="white">
+                      <q-popover>
+                        <q-list link class="no-border">
+                          <q-item v-close-overlay @click.native="addFotoMarca(marca.id)">
+                            <q-item-main label="Atualizar Foto"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="editMarca(marca)">
+                            <q-item-main label="Editar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="archiveMarca(marca.id)" v-if="!marca.deleted_at">
+                            <q-item-main label="Arquivar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="restoreMarca(marca.id)" v-if="marca.deleted_at">
+                            <q-item-main label="Ativar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="deleteMarca(marca.id)">
+                            <q-item-main label="Excluir"/>
+                          </q-item>
+                        </q-list>
+                      </q-popover>
+                    </q-btn>
+                  </div>
+                </q-card-title>
+
+                <img src="assets/images/icon-no-image.svg" v-if="!marca.image"/>
                 <img :src="marca.image" v-if="marca.image"/>
               </q-card-media>
             </q-card>
@@ -135,35 +135,35 @@
         <div class="row gutter-sm q-pa-md">
           <div class="col-xs-9 col-sm-6 col-md-4 col-lg-3" v-for="marca in marcasSemCultivares" :key="marca.id">
             <q-card>
-              <q-card-title>
-                {{marca.nome}}
-                <div slot="right">
-                  <q-btn round flat dense icon="more_vert">
-                    <q-popover>
-                      <q-list link class="no-border">
-                        <q-item v-close-overlay @click.native="addFotoMarca(marca.id)">
-                          <q-item-main label="Atualizar Foto"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="editMarca(marca)">
-                          <q-item-main label="Editar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="archiveMarca(marca.id)" v-if="!marca.deleted_at">
-                          <q-item-main label="Arquivar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="restoreMarca(marca.id)" v-if="marca.deleted_at">
-                          <q-item-main label="Ativar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="deleteMarca(marca.id)">
-                          <q-item-main label="Excluir"/>
-                        </q-item>
-                      </q-list>
-                    </q-popover>
-                  </q-btn>
-                </div>
-              </q-card-title>
-              <q-card-separator/>
-              <q-card-media>
-                <img src="assets/images/no-image.png"/>
+              <q-card-media overlay-position="top">
+                <q-card-title slot="overlay">
+                  {{marca.nome}}
+                  <div slot="right">
+                    <q-btn round flat dense icon="more_vert" color="white">
+                      <q-popover>
+                        <q-list link class="no-border">
+                          <q-item v-close-overlay @click.native="addFotoMarca(marca.id)">
+                            <q-item-main label="Atualizar Foto"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="editMarca(marca)">
+                            <q-item-main label="Editar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="archiveMarca(marca.id)" v-if="!marca.deleted_at">
+                            <q-item-main label="Arquivar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="restoreMarca(marca.id)" v-if="marca.deleted_at">
+                            <q-item-main label="Ativar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="deleteMarca(marca.id)">
+                            <q-item-main label="Excluir"/>
+                          </q-item>
+                        </q-list>
+                      </q-popover>
+                    </q-btn>
+                  </div>
+                </q-card-title>
+                <img src="assets/images/icon-no-image.svg" v-if="!marca.image"/>
+                <img :src="marca.image" v-if="marca.image"/>
               </q-card-media>
             </q-card>
           </div>
@@ -342,13 +342,20 @@
       <!--MODAL ADD FOTO CULTURA-->
       <q-modal v-model="modalAddFotoCulura" maximized no-backdrop-dismiss>
         <div class="row justify-center q-pt-lg">
-          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center">
-            MODAL ADD FOTO
-          </div>
+          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center"></div>
         </div>
-        <div class="row justify-center content-center" style="min-height: 80vh"></div>
+
+        <div class="row justify-center content-center" style="min-height: 80vh">
+          <imape-upload ref="culturaImageUpload"
+                        :url="culturaImageUrl"
+                        v-on:on_error="uploadFotoError"
+                        v-on:on_upload_success="uploadFotoSuccess"
+                        v-on:on_upload_error="uploadFotoError" />
+        </div>
+
         <q-page-sticky position="bottom-right" :offset="[18, 18]">
           <q-btn @click.native="closeModalAddFotoCultura" color="primary" label="Cancelar" class="q-mr-xs"/>
+          <q-btn @click.native="uploadFotoCultura" color="deep-orange" label="Salvar"/>
         </q-page-sticky>
       </q-modal>
 
@@ -385,16 +392,14 @@
       <!--MODAL ADD FOTO MARCA-->
       <q-modal v-model="modalAddFotoMarca"  no-backdrop-dismiss maximized >
         <div class="row justify-center q-pt-lg">
-          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center">
-
-          </div>
+          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center"></div>
         </div>
         <div class="row justify-center content-center" style="min-height: 80vh">
-          <imape-upload ref="imageUpload"
+          <imape-upload ref="marcaImageUpload"
                         :url="marcaImageUrl"
-                        v-on:on_error="uploadFotoMarcaError"
-                        v-on:on_upload_success="uploadFotoMarcaSuccess"
-                        v-on:on_upload_error="uploadFotoMarcaError" />
+                        v-on:on_error="uploadFotoError"
+                        v-on:on_upload_success="uploadFotoSuccess"
+                        v-on:on_upload_error="uploadFotoError" />
         </div>
         <q-page-sticky position="bottom-right" :offset="[18, 18]">
           <q-btn @click.native="closeModalAddFotoMarca" color="primary" label="Cancelar" class="q-mr-xs"/>
@@ -413,7 +418,8 @@
               <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in culturas" :key="cultura.id">
                 <q-card @click.native="selectCultura(cultura.id)">
                   <q-card-media overlay-position="full">
-                    <img src="assets/images/no-image.png"/>
+                    <img src="assets/images/icon-no-image.svg" v-if="!cultura.image"/>
+                    <img :src="cultura.image" v-if="cultura.image"/>
                     <q-card-title slot="overlay" align="end" v-if="cultura.id === cultivar.culturaId">
                       <q-icon name="check_circle" size="30px" color="positive"/>
                     </q-card-title>
@@ -440,7 +446,8 @@
               <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="marca in marcas" :key="marca.id">
                 <q-card @click.native="selectMarca(marca.id)">
                   <q-card-media overlay-position="full">
-                    <img src="assets/images/no-image.png"/>
+                    <img src="assets/images/icon-no-image.svg" v-if="!marca.image_path"/>
+                    <img :src="marca.image_path" v-if="marca.image_path"/>
                     <q-card-title slot="overlay" align="end" v-if="marca.id === cultivar.marcaId">
                       <q-icon name="check_circle" size="30px" color="positive"/>
                     </q-card-title>
@@ -777,6 +784,10 @@
         marcaImageUrl: function(){
           let produtor_id = localStorage.getItem('account.produtor_id');
           return '/produtor/' + produtor_id + '/marca/' + this.selectedMarcaId + '/image';
+        },
+        culturaImageUrl: function(){
+          let produtor_id = localStorage.getItem('account.produtor_id');
+          return '/produtor/' + produtor_id + '/cultura/' + this.selectedCulturaId + '/image';
         }
       },
       methods: {
@@ -819,10 +830,12 @@
           this.cultura.defaultUnidadeAreaId.value = cultura.default_unidade_area_id;
         },
         addFotoCultura: function(id){
+          this.selectedCulturaId = id;
           this.modalAddFotoCulura = true;
         },
         closeModalAddFotoCultura: function(){
           this.modalAddFotoCulura = false;
+          this.$refs.culturaImageUpload.clear();
         },
         updateCultura: function() {
           if (!this.cultura.isValid()) {
@@ -900,7 +913,7 @@
         },
         closeModalAddFotoMarca: function(){
           this.modalAddFotoMarca = false;
-          this.$refs.imageUpload.clear();
+          this.$refs.marcaImageUpload.clear();
         },
         editMarca: function(marca){
           this.selectedMarcaId = marca.id;
@@ -958,14 +971,18 @@
 
         },
         uploadFotoMarca: function(){
-          this.$refs.imageUpload.uploadImage();
+          this.$refs.marcaImageUpload.uploadImage();
         },
-        uploadFotoMarcaSuccess: function(response){
+        uploadFotoCultura: function(){
+          this.$refs.culturaImageUpload.uploadImage();
+        },
+        uploadFotoSuccess: function(response){
           this.closeModalAddFotoMarca();
+          this.closeModalAddFotoCultura();
           this.listCulturas()
           this.listMarcasSemCultivares();
         },
-        uploadFotoMarcaError: function(error){
+        uploadFotoError: function(error){
           if(error.data){
             this.$q.notify({type: 'negative', message: error.data.image[0]})
           }else{
