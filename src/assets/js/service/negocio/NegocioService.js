@@ -67,6 +67,43 @@ export default {
     });
   },
 
+  saveAttachCultura(params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.post('produtor/'+ produtorId + '/negocios', params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
+  saveAttachTitulo(params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.post('produtor/'+ produtorId + '/negocios', params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
+  saveAttachProduto(params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.post('produtor/'+ produtorId + '/negocios', params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
+  saveAttachFixacao(params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.post('produtor/'+ produtorId + '/negocios', params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
+
 }
 // getPessoa(id){
 //   return new Promise((resolve, reject) => {
