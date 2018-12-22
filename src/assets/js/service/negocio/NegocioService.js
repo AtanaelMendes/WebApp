@@ -12,6 +12,15 @@ export default {
       })
     });
   },
+  getNegocioById(id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/negocio/'+ id).then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   saveNegocio(params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.post('produtor/'+ produtorId + '/negocios', params).then(response => {
