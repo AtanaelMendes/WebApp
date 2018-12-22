@@ -198,7 +198,11 @@
             <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in culturas" :key="cultura.id">
               <q-card @click.native="setCultura(cultura)">
                 <q-card-media overlay-position="full">
-                  <img src="assets/images/soja250x250.jpg"/>
+                  <!--<img src="assets/images/soja250x250.jpg"/>-->
+
+                  <img src="assets/images/icon-no-image.svg" v-if="!cultura.image_path"/>
+                  <img :src="cultura.image_path" v-if="cultura.image_path"/>
+
                   <q-card-title slot="overlay" align="end" v-if="cultura.id === safraCultura.cultura_id">
                     <q-icon name="check_circle" size="30px" color="positive"/>
                   </q-card-title>
@@ -241,7 +245,11 @@
             <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3" v-for="area in areas" :key="area.id">
               <q-card @click.native="setArea(area)">
                 <q-card-media overlay-position="full">
-                  <img src="assets/images/confinamento250x250.jpg"/>
+                  <!--<img src="assets/images/confinamento250x250.jpg"/>-->
+
+                  <img src="assets/images/icon-no-image.svg" v-if="!area.image_path"/>
+                  <img :src="area.image_path" v-if="area.image_path"/>
+
                   <q-card-title slot="overlay" align="end" v-if="area.id === selectedArea.id">
                     <q-icon name="check_circle" size="30px" color="positive"/>
                   </q-card-title>
@@ -262,7 +270,10 @@
             <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3" v-for="talhao in talhoes" :key="talhao.id">
               <q-card>
                 <q-card-media overlay-position="full" @click.native="toggleTalhao(talhao)">
-                  <img src="assets/images/talhao2-250x250.jpg"/>
+
+                  <img src="assets/images/icon-no-image.svg" v-if="!talhao.image_path"/>
+                  <img :src="talhao.image_path" v-if="talhao.image_path"/>
+
                   <q-card-title slot="overlay" align="end" v-if="safraCultura.getTalhaoById(talhao.id).tamanho > 0">
                     <q-icon name="check_circle" size="30px" color="positive"/>
                   </q-card-title>
@@ -788,6 +799,7 @@
                 id: talhao.id,
                 nome: talhao.nome,
                 tamanho: parseFloat(talhao.tamanho),
+                image_path: talhao.image_path,
                 /*unidade: {
                   nome: talhao.unidade.nome,
                   plural: talhao.unidade.plural,

@@ -6,6 +6,9 @@
         <q-btn flat round dense icon="more_vert" >
           <q-popover anchor="bottom left">
             <q-list link>
+              <q-item @click.native="addFotoArea(area.id)">
+                <q-item-main label="Atualizar Foto"/>
+              </q-item>
               <q-item dense @click.native="archiveArea(area.id)" v-if="!area.deleted_at">
                 <q-item-main label="Arquivar area"  />
               </q-item>
@@ -29,9 +32,6 @@
 
           <div class="col-12">
             <q-item>
-              <q-item-side>
-                <q-icon name="place" size="40px"/>
-              </q-item-side>
               <q-item-main>
                 <q-item-tile class="q-title">{{area.nome}}</q-item-tile>
               </q-item-main>
@@ -40,7 +40,7 @@
 
           <div :class="coluna">
             <q-item>
-              <q-item-main inset>
+              <q-item-main>
                 <q-item-tile class="q-subheading">
                   {{area.localizacao.endereco}},&nbsp{{area.localizacao.numero}}
                 </q-item-tile>
@@ -68,28 +68,40 @@
           </div>
           <div class="col-6" v-for="talhao in talhoes" :key="talhao.id">
             <q-card color="white" text-color="black">
-              <q-card-title>
-                {{talhao.nome}}
-                <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
-                  <q-popover>
-                    <q-list link>
-                      <q-item v-close-overlay @click.native="updateTalhao(talhao.id)">
-                        <q-item-main label="Editar"/>
-                      </q-item>
-                      <q-item v-close-overlay @click.native="archiveTalhao(talhao.id)" v-if="!talhao.deleted_at">
-                        <q-item-main label="Arquivar"/>
-                      </q-item>
-                      <q-item v-close-overlay @click.native="restoreTalhao(talhao.id)" v-if="talhao.deleted_at">
-                        <q-item-main label="Ativar"/>
-                      </q-item>
-                      <q-item v-close-overlay @click.native="deleteTalhao(talhao.id)">
-                        <q-item-main label="Apagar"/>
-                      </q-item>
-                    </q-list>
-                  </q-popover>
-                </q-btn>
-              </q-card-title>
-              <q-card-separator/>
+
+              <q-card-media overlay-position="top">
+                <q-card-title slot="overlay">
+                  {{talhao.nome}}
+                  <div slot="right">
+                    <q-btn round flat dense icon="more_vert" color="white">
+                      <q-popover>
+                        <q-list link>
+                          <q-item v-close-overlay @click.native="addFotoTalhao(talhao.id)">
+                            <q-item-main label="Atualizar Foto"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="updateTalhao(talhao.id)">
+                            <q-item-main label="Editar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="archiveTalhao(talhao.id)" v-if="!talhao.deleted_at">
+                            <q-item-main label="Arquivar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="restoreTalhao(talhao.id)" v-if="talhao.deleted_at">
+                            <q-item-main label="Ativar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="deleteTalhao(talhao.id)">
+                            <q-item-main label="Apagar"/>
+                          </q-item>
+                        </q-list>
+                      </q-popover>
+                    </q-btn>
+                  </div>
+                </q-card-title>
+
+                <img src="assets/images/icon-no-image.svg" v-if="!talhao.image_path"/>
+                <img :src="talhao.image_path" v-if="talhao.image_path"/>
+              </q-card-media>
+
+
               <q-item v-if="talhao.deleted_at" class="bg-negative text-white" dense inset>
                 <q-item-main class="text-center">
                   Talhão Inativo
@@ -106,6 +118,46 @@
         <!--FIM TALHOES-->
       </div>
     </div>
+
+    <!--MODAL ADD FOTO AREA-->
+    <q-modal v-model="modalAddFotoArea" maximized no-backdrop-dismiss>
+      <div class="row justify-center q-pt-lg">
+        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center"></div>
+      </div>
+
+      <div class="row justify-center content-center" style="min-height: 80vh">
+        <imape-upload ref="areaImageUpload"
+                      :url="areaImageUrl"
+                      v-on:on_error="uploadFotoError"
+                      v-on:on_upload_success="uploadFotoSuccess"
+                      v-on:on_upload_error="uploadFotoError" />
+      </div>
+
+      <q-page-sticky position="bottom-right" :offset="[18, 18]">
+        <q-btn @click.native="closeModalAddFotoArea" color="primary" label="Cancelar" class="q-mr-xs"/>
+        <q-btn @click.native="uploadFotoArea" color="deep-orange" label="Salvar"/>
+      </q-page-sticky>
+    </q-modal>
+
+    <!--MODAL ADD FOTO TALHÃO-->
+    <q-modal v-model="modalAddFotoTalhao" maximized no-backdrop-dismiss>
+      <div class="row justify-center q-pt-lg">
+        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center"></div>
+      </div>
+
+      <div class="row justify-center content-center" style="min-height: 80vh">
+        <imape-upload ref="talhaoImageUpload"
+                      :url="talhaoImageUrl"
+                      v-on:on_error="uploadFotoError"
+                      v-on:on_upload_success="uploadFotoSuccess"
+                      v-on:on_upload_error="uploadFotoError" />
+      </div>
+
+      <q-page-sticky position="bottom-right" :offset="[18, 18]">
+        <q-btn @click.native="closeModalAddFotoTalhao" color="primary" label="Cancelar" class="q-mr-xs"/>
+        <q-btn @click.native="uploadFotoTalhao" color="deep-orange" label="Salvar"/>
+      </q-page-sticky>
+    </q-modal>
   </custom-page>
 </template>
 
@@ -114,11 +166,14 @@
   import customPage from 'components/CustomPage.vue'
   import talhaoService from 'assets/js/service/area/TalhaoService'
   import areaService from 'assets/js/service/area/AreaService'
+  import imapeUpload from 'components/ImageUpload'
+
   export default {
     name: "area-view",
     components: {
       toolbar,
       customPage,
+      imapeUpload,
     },
     watch: {
       '$route' (to, from) {
@@ -127,12 +182,26 @@
         this.areaId = this.$route.params.id;
       },
     },
+    computed: {
+      areaImageUrl: function(){
+        let produtor_id = localStorage.getItem('account.produtor_id');
+        return '/produtor/' + produtor_id + '/area/' + this.selectedAreaId + '/image';
+      },
+      talhaoImageUrl: function(){
+        let area_id = this.$route.params.id;
+        return '/area/' + area_id + '/talhao/' + this.selectedTalhaoId + '/image';
+      }
+    },
     data(){
       return{
         area: null,
         talhoes: [],
         areaId: this.$route.params.id,
         coluna: 'col-xs-12 col-sm-12 col-md-6 col-lg-6',
+        selectedAreaId: null,
+        modalAddFotoArea: false,
+        selectedTalhaoId: null,
+        modalAddFotoTalhao: false,
       }
     },
     methods: {
@@ -140,6 +209,30 @@
         areaService.getAreaById(areaId).then(area => {
           this.area = area
         })
+      },
+      uploadFotoSuccess: function(response){
+        this.closeModalAddFotoArea();
+        this.closeModalAddFotoTalhao();
+        this.listTalhoes(this.$route.params.id);
+        this.getAreaById(this.$route.params.id);
+      },
+      uploadFotoError: function(error){
+        if(error.data){
+          this.$q.notify({type: 'negative', message: error.data.image[0]})
+        }else{
+          this.$q.dialog({noBackdropDismiss: true, title: 'Oops!', message: error, ok: 'OK'});
+        }
+      },
+      addFotoArea: function(id){
+        this.selectedAreaId = id;
+        this.modalAddFotoArea = true;
+      },
+      closeModalAddFotoArea: function(){
+        this.modalAddFotoArea = false;
+        this.$refs.areaImageUpload.clear();
+      },
+      uploadFotoArea: function(){
+        this.$refs.areaImageUpload.uploadImage();
       },
       updateArea: function(){
         this.$router.push({name: 'edit_area', params: {id: this.areaId}});
@@ -189,6 +282,18 @@
         talhaoService.listTalhoes(id).then(talhoes => {
           this.talhoes = talhoes.data;
         })
+      },
+
+      addFotoTalhao: function(id){
+        this.selectedTalhaoId = id;
+        this.modalAddFotoTalhao = true;
+      },
+      closeModalAddFotoTalhao: function(){
+        this.modalAddFotoTalhao = false;
+        this.$refs.talhaoImageUpload.clear();
+      },
+      uploadFotoTalhao: function(){
+        this.$refs.talhaoImageUpload.uploadImage();
       },
       addtalhao: function(){
         this.$router.push({name: 'add_talhao', params: {id: this.$route.params.id}});

@@ -76,7 +76,7 @@ export default {
   },
   listCultivares(marcaId, culturaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('cultivar?marca_id='+ marcaId +'&cultura_id='+ culturaId).then( response => {
+      Vue.prototype.$axios.get('cultura/'+culturaId+'/cultivar?marca_id='+ marcaId).then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
