@@ -283,10 +283,10 @@
       </q-fab>
     </q-page-sticky>
 
-    <!--MODAL VINCULAR CULTURA -->
-    <q-modal v-model="modalAttachCultura" maximized>
+    <!--MODAL VINCULAR SAFRA CULTURA -->
+    <q-modal key="safraCultura" v-model="modalAttachSafraCultura" maximized>
 
-      <q-stepper ref="stepper" contractable color="positive" v-model="currentStepCultura" class="no-shadow" >
+      <q-stepper key="safraCultura" ref="stepperSafraCultura" contractable color="positive" v-model="currentStepCultura" class="no-shadow" >
 
         <!--PASSO 1 ESCOLHER SAFRA-->
         <q-step default title="Safra" name="safra">
@@ -315,8 +315,15 @@
 
           <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-              <q-radio v-model="cultura.isPagar.value" val="true" label="Entregar a sua colheita" class="q-mb-sm"/>
-              <q-radio v-model="cultura.isPagar.value" val="false" label="Receber a colheita de outro produtor" />
+
+              <q-field helper=" " label="Você vai">
+                <q-option-group type="radio" color="secondary" v-model="cultura.isPagar.value"
+                                :options="[{ label: 'Pagar', value: true },
+                                           { label: 'Receber', value: false}
+                                          ]"
+                />
+              </q-field>
+
             </div>
           </div>
 
@@ -448,20 +455,153 @@
       <q-page-sticky position="bottom-right" :offset="[30, 30]">
         <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
         <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepCulturaBtnEnable()" v-if="currentStepCultura != 'entrega' "/>
-        <q-btn label="salvar" color="primary" @click="saveAttachCultura" v-if="currentStepCultura == 'entrega' "/>
+        <q-btn label="salvar" color="primary" @click="saveAttachCultura" :disable="selectedArmazens.length <= 0" v-if="currentStepCultura == 'entrega' "/>
+      </q-page-sticky>
+    </q-modal>
+
+    <!--MODAL VINCULAR TITULO -->
+    <q-modal v-model="modalAttachTitulo" maximized key="titulo">
+
+      <q-stepper key="titulo" ref="stepperTitulo" contractable color="positive" v-model="currentStepTitulo" class="no-shadow">
+
+        <!--PASSO 1 PAGAR OU RECEBER-->
+        <q-step default title="Pagar/Receber" name="pagarReceber">
+          <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
+            <div class="col-xs-8 col-sm-4 col-md-3 col-lg-2">
+
+              <div class="row justify-center">
+                <div class="col-12 text-center q-title q-mb-sm">
+                  Você vai
+                </div>
+                <div class="col-4" >
+                  <q-field>
+                    <q-option-group type="radio" color="secondary" v-model="titulo.isPagar.value"
+                                    :options="[{ label: 'Pagar', value: true },
+                                               { label: 'Receber', value: false }
+                                             ]"
+                    />
+                  </q-field>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </q-step>
+
+        <!--PASSO 2 INFORMAR MOEDA -->
+        <q-step title="Moeda" name="moeda">
+          <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+
+              <div class="row gutter-y-xs">
+                <div class="col-12 q-title text-center">Qual a moeda?</div>
+                <div class="col-12" v-for="moeda in moedas" :key="moeda.nome">
+                  <q-btn class="full-width" @click.native="selectMoeda(moeda)" :color="isMoedaSelected(moeda.id)">
+                    {{moeda.simbolo}}&nbsp{{moeda.nome}}
+                  </q-btn>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </q-step>
+
+        <!--PASSO 3 INFORMAR VALOR -->
+        <q-step title="Valor" name="valor">
+          <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
+            <div class="col-xs-8 col-sm-4 col-md-3 col-lg-2">
+
+              <div class="row justify-center">
+                <div class="col-12">
+                  <custom-input-text key="valor" :prefix="prefixMoeda" type="number" label="Qual o valor?" :model="titulo.valor" align="center"/>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </q-step>
+
+        <!--PASSO 4 INFORMAR PARCELAS -->
+        <q-step title="Parcelas" name="parcelas">
+          <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
+            <div class="col-xs-8 col-sm-4 col-md-3 col-lg-2">
+
+              <div class="row justify-center">
+                <div class="col-12 text-center q-title q-mb-sm">
+                  Quantas Parcelas?
+                </div>
+                <div class="col-6" >
+                  <q-field>
+                    <q-option-group type="radio" color="secondary" v-model="numParcelas"
+                                    :options="[{ label: 'Uma', value: 1 },
+                                               { label: 'Duas', value: 2},
+                                               { label: 'Três', value: 3}
+                                             ]"
+                    />
+                  </q-field>
+                </div>
+                <div class="col-7">
+                  <q-input v-model="numParcelas" type="number" suffix="X" align="center"/>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </q-step>
+
+        <!--PASSO 5 INFORMAR VENCIMENTOS -->
+        <q-step title="Vencimentos" name="vencimentos">
+          <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
+            <div class="col-xs-12 col-sm-9 col-md-7 col-lg-5 text-center">
+              <span class="q-title">Informe as datas</span>
+
+              <q-list no-border separator>
+                <q-item v-for="parcela in titulo.parcelas" :key="parcela.numero">
+                  <q-item-main>
+                    <div class="row justify-center q-mt-md" >
+
+                      <div class="col-xs-4 col-lg-2 self-center">
+                        Parcela {{parcela.numero}}
+                      </div>
+                      <div class="col-xs-8 col-lg-3">
+                        <custom-input-datetime :key="parcela.numero" type="date" :model="parcela.vencimento"/>
+                      </div>
+
+                      <div class="col-xs-6 col-lg-3 self-center text-center">
+                        {{ numeral((moment(parcela.vencimento.value) - moment(dataAtual)) / (1000 * 3600 * 24)).format('0') }} Dias
+                      </div>
+
+                      <div class="col-xs-6 col-lg-4 self-center">
+                        <q-input v-model="parcela.valor.value" :prefix="prefixMoeda" align="center"/>
+                      </div>
+                    </div>
+                  </q-item-main>
+                </q-item>
+              </q-list>
+
+            </div>
+          </div>
+        </q-step>
+
+      </q-stepper>
+
+      <q-page-sticky position="bottom-right" :offset="[30, 30]">
+        <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
+        <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextTituloStep()" v-if="currentStepTitulo != 'vencimentos'"/>
+        <q-btn label="salvar" color="primary" @click="saveAttachTitulo" v-if="currentStepTitulo  == 'vencimentos' "/>
       </q-page-sticky>
     </q-modal>
 
     <!--MODAL VINCULAR PRODUTO -->
-    <q-modal v-model="modalAttachProduto" maximized>
+    <q-modal key="produto" v-model="modalAttachProduto" maximized>
 
-      <q-stepper ref="stepperProduto" contractable color="positive" v-model="currentStepProduto" class="no-shadow" >
+      <q-stepper key="produto" ref="stepperProduto" contractable color="positive" v-model="currentStepProduto" class="no-shadow" >
 
         <!--PASSO 1 ESCOLHER NEGOCIANTE-->
-        <q-step default title="Negociante" name="negociante"></q-step>
+        <q-step default title="produto" name="produto"></q-step>
 
         <!--PASSO 2 INFORMAR DETALHES -->
-        <q-step title="Informações" name="informacoes"></q-step>
+        <q-step title="passo2" name="passo2"></q-step>
 
       </q-stepper>
 
@@ -472,36 +612,16 @@
       </q-page-sticky>
     </q-modal>
 
-    <!--MODAL VINCULAR TITULO -->
-    <q-modal v-model="modalAttachTitulo" maximized>
-
-      <q-stepper ref="stepperTitulo" contractable color="positive" v-model="currentStepTitulo" class="no-shadow" >
-
-        <!--PASSO 1 ESCOLHER NEGOCIANTE-->
-        <q-step default title="Negociante" name="negociante"></q-step>
-
-        <!--PASSO 2 INFORMAR DETALHES -->
-        <q-step title="Informações" name="informacoes"></q-step>
-
-      </q-stepper>
-
-      <q-page-sticky position="bottom-right" :offset="[30, 30]">
-        <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-        <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="!isNextButtomEnabled()" v-if="currentStepTitulo"/>
-        <q-btn label="salvar" color="primary" @click="saveAttachTitulo" v-if="currentStepTitulo"/>
-      </q-page-sticky>
-    </q-modal>
-
     <!--MODAL VINCULAR FIXACAO -->
-    <q-modal v-model="modalAttachTitulo" maximized>
+    <q-modal key="fixacao" v-model="modalAttachFixacao" maximized>
 
-      <q-stepper ref="stepperFixacao" contractable color="positive" v-model="currentStepFixacao" class="no-shadow" >
+      <q-stepper key="fixacao" ref="stepperFixacao" contractable color="positive" v-model="currentStepFixacao" class="no-shadow" >
 
         <!--PASSO 1 ESCOLHER NEGOCIANTE-->
-        <q-step default title="Negociante" name="negociante"></q-step>
+        <q-step default title="fixacao" name="fixacao"></q-step>
 
         <!--PASSO 2 INFORMAR DETALHES -->
-        <q-step title="Informações" name="informacoes"></q-step>
+        <q-step title="fixacao2" name="fixacao2"></q-step>
 
       </q-stepper>
 
@@ -520,6 +640,7 @@
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import Cultura from 'assets/js/model/negocio/Cultura'
+  import Titulo from 'assets/js/model/negocio/Titulo'
   import negocioService from 'assets/js/service/negocio/NegocioService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   export default {
@@ -539,15 +660,20 @@
         progressModel: 50,
         isPrazo: false,
         isQuantidade: false,
+        selectedArmazens: [],
+        titulo: new Titulo(),
+        numParcelas: null,
+        prefixMoeda: null,
+        dataAtual: this.moment().format('YYYYMMDD'),
         unidadesMedida: [],
-        modalAttachCultura: false,
+        modalAttachSafraCultura: false,
         modalAttachTitulo: false,
         modalAttachProduto: false,
         modalAttachFixacao: false,
         currentStepCultura: 'safra',
-        currentStepFixacao: 'safra',
-        currentStepTitulo: 'safra',
-        currentStepProduto: 'safra',
+        currentStepTitulo: 'pagarReceber',
+        currentStepFixacao: 'fixacao',
+        currentStepProduto: 'produto',
 
         classificacoes: [
           {
@@ -599,7 +725,21 @@
             endereco: 'Rua sem nome, 2222 Bairro Camping Club Sinop-MT'
           }
         ],
-        selectedArmazens: [],
+        moedas:[
+          {
+            id: 1,
+            nome: 'Real',
+            plural: 'Reais',
+            simbolo: 'R$'
+          },
+          {
+            id: 2,
+            nome: 'Dollar',
+            plural: 'Dollars',
+            simbolo: '$'
+          }
+        ],
+        parcelasTeste: [],
       }
     },
     watch: {
@@ -608,11 +748,19 @@
       },
       isPrazo: function (val) {
         this.validaIsPrazo()
+      },
+      currentStepTitulo: function (val) {
+        if(val == 'vencimentos'){
+          this.generateFormParcelas()
+        }
+        if(val != 'vencimentos'){
+          this.titulo.parcelas = [];
+        }
       }
     },
     methods: {
       attachCultura: function(){
-        this.modalAttachCultura = true;
+        this.modalAttachSafraCultura = true;
       },
       selectSafraCultura: function(id){
         if(this.cultura.safraCulturaId.value == id){
@@ -641,10 +789,12 @@
 
         if(!existedArmazem){
           this.selectedArmazens.push(armazem);
+          this.cultura.armazens = this.selectedArmazens;
         }else{
           let mappedList = this.selectedArmazens.map(function(item){return item.id;});
           let position = mappedList.indexOf(armazem.id);
           this.selectedArmazens.splice(position, 1);
+          this.cultura.armazens = this.selectedArmazens;
         }
       },
       isArmazemSelected: function(armazem){
@@ -652,7 +802,7 @@
         return !value
       },
       isNextStepCulturaBtnEnable: function(){
-        if(this.cultura.safraCulturaId.value != null && this.currentStepCultura == 'safra'){
+        if(this.cultura.safraCulturaId.value == null && this.currentStepCultura == 'safra'){
           return true
         }
         if(this.cultura.isPagar.value == null && this.currentStepCultura == 'pagarReceber'){
@@ -665,18 +815,17 @@
         }
         if(this.isPrazo == true && this.currentStepCultura == 'prazo'){
           if(this.cultura.prazoEntregaInicial.value == null || this.cultura.prazoEntregaFinal.value == null){
-            return true
+            return true;
           }
         }
-        return false
-        this.$q.notify({type: 'negative', message: 'aqui'})
+        return false;
       },
       saveAttachCultura: function(id){
-        negocioService.saveNegocio(this.negocio.getValues()).then(response => {
+        negocioService.saveAttachCultura(this.cultura.getValues()).then(response => {
           if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Negócio criado com sucesso'});
-            this.listNegocios();
-            this.closeModalNegocio();
+            this.$q.notify({type: 'positive', message: 'Safra cultura vinculada com sucesso'});
+            this.getNegocioById();
+            this.closeModal();
           }
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -686,6 +835,51 @@
       attachTitulo: function(){
         this.modalAttachTitulo = true;
       },
+      isNextTituloStep: function(){
+        if(this.titulo.isPagar.value == null && this.currentStepTitulo == 'pagarReceber'){
+         return true
+        }
+        if(this.titulo.moedaId.value == null && this.currentStepTitulo == 'moeda'){
+          return true
+        }
+        if(this.titulo.valor.value == null && this.currentStepTitulo == 'valor'){
+          return true
+        }
+        if((this.numParcelas == null || this.numParcelas == 0) && this.currentStepTitulo == 'parcelas'){
+          return true
+        }
+        if(this.currentStepTitulo == 'vencimentos'){
+          this.generateFormParcelas()
+        }
+        return false;
+      },
+      selectMoeda: function(moeda){
+        if(this.titulo.moedaId.value == moeda.id){
+          this.titulo.moedaId.value = null;
+          this.prefixMoeda = null;
+        }else{
+          this.titulo.moedaId.value = moeda.id;
+          this.prefixMoeda = moeda.simbolo;
+        }
+      },
+      isMoedaSelected: function(id){
+        if(this.titulo.moedaId.value == id){
+          return 'positive';
+        }
+      },
+      generateFormParcelas: function(){
+        let numero = 1;
+        let valorParcela = null;
+        for (var parcela = 0; parcela < this.numParcelas; parcela++) {
+          valorParcela = this.titulo.valor.value / this.numParcelas;
+          this.titulo.parcelas.push({
+            numero: numero,
+            vencimento:{ value: this.moment().format('YYYY-MM-DD')} ,
+            valor: { value: this.numeral(valorParcela).format('0.0,0')}
+          });
+          numero++
+        }
+      },
       saveAttachTitulo: function(){
         if(!this.negocio.isValid()){
           return;
@@ -693,8 +887,8 @@
         negocioService.saveNegocio(this.negocio.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Negócio criado com sucesso'});
-            this.listNegocios();
-            this.closeModalNegocio();
+            this.getNegocioById();
+            this.closeModal();
           }
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -789,8 +983,10 @@
       },
       closeModal: function(){
         this.cultura = new Cultura();
+        this.titulo = new Titulo();
         this.currentStepCultura = 'safra';
-        this.modalAttachCultura = false;
+        this.currentStepTitulo = 'pagarReceber';
+        this.modalAttachSafraCultura = false;
         this.modalAttachTitulo = false;
         this.modalAttachProduto = false;
         this.modalAttachFixacao = false;
@@ -809,13 +1005,14 @@
         return false
       },
       goToNextStep(){
-        if(this.modalAttachCultura){
+        if(this.modalAttachSafraCultura){
           //Cultura
           if(this.currentStepCultura === 'classificacao'){
             this.cultura.classificacoes = this.classificacoes;
           }
         }
-        this.$refs.stepper.next();
+        this.$refs.stepperSafraCultura.next();
+        this.$refs.stepperTitulo.next();
       }
     },
     mounted () {
@@ -826,6 +1023,8 @@
       // });
     },
   }
+  // this.$q.notify({type: 'negative', message: 'aqui'})
+
 </script>
 <style>
   .space-end{

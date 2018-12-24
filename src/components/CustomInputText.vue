@@ -1,17 +1,21 @@
 <template>
   <q-field :error="model.errorMessage != null" class="q-mb-sm">
     <q-input
+      :type="type"
       v-mask="mask"
+      :align="align"
+      :suffix="suffix"
+      :prefix="prefix"
+      :loading="loading"
       autocomplete="foo"
+      :float-label="label"
+      :decimals="decimals"
       :readonly="readonly"
       v-model="model.value"
       :autofocus="autofocus"
       :maxlength="maxlength"
-      :suffix="suffix"
       :placeholder="placeholder"
       v-on:input="clearErrorMessage()"
-      :type="type" :float-label="label"
-      :loading="loading"
       @blur="$emit('blur', model.value)"
     />
     <div class="q-field-bottom row no-wrap" style="height: 22px">
@@ -29,12 +33,15 @@
     props: {
       model: Object,
       type: String,
+      align: String,
       placeholder: String,
       maxlength: String,
       suffix: String,
+      prefix: String,
       label: String,
       mask: String,
       autofocus: String,
+      decimals: Number,
       readonly: Boolean,
       loading: Boolean,
     },
