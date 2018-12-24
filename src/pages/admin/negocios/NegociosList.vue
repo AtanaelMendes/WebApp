@@ -75,14 +75,17 @@
 
           <!--PASSO 1 ESCOLHER NEGOCIANTE-->
           <q-step default title="Negociante" name="negociante">
+
             <div class="row text-center justify-center q-title">
               <div class="col-12">
                 Com quem está negociando?
               </div>
+
               <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
                 <pessoa-autocomplete label="Negociante" :model="negocio.pessoaId" :terms="terms" @input="selectedPessoa"/>
               </div>
             </div>
+
             <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
               <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
 
