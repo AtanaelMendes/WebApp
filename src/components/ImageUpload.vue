@@ -11,9 +11,11 @@
       <croppa v-model="croppa"
               :width="800"
               :height="500"
-              :remove-button-size="30"
+              :quality="1"
+              :show-loading="true"
               :show-remove-button="false"
               placeholder="Clique para selecionar uma imagem"
+              :placeholder-font-size="labelSize"
               :prevent-white-space="true"/>
     </div>
   </div>
@@ -31,6 +33,11 @@
         croppa: {}
       }
 
+    },
+    computed:{
+      labelSize: function () {
+        return this.$q.screen.lt.sm ? 40 : 20;
+      }
     },
     methods: {
       uploadImage() {
@@ -57,9 +64,16 @@
   }
 </script>
 
-<style scoped>
+<style >
   .croppa-container {
     background-color: #edebeb;
     border: 1px solid grey;
+    max-width: 800px;
+    margin: 0 20px;
+  }
+
+  .croppa-container canvas{
+    width: 100% !important;
+    height: auto !important;
   }
 </style>

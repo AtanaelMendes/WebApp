@@ -1242,7 +1242,6 @@
     background: white;
     right: 46px;
     border-radius: 6px;
-    /*border: 1px solid #d7d7d7;*/
     padding: 7px 10px;
   }
 </style>

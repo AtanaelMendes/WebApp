@@ -5,25 +5,25 @@
 
     <!--LISTA DE CONTRATOS-->
     <div class="row gutter-sm space-end q-ma-lg">
-      <div class="col-xs-12 col-sm-6 col-md- 4 col-lg-3" v-for="contrato in 10" :key="contrato">
+      <div class="col-xs-12 col-sm-6 col-md- 4 col-lg-3" v-for="contrato in contratos" :key="contrato.id">
 
         <q-card>
           <q-card-title @click.native="viewNegocio(contrato)">
-            Negocio{{contrato}}
+            Negocio {{contrato.numero_contrato}}
             <div slot="right">
               <q-btn round flat dense icon="more_vert" @click.stop>
                 <q-popover>
                   <q-list link no-boder>
-                    <q-item v-close-overlay @click.native="editNegocio(contrato)">
+                    <q-item v-close-overlay @click.native="editNegocio(contrato.id)">
                       <q-item-main label="Editar"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="archiveNegocio(contrato)">
+                    <q-item v-close-overlay @click.native="archiveNegocio(contrato.id)">
                       <q-item-main label="Arquivar"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="restoreNegocio(contrato)">
+                    <q-item v-close-overlay @click.native="restoreNegocio(contrato.id)">
                       <q-item-main label="Ativar"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="deleteNegocio(contrato)">
+                    <q-item v-close-overlay @click.native="deleteNegocio(contrato.id)">
                       <q-item-main label="Excluir"/>
                     </q-item>
                   </q-list>
@@ -53,17 +53,9 @@
     <!--PAGE STICKY BUTTOMS-->
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
       <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
-        <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="newNegocio('balcao')">
-          <span>Balcão</span>
-        </q-fab-action>
-        <q-fab-action color="grey-1" text-color="grey-7" @click="newNegocio('compra')" icon="add">
-          <span>Compra</span>
-        </q-fab-action>
-        <q-fab-action color="grey-1" text-color="grey-7" @click="newNegocio('venda')" icon="add">
-          <span>Venda</span>
-        </q-fab-action>
-        <q-fab-action color="grey-1" text-color="grey-7" @click="newNegocio('troca')" icon="add">
-          <span>Troca</span>
+        <q-fab-action color="grey-1" text-color="grey-7" icon="add"  v-for="tipoNegocio in tipoNegocios" :key="tipoNegocio.id"
+                      @click="newNegocioModal(tipoNegocio.id)">
+          <span class="shadow-2">{{tipoNegocio.nome}}</span>
         </q-fab-action>
       </q-fab>
     </q-page-sticky>
@@ -89,7 +81,7 @@
             <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
               <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
 
-                <div class="row" v-for="grupoEconomico in 3" :key="grupoEconomico">
+                <div class="row" v-for="grupoEconomico in 1" :key="grupoEconomico">
                   <div class="col-12">
 
                     <div class="row bg-blue-grey-1 q-pa-sm">
@@ -101,13 +93,13 @@
                     <div class="row justify-center">
                       <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
                         <q-list no-border link separator>
-                          <q-item v-for="pessoa in 5" :key="pessoa" @click.native="selectPesssoa(pessoa)">
+                          <q-item v-for="pessoa in pessoas" :key="pessoa.id" @click.native="selectPesssoa(pessoa.id)">
                             <div class="row">
                               <div class="col-1">
-                                <q-btn icon="done" size="8px" round dense color="positive" v-if="pessoa == negocio.pessoaId.value"/>
+                                <q-btn icon="done" size="8px" round dense color="positive" v-if="pessoa.id == negocio.pessoaId.value"/>
                               </div>
                               <div class="col-6">
-                                Adm do Brasil
+                                {{pessoa.nome}}
                               </div>
                               <div class="col-5 q-caption text-faded text-right">
                                 20 Dezembro 2018
@@ -249,6 +241,8 @@
   import Negocio from 'assets/js/model/negocio/Negocio'
   import negocioService from 'assets/js/service/negocio/NegocioService'
   import pessoaAutocomplete from 'components/PessoaAutocomplete.vue'
+  import pessoaService from 'assets/js/service/PessoaService'
+
   export default {
     name: "negocios",
     components: {
@@ -262,12 +256,14 @@
       return {
         contratos: [],
         terms: '',
-        negocioType: null,
+        //negocioType: null,
         negocio: new Negocio(),
         selectedNegocioId: null,
         modalNewNegocio: false,
         modalEditNegocio: false,
         currentStep: 'negociante',
+        pessoas: [],
+        tipoNegocios: [],
       }
     },
     methods: {
@@ -276,14 +272,14 @@
         negocioService.listNegocios().then(response => {
           this.contratos = response.data;
         });
-        this.contratos.push({nome: 'contrato'});
       },
-      newNegocio: function(type){
-        this.negocioType = type;
+      newNegocioModal: function(tipo_negocio_id){
+        this.negocio.tipoNegocioId = tipo_negocio_id;
         this.modalNewNegocio = true;
+        this.listPessoas();
       },
       selectPesssoa: function(id){
-        if(id == this.negocio.pessoaId.value){
+        if(id === this.negocio.pessoaId.value){
           this.negocio.pessoaId.value = null;
         }else{
           this.negocio.pessoaId.value = id;
@@ -350,7 +346,7 @@
           color: 'primary'
         }).then(data => {
           negocioService.deleteNegocio(id).then(response => {
-            this.listCulturas()
+            this.listNegocios()
           })
         }).catch(()=>{});
       },
@@ -369,8 +365,19 @@
       viewNegocio: function(id){
         this.$router.push({name: 'negocio_view', params: {id:id}});
       },
+      listTipoNegocios: function(){
+        negocioService.listTipoNegocios().then(response => {
+          this.tipoNegocios = response.data;
+        });
+      },
+      listPessoas: function () {
+        pessoaService.listPessoasByProdutorId().then(response => {
+          this.pessoas = response.data;
+        });
+      }
     },
     mounted () {
+      this.listTipoNegocios();
       this.listNegocios();
       // this.$root.$on('refreshSafraList', () => {
       //   this.listSafras();
@@ -384,8 +391,7 @@
   }
   .custom-fab .q-fab-actions .q-btn  span{
     position: absolute;
-    color: white;
-    background: rgba(0, 0, 0, 0.3);
+    background: white;
     right: 46px;
     border-radius: 6px;
     padding: 7px 10px;

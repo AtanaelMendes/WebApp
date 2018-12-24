@@ -3,9 +3,18 @@ import { Loading, Dialog } from 'quasar'
 import AgroUtils from 'assets/js/AgroUtils'
 const produtorId = localStorage.getItem('account.produtor_id');
 export default {
+  listTipoNegocios(){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/tipo_negocio').then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   listNegocios(){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/negocios').then( response => {
+      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/negocio').then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
@@ -23,7 +32,7 @@ export default {
   },
   saveNegocio(params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/'+ produtorId + '/negocios', params).then(response => {
+      Vue.prototype.$axios.post('produtor/'+ produtorId + '/negocio', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
@@ -32,7 +41,7 @@ export default {
   },
   updateNegocio(id, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/negocios/'+ id, params).then(response => {
+      Vue.prototype.$axios.put('produtor/'+ produtorId + '/negocio/'+ id, params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
@@ -41,7 +50,7 @@ export default {
   },
   archiveNegocio(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/negocios/' + id + '/archive').then(response => {
+      Vue.prototype.$axios.put('produtor/'+ produtorId + '/negocio/' + id + '/archive').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
@@ -50,7 +59,7 @@ export default {
   },
   restoreNegocio(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/negocios/' + id +'/restore').then(response => {
+      Vue.prototype.$axios.put('produtor/'+ produtorId + '/negocio/' + id +'/restore').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
@@ -59,7 +68,7 @@ export default {
   },
   deleteNegocio(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('produtor/'+ produtorId + '/negocios/' + id).then(response => {
+      Vue.prototype.$axios.delete('produtor/'+ produtorId + '/negocio/' + id).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
@@ -69,7 +78,7 @@ export default {
 
   saveAttachCultura(params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/'+ produtorId + '/negocios', params).then(response => {
+      Vue.prototype.$axios.post('produtor/'+ produtorId + '/negocio', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)

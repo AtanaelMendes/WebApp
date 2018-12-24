@@ -177,7 +177,7 @@
                   </div>
 
                   <div class="col-6 text-right">
-                    {{culturaTalhao.tamanho * culturaTalhao.estimativa}} {{safraCultura.cultura.estimativa_unidade_medida.nome}}
+                    {{culturaTalhao.estimativa_total}} {{safraCultura.cultura.estimativa_unidade_medida.nome}}
                   </div>
 
                 </div>
