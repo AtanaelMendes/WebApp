@@ -1,4 +1,4 @@
-// import { helpers} from 'vuelidate/lib/validators'
+import { helpers} from 'vuelidate/lib/validators'
 const moment = require('moment');
 export default class{
   isPagar = {
@@ -35,6 +35,23 @@ export default class{
       this.valorTotal.value = negocioProduto.valorTotal.value;
     }
   };
+  isValid(){
+    console.log('aqui')
+    let hasError = false;
+    if(!helpers.req(this.quantidade.value)){
+      this.quantidade.errorMessage = "Informe a quantidade";
+      hasError = true;
+    }
+    if(!helpers.req(this.preco.value)){
+      this.preco.errorMessage = "Informe o Preço";
+      hasError = true;
+    }
+    if(!helpers.req(this.valorTotal.value)){
+      this.valorTotal.errorMessage = "Informe o valor total";
+      hasError = true;
+    }
+    return !hasError;
+  };
   getValues(){
     return{
       is_pagar: this.isPagar.value,
@@ -45,16 +62,4 @@ export default class{
       valor_total: this.valorTotal.value
     }
   }
-  // isValid(){
-  //   let hasError = false;
-  //   if(!helpers.req(this.valor.value)){
-  //     this.valor.errorMessage = "Informe o Valor";
-  //     hasError = true;
-  //   }
-  //   if(this.valor.value <= 0){
-  //     this.valor.errorMessage = "Informe o valor";
-  //     hasError = true;
-  //   }
-  //   return !hasError;
-  // };
 }

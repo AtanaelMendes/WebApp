@@ -8,6 +8,7 @@
       :prefix="prefix"
       :loading="loading"
       autocomplete="foo"
+      :disable="disable"
       :float-label="label"
       :decimals="decimals"
       :readonly="readonly"
@@ -44,6 +45,7 @@
       autofocus: String,
       decimals: Number,
       readonly: Boolean,
+      disable: Boolean,
       loading: Boolean,
       disable: Boolean,
     },
