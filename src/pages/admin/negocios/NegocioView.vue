@@ -291,18 +291,21 @@
         <!--PASSO 1 ESCOLHER SAFRA-->
         <q-step default title="Safra" name="safra">
           <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
-            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="safraCultura in 5" :key="safraCultura">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="safraCultura in safraCulturas" :key="safraCultura.id">
               <q-card @click.native="selectSafraCultura(safraCultura)">
                 <q-card-media overlay-position="full">
-                  <img src="assets/images/soja250x250.jpg"/>
-                  <q-card-title slot="overlay" align="end" v-if="cultura.safraCulturaId.value == safraCultura">
+
+                  <img src="assets/images/icon-no-image.svg" v-if="!safraCultura.cultura.image"/>
+                  <img :src="safraCultura.cultura.image" v-if="safraCultura.cultura.image"/>
+
+                  <q-card-title slot="overlay" align="end" v-if="cultura.safraCulturaId.value == safraCultura.id">
                     <q-icon name="check_circle" size="30px" color="positive"/>
                   </q-card-title>
                 </q-card-media>
                 <q-card-main>
                   <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">Soja</div>
-                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">2018-2019</div>
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">{{safraCultura.cultura.nome}}</div>
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">{{safraCultura.safra.ano_inicio}}-{{safraCultura.safra.ano_fim}}</div>
                   </div>
                 </q-card-main>
               </q-card>
@@ -333,10 +336,9 @@
         <q-step title="Quantidade" name="quantidade">
           <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
             <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
-
               <div class="row justify-center">
                 <div class="col-12" align="center">
-                  Foi definida uma Quantidade? &nbsp
+                  Foi definida uma Quantidade?
                   <q-btn-toggle
                     v-model="isQuantidade"
                     toggle-color="primary"
@@ -347,11 +349,11 @@
                   <custom-input-text
                     type="number"
                     label="Quantidade"
-                    :readonly="!isQuantidade"
+                    :disable="!isQuantidade"
                     :model="cultura.quantidade"
                   />
                   <q-select
-                    :readonly="!isQuantidade"
+                    :disable="!isQuantidade"
                     float-label="Unidade de medida"
                     v-model="cultura.unidadeMedidaId.value"
                     :options="parsedUnidades(unidadesMedida)"
@@ -404,7 +406,7 @@
 
               <div class="row justify-center">
                 <div class="col-12 q-mb-sm" align="center">
-                  Qual foi o padrão de de classificação negociado?
+                  Qual foi o padrão de classificação negociado?
                 </div>
                 <div class="col-8" v-for="(classificacao, index) in classificacoes" :key="classificacao.id">
                   <div class="row">
@@ -643,6 +645,10 @@
   import Titulo from 'assets/js/model/negocio/Titulo'
   import negocioService from 'assets/js/service/negocio/NegocioService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
+  import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
+  import culturaClassificacaoService from 'assets/js/service/cultura/CulturaClassificacaoService'
+  import armazemService from 'assets/js/service/localizacao/ArmazemService'
+
   export default {
     name: "negocio-view",
     components: {
@@ -675,56 +681,8 @@
         currentStepFixacao: 'fixacao',
         currentStepProduto: 'produto',
 
-        classificacoes: [
-          {
-            id: 1,
-            nome: 'Umidade',
-            tolerancia: 14
-          },
-          {
-            id: 2,
-            nome: 'Impureza',
-            tolerancia: 1
-          },
-          {
-            id: 3,
-            nome: 'Avariado',
-            tolerancia: 1
-          },
-          {
-            id: 4,
-            nome: 'verde',
-            tolerancia: 8
-          },
-          {
-            id: 5,
-            nome: 'quebrados',
-            tolerancia: 30
-          },
-
-        ],
-        armazens: [
-          {
-            id: 1,
-            nome: 'Silo ADM',
-            endereco: 'Rua sem nome, 2222 Bairro Camping Club Sinop-MT'
-          },
-          {
-            id: 2,
-            nome: 'Armazém Bunge',
-            endereco: 'Rua sem nome, 2222 Bairro Camping Club Sinop-MT'
-          },
-          {
-            id: 3,
-            nome: 'Fiagril',
-            endereco: 'Rua sem nome, 2222 Bairro Camping Club Sinop-MT'
-          },
-          {
-            id: 4,
-            nome: 'Na minha Casa',
-            endereco: 'Rua sem nome, 2222 Bairro Camping Club Sinop-MT'
-          }
-        ],
+        classificacoes: [],
+        armazens: [],
         moedas:[
           {
             id: 1,
@@ -740,6 +698,7 @@
           }
         ],
         parcelasTeste: [],
+        safraCulturas: [],
       }
     },
     watch: {
@@ -760,14 +719,18 @@
     },
     methods: {
       attachCultura: function(){
+        this.listSafraCulturas();
         this.modalAttachSafraCultura = true;
       },
-      selectSafraCultura: function(id){
-        if(this.cultura.safraCulturaId.value == id){
+      selectSafraCultura: function(safraCultura){
+        console.log('selectSafraCultura');
+        console.log(safraCultura)
+        if(this.cultura.safraCulturaId.value == safraCultura.id){
           this.cultura.safraCulturaId.value = null;
         }else{
-          this.cultura.safraCulturaId.value = id;
-          this.goToNextStep()
+          this.cultura.safraCulturaId.value = safraCultura.id;
+          this.goToNextStep();
+          this.listClassificacoesByCultura(safraCultura.cultura.id)
         }
       },
       validaIsQuantidade: function(){
@@ -990,6 +953,7 @@
         this.modalAttachTitulo = false;
         this.modalAttachProduto = false;
         this.modalAttachFixacao = false;
+        this.isQuantidade = false;
         // this.currentStep = 'negociante';
       },
       getNegocioById: function(){
@@ -1009,10 +973,28 @@
           //Cultura
           if(this.currentStepCultura === 'classificacao'){
             this.cultura.classificacoes = this.classificacoes;
+            this.listArmazensByProdutor();
           }
+
+
         }
         this.$refs.stepperSafraCultura.next();
         this.$refs.stepperTitulo.next();
+      },
+      listSafraCulturas(){
+        safraCulturaService.listSafraCulturas().then(response => {
+          this.safraCulturas = response.data;
+        })
+      },
+      listClassificacoesByCultura(cultura_id){
+        culturaClassificacaoService.listClassificacoesByCultura(cultura_id).then(response => {
+          this.classificacoes = response.data;
+        })
+      },
+      listArmazensByProdutor(produtor_id){
+        armazemService.listArmazensByProdutor().then(response => {
+          this.armazens = response.data;
+        })
       }
     },
     mounted () {

@@ -8,7 +8,7 @@
       <div class="col-xs-12 col-sm-6 col-md- 4 col-lg-3" v-for="contrato in contratos" :key="contrato.id">
 
         <q-card>
-          <q-card-title @click.native="viewNegocio(contrato)">
+          <q-card-title @click.native="viewNegocio(contrato.id)">
             Negocio {{contrato.numero_contrato}}
             <div slot="right">
               <q-btn round flat dense icon="more_vert" @click.stop>

@@ -54,6 +54,16 @@ export default {
       })
     });
   },
+  listSafraCulturas(){
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('produtor/'+ produtor_id +'/safra/safra_cultura').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   listCulturas(){
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
