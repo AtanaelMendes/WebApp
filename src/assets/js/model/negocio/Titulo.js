@@ -29,7 +29,7 @@ export default class{
       hasError = true;
     }
     if(this.valor.value <= 0){
-      this.valor.errorMessage = "Valor inválido";
+      this.valor.errorMessage = "Informe o valor";
       hasError = true;
     }
     return !hasError;
@@ -39,7 +39,7 @@ export default class{
       is_pagar: this.isPagar.value,
       moeda_id: this.moedaId.value,
       valor: this.valor.value,
-      titulos_liquidacoes: this.titulosLiquidacoes.value,
+      titulos_liquidacoes: this.parcelas
     }
   }
 }

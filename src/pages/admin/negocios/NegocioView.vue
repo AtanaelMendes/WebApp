@@ -514,8 +514,11 @@
             <div class="col-xs-8 col-sm-4 col-md-3 col-lg-2">
 
               <div class="row justify-center">
+                <div class="col-12 text-center q-title q-mb-sm">
+                  Qual o valor?
+                </div>
                 <div class="col-12">
-                  <custom-input-text key="valor" :prefix="prefixMoeda" type="number" label="Qual o valor?" :model="titulo.valor" align="center"/>
+                  <custom-input-text key="valor" :prefix="prefixMoeda" type="number" :model="titulo.valor" align="center"/>
                 </div>
               </div>
 
@@ -558,13 +561,14 @@
               <span class="q-title">Informe as datas</span>
 
               <q-list no-border separator>
-                <q-item v-for="parcela in titulo.parcelas" :key="parcela.numero">
+                <q-item v-for="parcela in verifyParcelas" :key="parcela.numero">
                   <q-item-main>
                     <div class="row justify-center q-mt-md" >
 
                       <div class="col-xs-4 col-lg-2 self-center">
-                        Parcela {{parcela.numero}}
+                        <span class="text-faded">Parcela</span> {{parcela.numero}}
                       </div>
+
                       <div class="col-xs-8 col-lg-3">
                         <custom-input-datetime :key="parcela.numero" type="date" :model="parcela.vencimento"/>
                       </div>
@@ -573,12 +577,19 @@
                         {{ numeral((moment(parcela.vencimento.value) - moment(dataAtual)) / (1000 * 3600 * 24)).format('0') }} Dias
                       </div>
 
-                      <div class="col-xs-6 col-lg-4 self-center">
-                        <q-input v-model="parcela.valor.value" :prefix="prefixMoeda" align="center"/>
+                      <div class="col-xs-6 col-lg-4">
+                        <q-input type="number" v-model="parcela.valor.value" :decimals="2" :prefix="prefixMoeda" align="center"/>
                       </div>
                     </div>
+
                   </q-item-main>
                 </q-item>
+                <div class="row q-mt-md justify-end">
+                  <div class="col-xs-6 col-lg-4 self-center text-justify">
+                    <span class="text-faded">Total: {{prefixMoeda}}</span>&nbsp
+                    <span :class="errorValue">{{numeral(titulo.valor.value).format('0,0.00')}}</span>
+                  </div>
+                </div>
               </q-list>
 
             </div>
@@ -590,7 +601,7 @@
       <q-page-sticky position="bottom-right" :offset="[30, 30]">
         <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
         <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextTituloStep()" v-if="currentStepTitulo != 'vencimentos'"/>
-        <q-btn label="salvar" color="primary" @click="saveAttachTitulo" v-if="currentStepTitulo  == 'vencimentos' "/>
+        <q-btn label="salvar" color="primary" @click="saveAttachTitulo" :disable="isValid" v-if="currentStepTitulo  == 'vencimentos' "/>
       </q-page-sticky>
     </q-modal>
 
@@ -599,18 +610,91 @@
 
       <q-stepper key="produto" ref="stepperProduto" contractable color="positive" v-model="currentStepProduto" class="no-shadow" >
 
-        <!--PASSO 1 ESCOLHER NEGOCIANTE-->
-        <q-step default title="produto" name="produto"></q-step>
+        <!--PASSO 1 ESCOLHER PRODUTO-->
+        <q-step default title="Produto" name="produto">
 
-        <!--PASSO 2 INFORMAR DETALHES -->
-        <q-step title="passo2" name="passo2"></q-step>
+          <div class="row text-center justify-center q-title">
+            <div class="col-12">
+              Escolher o produto
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
+              <q-input align="center" v-model="searchProdutos" :after="[{icon: 'search'}]"/>
+            </div>
+          </div>
+
+          <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
+            <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+
+              <div class="row justify-center">
+                <div class="col-xs-12 col-sm-12 col-md-10 col-lg-6">
+                  <q-list no-border link separator>
+                    <q-item v-for="item in produtos" :key="item.id" @click.native="selectProduto(item)">
+                      <q-item-side><q-btn icon="done" size="8px" round dense color="positive" v-if="item.id == produto.produtoId.value"/></q-item-side>
+                      <q-item-main>
+                        {{item.nome}}
+                      </q-item-main>
+                    </q-item>
+                  </q-list>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </q-step>
+
+        <!--PASSO 2 ESCOLHER INDEXADOR -->
+        <q-step title="Indexador" name="indexador">
+
+          <div class="row text-center justify-center q-title">
+            <div class="col-12">
+              Em qual indexador foi negociado?
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
+              <q-input align="center" v-model="searchProdutos" :after="[{icon: 'search'}]"/>
+            </div>
+          </div>
+
+          <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
+            <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+
+              <div class="row justify-center">
+                <div class="col-xs-12 col-sm-12 col-md-10 col-lg-6">
+                  <q-list no-border link separator>
+                    <q-item v-for="item in indexadores" :key="item.id" @click.native="selectIndexador(item)">
+                      <q-item-side>
+                        <q-btn icon="done" size="8px" round dense color="positive" v-if="item.id == produto.indexadorId.value"/>
+                      </q-item-side>
+                      <q-item-main>
+                        {{item.sigla}} {{item.nome}}
+                      </q-item-main>
+                    </q-item>
+                  </q-list>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </q-step>
+
+        <!--PASSO 3 INFORMAR DETALHES -->
+        <q-step title="Informações" name="informacoes">
+          <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
+            <div class="col-xs-8 col-sm-4 col-md-3 col-lg-2">
+
+              <custom-input-text type="number" :model="produto.quantidade" label="Toneladas"/>
+              <custom-input-text type="number" :model="produto.preco" label="Preço por toneladas" prefix="SC60"/>
+              <custom-input-text type="number" :model="produto.total" label="Valor Total"/>
+
+            </div>
+          </div>
+        </q-step>
 
       </q-stepper>
 
       <q-page-sticky position="bottom-right" :offset="[30, 30]">
         <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-        <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="!isNextButtomEnabled()" v-if="currentStepProduto"/>
-        <q-btn label="salvar" color="primary" @click="saveAttachProduto" v-if="currentStepProduto"/>
+        <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextProdutoStep()" v-if="currentStepProduto != 'informacoes' "/>
+        <q-btn label="salvar" color="primary" @click="saveAttachProduto" v-if="currentStepProduto == 'informacoes' "/>
       </q-page-sticky>
     </q-modal>
 
@@ -620,16 +704,38 @@
       <q-stepper key="fixacao" ref="stepperFixacao" contractable color="positive" v-model="currentStepFixacao" class="no-shadow" >
 
         <!--PASSO 1 ESCOLHER NEGOCIANTE-->
-        <q-step default title="fixacao" name="fixacao"></q-step>
+        <q-step default title="fixacao" name="fixacao">
+          <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
+            <div class="col-xs-8 col-sm-4 col-md-3 col-lg-2">
+
+              <div class="row justify-center">
+                <div class="col-12 text-center q-title q-mb-sm"></div>
+                <div class="col-4" ></div>
+              </div>
+
+            </div>
+          </div>
+        </q-step>
 
         <!--PASSO 2 INFORMAR DETALHES -->
-        <q-step title="fixacao2" name="fixacao2"></q-step>
+        <q-step title="fixacao2" name="fixacao2">
+          <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
+            <div class="col-xs-8 col-sm-4 col-md-3 col-lg-2">
+
+              <div class="row justify-center">
+                <div class="col-12 text-center q-title q-mb-sm"></div>
+                <div class="col-4" ></div>
+              </div>
+
+            </div>
+          </div>
+        </q-step>
 
       </q-stepper>
 
       <q-page-sticky position="bottom-right" :offset="[30, 30]">
         <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-        <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="!isNextButtomEnabled()" v-if="currentStepFixacao"/>
+        <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextProdutoStep()" v-if="currentStepFixacao"/>
         <q-btn label="salvar" color="primary" @click="saveAttachFixacao" v-if="currentStepFixacao"/>
       </q-page-sticky>
     </q-modal>
@@ -643,6 +749,7 @@
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import Cultura from 'assets/js/model/negocio/Cultura'
   import Titulo from 'assets/js/model/negocio/Titulo'
+  import Produto from 'assets/js/model/negocio/Produto'
   import negocioService from 'assets/js/service/negocio/NegocioService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
@@ -668,9 +775,14 @@
         isQuantidade: false,
         selectedArmazens: [],
         titulo: new Titulo(),
-        numParcelas: null,
         prefixMoeda: null,
+        numParcelas: null,
+        verifyParcelas: [],
+        isValid: false,
+        errorValue: 'text-positive',
         dataAtual: this.moment().format('YYYYMMDD'),
+        produto: new Produto(),
+        searchProdutos: null,
         unidadesMedida: [],
         modalAttachSafraCultura: false,
         modalAttachTitulo: false,
@@ -678,8 +790,8 @@
         modalAttachFixacao: false,
         currentStepCultura: 'safra',
         currentStepTitulo: 'pagarReceber',
-        currentStepFixacao: 'fixacao',
         currentStepProduto: 'produto',
+        currentStepFixacao: 'fixacao',
 
         classificacoes: [],
         armazens: [],
@@ -697,11 +809,65 @@
             simbolo: '$'
           }
         ],
+        produtos: [
+          {
+            id: 1,
+            nome: 'KCL',
+            unidade_medida_id: 155
+          },
+          {
+            id: 2,
+            nome: 'AZOTO',
+            unidade_medida_id: 155
+          },
+          {
+            id: 3,
+            nome: 'FÓSFORO',
+            unidade_medida_id: 155
+          },
+          {
+            id: 4,
+            nome: 'POTÁSSIO',
+            unidade_medida_id: 155
+          }
+        ],
+        indexadores: [
+          {
+            id: 1,
+            nome: 'Real',
+            sigla: 'R$',
+            moeda_id: 1,
+            cultura_id: 1,
+            unidade_media_id: 155
+          },
+          {
+            id: 2,
+            nome: 'Dollar',
+            sigla: '$',
+            moeda_id: 1,
+            cultura_id: 1,
+            unidade_media_id: 155
+          },
+          {
+            id: 3,
+            nome: 'Soja',
+            sigla: 'SC',
+            moeda_id: 1,
+            cultura_id: 1,
+            unidade_media_id: 155
+          }
+        ],
         parcelasTeste: [],
         safraCulturas: [],
       }
     },
     watch: {
+      verifyParcelas: {
+        handler: function (val, oldVal) {
+          this.validateVerifyParcelas()
+        },
+        deep: true
+      },
       isQuantidade: function (val) {
         this.validaIsQuantidade()
       },
@@ -713,7 +879,7 @@
           this.generateFormParcelas()
         }
         if(val != 'vencimentos'){
-          this.titulo.parcelas = [];
+          this.verifyParcelas = [];
         }
       }
     },
@@ -787,8 +953,8 @@
         negocioService.saveAttachCultura(this.cultura.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Safra cultura vinculada com sucesso'});
-            this.getNegocioById();
             this.closeModal();
+            this.$router.go(-1);
           }
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -823,6 +989,7 @@
         }else{
           this.titulo.moedaId.value = moeda.id;
           this.prefixMoeda = moeda.simbolo;
+          this.goToNextStep()
         }
       },
       isMoedaSelected: function(id){
@@ -831,27 +998,51 @@
         }
       },
       generateFormParcelas: function(){
-        let numero = 1;
-        let valorParcela = null;
-        for (var parcela = 0; parcela < this.numParcelas; parcela++) {
-          valorParcela = this.titulo.valor.value / this.numParcelas;
-          this.titulo.parcelas.push({
-            numero: numero,
+        let total = 0;
+        for (var parcela = 1; parcela <= this.numParcelas; parcela++) {
+          let valorParcela = 0;
+          if(parcela === this.numParcelas){
+            //valorParcela = this.titulo.valor.value - total;
+            valorParcela = parseFloat((this.titulo.valor.value - total).toFixed(2));
+          }else{
+            valorParcela = Math.round((this.titulo.valor.value * 100) / this.numParcelas)/100;
+          }
+          total += valorParcela;
+
+          this.verifyParcelas.push({
+            numero: parcela,
             vencimento:{ value: this.moment().format('YYYY-MM-DD')} ,
-            valor: { value: this.numeral(valorParcela).format('0.0,0')}
+            valor: { value: valorParcela }
           });
-          numero++
+        }
+      },
+      validateVerifyParcelas: function(){
+        let validaValorTotal = 0;
+        this.verifyParcelas.forEach(function (valida) {
+          validaValorTotal += parseFloat(valida.valor.value);
+          if(valida.valor.value == ''){
+            this.errorValue = 'text-negative'
+            this.isValid = true;
+          }
+          if(valida.vencimento.value == null){
+            this.isValid = true;
+          }
+        }, this);
+        if(validaValorTotal > this.titulo.valor.value || validaValorTotal < this.titulo.valor.value){
+          this.errorValue = 'text-negative';
+          this.isValid = true;
+        }else{
+          this.isValid = false;
+          this.errorValue = 'text-positive'
         }
       },
       saveAttachTitulo: function(){
-        if(!this.negocio.isValid()){
-          return;
-        }
-        negocioService.saveNegocio(this.negocio.getValues()).then(response => {
+        this.titulo.parcelas = this.verifyParcelas;
+        negocioService.saveAttachTitulo(this.titulo.getValues()).then(response => {
           if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Negócio criado com sucesso'});
-            this.getNegocioById();
+            this.$q.notify({type: 'positive', message: 'Título vinculado com sucesso'});
             this.closeModal();
+            this.$router.go(-1);
           }
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -860,6 +1051,28 @@
 
       attachProduto: function(){
         this.modalAttachProduto = true;
+      },
+      selectProduto: function(produto){
+        if(this.produto.produtoId.value == produto.id){
+          this.produto.produtoId.value = null;
+        }else{
+          this.produto.produtoId.value = produto.id;
+          this.goToNextStep()
+        }
+      },
+      selectIndexador: function(idexador){
+        if(this.produto.indexadorId.value == idexador.id){
+          this.produto.indexadorId.value = null;
+        }else{
+          this.produto.indexadorId.value = idexador.id;
+          this.goToNextStep()
+        }
+      },
+      isNextProdutoStep: function(){
+        if(this.produto.produtoId.value == null && this.currentStepProduto == 'produto'){
+          return true
+        }
+        return false;
       },
       saveAttachProduto: function(){
         if(!this.negocio.isValid()){
@@ -962,12 +1175,6 @@
         });
         this.negocio = 'ijijiijiji';
       },
-      isNextButtomEnabled: function(){
-        if(this.currentStepCultura){
-          return true
-        }
-        return false
-      },
       goToNextStep(){
         if(this.modalAttachSafraCultura){
           //Cultura
@@ -980,6 +1187,7 @@
         }
         this.$refs.stepperSafraCultura.next();
         this.$refs.stepperTitulo.next();
+        this.$refs.stepperProduto.next();
       },
       listSafraCulturas(){
         safraCulturaService.listSafraCulturas().then(response => {
