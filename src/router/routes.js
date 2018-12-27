@@ -50,12 +50,10 @@ const routes = [
 
       { name: 'negocios', path: 'negocios', component: () => import('pages/admin/negocios/NegociosList.vue')},
       { name: 'negocio_view', path: 'negocios/:id/view', component: () => import('pages/admin/negocios/NegocioView.vue')},
-        // children: [
-        //   { name: 'cultura_safra', path: 'view/:id', component: () => import('pages/admin/safras/cultura/SafraCultura.vue') },
-        //   { name: 'add_safra', path: 'add', component: () => import('pages/admin/safras/SafraAdd.vue') },
-        //   { name: 'edit_safra', path: 'edit/:id', component: () => import('pages/admin/safras/SafraEdit.vue') }
-        // ]
-      // },
+
+      { name: 'entregas', path: 'entregas', component: () => import('pages/admin/entregas/Entregas.vue')},
+      { name: 'entrega_view', path: 'entrega/:id/view', component: () => import('pages/admin/entregas/EntregaView.vue')},
+
       { path: 'teste', component: () => import('pages/admin/TestFather.vue'),
         children: [
           { path: 'child', component: () => import('pages/admin/TestChild.vue') }
