@@ -8,6 +8,7 @@
       :prefix="prefix"
       :loading="loading"
       autocomplete="foo"
+      :disable="disable"
       :float-label="label"
       :decimals="decimals"
       :readonly="readonly"
@@ -15,7 +16,6 @@
       :autofocus="autofocus"
       :maxlength="maxlength"
       :placeholder="placeholder"
-      :disable="disable"
       v-on:input="clearErrorMessage()"
       @blur="$emit('blur', model.value)"
     />
@@ -44,8 +44,8 @@
       autofocus: String,
       decimals: Number,
       readonly: Boolean,
-      loading: Boolean,
       disable: Boolean,
+      loading: Boolean,
     },
     model:{
       event: 'blur',
