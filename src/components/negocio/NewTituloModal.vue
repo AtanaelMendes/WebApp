@@ -269,19 +269,19 @@
         }
       },
       isNextTituloStep: function(){
-        if(this.titulo.isPagar.value == null && this.currentStepTitulo == 'pagarReceber'){
+        if(this.titulo.isPagar.value == null && this.currentStep == 'pagarReceber'){
           return true
         }
-        if(this.titulo.moedaId.value == null && this.currentStepTitulo == 'moeda'){
+        if(this.titulo.moedaId.value == null && this.currentStep == 'moeda'){
           return true
         }
-        if(this.titulo.valor.value == null && this.currentStepTitulo == 'valor'){
+        if(this.titulo.valor.value == null && this.currentStep == 'valor'){
           return true
         }
-        if((this.numParcelas == null || this.numParcelas == 0) && this.currentStepTitulo == 'parcelas'){
+        if((this.numParcelas == null || this.numParcelas == 0) && this.currentStep == 'parcelas'){
           return true
         }
-        if(this.currentStepTitulo == 'vencimentos'){
+        if(this.currentStep == 'vencimentos'){
           this.generateFormParcelas()
         }
         return false;

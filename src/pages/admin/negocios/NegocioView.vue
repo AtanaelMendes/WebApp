@@ -632,6 +632,7 @@
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import Fixacao from 'assets/js/model/negocio/Fixacao'
   import negocioService from 'assets/js/service/negocio/NegocioService'
+  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
 
   import newCulturaModal from 'components/negocio/NewCulturaModal';
   import newTituloModal from 'components/negocio/NewTituloModal';
@@ -666,6 +667,9 @@
         isValidFixacaoParcelas: false,
         modalAttachFixacao: false,
         currentStepFixacao: 'negocioCultura',
+        unidadesMedida: [],
+        prefixMoeda: null,
+        dataAtual: this.moment().format('YYYYMMDD'),
         moedas:[
           {
             id: 1,
@@ -687,7 +691,7 @@
             ano_inicio: 2018,
             ano_fim: 2019,
             quantidade: 99000,
-            unidade_medida_quantidade_id: 163
+            unidade_medida_quantidade_id: 3195
           },
           {
             id: 2,
@@ -696,7 +700,7 @@
             ano_inicio: 2018,
             ano_fim: 2018,
             quantidade: 50000,
-            unidade_medida_quantidade_id: 163
+            unidade_medida_quantidade_id: 3195
           },
           {
             id: 3,
@@ -704,7 +708,7 @@
             ano_inicio: 2016,
             ano_fim: 2017,
             quantidade: 60000,
-            unidade_medida_quantidade_id: 155
+            unidade_medida_quantidade_id: 1584
           }
         ],
         bancosContas: [
@@ -820,6 +824,7 @@
         this.modalAttachFixacao = true;
       },
       selectNegocioCultura: function(negocioCultura){
+
         if(this.selectedSafraId == negocioCultura.id){
           this.maxQuantidade = null;
           this.selectedSafraId = null;
@@ -965,9 +970,6 @@
       },
 
       isMoedaSelected: function(id){
-        if(this.titulo.moedaId.value == id){
-          return 'positive';
-        }
         if(this.fixacao.moedaId.value == id){
           return 'positive';
         }
@@ -996,10 +998,24 @@
       },
       goToNextStep(){
         this.$refs.stepperFixacao.next();
-      }
+      },
+      parsedUnidades: function(unidades){
+        return unidades.map(unidade => {
+          return {
+            label: unidade.nome,
+            value: unidade.id
+          }
+        })
+      },
+      getUnidadesMedida:function(){
+        unidadeMedidaService.listUnidadesMedida().then(response => {
+          this.unidadesMedida = response.data;
+        })
+      },
     },
     mounted () {
       this.getNegocioById();
+      this.getUnidadesMedida();
 
       // this.$root.$on('refreshSafraList', () => {
       //   this.listSafras();

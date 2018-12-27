@@ -179,7 +179,7 @@
         }
       },
       isNextProdutoStep: function(){
-        if(this.produto.produtoId.value == null && this.currentStepProduto == 'produto'){
+        if(this.produto.produtoId.value == null && this.currentStep == 'produto'){
           return true
         }
         return false;
