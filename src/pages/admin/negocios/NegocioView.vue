@@ -518,7 +518,7 @@
                   Qual o valor?
                 </div>
                 <div class="col-12">
-                  <custom-input-text key="valor" :prefix="prefixMoeda" type="number" :model="titulo.valor" align="center"/>
+                  <custom-input-text key="valor" :prefix="prefixMoeda" type="number" :model="titulo.valor" align="right"/>
                 </div>
               </div>
 
@@ -578,7 +578,7 @@
                       </div>
 
                       <div class="col-xs-6 col-lg-4">
-                        <q-input type="number" v-model="parcela.valor.value" :decimals="2" :prefix="prefixMoeda" align="center"/>
+                        <q-input type="number" v-model="parcela.valor.value" :decimals="2" :prefix="prefixMoeda" align="right"/>
                       </div>
                     </div>
 
@@ -704,7 +704,7 @@
       <q-stepper key="fixacao" ref="stepperFixacao" contractable color="positive" v-model="currentStepFixacao" class="no-shadow" >
 
         <!--PASSO 1 ESCOLHER NEGOCIO CULTURA-->
-        <q-step default title="Negócio" name="negocioCultura">
+        <q-step default title="Escolher a safra cultura" name="negocioCultura">
           <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
             <div class="col-xs-12 col-sm-8 col-md-6 col-lg-5">
 
@@ -741,7 +741,7 @@
         </q-step>
 
         <!--PASSO 2 INFORMAR QUANTIDADE -->
-        <q-step title="Quantidade" name="quantidade">
+        <q-step title="Quantidade Fixada" name="quantidade">
           <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
             <div class="col-xs-12 col-sm-8 col-md-5 col-lg-3">
 
@@ -753,7 +753,7 @@
                   <q-slider v-model="fixacao.quantidade.value" :min="0" :max="maxQuantidade" label  snap/>
                 </div>
                 <div class="col-6">
-                  <custom-input-text :model="fixacao.quantidade" type="number" label="Quantidade" align="center"/>
+                  <custom-input-text @blur="validaQuantidade" :model="fixacao.quantidade" type="number" label="Quantidade" align="right"/>
                 </div>
                 <div class="col-6" >
                   <q-select
@@ -770,7 +770,7 @@
         </q-step>
 
         <!--PASSO 3 INFORMAR MOEDA -->
-        <q-step title="Moeda" name="moeda">
+        <q-step title="Escolher moeda" name="moeda">
           <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
             <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
 
@@ -788,7 +788,7 @@
         </q-step>
 
         <!--PASSO 4 INFORMAR PRECO -->
-        <q-step title="Preço" name="preco">
+        <q-step title="Preço fixado" name="preco">
           <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
             <div class="col-xs-12 col-sm-8 col-md-5 col-lg-3">
 
@@ -813,8 +813,8 @@
           </div>
         </q-step>
 
-        <!--PASSO 5 INFORMAR DESCONTOS -->
-        <q-step title="Descontos" name="descontos">
+        <!--PASSO 5 INFORMAR SE HAVERA DESCONTOS/ACRESCIMOS -->
+        <q-step title="Valor Líquido ou com desconto" name="descontos">
           <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
             <div class="col-xs-12 col-sm-10 col-md-6 col-lg-5">
 
@@ -859,7 +859,7 @@
         </q-step>
 
         <!--PASSO 6 INFORMAR DESCONTOS VALORES -->
-        <q-step title="Descontos/Acréscimos" name="descontosAcrescimos" :disable="!fixacao.isPrecoLiquido.value">
+        <q-step title="Descontos e acréscimos" name="descontosAcrescimos" :disable="!fixacao.isPrecoLiquido.value">
           <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
             <div class="col-xs-12 col-sm-9 col-md-7 col-lg-5">
 
@@ -881,7 +881,8 @@
                   <custom-input-text type="number" :model="fixacao.totalImpostos" align="right" :prefix="prefixMoeda"/>
                 </div>
                 <div class="col-5 self-center" align="end">
-                  {{ numeral(totalImpostosUn).format('0,0.00') }} <span class="text-faded">por Saca 60 kg</span>
+                  {{ numeral(totalImpostosUn).format('0,0.00') }}
+                  <span class="text-faded">por Saca 60 kg</span>
                 </div>
 
                 <div class="col-3 self-center">Descontos:</div>
@@ -889,6 +890,7 @@
                   <custom-input-text type="number" :model="fixacao.valorOutrosDescontos" align="right" :prefix="prefixMoeda"/>
                 </div>
                 <div class="col-5 self-center" align="end">
+                  {{ numeral(totalDescontosUn).format('0,0.00') }}
                   <span class="text-faded">por Saca 60 kg</span>
                 </div>
 
@@ -897,14 +899,16 @@
                   <custom-input-text type="number" :model="fixacao.valorOutrosAcrescimos" align="right" :prefix="prefixMoeda" />
                 </div>
                 <div class="col-5 self-center" align="end">
+                  {{ numeral(totalAcrescimosUn).format('0,0.00') }}
                   <span class="text-faded">por Saca 60 kg</span>
                 </div>
 
                 <div class="col-3 self-center">Total:</div>
                 <div class="col-4">
-                  <custom-input-text type="number" :model="fixacao.totalLiquido" align="right" :prefix="prefixMoeda"/>
+                  <custom-input-text type="number" :model="fixacao.totalLiquido" align="right" :disable="true" :prefix="prefixMoeda"/>
                 </div>
                 <div class="col-5 self-center" align="end">
+                  {{ numeral(totalLiquidoUn).format('0,0.00') }}
                   <span class="text-faded">por Saca 60 kg</span>
                 </div>
               </div>
@@ -913,14 +917,33 @@
           </div>
         </q-step>
 
-        <!--PASSO 7 INFORMAR VALOR DE DEPOSITO -->
-        <q-step title="Valor Depósito" name="valorDeposito">
+        <!--PASSO 7 INFORMAR CONTA DE DEPOSITO -->
+        <q-step title="Conta para Depósito" name="contaDeposito">
           <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
-            <div class="col-xs-8 col-sm-4 col-md-3 col-lg-2">
+            <div class="col-xs-12 col-sm-10 col-md-6 col-lg-5">
 
               <div class="row justify-center">
-                <div class="col-12 text-center q-title q-mb-sm">Em qual conta o valor será depositado?</div>
-                <div class="col-4" ></div>
+                <div class="col-12 text-center q-title q-mb-sm">
+                  Em qual conta o valor será depositado?
+                </div>
+                <div class="col-12">
+                  <q-list link no-border separator>
+                    <q-item v-for="bancoConta in bancosContas" @click.native="selectBancoConta(bancoConta)" :key="bancoConta.id">
+                      <q-item-side>
+                        <q-btn v-if="selectedContaBancariaId == bancoConta.conta.id" icon="done" color="positive" size="8px" round dense/>
+                      </q-item-side>
+                      <q-item-main>
+                        <q-item-tile>{{bancoConta.nome}}</q-item-tile>
+                        <q-item-tile sublabel>{{bancoConta.pessoa.nome}}</q-item-tile>
+                        <q-item-tile sublabel>
+                          <span class="text-faded">Agência:</span> {{bancoConta.conta.agencia}},
+                          <span class="text-faded">Operação:</span> {{bancoConta.conta.operacao}},
+                          <span class="text-faded">conta:</span> {{bancoConta.conta.numero}}
+                        </q-item-tile>
+                      </q-item-main>
+                    </q-item>
+                  </q-list>
+                </div>
               </div>
 
             </div>
@@ -928,13 +951,27 @@
         </q-step>
 
         <!--PASSO 8 INFORMAR PARCELAS -->
-        <q-step title="Parcelas" name="parcelas">
+        <q-step title="Número de parcelas" name="parcelas">
           <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
             <div class="col-xs-8 col-sm-4 col-md-3 col-lg-2">
 
               <div class="row justify-center">
-                <div class="col-12 text-center q-title q-mb-sm"></div>
-                <div class="col-4" ></div>
+                <div class="col-12 text-center q-title q-mb-sm">
+                  Quantas Parcelas?
+                </div>
+                <div class="col-6" >
+                  <q-field>
+                    <q-option-group type="radio" color="secondary" v-model="numParcelasFixacao"
+                                    :options="[{ label: 'Uma', value: 1 },
+                                               { label: 'Duas', value: 2},
+                                               { label: 'Três', value: 3}
+                                             ]"
+                    />
+                  </q-field>
+                </div>
+                <div class="col-7">
+                  <q-input v-model="numParcelasFixacao" type="number" suffix="X" align="center"/>
+                </div>
               </div>
 
             </div>
@@ -944,12 +981,40 @@
         <!--PASSO 9 INFORMAR VENCIMENTOS -->
         <q-step title="Vencimentos" name="vencimentos">
           <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
-            <div class="col-xs-8 col-sm-4 col-md-3 col-lg-2">
+            <div class="col-xs-12 col-sm-9 col-md-7 col-lg-5 text-center">
+              <span class="q-title">Informe os vencimentos</span>
 
-              <div class="row justify-center">
-                <div class="col-12 text-center q-title q-mb-sm"></div>
-                <div class="col-4" ></div>
-              </div>
+              <q-list no-border separator>
+                <q-item v-for="parcela in fixacaoParcelas" :key="parcela.numero">
+                  <q-item-main>
+                    <div class="row justify-center q-mt-md" >
+
+                      <div class="col-xs-4 col-lg-2 self-center">
+                        <span class="text-faded">Parcela</span> {{parcela.numero}}
+                      </div>
+
+                      <div class="col-xs-8 col-lg-3">
+                        <custom-input-datetime :key="parcela.numero" type="date" :model="parcela.vencimento"/>
+                      </div>
+
+                      <div class="col-xs-6 col-lg-3 self-center text-center">
+                        {{ numeral((moment(parcela.vencimento.value) - moment(dataAtual)) / (1000 * 3600 * 24)).format('0') }} Dias
+                      </div>
+
+                      <div class="col-xs-6 col-lg-4">
+                        <q-input type="number" v-model="parcela.valor.value" :decimals="2" :prefix="prefixMoeda" align="right"/>
+                      </div>
+                    </div>
+
+                  </q-item-main>
+                </q-item>
+                <div class="row q-mt-md justify-end">
+                  <div class="col-xs-6 col-lg-4 self-center text-justify">
+                    <span class="text-faded">Total: {{prefixMoeda}}</span>&nbsp
+                    <span :class="errorValueFixacao">{{numeral(fixacao.totalLiquido.value).format('0,0.00')}}</span>
+                  </div>
+                </div>
+              </q-list>
 
             </div>
           </div>
@@ -959,8 +1024,8 @@
 
       <q-page-sticky position="bottom-right" :offset="[30, 30]">
         <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-        <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextFixacaoStep()" v-if="!currentStepFixacao != 'vencimentos' "/>
-        <q-btn label="salvar" color="primary" @click="saveAttachFixacao" v-if="currentStepFixacao == 'vencimentos' "/>
+        <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextFixacaoStep()" v-if="currentStepFixacao != 'vencimentos' "/>
+        <q-btn label="salvar" color="primary" @click="saveAttachFixacao" :disable="isValidFixacaoParcelas" v-if="currentStepFixacao == 'vencimentos' "/>
       </q-page-sticky>
     </q-modal>
 
@@ -994,11 +1059,13 @@
         direita: 'col-xs-12 col-sm-12 col-md-7 col-lg-7',
         esquerda: 'col-xs-12 col-sm-12 col-md-5 col-lg-5',
         negocio: null,
+
         cultura: new Cultura(),
         progressModel: 50,
         isPrazo: false,
         isQuantidade: false,
         selectedArmazens: [],
+
         titulo: new Titulo(),
         prefixMoeda: null,
         numParcelas: null,
@@ -1006,13 +1073,22 @@
         isValid: false,
         errorValue: 'text-positive',
         dataAtual: this.moment().format('YYYYMMDD'),
+
         produto: new Produto(),
         searchProdutos: null,
         selectedIndexador: null,
+
         fixacao: new Fixacao(),
         selectedSafraId: null,
         maxQuantidade: 0,
         selectedDescontoAcrescimoType: null,
+        selectedContaBancariaId: 0,
+        numParcelasFixacao: null,
+        fixacaoParcelas: [],
+        errorValueFixacao: 'text-positive',
+        isValidFixacaoParcelas: false,
+
+        // OUTROS
         unidadesMedida: [],
         modalAttachSafraCultura: false,
         modalAttachTitulo: false,
@@ -1114,6 +1190,51 @@
             unidade_medida_quantidade_id: 155
           }
         ],
+        safraCulturas: [],
+        bancosContas: [
+          {
+            id: 1,
+            numero: '8485566',
+            nome: 'Banco do Brasil',
+            pessoa: {
+              nome: 'Fulano de tal'
+            },
+            conta: {
+              id: 1,
+              agencia: '6654-6',
+              numero: '96584752-6',
+              operacao: '66'
+            }
+          },
+          {
+            id: 2,
+            numero: '8485566',
+            nome: 'Bradesco',
+            pessoa: {
+              nome: 'Cicrano de tal'
+            },
+            conta: {
+              id: 2,
+              agencia: '6654-6',
+              numero: '96584752-6',
+              operacao: '66'
+            }
+          },
+          {
+            id: 3,
+            numero: '8485566',
+            nome: 'Sicred',
+            pessoa: {
+              nome: 'No One Knows'
+            },
+            conta: {
+              id: 3,
+              agencia: '6654-6',
+              numero: '96584752-6',
+              operacao: '66'
+            }
+          }
+        ],
       }
     },
     watch: {
@@ -1136,6 +1257,20 @@
         if(val != 'vencimentos'){
           this.verifyParcelas = [];
         }
+      },
+      fixacaoParcelas: {
+        handler: function (val, oldVal) {
+          this.validateVerifyFixacaoParcelas()
+        },
+        deep: true
+      },
+      currentStepFixacao: function (val) {
+        if(val == 'vencimentos'){
+          this.generateFormFixacaoParcelas()
+        }
+        if(val != 'vencimentos'){
+          this.fixacaoParcelas = [];
+        }
       }
     },
     computed: {
@@ -1147,9 +1282,29 @@
         return null;
       },
       totalImpostosUn: function () {
-        console.log(this.fixacao.quantidade.value)
         if (this.fixacao.quantidade.value != 0) {
           return this.fixacao.totalImpostos.value / this.fixacao.quantidade.value;
+        }
+        return null;
+      },
+      totalDescontosUn: function () {
+        if (this.fixacao.quantidade.value != 0) {
+          return this.fixacao.valorOutrosDescontos.value / this.fixacao.quantidade.value;
+        }
+        return null;
+      },
+      totalAcrescimosUn: function () {
+        if (this.fixacao.quantidade.value != 0) {
+          return this.fixacao.valorOutrosAcrescimos.value / this.fixacao.quantidade.value;
+        }
+        return null;
+      },
+      totalLiquidoUn: function () {
+        if (this.fixacao.quantidade.value != 0) {
+          this.fixacao.totalLiquido.value = (this.fixacao.totalBruto.value - (
+            this.fixacao.valorOutrosDescontos.value + this.fixacao.totalImpostos.value)
+          ) + this.fixacao.valorOutrosAcrescimos.value;
+          return this.fixacao.totalLiquido.value / this.fixacao.quantidade.value;
         }
         return null;
       }
@@ -1391,6 +1546,15 @@
         if(this.fixacao.preco.value == null && this.currentStepFixacao == 'preco'){
           return true;
         }
+        if(this.selectedDescontoAcrescimoType == null && this.currentStepFixacao == 'descontos'){
+          return true;
+        }
+        if(this.fixacao.contaBancariaId.value == null && this.currentStepFixacao == 'contaDeposito'){
+          return true;
+        }
+        if((this.numParcelasFixacao == null || this.numParcelasFixacao == 0) && this.currentStepFixacao == 'parcelas'){
+          return true
+        }
         return false;
       },
       selectMoedaFixacao: function(moeda){
@@ -1413,20 +1577,71 @@
             this.currentStepFixacao = 'descontosAcrescimos';
           }else{
             this.fixacao.isPrecoLiquido.value = false;
-            this.currentStepFixacao = 'valorDeposito';
+            this.currentStepFixacao = 'contaDeposito';
           }
         }
 
       },
-      saveAttachFixacao: function(){
-        if(!this.negocio.isValid()){
-          return;
+      validaQuantidade: function(){
+        if(this.fixacao.quantidade.value > this.maxQuantidade){
+          this.fixacao.quantidade.value = this.maxQuantidade
         }
-        negocioService.saveNegocio(this.negocio.getValues()).then(response => {
+      },
+      selectBancoConta: function(bancoConta){
+        if(this.fixacao.contaBancariaId.value == bancoConta.conta.id){
+          this.selectedContaBancariaId = null;
+          this.fixacao.contaBancariaId.value = null;
+        }else{
+          this.selectedContaBancariaId = bancoConta.conta.id;
+          this.fixacao.contaBancariaId.value = bancoConta.conta.id;
+          this.goToNextStep()
+        }
+      },
+      generateFormFixacaoParcelas: function(){
+        let total = 0;
+        for (var parcela = 1; parcela <= this.numParcelasFixacao; parcela++) {
+          let valorParcela = 0;
+          if(parcela === this.numParcelasFixacao){
+            valorParcela = parseFloat((this.fixacao.totalLiquido.value - total).toFixed(2));
+          }else{
+            valorParcela = Math.round((this.fixacao.totalLiquido.value * 100) / this.numParcelasFixacao)/100;
+          }
+          total += valorParcela;
+
+          this.fixacaoParcelas.push({
+            numero: parcela,
+            vencimento:{ value: this.moment().format('YYYY-MM-DD')} ,
+            valor: { value: valorParcela }
+          });
+        }
+      },
+      validateVerifyFixacaoParcelas: function(){
+        let validaValorTotal = 0;
+        this.fixacaoParcelas.forEach(function (valida) {
+          validaValorTotal += parseFloat(valida.valor.value);
+          if(valida.valor.value == ''){
+            this.errorValueFixacao = 'text-negative';
+            this.isValidFixacaoParcelas = true;
+          }
+          if(valida.vencimento.value == null){
+            this.isValidFixacaoParcelas = true;
+          }
+        }, this);
+        if(validaValorTotal > this.fixacao.totalLiquido.value || validaValorTotal < this.fixacao.totalLiquido.value){
+          this.errorValueFixacao = 'text-negative';
+          this.isValidFixacaoParcelas = true;
+        }else{
+          this.isValidFixacaoParcelas = false;
+          this.errorValueFixacao = 'text-positive';
+        }
+      },
+      saveAttachFixacao: function(){
+        this.fixacao.parcelas = this.fixacaoParcelas;
+        negocioService.saveAttachFixacao(this.fixacao.getValues()).then(response => {
           if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Negócio criado com sucesso'});
-            this.listNegocios();
-            this.closeModalNegocio();
+            this.$q.notify({type: 'positive', message: 'Fixação vinculada com sucesso'});
+            this.closeModal();
+            this.$router.go(-1);
           }
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -1434,30 +1649,6 @@
       },
 
       delete1: function(id){
-        this.$q.dialog({
-          title: 'Atenção',
-          message: 'Realmente deseja apagar esta Negocio?',
-          ok: 'Sim', cancel: 'Não',
-          color: 'primary'
-        }).then(data => {
-          negocioService.deleteNegocio(id).then(response => {
-            this.listCulturas()
-          })
-        }).catch(()=>{});
-      },
-      delete2: function(id){
-        this.$q.dialog({
-          title: 'Atenção',
-          message: 'Realmente deseja apagar esta Negocio?',
-          ok: 'Sim', cancel: 'Não',
-          color: 'primary'
-        }).then(data => {
-          negocioService.deleteNegocio(id).then(response => {
-            this.listCulturas()
-          })
-        }).catch(()=>{});
-      },
-      delete3: function(id){
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente deseja apagar esta Negocio?',

@@ -16,7 +16,6 @@
       :autofocus="autofocus"
       :maxlength="maxlength"
       :placeholder="placeholder"
-      :disable="disable"
       v-on:input="clearErrorMessage()"
       @blur="$emit('blur', model.value)"
     />
@@ -47,7 +46,6 @@
       readonly: Boolean,
       disable: Boolean,
       loading: Boolean,
-      disable: Boolean,
     },
     model:{
       event: 'blur',

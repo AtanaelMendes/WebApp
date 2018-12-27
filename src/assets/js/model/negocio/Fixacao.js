@@ -53,10 +53,15 @@ export default class{
     value: null,
     errorMessage: null
   };
+  contaBancariaId = {
+    value: null,
+    errorMessage: null
+  };
   observacoes = {
     value: null,
     errorMessage: null
   };
+  parcelas = [];
   constructor(negocioFixacao){
     if (negocioFixacao !== undefined || negocioFixacao != null){
       this.negocioCulturaId.value = negocioFixacao.negocioCulturaId.value;
@@ -72,6 +77,7 @@ export default class{
       this.valorOutrosDescontos.value = negocioFixacao.valorOutrosDescontos.value;
       this.valorOutrosAcrescimos.value = negocioFixacao.valorOutrosAcrescimos.value;
       this.totalLiquido.value = negocioFixacao.totalLiquido.value;
+      this.contaBancariaId.value = negocioFixacao.contaBancariaId.value;
       this.observacoes.value = negocioFixacao.observacoes.value;
     }
   };
@@ -106,6 +112,7 @@ export default class{
       valor_outros_descontos: this.valorOutrosDescontos.value,
       valor_outros_acrescimos: this.valorOutrosAcrescimos.value,
       total_liquido: this.totalLiquido.value,
+      conta_bancaria_id: this.contaBancariaId.value,
       observacoes: this.observacoes.value
     }
   }
