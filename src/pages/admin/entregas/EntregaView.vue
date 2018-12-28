@@ -1,6 +1,6 @@
 <template>
   <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Entregas" navigation_type="menu" >'
+    <toolbar slot="toolbar" title="Detalhes da entrega" navigation_type="menu" >
     </toolbar>
 
     <div class="row gutter-sm space-end q-ma-lg"></div>

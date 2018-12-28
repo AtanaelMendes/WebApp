@@ -47,7 +47,7 @@
                 <span class="text-faded q-caption" v-if="safra.is_safrinha">
                   Safrinha
                 </span>
-                <q-icon slot="right" name="check_circle" color="positive" v-if="novaCarga.safraId.value == safra.id" round dense/>
+                <q-icon slot="right" name="check_circle" color="positive" v-if="novaCarga.safraCulturaId.value == safra.id" round dense/>
               </q-card-title>
               <q-card-separator/>
               <q-card-main>
@@ -75,21 +75,20 @@
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
               </q-card-media>
-              <q-card-title>
+
+              <q-card-title class="q-py-xs">
                 {{area.nome}}
               </q-card-title>
-            </q-card>
-            <br>
-            &nbsp
-          </div>
 
+            </q-card>
+          </div>
         </div>
       </q-step>
 
       <!--PASSO 4 ESCOLHER TALHAO -->
       <q-step title="Escolher Talhão" name="escolherTalhao">
-        <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
-          <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3" v-for="talhao in talhoes" :key="talhao.id">
+        <div class="row justify-center items-center gutter-sm space-end" style="min-height: 80vh">
+          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2" v-for="talhao in talhoes" :key="talhao.id">
             <q-card>
               <q-card-media overlay-position="full" @click.native="selectTalhao(talhao)">
 
@@ -100,11 +99,11 @@
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
               </q-card-media>
-              <q-card-title>
+
+              <q-card-title class="q-py-xs">
                 {{talhao.nome}}
               </q-card-title>
 
-              <q-card-main class="q-px-none"></q-card-main>
             </q-card>
           </div>
         </div>
@@ -112,18 +111,22 @@
 
       <!--PASSO 5 ESCOLHER CULTIVAR -->
       <q-step title="Escolher cultivar" name="escolherCultivar">
-        <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
-          <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3" v-for="area in areas" :key="area.id">
-            <q-card @click.native="selectArea(area.id)">
-              <q-card-media overlay-position="full">
-                <img src="assets/images/confinamento250x250.jpg"/>
-                <q-card-title slot="overlay" align="end" v-if="area.id === novaCarga.areaId.value">
+        <div class="row justify-center items-center gutter-sm space-end" style="min-height: 80vh">
+          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2" v-for="cultivar in cultivares" :key="cultivar.id">
+            <q-card>
+              <q-card-media overlay-position="full" @click.native="selectCultivar(cultivar)">
+
+                <img src="assets/images/icon-no-image.svg" v-if="!cultivar.image_path"/>
+                <img :src="cultivar.image_path" v-if="cultivar.image_path"/>
+
+                <q-card-title slot="overlay" align="end" v-if="cultivar.id == novaCarga.cultivarId.value">
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
               </q-card-media>
               <q-card-title class="q-py-xs">
-                {{area.nome}}
+                {{cultivar.nome}}
               </q-card-title>
+
             </q-card>
           </div>
         </div>
@@ -133,14 +136,15 @@
 
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-      <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="currentStep != 'entrega' "/>
-      <q-btn label="salvar" color="primary" @click="saveAttachCultura" :disable="selectedArmazens.length <= 0" v-if="currentStep == 'entrega' "/>
+      <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="currentStep != 'escolherCultivar' "/>
+      <q-btn label="salvar" color="primary" @click="saveNovaCarga" :disable="isNextStepEnabled()" v-if="currentStep == 'escolherCultivar' "/>
     </q-page-sticky>
 
   </q-modal>
 </template>
 <script>
   import areaService from 'assets/js/service/area/AreaService'
+  import talhaoService from 'assets/js/service/area/TalhaoService'
   import NovaCarga from 'assets/js/model/entrega/NovaCarga'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
@@ -196,7 +200,23 @@
         ],
         areas: [],
         talhoes: [],
-        cultivares: [],
+        cultivares: [
+          {
+            id: 1,
+            marca: 'Pionner',
+            nome: 'YK6565'
+          },
+          {
+            id: 2,
+            marca: 'Mosanto',
+            nome: 'TG5588'
+          },
+          {
+            id: 3,
+            marca: 'Bayer',
+            nome: 'HJ3354'
+          }
+        ],
       }
     },
     methods: {
@@ -210,7 +230,7 @@
         if(this.novaCarga.caminhaoId.value == null && this.currentStep == 'escolherCaminhao' ){
           return true
         }
-        if(this.novaCarga.safraId.value == null && this.currentStep == 'escolherSafra' ){
+        if(this.novaCarga.safraCulturaId.value == null && this.currentStep == 'escolherSafra' ){
           return true
         }
         if(this.novaCarga.areaId.value == null && this.currentStep == 'escolherArea' ){
@@ -235,10 +255,10 @@
       },
       listSafras: function(){},
       selectSafra: function(safra){
-        if(this.novaCarga.safraId.value == safra.id){
-          this.novaCarga.safraId.value = null;
+        if(this.novaCarga.safraCulturaId.value == safra.id){
+          this.novaCarga.safraCulturaId.value = null;
         }else{
-          this.novaCarga.safraId.value = safra.id;
+          this.novaCarga.safraCulturaId.value = safra.id;
           this.goToNextStep()
         }
       },
@@ -252,12 +272,14 @@
           this.novaCarga.areaId.value = null;
         }else{
           this.novaCarga.areaId.value = area.id;
-          this.getTalhoesBySafraAndArea(area.id);
+          this.listTalhoesBySafraCulturaAndArea();
           this.goToNextStep()
         }
       },
-      getTalhoesBySafraAndArea: function(area_id){
-        safraService.listFreeTalhoes(area_id, this.selectedSafraId, this.safraCultura.view_unidade_area_id, this.safraCultura.view_unidade_medida_id, this.safraCultura.cultura_id).then(response => {
+      listTalhoesBySafraCulturaAndArea: function(){
+        let safraCulturaId =this.novaCarga.safraCulturaId.value;
+        let areaId = this.novaCarga.areaId.value;
+        talhaoService.listTalhoesBySafraCulturaAndArea(safraCulturaId, areaId).then(response => {
           this.talhoes = [];
           response.data.forEach(function(talhao){
             this.talhoes.push({
@@ -265,11 +287,6 @@
               nome: talhao.nome,
               tamanho: parseFloat(talhao.tamanho),
               image_path: talhao.image_path,
-              /*unidade: {
-                nome: talhao.unidade.nome,
-                plural: talhao.unidade.plural,
-                sigla: talhao.unidade.sigla,
-              }*/
             });
           },this)
         })
@@ -279,7 +296,7 @@
           this.novaCarga.talhaoId.value = null;
         }else{
           this.novaCarga.talhaoId.value = talhao.id;
-          // this.goToNextStep()
+          this.goToNextStep()
         }
       },
       listCultivar: function(){},
@@ -292,11 +309,10 @@
         }
       },
       saveNovaCarga: function(){
-        negocioService.saveNovaCarga(this.titulo.getValues()).then(response => {
+        negocioService.saveNovaCarga(this.novaCarga.getValues()).then(response => {
           if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Título vinculado com sucesso'});
+            this.$q.notify({type: 'positive', message: 'Carga Criada com sucesso'});
             this.closeModal();
-            this.$router.go(-1);
           }
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -316,4 +332,7 @@
   }
 </script>
 <style>
+  .space-end{
+    margin-bottom: 150px;
+  }
 </style>

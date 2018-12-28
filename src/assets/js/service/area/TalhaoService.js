@@ -11,6 +11,15 @@ export default {
       })
     });
   },
+  listTalhoesBySafraCulturaAndArea(safraCulturaId, areaId){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('area/' + areaId + '/talhao').then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   saveTalhao(areaId, params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.post('/area/'+ areaId + '/talhao', params).then(response => {
