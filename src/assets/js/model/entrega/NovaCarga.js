@@ -5,7 +5,7 @@ export default class{
     value: null,
     errorMessage: null
   };
-  safraId = {
+  safraCulturaId = {
     value: null,
     errorMessage: null
   };
@@ -24,7 +24,7 @@ export default class{
   constructor(novaCarga){
     if(novaCarga !== undefined || novaCarga != null){
       this.caminhaoId.value = novaCarga.caminhaoId.value;
-      this.safraId.value = novaCarga.safraId.value;
+      this.safraCulturaId.value = novaCarga.safraCulturaId.value;
       this.areaId.value = novaCarga.areaId.value;
       this.talhaoId.value = novaCarga.talhaoId.value;
       this.cultivarId.value = novaCarga.cultivarId.value;
@@ -41,7 +41,7 @@ export default class{
   getValues(){
     return{
       caminhao_id: this.caminhaoId.value,
-      safra_id: this.safraId.value,
+      safra_id: this.safraCulturaId.value,
       area_id: this.areaId.value,
       talhao_id: this.talhaoId.value,
       cultivar_id: this.cultivarId.value,

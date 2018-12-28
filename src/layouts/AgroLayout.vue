@@ -18,6 +18,9 @@
         <!-- search field -->
         <slot name="searchField"></slot>&nbsp
 
+        <!--TABS BUTTONS-->
+        <!--<slot name="tabHeader"></slot>-->
+
         <!-- right buttons -->
         <slot name="rightBtn"></slot>
 
@@ -27,7 +30,7 @@
         </slot>
       </q-toolbar>
 
-      <slot name="tabHeader"></slot>
+      <!--<slot name="tabHeader"></slot>-->
 
     </q-layout-header>
 
