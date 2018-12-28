@@ -42,9 +42,9 @@
           <div class="col-12">
             Em qual indexador foi negociado?
           </div>
-          <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
-            <q-input align="center" v-model="searchProdutos" :after="[{icon: 'search'}]"/>
-          </div>
+          <!--<div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">-->
+            <!--<q-input align="center" v-model="searchProdutos" :after="[{icon: 'search'}]"/>-->
+          <!--</div>-->
         </div>
 
         <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">

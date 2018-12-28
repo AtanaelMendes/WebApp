@@ -1,14 +1,11 @@
 import { helpers} from 'vuelidate/lib/validators'
-const moment = require('moment');
+
 export default class{
   isPagar = {
     value: null,
     errorMessage: null
   };
-  moedaId = {
-    value: null,
-    errorMessage: null
-  };
+  indexador = null;
   valor = {
     value: null,
     errorMessage: null
@@ -17,7 +14,7 @@ export default class{
   constructor(negocioTitulo){
     if(negocioTitulo !== undefined || negocioTitulo != null){
       this.isPagar.value = negocioTitulo.isPagar.value;
-      this.moedaId.value = negocioTitulo.moedaId.value;
+      this.indexador = negocioTitulo.indexador;
       this.valor.value = negocioTitulo.valor.value;
       this.parcelas = negocioTitulo.parcelas
     }
@@ -37,7 +34,7 @@ export default class{
   getValues(){
     return{
       is_pagar: this.isPagar.value,
-      moeda_id: this.moedaId.value,
+      indexador_id: this.indexador.id,
       valor: this.valor.value,
       titulos_liquidacoes: this.parcelas
     }

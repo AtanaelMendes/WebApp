@@ -28,15 +28,15 @@
       </q-step>
 
       <!--PASSO 2 INFORMAR MOEDA -->
-      <q-step title="Moeda" name="moeda">
+      <q-step title="Indexador" name="indexador">
         <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
           <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
 
             <div class="row gutter-y-xs">
-              <div class="col-12 q-title text-center">Qual a moeda?</div>
-              <div class="col-12" v-for="moeda in moedas" :key="moeda.nome">
-                <q-btn class="full-width" @click.native="selectMoeda(moeda)" :color="isMoedaSelected(moeda.id)">
-                  {{moeda.simbolo}}&nbsp{{moeda.nome}}
+              <div class="col-12 q-title text-center">Qual é o indexador?</div>
+              <div class="col-12" v-for="indexador in indexadores" :key="indexador.nome">
+                <q-btn class="full-width" @click.native="selectIndexador(indexador)" :color="isIndexadorSelected(indexador.id) ? 'positive' : ''">
+                  ({{indexador.sigla}}) {{indexador.nome}}
                 </q-btn>
               </div>
             </div>
@@ -55,7 +55,7 @@
                 Qual o valor?
               </div>
               <div class="col-12">
-                <custom-input-text key="valor" :prefix="prefixMoeda" type="number" :model="titulo.valor" align="center"/>
+                <custom-input-text key="valor" :prefix="titulo.indexador.sigla" type="number" :model="titulo.valor" align="center" v-if="titulo.indexador"/>
               </div>
             </div>
 
@@ -115,7 +115,7 @@
                     </div>
 
                     <div class="col-xs-6 col-lg-4">
-                      <q-input type="number" v-model="parcela.valor.value" :decimals="2" :prefix="prefixMoeda" align="center"/>
+                      <q-input type="number" v-model="parcela.valor.value" :decimals="2" :prefix="titulo.indexador.sigla" align="center" v-if="titulo.indexador"/>
                     </div>
                   </div>
 
@@ -123,7 +123,7 @@
               </q-item>
               <div class="row q-mt-md justify-end">
                 <div class="col-xs-6 col-lg-4 self-center text-justify">
-                  <span class="text-faded">Total: {{prefixMoeda}}</span>&nbsp
+                  <span class="text-faded" v-if="titulo.indexador">Total: {{titulo.indexador.sigla}}</span>&nbsp
                   <span :class="errorValue">{{numeral(titulo.valor.value).format('0,0.00')}}</span>
                 </div>
               </div>
@@ -147,6 +147,8 @@
   import Titulo from 'assets/js/model/negocio/Titulo'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
+  import negocioService from 'assets/js/service/negocio/NegocioService'
+  import indexadorService from 'assets/js/service/IndexadorService'
 
   export default {
     name: "NewTituloModal",
@@ -175,32 +177,34 @@
         isModalOpened: false,
         currentStep: 'pagarReceber',
         titulo: new Titulo(),
-        prefixMoeda: null,
+        //prefixMoeda: null,
         numParcelas: null,
         verifyParcelas: [],
         isValid: false,
         errorValue: 'text-positive',
         dataAtual: this.moment().format('YYYYMMDD'),
-        moedas:[
-          {
-            id: 1,
-            nome: 'Real',
-            plural: 'Reais',
-            simbolo: 'R$'
-          },
-          {
-            id: 2,
-            nome: 'Dollar',
-            plural: 'Dollars',
-            simbolo: '$'
-          }
-        ],
+        indexadores: [],
+        // moedas:[
+        //   {
+        //     id: 1,
+        //     nome: 'Real',
+        //     plural: 'Reais',
+        //     simbolo: 'R$'
+        //   },
+        //   {
+        //     id: 2,
+        //     nome: 'Dollar',
+        //     plural: 'Dollars',
+        //     simbolo: '$'
+        //   }
+        // ],
       }
     },
     methods: {
       openModal: function(){
         this.isModalOpened = true;
         this.titulo = new Titulo();
+        this.listIndexadores();
       },
       closeModal: function(){
         this.isModalOpened = false;
@@ -214,19 +218,20 @@
         }
         this.$refs.stepperTitulo.next();
       },
-      selectMoeda: function(moeda){
-        if(this.titulo.moedaId.value == moeda.id){
-          this.titulo.moedaId.value = null;
-          this.prefixMoeda = null;
+      selectIndexador: function(indexador){
+        if(this.titulo.indexador != null){
+          this.titulo.indexador = null;
         }else{
-          this.titulo.moedaId.value = moeda.id;
-          this.prefixMoeda = moeda.simbolo;
+          this.titulo.indexador = indexador;
           this.goToNextStep()
         }
       },
-      isMoedaSelected: function(id){
-        if(this.titulo.moedaId.value == id){
-          return 'positive';
+      isIndexadorSelected: function(id){
+        if(this.titulo.indexador === null){
+          return false;
+        }
+        if(this.titulo.indexador.id === id){
+          return true;
         }
       },
       generateFormParcelas: function(){
@@ -234,7 +239,6 @@
         for (var parcela = 1; parcela <= this.numParcelas; parcela++) {
           let valorParcela = 0;
           if(parcela === this.numParcelas){
-            //valorParcela = this.titulo.valor.value - total;
             valorParcela = parseFloat((this.titulo.valor.value - total).toFixed(2));
           }else{
             valorParcela = Math.round((this.titulo.valor.value * 100) / this.numParcelas)/100;
@@ -243,7 +247,7 @@
 
           this.verifyParcelas.push({
             numero: parcela,
-            vencimento:{ value: this.moment().format('YYYY-MM-DD')} ,
+            vencimento:{ value: this.moment().add(parcela * 30, 'days').format('YYYY-MM-DD')} ,
             valor: { value: valorParcela }
           });
         }
@@ -252,7 +256,7 @@
         let validaValorTotal = 0;
         this.verifyParcelas.forEach(function (valida) {
           validaValorTotal += parseFloat(valida.valor.value);
-          if(valida.valor.value == ''){
+          if(valida.valor.value === ''){
             this.errorValue = 'text-negative'
             this.isValid = true;
           }
@@ -269,19 +273,19 @@
         }
       },
       isNextTituloStep: function(){
-        if(this.titulo.isPagar.value == null && this.currentStep == 'pagarReceber'){
+        if(this.titulo.isPagar.value == null && this.currentStep === 'pagarReceber'){
           return true
         }
-        if(this.titulo.moedaId.value == null && this.currentStep == 'moeda'){
+        if(this.titulo.indexador === null && this.currentStep === 'indexador'){
           return true
         }
-        if(this.titulo.valor.value == null && this.currentStep == 'valor'){
+        if(this.titulo.valor.value == null && this.currentStep === 'valor'){
           return true
         }
-        if((this.numParcelas == null || this.numParcelas == 0) && this.currentStep == 'parcelas'){
+        if((this.numParcelas == null || this.numParcelas === 0) && this.currentStep === 'parcelas'){
           return true
         }
-        if(this.currentStep == 'vencimentos'){
+        if(this.currentStep === 'vencimentos'){
           this.generateFormParcelas()
         }
         return false;
@@ -298,6 +302,11 @@
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
       },
+      listIndexadores: function(){
+        indexadorService.listIndexadores().then(response => {
+          this.indexadores = response.data;
+        })
+      }
     }
   }
 </script>
