@@ -76,9 +76,9 @@ export default {
     });
   },
 
-  saveAttachCultura(params){
+  saveAttachCultura(negocioId, negocioCultura){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/'+ produtorId + '/negocio', params).then(response => {
+      Vue.prototype.$axios.post('negocio/'+ negocioId + '/cultura', negocioCultura).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)

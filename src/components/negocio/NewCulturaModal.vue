@@ -179,6 +179,7 @@
   import culturaClassificacaoService from 'assets/js/service/cultura/CulturaClassificacaoService'
   import armazemService from 'assets/js/service/localizacao/ArmazemService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
+  import negocioService from 'assets/js/service/negocio/NegocioService'
   import Cultura from 'assets/js/model/negocio/Cultura'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
@@ -230,15 +231,18 @@
       },
       saveAttachCultura: function(id){
         console.log('salvar cultura')
-        // negocioService.saveAttachCultura(this.cultura.getValues()).then(response => {
-        //   if(response.status === 201) {
-        //     this.$q.notify({type: 'positive', message: 'Safra cultura vinculada com sucesso'});
-        //     this.closeModal();
-        //     this.$router.go(-1);
-        //   }
-        // }).catch(error => {
-        //   this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-        // });
+        console.log(this.cultura)
+        console.log(this.cultura.getValues())
+
+        negocioService.saveAttachCultura(this.$route.params.id, this.cultura.getValues()).then(response => {
+          if(response.status === 201) {
+            this.$q.notify({type: 'positive', message: 'Safra cultura vinculada com sucesso'});
+            this.closeModal();
+            this.$router.go(-1);
+          }
+        }).catch(error => {
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+        });
       },
       goToNextStep(){
         if(this.currentStep === 'classificacao'){
