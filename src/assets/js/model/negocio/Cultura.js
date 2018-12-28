@@ -1,10 +1,10 @@
 import { helpers} from 'vuelidate/lib/validators'
 const moment = require('moment');
 export default class{
-  negocioId = {
-    value: null,
-    errorMessage: null
-  };
+  // negocioId = {
+  //   value: null,
+  //   errorMessage: null
+  // };
   safraCulturaId = {
     value: null,
     errorMessage: null
@@ -38,7 +38,7 @@ export default class{
   };
   constructor(negocioCultura){
     if(negocioCultura !== undefined || negocioCultura != null){
-      this.negocioId.value = negocioCultura.negocioId.value;
+      //this.negocioId.value = negocioCultura.negocioId.value;
       this.safraCulturaId.value = negocioCultura.safraCulturaId.value;
       this.isPagar.value = negocioCultura.isPagar.value;
       this.quantidade.value = negocioCultura.quantidade.value;
@@ -81,14 +81,25 @@ export default class{
 
   getValues(){
     return{
-      negocio_id: this.negocioId.value,
+      //negocio_id: this.negocioId.value,
       safra_cultura_id: this.safraCulturaId.value,
       is_pagar: this.isPagar.value,
       quantidade: this.quantidade.value,
       unidade_medida_id: this.unidadeMedidaId.value,
       prazo_entrega_inicial: this.prazoEntregaInicial.value,
       prazo_entrega_final: this.prazoEntregaFinal.value,
-      observacoes: this.observacoes.value
+      observacoes: this.observacoes.value,
+      classificacoes: this.classificacoes.map(function (classificacao) {
+        return {
+          cultura_classificacao_id: classificacao.id,
+          tolerancia: classificacao.tolerancia,
+        }
+      }),
+      armazens: this.armazens.map(function (armazem) {
+        return {
+          armazem_id: armazem.id,
+        }
+      })
     }
   }
 }
