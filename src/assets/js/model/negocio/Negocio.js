@@ -22,14 +22,14 @@ export default class{
     value: null,
     errorMessage: null
   };
-  constructor(contrato){
-    if(contrato !== undefined || contrato != null){
-      this.tipoNegocioId = contrato.tipoNegocioId;
-      this.pessoaId.value = contrato.pessoaId.value;
-      this.emissao.value = contrato.emissao.value;
-      this.numeroPedido.value = contrato.numeroPedido.value;
-      this.numeroContrato.value = contrato.numeroContrato.value;
-      this.observacoes.value = contrato.observacoes.value;
+  constructor(negocio){
+    if(negocio !== undefined || negocio != null){
+      //this.tipoNegocioId = negocio.tipoNegocioId;
+      this.pessoaId.value = negocio.pessoa_id;
+      // this.emissao.value = negocio.emissao.value;
+      // this.numeroPedido.value = negocio.numeroPedido.value;
+      // this.numeroContrato.value = negocio.numeroContrato.value;
+      // this.observacoes.value = negocio.observacoes.value;
     }
   }
 

@@ -305,6 +305,7 @@
   import newTituloModal from 'components/negocio/NewTituloModal';
   import newProdutoModal from 'components/negocio/NewProdutoModal';
   import newFixacaoModal from 'components/negocio/NewFixacaoModal';
+  import Negocio from 'assets/js/model/negocio/Negocio';
 
   export default {
     name: "negocio-view",
@@ -330,7 +331,7 @@
         this.$refs.culturaModal.openModal();
       },
       attachTitulo: function(){
-        this.$refs.tituloModal.openModal();
+        this.$refs.tituloModal.openModal(this.negocio.pessoaId.value);
       },
       attachProduto: function(){
         this.$refs.produtoModal.openModal();
@@ -367,9 +368,8 @@
 
       getNegocioById: function(){
         negocioService.getNegocioById(this.$route.params.id).then(response => {
-          this.negocio = response.data;
+          this.negocio = new Negocio(response.data);
         });
-        this.negocio = 'ijijiijiji';
       },
 
     },

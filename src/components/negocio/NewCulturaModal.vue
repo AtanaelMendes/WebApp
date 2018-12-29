@@ -229,11 +229,7 @@
         this.currentStep = 'safra';
         this.$emit('modal-closed')
       },
-      saveAttachCultura: function(id){
-        console.log('salvar cultura')
-        console.log(this.cultura)
-        console.log(this.cultura.getValues())
-
+      saveAttachCultura: function(){
         negocioService.saveAttachCultura(this.$route.params.id, this.cultura.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Safra cultura vinculada com sucesso'});

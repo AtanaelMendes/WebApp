@@ -201,9 +201,10 @@
       }
     },
     methods: {
-      openModal: function(){
+      openModal: function(pessoa_id){
         this.isModalOpened = true;
         this.titulo = new Titulo();
+        this.titulo.pessoaId = pessoa_id;
         this.listIndexadores();
       },
       closeModal: function(){
@@ -246,7 +247,7 @@
           total += valorParcela;
 
           this.verifyParcelas.push({
-            numero: parcela,
+            //numero: parcela,
             vencimento:{ value: this.moment().add(parcela * 30, 'days').format('YYYY-MM-DD')} ,
             valor: { value: valorParcela }
           });
@@ -292,7 +293,7 @@
       },
       saveAttachTitulo: function(){
         this.titulo.parcelas = this.verifyParcelas;
-        negocioService.saveAttachTitulo(this.titulo.getValues()).then(response => {
+        negocioService.saveAttachTitulo(this.$route.params.id, this.titulo.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Título vinculado com sucesso'});
             this.closeModal();

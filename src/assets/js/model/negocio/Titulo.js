@@ -11,6 +11,9 @@ export default class{
     errorMessage: null
   };
   parcelas = [];
+  pessoaId = null;
+
+
   constructor(negocioTitulo){
     if(negocioTitulo !== undefined || negocioTitulo != null){
       this.isPagar.value = negocioTitulo.isPagar.value;
@@ -19,6 +22,7 @@ export default class{
       this.parcelas = negocioTitulo.parcelas
     }
   }
+
   isValid(){
     let hasError = false;
     if(!helpers.req(this.valor.value)){
@@ -31,12 +35,18 @@ export default class{
     }
     return !hasError;
   };
+
   getValues(){
     return{
+      pessoa_id: this.pessoaId,
       is_pagar: this.isPagar.value,
       indexador_id: this.indexador.id,
-      valor: this.valor.value,
-      titulos_liquidacoes: this.parcelas
+      parcelas: this.parcelas.map(function (parcela) {
+        return {
+          'valor': parcela.valor.value,
+          'vencimento': parcela.vencimento.value
+        }
+      })
     }
   }
 }
