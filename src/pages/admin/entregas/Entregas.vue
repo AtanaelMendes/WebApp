@@ -16,7 +16,7 @@
     <div class="row gutter-sm space-end q-ma-lg" v-if="tabs == 'carregando' ">
 
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="cargaCarregando in cargasCarregando" :key="cargaCarregando.id">
-        <q-card @click.native="getCargaById(cargaCarregando.id)">
+        <q-card @click.native="viewCarga(cargaCarregando.id)">
           <q-card-media>
             <img :src=" 'assets/images/'+cargaCarregando.id+'.jpg' "/>
           </q-card-media>
@@ -62,7 +62,7 @@
     <div class="row gutter-sm space-end q-ma-lg" v-if="tabs == 'no-armazem' ">
 
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="cargaNoArmazem in cargasNoArmazem" :key="cargaNoArmazem.id">
-        <q-card @click.native="getCargaById(cargaNoArmazem.id)">
+        <q-card @click.native="viewCarga(cargaNoArmazem.id)">
           <q-card-media>
             <img :src=" 'assets/images/'+cargaNoArmazem.id+'.jpg' "/>
           </q-card-media>
@@ -96,34 +96,52 @@
     </div>
 
     <!--TAB ENTREGUE-->
-    <div class="row gutter-sm space-end q-ma-lg" v-if="tabs == 'entregue' ">
+    <div class="row gutter-sm space-end" v-if="tabs == 'entregue' ">
       <div class="col-12">
         <q-list no-border link separator>
 
-          <q-collapsible v-for="cargaEntregue in 10" :key="cargaEntregue">
-            <template slot="header">
-              <q-item-main>
-                <q-item-tile>HGT9966</q-item-tile>
-                <q-item-tile sublabel>2018/2019</q-item-tile>
-              </q-item-main>
-              <q-item-side right>
-                <q-item-tile stamp>
-                  28/12/2019 17:45:55
-                </q-item-tile>
-                <q-item-tile sublabel>
-                  ADM
-                </q-item-tile>
-              </q-item-side>
-            </template>
-            <div class="row q-caption">
-              <div class="col-12">Bruto: <b>{{numeral(70000).format('0,0')}} KG</b></div>
-              <!--<div class="col-xs-6 col-sm-8 col-md-9 col-lg-10">{{numeral(70000).format('0,0')}} KG</div>-->
-              <div class="col-12">Desconto: <b>{{numeral(15250).format('0,0')}} KG</b></div>
-              <!--<div class="col-xs-6 col-sm-8 col-md-9 col-lg-10">{{numeral(15250).format('0,0')}} KG</div>-->
-              <div class="col-12">Líquido: <b>{{numeral(54750).format('0,0')}} KG</b></div>
-              <!--<div class="col-xs-6 col-sm-8 col-md-9 col-lg-10">{{numeral(54750).format('0,0')}} KG</div>-->
+          <q-item multiline v-for="cargaEntregue in 30" :key="cargaEntregue" @click.native="viewCarga(cargaEntregue)">
+            <div class="gt-sm">
+              <q-item-side avatar="assets/images/1.jpg" class="gt-sm"/>
             </div>
-          </q-collapsible>
+            <q-item-side image="assets/images/1.jpg" class="lt-md"/>
+            <q-item-main>
+              <q-item-tile class="content-center">
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    Madenorte
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    {{numeral(49000).format('0,0')}}
+                    ({{numeral(50000).format('0,0')}} -
+                    {{numeral(10000).format('0,0')}}) KG
+                  </div>
+                </div>
+              </q-item-tile>
+              <q-item-tile sublabel>
+                <div class="row">
+                  <div class="col-sm-12 col-md-6">
+                    Crotalaria 2018/2019
+                  </div>
+                  <div class="col-sm-12 col-md-6">
+                    Fulano da Silva
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-6 lt-md">
+                    28 dez 17:45 <br>
+                    HGT 9966
+                  </div>
+                </div>
+              </q-item-tile>
+            </q-item-main>
+            <q-item-side right class="gt-sm">
+              <q-item-tile stamp>
+                28 dez 17:45
+              </q-item-tile>
+              <q-item-tile sublabel>
+                HGT 9966
+              </q-item-tile>
+            </q-item-side>
+          </q-item>
 
         </q-list>
       </div>
@@ -229,7 +247,7 @@
       listCargasEntregues: function () {
 
       },
-      getCargaById: function (id) {
+      viewCarga: function (id) {
         this.$router.push({name: 'entrega_view', params: {id:id}});
       }
     },

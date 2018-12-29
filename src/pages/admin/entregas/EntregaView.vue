@@ -1,37 +1,202 @@
 <template>
   <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Detalhes da entrega" navigation_type="menu" >
-    </toolbar>
+    <toolbar slot="toolbar" title="Detalhes da entrega" navigation_type="menu"></toolbar>
 
-    <div class="row gutter-sm space-end q-ma-lg"></div>
+    <div class="row space-end gutter-sm q-pa-md">
 
-    <!--EMPTY LIST-->
-    <div class="column q-ma-xl items-center">
-      <div class="col-6">
-        <img src="assets/images/sad_2.svg" class="responsive"/>
+      <!--INFO DO CAMINHAO-->
+      <div class="col-12 ">
+
+        <q-card class="row">
+
+          <!--IMAGEM HEADER-->
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <img src="assets/images/1.jpg" class="responsive"/>
+          </div>
+
+          <!--INFO DO HEADER-->
+          <div class="col-xs-12 col-sm-6 col-md-8 col-lg-9 q-pa-sm">
+
+            <q-btn class="float-right" icon="more_vert" round flat>
+              <q-popover>
+                <q-list link class="no-border">
+                  <q-item v-close-overlay @click.native="addDriver()">
+                    <q-item-main label="Alterar Motorista"/>
+                  </q-item>
+                </q-list>
+              </q-popover>
+            </q-btn>
+
+            <p>Tiburcio</p>
+            <p>Feneme  FRG 8855</p>
+            <p><span class="text-faded">Lotação</span> {{numeral(70000).format('0,0')}} KG</p>
+            <p><span class="text-faded">Carregado em</span> {{moment('2018/12/28 15:30:45').format('lll')}}</p>
+            <p><span class="text-faded">Enviado em</span> {{moment('2018/12/28 16:30:45').format('lll')}}</p>
+            <p><span class="text-faded">Descarregado em</span> {{moment('2018/12/28 17:30:45').format('lll')}}</p>
+
+          </div>
+        </q-card>
       </div>
-      <div class="col-6 text-justify">
-        <span>Nenhum resultado encontrado.</span>
+
+
+      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+
+        <div class="row gutter-y-sm">
+
+          <!--INFO DAS CARGAS-->
+          <div class="col-12">
+            <q-btn class="float-right" icon="more_vert" round flat>
+              <q-popover>
+                <q-list link class="no-border">
+                  <q-item v-close-overlay @click.native="addTalhaoPercentage()">
+                    <q-item-main label="Definir Porc. do talhão"/>
+                  </q-item>
+                  <q-item v-close-overlay @click.native="addTalhao()">
+                    <q-item-main label="Adiconar talhão"/>
+                  </q-item>
+                  <q-item v-close-overlay @click.native="deleteTalhao()">
+                    <q-item-main label="Excluir talhão"/>
+                  </q-item>
+                </q-list>
+              </q-popover>
+            </q-btn>
+
+            <q-card class="q-pa-sm">
+
+              <q-list link no-border>
+                <q-item v-for="carga in 3" :key="carga">
+                  <q-item-main>
+                    <q-item-tile>
+                      Soja 2018/2019
+                    </q-item-tile>
+                    <q-item-tile sublabel>
+                      33% Y30 Caroline talhão fundos
+                    </q-item-tile>
+                  </q-item-main>
+                </q-item>
+              </q-list>
+
+            </q-card>
+          </div>
+
+        <!--INFO DOS TICKETS-->
+          <div class="col-12">
+            <q-btn class="float-right" icon="more_vert" round flat>
+              <q-popover>
+                <q-list link class="no-border">
+                  <q-item v-close-overlay @click.native="addTicket()">
+                    <q-item-main label="Novo ticket"/>
+                  </q-item>
+                  <q-item v-close-overlay @click.native="deleteTicket()">
+                    <q-item-main label="Excluir"/>
+                  </q-item>
+                </q-list>
+              </q-popover>
+            </q-btn>
+
+            <q-card class="q-pa-sm">
+
+              <q-list link no-border>
+                <q-item>
+                  <q-item-main class="row">
+                    <div class="col-4">
+                      Líquido
+                    </div>
+                    <div class="col-4">
+                      {{numeral(46220).format('0.0')}} KG
+                    </div>
+                    <div class="col-4">
+                      {{numeral(770.33).format('0,0.00')}} SC
+                    </div>
+                    <div class="col-4">
+                      Desconto
+                    </div>
+                    <div class="col-4">
+                      {{numeral(3780).format('0.0')}} KG
+                    </div>
+                    <div class="col-4">
+                      {{numeral(63).format('0,0.00')}} SC
+                    </div>
+                    <div class="col-4">
+                      Bruto
+                    </div>
+                    <div class="col-4">
+                      {{numeral(50000).format('0.0')}} KG
+                    </div>
+                    <div class="col-4">
+                      {{numeral(833.33).format('0,0.00')}} SC
+                    </div>
+
+                  </q-item-main>
+                </q-item>
+              </q-list>
+
+            </q-card>
+
+          </div>
+        </div>
+
       </div>
+
+      <!--INFO DAS ENTREGAS-->
+      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <div class="row gutter-y-sm">
+          <div class="col-12" v-for="entrega in 2" :key="entrega">
+
+            <q-card>
+
+              <q-btn class="float-right" icon="more_vert" round flat>
+                <q-popover>
+                  <q-list link class="no-border">
+                    <q-item v-close-overlay @click.native="updateNota()">
+                      <q-item-main label="Alterar nota"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="benderCarga()">
+                      <q-item-main label="Desdobrar carga"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="deleteNegocio()">
+                      <q-item-main label="Excluir negócio"/>
+                    </q-item>
+                  </q-list>
+                </q-popover>
+              </q-btn>
+
+              <div class="col-12 q-pa-lg">
+                <p>Troca ADM {{entrega}}</p>
+                <p>Bunge</p>
+                <p>Nota</p>
+                <p>Vitório 1-1234 {{numeral(30000).format('0,0')}} 0,85 {{numeral(25500).format('0,0.00')}}</p>
+                <p></p>
+                <p></p>
+              </div>
+
+            </q-card>
+          </div>
+        </div>
+      </div>
+
+      <!--PAGE STICKY BUTTOMS-->
+      <q-page-sticky position="bottom-right" :offset="[35, 35]">
+        <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
+          <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="addTicket()">
+            <span class="shadow-2 text-no-wrap	">Informar ticket</span>
+          </q-fab-action>
+          <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="sendToWarehause()">
+            <span class="shadow-2 text-no-wrap	">Enviar para armazém</span>
+          </q-fab-action>
+        </q-fab>
+      </q-page-sticky>
     </div>
 
-    <!--PAGE STICKY BUTTOMS-->
-    <q-page-sticky position="bottom-right" :offset="[35, 35]">
-      <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
-        <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="attachCultura()">
-          <span class="shadow-2">Cultura</span>
-        </q-fab-action>
-        <q-fab-action color="grey-1" text-color="grey-7" @click="attachTitulo()" icon="add">
-          <span class="shadow-2">Título</span>
-        </q-fab-action>
-        <q-fab-action color="grey-1" text-color="grey-7" @click="attachProduto()" icon="add">
-          <span class="shadow-2">Produto</span>
-        </q-fab-action>
-        <q-fab-action color="grey-1" text-color="grey-7" @click="attachFixacao()" icon="add">
-          <span class="shadow-2">Fixação</span>
-        </q-fab-action>
-      </q-fab>
-    </q-page-sticky>
+    <!--EMPTY LIST-->
+    <div class="col-12" v-if="!carga">
+      <div class="row justify-center items-center" style="min-height: 40vh">
+        <div class="col-6 text-center">
+          <img src="assets/images/sad_2.svg" class="responsive"/>
+          <p>Nenhum resultado encontrado.</p>
+        </div>
+      </div>
+    </div>
 
   </custom-page>
 </template>
@@ -59,45 +224,15 @@
     },
     data () {
       return {
-        titulo: new Titulo(),
-        unidadesMedida: [],
+        carga: true,
       }
     },
     watch: {
     },
     computed: {
-      totalBrutoUn: function () {
-        if (this.fixacao.quantidade.value != 0) {
-          this.fixacao.totalBruto.value = (this.fixacao.quantidade.value * this.fixacao.preco.value);
-          return this.fixacao.totalBruto.value / this.fixacao.quantidade.value;
-        }
-        return null;
-      },
     },
     methods: {
-      attachTitulo: function(){
-        this.modalAttachTitulo = true;
-      },
-      isNextTituloStep: function(){
-        if(this.titulo.isPagar.value == null && this.currentStepTitulo == 'pagarReceber'){
-          return true
-        }
-        if(this.titulo.moedaId.value == null && this.currentStepTitulo == 'moeda'){
-          return true
-        }
-        if(this.titulo.valor.value == null && this.currentStepTitulo == 'valor'){
-          return true
-        }
-        if((this.numParcelas == null || this.numParcelas == 0) && this.currentStepTitulo == 'parcelas'){
-          return true
-        }
-        if(this.currentStepTitulo == 'vencimentos'){
-          this.generateFormParcelas()
-        }
-        return false;
-      },
-      saveAttachTitulo: function(){
-        this.titulo.parcelas = this.verifyParcelas;
+      sendToWarehause: function(){
         negocioService.saveAttachTitulo(this.titulo.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Título vinculado com sucesso'});
@@ -108,7 +243,10 @@
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
       },
-      delete1: function(id){
+      addTicket: function(){},
+      addDriver: function(){},
+      addTalhaoPercentage: function(){},
+      deleteTalhao: function(id){
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente deseja apagar esta Negocio?',
@@ -120,19 +258,38 @@
           })
         }).catch(()=>{});
       },
-      getUnidadesMedida:function(){
-        unidadeMedidaService.listUnidadesMedida().then(response => {
-          this.unidadesMedida = response.data;
-        })
+      addTalhao: function(){},
+      addDriver: function(){},
+
+      deleteNegocio: function(){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar esta Negocio?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          negocioService.deleteNegocio(id).then(response => {
+            this.listCulturas()
+          })
+        }).catch(()=>{});
       },
-      parsedUnidades: function(unidades){
-        return unidades.map(unidade => {
-          return {
-            label: unidade.nome,
-            value: unidade.id
-          }
-        })
+      updateNota: function(){},
+      benderCarga: function(){},
+
+      deleteTicket: function(){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar esta Negocio?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          negocioService.deleteNegocio(id).then(response => {
+            this.listCulturas()
+          })
+        }).catch(()=>{});
       },
+      newTicket: function(){},
+
     },
     mounted () {
       // this.$root.$on('refreshSafraList', () => {
