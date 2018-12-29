@@ -164,10 +164,10 @@
         deep: true
       },
       currentStep: function (val) {
-        if(val == 'vencimentos'){
+        if(val === 'vencimentos'){
           this.generateFormParcelas()
         }
-        if(val != 'vencimentos'){
+        if(val !== 'vencimentos'){
           this.verifyParcelas = [];
         }
       }
@@ -177,27 +177,12 @@
         isModalOpened: false,
         currentStep: 'pagarReceber',
         titulo: new Titulo(),
-        //prefixMoeda: null,
         numParcelas: null,
         verifyParcelas: [],
         isValid: false,
         errorValue: 'text-positive',
         dataAtual: this.moment().format('YYYYMMDD'),
         indexadores: [],
-        // moedas:[
-        //   {
-        //     id: 1,
-        //     nome: 'Real',
-        //     plural: 'Reais',
-        //     simbolo: 'R$'
-        //   },
-        //   {
-        //     id: 2,
-        //     nome: 'Dollar',
-        //     plural: 'Dollars',
-        //     simbolo: '$'
-        //   }
-        // ],
       }
     },
     methods: {

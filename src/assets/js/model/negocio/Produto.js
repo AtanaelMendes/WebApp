@@ -1,14 +1,11 @@
 import { helpers} from 'vuelidate/lib/validators'
-const moment = require('moment');
+
 export default class{
   isPagar = {
     value: null,
     errorMessage: null
   };
-  produtoId = {
-    value: null,
-    errorMessage: null
-  };
+  produto = null;
   quantidade = {
     value: null,
     errorMessage: null
@@ -17,26 +14,24 @@ export default class{
     value: null,
     errorMessage: null
   };
-  indexadorId = {
-    value: null,
-    errorMessage: null
-  };
+  indexador = null;
+
   valorTotal = {
     value: null,
     errorMessage: null
   };
   constructor(negocioProduto){
-    if(negocioProduto !== undefined || negocioProduto != null){
-      this.isPagar.value = negocioProduto.isPagar.value;
-      this.produtoId.value = negocioProduto.produtoId.value;
-      this.quantidade.value = negocioProduto.quantidade.value;
-      this.preco.value = negocioProduto.preco.value;
-      this.indexadorId.value = negocioProduto.indexadorId.value;
-      this.valorTotal.value = negocioProduto.valorTotal.value;
-    }
+    // if(negocioProduto !== undefined || negocioProduto != null){
+    //   this.isPagar.value = negocioProduto.isPagar.value;
+    //   this.produto = negocioProduto.produtoId.value;
+    //   this.quantidade.value = negocioProduto.quantidade.value;
+    //   this.preco.value = negocioProduto.preco.value;
+    //   this.indexadorId.value = negocioProduto.indexadorId.value;
+    //   this.valorTotal.value = negocioProduto.valorTotal.value;
+    // }
   };
   isValid(){
-    console.log('aqui')
+
     let hasError = false;
     if(!helpers.req(this.quantidade.value)){
       this.quantidade.errorMessage = "Informe a quantidade";
@@ -55,10 +50,10 @@ export default class{
   getValues(){
     return{
       is_pagar: this.isPagar.value,
-      produto_id: this.produtoId.value,
+      produto_id: this.produto.id,
       quantidade: this.quantidade.value,
       preco: this.preco.value,
-      indexador_id: this.indexadorId.value,
+      indexador_id: this.indexador.id,
       valor_total: this.valorTotal.value
     }
   }
