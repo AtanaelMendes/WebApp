@@ -176,6 +176,7 @@
       return {
         isModalOpened: false,
         currentStep: 'pagarReceber',
+        negocio: null,
         titulo: new Titulo(),
         numParcelas: null,
         verifyParcelas: [],
@@ -186,10 +187,11 @@
       }
     },
     methods: {
-      openModal: function(pessoa_id){
+      openModal: function(negocio){
         this.isModalOpened = true;
         this.titulo = new Titulo();
-        this.titulo.pessoaId = pessoa_id;
+        this.negocio = negocio;
+        this.titulo.pessoaId = negocio.pessoaId.value;
         this.listIndexadores();
       },
       closeModal: function(){
@@ -278,7 +280,7 @@
       },
       saveAttachTitulo: function(){
         this.titulo.parcelas = this.verifyParcelas;
-        negocioService.saveAttachTitulo(this.$route.params.id, this.titulo.getValues()).then(response => {
+        negocioService.saveAttachTitulo(this.negocio.id, this.titulo.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Título vinculado com sucesso'});
             this.closeModal();

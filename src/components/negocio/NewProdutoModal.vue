@@ -118,6 +118,7 @@
       return {
         isModalOpened: false,
         produto: new Produto(),
+        negocio: null,
         currentStep: 'produto',
         searchProdutosQuery: '',
         produtos: [],
@@ -125,10 +126,10 @@
       }
     },
     methods: {
-      openModal: function(){
+      openModal: function(negocio){
         this.isModalOpened = true;
         this.produto = new Produto();
-
+        this.negocio = negocio;
         this.searchProdutos("");
         this.listIndexadores();
       },
@@ -172,15 +173,18 @@
         if(!this.produto.isValid()){
           return;
         }
-        // negocioService.saveNegocio(this.negocio.getValues()).then(response => {
-        //   if(response.status === 201) {
-        //     this.$q.notify({type: 'positive', message: 'Negócio criado com sucesso'});
-        //     this.listNegocios();
-        //     this.closeModalNegocio();
-        //   }
-        // }).catch(error => {
-        //   this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-        // });
+
+        this.produto.isPagar.value = false;
+
+        negocioService.saveAttachProduto(this.negocio.id, this.produto.getValues()).then(response => {
+          if(response.status === 201) {
+            this.$q.notify({type: 'positive', message: 'Negócio criado com sucesso'});
+            this.closeModal();
+            this.$router.go(-1);
+          }
+        }).catch(error => {
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+        });
       },
       searchProdutos: function(nome){
         this.produto.produto = null;

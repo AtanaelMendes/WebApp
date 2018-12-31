@@ -104,9 +104,9 @@ export default {
       })
     });
   },
-  saveAttachProduto(params){
+  saveAttachProduto(negocioId, negocioProduto){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/'+ produtorId + '/negocios', params).then(response => {
+      Vue.prototype.$axios.post('negocio/'+ negocioId + '/produto', negocioProduto).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)

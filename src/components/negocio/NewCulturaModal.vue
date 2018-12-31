@@ -208,6 +208,7 @@
       return{
         isModalOpened: false,
         cultura: new Cultura(),
+        negocio: null,
         currentStep: 'safra',
         safraCulturas: [],
         hasQuantidadeDefined: false,
@@ -218,11 +219,12 @@
       }
     },
     methods: {
-      openModal: function(){
+      openModal: function(negocio){
         this.isModalOpened = true;
         this.listSafraCulturas();
         this.getUnidadesMedida();
         this.cultura = new Cultura();
+        this.negocio = negocio;
       },
       closeModal: function(){
         this.isModalOpened = false;
@@ -230,7 +232,7 @@
         this.$emit('modal-closed')
       },
       saveAttachCultura: function(){
-        negocioService.saveAttachCultura(this.$route.params.id, this.cultura.getValues()).then(response => {
+        negocioService.saveAttachCultura(this.negocio.id, this.cultura.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Safra cultura vinculada com sucesso'});
             this.closeModal();
@@ -317,7 +319,7 @@
           this.cultura.classificacoes = response.data;
         })
       },
-      listArmazensByProdutor(produtor_id){
+      listArmazensByProdutor(){
         armazemService.listArmazensByProdutor().then(response => {
           this.armazens = response.data;
         })

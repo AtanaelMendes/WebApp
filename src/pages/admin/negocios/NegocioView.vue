@@ -328,13 +328,13 @@
 
     methods: {
       attachCultura: function(){
-        this.$refs.culturaModal.openModal();
+        this.$refs.culturaModal.openModal(this.negocio);
       },
       attachTitulo: function(){
-        this.$refs.tituloModal.openModal(this.negocio.pessoaId.value);
+        this.$refs.tituloModal.openModal(this.negocio);
       },
       attachProduto: function(){
-        this.$refs.produtoModal.openModal();
+        this.$refs.produtoModal.openModal(this.negocio);
       },
       attachFixacao: function(){
         this.$refs.fixacaoModal.openModal(this.negocio);
