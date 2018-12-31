@@ -85,6 +85,16 @@ export default {
       })
     });
   },
+  listNegociosCulturas(negocioId){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('negocio/'+ negocioId + '/cultura').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
+
   saveAttachTitulo(negocioId, negocioTitulo){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.post('negocio/'+ negocioId + '/titulo', negocioTitulo).then(response => {

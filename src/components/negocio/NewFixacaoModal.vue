@@ -17,17 +17,17 @@
 
                   <q-item v-for="negocioCultura in negociosCulturas" :key="negocioCultura.id" @click.native="selectNegocioCultura(negocioCultura)">
                     <q-item-side>
-                      <q-btn v-if="selectedSafraId == negocioCultura.id" icon="done" color="positive" size="8px" round dense/>
+                      <q-btn v-if="isNegocioCulturaSelected(negocioCultura.id)" icon="done" color="positive" size="8px" round dense/>
                     </q-item-side>
                     <q-item-main class="row">
                       <div class="col-4">
-                        {{negocioCultura.cultura}}&nbsp<span v-if="negocioCultura.is_safrinha">Safrinha</span>
+                        {{negocioCultura.safra_cultura.cultura}}&nbsp<span v-if="negocioCultura.safra_cultura.safra.is_safrinha">Safrinha</span>
                       </div>
                       <div class="col-4">
-                        {{negocioCultura.ano_inicio}}/{{negocioCultura.ano_fim}}
+                        {{negocioCultura.safra_cultura.safra.ano_inicio}}/{{negocioCultura.safra_cultura.safra.ano_fim}}
                       </div>
                       <div class="col-4 text-faded q-caption">
-                        {{numeral(negocioCultura.quantidade).format('0,0')}} {{negocioCultura.unidade_medida}}
+                        {{numeral(negocioCultura.quantidade).format('0,0')}} {{negocioCultura.unidade_medida.plural}}
                       </div>
                     </q-item-main>
                   </q-item>
@@ -47,7 +47,7 @@
 
             <div class="row justify-center gutter-xs">
               <div class="col-12 text-center q-title q-mb-sm">
-                Qual quantidade Foi fixada?
+                Qual foi a quantidade fixada?
               </div>
               <div class="col-12" >
                 <q-slider v-model="fixacao.quantidade.value" :min="0" :max="maxQuantidade" label  snap/>
@@ -60,7 +60,7 @@
                   align="center"
                   float-label="Unidade de medida"
                   :options="parsedUnidades(unidadesMedida)"
-                  v-model="fixacao.unidadeMedidaQuantidadeId.value"
+                  v-model="fixacao.unidadeMedidaQuantidadeId" v-if="fixacao.negocioCultura"
                 />
               </div>
             </div>
@@ -77,7 +77,7 @@
             <div class="row gutter-y-xs">
               <div class="col-12 q-title text-center">Qual a moeda?</div>
               <div class="col-12" v-for="moeda in moedas" :key="moeda.nome">
-                <q-btn class="full-width" @click.native="selectMoedaFixacao(moeda)" :color="isMoedaSelected(moeda.id)">
+                <q-btn class="full-width" @click.native="selectMoedaFixacao(moeda)" :color="isMoedaSelected(moeda.id) ? 'positive' : ''">
                   {{moeda.simbolo}}&nbsp{{moeda.nome}}
                 </q-btn>
               </div>
@@ -94,17 +94,17 @@
 
             <div class="row justify-center gutter-xs">
               <div class="col-12 text-center q-title q-mb-sm">
-                Qual Preço Foi fixado?
+                Qual foi o preço fixado?
               </div>
               <div class="col-6">
-                <custom-input-text :prefix="prefixMoeda" :model="fixacao.preco" type="number" label="Preço" align="center"/>
+                <custom-input-text :prefix="fixacao.moeda.simbolo" :model="fixacao.preco" v-if="fixacao.moeda" type="number" label="Preço" align="center"/>
               </div>
               <div class="col-6" >
                 <q-select
                   align="center"
                   float-label="Unidade de medida"
                   :options="parsedUnidades(unidadesMedida)"
-                  v-model="fixacao.unidadeMedidaQuantidadeId.value"
+                  v-model="fixacao.unidadeMedidaQuantidadeId"
                 />
               </div>
             </div>
@@ -163,14 +163,14 @@
         <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
           <div class="col-xs-12 col-sm-9 col-md-7 col-lg-5">
 
-            <div class="row justify-center">
+            <div class="row justify-center" v-if="fixacao.moeda">
               <div class="col-12 text-center q-title q-mb-sm">
                 Quais os valores de desconto/acréscimos?
               </div>
 
               <div class="col-3 self-center">Bruto:</div>
               <div class="col-4">
-                <custom-input-text type="number" :model="fixacao.totalBruto" :disable="true" align="right" :prefix="prefixMoeda"/>
+                <custom-input-text type="number" :model="fixacao.totalBruto" :disable="true" align="right" :prefix="fixacao.moeda.simbolo" />
               </div>
               <div class="col-5 self-center" align="end">
                 {{ numeral(totalBrutoUn).format('0,0.00') }} <span class="text-faded">por Saca 60 kg</span>
@@ -178,7 +178,7 @@
 
               <div class="col-3 self-center">Impostos:</div>
               <div class="col-4">
-                <custom-input-text type="number" :model="fixacao.totalImpostos" align="right" :prefix="prefixMoeda"/>
+                <custom-input-text type="number" :model="fixacao.totalImpostos" align="right" :prefix="fixacao.moeda.simbolo"/>
               </div>
               <div class="col-5 self-center" align="end">
                 {{ numeral(totalImpostosUn).format('0,0.00') }}
@@ -187,7 +187,7 @@
 
               <div class="col-3 self-center">Descontos:</div>
               <div class="col-4">
-                <custom-input-text type="number" :model="fixacao.valorOutrosDescontos" align="right" :prefix="prefixMoeda"/>
+                <custom-input-text type="number" :model="fixacao.valorOutrosDescontos" align="right" :prefix="fixacao.moeda.simbolo"/>
               </div>
               <div class="col-5 self-center" align="end">
                 {{ numeral(totalDescontosUn).format('0,0.00') }}
@@ -196,7 +196,7 @@
 
               <div class="col-3 self-center">Acrescimos:</div>
               <div class="col-4">
-                <custom-input-text type="number" :model="fixacao.valorOutrosAcrescimos" align="right" :prefix="prefixMoeda" />
+                <custom-input-text type="number" :model="fixacao.valorOutrosAcrescimos" align="right" :prefix="fixacao.moeda.simbolo" />
               </div>
               <div class="col-5 self-center" align="end">
                 {{ numeral(totalAcrescimosUn).format('0,0.00') }}
@@ -205,7 +205,7 @@
 
               <div class="col-3 self-center">Total:</div>
               <div class="col-4">
-                <custom-input-text type="number" :model="fixacao.totalLiquido" align="right" :disable="true" :prefix="prefixMoeda"/>
+                <custom-input-text type="number" :model="fixacao.totalLiquido" align="right" :disable="true" :prefix="fixacao.moeda.simbolo" />
               </div>
               <div class="col-5 self-center" align="end">
                 {{ numeral(totalLiquidoUn).format('0,0.00') }}
@@ -228,17 +228,17 @@
               </div>
               <div class="col-12">
                 <q-list link no-border separator>
-                  <q-item v-for="bancoConta in bancosContas" @click.native="selectBancoConta(bancoConta)" :key="bancoConta.id">
+                  <q-item v-for="conta in contasBancarias" @click.native="selectContaBancaria(conta)" :key="conta.id">
                     <q-item-side>
-                      <q-btn v-if="selectedContaBancariaId == bancoConta.conta.id" icon="done" color="positive" size="8px" round dense/>
+                      <q-btn v-if="isContaSelected(conta.id)" icon="done" color="positive" size="8px" round dense/>
                     </q-item-side>
                     <q-item-main>
-                      <q-item-tile>{{bancoConta.nome}}</q-item-tile>
-                      <q-item-tile sublabel>{{bancoConta.pessoa.nome}}</q-item-tile>
+                      <q-item-tile>{{conta.banco.nome}}</q-item-tile>
+                      <q-item-tile sublabel>{{conta.pessoa.nome}}</q-item-tile>
                       <q-item-tile sublabel>
-                        <span class="text-faded">Agência:</span> {{bancoConta.conta.agencia}},
-                        <span class="text-faded">Operação:</span> {{bancoConta.conta.operacao}},
-                        <span class="text-faded">conta:</span> {{bancoConta.conta.numero}}
+                        <span class="text-faded">Agência:</span> {{conta.agencia}}-{{conta.agencia_digito}},
+                        <span class="text-faded">Operação:</span> {{conta.operacao}},
+                        <span class="text-faded">conta:</span> {{conta.numero}}
                       </q-item-tile>
                     </q-item-main>
                   </q-item>
@@ -285,16 +285,16 @@
             <span class="q-title">Informe os vencimentos</span>
 
             <q-list no-border separator>
-              <q-item v-for="parcela in fixacaoParcelas" :key="parcela.numero">
+              <q-item v-for="(parcela, index) in fixacaoParcelas" :key="parcela.numero">
                 <q-item-main>
                   <div class="row justify-center q-mt-md" >
 
                     <div class="col-xs-4 col-lg-2 self-center">
-                      <span class="text-faded">Parcela</span> {{parcela.numero}}
+                      <span class="text-faded">Parcela</span> {{index + 1}}
                     </div>
 
                     <div class="col-xs-8 col-lg-3">
-                      <custom-input-datetime :key="parcela.numero" type="date" :model="parcela.vencimento"/>
+                      <custom-input-datetime :key="index" type="date" :model="parcela.vencimento"/>
                     </div>
 
                     <div class="col-xs-6 col-lg-3 self-center text-center">
@@ -302,7 +302,7 @@
                     </div>
 
                     <div class="col-xs-6 col-lg-4">
-                      <q-input type="number" v-model="parcela.valor.value" :decimals="2" :prefix="prefixMoeda" align="right"/>
+                      <q-input type="number" v-model="parcela.valor.value" :decimals="2" :prefix="fixacao.moeda.simbolo" align="right"/>
                     </div>
                   </div>
 
@@ -310,7 +310,7 @@
               </q-item>
               <div class="row q-mt-md justify-end">
                 <div class="col-xs-6 col-lg-4 self-center text-justify">
-                  <span class="text-faded">Total: {{prefixMoeda}}</span>&nbsp
+                  <span class="text-faded" v-if="fixacao.moeda">Total: {{fixacao.moeda.simbolo}}</span>&nbsp
                   <span :class="errorValueFixacao">{{numeral(fixacao.totalLiquido.value).format('0,0.00')}}</span>
                 </div>
               </div>
@@ -334,6 +334,8 @@
   import Fixacao from 'assets/js/model/negocio/Fixacao'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import negocioService from 'assets/js/service/negocio/NegocioService'
+  import moedaService from 'assets/js/service/MoedaService'
+  import contaBancariaService from 'assets/js/service/ContaBancariaService'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
 
@@ -345,105 +347,21 @@
     },
     data(){
       return{
-        currentStep: 'negocioCultura',
         isModalOpened: false,
-        selectedSafraId: null,
-        maxQuantidade: 0,
+        currentStep: 'negocioCultura',
         fixacao: new Fixacao(),
+        negocio: null,
+        maxQuantidade: 0,
         unidadesMedida: [],
-        prefixMoeda: null,
         dataAtual: this.moment().format('YYYYMMDD'),
         fixacaoParcelas: [],
         errorValueFixacao: 'text-positive',
         isValidFixacaoParcelas: false,
         numParcelasFixacao: null,
         selectedDescontoAcrescimoType: null,
-        selectedContaBancariaId: 0,
-        moedas:[
-          {
-            id: 1,
-            nome: 'Real',
-            plural: 'Reais',
-            simbolo: 'R$'
-          },
-          {
-            id: 2,
-            nome: 'Dollar',
-            plural: 'Dollars',
-            simbolo: '$'
-          }
-        ],
-        negociosCulturas: [
-          {
-            id: 1,
-            cultura: 'Soja',
-            ano_inicio: 2018,
-            ano_fim: 2019,
-            quantidade: 99000,
-            unidade_medida_quantidade_id: 3195
-          },
-          {
-            id: 2,
-            cultura: 'Milho',
-            is_safrinha: true,
-            ano_inicio: 2018,
-            ano_fim: 2018,
-            quantidade: 50000,
-            unidade_medida_quantidade_id: 3195
-          },
-          {
-            id: 3,
-            cultura: 'Algodão',
-            ano_inicio: 2016,
-            ano_fim: 2017,
-            quantidade: 60000,
-            unidade_medida_quantidade_id: 1584
-          }
-        ],
-        bancosContas: [
-          {
-            id: 1,
-            numero: '8485566',
-            nome: 'Banco do Brasil',
-            pessoa: {
-              nome: 'Fulano de tal'
-            },
-            conta: {
-              id: 1,
-              agencia: '6654-6',
-              numero: '96584752-6',
-              operacao: '66'
-            }
-          },
-          {
-            id: 2,
-            numero: '8485566',
-            nome: 'Bradesco',
-            pessoa: {
-              nome: 'Cicrano de tal'
-            },
-            conta: {
-              id: 2,
-              agencia: '6654-6',
-              numero: '96584752-6',
-              operacao: '66'
-            }
-          },
-          {
-            id: 3,
-            numero: '8485566',
-            nome: 'Sicred',
-            pessoa: {
-              nome: 'No One Knows'
-            },
-            conta: {
-              id: 3,
-              agencia: '6654-6',
-              numero: '96584752-6',
-              operacao: '66'
-            }
-          }
-        ],
+        moedas:[],
+        negociosCulturas: [],
+        contasBancarias: [],
       }
     },
     watch:{
@@ -464,7 +382,7 @@
     },
     computed: {
       totalBrutoUn: function () {
-        if (this.fixacao.quantidade.value != 0) {
+        if (this.fixacao.quantidade != 0) {
           this.fixacao.totalBruto.value = (this.fixacao.quantidade.value * this.fixacao.preco.value);
           return this.fixacao.totalBruto.value / this.fixacao.quantidade.value;
         }
@@ -490,19 +408,21 @@
       },
       totalLiquidoUn: function () {
         if (this.fixacao.quantidade.value != 0) {
-          this.fixacao.totalLiquido.value = (this.fixacao.totalBruto.value - (
-              this.fixacao.valorOutrosDescontos.value + this.fixacao.totalImpostos.value)
-          ) + this.fixacao.valorOutrosAcrescimos.value;
+          this.fixacao.totalLiquido.value = (this.fixacao.totalBruto.value - (this.fixacao.valorOutrosDescontos.value + this.fixacao.totalImpostos.value)) + this.fixacao.valorOutrosAcrescimos.value;
           return this.fixacao.totalLiquido.value / this.fixacao.quantidade.value;
         }
         return null;
       }
     },
     methods:{
-      openModal: function(){
+      openModal: function(negocio){
         this.isModalOpened = true;
+        this.negocio = negocio;
         this.getUnidadesMedida();
         this.fixacao = new Fixacao();
+        this.listNegociosCulturas(negocio.id)
+        this.listMoedas();
+        this.listContasBancarias(negocio.pessoaId.value)
       },
       closeModal: function(){
         this.isModalOpened = false;
@@ -510,32 +430,30 @@
         this.$emit('modal-closed')
       },
       selectNegocioCultura: function(negocioCultura){
-
-        if(this.selectedSafraId == negocioCultura.id){
-          this.maxQuantidade = null;
-          this.selectedSafraId = null;
-          this.fixacao.quantidade.value = null;
-          this.fixacao.negocioCulturaId.value = null;
-          this.fixacao.unidadeMedidaQuantidadeId.value = null;
-        }else{
-          this.selectedSafraId = negocioCultura.id;
-          this.maxQuantidade = negocioCultura.quantidade;
-          this.fixacao.negocioCulturaId.value = negocioCultura.id;
-          this.fixacao.quantidade.value = negocioCultura.quantidade;
-          this.fixacao.unidadeMedidaQuantidadeId.value = negocioCultura.unidade_medida_quantidade_id;
-          this.goToNextStep();
+        this.fixacao.negocioCultura = negocioCultura;
+        this.maxQuantidade = negocioCultura.quantidade;
+        this.fixacao.quantidade.value = this.maxQuantidade;
+        this.fixacao.unidadeMedidaQuantidadeId = negocioCultura.unidade_medida.id;
+        this.goToNextStep();
+      },
+      isNegocioCulturaSelected: function(id) {
+        if (this.fixacao.negocioCultura === null) {
+          return false;
+        }
+        if (this.fixacao.negocioCultura.id === id) {
+          return true;
         }
       },
       isNextFixacaoStep: function() {
-        if(this.fixacao.negocioCulturaId.value == null && this.currentStep === 'negocioCultura'){
+        if(this.fixacao.negocioCultura == null && this.currentStep === 'negocioCultura'){
           return true;
         }
         if(this.currentStep === 'quantidade'){
-          if(this.fixacao.quantidade.value == null || this.fixacao.unidadeMedidaQuantidadeId.value == null){
+          if(this.fixacao.quantidade.value == null || this.fixacao.unidadeMedidaQuantidadeId == null){
             return true;
           }
         }
-        if(this.fixacao.moedaId.value == null && this.currentStep === 'moeda'){
+        if(this.fixacao.moeda == null && this.currentStep === 'moeda'){
           return true;
         }
         if(this.fixacao.preco.value == null && this.currentStep === 'preco'){
@@ -544,7 +462,7 @@
         if(this.selectedDescontoAcrescimoType == null && this.currentStep === 'descontos'){
           return true;
         }
-        if(this.fixacao.contaBancariaId.value == null && this.currentStep === 'contaDeposito'){
+        if(this.fixacao.contaBancaria == null && this.currentStep === 'contaDeposito'){
           return true;
         }
         if((this.numParcelasFixacao == null || this.numParcelasFixacao === 0) && this.currentStep === 'parcelas'){
@@ -553,14 +471,8 @@
         return false;
       },
       selectMoedaFixacao: function(moeda){
-        if(this.fixacao.moedaId.value === moeda.id){
-          this.fixacao.moedaId.value = null;
-          this.prefixMoeda = null;
-        }else{
-          this.fixacao.moedaId.value = moeda.id;
-          this.prefixMoeda = moeda.simbolo;
-          this.goToNextStep()
-        }
+        this.fixacao.moeda = moeda;
+        this.goToNextStep()
       },
       selectDescontoAcrescimos: function(type){
         if(this.selectedDescontoAcrescimoType === type){
@@ -569,10 +481,10 @@
           this.selectedDescontoAcrescimoType = type;
           if(this.selectedDescontoAcrescimoType === 2){
             this.fixacao.isPrecoLiquido.value = true;
-            this.currentStepFixacao = 'descontosAcrescimos';
+            this.currentStep = 'descontosAcrescimos';
           }else{
             this.fixacao.isPrecoLiquido.value = false;
-            this.currentStepFixacao = 'contaDeposito';
+            this.currentStep = 'contaDeposito';
           }
         }
 
@@ -582,14 +494,16 @@
           this.fixacao.quantidade.value = this.maxQuantidade
         }
       },
-      selectBancoConta: function(bancoConta){
-        if(this.fixacao.contaBancariaId.value === bancoConta.conta.id){
-          this.selectedContaBancariaId = null;
-          this.fixacao.contaBancariaId.value = null;
-        }else{
-          this.selectedContaBancariaId = bancoConta.conta.id;
-          this.fixacao.contaBancariaId.value = bancoConta.conta.id;
-          this.goToNextStep()
+      selectContaBancaria: function(conta){
+        this.fixacao.contaBancaria = conta;
+        this.goToNextStep()
+      },
+      isContaSelected: function(id){
+        if(!this.fixacao.contaBancaria){
+          return false;
+        }
+        if(this.fixacao.contaBancaria.id === id){
+          return true;
         }
       },
       generateFormFixacaoParcelas: function(){
@@ -604,8 +518,8 @@
           total += valorParcela;
 
           this.fixacaoParcelas.push({
-            numero: parcela,
-            vencimento:{ value: this.moment().format('YYYY-MM-DD')} ,
+            //numero: parcela,
+            vencimento:{ value: this.moment().add(parcela * 30, 'days').format('YYYY-MM-DD')} ,
             valor: { value: valorParcela }
           });
         }
@@ -643,8 +557,11 @@
         });
       },
       isMoedaSelected: function(id){
-        if(this.fixacao.moedaId.value == id){
-          return 'positive';
+        if(!this.fixacao.moeda){
+          return false;
+        }
+        if(this.fixacao.moeda.id === id){
+          return true;
         }
       },
       goToNextStep(){
@@ -663,6 +580,21 @@
           this.unidadesMedida = response.data;
         })
       },
+      listNegociosCulturas: function(negocioId){
+        negocioService.listNegociosCulturas(negocioId).then(response => {
+          this.negociosCulturas = response.data;
+        })
+      },
+      listMoedas:function(){
+        moedaService.listMoedas().then(response => {
+          this.moedas = response.data;
+        })
+      },
+      listContasBancarias: function(pessoaId){
+        contaBancariaService.listContasPorPessoa(pessoaId).then(response => {
+          this.contasBancarias = response.data;
+        });
+      }
     }
   }
 </script>

@@ -1,6 +1,7 @@
 import { helpers} from 'vuelidate/lib/validators'
 const moment = require('moment');
 export default class{
+  id = null;
   tipoNegocioId = null; // TIPOS DE NEGOCIO = compra, venda, troca, balcao
   pessoaId = {
     value: null,
@@ -24,6 +25,7 @@ export default class{
   };
   constructor(negocio){
     if(negocio !== undefined || negocio != null){
+      this.id = negocio.id;
       //this.tipoNegocioId = negocio.tipoNegocioId;
       this.pessoaId.value = negocio.pessoa_id;
       // this.emissao.value = negocio.emissao.value;

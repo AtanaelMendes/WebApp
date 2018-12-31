@@ -27,7 +27,7 @@
         </div>
       </q-step>
 
-      <!--PASSO 2 INFORMAR MOEDA -->
+      <!--PASSO 2 INFORMAR INDEXADOR -->
       <q-step title="Indexador" name="indexador">
         <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
           <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">

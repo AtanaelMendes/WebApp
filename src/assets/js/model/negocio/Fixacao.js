@@ -1,18 +1,12 @@
 import { helpers} from 'vuelidate/lib/validators'
 const moment = require('moment');
 export default class{
-  negocioCulturaId = {
-    value: null,
-    errorMessage: null
-  };
+  negocioCultura = null;
   dataFixacao = {
     value: null,
     errorMessage: null
   };
-  moedaId = {
-    value: null,
-    errorMessage: null
-  };
+  moeda = null;
   preco = {
     value: null,
     errorMessage: null
@@ -29,10 +23,7 @@ export default class{
     value: null,
     errorMessage: null
   };
-  unidadeMedidaQuantidadeId = {
-    value: null,
-    errorMessage: null
-  };
+  unidadeMedidaQuantidadeId = null;
   totalBruto = {
     value: null,
     errorMessage: null
@@ -53,16 +44,14 @@ export default class{
     value: null,
     errorMessage: null
   };
-  contaBancariaId = {
-    value: null,
-    errorMessage: null
-  };
+  contaBancaria = null;
   observacoes = {
     value: null,
     errorMessage: null
   };
   parcelas = [];
-  constructor(negocioFixacao){
+
+  /*constructor(negocioFixacao){
     if (negocioFixacao !== undefined || negocioFixacao != null){
       this.negocioCulturaId.value = negocioFixacao.negocioCulturaId.value;
       this.dataFixacao.value = negocioFixacao.dataFixacao.value;
@@ -80,39 +69,24 @@ export default class{
       this.contaBancariaId.value = negocioFixacao.contaBancariaId.value;
       this.observacoes.value = negocioFixacao.observacoes.value;
     }
-  };
-  // isValid(){
-  //   let hasError = false;
-  //   if(!helpers.req(this.quantidade.value)){
-  //     this.quantidade.errorMessage = "Informe a quantidade";
-  //     hasError = true;
-  //   }
-  //   if(!helpers.req(this.preco.value)){
-  //     this.preco.errorMessage = "Informe o Preço";
-  //     hasError = true;
-  //   }
-  //   if(!helpers.req(this.valorTotal.value)){
-  //     this.valorTotal.errorMessage = "Informe o valor total";
-  //     hasError = true;
-  //   }
-  //   return !hasError;
-  // };
+  };*/
+
   getValues(){
     return{
-      negocio_cultura_id: this.negocioCulturaId.value,
+      negocio_cultura_id: this.negocioCultura.id,
       data_fixacao: this.dataFixacao.value,
-      moeada_id: this.moedaId.value,
+      moeada_id: this.moeda.id,
       preco: this.preco.value,
       unidade_medida_preco_id: this.unidadeMedidaPrecoId.value,
       is_preco_liquido: this.isPrecoLiquido.value,
       quantidade: this.quantidade.value,
-      unidade_medida_quantidade_id: this.unidadeMedidaQuantidadeId.value,
+      unidade_medida_quantidade_id: this.unidadeMedidaQuantidadeId,
       total_bruto: this.totalBruto.value,
       total_impostos: this.totalImpostos.value,
       valor_outros_descontos: this.valorOutrosDescontos.value,
       valor_outros_acrescimos: this.valorOutrosAcrescimos.value,
       total_liquido: this.totalLiquido.value,
-      conta_bancaria_id: this.contaBancariaId.value,
+      conta_bancaria_id: this.contaBancaria.id,
       observacoes: this.observacoes.value
     }
   }

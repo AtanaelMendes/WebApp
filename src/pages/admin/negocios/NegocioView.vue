@@ -337,7 +337,7 @@
         this.$refs.produtoModal.openModal();
       },
       attachFixacao: function(){
-        this.$refs.fixacaoModal.openModal();
+        this.$refs.fixacaoModal.openModal(this.negocio);
       },
 
       delete1: function(id){
