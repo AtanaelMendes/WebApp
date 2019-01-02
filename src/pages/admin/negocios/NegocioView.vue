@@ -46,10 +46,10 @@
       </template>
 
       <!--NEGOCIO CULTURAS-->
-      <template>
+      <template v-for="(cultura, index) in negocio.culturas">
         <div :class="direita">
           <div class="row gutter-xs">
-            <div class="col-12">SOJA 2018/2019</div>
+            <div class="col-12">{{cultura.safra_cultura.nome}} {{cultura.safra_cultura.ano_inicio}}/{{cultura.safra_cultura.ano_fim}}</div>
             <div class="col-12 text-faded q-caption">
               Entrega
               <q-progress :percentage="progressModel + 10" height="6px" color="blue" animate stripe/>
@@ -62,9 +62,9 @@
               Financeiro
               <q-progress :percentage="progressModel + 20" height="6px" color="blue" animate stripe/>
             </div>
-            <div class="col-12">
+            <div class="col-12" v-if="cultura.observacoes">
               Observações
-              <p class="text-faded ">so caso houver observaçoes o conteudo irá aqui</p>
+              <p class="text-faded ">{{cultura.observacoes}}</p>
             </div>
           </div>
         </div>
@@ -82,9 +82,10 @@
             <div class="col-12">
               <span class="text-faded">Entregue</span> 3.500 <span class="text-faded">de</span> 5.000 SC/60
               <span class="text-faded">entre</span> 5 jan 2018 <span class="text-faded">e</span> 31 jan 2019.
-              <span class="text-faded">Armazens</span> ADM Sinop, Bunge Sinop.
-              <span class="text-faded">Tolerância de classificação</span> umidade 14%, impureza 1%, avariados 8%,
-              verde 8%, quebrados 30%, mofados 6%, ardidos 4% e queimados 1%.
+              <br/>
+              <span class="text-faded">Armazens: </span> {{cultura.armazens}}.
+              <br/>
+              <span class="text-faded">Classificação: </span>{{cultura.classificacao}}.
             </div>
           </div>
 
@@ -205,7 +206,7 @@
             <div class="col-6 q-mb-xs">
               Produto
             </div>
-            <div class="col-6 q-mb-xs">
+            <div class="col-6 q-mb-xs text-right">
               Quantidade
             </div>
 
@@ -213,7 +214,7 @@
               <div class="col-6 text-faded ">
                 {{produto.nome}}
               </div>
-              <div class="col-6 text-faded ">
+              <div class="col-6 text-faded text-right">
                 {{produto.quantidade}} {{produto.quantidade_unidade_medida}}
               </div>
             </div>
@@ -223,17 +224,17 @@
 
         <div :class="esquerda">
           <div class="row gutter-xs">
-            <div class="col-5">Preço</div>
-            <div class="col-5">Total</div>
+            <div class="col-5 text-right">Preço</div>
+            <div class="col-5 text-right">Total</div>
             <div class="col-2">
               <q-btn icon="more_vert" color="primary" flat dense round></q-btn>
             </div>
             <div class="row col-12" v-for="(produto, index) in negocio.produtos">
-              <div class="col-5 text-faded">{{produto.preco}} {{produto.indexador.sigla}}</div>
-              <div class="col-5 text-faded">{{produto.valor_total}} {{produto.indexador.sigla}}</div>
+              <div class="col-5 text-faded text-right">{{produto.preco}} {{produto.indexador.sigla}}</div>
+              <div class="col-5 text-faded text-right">{{produto.valor_total}} {{produto.indexador.sigla}}</div>
             </div>
-            <div class="col-5"> Total</div>
-            <div class="col-5">{{produtosValorTotal}} {{produtosValorTotalIndexador}}</div>
+            <div class="col-5 text-right"> Total</div>
+            <div class="col-5 text-right">{{produtosValorTotal}} {{produtosValorTotalIndexador}}</div>
           </div>
 
         </div>
