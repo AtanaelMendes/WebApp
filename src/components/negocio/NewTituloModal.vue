@@ -191,7 +191,7 @@
         this.isModalOpened = true;
         this.titulo = new Titulo();
         this.negocio = negocio;
-        this.titulo.pessoaId = negocio.pessoaId.value;
+        this.titulo.pessoaId = negocio.pessoa.id;
         this.listIndexadores();
       },
       closeModal: function(){

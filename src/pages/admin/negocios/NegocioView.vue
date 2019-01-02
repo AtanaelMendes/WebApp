@@ -4,10 +4,10 @@
     </toolbar>
 
     <!--CONTRATO VIEW-->
-    <div class="row gutter-sm space-end q-ma-lg">
+    <div class="row gutter-sm space-end q-ma-lg" v-if="negocio">
 
       <!--NEGOCIO-->
-      <template v-if="negocio">
+      <template>
         <div :class="direita">
           <div class="row gutter-xs">
 
@@ -314,9 +314,11 @@
     computed: {
       produtosValorTotal: function(){
         let valorTotal = 0;
+
         this.negocio.produtos.forEach(function(produto){
           valorTotal += produto.valor_total;
         });
+
         return valorTotal;
       },
       produtosValorTotalIndexador: function(){
