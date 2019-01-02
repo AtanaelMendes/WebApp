@@ -252,8 +252,10 @@
       selectSafraCultura: function(safraCultura){
         if(this.cultura.safraCulturaId.value === safraCultura.id){
           this.cultura.safraCulturaId.value = null;
+          this.cultura.unidadeMedidaId.value = null;
         }else{
           this.cultura.safraCulturaId.value = safraCultura.id;
+          this.cultura.unidadeMedidaId.value = safraCultura.cultura.default_unidade_medida_id;
           this.goToNextStep();
           this.listClassificacoesByCultura(safraCultura.cultura.id)
         }
