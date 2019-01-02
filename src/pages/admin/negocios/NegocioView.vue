@@ -7,22 +7,22 @@
     <div class="row gutter-sm space-end q-ma-lg">
 
       <!--NEGOCIO-->
-      <template>
+      <template v-if="negocio">
         <div :class="direita">
           <div class="row gutter-xs">
 
             <div class="col-12">
-              VENDA oQueVaiAqui? / oQueVaiAqui? - 20 dezembro 2018
+              {{negocio.tipo}} {{negocio.numero_pedido}} / {{negocio.numero_contrato}} - {{moment(negocio.emissao).format('DD/MM/YYYY')}}
             </div>
 
             <div class="col-12 text-faded ">
-              Contrato de venda com ADM do Brasil Ltda emitido em 20 dezembro de 2018.
-              Número do pedido 21695498 Número do contrato 65496665846
+              Contrato de {{negocio.tipo.toLowerCase()}} com {{negocio.pessoa.nome}} emitido em {{moment(negocio.emissao).format('DD [de] MMMM [de] YYYY')}}.
+              Número do pedido {{negocio.numero_pedido}} Número do contrato {{negocio.numero_contrato}}
             </div>
 
-            <div class="col-12">
+            <div class="col-12" v-if="negocio.observacoes">
               Observações
-              <p class="text-faded ">so caso houver observaçoes o conteudo irá aqui</p>
+              <p class="text-faded ">{{negocio.observacoes}}</p>
             </div>
 
           </div>
@@ -32,14 +32,14 @@
           <div class="row gutter-xs">
             <div class="col-12">
               <div class="row">
-                <div class="col-9 self-center">ADM</div>
+                <div class="col-9 self-center">{{negocio.pessoa.nome}}</div>
                 <div class="col-3 self-center" align="end">
                   <q-btn icon="more_vert" color="primary" flat dense round></q-btn>
                 </div>
               </div>
             </div>
             <div class="col-12 text-faded ">
-              ADM do brasil Ltda, Rod BR 163 KM 855 - Camping club, Sinop-MT
+              {{negocio.pessoa.nome}}, {{negocio.pessoa.localizacao}}
             </div>
           </div>
         </div>
@@ -196,7 +196,7 @@
       </template>
 
       <!--NEGOCIO PRODUTOS-->
-      <template>
+      <template v-if="negocio.produtos">
         <div :class="direita">
           <div class="row">
 
@@ -209,25 +209,13 @@
               Quantidade
             </div>
 
-            <div class="col-6 text-faded ">
-              Adubo 08-40-00
-            </div>
-            <div class="col-6 text-faded ">
-              350 Ton
-            </div>
-
-            <div class="col-6 text-faded ">
-              KCL
-            </div>
-            <div class="col-6 text-faded ">
-              256 Ton
-            </div>
-
-            <div class="col-6 text-faded ">
-              Asist
-            </div>
-            <div class="col-6 text-faded ">
-              1.400 L
+            <div class="row col-12" v-for="(produto, index) in negocio.produtos">
+              <div class="col-6 text-faded ">
+                {{produto.nome}}
+              </div>
+              <div class="col-6 text-faded ">
+                {{produto.quantidade}} {{produto.quantidade_unidade_medida}}
+              </div>
             </div>
 
           </div>
@@ -240,14 +228,12 @@
             <div class="col-2">
               <q-btn icon="more_vert" color="primary" flat dense round></q-btn>
             </div>
-            <div class="col-5 text-faded">R$ 36,69 SC60</div>
-            <div class="col-5 text-faded">R$ 12.771,50 SC60</div>
-            <div class="col-5 text-faded">R$ 29,10 SC60</div>
-            <div class="col-5 text-faded">R$ 7.333,20 SC60</div>
-            <div class="col-5 text-faded">R$ 0,22 SC60</div>
-            <div class="col-5 text-faded">R$ 308,00 SC60</div>
+            <div class="row col-12" v-for="(produto, index) in negocio.produtos">
+              <div class="col-5 text-faded">{{produto.preco}} {{produto.indexador.sigla}}</div>
+              <div class="col-5 text-faded">{{produto.valor_total}} {{produto.indexador.sigla}}</div>
+            </div>
             <div class="col-5"> Total</div>
-            <div class="col-5">31.640,00 SC60</div>
+            <div class="col-5">{{produtosValorTotal}} {{produtosValorTotalIndexador}}</div>
           </div>
 
         </div>
@@ -325,7 +311,18 @@
         progressModel: 50,
       }
     },
-
+    computed: {
+      produtosValorTotal: function(){
+        let valorTotal = 0;
+        this.negocio.produtos.forEach(function(produto){
+          valorTotal += produto.valor_total;
+        });
+        return valorTotal;
+      },
+      produtosValorTotalIndexador: function(){
+        return this.negocio.produtos[0].indexador.sigla;
+      }
+    },
     methods: {
       attachCultura: function(){
         this.$refs.culturaModal.openModal(this.negocio);
@@ -368,7 +365,8 @@
 
       getNegocioById: function(){
         negocioService.getNegocioById(this.$route.params.id).then(response => {
-          this.negocio = new Negocio(response.data);
+          this.negocio = response.data;
+          //this.negocio = new Negocio(response.data);
         });
       },
 
