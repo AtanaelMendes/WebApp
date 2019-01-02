@@ -20,7 +20,7 @@
             <q-btn class="float-right" icon="more_vert" round flat>
               <q-popover>
                 <q-list link class="no-border">
-                  <q-item v-close-overlay @click.native="addDriver()">
+                  <q-item v-close-overlay @click.native="updateDriver()">
                     <q-item-main label="Alterar Motorista"/>
                   </q-item>
                 </q-list>
@@ -38,140 +38,230 @@
         </q-card>
       </div>
 
-
       <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
 
         <div class="row gutter-y-sm">
 
-          <!--INFO DAS CARGAS-->
+         <!--INFO DAS CARGAS-->
           <div class="col-12">
-            <q-btn class="float-right" icon="more_vert" round flat>
-              <q-popover>
-                <q-list link class="no-border">
-                  <q-item v-close-overlay @click.native="addTalhaoPercentage()">
-                    <q-item-main label="Definir Porc. do talhão"/>
-                  </q-item>
-                  <q-item v-close-overlay @click.native="addTalhao()">
-                    <q-item-main label="Adiconar talhão"/>
-                  </q-item>
-                  <q-item v-close-overlay @click.native="deleteTalhao()">
-                    <q-item-main label="Excluir talhão"/>
+            <q-card>
+              <q-card-title>
+                Carga
+                <q-btn slot="right" dense icon="more_vert" round flat>
+                  <q-popover>
+                    <q-list link class="no-border">
+                      <q-item v-close-overlay @click.native="addTalhaoPercentage()">
+                        <q-item-main label="Definir Porc. do talhão"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="addTalhao()">
+                        <q-item-main label="Adiconar talhão"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="deleteTalhao()">
+                        <q-item-main label="Excluir talhão"/>
+                      </q-item>
+                    </q-list>
+                  </q-popover>
+                </q-btn>
+              </q-card-title>
+              <q-card-separator/>
+
+              <q-card-main>
+                <q-list link no-border>
+                  <q-item v-for="carga in 3" :key="carga">
+                    <q-item-main>
+                      <q-item-tile>
+                        Soja 2018/2019
+                      </q-item-tile>
+                      <q-item-tile sublabel>
+                        33% Y30 Caroline talhão fundos
+                      </q-item-tile>
+                    </q-item-main>
                   </q-item>
                 </q-list>
-              </q-popover>
-            </q-btn>
-
-            <q-card class="q-pa-sm">
-
-              <q-list link no-border>
-                <q-item v-for="carga in 3" :key="carga">
-                  <q-item-main>
-                    <q-item-tile>
-                      Soja 2018/2019
-                    </q-item-tile>
-                    <q-item-tile sublabel>
-                      33% Y30 Caroline talhão fundos
-                    </q-item-tile>
-                  </q-item-main>
-                </q-item>
-              </q-list>
+              </q-card-main>
 
             </q-card>
           </div>
 
-        <!--INFO DOS TICKETS-->
-          <div class="col-12">
-            <q-btn class="float-right" icon="more_vert" round flat>
-              <q-popover>
-                <q-list link class="no-border">
-                  <q-item v-close-overlay @click.native="addTicket()">
-                    <q-item-main label="Novo ticket"/>
+          <!--INFO DOS TICKETS-->
+          <div class="col-12" v-for="ticket in 3" :key="ticket">
+            <q-card>
+
+              <q-card-title>
+                Ticket {{ticket}}
+                <q-btn slot="right" icon="more_vert" dense round flat>
+                  <q-popover>
+                    <q-list link class="no-border">
+                      <q-item v-close-overlay @click.native="deleteTicket()">
+                        <q-item-main label="Excluir"/>
+                      </q-item>
+                    </q-list>
+                  </q-popover>
+                </q-btn>
+              </q-card-title>
+              <q-card-separator/>
+
+              <q-card-main>
+                <q-list link no-border>
+
+                  <q-item>
+                    <q-item-main >
+
+                      <q-item-tile class="row">
+                        <div class="col-4">Líquido</div>
+                        <div class="col-4 text-right">{{numeral(46220).format('0,0.0')}} KG</div>
+                        <div class="col-4 text-right">{{numeral(770.33).format('0,0.0')}} SC</div>
+                      </q-item-tile>
+
+                      <q-item-tile class="row">
+                        <div class="col-4">Desconto</div>
+                        <div class="col-4 text-right">{{numeral(3780).format('0,0.0')}} KG</div>
+                        <div class="col-4 text-right">{{numeral(63).format('0,0.0')}} SC</div>
+                      </q-item-tile>
+
+                      <q-item-tile class="row">
+                        <div class="col-4">Bruto</div>
+                        <div class="col-4 text-right">{{numeral(50000).format('0.0')}} KG</div>
+                        <div class="col-4 text-right">{{numeral(833.33).format('0,0.00')}} SC</div>
+                      </q-item-tile>
+
+                    </q-item-main>
                   </q-item>
-                  <q-item v-close-overlay @click.native="deleteTicket()">
-                    <q-item-main label="Excluir"/>
+
+                  <q-item>
+                    <q-item-main class="row">
+                      <div class="col-12">
+                        {{moment().format('DD/MM/YYYY HH:mm')}} /
+                        Nº {{numeral(18539).format('0,0')}}
+                      </div>
+                    </q-item-main>
                   </q-item>
+
+                  <q-item>
+                    <q-item-main>
+
+                      <q-item-tile class="row">
+                        <div class="col-4 q-mb-sm">
+                          Classificação
+                        </div>
+                        <div class="col-4 text-right">
+                          %
+                        </div>
+                        <div class="col-4 text-right">
+                          Desconto
+                        </div>
+                      </q-item-tile>
+
+                      <q-item-tile class="row">
+                        <div class="col-4">
+                          Umidade
+                        </div>
+                        <div class="col-4 text-right">
+                          14,00
+                        </div>
+                        <div class="col-4 text-right">
+                          198 KG
+                        </div>
+                      </q-item-tile>
+
+                      <q-item-tile class="row">
+                        <div class="col-4">
+                          Impureza
+                        </div>
+                        <div class="col-4 text-right">
+                          0,80
+                        </div>
+                        <div class="col-4 text-right">
+                          0 KG
+                        </div>
+                      </q-item-tile>
+
+                      <q-item-tile class="row">
+                        <div class="col-4">
+                          Avariados
+                        </div>
+                        <div class="col-4 text-right">
+                          3,20
+                        </div>
+                        <div class="col-4 text-right">
+                          0 KG
+                        </div>
+                      </q-item-tile>
+
+                      <q-item-tile class="row">
+                        <div class="col-4">
+                          Quebrados
+                        </div>
+                        <div class="col-4 text-right">
+                          2,00
+                        </div>
+                        <div class="col-4 text-right">
+                          0 KG
+                        </div>
+                      </q-item-tile>
+
+                    </q-item-main>
+                  </q-item>
+
                 </q-list>
-              </q-popover>
-            </q-btn>
-
-            <q-card class="q-pa-sm">
-
-              <q-list link no-border>
-                <q-item>
-                  <q-item-main class="row">
-                    <div class="col-4">
-                      Líquido
-                    </div>
-                    <div class="col-4">
-                      {{numeral(46220).format('0.0')}} KG
-                    </div>
-                    <div class="col-4">
-                      {{numeral(770.33).format('0,0.00')}} SC
-                    </div>
-                    <div class="col-4">
-                      Desconto
-                    </div>
-                    <div class="col-4">
-                      {{numeral(3780).format('0.0')}} KG
-                    </div>
-                    <div class="col-4">
-                      {{numeral(63).format('0,0.00')}} SC
-                    </div>
-                    <div class="col-4">
-                      Bruto
-                    </div>
-                    <div class="col-4">
-                      {{numeral(50000).format('0.0')}} KG
-                    </div>
-                    <div class="col-4">
-                      {{numeral(833.33).format('0,0.00')}} SC
-                    </div>
-
-                  </q-item-main>
-                </q-item>
-              </q-list>
+              </q-card-main>
 
             </q-card>
-
           </div>
+
         </div>
-
       </div>
 
       <!--INFO DAS ENTREGAS-->
       <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
         <div class="row gutter-y-sm">
-          <div class="col-12" v-for="entrega in 2" :key="entrega">
 
+          <div class="col-12" v-for="entrega in 3" :key="entrega">
             <q-card>
+              <q-card-title>
+                Troca ADM {{entrega}}
+                <q-btn slot="right" icon="more_vert" dense round flat>
+                  <q-popover>
+                    <q-list link class="no-border">
+                      <q-item v-close-overlay @click.native="updateNota()">
+                        <q-item-main label="Alterar nota"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="desdobrarCarga()">
+                        <q-item-main label="Desdobrar carga"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="deleteNegocio()">
+                        <q-item-main label="Excluir negócio"/>
+                      </q-item>
+                    </q-list>
+                  </q-popover>
+                </q-btn>
+              </q-card-title>
+              <q-card-separator/>
 
-              <q-btn class="float-right" icon="more_vert" round flat>
-                <q-popover>
-                  <q-list link class="no-border">
-                    <q-item v-close-overlay @click.native="updateNota()">
-                      <q-item-main label="Alterar nota"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="benderCarga()">
-                      <q-item-main label="Desdobrar carga"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="deleteNegocio()">
-                      <q-item-main label="Excluir negócio"/>
-                    </q-item>
-                  </q-list>
-                </q-popover>
-              </q-btn>
+              <q-card-main>
+                <q-item>
+                  <q-item-main>
 
-              <div class="col-12 q-pa-lg">
-                <p>Troca ADM {{entrega}}</p>
-                <p>Bunge</p>
-                <p>Nota</p>
-                <p>Vitório 1-1234 {{numeral(30000).format('0,0')}} 0,85 {{numeral(25500).format('0,0.00')}}</p>
-                <p></p>
-                <p></p>
-              </div>
+                    <q-item-tile>
+                      Bunge
+                    </q-item-tile>
+                    <q-item-tile>
+                      Nota
+                    </q-item-tile>
+                    <q-item-tile>
+                      Vitório 1-1234 {{numeral(30000).format('0,0')}} 0,85 {{numeral(25500).format('0,0.00')}}
+                    </q-item-tile>
+                    <q-item-tile>
+                      5101 - Venda Produção estabelecimento {{moment('2018/12/19').format('DD MMM YYYY')}}
+                    </q-item-tile>
+
+                  </q-item-main>
+                </q-item>
+              </q-card-main>
 
             </q-card>
           </div>
+
         </div>
       </div>
 
@@ -198,29 +288,22 @@
       </div>
     </div>
 
+    <!--MODAL ENVIAR CARGA-->
+    <send-carga-modal ref="sendCargaModal"/>
+
   </custom-page>
 </template>
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import customInputText from 'components/CustomInputText.vue'
-  import customInputDatetime from 'components/CustomInputDateTime.vue'
-  import Cultura from 'assets/js/model/negocio/Cultura'
-  import Titulo from 'assets/js/model/negocio/Titulo'
-  import Produto from 'assets/js/model/negocio/Produto'
-  import Fixacao from 'assets/js/model/negocio/Fixacao'
-  import negocioService from 'assets/js/service/negocio/NegocioService'
-  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
-  import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
-  import culturaClassificacaoService from 'assets/js/service/cultura/CulturaClassificacaoService'
-  import armazemService from 'assets/js/service/localizacao/ArmazemService'
+  import sendCargaModal from 'components/entrega/SendCargaModal'
+  import ticketService from 'assets/js/service/entrega/TicketService'
   export default {
-    name: "negocio-view",
+    name: "carga-view",
     components: {
       toolbar,
       customPage,
-      customInputText,
-      customInputDatetime
+      sendCargaModal,
     },
     data () {
       return {
@@ -233,18 +316,10 @@
     },
     methods: {
       sendToWarehause: function(){
-        negocioService.saveAttachTitulo(this.titulo.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Título vinculado com sucesso'});
-            this.closeModal();
-            this.$router.go(-1);
-          }
-        }).catch(error => {
-          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-        });
+        this.$refs.sendCargaModal.openModal()
       },
-      addTicket: function(){},
-      addDriver: function(){},
+
+      addTalhao: function(){},
       addTalhaoPercentage: function(){},
       deleteTalhao: function(id){
         this.$q.dialog({
@@ -258,8 +333,8 @@
           })
         }).catch(()=>{});
       },
-      addTalhao: function(){},
-      addDriver: function(){},
+
+      updateDriver: function(){},
 
       deleteNegocio: function(){
         this.$q.dialog({
@@ -274,21 +349,21 @@
         }).catch(()=>{});
       },
       updateNota: function(){},
-      benderCarga: function(){},
+      desdobrarCarga: function(){},
 
+      saveTicket: function(){},
       deleteTicket: function(){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente deseja apagar esta Negocio?',
+          message: 'Realmente deseja apagar este Ticket?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          negocioService.deleteNegocio(id).then(response => {
-            this.listCulturas()
+          ticketService.deleteTicket(id).then(response => {
+            this.getCargaById()
           })
         }).catch(()=>{});
       },
-      newTicket: function(){},
 
     },
     mounted () {
