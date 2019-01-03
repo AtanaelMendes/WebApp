@@ -39,7 +39,7 @@ export default {
       })
     });
   },
-  saveNovaCarga(params){
+  saveNewCarga(params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.post('produtor/'+ produtorId + '/entrega', params).then(response => {
         resolve(response)
