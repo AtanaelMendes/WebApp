@@ -181,7 +181,7 @@
                 ({{index}}) Total: {{titulo.total}}
               </div>
               <div class="col-12  text-faded" v-for="item in titulo.itens">
-                {{item}}
+                {{item[0]}} <br/><span class="q-caption">{{item[1]}}</span>
               </div>
               <!--<div class="col-12  text-faded q-pb-xs">-->
                 <!--R$ 50.000,00 em (USD 12.88593 a taxa de 3,8802) em 01 fev na conta 22610-0-->
