@@ -145,7 +145,7 @@
 <script>
   import areaService from 'assets/js/service/area/AreaService'
   import talhaoService from 'assets/js/service/area/TalhaoService'
-  import NovaCarga from 'assets/js/model/entrega/NovaCarga'
+  import NewEntrega from 'assets/js/model/entrega/NewEntrega'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   export default {
@@ -157,7 +157,7 @@
     data () {
       return {
         currentStep: 'escolherCaminhao',
-        novaCarga: new NovaCarga(),
+        novaCarga: new NewEntrega(),
         isModalOpened: false,
         caminhoes: [
           {

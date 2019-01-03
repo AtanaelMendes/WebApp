@@ -168,7 +168,7 @@
   import cargaService from 'assets/js/service/entrega/CargaService'
   import armazemService from 'assets/js/service/localizacao/ArmazemService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
-  import SendCarga from 'assets/js/model/entrega/SendCarga'
+  import SendEntrega from 'assets/js/model/entrega/SendEntrega'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
   export default {
@@ -180,7 +180,7 @@
     data () {
       return {
         currentStep: 'negocio',
-        sendCarga: new SendCarga(),
+        sendCarga: new SendEntrega(),
         isModalOpened: false,
         negocios: [],
         armazems: [
