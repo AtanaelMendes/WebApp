@@ -30,11 +30,11 @@
 
       <!--PASSO 2 ESCOLHER PAGAR RECEBER -->
       <q-step title="Pagar/Receber" name="pagarReceber">
-
         <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
 
-            <q-field helper=" " label="Você vai">
+          <div class="col-xs-4 col-sm-3 col-md-2 col-lg-1">
+            <p class="q-title text-center">Você vai</p>
+            <q-field>
               <q-option-group type="radio" color="secondary" v-model="cultura.isPagar.value"
                               :options="[{ label: 'Pagar', value: true },{ label: 'Receber', value: false}]"/>
             </q-field>

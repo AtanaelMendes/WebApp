@@ -82,7 +82,7 @@
           </div>
 
           <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2" v-for="motorista in motoristas" :key="motorista.nome">
-            <q-card @click.native="selectMotorista(motorista)">
+            <q-card @click.native="selectMotorista(motorista)" class="cursor-pointer">
               <q-card-media overlay-position="full">
                 <img src="assets/images/no-image.png"/>
 
@@ -98,6 +98,19 @@
 
             </q-card>
           </div>
+
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2" >
+            <q-card @click.native=""  class="cursor-pointer">
+              <q-card-media align="center">
+                <q-icon name="add" color="primary" flat size="200px" />
+              </q-card-media>
+              <q-card-separator/>
+              <q-card-main>
+                Novo motorista
+              </q-card-main>
+            </q-card>
+          </div>
+
         </div>
       </q-step>
 
