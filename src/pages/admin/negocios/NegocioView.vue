@@ -49,7 +49,7 @@
       <template v-for="(cultura, index) in negocio.culturas">
         <div :class="direita">
           <div class="row gutter-xs">
-            <div class="col-12">{{cultura.safra_cultura.nome}} {{cultura.safra_cultura.ano_inicio}}/{{cultura.safra_cultura.ano_fim}}</div>
+            <div class="col-12">{{cultura.safra_cultura}}</div>
             <div class="col-12 text-faded q-caption">
               Entrega
               <q-progress :percentage="progressModel + 10" height="6px" color="blue" animate stripe/>
@@ -167,31 +167,38 @@
       </template>
 
       <!--TITULOS-->
-      <template>
+      <template v-if="negocio.titulos">
         <div :class="direita">
           <div class="row">
 
             <div class="col-12 q-pb-xs">FINACEIRO</div>
+
             <div class="col-12 q-pb-xs">
-              Recebido R$ 100.000,00
+              Pagos:
             </div>
-            <div class="col-12  text-faded">
-              R$ 20.000,00 em 15 fev 2019 na conta 22610-0
-            </div>
-            <div class="col-12  text-faded q-pb-xs">
-              R$ 50.000,00 em (USD 12.88593 a taxa de 3,8802) em 01 fev na conta 22610-0
+            <div class="row col-12" v-for="(titulo, index) in negocio.titulos.pagos">
+              <div class="col-12 q-pb-xs">
+                ({{index}}) Total: {{titulo.total}}
+              </div>
+              <div class="col-12  text-faded" v-for="item in titulo.itens">
+                {{item}}
+              </div>
+              <!--<div class="col-12  text-faded q-pb-xs">-->
+                <!--R$ 50.000,00 em (USD 12.88593 a taxa de 3,8802) em 01 fev na conta 22610-0-->
+              <!--</div>-->
             </div>
 
             <div class="col-12 q-pb-xs">
-              Para receber R$ 126.000,00
+              Para pagar:
             </div>
-            <div class="col-12  text-faded">
-              R$ 30.000,00 em 01 mar 2019
+            <div class="row col-12" v-for="(titulo, index) in negocio.titulos.para_pagar">
+              <div class="col-12 q-pb-xs">
+                ({{index}}) Total: {{titulo.total}}
+              </div>
+              <div class="col-12  text-faded" v-for="item in titulo.itens">
+                {{item}}
+              </div>
             </div>
-            <div class="col-12  text-faded">
-              R$ 96.000,00 em 15 mar 2019
-            </div>
-
           </div>
         </div>
       </template>
