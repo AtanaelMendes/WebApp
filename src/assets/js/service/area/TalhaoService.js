@@ -13,7 +13,7 @@ export default {
   },
   listTalhoesBySafraCulturaAndArea(safraCulturaId, areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('area/' + areaId + '/talhao').then( response => {
+      Vue.prototype.$axios.get('area/' + areaId + '/talhao?safra_cultura_id=' + safraCulturaId).then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)

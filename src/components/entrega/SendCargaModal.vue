@@ -165,7 +165,7 @@
   </q-modal>
 </template>
 <script>
-  import cargaService from 'assets/js/service/entrega/CargaService'
+  import entregaService from 'assets/js/service/entrega/EntregaService'
   import armazemService from 'assets/js/service/localizacao/ArmazemService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import SendCarga from 'assets/js/model/entrega/SendCarga'

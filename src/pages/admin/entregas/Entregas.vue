@@ -158,7 +158,7 @@
     </div>
 
     <!--MODAL NOVA CARGA -->
-    <new-carga-modal ref="cargaModal"/>
+    <new-entrega-modal ref="entregaModal"/>
 
   </custom-page>
 </template>
@@ -167,7 +167,7 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
-  import NewCargaModal from 'components/entrega/NewCargaModal'
+  import NewEntregaModal from 'components/entrega/NewEntregaModal'
   export default {
     name: "entregas",
     components: {
@@ -175,7 +175,7 @@
       customPage,
       customInputText,
       customInputDatetime,
-      NewCargaModal
+      NewEntregaModal
     },
     data () {
       return {
@@ -236,7 +236,7 @@
     },
     methods: {
       novaCarga: function(){
-        this.$refs.cargaModal.openModal()
+        this.$refs.entregaModal.openModal()
       },
       listCargasCarregando: function () {
 

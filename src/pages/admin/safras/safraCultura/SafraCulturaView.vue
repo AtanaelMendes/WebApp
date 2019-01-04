@@ -377,7 +377,7 @@
         })
       },
       listCultivar: function(marcaId){
-        safraCulturaService.listCultivares(marcaId, this.safraCultura.cultura.id).then(response => {
+        safraCulturaService.listCultivaresByMarca(this.safraCultura.cultura.id, marcaId).then(response => {
           this.cultivares = response.data;
         })
       },
