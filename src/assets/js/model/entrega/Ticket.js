@@ -1,115 +1,73 @@
 import { helpers} from 'vuelidate/lib/validators'
 const moment = require('moment');
 export default class{
-  negocioId = {
-    value: null,
-    errorMessage: null
-  };
-  armazemId = {
-    value: null,
-    errorMessage: null
-  };
-  motoristaId = {
-    value: null,
-    errorMessage: null
-  };
-  ie = {
-    value: null,
-    errorMessage: null
-  };
-  serie = {
-    value: null,
-    errorMessage: null
-  };
-  notaNumero = {
-    value: null,
-    errorMessage: null
-  };
-  peso = {
-    value: 30000,
-    errorMessage: null
-  };
-  unidadeMedidaId = {
-    value: null,
-    errorMessage: null
-  };
-  valor = {
-    value: null,
-    errorMessage: null
-  };
-  total = {
-    value: null,
-    errorMessage: null
-  };
-  cfop = {
+  numeroTicket = {
     value: null,
     errorMessage: null
   };
   emissao = {
-    value: moment().format('YYYY-MM-DD'),
+    value: null,
     errorMessage: null
   };
-  constructor(sendCarga){
-    if(sendCarga !== undefined || sendCarga != null){
-      this.negocioId.value = sendCarga.negocioId.value;
-      this.armazemId.value = sendCarga.armazemId.value;
-      this.motoristaId.value = sendCarga.motoristaId.value;
-      this.ie.value = sendCarga.ie.value;
-      this.serie.value = sendCarga.serie.value;
-      this.notaNumero.value = sendCarga.notaNumero.value;
-      this.peso.value = sendCarga.peso.value;
-      this.unidadeMedidaId.value = sendCarga.unidadeMedidaId.value;
-      this.valor.value = sendCarga.valor.value;
-      this.total.value = sendCarga.total.value;
-      this.cfop.value = sendCarga.cfop.value;
-      this.emissao.value = sendCarga.emissao.value;
-    }
+  pesoBrutoTotal = {
+    value: null,
+    errorMessage: null
   };
+  pesoTara = {
+    value: null,
+    errorMessage: null
+  };
+  pesoLiquido = {
+    value: null,
+    errorMessage: null
+  };
+  entregaClassificacao = [];
+  negocioCulturas = [];
+
   isValid(){
     let hasError = false;
-    if(!helpers.req(this.ie.value)){
-      hasError = true;
-    }
-    if(!helpers.req(this.serie.value)){
-      hasError = true;
-    }
-    if(!helpers.req(this.notaNumero.value)){
-      hasError = true;
-    }
-    if(!helpers.req(this.peso.value)){
-      hasError = true;
-    }
-    if(!helpers.req(this.unidadeMedidaId.value)){
-      hasError = true;
-    }
-    if(!helpers.req(this.valor.value)){
-      hasError = true;
-    }
-    if(!helpers.req(this.total.value)){
-      hasError = true;
-    }
-    if(!helpers.req(this.cfop.value)){
+    if(!helpers.req(this.numeroTicket.value)){
       hasError = true;
     }
     if(!helpers.req(this.emissao.value)){
+      hasError = true;
+    }
+    if(!helpers.req(this.pesoBrutoTotal.value)){
+      hasError = true;
+    }
+    if(!helpers.req(this.pesoTara.value)){
+      hasError = true;
+    }
+    if(!helpers.req(this.pesoLiquido.value)){
       hasError = true;
     }
     return !hasError;
   };
   getValues(){
     return{
-      negocio_id: this.negocioId.value,
-      armazem_id: this.armazemId.value,
-      motorista_id: this.motoristaId.value,
-      ie: this.ie.value,
-      serie: this.serie.value,
-      nota_numero: this.notaNumero.value,
-      peso: this.peso.value,
-      unidade_medida_id: this.unidadeMedidaId.value,
-      valor: this.valor.value,
-      total: this.total.value,
-      cfop: this.cfop.value,
+      numero_ticket: this.numeroTicket.value,
       emisao: this.emisao.value,
+      peso_bruto_total: this.pesoBrutoTotal.value,
+      peso_tara: this.pesoTara.value,
+      peso_liquido: this.pesoLiquido.value,
+      entrega_classificacao: this.entregaClassificacao,
     }
+  }
+
+
+  addNegocioCultura(negocioCultura){
+    this.negocioCulturas.push(negocioCultura);
+  }
+
+  removeNegocioCultura(index){
+    this.negocioCulturas.splice(index, 1);
+  }
+
+  existsNegocioCulturaById(id){
+    return this.negocioCulturas.map(negocioCultura => negocioCultura.id).indexOf(id);
+  }
+
+  getNegocioCulturaById(id){
+    return this.negocioCulturas[this.existsNegocioCulturaById(id)]
   }
 }

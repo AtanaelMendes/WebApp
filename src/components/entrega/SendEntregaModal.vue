@@ -82,7 +82,7 @@
           </div>
 
           <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2" v-for="motorista in motoristas" :key="motorista.nome">
-            <q-card @click.native="selectMotorista(motorista)">
+            <q-card @click.native="selectMotorista(motorista)" class="cursor-pointer">
               <q-card-media overlay-position="full">
                 <img src="assets/images/no-image.png"/>
 
@@ -98,6 +98,19 @@
 
             </q-card>
           </div>
+
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2" >
+            <q-card @click.native=""  class="cursor-pointer">
+              <q-card-media align="center">
+                <q-icon name="add" color="primary" flat size="200px" />
+              </q-card-media>
+              <q-card-separator/>
+              <q-card-main>
+                Novo motorista
+              </q-card-main>
+            </q-card>
+          </div>
+
         </div>
       </q-step>
 
@@ -168,7 +181,7 @@
   import entregaService from 'assets/js/service/entrega/EntregaService'
   import armazemService from 'assets/js/service/localizacao/ArmazemService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
-  import SendCarga from 'assets/js/model/entrega/SendCarga'
+  import SendEntrega from 'assets/js/model/entrega/SendEntrega'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
   export default {
@@ -180,7 +193,7 @@
     data () {
       return {
         currentStep: 'negocio',
-        sendCarga: new SendCarga(),
+        sendCarga: new SendEntrega(),
         isModalOpened: false,
         negocios: [],
         armazems: [

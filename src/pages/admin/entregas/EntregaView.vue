@@ -268,7 +268,7 @@
       <!--PAGE STICKY BUTTOMS-->
       <q-page-sticky position="bottom-right" :offset="[35, 35]">
         <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
-          <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="addTicket()">
+          <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="newTicket()">
             <span class="shadow-2 text-no-wrap	">Informar ticket</span>
           </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="sendToWarehause()">
@@ -289,25 +289,37 @@
     </div>
 
     <!--MODAL ENVIAR CARGA-->
-    <send-carga-modal ref="sendCargaModal"/>
+    <send-entrega-modal ref="sendEntregaModal"/>
+
+    <!--MODAL INFORMAR TICKET-->
+    <new-ticket-modal ref="newTicketModal"/>
 
   </custom-page>
 </template>
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import sendCargaModal from 'components/entrega/SendCargaModal'
+  import sendEntregaModal from 'components/entrega/SendEntregaModal'
+  import newTicketModal from 'components/entrega/NewTicketModal'
   import ticketService from 'assets/js/service/entrega/TicketService'
   export default {
     name: "carga-view",
     components: {
       toolbar,
       customPage,
-      sendCargaModal,
+      newTicketModal,
+      sendEntregaModal,
     },
     data () {
       return {
         carga: true,
+        entrega: {
+          culturaId: 1,
+          negocios_entregas: [
+            {id:1},
+            {id:2}
+          ]
+        }
       }
     },
     watch: {
@@ -316,7 +328,10 @@
     },
     methods: {
       sendToWarehause: function(){
-        this.$refs.sendCargaModal.openModal()
+        this.$refs.sendEntregaModal.openModal()
+      },
+      newTicket: function(){
+        this.$refs.newTicketModal.openModal(this.entrega)
       },
 
       addTalhao: function(){},
@@ -373,7 +388,6 @@
     },
   }
   // this.$q.notify({type: 'negative', message: 'aqui'})
-
 </script>
 <style>
   .space-end{
