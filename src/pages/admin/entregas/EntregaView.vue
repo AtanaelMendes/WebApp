@@ -316,8 +316,8 @@
         entrega: {
           culturaId: 1,
           negocios_entregas: [
-            {id:1},
-            {id:2}
+            {id: 1, tipo_negocio: 'Troca', pessoa: 'ADM', negocio_produto_quantidade: null },
+            // {id: 2, tipo_negocio: 'Balcão', pessoa: 'ADM', negocio_produto_quantidade: null}
           ]
         }
       }
