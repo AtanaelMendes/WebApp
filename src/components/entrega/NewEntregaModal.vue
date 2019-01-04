@@ -1,7 +1,7 @@
 <template>
   <q-modal key="safraCultura" v-model="isModalOpened" maximized @hide="closeModal">
 
-    <q-stepper key="novaCarga" ref="stepperNovaCarga" contractable color="positive" v-model="currentStep" class="no-shadow">
+    <q-stepper key="novaEntrega" ref="stepperNovaEntrega" contractable color="positive" v-model="currentStep" class="no-shadow">
 
       <!--PASSO 1 ESCOLHER CAMINHAO -->
       <q-step default title="Escolher caminhão" name="escolherCaminhao">
@@ -12,7 +12,7 @@
               <q-card-media overlay-position="full">
                 <img src="assets/images/icon-no-image.svg" v-if="!caminhao.image"/>
                 <img :src="caminhao.image" v-if="caminhao.image"/>
-                <q-card-title slot="overlay" align="end" v-if="caminhao.id === novaCarga.caminhaoId">
+                <q-card-title slot="overlay" align="end" v-if="caminhao.id === novaEntrega.caminhaoId">
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
               </q-card-media>
@@ -149,7 +149,7 @@
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
       <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="currentStep != 'escolherCultivar' "/>
-      <q-btn label="salvar" color="primary" @click="saveNovaCarga" :disable="isNextStepEnabled()" v-if="currentStep == 'escolherCultivar' "/>
+      <q-btn label="salvar" color="primary" @click="saveNovaEntrega" :disable="isNextStepEnabled()" v-if="currentStep == 'escolherCultivar' "/>
     </q-page-sticky>
 
   </q-modal>
@@ -158,7 +158,7 @@
   import caminhaoService from 'assets/js/service/CaminhaoService'
   import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
   import entregaService from 'assets/js/service/entrega/EntregaService'
-  import NovaCarga from 'assets/js/model/entrega/NovaCarga'
+  import NovaEntrega from 'assets/js/model/entrega/NewEntrega'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   export default {
@@ -170,7 +170,7 @@
     data () {
       return {
         currentStep: 'escolherCaminhao',
-        novaCarga: new NovaCarga(),
+        novaEntrega: new NovaEntrega(),
         isModalOpened: false,
         caminhoes: [],
         safraCulturas: [],
@@ -187,7 +187,7 @@
     methods: {
       openModal: function(){
         this.isModalOpened = true;
-        this.novaCarga = new NovaCarga();
+        this.novaEntrega = new NovaEntrega();
         this.selectedSafraCulturaId = null;
         this.selectedAreaId = null;
         this.selectedTalhaoId = null;
@@ -199,7 +199,7 @@
         this.isModalOpened = false;
       },
       isNextStepEnabled: function(){
-        if(this.novaCarga.caminhaoId == null && this.currentStep === 'escolherCaminhao' ){
+        if(this.novaEntrega.caminhaoId == null && this.currentStep === 'escolherCaminhao' ){
           return true
         }
         if(this.selectedSafraCulturaId == null && this.currentStep === 'escolherSafra' ){
@@ -222,7 +222,7 @@
         })
       },
       selectCaminhao: function(caminhao){
-        this.novaCarga.caminhaoId = caminhao.id;
+        this.novaEntrega.caminhaoId = caminhao.id;
         this.goToNextStep()
       },
       listSafraCulturas: function(){
@@ -310,9 +310,9 @@
       },
       selectCultivar: function(cultivar){
         this.selectedCultivarId = cultivar.id;
-        //this.saveNovaCarga();
+        //this.saveNovaEntrega();
       },
-      saveNovaCarga: function(){
+      saveNovaEntrega: function(){
         let filteredSafraCulturaTalhoes = this.safraCulturaTalhoes.filter(safraCulturaTalhao => {
           return safraCulturaTalhao.talhao.id === this.selectedTalhaoId
             && safraCulturaTalhao.talhao.area.id === this.selectedAreaId
@@ -320,11 +320,11 @@
 
         });
 
-        this.novaCarga.safraCulturaTalhaoId = filteredSafraCulturaTalhoes[0].id;
+        this.novaEntrega.safraCulturaTalhaoId = filteredSafraCulturaTalhoes[0].id;
 
-        entregaService.saveEntrega(this.novaCarga.getValues()).then(response => {
+        entregaService.saveEntrega(this.novaEntrega.getValues()).then(response => {
           if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Carga Criada com sucesso'});
+            this.$q.notify({type: 'positive', message: 'Entrega criada com sucesso'});
             this.closeModal();
           }
         }).catch(error => {
@@ -332,7 +332,7 @@
         });
       },
       goToNextStep(){
-        this.$refs.stepperNovaCarga.next();
+        this.$refs.stepperNovaEntrega.next();
       }
     },
   }
