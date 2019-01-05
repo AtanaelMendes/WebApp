@@ -84,4 +84,13 @@ export default {
       })
     });
   },
+  saveTalhaoPercentage(params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ id, params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
 }
