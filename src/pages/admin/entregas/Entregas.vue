@@ -13,33 +13,44 @@
     </toolbar>
 
     <!--TAB CARREGANDO-->
-    <div class="row gutter-sm space-end q-ma-lg" v-if="tabs == 'carregando' ">
+    <div class="row gutter-sm space-end q-ma-lg" v-if="tabs === 'carregando' ">
 
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="cargaCarregando in cargasCarregando" :key="cargaCarregando.id">
-        <q-card @click.native="viewCarga(cargaCarregando.id)">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="entrega in entregasCarregando" :key="entrega.id">
+        <q-card @click.native="viewCarga(entrega.id)">
           <q-card-media>
-            <img :src=" 'assets/images/'+cargaCarregando.id+'.jpg' "/>
+            <img src="assets/images/icon-no-image.svg" v-if="!entrega.caminhao.image"/>
+            <img :src="entrega.caminhao.image" v-if="entrega.caminhao.image"/>
           </q-card-media>
           <q-card-separator/>
 
           <q-card-title class="q-py-xs">
-            {{ cargaCarregando.caminhao }}
+            <div>
+            {{ entrega.caminhao.nome }}
+              <span class="text-faded float-right q-body-1">{{entrega.caminhao.placa}}</span>
+            </div>
+            <span slot="subtitle">Início do carregamamento {{moment(entrega.inicio_carregamento).fromNow()}}</span>
           </q-card-title>
           <q-card-separator/>
 
           <q-card-main class="gutter-y-xs">
-            <div class="col-12">
-              {{cargaCarregando.motorista}}
-            </div>
-            <div class="col-12">
-              Início do Carregamamento {{moment(cargaCarregando.inicio_carregamento).calendar()}}
+            <div class="col-12" v-for="safra_cultura_talhao in entrega.safra_culturas_talhoes">
+              <span class="q-subheading">{{safra_cultura_talhao.safra}}</span>
+              <span class="float-right q-subheading">{{safra_cultura_talhao.percentual}}%</span>
+              <div class="q-pl-sm q-my-xs">
+                <span class="text-faded q-body-1">{{safra_cultura_talhao.area}}</span>
+                <span class="text-faded float-right q-body-1">{{safra_cultura_talhao.talhao}}</span>
+              </div>
+              <div class="q-pl-sm q-my-xs">
+                <span class="text-faded q-body-1">{{safra_cultura_talhao.cultivar.nome}}</span>
+                <span class="text-faded float-right q-body-1">{{safra_cultura_talhao.cultivar.marca}}</span>
+              </div>
             </div>
           </q-card-main>
         </q-card>
       </div>
 
       <!--EMPTY LIST-->
-      <div class="col-12" v-if="cargasCarregando <= 0">
+      <div class="col-12" v-if="entregasCarregando <= 0">
         <div class="row justify-center items-center" style="min-height: 40vh">
           <div class="col-6 text-center">
             <img src="assets/images/sad_2.svg" class="responsive"/>
@@ -51,8 +62,8 @@
       <!--PAGE STICKY BUTTOMS-->
       <q-page-sticky position="bottom-right" :offset="[35, 35]">
         <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
-          <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="novaCarga()">
-            <span class="shadow-2">Nova Carga</span>
+          <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="novaEntrega()">
+            <span class="shadow-2 text-no-wrap">Nova Entrega</span>
           </q-fab-action>
         </q-fab>
       </q-page-sticky>
@@ -167,6 +178,7 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
+  import entregaService from 'assets/js/service/entrega/EntregaService'
   import NewEntregaModal from 'components/entrega/NewEntregaModal'
   export default {
     name: "entregas",
@@ -181,29 +193,7 @@
       return {
         tabs: 'carregando',
         entregas: [],
-        cargasCarregando:[
-          {
-            id: 1,
-            caminhao: 'Feneme',
-            motorista: 'Tiburcio',
-            inicio_carregamento: '2018/12/26 13:30:22',
-            envio_armazem: '2018/12/26 14:30:10'
-          },
-          {
-            id: 2,
-            caminhao: 'Black Pearl',
-            motorista: 'Jack Sparrow',
-            inicio_carregamento: '2018/12/27 14:30:22',
-            envio_armazem: '2018/12/27 15:30:10'
-          },
-          {
-            id: 3,
-            caminhao: 'Holandês Voador',
-            motorista: 'Barba Negra',
-            inicio_carregamento: '2018/12/28 15:30:22',
-            envio_armazem: '2018/12/26 16:30:10'
-          }
-        ],
+        entregasCarregando:[],
         cargasNoArmazem:[
           {
             id: 1,
@@ -230,16 +220,14 @@
         cargasEntregue:[],
       }
     },
-    watch: {
-    },
-    computed: {
-    },
     methods: {
-      novaCarga: function(){
+      novaEntrega: function(){
         this.$refs.entregaModal.openModal()
       },
-      listCargasCarregando: function () {
-
+      listEntregasCarregando() {
+        entregaService.listEntregasCarregando().then(response => {
+          this.entregasCarregando = response.data;
+        })
       },
       listCargasNoArmazem: function () {
 
@@ -252,6 +240,7 @@
       }
     },
     mounted () {
+      this.listEntregasCarregando();
       // this.$root.$on('refreshSafraList', () => {
       //   this.listSafras();
       // });

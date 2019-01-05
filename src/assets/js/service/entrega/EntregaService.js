@@ -2,9 +2,9 @@ import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
 const produtorId = localStorage.getItem('account.produtor_id');
 export default {
-  listCargasCarregando(){
+  listEntregasCarregando(){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entregas?staus=carregando').then( response => {
+      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=carregando').then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
