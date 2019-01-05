@@ -260,6 +260,24 @@
               </div>
             </div>
 
+            <div class="row">
+              <!--SELECT UNIDADE AREA-->
+              <div class="col-8">
+                <q-field :error="cultura.defaultUnidadePrecoId.errorMessage != null">
+                  <q-select
+                    @input="clearErrorMessage"
+                    float-label="Unidade preço padrão"
+                    :options="unidadeMedidaOptions"
+                    v-model="cultura.defaultUnidadePrecoId.value"
+                  />
+                </q-field>
+                <div class="q-field-bottom row">
+                  <div class="text-negative" v-if="cultura.defaultUnidadePrecoId.errorMessage != null" >
+                    {{cultura.defaultUnidadePrecoId.errorMessage}}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row q-ma-sm">
@@ -328,9 +346,27 @@
                 </div>
               </div>
             </div>
-
+            <div class="row">
+              <!--SELECT UNIDADE AREA-->
+              <div class="col-8">
+                <q-field :error="cultura.defaultUnidadePrecoId.errorMessage != null">
+                  <q-select
+                    @input="clearErrorMessage"
+                    float-label="Unidade preço padrão"
+                    :options="unidadeMedidaOptions"
+                    v-model="cultura.defaultUnidadePrecoId.value"
+                  />
+                </q-field>
+                <div class="q-field-bottom row">
+                  <div class="text-negative" v-if="cultura.defaultUnidadePrecoId.errorMessage != null" >
+                    {{cultura.defaultUnidadePrecoId.errorMessage}}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
         <div class="row q-ma-sm">
           <div class="col-12" align="end">
             <q-btn @click.native="closeModalEditCultura" color="primary" label="Cancelar" class="q-mr-xs"/>
@@ -828,6 +864,7 @@
           this.cultura.defaultEstimativa.value = cultura.default_estimativa;
           this.cultura.defaultUnidadeMedidaId.value = cultura.default_unidade_medida_id;
           this.cultura.defaultUnidadeAreaId.value = cultura.default_unidade_area_id;
+          this.cultura.defaultUnidadePrecoId.value = cultura.default_unidade_preco_id;
         },
         addFotoCultura: function(id){
           this.selectedCulturaId = id;

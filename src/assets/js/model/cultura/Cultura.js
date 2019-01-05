@@ -16,6 +16,10 @@ export default class{
     value: null,
     errorMessage: null
   };
+  defaultUnidadePrecoId = {
+    value: null,
+    errorMessage: null
+  }
 
   constructor(cultura){
     if(cultura !== undefined || cultura != null){
@@ -23,6 +27,7 @@ export default class{
       this.defaultEstimativa.value = cultura.defaultEstimativa.value;
       this.defaultUnidadeMedidaId.value = cultura.defaultUnidadeMedidaId.value;
       this.defaultUnidadeAreaId.value = cultura.defaultUnidadeAreaId.value;
+      this.defaultUnidadePrecoId.value = cultura.defaultUnidadePrecoId.value;
     }
   }
 
@@ -52,6 +57,11 @@ export default class{
       this.defaultUnidadeAreaId.errorMessage = "Selecione uma unidade de área";
       hasError = true;
     }
+
+    if (!helpers.req(this.defaultUnidadePrecoId.value)) {
+      this.defaultUnidadePrecoId.errorMessage = "Selecione uma unidade de preço";
+      hasError = true;
+    }
     return !hasError;
   };
 
@@ -60,7 +70,8 @@ export default class{
       nome: this.nome.value,
       default_estimativa: this.defaultEstimativa.value,
       default_unidade_medida_id: this.defaultUnidadeMedidaId.value,
-      default_unidade_area_id: this.defaultUnidadeAreaId.value
+      default_unidade_area_id: this.defaultUnidadeAreaId.value,
+      default_unidade_preco_id: this.defaultUnidadePrecoId.value
     }
   }
 }
