@@ -23,7 +23,6 @@ export default class{
   };
   entregaClassificacao = [];
   negocioCulturas = [];
-
   isValid(){
     let hasError = false;
     if(!helpers.req(this.numeroTicket.value)){
@@ -46,11 +45,12 @@ export default class{
   getValues(){
     return{
       numero_ticket: this.numeroTicket.value,
-      emisao: this.emisao.value,
+      emissao: this.emissao.value,
       peso_bruto_total: this.pesoBrutoTotal.value,
       peso_tara: this.pesoTara.value,
       peso_liquido: this.pesoLiquido.value,
       entrega_classificacao: this.entregaClassificacao,
+      negocio_culturas: this.negocioCulturas
     }
   }
 
