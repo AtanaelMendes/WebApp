@@ -87,7 +87,7 @@ export default {
   },
   listNegociosCulturas(negocioId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('negocio/'+ negocioId + '/cultura').then(response => {
+      Vue.prototype.$axios.get('negocio/'+ negocioId + '/cultura?filter=without_empty').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
@@ -113,9 +113,9 @@ export default {
       })
     });
   },
-  saveAttachFixacao(params){
+  saveAttachFixacao(negocioCulturaId, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/'+ produtorId + '/negocios', params).then(response => {
+      Vue.prototype.$axios.post('negocio_cultura/'+ negocioCulturaId + '/fixacao', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)

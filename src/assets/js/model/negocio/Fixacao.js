@@ -1,7 +1,7 @@
 import { helpers} from 'vuelidate/lib/validators'
 const moment = require('moment');
 export default class{
-  negocioCultura = null;
+  //negocioCultura = null;
   dataFixacao = {
     value: null,
     errorMessage: null
@@ -11,10 +11,7 @@ export default class{
     value: null,
     errorMessage: null
   };
-  unidadeMedidaPrecoId = {
-    value: null,
-    errorMessage: null
-  };
+  unidadeMedidaPrecoId = null;
   isPrecoLiquido = {
     value: false,
     errorMessage: null
@@ -73,11 +70,11 @@ export default class{
 
   getValues(){
     return{
-      negocio_cultura_id: this.negocioCultura.id,
+      //negocio_cultura_id: this.negocioCultura.id,
       data_fixacao: this.dataFixacao.value,
-      moeada_id: this.moeda.id,
+      moeda_id: this.moeda.id,
       preco: this.preco.value,
-      unidade_medida_preco_id: this.unidadeMedidaPrecoId.value,
+      unidade_medida_preco_id: this.unidadeMedidaPrecoId,
       is_preco_liquido: this.isPrecoLiquido.value,
       quantidade: this.quantidade.value,
       unidade_medida_quantidade_id: this.unidadeMedidaQuantidadeId,
@@ -87,7 +84,13 @@ export default class{
       valor_outros_acrescimos: this.valorOutrosAcrescimos.value,
       total_liquido: this.totalLiquido.value,
       conta_bancaria_id: this.contaBancaria.id,
-      observacoes: this.observacoes.value
+      observacoes: this.observacoes.value,
+      parcelas: this.parcelas.map(function (parcela) {
+        return {
+          'valor': parcela.valor.value,
+          'vencimento': parcela.vencimento.value
+        }
+      })
     }
   }
 }

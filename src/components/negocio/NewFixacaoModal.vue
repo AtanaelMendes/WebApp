@@ -21,13 +21,13 @@
                     </q-item-side>
                     <q-item-main class="row">
                       <div class="col-4">
-                        {{negocioCultura.safra_cultura.cultura}}&nbsp<span v-if="negocioCultura.safra_cultura.safra.is_safrinha">Safrinha</span>
+                        {{negocioCultura.safra_cultura.cultura.nome}}&nbsp<span v-if="negocioCultura.safra_cultura.safra.is_safrinha">Safrinha</span>
                       </div>
                       <div class="col-4">
                         {{negocioCultura.safra_cultura.safra.ano_inicio}}/{{negocioCultura.safra_cultura.safra.ano_fim}}
                       </div>
                       <div class="col-4 text-faded q-caption">
-                        {{numeral(negocioCultura.quantidade).format('0,0')}} {{negocioCultura.unidade_medida.plural}}
+                        {{negocioCulturaRestanteLabel(negocioCultura)}}
                       </div>
                     </q-item-main>
                   </q-item>
@@ -60,7 +60,7 @@
                   align="center"
                   float-label="Unidade de medida"
                   :options="parsedUnidades(unidadesMedida)"
-                  v-model="fixacao.unidadeMedidaQuantidadeId" v-if="fixacao.negocioCultura"
+                  v-model="fixacao.unidadeMedidaQuantidadeId" v-if="selectedNegocioCultura"
                 />
               </div>
             </div>
@@ -104,7 +104,7 @@
                   align="center"
                   float-label="Unidade de medida"
                   :options="parsedUnidades(unidadesMedida)"
-                  v-model="fixacao.unidadeMedidaQuantidadeId"
+                  v-model="fixacao.unidadeMedidaPrecoId"
                 />
               </div>
             </div>
@@ -159,7 +159,7 @@
       </q-step>
 
       <!--PASSO 6 INFORMAR DESCONTOS VALORES -->
-      <q-step title="Descontos e acréscimos" name="descontosAcrescimos" :disable="!fixacao.isPrecoLiquido.value">
+      <q-step title="Descontos e acréscimos" name="descontosAcrescimos" :disable="selectedDescontoAcrescimoType !== 2">
         <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
           <div class="col-xs-12 col-sm-9 col-md-7 col-lg-5">
 
@@ -173,7 +173,7 @@
                 <custom-input-text type="number" :model="fixacao.totalBruto" :disable="true" align="right" :prefix="fixacao.moeda.simbolo" />
               </div>
               <div class="col-5 self-center" align="end">
-                {{ numeral(totalBrutoUn).format('0,0.00') }} <span class="text-faded">por Saca 60 kg</span>
+                {{ numeral(totalBrutoUn).format('0,0.00') }} <span class="text-faded">por {{getUnidadeMedidaById(fixacao.unidadeMedidaPrecoId).plural}}</span>
               </div>
 
               <div class="col-3 self-center">Impostos:</div>
@@ -182,7 +182,7 @@
               </div>
               <div class="col-5 self-center" align="end">
                 {{ numeral(totalImpostosUn).format('0,0.00') }}
-                <span class="text-faded">por Saca 60 kg</span>
+                <span class="text-faded">por {{getUnidadeMedidaById(fixacao.unidadeMedidaPrecoId).plural}}</span>
               </div>
 
               <div class="col-3 self-center">Descontos:</div>
@@ -191,7 +191,7 @@
               </div>
               <div class="col-5 self-center" align="end">
                 {{ numeral(totalDescontosUn).format('0,0.00') }}
-                <span class="text-faded">por Saca 60 kg</span>
+                <span class="text-faded">por {{getUnidadeMedidaById(fixacao.unidadeMedidaPrecoId).plural}}</span>
               </div>
 
               <div class="col-3 self-center">Acrescimos:</div>
@@ -200,7 +200,7 @@
               </div>
               <div class="col-5 self-center" align="end">
                 {{ numeral(totalAcrescimosUn).format('0,0.00') }}
-                <span class="text-faded">por Saca 60 kg</span>
+                <span class="text-faded">por {{getUnidadeMedidaById(fixacao.unidadeMedidaPrecoId).plural}}</span>
               </div>
 
               <div class="col-3 self-center">Total:</div>
@@ -209,7 +209,7 @@
               </div>
               <div class="col-5 self-center" align="end">
                 {{ numeral(totalLiquidoUn).format('0,0.00') }}
-                <span class="text-faded">por Saca 60 kg</span>
+                <span class="text-faded">por {{getUnidadeMedidaById(fixacao.unidadeMedidaPrecoId).plural}}</span>
               </div>
             </div>
 
@@ -351,6 +351,7 @@
         currentStep: 'negocioCultura',
         fixacao: new Fixacao(),
         negocio: null,
+        selectedNegocioCultura: null,
         maxQuantidade: 0,
         unidadesMedida: [],
         dataAtual: this.moment().format('YYYYMMDD'),
@@ -372,10 +373,10 @@
         deep: true
       },
       currentStep: function (val) {
-        if(val == 'vencimentos'){
+        if(val === 'vencimentos'){
           this.generateFormFixacaoParcelas()
         }
-        if(val != 'vencimentos'){
+        if(val !== 'vencimentos'){
           this.fixacaoParcelas = [];
         }
       }
@@ -422,7 +423,7 @@
         this.fixacao = new Fixacao();
         this.listNegociosCulturas(negocio.id)
         this.listMoedas();
-        this.listContasBancarias(negocio.pessoaId.value)
+        this.listContasBancarias(negocio.pessoa.id)
       },
       closeModal: function(){
         this.isModalOpened = false;
@@ -430,22 +431,21 @@
         this.$emit('modal-closed')
       },
       selectNegocioCultura: function(negocioCultura){
-        this.fixacao.negocioCultura = negocioCultura;
-        this.maxQuantidade = negocioCultura.quantidade;
+        this.selectedNegocioCultura = negocioCultura;
+        this.maxQuantidade = negocioCultura.quantidade - negocioCultura.quantidade_ocupada;
         this.fixacao.quantidade.value = this.maxQuantidade;
-        this.fixacao.unidadeMedidaQuantidadeId = negocioCultura.unidade_medida.id;
+        this.fixacao.unidadeMedidaPrecoId = negocioCultura.unidade_medida.id;
+        this.fixacao.unidadeMedidaQuantidadeId = negocioCultura.safra_cultura.cultura.default_unidade_preco_id;
         this.goToNextStep();
       },
       isNegocioCulturaSelected: function(id) {
-        if (this.fixacao.negocioCultura === null) {
+        if(!this.selectedNegocioCultura){
           return false;
         }
-        if (this.fixacao.negocioCultura.id === id) {
-          return true;
-        }
+        return this.selectedNegocioCultura.id === id;
       },
       isNextFixacaoStep: function() {
-        if(this.fixacao.negocioCultura == null && this.currentStep === 'negocioCultura'){
+        if(this.selectedNegocioCultura == null && this.currentStep === 'negocioCultura'){
           return true;
         }
         if(this.currentStep === 'quantidade'){
@@ -479,8 +479,11 @@
           this.selectedDescontoAcrescimoType = null;
         }else{
           this.selectedDescontoAcrescimoType = type;
-          if(this.selectedDescontoAcrescimoType === 2){
+          if(this.selectedDescontoAcrescimoType === 1){
             this.fixacao.isPrecoLiquido.value = true;
+            this.currentStep = 'contaDeposito';
+          }else if(this.selectedDescontoAcrescimoType === 2){
+            this.fixacao.isPrecoLiquido.value = false;
             this.currentStep = 'descontosAcrescimos';
           }else{
             this.fixacao.isPrecoLiquido.value = false;
@@ -546,7 +549,8 @@
       },
       saveAttachFixacao: function(){
         this.fixacao.parcelas = this.fixacaoParcelas;
-        negocioService.saveAttachFixacao(this.fixacao.getValues()).then(response => {
+        this.fixacao.dataFixacao.value = new Date().toLocaleString();
+        negocioService.saveAttachFixacao(this.selectedNegocioCultura.id, this.fixacao.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Fixação vinculada com sucesso'});
             this.closeModal();
@@ -580,6 +584,9 @@
           this.unidadesMedida = response.data;
         })
       },
+      getUnidadeMedidaById: function(id){
+        return this.unidadesMedida.filter(unidade => unidade.id = id)[0];
+      },
       listNegociosCulturas: function(negocioId){
         negocioService.listNegociosCulturas(negocioId).then(response => {
           this.negociosCulturas = response.data;
@@ -594,7 +601,17 @@
         contaBancariaService.listContasPorPessoa(pessoaId).then(response => {
           this.contasBancarias = response.data;
         });
-      }
+      },
+      negocioCulturaRestanteLabel: function(negocioCultura){
+        console.log(negocioCultura)
+        if(negocioCultura.quantidade_ocupada > 0){
+          return (negocioCultura.quantidade - negocioCultura.quantidade_ocupada)
+            + " de " + negocioCultura.quantidade + ' ' + negocioCultura.unidade_medida.plural + ' disponíveis';
+        }else{
+          return negocioCultura.quantidade + ' ' + negocioCultura.unidade_medida.plural + ' disponíveis';
+        }
+
+      },
     }
   }
 </script>
