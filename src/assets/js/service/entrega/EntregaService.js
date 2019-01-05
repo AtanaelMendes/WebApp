@@ -11,9 +11,9 @@ export default {
       })
     });
   },
-  listCargasNoArmazem(){
+  listEntregasNoArmazem(){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entregas?staus=no-armazem').then( response => {
+      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=no_armazem').then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)

@@ -72,31 +72,39 @@
     <!--TAB NO ARMAZEM-->
     <div class="row gutter-sm space-end q-ma-lg" v-if="tabs == 'no-armazem' ">
 
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="cargaNoArmazem in cargasNoArmazem" :key="cargaNoArmazem.id">
-        <q-card @click.native="viewCarga(cargaNoArmazem.id)">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="entrega in entregasNoArmazem" :key="entrega.id">
+        <q-card @click.native="viewCarga(entrega.id)">
           <q-card-media>
-            <img :src=" 'assets/images/'+cargaNoArmazem.id+'.jpg' "/>
+            <img src="assets/images/icon-no-image.svg" v-if="!entrega.caminhao.image"/>
+            <img :src="entrega.caminhao.image" v-if="entrega.caminhao.image"/>
           </q-card-media>
           <q-card-separator/>
 
           <q-card-title class="q-py-xs">
-            {{ cargaNoArmazem.caminhao }}
+            <div>
+              {{ entrega.caminhao.nome }}
+              <span class="text-faded float-right q-body-1">{{entrega.caminhao.placa}}</span>
+            </div>
+            <span slot="subtitle">Enviado para o armazém {{moment(entrega.inicio_carregamento).fromNow()}}</span>
           </q-card-title>
           <q-card-separator/>
 
           <q-card-main class="gutter-y-xs">
             <div class="col-12">
-              {{cargaNoArmazem.motorista}}
-            </div>
-            <div class="col-12">
-              Hora do envio {{moment(cargaNoArmazem.inicio_carregamento).calendar()}}
+              <span class="q-subheading">{{entrega.armazem.nome}}</span>
+              <div class="q-my-xs ">
+                <span class="text-faded q-body-1">{{entrega.armazem.localizacao}}</span>
+              </div>
+              <div class="q-mt-md">Motorista:
+                <span class="text-faded q-body-1">{{entrega.motorista}}</span>
+              </div>
             </div>
           </q-card-main>
         </q-card>
       </div>
 
       <!--EMPTY LIST-->
-      <div class="col-12" v-if="cargasNoArmazem <= 0">
+      <div class="col-12" v-if="entregasNoArmazem <= 0">
         <div class="row justify-center items-center" style="min-height: 40vh">
           <div class="col-6 text-center">
             <img src="assets/images/sad_2.svg" class="responsive"/>
@@ -194,29 +202,7 @@
         tabs: 'carregando',
         entregas: [],
         entregasCarregando:[],
-        cargasNoArmazem:[
-          {
-            id: 1,
-            caminhao: 'Feneme',
-            motorista: 'Tiburcio',
-            inicio_carregamento: '2018/12/26 13:30:22',
-            envio_armazem: '2018/12/26 14:30:10'
-          },
-          {
-            id: 2,
-            caminhao: 'Black Pearl',
-            motorista: 'Jack Sparrow',
-            inicio_carregamento: '2018/12/27 14:30:22',
-            envio_armazem: '2018/12/27 15:30:10'
-          },
-          {
-            id: 3,
-            caminhao: 'Holandês Voador',
-            motorista: 'Barba Negra',
-            inicio_carregamento: '2018/12/28 15:30:22',
-            envio_armazem: '2018/12/26 16:30:10'
-          }
-        ],
+        entregasNoArmazem:[],
         cargasEntregue:[],
       }
     },
@@ -229,8 +215,10 @@
           this.entregasCarregando = response.data;
         })
       },
-      listCargasNoArmazem: function () {
-
+      listEntregasNoArmazem: function () {
+        entregaService.listEntregasNoArmazem().then(response => {
+          this.entregasNoArmazem = response.data;
+        })
       },
       listCargasEntregues: function () {
 
@@ -241,6 +229,7 @@
     },
     mounted () {
       this.listEntregasCarregando();
+      this.listEntregasNoArmazem();
       // this.$root.$on('refreshSafraList', () => {
       //   this.listSafras();
       // });
