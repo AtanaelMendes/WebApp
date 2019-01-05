@@ -51,7 +51,7 @@
                   <q-popover>
                     <q-list link class="no-border">
                       <q-item v-close-overlay @click.native="addTalhaoPercentage()">
-                        <q-item-main label="Definir Porc. do talhão"/>
+                        <q-item-main label="Definir Porc. dos talhões"/>
                       </q-item>
                       <q-item v-close-overlay @click.native="addTalhao()">
                         <q-item-main label="Adiconar talhão"/>
@@ -294,6 +294,9 @@
     <!--MODAL INFORMAR TICKET-->
     <new-ticket-modal ref="newTicketModal"/>
 
+    <!--MODAL INFORMAR PORCENTAGEM DOS TALHOES-->
+    <add-talhao-percentage-modal ref="addTalhaoPercentageModal"/>
+
   </custom-page>
 </template>
 <script>
@@ -301,6 +304,7 @@
   import customPage from 'components/CustomPage.vue'
   import sendEntregaModal from 'components/entrega/SendEntregaModal'
   import newTicketModal from 'components/entrega/NewTicketModal'
+  import addTalhaoPercentageModal from 'components/entrega/AddTalhaoPercentageModal'
   import ticketService from 'assets/js/service/entrega/TicketService'
   export default {
     name: "carga-view",
@@ -309,6 +313,7 @@
       customPage,
       newTicketModal,
       sendEntregaModal,
+      addTalhaoPercentageModal,
     },
     data () {
       return {
@@ -333,9 +338,10 @@
       newTicket: function(){
         this.$refs.newTicketModal.openModal(this.entrega)
       },
-
       addTalhao: function(){},
-      addTalhaoPercentage: function(){},
+      addTalhaoPercentage: function(){
+        this.$refs.addTalhaoPercentageModal.openModal()
+      },
       deleteTalhao: function(id){
         this.$q.dialog({
           title: 'Atenção',
@@ -366,7 +372,6 @@
       updateNota: function(){},
       desdobrarCarga: function(){},
 
-      saveTicket: function(){},
       deleteTicket: function(){
         this.$q.dialog({
           title: 'Atenção',
