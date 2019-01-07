@@ -1,7 +1,6 @@
 <template>
   <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Detalhes do Negocio" navigation_type="menu" >
-    </toolbar>
+    <toolbar slot="toolbar" title="Detalhes do Negocio" navigation_type="back" @navigation_clicked="backAction"></toolbar>
 
     <!--CONTRATO VIEW-->
     <div class="row gutter-sm space-end q-ma-lg" v-if="negocio">
@@ -390,7 +389,9 @@
           //this.negocio = new Negocio(response.data);
         });
       },
-
+      backAction: function () {
+        this.$router.push({name: 'negocios'});
+      },
     },
     mounted () {
       this.getNegocioById();

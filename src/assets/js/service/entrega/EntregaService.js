@@ -30,7 +30,7 @@ export default {
     });
   },
 
-  getCargaById(id){
+  getEntregaById(id){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega/'+ id).then( response => {
         resolve(response);
@@ -84,9 +84,28 @@ export default {
       })
     });
   },
+
   saveTalhaoPercentage(params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ id, params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
+  saveAddTalhao(params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ id, params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
+  deleteTalhao(id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.delete('produtor/'+ produtorId + '/entrega/' + id).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)

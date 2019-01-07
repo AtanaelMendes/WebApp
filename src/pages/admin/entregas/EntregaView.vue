@@ -1,6 +1,6 @@
 <template>
   <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Detalhes da entrega" navigation_type="menu"></toolbar>
+    <toolbar slot="toolbar" title="Detalhes da entrega" navigation_type="back" @navigation_clicked="backAction"></toolbar>
 
     <div class="row space-end gutter-sm q-pa-md">
 
@@ -20,7 +20,7 @@
             <q-btn class="float-right" icon="more_vert" round flat>
               <q-popover>
                 <q-list link class="no-border">
-                  <q-item v-close-overlay @click.native="updateDriver()">
+                  <q-item v-close-overlay @click.native="updateMotorista()">
                     <q-item-main label="Alterar Motorista"/>
                   </q-item>
                 </q-list>
@@ -297,27 +297,34 @@
     <!--MODAL INFORMAR PORCENTAGEM DOS TALHOES-->
     <add-talhao-percentage-modal ref="addTalhaoPercentageModal"/>
 
+    <!--MODAL ADD TALHAO-->
+    <new-entrega-modal ref="entregaModal"/>
+
   </custom-page>
 </template>
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
+  import ticketService from 'assets/js/service/entrega/TicketService'
+  import entregaService from 'assets/js/service/entrega/EntregaService'
   import sendEntregaModal from 'components/entrega/SendEntregaModal'
   import newTicketModal from 'components/entrega/NewTicketModal'
   import addTalhaoPercentageModal from 'components/entrega/AddTalhaoPercentageModal'
-  import ticketService from 'assets/js/service/entrega/TicketService'
+  import newEntregaModal from 'components/entrega/NewEntregaModal'
   export default {
     name: "carga-view",
     components: {
       toolbar,
       customPage,
       newTicketModal,
+      newEntregaModal,
       sendEntregaModal,
       addTalhaoPercentageModal,
     },
     data () {
       return {
         carga: true,
+        entregaView: null,
         entrega: {
           culturaId: 1,
           negocios_entregas: [
@@ -329,34 +336,42 @@
     },
     watch: {
     },
-    computed: {
-    },
     methods: {
       sendToWarehause: function(){
-        this.$refs.sendEntregaModal.openModal()
+        this.$refs.sendEntregaModal.openModal('sendEntrega')
+      },
+      updateNota: function(){
+        this.$refs.sendEntregaModal.openModal('updateNota')
+      },
+      desdobrarCarga: function(){
+        this.$refs.sendEntregaModal.openModal('desdobrarCarga')
+      },
+      updateMotorista: function(){
+        this.$refs.sendEntregaModal.openModal('updateMotorista')
       },
       newTicket: function(){
         this.$refs.newTicketModal.openModal(this.entrega)
       },
-      addTalhao: function(){},
+
+      // TODO passar o id do caminhao no addTalhao
+      addTalhao: function(){
+        this.$refs.entregaModal.openModal(1)
+      },
       addTalhaoPercentage: function(){
         this.$refs.addTalhaoPercentageModal.openModal()
       },
       deleteTalhao: function(id){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente deseja apagar esta Negocio?',
+          message: 'Realmente deseja apagar este talhão?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          negocioService.deleteNegocio(id).then(response => {
-            this.listCulturas()
+          entregaService.deleteTalhao(id).then(response => {
+            this.getEntregaById()
           })
         }).catch(()=>{});
       },
-
-      updateDriver: function(){},
-
       deleteNegocio: function(){
         this.$q.dialog({
           title: 'Atenção',
@@ -369,9 +384,6 @@
           })
         }).catch(()=>{});
       },
-      updateNota: function(){},
-      desdobrarCarga: function(){},
-
       deleteTicket: function(){
         this.$q.dialog({
           title: 'Atenção',
@@ -384,7 +396,14 @@
           })
         }).catch(()=>{});
       },
-
+      getEntregaById: function(){
+        entregaService.getEntregaById(id).then(response => {
+          this.entregaView = response.data;
+        })
+      },
+      backAction: function () {
+        this.$router.push({name: 'entregas'});
+      },
     },
     mounted () {
       // this.$root.$on('refreshSafraList', () => {
