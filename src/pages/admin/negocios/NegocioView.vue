@@ -90,80 +90,91 @@
           </div>
 
         </div>
-      </template>
 
-      <!--NEGOCIO FIXAÇOES-->
-      <template>
-        <div :class="direita">
-          <div class="row">
+        <!--NEGOCIO CULTURA FIXAÇOES-->
 
-            <div class="col-12 q-pb-xs">FINACEIRO</div>
-            <div class="col-12 q-pb-xs">
-              Recebido R$ 100.000,00
-            </div>
-            <div class="col-12  text-faded">
-              R$ 20.000,00 em 15 fev 2019 na conta 22610-0
-            </div>
-            <div class="col-12  text-faded q-pb-xs">
-              R$ 50.000,00 em (USD 12.88593 a taxa de 3,8802) em 01 fev na conta 22610-0
-            </div>
-
-            <div class="col-12 q-pb-xs">
-              Para receber R$ 126.000,00
-            </div>
-            <div class="col-12  text-faded">
-              R$ 30.000,00 em 01 mar 2019
-            </div>
-            <div class="col-12  text-faded">
-              R$ 96.000,00 em 15 mar 2019
-            </div>
-
-          </div>
-        </div>
-
-        <div :class="esquerda">
-          <div class="row gutter-xs">
-
-            <div class="col-12">
+        <template v-for="(fixacao, index) in cultura.fixacoes">
+          <!--FIXAÇOES TITULOS-->
+          <template v-if="fixacao.titulos">
+            <div :class="direita">
               <div class="row">
-                <div class="col-9 self-center">3000 SC60 EM 25 Jan 2018</div>
-                <div class="col-3 self-center" align="end">
-                  <q-btn icon="more_vert" color="primary" flat dense round></q-btn>
+
+                <div class="col-12 q-pb-xs">FINACEIRO</div>
+
+                <div class="col-12 q-pb-xs">
+                  Pagos:
+                </div>
+                <div class="row col-12" v-for="(titulo, index) in fixacao.titulos.pagos">
+                  <div class="col-12 q-pb-xs">
+                    ({{index}}) Total: {{titulo.total}}
+                  </div>
+                  <div class="col-12  text-faded" v-for="item in titulo.itens">
+                    {{item[0]}} <br/><span class="q-caption">{{item[1]}}</span>
+                  </div>
+                  <!--<div class="col-12  text-faded q-pb-xs">-->
+                  <!--R$ 50.000,00 em (USD 12.88593 a taxa de 3,8802) em 01 fev na conta 22610-0-->
+                  <!--</div>-->
+                </div>
+
+                <div class="col-12 q-pb-xs">
+                  Para pagar:
+                </div>
+                <div class="row col-12" v-for="(titulo, index) in fixacao.titulos.para_pagar">
+                  <div class="col-12 q-pb-xs">
+                    ({{index}}) Total: {{titulo.total}}
+                  </div>
+                  <div class="col-12  text-faded" v-for="item in titulo.itens">
+                    {{item}}
+                  </div>
                 </div>
               </div>
             </div>
+          </template>
 
-            <div class="col-12">
-              <div class="row gutter-xs">
-                <div class="col-4 q-pb-xs"></div>
-                <div class="col-4 q-pb-xs ">SC60</div>
-                <div class="col-4 q-pb-xs ">Total</div>
+          <div :class="esquerda">
+            <div class="row gutter-xs">
 
-                <div class="col-4 text-faded"> Bruto </div>
-                <div class="col-4 text-faded">R$ 68,00</div>
-                <div class="col-4 text-faded">R$ 205.500,00</div>
-
-                <div class="col-4 text-faded"> Impostos </div>
-                <div class="col-4 text-faded">R$ 2,61</div>
-                <div class="col-4 text-faded">R$ 7.816,50</div>
-
-                <div class="col-4 text-faded"> Acréscimos </div>
-                <div class="col-4 text-faded">R$ 0,50</div>
-                <div class="col-4 text-faded">R$ 1.500,00</div>
-
-                <div class="col-4 text-faded"> Descontos </div>
-                <div class="col-4 text-faded">R$ 0,75</div>
-                <div class="col-4 text-faded">R$ 2.250,00</div>
-
-                <div class="col-4"> Líquido </div>
-                <div class="col-4">R$ 65,64</div>
-                <div class="col-4">R$ 196.933,50</div>
-
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-9 self-center">{{fixacao.quantidade}} {{fixacao.unidade_medida_quantidade.sigla}} em {{moment(fixacao.data_fixacao).format('DD [de] MMMM [de] YYYY')}}</div>
+                  <div class="col-3 self-center" align="end">
+                    <q-btn icon="more_vert" color="primary" flat dense round></q-btn>
+                  </div>
+                </div>
               </div>
-            </div>
 
+              <div class="col-12">
+                <div class="row gutter-xs">
+                  <div class="col-4 q-pb-xs"></div>
+                  <div class="col-4 q-pb-xs " align="end">{{fixacao.unidade_medida_preco.sigla}}</div>
+                  <div class="col-4 q-pb-xs " align="end">Total</div>
+
+                  <div class="col-4 text-faded"> Bruto </div>
+                  <div class="col-4 text-faded" align="end">{{fixacao.bruto}} {{fixacao.moeda.simbolo}}</div>
+                  <div class="col-4 text-faded" align="end">{{fixacao.total_bruto}} {{fixacao.moeda.simbolo}}</div>
+
+                  <div class="col-4 text-faded"> Impostos </div>
+                  <div class="col-4 text-faded" align="end">{{fixacao.impostos}} {{fixacao.moeda.simbolo}}</div>
+                  <div class="col-4 text-faded" align="end">{{fixacao.total_impostos}} {{fixacao.moeda.simbolo}}</div>
+
+                  <div class="col-4 text-faded"> Acréscimos </div>
+                  <div class="col-4 text-faded" align="end">{{fixacao.acrescimos}} {{fixacao.moeda.simbolo}}</div>
+                  <div class="col-4 text-faded" align="end">{{fixacao.total_acrescimos}} {{fixacao.moeda.simbolo}}</div>
+
+                  <div class="col-4 text-faded"> Descontos </div>
+                  <div class="col-4 text-faded" align="end">{{fixacao.descontos}} {{fixacao.moeda.simbolo}}</div>
+                  <div class="col-4 text-faded" align="end">{{fixacao.total_descontos}} {{fixacao.moeda.simbolo}}</div>
+
+                  <div class="col-4"> Líquido </div>
+                  <div class="col-4" align="end">{{fixacao.liquido}} {{fixacao.moeda.simbolo}}</div>
+                  <div class="col-4" align="end">{{fixacao.total_liquido}} {{fixacao.moeda.simbolo}}</div>
+
+                </div>
+              </div>
+
+            </div>
           </div>
-        </div>
+        </template>
       </template>
 
       <!--TITULOS-->

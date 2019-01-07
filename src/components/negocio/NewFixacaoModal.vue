@@ -585,7 +585,7 @@
         })
       },
       getUnidadeMedidaById: function(id){
-        return this.unidadesMedida.filter(unidade => unidade.id = id)[0];
+        return this.unidadesMedida.filter(unidade => unidade.id === id)[0];
       },
       listNegociosCulturas: function(negocioId){
         negocioService.listNegociosCulturas(negocioId).then(response => {
@@ -603,7 +603,6 @@
         });
       },
       negocioCulturaRestanteLabel: function(negocioCultura){
-        console.log(negocioCultura)
         if(negocioCultura.quantidade_ocupada > 0){
           return (negocioCultura.quantidade - negocioCultura.quantidade_ocupada)
             + " de " + negocioCultura.quantidade + ' ' + negocioCultura.unidade_medida.plural + ' disponíveis';
