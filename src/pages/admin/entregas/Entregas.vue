@@ -220,7 +220,7 @@
           this.entregasNoArmazem = response.data;
         })
       },
-      listCargasEntregues: function () {
+      listEntregasEntregues: function () {
 
       },
       viewCarga: function (id) {
@@ -230,9 +230,19 @@
     mounted () {
       this.listEntregasCarregando();
       this.listEntregasNoArmazem();
-      // this.$root.$on('refreshSafraList', () => {
-      //   this.listSafras();
-      // });
+      this.$root.$on('refreshEntregasList', (status) => {
+        switch (status) {
+          case 'carregando':
+            this.listEntregasCarregando();
+            break;
+          case 'no_armazem':
+            this.listEntregasNoArmazem();
+            break;
+          case 'entregue':
+            this.listEntregasEntregues();
+            break;
+        }
+      });
     },
   }
   // this.$q.notify({type: 'negative', message: 'aqui'})

@@ -5,7 +5,7 @@
 
       <!--PASSO 1 ESCOLHER NEGOCIO-->
       <!--TODO ordenar por data vencimento-->
-      <q-step default title="Escolher Negócico" name="negocio">
+      <q-step default title="Escolher Negócico" v-if="stepNegocio" name="negocio">
         <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
 
           <div class="col-12 text-center q-title">
@@ -45,7 +45,7 @@
       </q-step>
 
       <!--PASSO 2 ESCOLHER ARMAZEM -->
-      <q-step title="Escolher Armazém" name="armazem">
+      <q-step title="Escolher Armazém" v-if="stepArmazem" name="armazem">
         <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
 
           <div class="col-12 text-center q-title">
@@ -74,7 +74,7 @@
       </q-step>
 
       <!--PASSO 3 ESCOLHER MOTORISTA -->
-      <q-step title="Escolher Motorista" name="motorista">
+      <q-step title="Escolher Motorista" v-if="stepMotorista" name="motorista">
         <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
 
           <div class="col-12 text-center q-title">
@@ -115,7 +115,7 @@
       </q-step>
 
       <!--PASSO 4 INFORMACOES -->
-      <q-step title="Informações" name="informacoes">
+      <q-step title="Informações" v-if="stepInformacoes" name="informacoes">
         <div class="row justify-center items-center gutter-sm space-end" style="min-height: 80vh">
 
           <div class="col-12 text-center q-title">
@@ -171,8 +171,8 @@
 
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-      <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="currentStep != 'informacoes' "/>
-      <q-btn label="salvar" color="primary" @click="saveNewCarga" :disable="isNextStepEnabled()" v-if="currentStep == 'informacoes' "/>
+      <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="isBtnVisible"/>
+      <q-btn label="salvar" color="primary" @click="saveSendEntrega" :disable="isNextStepEnabled()" v-if="!isBtnVisible"/>
     </q-page-sticky>
 
   </q-modal>
@@ -229,6 +229,12 @@
         ],
         unidadesMedida: [],
 
+        stepNegocio: false,
+        stepArmazem: false,
+        stepMotorista: false,
+        stepInformacoes: false,
+        funcao: '',
+
         optionsIe:[
           {
             id: 1,
@@ -282,10 +288,54 @@
           return result;
         }
         return null;
-      }
+      },
+      isBtnVisible: function () {
+        if(this.currentStep === 'informacoes'){
+          return false
+        }
+        if(this.funcao == 'updateMotorista'){
+          return false
+        }
+        return true
+      },
     },
     methods: {
-      openModal: function(){
+      // FUNCAO = sendEntrega, updateNota, desdobrarCarga
+      openModal: function(funcao){
+        this.funcao = funcao;
+        switch (funcao) {
+          case 'sendEntrega':
+            this.currentStep = 'negocio';
+            this.stepNegocio = true;
+            this.stepArmazem = true;
+            this.stepMotorista = true;
+            this.stepInformacoes = true;
+          break;
+
+          case 'updateNota':
+            this.currentStep = 'informacoes';
+            this.stepNegocio = false;
+            this.stepArmazem = false;
+            this.stepMotorista = false;
+            this.stepInformacoes = true;
+          break;
+
+          case 'desdobrarCarga':
+            this.currentStep = 'negocio';
+            this.stepNegocio = true;
+            this.stepArmazem = false;
+            this.stepMotorista = false;
+            this.stepInformacoes = true;
+          break;
+
+          case 'updateMotorista':
+            this.currentStep = 'motorista';
+            this.stepNegocio = false;
+            this.stepArmazem = false;
+            this.stepMotorista = true;
+            this.stepInformacoes = false;
+          break;
+        }
         this.isModalOpened = true;
       },
       closeModal: function(){
@@ -337,11 +387,12 @@
           this.goToNextStep()
         }
       },
-      saveNewCarga: function(){
-        cargaService.saveNewCarga(this.sendCarga.getValues()).then(response => {
+      saveSendEntrega: function(){
+        cargaService.saveSendEntrega(this.sendCarga.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Carga enviada com sucesso'});
             this.closeModal();
+            this.$root.$emit('refreshEntregasList', 'no_armazem')
           }
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})

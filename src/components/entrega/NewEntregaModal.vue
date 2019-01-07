@@ -4,11 +4,11 @@
     <q-stepper key="novaEntrega" ref="stepperNovaEntrega" contractable color="positive" v-model="currentStep" class="no-shadow">
 
       <!--PASSO 1 ESCOLHER CAMINHAO -->
-      <q-step default title="Escolher caminhão" name="escolherCaminhao">
+      <q-step default title="Escolher caminhão" name="escolherCaminhao" v-if="!addNewTalhaoMode">
         <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
 
           <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="caminhao in caminhoes" :key="caminhao.id">
-            <q-card @click.native="selectCaminhao(caminhao)">
+            <q-card @click.native="selectCaminhao(caminhao.id)">
               <q-card-media overlay-position="full">
                 <img src="assets/images/icon-no-image.svg" v-if="!caminhao.image"/>
                 <img :src="caminhao.image" v-if="caminhao.image"/>
@@ -182,18 +182,26 @@
         selectedAreaId: null,
         selectedTalhaoId: null,
         selectedCultivarId: null,
+        addNewTalhaoMode: false,
       }
     },
     methods: {
-      openModal: function(){
+      openModal: function(caminhaoId = null){
         this.isModalOpened = true;
         this.novaEntrega = new NovaEntrega();
         this.selectedSafraCulturaId = null;
         this.selectedAreaId = null;
         this.selectedTalhaoId = null;
         this.selectedCultivarId = null;
-        this.listCaminhoes();
+
         this.listSafraCulturas();
+        if(caminhaoId){
+          this.addNewTalhaoMode = true;
+          this.selectCaminhao(caminhaoId);
+        }else{
+          this.listCaminhoes();
+          this.addNewTalhaoMode = false;
+        }
       },
       closeModal: function(){
         this.isModalOpened = false;
@@ -221,8 +229,8 @@
           this.caminhoes = response.data;
         })
       },
-      selectCaminhao: function(caminhao){
-        this.novaEntrega.caminhaoId = caminhao.id;
+      selectCaminhao: function(caminhaoId){
+        this.novaEntrega.caminhaoId = caminhaoId;
         this.goToNextStep()
       },
       listSafraCulturas: function(){
@@ -232,7 +240,7 @@
       },
       selectSafraCultura: function(safraCultura){
         this.selectedSafraCulturaId = safraCultura.id;
-        this.listSafraCulturaTalhaoBySafraCultura(safraCultura.id)
+        this.listSafraCulturaTalhaoBySafraCultura(safraCultura.id);
         this.goToNextStep()
       },
       listAreas: function(){
@@ -254,13 +262,11 @@
       },
       listTalhoesByArea(area_id){
         let filteredSafraCulturaTalhoes = this.safraCulturaTalhoes.filter(safraCulturaTalhao => safraCulturaTalhao.talhao.area.id === area_id);
-
         if(filteredSafraCulturaTalhoes === 1){
           console.log('saveEntrega')
           //TODO: Já selecionar o id de safraCulturaTalhao e enviar
           //return
         }
-
         this.talhoes = [];
         filteredSafraCulturaTalhoes.forEach(safraCulturaTalhao => {
           if(this.talhoes.length === 0){
@@ -271,8 +277,6 @@
             }
           }
         })
-
-
       },
       listSafraCulturaTalhaoBySafraCultura(safra_cultura_id){
         safraCulturaService.listFullSafraCulturaTalhao(safra_cultura_id).then(response => {
@@ -326,6 +330,7 @@
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Entrega criada com sucesso'});
             this.closeModal();
+            this.$root.$emit('refreshEntregasList', 'carregando')
           }
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
