@@ -107,6 +107,15 @@
         </q-card>
       </div>
 
+      <!--GRAFICOS-->
+      <div class="col-12 row">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+          <q-card>
+            <grafico-colheita-diaria/>
+          </q-card>
+        </div>
+      </div>
+
       <!--CARD DOS TALHOES-->
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="culturaTalhao in safraCultura.cultura_talhoes" :key="culturaTalhao.id">
         <q-card>
@@ -277,7 +286,7 @@
     <q-modal v-model="modalAddCultivarInfo" maximized>
       <q-stepper ref="stepper" contractable color="positive" v-model="currentStep" class="no-shadow">
 
-        <!--ESCOLHER MARCA-->
+        <!-- PASSO 1 ESCOLHER MARCA-->
         <q-step default title="Marca" name="marca">
 
           <div class="row q-ma-md gutter-xs justify-center" style="min-height: 80vh">
@@ -343,12 +352,14 @@
   import customInputText from 'components/CustomInputText.vue'
   import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
   import SafraCulturaTalhaoEdit from 'assets/js/model/safra/SafraCulturaTalhaoEdit'
+  import graficoColheitaDiaria from 'components/graficos/GraficoColheitaDiaria.vue'
   export default {
     name: "safra-cultura",
     components: {
       toolbar,
       customPage,
       customInputText,
+      graficoColheitaDiaria,
     },
     data () {
       return {
