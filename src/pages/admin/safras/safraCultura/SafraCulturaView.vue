@@ -3,177 +3,56 @@
     <toolbar slot="toolbar" v-if="safraCultura" :title="safraCultura.inicio + '/' + safraCultura.fim" navigation_type="back" @navigation_clicked="backAction" >
     </toolbar>
 
-    <div class="row q-pa-md gutter-sm space-end" v-if="safraCultura">
+    <div class="row q-pa-md gutter-sm space-end ">
 
       <!--HEADER-->
       <div class="col-12">
-        <q-card class="q-mb-md">
-          <div class="row">
+        <q-card class="row">
 
-            <!--IMAGEM HEADER-->
-            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-              <div style="max-height: 200px; overflow: hidden">
-                <img src="assets/images/icon-no-image.svg" class="responsive" style="margin-top:-200px" v-if="!safraCultura.cultura.image"/>
-                <img :src="safraCultura.cultura.image" class="responsive" v-if="safraCultura.cultura.image"/>
-              </div>
-            </div>
-
-            <!--INFO DO HEADER-->
-            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-              <div class="row gutter-y-xs q-pa-md">
-
-                <div class="col-12 text-faded" v-if="loaded">
-                  <!--Plantio total em {{getSafraCulturaTotalArea()}} hectares (100%)-->
-                  Plantio total em {{safraCultura.plantioTotal}} {{safraCultura.cultura.estimativa_unidade_area.plural}} ({{Math.round((safraCultura.plantioTotal / safraCultura.area_total) * 100)}}%)
-                </div>
-
-                <!--NEGOCIADO-->
-                <div class="col-12">
-                  <!--<div class="row">-->
-
-                    <!--<div class="col-6 q-caption text-faded">-->
-                      <!--Negociado 000%-->
-                    <!--</div>-->
-
-                    <!--&lt;!&ndash;BARRA DE % DO NEGOCIADO&ndash;&gt;-->
-                    <!--<div class="col-6 self-center">-->
-                      <!--<q-progress color="deep-orange" :percentage="progressBuffer"/>-->
-                    <!--</div>-->
-
-                    <!--&lt;!&ndash;TOTAL SACAS POR HECTARE&ndash;&gt;-->
-                    <!--<div class="col-6">-->
-                      <!--0000 Sc/Ha-->
-                    <!--</div>-->
-
-                    <!--&lt;!&ndash;TOTAL DE SACAS&ndash;&gt;-->
-                    <!--<div class="col-6">-->
-                      <!--00000 Sacas-->
-                    <!--</div>-->
-
-                  <!--</div>-->
-                </div>
-
-                <!--ESTIMATIVA TOTAL-->
-                <div class="col-12">
-                  <div class="row">
-
-                    <div class="col-12 q-caption text-faded">
-                      Estimativa
-                    </div>
-
-                    <!--ESTIMATIVA TOTAL DE SACAS POR HECTARE-->
-                    <div class="col-6">
-                      {{safraCultura.estimativa}} {{safraCultura.cultura.estimativa_unidade_medida.sigla}}/{{safraCultura.cultura.estimativa_unidade_area.sigla}}
-                    </div>
-
-                    <!--ESTIMATIVA TOTAL DE SACAS-->
-                    <div class="col-6">
-                      {{safraCultura.estimativa_total}} {{safraCultura.cultura.estimativa_unidade_medida.plural}}
-                    </div>
-
-                  </div>
-                </div>
-
-                <!--TOTAL COLHIDO-->
-                <div class="col-12">
-                  <!--<div class="row">-->
-
-                    <!--<div class="col-12 q-mb-xs">-->
-                      <!--<div class="row">-->
-                        <!--<div class="col-6 q-caption text-faded">-->
-                          <!--Colhido 000%-->
-                        <!--</div>-->
-                        <!--<div class="col-6 self-center">-->
-                          <!--<q-progress color="deep-orange" :percentage="progressBuffer"/>-->
-                        <!--</div>-->
-                      <!--</div>-->
-
-                    <!--</div>-->
-
-                    <!--<div class="col-6">-->
-                      <!--000 Sc/Ha-->
-                    <!--</div>-->
-
-                    <!--<div class="col-6">-->
-                      <!--00000 Sacas-->
-                    <!--</div>-->
-
-                  <!--</div>-->
-                </div>
-
-              </div>
+          <!--IMAGEM HEADER-->
+          <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+            <div style="max-height: 200px; overflow: hidden">
+              <img :src="safraCultura.cultura.image" class="responsive" v-if="safraCultura.cultura.image"/>
+              <img src="assets/images/icon-no-image.svg" class="responsive" style="margin-top:-200px" v-if="!safraCultura.cultura.image"/>
             </div>
           </div>
-        </q-card>
-      </div>
 
-      <!--GRAFICOS-->
-      <div class="col-12 row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-          <q-card>
-            <grafico-colheita-diaria/>
-          </q-card>
-        </div>
-      </div>
+          <!--INFO DO HEADER-->
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <div class="row gutter-y-xs q-pa-md">
 
-      <!--CARD DOS TALHOES-->
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="culturaTalhao in safraCultura.cultura_talhoes" :key="culturaTalhao.id">
-        <q-card>
-
-          <q-card-media>
-            <img src="assets/images/icon-no-image.svg" v-if="!culturaTalhao.talhao.image"/>
-            <img :src="culturaTalhao.talhao.image" v-if="culturaTalhao.talhao.image"/>
-          </q-card-media>
-          <q-card-separator/>
-
-          <q-card-title class="q-py-sm q-px-none q-pl-md">
-            {{culturaTalhao.talhao.nome}}
-            <q-btn round flat dense icon="more_vert" slot="right">
-              <q-popover>
-                <q-list link class="no-border">
-                  <q-item v-close-overlay @click.native="addCultivarModal(culturaTalhao)">
-                    <q-item-main label="Informar cultivar"/>
-                  </q-item>
-                  <q-item v-close-overlay @click.native="editSafraCulturaTalhao(culturaTalhao)">
-                    <q-item-main label="Editar"/>
-                  </q-item>
-                  <q-item v-close-overlay @click.native="deleteSafraCulturaTalhao(culturaTalhao)">
-                    <q-item-main label="Excluir"/>
-                  </q-item>
-                </q-list>
-              </q-popover>
-            </q-btn>
-          </q-card-title>
-          <q-card-separator/>
-
-          <q-card-main class="gutter-xs">
-
-            <!--CULTURA TALHAO-->
-            <div class="">
-              <div class="col-12 text-faded q-caption">
-                {{formatCulturaTalhaoTamanhoLabel(culturaTalhao)}}
+              <div class="col-12 text-faded" v-if="loaded">
+                <!--Plantio total em {{getSafraCulturaTotalArea()}} hectares (100%)-->
+                Plantio total em {{safraCultura.plantioTotal}} {{safraCultura.cultura.estimativa_unidade_area.plural}} ({{Math.round((safraCultura.plantioTotal / safraCultura.area_total) * 100)}}%)
               </div>
 
-              <div class="cultivar-container">
-                <div class="cultivar-item row" v-if="culturaTalhao.cultivar">
-                  <div class="col-xs-10 col-sm-10 col-md-9 col-lg-9 self-center">
-                    <span class="q-subheading">{{culturaTalhao.cultivar.nome}}</span>
-                  </div>
+              <!--NEGOCIADO-->
+              <div class="col-12">
+                <!--<div class="row">-->
 
-                  <div class="col-xs-2 col-sm-2 col-md-3 col-lg-3">
-                    <img :src="culturaTalhao.cultivar.image_path" class="responsive" v-if="culturaTalhao.cultivar.image_path"/>
-                  </div>
-                </div>
+                <!--<div class="col-6 q-caption text-faded">-->
+                <!--Negociado 000%-->
+                <!--</div>-->
 
-                <div class="cultivar-empty"  v-if="!culturaTalhao.cultivar">
-                  <q-icon name="warning" />
-                  <span>Nenhum cultivar adicionado ainda</span>
-                </div>
+                <!--&lt;!&ndash;BARRA DE % DO NEGOCIADO&ndash;&gt;-->
+                <!--<div class="col-6 self-center">-->
+                <!--<q-progress color="deep-orange" :percentage="progressBuffer"/>-->
+                <!--</div>-->
+
+                <!--&lt;!&ndash;TOTAL SACAS POR HECTARE&ndash;&gt;-->
+                <!--<div class="col-6">-->
+                <!--0000 Sc/Ha-->
+                <!--</div>-->
+
+                <!--&lt;!&ndash;TOTAL DE SACAS&ndash;&gt;-->
+                <!--<div class="col-6">-->
+                <!--00000 Sacas-->
+                <!--</div>-->
+
+                <!--</div>-->
               </div>
-            </div>
 
-            <!--ESTIMATIVA  TALHAO-->
-            <div class="row">
+              <!--ESTIMATIVA TOTAL-->
               <div class="col-12">
                 <div class="row">
 
@@ -181,48 +60,187 @@
                     Estimativa
                   </div>
 
+                  <!--ESTIMATIVA TOTAL DE SACAS POR HECTARE-->
                   <div class="col-6">
-                    {{culturaTalhao.estimativa}} {{safraCultura.cultura.estimativa_unidade_medida.sigla}}/{{safraCultura.cultura.estimativa_unidade_area.plural}}
+                    {{safraCultura.estimativa}} {{safraCultura.cultura.estimativa_unidade_medida.sigla}}/{{safraCultura.cultura.estimativa_unidade_area.sigla}}
                   </div>
 
-                  <div class="col-6 text-right">
-                    {{culturaTalhao.estimativa_total}} {{safraCultura.cultura.estimativa_unidade_medida.nome}}
+                  <!--ESTIMATIVA TOTAL DE SACAS-->
+                  <div class="col-6">
+                    {{safraCultura.estimativa_total}} {{safraCultura.cultura.estimativa_unidade_medida.plural}}
                   </div>
 
                 </div>
               </div>
-            </div>
 
-            <!--COLHIDO POR TALHAO-->
-            <div clas="row">
-              <!--<div class="col-12 gutter-y-xs">-->
-
+              <!--TOTAL COLHIDO-->
+              <div class="col-12">
                 <!--<div class="row">-->
-                  <!--<div class="col-6 text-faded">-->
-                    <!--Colhido 000%-->
-                  <!--</div>-->
-                  <!--<div class="col-6 self-center">-->
-                    <!--<q-progress color="deep-orange" :percentage="progressBuffer"/>-->
-                  <!--</div>-->
+
+                <!--<div class="col-12 q-mb-xs">-->
+                <!--<div class="row">-->
+                <!--<div class="col-6 q-caption text-faded">-->
+                <!--Colhido 000%-->
+                <!--</div>-->
+                <!--<div class="col-6 self-center">-->
+                <!--<q-progress color="deep-orange" :percentage="progressBuffer"/>-->
+                <!--</div>-->
                 <!--</div>-->
 
-                <!--<div class="row">-->
-                  <!--<div class="col-6">-->
-                    <!--000 Sc/Ha-->
-                  <!--</div>-->
-
-                  <!--<div class="col-6 text-right">-->
-                    <!--000 Sacas-->
-                  <!--</div>-->
                 <!--</div>-->
 
-              <!--</div>-->
-            </div>
+                <!--<div class="col-6">-->
+                <!--000 Sc/Ha-->
+                <!--</div>-->
 
+                <!--<div class="col-6">-->
+                <!--00000 Sacas-->
+                <!--</div>-->
+
+                <!--</div>-->
+              </div>
+
+            </div>
+          </div>
+
+        </q-card>
+      </div>
+
+      <!--GRAFICO COLHEITA DIARIA-->
+      <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">-->
+        <!--<grafico-colheita-diaria :height="200"/>-->
+      <!--</div>-->
+
+      <!--GRAFICO CLASSIFICACAO DIARIA-->
+      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <q-card class="full-height">
+          <q-card-title>
+            Classificação diária
+          </q-card-title>
+          <q-card-main>
+            <grafico-classificacoes-diaria :height="200" :width="100"/>
           </q-card-main>
         </q-card>
-
       </div>
+
+
+
+
+      <!--GRAFICO CLASSIFICACAO MEDIA ARMAZEM-->
+      <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">-->
+        <!--<grafico-classificacao-media-armazem :height="200"/>-->
+      <!--</div>-->
+
+      <!--TALHOES-->
+      <template v-if="safraCultura">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="culturaTalhao in safraCultura.cultura_talhoes" :key="culturaTalhao.id">
+
+          <q-card class="full-height">
+            <q-card-media>
+              <img src="assets/images/icon-no-image.svg" v-if="!culturaTalhao.talhao.image"/>
+              <img :src="culturaTalhao.talhao.image" v-if="culturaTalhao.talhao.image"/>
+            </q-card-media>
+            <q-card-separator/>
+
+            <q-card-title class="q-py-sm q-px-none q-pl-md">
+              {{culturaTalhao.talhao.nome}}
+              <q-btn round flat dense icon="more_vert" slot="right">
+                <q-popover>
+                  <q-list link class="no-border">
+                    <q-item v-close-overlay @click.native="addCultivarModal(culturaTalhao)">
+                      <q-item-main label="Informar cultivar"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="editSafraCulturaTalhao(culturaTalhao)">
+                      <q-item-main label="Editar"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="deleteSafraCulturaTalhao(culturaTalhao)">
+                      <q-item-main label="Excluir"/>
+                    </q-item>
+                  </q-list>
+                </q-popover>
+              </q-btn>
+            </q-card-title>
+            <q-card-separator/>
+
+            <q-card-main class="gutter-xs">
+
+              <!--CULTURA TALHAO-->
+              <div class="">
+                <div class="col-12 text-faded q-caption">
+                  {{formatCulturaTalhaoTamanhoLabel(culturaTalhao)}}
+                </div>
+
+                <div class="cultivar-container">
+                  <div class="cultivar-item row" v-if="culturaTalhao.cultivar">
+                    <div class="col-xs-10 col-sm-10 col-md-9 col-lg-9 self-center">
+                      <span class="q-subheading">{{culturaTalhao.cultivar.nome}}</span>
+                    </div>
+
+                    <div class="col-xs-2 col-sm-2 col-md-3 col-lg-3">
+                      <img :src="culturaTalhao.cultivar.image_path" class="responsive" v-if="culturaTalhao.cultivar.image_path"/>
+                    </div>
+                  </div>
+
+                  <div class="cultivar-empty"  v-if="!culturaTalhao.cultivar">
+                    <q-icon name="warning" />
+                    <span>Nenhum cultivar adicionado ainda</span>
+                  </div>
+                </div>
+              </div>
+
+              <!--ESTIMATIVA  TALHAO-->
+              <div class="row">
+                <div class="col-12">
+                  <div class="row">
+
+                    <div class="col-12 q-caption text-faded">
+                      Estimativa
+                    </div>
+
+                    <div class="col-6">
+                      {{culturaTalhao.estimativa}} {{safraCultura.cultura.estimativa_unidade_medida.sigla}}/{{safraCultura.cultura.estimativa_unidade_area.plural}}
+                    </div>
+
+                    <div class="col-6 text-right">
+                      {{culturaTalhao.estimativa_total}} {{safraCultura.cultura.estimativa_unidade_medida.nome}}
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+              <!--COLHIDO POR TALHAO-->
+              <div clas="row">
+                <!--<div class="col-12 gutter-y-xs">-->
+
+                <!--<div class="row">-->
+                <!--<div class="col-6 text-faded">-->
+                <!--Colhido 000%-->
+                <!--</div>-->
+                <!--<div class="col-6 self-center">-->
+                <!--<q-progress color="deep-orange" :percentage="progressBuffer"/>-->
+                <!--</div>-->
+                <!--</div>-->
+
+                <!--<div class="row">-->
+                <!--<div class="col-6">-->
+                <!--000 Sc/Ha-->
+                <!--</div>-->
+
+                <!--<div class="col-6 text-right">-->
+                <!--000 Sacas-->
+                <!--</div>-->
+                <!--</div>-->
+
+                <!--</div>-->
+              </div>
+
+            </q-card-main>
+          </q-card>
+
+        </div>
+      </template>
+
     </div>
 
     <!--MODAL UPDATE SAFRA CULTURA-->
@@ -353,6 +371,8 @@
   import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
   import SafraCulturaTalhaoEdit from 'assets/js/model/safra/SafraCulturaTalhaoEdit'
   import graficoColheitaDiaria from 'components/graficos/GraficoColheitaDiaria.vue'
+  import graficoClassificacoesDiaria from 'components/graficos/GraficoClassificacoesDiaria.vue'
+  import graficoClassificacaoMediaArmazem from 'components/graficos/GraficoClassificacaoMediaArmazem.vue'
   export default {
     name: "safra-cultura",
     components: {
@@ -360,6 +380,8 @@
       customPage,
       customInputText,
       graficoColheitaDiaria,
+      graficoClassificacoesDiaria,
+      graficoClassificacaoMediaArmazem,
     },
     data () {
       return {
