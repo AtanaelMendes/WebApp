@@ -74,49 +74,50 @@
               </div>
 
               <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
-                <pessoa-autocomplete label="Negociante" :model="negocio.pessoaId" :terms="terms" @input="selectedPessoa"/>
+                <!--<pessoa-autocomplete label="Negociante" :model="negocio.pessoaId" :terms="terms" @input="selectedPessoa"/>-->
+                <q-search align="center" v-model="searchPessoasQuery" placeholder="Busque por uma pessoa"/>
               </div>
             </div>
 
             <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
               <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
 
-                <div class="row" v-for="grupoEconomico in 1" :key="grupoEconomico">
+                <div class="row" v-for="grupo in pessoas" :key="grupo.id">
                   <div class="col-12">
 
                     <div class="row bg-blue-grey-1 q-pa-sm">
                       <div class="col-12 q-title">
-                        ADM
+                        {{grupo.nome}}
                       </div>
                     </div>
 
                     <div class="row justify-center">
                       <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
                         <q-list no-border link separator>
-                          <q-item v-for="pessoa in pessoas" :key="pessoa.id" @click.native="selectPesssoa(pessoa.id)">
-                            <div class="row">
+                          <q-item class="row" @click.native="selectPesssoa(pessoa.id)" v-for="pessoa in grupo.pessoas" :key="pessoa.id">
                               <div class="col-1">
                                 <q-btn icon="done" size="8px" round dense color="positive" v-if="pessoa.id == negocio.pessoaId.value"/>
                               </div>
-                              <div class="col-6">
+                              <div class="col-11">
                                 {{pessoa.nome}}
                               </div>
-                              <div class="col-5 q-caption text-faded text-right">
-                                20 Dezembro 2018
+                              <div class="col-12 offset-1 q-caption text-faded">
+                                {{pessoa.cpf ? pessoa.cpf : pessoa.cnpj}}
                               </div>
-                              <div class="col-11 offset-1 q-caption text-faded">
-                                50.721.088/0001-09 -  24813801-4
+                              <div class="col-12 offset-1 q-caption text-faded">
+                                {{pessoa.inscricao_estadual}} {{pessoa.inscricao_municipal}}
                               </div>
-                              <div class="col-11 offset-1 q-caption text-faded">
-                                Rua sem nome 2626, Camping Club, Sinop-MT
-                              </div>
-                            </div>
                           </q-item>
                         </q-list>
                       </div>
                     </div>
 
                   </div>
+                </div>
+
+                <div v-if="pessoas.length === 0" class="list-empty">
+                  <q-icon name="warning" />
+                  <span>Nenhum resultado encontrado</span>
                 </div>
 
               </div>
@@ -252,6 +253,11 @@
       customInputDatetime,
       pessoaAutocomplete
     },
+    watch:{
+      searchPessoasQuery: function(value){
+        this.searchPessoas(value);
+      }
+    },
     data () {
       return {
         contratos: [],
@@ -264,6 +270,7 @@
         currentStep: 'negociante',
         pessoas: [],
         tipoNegocios: [],
+        searchPessoasQuery: '',
       }
     },
     methods: {
@@ -276,7 +283,7 @@
       newNegocioModal: function(tipo_negocio_id){
         this.negocio.tipoNegocioId = tipo_negocio_id;
         this.modalNewNegocio = true;
-        this.listPessoas();
+        //this.listPessoas();
       },
       selectPesssoa: function(id){
         if(id === this.negocio.pessoaId.value){
@@ -370,11 +377,12 @@
           this.tipoNegocios = response.data;
         });
       },
-      listPessoas: function () {
-        pessoaService.listPessoasByProdutorId().then(response => {
+      searchPessoas: function (params) {
+        this.negocio.pessoaId.value = null;
+        pessoaService.searchPessoaGroupedByGrupoEconomico(params).then(response => {
           this.pessoas = response.data;
         });
-      }
+      },
     },
     mounted () {
       this.listTipoNegocios();
@@ -395,5 +403,21 @@
     right: 46px;
     border-radius: 6px;
     padding: 7px 10px;
+  }
+
+  .list-empty{
+    height: 55px;
+    text-align: center;
+    padding-top: 15px;
+  }
+  .list-empty span{
+    color: #8c8c8c;
+    font-weight: 300;
+    font-size: 15px;
+  }
+  .list-empty i{
+    color: #ffb500;
+    font-size: 20px;
+    margin-right: 6px;
   }
 </style>

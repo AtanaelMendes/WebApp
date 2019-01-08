@@ -30,6 +30,15 @@ export default {
       })
     });
   },
+  searchPessoaGroupedByGrupoEconomico: function(value){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get( 'pessoa?search='+value ).then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   searchPessoa: function(){
     return new Promise((resolve, reject) => {
       this.listPessoasByProdutorId().then(response => {
