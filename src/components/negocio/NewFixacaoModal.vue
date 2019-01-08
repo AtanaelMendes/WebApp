@@ -4,7 +4,7 @@
     <q-stepper key="fixacao" ref="stepperFixacao" contractable color="positive" v-model="currentStep" class="no-shadow" >
 
       <!--PASSO 1 ESCOLHER NEGOCIO CULTURA-->
-      <q-step default title="Escolher a safra cultura" name="negocioCultura">
+      <q-step default title="Safras" name="negocioCultura">
         <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
           <div class="col-xs-12 col-sm-8 col-md-6 col-lg-5">
 
@@ -32,6 +32,10 @@
                     </q-item-main>
                   </q-item>
 
+                  <div v-if="negociosCulturas.length === 0" class="list-empty">
+                    <q-icon name="warning" />
+                    <span>Nenhuma safra disponível para seleção</span>
+                  </div>
                 </q-list>
               </div>
             </div>
@@ -41,7 +45,7 @@
       </q-step>
 
       <!--PASSO 2 INFORMAR QUANTIDADE -->
-      <q-step title="Quantidade Fixada" name="quantidade">
+      <q-step title="Quantidade" name="quantidade">
         <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
           <div class="col-xs-12 col-sm-8 col-md-5 col-lg-3">
 
@@ -70,7 +74,7 @@
       </q-step>
 
       <!--PASSO 3 INFORMAR MOEDA -->
-      <q-step title="Escolher moeda" name="moeda">
+      <q-step title="Moedas" name="moeda">
         <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
           <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
 
@@ -88,7 +92,7 @@
       </q-step>
 
       <!--PASSO 4 INFORMAR PRECO -->
-      <q-step title="Preço fixado" name="preco">
+      <q-step title="Preço" name="preco">
         <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
           <div class="col-xs-12 col-sm-8 col-md-5 col-lg-3">
 
@@ -218,7 +222,7 @@
       </q-step>
 
       <!--PASSO 7 INFORMAR CONTA DE DEPOSITO -->
-      <q-step title="Conta para Depósito" name="contaDeposito">
+      <q-step title="Contas" name="contaDeposito">
         <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
           <div class="col-xs-12 col-sm-10 col-md-6 col-lg-5">
 
@@ -242,6 +246,11 @@
                       </q-item-tile>
                     </q-item-main>
                   </q-item>
+
+                  <div v-if="contasBancarias.length === 0" class="list-empty">
+                    <q-icon name="warning" />
+                    <span>Nenhuma conta associada a essa pessoa. Cadastre uma para pode continuar</span>
+                  </div>
                 </q-list>
               </div>
             </div>
@@ -251,7 +260,7 @@
       </q-step>
 
       <!--PASSO 8 INFORMAR PARCELAS -->
-      <q-step title="Número de parcelas" name="parcelas">
+      <q-step title="Parcelas" name="parcelas">
         <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
           <div class="col-xs-8 col-sm-4 col-md-3 col-lg-2">
 
@@ -616,5 +625,19 @@
 </script>
 
 <style scoped>
-
+  .list-empty{
+    height: 55px;
+    text-align: center;
+    padding-top: 15px;
+  }
+  .list-empty span{
+    color: #8c8c8c;
+    font-weight: 300;
+    font-size: 15px;
+  }
+  .list-empty i{
+    color: #ffb500;
+    font-size: 20px;
+    margin-right: 6px;
+  }
 </style>

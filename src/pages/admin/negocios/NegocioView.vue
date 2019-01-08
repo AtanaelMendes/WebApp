@@ -32,9 +32,9 @@
             <div class="col-12">
               <div class="row">
                 <div class="col-9 self-center">{{negocio.pessoa.nome}}</div>
-                <div class="col-3 self-center" align="end">
-                  <q-btn icon="more_vert" color="primary" flat dense round></q-btn>
-                </div>
+                <!--<div class="col-3 self-center" align="end">-->
+                  <!--<q-btn icon="more_vert" color="primary" flat dense round></q-btn>-->
+                <!--</div>-->
               </div>
             </div>
             <div class="col-12 text-faded ">
@@ -74,7 +74,7 @@
               <div class="row">
                 <div class="col-9 self-center">DETALHES</div>
                 <div class="col-3 self-center" align="end">
-                  <q-btn icon="more_vert" color="primary" flat dense round></q-btn>
+                  <!--<q-btn icon="more_vert" color="primary" flat dense round></q-btn>-->
                 </div>
               </div>
             </div>
@@ -137,7 +137,7 @@
                 <div class="row">
                   <div class="col-9 self-center">{{fixacao.quantidade}} {{fixacao.unidade_medida_quantidade.sigla}} em {{moment(fixacao.data_fixacao).format('DD [de] MMMM [de] YYYY')}}</div>
                   <div class="col-3 self-center" align="end">
-                    <q-btn icon="more_vert" color="primary" flat dense round></q-btn>
+                    <!--<q-btn icon="more_vert" color="primary" flat dense round></q-btn>-->
                   </div>
                 </div>
               </div>
@@ -244,7 +244,16 @@
             <div class="col-5 text-right">Preço</div>
             <div class="col-5 text-right">Total</div>
             <div class="col-2">
-              <q-btn icon="more_vert" color="primary" flat dense round></q-btn>
+              <!--<q-btn icon="more_vert" color="primary" flat dense round></q-btn>-->
+              <!--<q-btn round flat dense icon="more_vert" @click.stop>-->
+                <!--<q-popover>-->
+                  <!--<q-list link no-boder>-->
+                    <!--<q-item v-close-overlay @click.native="deleteProduto(contrato.id)">-->
+                      <!--<q-item-main label="Editar"/>-->
+                    <!--</q-item>-->
+                  <!--</q-list>-->
+                <!--</q-popover>-->
+              <!--</q-btn>-->
             </div>
             <div class="row col-12" v-for="(produto, index) in negocio.produtos">
               <div class="col-5 text-faded text-right">{{produto.preco}} {{produto.indexador.sigla}}</div>
