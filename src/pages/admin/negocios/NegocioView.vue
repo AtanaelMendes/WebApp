@@ -51,13 +51,13 @@
             <div class="col-12">{{cultura.safra_cultura}}</div>
             <div class="col-12 text-faded q-caption">
               Entrega
-              <q-progress :percentage="progressModel + 10" height="6px" color="blue" animate stripe/>
+              <q-progress :percentage="cultura.entrega_porcentagem" height="6px" color="blue" animate stripe/>
             </div>
             <div class="col-12 text-faded q-caption">
               Fixações
-              <q-progress :percentage="progressModel - 10" height="6px" color="blue" animate stripe/>
+              <q-progress :percentage="cultura.fixacao_porcentagem"  height="6px" color="blue" animate stripe/>
             </div>
-            <div class="col-12 text-faded q-caption">
+            <div class="col-12 text-faded q-caption" v-if="false">
               Financeiro
               <q-progress :percentage="progressModel + 20" height="6px" color="blue" animate stripe/>
             </div>
