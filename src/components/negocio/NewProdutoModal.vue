@@ -178,9 +178,9 @@
 
         negocioService.saveAttachProduto(this.negocio.id, this.produto.getValues()).then(response => {
           if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Negócio criado com sucesso'});
+            this.$q.notify({type: 'positive', message: 'Produto vinculado com sucesso'});
             this.closeModal();
-            this.$router.go(-1);
+            this.$root.$emit('refreshNegocio')
           }
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})

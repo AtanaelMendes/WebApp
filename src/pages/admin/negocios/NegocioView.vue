@@ -395,9 +395,10 @@
     },
     mounted () {
       this.getNegocioById();
-      // this.$root.$on('refreshSafraList', () => {
-      //   this.listSafras();
-      // });
+
+      this.$root.$on('refreshNegocio', () => {
+        this.getNegocioById();
+      });
     },
   }
 
