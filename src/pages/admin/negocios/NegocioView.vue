@@ -412,7 +412,7 @@
   }
 
 </script>
-<style>
+<style scoped>
   .space-end{
     margin-bottom: 200px;
   }

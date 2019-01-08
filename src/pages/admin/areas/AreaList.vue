@@ -49,7 +49,7 @@
       <span>Nenhum resultado encontrado.</span>
     </div>
 
-    <q-btn slot="fab-container" round color="primary" @click="addArea()" icon="add" size="20px" />
+    <q-btn slot="fab-container" round color="deep-orange" @click="addArea()" icon="add" size="20px" />
 
   </custom-page>
 </template>

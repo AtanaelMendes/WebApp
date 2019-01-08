@@ -185,13 +185,13 @@
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
       <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
         <q-fab-action color="grey-1" text-color="grey-7" @click="newCultura" icon="add">
-          <span>Cultura</span>
+          <span class="shadow-2 text-no-wrap">Cultura</span>
         </q-fab-action>
         <q-fab-action color="grey-1" text-color="grey-7" @click="newMarca" icon="add">
-          <span>Marca</span>
+          <span class="shadow-2 text-no-wrap">Marca</span>
         </q-fab-action>
         <q-fab-action color="grey-1" text-color="grey-7" @click="newCultivar" icon="add">
-          <span>Cultivar</span>
+          <span class="shadow-2 text-no-wrap" >Cultivar</span>
         </q-fab-action>
         <!--<q-btn v-close-overlay rounded color="primary" @click="newCultura" label="cultura"/>-->
         <!--<q-btn rounded color="primary" @click="newMarca" label="marca"/>-->
@@ -1233,18 +1233,15 @@
       },
     }
   </script>
-<style>
+<style scoped>
   .space-end{
     margin-bottom: 200px;
   }
-
   .custom-fab .q-fab-actions .q-btn  span{
     position: absolute;
-    color: white;
-    background: rgba(0, 0, 0, 0.30);
+    background: white;
     right: 46px;
-    border-radius: 4px;
-    padding: 4px 8px;
-    font-size: 12px;
+    border-radius: 6px;
+    padding: 7px 10px;
   }
 </style>

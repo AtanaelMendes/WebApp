@@ -269,7 +269,7 @@
       <q-page-sticky position="bottom-right" :offset="[35, 35]">
         <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
           <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="newTicket()">
-            <span class="shadow-2 text-no-wrap	">Informar ticket</span>
+            <span class="shadow-2 text-no-wrap">Informar ticket</span>
           </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="sendToWarehause()">
             <span class="shadow-2 text-no-wrap	">Enviar para armazém</span>
@@ -413,7 +413,7 @@
   }
   // this.$q.notify({type: 'negative', message: 'aqui'})
 </script>
-<style>
+<style scoped>
   .space-end{
     margin-bottom: 200px;
   }

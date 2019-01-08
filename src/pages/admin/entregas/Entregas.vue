@@ -247,7 +247,7 @@
   }
   // this.$q.notify({type: 'negative', message: 'aqui'})
 </script>
-<style>
+<style scoped>
   .space-end{
     margin-bottom: 200px;
   }

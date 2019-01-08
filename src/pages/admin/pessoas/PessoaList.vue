@@ -53,7 +53,7 @@
     </div>
 
     <div slot="fab-container">
-      <q-btn round color="primary" @click="addPessoa" icon="add" size="20px" />
+      <q-btn round color="deep-orange" @click="addPessoa" icon="add" size="20px" />
     </div>
 
   </custom-page>

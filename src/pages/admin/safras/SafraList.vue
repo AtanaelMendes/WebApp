@@ -184,7 +184,7 @@
     </div>
 
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
-      <q-btn round color="primary" size="20px" @click="addSafra" icon="add" />
+      <q-btn round color="deep-orange" size="20px" @click="addSafra" icon="add" />
     </q-page-sticky>
 
     <!--MODAL SAFRA CULTURA-->
