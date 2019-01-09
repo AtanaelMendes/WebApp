@@ -3,7 +3,7 @@
     <toolbar slot="toolbar" v-if="safraCultura" :title="safraCultura.inicio + '/' + safraCultura.fim" navigation_type="back" @navigation_clicked="backAction" >
     </toolbar>
 
-    <div class="row q-pa-md gutter-sm space-end ">
+    <div class="row q-pa-md gutter-sm space-end">
 
       <!--HEADER-->
       <div class="col-12">
@@ -107,9 +107,9 @@
       </div>
 
       <!--GRAFICO COLHEITA DIARIA-->
-      <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">-->
-        <!--<grafico-colheita-diaria :height="200"/>-->
-      <!--</div>-->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <grafico-colheita-diaria :height="200"/>
+      </div>
 
       <!--GRAFICO CLASSIFICACAO DIARIA-->
       <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -123,13 +123,10 @@
         </q-card>
       </div>
 
-
-
-
       <!--GRAFICO CLASSIFICACAO MEDIA ARMAZEM-->
-      <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">-->
-        <!--<grafico-classificacao-media-armazem :height="200"/>-->
-      <!--</div>-->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <grafico-classificacao-media-armazem :height="200"/>
+      </div>
 
       <!--TALHOES-->
       <template v-if="safraCultura">

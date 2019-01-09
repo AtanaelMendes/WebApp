@@ -3,43 +3,46 @@
     <toolbar slot="toolbar" title="Cultivares" searchable navigation_type="menu" >
     </toolbar>
 
-    <div class="space-end">
+    <div class="row q-pa-md gutter-sm space-end">
       <template v-for="cultura in culturas">
 
         <!--HEADER CULTURA-->
-        <div :key="cultura.id" class="row q-pa-md q-mt-sm bg-blue-grey-1">
+        <div class="col-12" :key="cultura.id">
+          <div class="row q-pa-md bg-blue-grey-1">
 
-          <div class="col-6 q-title">
-            {{cultura.nome}}
-          </div>
+            <div class="col-6 q-title self-center">
+              {{cultura.nome}}
+            </div>
 
-          <div class="col-6" align="end">
-            <q-btn icon="edit" @click.native="editCultura(cultura)" flat round color="primary"/>
-            <q-btn round flat dense icon="more_vert">
-              <q-popover>
-                <q-list link class="no-border">
-                  <q-item v-close-overlay @click.native="addFotoCultura(cultura.id)">
-                    <q-item-main label="Atualizar Foto"/>
-                  </q-item>
-                  <q-item v-close-overlay @click.native="archiveCultura(cultura.id)" v-if="!cultura.deleted_at">
-                    <q-item-main label="Arquivar"/>
-                  </q-item>
-                  <q-item v-close-overlay @click.native="restoreCultura(cultura.id)" v-if="cultura.deleted_at">
-                    <q-item-main label="Ativar"/>
-                  </q-item>
-                  <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
-                    <q-item-main label="Excluir"/>
-                  </q-item>
-                </q-list>
-              </q-popover>
-            </q-btn>
+            <div class="col-6" align="end">
+              <q-btn dense class="q-mr-xs" icon="edit" @click.native="editCultura(cultura)" flat round color="primary"/>
+              <q-btn round flat dense icon="more_vert">
+                <q-popover>
+                  <q-list link class="no-border">
+                    <q-item v-close-overlay @click.native="addFotoCultura(cultura.id)">
+                      <q-item-main label="Atualizar Foto"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="archiveCultura(cultura.id)" v-if="!cultura.deleted_at">
+                      <q-item-main label="Arquivar"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="restoreCultura(cultura.id)" v-if="cultura.deleted_at">
+                      <q-item-main label="Ativar"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
+                      <q-item-main label="Excluir"/>
+                    </q-item>
+                  </q-list>
+                </q-popover>
+              </q-btn>
+            </div>
           </div>
         </div>
 
-        <div class="row gutter-xs justify-center" v-for="marca in cultura.marcas">
+        <!--MARCAS E CULTIVAES-->
+        <template v-for="marca in cultura.marcas">
 
           <!--MARCA-->
-          <div class="q-ma-sm col-xs-9 col-sm-6 col-md-4 col-lg-3">
+          <div :key="marca.id" class="col-xs-9 col-sm-6 col-md-4 col-lg-3">
             <q-card>
               <q-card-media overlay-position="top">
                 <q-card-title slot="overlay">
@@ -76,98 +79,102 @@
           </div>
 
           <!--CULTIVARES-->
-          <div class="q-mt-sm col-xs-12 col-sm-12 col-md-7 col-lg-8">
-            <div class="row gutter-y-xs" v-for="cultivar in marca.cultivares">
-              <div class="col-12">
-                <q-list separator>
-                  <q-item class="q-py-xs">
-                    <q-item-main>
-                      <div class="row">
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">{{cultivar.nome}}</div>
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                          <q-chip color="primary" small v-if="cultivar.is_convencional">Convencional</q-chip>
-                          <q-chip class="q-ma-xs" color="primary" small v-if="cultivar.is_rr">RR</q-chip>
-                          <q-chip class="q-ma-xs" color="primary" small v-if="cultivar.is_inox">Inox</q-chip>
-                          <q-chip class="q-ma-xs" color="primary" small v-if="cultivar.is_intacta">Intacta</q-chip>
-                        </div>
-                        <div class="col-xs-12 col-sm-6 col-md-12 col-lg-5">Ciclo {{cultivar.ciclo}} {{cultivar.ciclo_dias}} dias</div>
-                      </div>
-                    </q-item-main>
-                    <q-item-side>
-                      <q-btn round flat dense icon="more_vert">
-                        <q-popover>
-                          <q-list link class="no-border">
-                            <q-item v-close-overlay @click.native="editCultivar(cultura.id, cultivar)">
-                              <q-item-main label="Editar"/>
-                            </q-item>
-                            <q-item v-close-overlay @click.native="editTypeCultivar(cultura.id, cultivar)">
-                              <q-item-main label="Alterar tipo"/>
-                            </q-item>
-                            <q-item v-close-overlay @click.native="archiveCultivar(cultura.id, cultivar.id)"  v-if="!cultivar.deleted_at">
-                              <q-item-main label="Arquivar"/>
-                            </q-item>
-                            <q-item v-close-overlay @click.native="restoreCultivar(cultura.id, cultivar.id)"  v-if="cultivar.deleted_at">
-                              <q-item-main label="Ativar"/>
-                            </q-item>
-                            <q-item v-close-overlay @click.native="deleteCultivar(cultura.id, cultivar.id)">
-                              <q-item-main label="Excluir"/>
-                            </q-item>
-                          </q-list>
-                        </q-popover>
-                      </q-btn>
-                    </q-item-side>
-                  </q-item>
-                </q-list>
-              </div>
-            </div>
+          <div class="col-xs-12 col-sm-12 col-md-7 col-lg-9">
+
+            <q-list separator no-border highlight>
+              <q-item v-for="cultivar in marca.cultivares">
+                <q-item-main>
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3 self-center">
+                      {{cultivar.nome}}
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                      <q-chip color="primary" small v-if="cultivar.is_convencional">Convencional</q-chip>
+                      <q-chip class="q-ma-xs" color="primary" small v-if="cultivar.is_rr">RR</q-chip>
+                      <q-chip class="q-ma-xs" color="primary" small v-if="cultivar.is_inox">Inox</q-chip>
+                      <q-chip class="q-ma-xs" color="primary" small v-if="cultivar.is_intacta">Intacta</q-chip>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-12 col-lg-5 self-center">
+                      Ciclo {{cultivar.ciclo}} {{cultivar.ciclo_dias}} dias
+                    </div>
+                  </div>
+                </q-item-main>
+                <q-item-side>
+                  <q-btn round flat dense icon="more_vert">
+                    <q-popover>
+                      <q-list link class="no-border">
+                        <q-item v-close-overlay @click.native="editCultivar(cultura.id, cultivar)">
+                          <q-item-main label="Editar"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="editTypeCultivar(cultura.id, cultivar)">
+                          <q-item-main label="Alterar tipo"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="archiveCultivar(cultura.id, cultivar.id)"  v-if="!cultivar.deleted_at">
+                          <q-item-main label="Arquivar"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="restoreCultivar(cultura.id, cultivar.id)"  v-if="cultivar.deleted_at">
+                          <q-item-main label="Ativar"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="deleteCultivar(cultura.id, cultivar.id)">
+                          <q-item-main label="Excluir"/>
+                        </q-item>
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
+                </q-item-side>
+              </q-item>
+            </q-list>
+
           </div>
 
-        </div>
+        </template>
+
       </template>
 
       <!--MARCAS SEM CULTIVARES-->
-      <div v-if="marcasSemCultivares.length > 0">
-        <div class="row q-pa-lg q-mt-md bg-blue-grey-1">
+      <div class="col-12 " v-if="marcasSemCultivares.length > 0">
+
+        <div class="row q-pa-lg bg-blue-grey-1">
           <div class="col-12 q-title">
             Marcas sem Cultivares
           </div>
         </div>
-        <div class="row gutter-sm q-pa-md">
-          <div class="col-xs-9 col-sm-6 col-md-4 col-lg-3" v-for="marca in marcasSemCultivares" :key="marca.id">
-            <q-card>
-              <q-card-media overlay-position="top">
-                <q-card-title slot="overlay">
-                  {{marca.nome}}
-                  <div slot="right">
-                    <q-btn round flat dense icon="more_vert" color="white">
-                      <q-popover>
-                        <q-list link class="no-border">
-                          <q-item v-close-overlay @click.native="addFotoMarca(marca.id)">
-                            <q-item-main label="Atualizar Foto"/>
-                          </q-item>
-                          <q-item v-close-overlay @click.native="editMarca(marca)">
-                            <q-item-main label="Editar"/>
-                          </q-item>
-                          <q-item v-close-overlay @click.native="archiveMarca(marca.id)" v-if="!marca.deleted_at">
-                            <q-item-main label="Arquivar"/>
-                          </q-item>
-                          <q-item v-close-overlay @click.native="restoreMarca(marca.id)" v-if="marca.deleted_at">
-                            <q-item-main label="Ativar"/>
-                          </q-item>
-                          <q-item v-close-overlay @click.native="deleteMarca(marca.id)">
-                            <q-item-main label="Excluir"/>
-                          </q-item>
-                        </q-list>
-                      </q-popover>
-                    </q-btn>
-                  </div>
-                </q-card-title>
-                <img src="assets/images/icon-no-image.svg" v-if="!marca.image"/>
-                <img :src="marca.image" v-if="marca.image"/>
-              </q-card-media>
-            </q-card>
-          </div>
-        </div>
+
+      </div>
+
+      <div class="col-xs-9 col-sm-6 col-md-4 col-lg-3" v-for="marca in marcasSemCultivares" :key="marca.id">
+        <q-card>
+          <q-card-media overlay-position="top">
+            <q-card-title slot="overlay">
+              {{marca.nome}}
+              <div slot="right">
+                <q-btn round flat dense icon="more_vert" color="white">
+                  <q-popover>
+                    <q-list link class="no-border">
+                      <q-item v-close-overlay @click.native="addFotoMarca(marca.id)">
+                        <q-item-main label="Atualizar Foto"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="editMarca(marca)">
+                        <q-item-main label="Editar"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="archiveMarca(marca.id)" v-if="!marca.deleted_at">
+                        <q-item-main label="Arquivar"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="restoreMarca(marca.id)" v-if="marca.deleted_at">
+                        <q-item-main label="Ativar"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="deleteMarca(marca.id)">
+                        <q-item-main label="Excluir"/>
+                      </q-item>
+                    </q-list>
+                  </q-popover>
+                </q-btn>
+              </div>
+            </q-card-title>
+            <img src="assets/images/icon-no-image.svg" v-if="!marca.image"/>
+            <img :src="marca.image" v-if="marca.image"/>
+          </q-card-media>
+        </q-card>
       </div>
     </div>
 
@@ -193,9 +200,6 @@
         <q-fab-action color="grey-1" text-color="grey-7" @click="newCultivar" icon="add">
           <span class="shadow-2 text-no-wrap" >Cultivar</span>
         </q-fab-action>
-        <!--<q-btn v-close-overlay rounded color="primary" @click="newCultura" label="cultura"/>-->
-        <!--<q-btn rounded color="primary" @click="newMarca" label="marca"/>-->
-        <!--<q-btn rounded color="primary" @click="newCultivar" label="cultivar"/>-->
       </q-fab>
     </q-page-sticky>
 

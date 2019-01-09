@@ -4,7 +4,7 @@
     </toolbar>
 
     <!--LISTA DE CONTRATOS-->
-    <div class="row gutter-sm space-end q-ma-lg">
+    <div class="row gutter-sm space-end q-pa-md">
       <div class="col-xs-12 col-sm-6 col-md- 4 col-lg-3" v-for="contrato in contratos" :key="contrato.id">
 
         <q-card>
