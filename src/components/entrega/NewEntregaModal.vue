@@ -34,6 +34,11 @@
               </q-card-main>
             </q-card>
           </div>
+
+          <div v-if="caminhoes.length === 0" class="list-empty">
+            <q-icon name="warning" />
+            <span>Nenhum caminhão encontrado</span>
+          </div>
         </div>
       </q-step>
 
@@ -114,6 +119,10 @@
               </q-card-title>
 
             </q-card>
+          </div>
+          <div v-if="talhoes.length === 0" class="list-empty">
+            <q-icon name="warning" />
+            <span>Nenhum talhão cadastrado ou nenhum cultivar associado à um talhão</span>
           </div>
         </div>
       </q-step>
@@ -261,7 +270,10 @@
         this.goToNextStep()
       },
       listTalhoesByArea(area_id){
-        let filteredSafraCulturaTalhoes = this.safraCulturaTalhoes.filter(safraCulturaTalhao => safraCulturaTalhao.talhao.area.id === area_id);
+        let filteredSafraCulturaTalhoes = this.safraCulturaTalhoes.filter(
+          safraCulturaTalhao => safraCulturaTalhao.talhao.area.id === area_id && safraCulturaTalhao.cultivar != null
+        );
+
         if(filteredSafraCulturaTalhoes === 1){
           console.log('saveEntrega')
           //TODO: Já selecionar o id de safraCulturaTalhao e enviar
@@ -302,7 +314,9 @@
         this.cultivares = [];
         filteredSafraCulturaTalhoes.forEach(safraCulturaTalhao => {
           if(this.cultivares.length === 0){
-            this.cultivares.push(safraCulturaTalhao.cultivar);
+            if(safraCulturaTalhao.cultivar){
+              this.cultivares.push(safraCulturaTalhao.cultivar);
+            }
           }else{
             if(safraCulturaTalhao.cultivar){
               if(!this.cultivares.some(cultivar => cultivar.id = safraCulturaTalhao.cultivar.id)){
@@ -342,8 +356,24 @@
     },
   }
 </script>
-<style>
+<style scoped>
   .space-end{
     margin-bottom: 150px;
+  }
+
+  .list-empty{
+    height: 55px;
+    text-align: center;
+    padding-top: 15px;
+  }
+  .list-empty span{
+    color: #8c8c8c;
+    font-weight: 300;
+    font-size: 15px;
+  }
+  .list-empty i{
+    color: #ffb500;
+    font-size: 20px;
+    margin-right: 6px;
   }
 </style>
