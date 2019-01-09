@@ -393,9 +393,8 @@
       },
 
       getNegocioById: function(){
-        negocioService.getNegocioById(this.$route.params.id).then(response => {
+        negocioService.getNegocioById(this.$route.params.id, true).then(response => {
           this.negocio = response.data;
-          //this.negocio = new Negocio(response.data);
         });
       },
       backAction: function () {

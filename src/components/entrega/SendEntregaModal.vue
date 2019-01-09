@@ -12,11 +12,11 @@
             Escolha o negócio
           </div>
 
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="negocio in 4" :key="negocio">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="negocio in negocios" :key="negocio.id">
             <q-card @click.native="selectNegocio(negocio)" class="cursor-pointer	">
 
               <q-card-title>
-                Troca ADM
+                {{negocio.nome}}
                 <q-btn v-if="sendCarga.negocioId.value == negocio" slot="right" round size="8px" icon="done" color="positive"/>
               </q-card-title>
               <q-card-separator/>
@@ -54,7 +54,7 @@
 
           <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4" >
             <q-list no-border separator link>
-              <q-item v-for="armazem in armazems" :key="armazem.id" @click.native="selectArmazem(armazem)">
+              <q-item v-for="armazem in armazens" :key="armazem.id" @click.native="selectArmazem(armazem)">
                 <q-item-side>
                   <q-btn v-if="sendCarga.armazemId.value == armazem.id" size="8px" icon="done" color="positive" round/>
                 </q-item-side>
@@ -63,7 +63,7 @@
                     {{armazem.nome}}
                   </q-item-tile>
                   <q-item-tile sublabel>
-                    {{armazem.localizacao}}
+                    {{armazem.endereco}}
                   </q-item-tile>
                 </q-item-main>
               </q-item>
@@ -81,12 +81,13 @@
             Escolha o Motorista
           </div>
 
-          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2" v-for="motorista in motoristas" :key="motorista.nome">
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2" v-for="motorista in motoristas" :key="motorista.id">
             <q-card @click.native="selectMotorista(motorista)" class="cursor-pointer">
               <q-card-media overlay-position="full">
-                <img src="assets/images/no-image.png"/>
+                <img src="assets/images/icon-no-image.svg" v-if="!motorista.image"/>
+                <img :src="motorista.image" v-if="motorista.image"/>
 
-                <q-card-title slot="overlay" align="end" v-if="sendCarga.motoristaId.value == motorista.id">
+                <q-card-title slot="overlay" align="end" v-if="sendCarga.motoristaId.value === motorista.id">
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
               </q-card-media>
@@ -118,16 +119,16 @@
       <q-step title="Informações" v-if="stepInformacoes" name="informacoes">
         <div class="row justify-center items-center gutter-sm space-end" style="min-height: 80vh">
 
-          <div class="col-12 text-center q-title">
-            Informações
-          </div>
+          <!--<div class="col-12 text-center q-title">-->
+            <!--Informações-->
+          <!--</div>-->
 
           <div class="col-xs-12 col-sm-8 col-md-6 col-lg-3">
             <div class="row gutter-xs">
 
-              <div class="col-12">
-                <q-select v-model="sendCarga.ie.value" float-label="IE" :options="parseIE()" align="right"/>
-              </div>
+              <!--<div class="col-12">-->
+                <!--<q-select v-model="sendCarga.ie.value" float-label="IE" :options="parseIE()" align="right"/>-->
+              <!--</div>-->
 
               <div class="col-12">
                 <q-select v-model="sendCarga.serie.value" float-label="Série" :options="parseSerie()" align="right"/>
@@ -179,11 +180,13 @@
 </template>
 <script>
   import entregaService from 'assets/js/service/entrega/EntregaService'
-  import armazemService from 'assets/js/service/localizacao/ArmazemService'
+  import armazemService from 'assets/js/service/armazem/ArmazemService'
+  import motoristaService from 'assets/js/service/motorista/MotoristaService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import SendEntrega from 'assets/js/model/entrega/SendEntrega'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
+  import negocioService from 'assets/js/service/negocio/NegocioService'
   export default {
     name: "stepper-send-carga",
     components:{
@@ -196,37 +199,8 @@
         sendCarga: new SendEntrega(),
         isModalOpened: false,
         negocios: [],
-        armazems: [
-          {
-            id: 1,
-            nome: 'ADM',
-            localizacao: 'Rua sem nome 425, Bairro Industrial Sinop/MT'
-          },
-          {
-            id: 2,
-            nome: 'Bunge',
-            localizacao: 'Rua sem nome 425, Bairro Industrial Sinop/MT'
-          },
-          {
-            id: 3,
-            nome: 'Silo mais',
-            localizacao: 'Rua sem nome 425, Bairro Industrial Sinop/MT'
-          },
-        ],
-        motoristas: [
-          {
-            id: 1,
-            nome: 'Tiburcio dos Santos'
-          },
-          {
-            id: 2,
-            nome: 'Jucelino cu de Cheque'
-          },
-          {
-            id: 3,
-            nome: 'Oscar Nié Maié'
-          },
-        ],
+        armazens: [],
+        motoristas: [],
         unidadesMedida: [],
 
         stepNegocio: false,
@@ -337,6 +311,10 @@
           break;
         }
         this.isModalOpened = true;
+        this.listNegocios();
+        this.listArmazens();
+        this.listMotoristas();
+        this.getUnidadesMedida();
       },
       closeModal: function(){
         this.isModalOpened = false;
@@ -356,7 +334,11 @@
         }
         return false;
       },
-      listNegocio: function(){},
+      listNegocios: function(){
+        negocioService.listNegocios().then(response => {
+          this.negocios = response.data;
+        });
+      },
       selectNegocio: function(negocio){
         if(this.sendCarga.negocioId.value == negocio){
           this.sendCarga.negocioId.value = null;
@@ -365,18 +347,18 @@
           this.goToNextStep()
         }
       },
-      listArmazem: function(){},
-      selectArmazem: function(armazem){
-        if(this.sendCarga.armazemId.value == armazem.id){
-          this.sendCarga.armazemId.value = null;
-        }else{
-          this.sendCarga.armazemId.value = armazem.id;
-          this.goToNextStep()
-        }
+      listArmazens: function(){
+        armazemService.listArmazens().then(response => {
+          this.armazens = response.data;
+        })
       },
-      listMotorista: function(){
-        areaService.listAreas().then(response => {
-          this.areas = response;
+      selectArmazem: function(armazem){
+        this.sendCarga.armazemId.value = armazem.id;
+        this.goToNextStep()
+      },
+      listMotoristas: function(){
+        motoristaService.listMotoristas().then(response => {
+          this.motoristas = response.data;
         })
       },
       selectMotorista: function(motorista){
@@ -441,13 +423,6 @@
         });
         return parsedCfop
       },
-    },
-    mounted () {
-      this.listNegocio();
-      this.getUnidadesMedida();
-      // this.$root.$on('refreshSafraList', () => {
-      //   this.listSafras();
-      // });
     },
   }
 </script>

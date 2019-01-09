@@ -73,14 +73,14 @@
         <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
           <div class="col-xs-8 col-sm-4 col-md-3 col-lg-2" v-if="produto.produto && produto.indexador">
 
-            <custom-input-text type="number" align="right"
-                               :model="produto.quantidade" label="Quantidade"
+            <q-input type="number" align="right" class="q-mb-md"
+                               v-model="quantidade" label="Quantidade"
                                :suffix="produto.produto.unidade_medida.sigla"/>
-            <custom-input-text type="number" align="right"
-                               :model="produto.preco" :label="'Preço por ' + produto.produto.unidade_medida.plural"
+            <q-input type="number" align="right" class="q-mb-md"
+                               v-model="valorUnitario" :label="'Preço por ' + produto.produto.unidade_medida.plural"
                                :prefix="produto.indexador.sigla"/>
-            <custom-input-text type="number" align="right"
-                               :model="produto.valorTotal" label="Valor Total"
+            <q-input type="number" align="right" class="q-mb-md"
+                               v-model="valorTotal" label="Valor Total"
                                :prefix="produto.indexador.sigla"/>
 
           </div>
@@ -112,6 +112,15 @@
     watch:{
       searchProdutosQuery: function(value){
         this.searchProdutos(value);
+      },
+      quantidade:function(){
+        this.valorTotal = this.valorUnitario * this.quantidade;
+      },
+      valorUnitario: function(){
+        this.valorTotal = this.valorUnitario * this.quantidade;
+      },
+      valorTotal: function(){
+        this.valorUnitario = this.valorTotal / this.quantidade;
       }
     },
     data(){
@@ -123,6 +132,10 @@
         searchProdutosQuery: '',
         produtos: [],
         indexadores: [],
+
+        quantidade: null,
+        valorUnitario: null,
+        valorTotal: null,
       }
     },
     methods: {
@@ -170,6 +183,10 @@
         }
       },
       saveAttachProduto: function(){
+        this.produto.quantidade.value = this.quantidade;
+        this.produto.preco.value = this.valorUnitario;
+        this.produto.valorTotal.value = this.valorTotal;
+
         if(!this.produto.isValid()){
           return;
         }
