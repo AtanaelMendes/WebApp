@@ -17,10 +17,10 @@
                     <q-item v-close-overlay @click.native="editNegocio(negocio.id)">
                       <q-item-main label="Editar"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="archiveNegocio(negocio.id)">
+                    <q-item v-close-overlay @click.native="archiveNegocio(negocio.id)" v-if="!negocio.deleted_at">
                       <q-item-main label="Arquivar"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="restoreNegocio(negocio.id)">
+                    <q-item v-close-overlay @click.native="restoreNegocio(negocio.id)" v-if="negocio.deleted_at">
                       <q-item-main label="Ativar"/>
                     </q-item>
                     <q-item v-close-overlay @click.native="deleteNegocio(negocio.id)">
