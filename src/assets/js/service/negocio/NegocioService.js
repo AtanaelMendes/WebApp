@@ -21,9 +21,9 @@ export default {
       })
     });
   },
-  getNegocioById(id){
+  getNegocioById(id, fullType = false){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/negocio/'+ id).then( response => {
+      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/negocio/'+ id + (fullType ? '?type=full' : '')).then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
@@ -124,12 +124,3 @@ export default {
   },
 
 }
-// getPessoa(id){
-//   return new Promise((resolve, reject) => {
-//     Vue.prototype.$axios.get('/pessoa/' + id).then(response => {
-//       resolve(response.data)
-//     }).catch(error => {
-//       reject(error)
-//     })
-//   });
-// },
