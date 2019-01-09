@@ -177,7 +177,7 @@
 <script>
   import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
   import culturaClassificacaoService from 'assets/js/service/cultura/CulturaClassificacaoService'
-  import armazemService from 'assets/js/service/localizacao/ArmazemService'
+  import armazemService from 'assets/js/service/armazem/ArmazemService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import negocioService from 'assets/js/service/negocio/NegocioService'
   import Cultura from 'assets/js/model/negocio/Cultura'
@@ -322,7 +322,7 @@
         })
       },
       listArmazensByProdutor(){
-        armazemService.listArmazensByProdutor().then(response => {
+        armazemService.listArmazens().then(response => {
           this.armazens = response.data;
         })
       }

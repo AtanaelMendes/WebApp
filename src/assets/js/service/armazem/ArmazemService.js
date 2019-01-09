@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
+import AgroUtils from 'assets/js/AgroUtils'
+const produtorId = localStorage.getItem('account.produtor_id');
 export default {
-
-  listArmazensByProdutor(){
-    let produtor_id = localStorage.getItem('account.produtor_id');
+  listArmazens() {
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtor_id + '/armazem').then( response => {
+      Vue.prototype.$axios.get('produtor/' + produtorId + '/armazem').then(response => {
         resolve(response);
       }).catch(error => {
         reject(error)
