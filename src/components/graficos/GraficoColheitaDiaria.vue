@@ -1,26 +1,9 @@
-<template>
-  <q-card>
-    <q-card-title class="text-center">
-      Colheita diária
-    </q-card-title>
-    <q-card-main>
-      <line-chart v-if="loaded" :chartdata="chartdata" :options="options" :height="height"/>
-    </q-card-main>
-  </q-card>
-</template>
 <script>
-   //import { Line } from 'vue-chartjs'
-  import LineChart from 'assets/js/chart/LineChart.js'
+   import { Line } from 'vue-chartjs'
   // import graficoService from 'assets/js/service/GraficoService'
   export default {
     name: "colheita-diaria",
-    //extends: Line,
-    components: {
-      LineChart,
-    },
-    props: {
-      height: BigInt
-    },
+    extends: Line,
     data (){
       return {
         loaded: true,
@@ -58,6 +41,7 @@
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
           title: {
             display: false,
             text: 'Colheita diária',
@@ -94,12 +78,12 @@
         return Math.floor(Math.random() * (50 - 5 + 1)) + 5
       },
       listArmazem: function(){
-        //this.renderChart(this.chartdata, this.options)
+        this.renderChart(this.chartdata, this.options)
       },
 
     },
     mounted () {
-      // this.listArmazem()
+      this.listArmazem()
     }
   }
 </script>

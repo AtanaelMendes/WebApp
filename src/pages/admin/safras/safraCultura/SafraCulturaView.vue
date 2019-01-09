@@ -106,9 +106,28 @@
         </q-card>
       </div>
 
+      <!--GRAFICO QUANTIDADE ENTREGA DOS ARMAZEMS-->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-card class="full-height">
+          <q-card-title>
+            Entrega dos Armazéms
+          </q-card-title>
+          <q-card-main>
+            <grafico-quantidade-entrega-armazems :height="200" :width="100"/>
+          </q-card-main>
+        </q-card>
+      </div>
+
       <!--GRAFICO COLHEITA DIARIA-->
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-        <grafico-colheita-diaria :height="200"/>
+        <q-card class="full-height">
+          <q-card-title>
+            Classificação diária
+          </q-card-title>
+          <q-card-main>
+            <grafico-colheita-diaria :height="200" :width="100"/>
+          </q-card-main>
+        </q-card>
       </div>
 
       <!--GRAFICO CLASSIFICACAO DIARIA-->
@@ -125,7 +144,71 @@
 
       <!--GRAFICO CLASSIFICACAO MEDIA ARMAZEM-->
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-        <grafico-classificacao-media-armazem :height="200"/>
+        <q-card class="full-height">
+          <q-card-main>
+            <grafico-classificacao-media-armazem/>
+          </q-card-main>
+        </q-card>
+      </div>
+
+      <!--GRAFICO PORCENTAGEM ENTREGA DOS ARMAZEMS-->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-card class="full-height">
+          <q-card-title>
+            Porcentagem dos Armazéms
+          </q-card-title>
+          <q-card-main>
+            <grafico-porcentagem-entrega-armazems :height="200" :width="100"/>
+          </q-card-main>
+        </q-card>
+      </div>
+
+      <!--GRAFICO COLHEITA POR AREA-->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-card class="full-height">
+          <q-card-title>
+            Colheita por área
+          </q-card-title>
+          <q-card-main>
+            <grafico-colheita-por-area :height="200" :width="100"/>
+          </q-card-main>
+        </q-card>
+      </div>
+
+      <!--GRAFICO COLHEITA POR AREA-->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-card class="full-height">
+          <q-card-title>
+            Colheita por talhão
+          </q-card-title>
+          <q-card-main>
+            <grafico-colheita-por-talhao :height="200" :width="100"/>
+          </q-card-main>
+        </q-card>
+      </div>
+
+      <!--GRAFICO COLHEITA POR CULTIVAR-->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-card class="full-height">
+          <q-card-title>
+            Colheita por cultivar
+          </q-card-title>
+          <q-card-main>
+            <grafico-colheita-por-cultivar :height="200" :width="100"/>
+          </q-card-main>
+        </q-card>
+      </div>
+
+      <!--GRAFICO PORENTAGEM CAMINHOES-->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-card class="full-height">
+          <q-card-title>
+            Porcentagem por caminhões
+          </q-card-title>
+          <q-card-main>
+            <!--<grafico-colheita-por-cultivar :height="200" :width="100"/>-->
+          </q-card-main>
+        </q-card>
       </div>
 
       <!--TALHOES-->
@@ -370,6 +453,11 @@
   import graficoColheitaDiaria from 'components/graficos/GraficoColheitaDiaria.vue'
   import graficoClassificacoesDiaria from 'components/graficos/GraficoClassificacoesDiaria.vue'
   import graficoClassificacaoMediaArmazem from 'components/graficos/GraficoClassificacaoMediaArmazem.vue'
+  import graficoQuantidadeEntregaArmazems from 'components/graficos/GraficoQuantidadeEntregaArmazems.vue'
+  import graficoPorcentagemEntregaArmazems from 'components/graficos/GraficoPorcentagemEntregaArmazems.vue'
+  import graficoColheitaPorArea from 'components/graficos/GraficoColheitaPorArea.vue'
+  import graficoColheitaPorTalhao from 'components/graficos/GraficoColheitaPorTalhao.vue'
+  import graficoColheitaPorCultivar from 'components/graficos/GraficoColheitaPorCultivar.vue'
   export default {
     name: "safra-cultura",
     components: {
@@ -379,6 +467,11 @@
       graficoColheitaDiaria,
       graficoClassificacoesDiaria,
       graficoClassificacaoMediaArmazem,
+      graficoQuantidadeEntregaArmazems,
+      graficoPorcentagemEntregaArmazems,
+      graficoColheitaPorArea,
+      graficoColheitaPorTalhao,
+      graficoColheitaPorCultivar,
     },
     data () {
       return {
