@@ -3,53 +3,56 @@
     <toolbar slot="toolbar" title="Safras" searchable navigation_type="menu" >
     </toolbar>
 
-    <div class="row gutter-y-sm space-end" v-if="safras.length > 0">
-      <div class="col-12" v-for="safra in safras" :key="safra.id">
+    <div class="row q-pa-md gutter-sm space-end" v-if="safras.length > 0">
+      <template v-for="safra in safras">
 
         <!--HEADER-->
-        <div class="row q-title  q-pa-md bg-blue-grey-1">
-          <div class="col-8 self-center">
-            {{safra.inicio}}/{{safra.fim}} -
-            <span v-if="!safra.is_safrinha">Safra</span>
-            <span v-if="safra.is_safrinha">Safrinha</span>
-          </div>
-          <div class="col-4" align="end">
-            <q-btn icon="add" dense color="primary" @click="addSafraCultura(safra.id)" flat round/>
-            <q-checkbox
-              @input="favoriteSafra(safra.id, safra.is_favorite)"
-              color="deep-orange"
-              checked-icon="flag"
-              v-model="safra.is_favorite"
-              unchecked-icon="outlined_flag"
-            />
-            <q-btn round flat dense icon="more_vert">
-              <q-popover>
-                <q-list link class="no-border">
-                  <q-item v-close-overlay @click.native="editSafra(safra)">
-                    <q-item-main label="Editar"/>
-                  </q-item>
-                  <q-item v-close-overlay v-if="!safra.deleted_at" @click.native="archiveSafra(safra.id)" >
-                    <q-item-main label="Arquivar"/>
-                  </q-item>
-                  <q-item v-close-overlay v-if="safra.deleted_at" @click.native="restoreSafra(safra.id)">
-                    <q-item-main label="Ativar"/>
-                  </q-item>
-                  <q-item v-close-overlay @click.native="deleteSafra(safra.id)">
-                    <q-item-main label="Excluir"/>
-                  </q-item>
-                </q-list>
-              </q-popover>
-            </q-btn>
+        <div class="col-12" :key="safra.id">
+          <div class="row q-title q-pa-md bg-blue-grey-1">
+            <div class="col-8 self-center">
+              {{safra.inicio}}/{{safra.fim}} -
+              <span v-if="!safra.is_safrinha">Safra</span>
+              <span v-if="safra.is_safrinha">Safrinha</span>
+            </div>
+            <div class="col-4" align="end">
+              <q-btn class="q-mx-xs" icon="add" dense color="primary" @click="addSafraCultura(safra.id)" flat round/>
+              <q-checkbox class="q-mx-xs"
+                @input="favoriteSafra(safra.id, safra.is_favorite)"
+                color="deep-orange"
+                checked-icon="flag"
+                v-model="safra.is_favorite"
+                unchecked-icon="outlined_flag"
+              />
+              <q-btn round flat dense icon="more_vert">
+                <q-popover>
+                  <q-list link class="no-border">
+                    <q-item v-close-overlay @click.native="editSafra(safra)">
+                      <q-item-main label="Editar"/>
+                    </q-item>
+                    <q-item v-close-overlay v-if="!safra.deleted_at" @click.native="archiveSafra(safra.id)" >
+                      <q-item-main label="Arquivar"/>
+                    </q-item>
+                    <q-item v-close-overlay v-if="safra.deleted_at" @click.native="restoreSafra(safra.id)">
+                      <q-item-main label="Ativar"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="deleteSafra(safra.id)">
+                      <q-item-main label="Excluir"/>
+                    </q-item>
+                  </q-list>
+                </q-popover>
+              </q-btn>
+            </div>
           </div>
         </div>
 
         <!--LISTA DE SAFRA CULTURAS-->
-        <div class="row gutter-sm q-ma-sm" v-if="safra.safra_culturas.length > 0">
+        <template v-if="safra.safra_culturas.length > 0">
           <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" v-for="safraCultura in safra.safra_culturas" :key="safraCultura.id">
+
             <q-card>
               <q-card-title class="q-py-xs">
                 {{safraCultura.nome}}
-                <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
+                <q-btn round flat dense icon="more_vert" slot="right">
                   <q-popover>
                     <q-list link class="no-border">
                       <q-item v-close-overlay v-if="!safraCultura.deleted_at" @click.native="editSafraCultura(safra.id, safraCultura)">
@@ -157,20 +160,22 @@
                 </div>
               </q-card-main>
             </q-card>
+
           </div>
-        </div>
+        </template>
 
         <!--LISTA VAZIA-->
-        <div class="row q-mt-xl" v-else>
-          <div class="col-12 q-title text-center text-faded">
-            <q-icon name="warning" color="warning" size="30px"/> Não há informaçôes sobre essa safra
-          </div>
-          <div class="col-12 q-title text-center text-faded">
+        <div class="col-12 q-title text-center text-faded" v-else>
+          <p>
+            <!--<q-icon name="warning" color="warning" size="30px"/>-->
+            Não há informaçôes sobre essa safra
+          </p>
+          <p>
             <q-btn color="deep-orange" round icon="add" @click.native="addSafraCultura(safra.id)"/>
-          </div>
+          </p>
         </div>
 
-      </div>
+      </template>
     </div>
 
     <!--EMPTY LIST-->

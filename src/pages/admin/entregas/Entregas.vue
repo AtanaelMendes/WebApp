@@ -13,7 +13,7 @@
     </toolbar>
 
     <!--TAB CARREGANDO-->
-    <div class="row gutter-sm space-end q-ma-lg" v-if="tabs === 'carregando' ">
+    <div class="row gutter-sm space-end q-pa-md" v-if="tabs === 'carregando' ">
 
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="entrega in entregasCarregando" :key="entrega.id">
         <q-card @click.native="viewCarga(entrega.id)">
@@ -70,7 +70,7 @@
     </div>
 
     <!--TAB NO ARMAZEM-->
-    <div class="row gutter-sm space-end q-ma-lg" v-if="tabs == 'no-armazem' ">
+    <div class="row gutter-sm space-end q-pa-md" v-if="tabs == 'no-armazem' ">
 
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="entrega in entregasNoArmazem" :key="entrega.id">
         <q-card @click.native="viewCarga(entrega.id)">
