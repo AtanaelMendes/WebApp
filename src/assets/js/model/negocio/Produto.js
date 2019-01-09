@@ -33,15 +33,15 @@ export default class{
   isValid(){
 
     let hasError = false;
-    if(!helpers.req(this.quantidade.value)){
+    if(!helpers.req(this.quantidade.value) || this.quantidade.value === 0){
       this.quantidade.errorMessage = "Informe a quantidade";
       hasError = true;
     }
-    if(!helpers.req(this.preco.value)){
+    if(!helpers.req(this.preco.value) || this.preco.value === 0){
       this.preco.errorMessage = "Informe o Preço";
       hasError = true;
     }
-    if(!helpers.req(this.valorTotal.value)){
+    if(!helpers.req(this.valorTotal.value) || this.valorTotal.value === 0){
       this.valorTotal.errorMessage = "Informe o valor total";
       hasError = true;
     }
