@@ -7,7 +7,7 @@
       <template v-for="cultura in culturas">
 
         <!--HEADER CULTURA-->
-        <div class="col-12" :key="cultura.id">
+        <div class="col-12" :key="cultura.nome">
           <div class="row q-pa-md bg-blue-grey-1">
 
             <div class="col-6 q-title self-center">
@@ -42,7 +42,7 @@
         <template v-for="marca in cultura.marcas">
 
           <!--MARCA-->
-          <div :key="marca.id" class="col-xs-9 col-sm-6 col-md-4 col-lg-3">
+          <div :key="marca.nome" class="col-xs-9 col-sm-6 col-md-4 col-lg-3">
             <q-card>
               <q-card-media overlay-position="top">
                 <q-card-title slot="overlay">
@@ -82,7 +82,7 @@
           <div class="col-xs-12 col-sm-12 col-md-7 col-lg-9">
 
             <q-list separator no-border highlight>
-              <q-item v-for="cultivar in marca.cultivares">
+              <q-item v-for="cultivar in marca.cultivares" :key="cultivar.nome">
                 <q-item-main>
                   <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3 self-center">
@@ -142,7 +142,7 @@
 
       </div>
 
-      <div class="col-xs-9 col-sm-6 col-md-4 col-lg-3" v-for="marca in marcasSemCultivares" :key="marca.id">
+      <div class="col-xs-9 col-sm-6 col-md-4 col-lg-3" v-for="marca in marcasSemCultivares" :key="marca.nome">
         <q-card>
           <q-card-media overlay-position="top">
             <q-card-title slot="overlay">
@@ -455,7 +455,7 @@
           <!--PASSO 1 ESCOLHER CULTURA-->
           <q-step default title="Culturas" name="cultura">
             <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
-              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in culturas" :key="cultura.id">
+              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in culturas" :key="cultura.nome">
                 <q-card @click.native="selectCultura(cultura.id)">
                   <q-card-media overlay-position="full">
                     <img src="assets/images/icon-no-image.svg" v-if="!cultura.image"/>
@@ -483,7 +483,7 @@
           <!--PASSO 2 ESCOLHER A MARCA -->
           <q-step title="Marca" name="marca">
             <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
-              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="marca in marcas" :key="marca.id">
+              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="marca in marcas" :key="marca.nome">
                 <q-card @click.native="selectMarca(marca.id)">
                   <q-card-media overlay-position="full">
                     <img src="assets/images/icon-no-image.svg" v-if="!marca.image_path"/>
