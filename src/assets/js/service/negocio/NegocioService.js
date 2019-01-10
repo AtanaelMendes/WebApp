@@ -94,6 +94,15 @@ export default {
       })
     });
   },
+  listNegociosCulturasByProdutor(){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('negocio/cultura/produtor/' + produtorId).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
 
   saveAttachTitulo(negocioId, negocioTitulo){
     return new Promise((resolve, reject) => {

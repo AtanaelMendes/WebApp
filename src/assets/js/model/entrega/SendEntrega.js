@@ -1,88 +1,43 @@
 import { helpers} from 'vuelidate/lib/validators'
 const moment = require('moment');
 export default class{
-  negocioId = {
-    value: null,
-    errorMessage: null
-  };
-  armazemId = {
-    value: null,
-    errorMessage: null
-  };
-  motoristaId = {
-    value: null,
-    errorMessage: null
-  };
-  ie = {
-    value: null,
-    errorMessage: null
-  };
+  negocioCulturaId = null;
+  armazemId = null;
+  motoristaId = null;
   serie = null;
   notaNumero = null;
-  peso = {
-    value: 30000,
-    errorMessage: null
-  };
-  unidadeMedidaId = {
-    value: null,
-    errorMessage: null
-  };
-  valor = {
-    value: null,
-    errorMessage: null
-  };
-  total = {
-    value: null,
-    errorMessage: null
-  };
-  cfop = {
-    value: null,
-    errorMessage: null
-  };
+  peso = null;
+  unidadeMedidaId = null;
+  valor = null;
+  total = null;
+  cfop = null;
   emissao = {
     value: moment().format('YYYY-MM-DD'),
     errorMessage: null
   };
-  constructor(sendCarga){
-    if(sendCarga !== undefined || sendCarga != null){
-      this.negocioId.value = sendCarga.negocioId.value;
-      this.armazemId.value = sendCarga.armazemId.value;
-      this.motoristaId.value = sendCarga.motoristaId.value;
-      this.ie.value = sendCarga.ie.value;
-      this.serie.value = sendCarga.serie.value;
-      this.notaNumero.value = sendCarga.notaNumero.value;
-      this.peso.value = sendCarga.peso.value;
-      this.unidadeMedidaId.value = sendCarga.unidadeMedidaId.value;
-      this.valor.value = sendCarga.valor.value;
-      this.total.value = sendCarga.total.value;
-      this.cfop.value = sendCarga.cfop.value;
-      this.emissao.value = sendCarga.emissao.value;
-    }
-  };
+
+
   isValid(){
     let hasError = false;
-    // if(!helpers.req(this.ie.value)){
-    //   hasError = true;
-    // }
     if(!helpers.req(this.serie)){
       hasError = true;
     }
     if(!helpers.req(this.notaNumero)){
       hasError = true;
     }
-    if(!helpers.req(this.peso.value)){
+    if(!helpers.req(this.peso)){
       hasError = true;
     }
-    if(!helpers.req(this.unidadeMedidaId.value)){
+    if(!helpers.req(this.unidadeMedidaId)){
       hasError = true;
     }
-    if(!helpers.req(this.valor.value)){
+    if(!helpers.req(this.valor)){
       hasError = true;
     }
-    if(!helpers.req(this.total.value)){
+    if(!helpers.req(this.total)){
       hasError = true;
     }
-    if(!helpers.req(this.cfop.value)){
+    if(!helpers.req(this.cfop)){
       hasError = true;
     }
     if(!helpers.req(this.emissao.value)){
@@ -92,17 +47,18 @@ export default class{
   };
   getValues(){
     return{
-      negocio_id: this.negocioId.value,
-      armazem_id: this.armazemId.value,
-      motorista_id: this.motoristaId.value,
-      serie: this.serie.id,
-      nota_numero: this.notaNumero,
-      peso: this.peso.value,
-      unidade_medida_id: this.unidadeMedidaId.value.id,
-      valor: this.valor.value,
-      total: this.total.value,
-      cfop: this.cfop.value,
-      emisao: this.emissao.value,
+      negocio_cultura_id: this.negocioCulturaId,
+      armazem_id: this.armazemId,
+      motorista_id: this.motoristaId,
+      nota_fiscal_serie_id: this.serie.id,
+      numero: this.notaNumero,
+      peso: this.peso,
+      unidade_medida_id: this.unidadeMedidaId.id,
+      valor_unitario: this.valor,
+      valor_total: this.total,
+      cfop_id: this.cfop.id,
+      emissao: this.emissao.value,
+      is_saida: this.cfop.is_saida,
     }
   }
 }
