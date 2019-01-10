@@ -20,4 +20,14 @@ export default {
       })
     });
   },
+  listSeries(){
+    return new Promise((resolve, reject) => {
+      let produtor_id = localStorage.getItem('account.produtor_id');
+      Vue.prototype.$axios.get('/produtor/' + produtor_id + '/nota_fiscal_serie').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  }
 }

@@ -17,14 +17,8 @@ export default class{
     value: null,
     errorMessage: null
   };
-  serie = {
-    value: null,
-    errorMessage: null
-  };
-  notaNumero = {
-    value: null,
-    errorMessage: null
-  };
+  serie = null;
+  notaNumero = null;
   peso = {
     value: 30000,
     errorMessage: null
@@ -67,13 +61,13 @@ export default class{
   };
   isValid(){
     let hasError = false;
-    if(!helpers.req(this.ie.value)){
+    // if(!helpers.req(this.ie.value)){
+    //   hasError = true;
+    // }
+    if(!helpers.req(this.serie)){
       hasError = true;
     }
-    if(!helpers.req(this.serie.value)){
-      hasError = true;
-    }
-    if(!helpers.req(this.notaNumero.value)){
+    if(!helpers.req(this.notaNumero)){
       hasError = true;
     }
     if(!helpers.req(this.peso.value)){
@@ -101,15 +95,14 @@ export default class{
       negocio_id: this.negocioId.value,
       armazem_id: this.armazemId.value,
       motorista_id: this.motoristaId.value,
-      ie: this.ie.value,
-      serie: this.serie.value,
-      nota_numero: this.notaNumero.value,
+      serie: this.serie.id,
+      nota_numero: this.notaNumero,
       peso: this.peso.value,
-      unidade_medida_id: this.unidadeMedidaId.value,
+      unidade_medida_id: this.unidadeMedidaId.value.id,
       valor: this.valor.value,
       total: this.total.value,
       cfop: this.cfop.value,
-      emisao: this.emisao.value,
+      emisao: this.emissao.value,
     }
   }
 }

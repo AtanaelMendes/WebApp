@@ -131,11 +131,11 @@
               <!--</div>-->
 
               <div class="col-12">
-                <q-select v-model="sendCarga.serie.value" float-label="Série" :options="parseSerie()" align="right"/>
+                <q-select v-model="sendCarga.serie" float-label="Série" :options="parseNotasFiscaisSeSeries(notasFiscaisSeries)" align="right" @input="changeNumeroSerie()"/>
               </div>
 
               <div class="col-12">
-                <q-input type="number" v-model="sendCarga.notaNumero.value" float-label="Numero da nota" align="right"/>
+                <q-input type="number" v-model="sendCarga.notaNumero" float-label="Numero da nota" align="right"/>
               </div>
 
               <div class="col-6">
@@ -156,7 +156,7 @@
               </div>
 
               <div class="col-12">
-                <q-select v-model="sendCarga.cfop.value" float-label="CFOP" :options="parseCfop()" align="right"/>
+                <q-select v-model="sendCarga.cfop.value" float-label="CFOP" :options="parseCfops(cfops)" align="right"/>
               </div>
 
               <div class="col-12">
@@ -187,6 +187,9 @@
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
   import negocioService from 'assets/js/service/negocio/NegocioService'
+  import notaFiscalService from 'assets/js/service/NotaFiscalService'
+  import cfopService from 'assets/js/service/CfopService'
+
   export default {
     name: "stepper-send-carga",
     components:{
@@ -208,49 +211,8 @@
         stepMotorista: false,
         stepInformacoes: false,
         funcao: '',
-
-        optionsIe:[
-          {
-            id: 1,
-            ie: '14.853.697-4'
-          },
-          {
-            id: 2,
-            ie: '16.685.345-6'
-          },
-          {
-            id: 3,
-            ie: '58.684.567-7'
-          },
-        ],
-        optionsSerie:[
-          {
-            id: 1,
-          },
-          {
-            id: 2,
-          },
-          {
-            id: 3,
-          },
-        ],
-        optionsCfop:[
-          {
-            id: 1,
-            numero: '8855',
-            descricao: 'Aqui vai a descricao'
-          },
-          {
-            id: 2,
-            numero: '74584',
-            descricao: 'Aqui vai a descricao'
-          },
-          {
-            id: 3,
-            numero: '9684',
-            descricao: 'Aqui vai a descricao'
-          },
-        ],
+        notasFiscaisSeries:[],
+        cfops: [],
       }
     },
     computed: {
@@ -258,7 +220,6 @@
         if (this.sendCarga.valor.value) {
           let result  = this.sendCarga.valor.value  * this.sendCarga.peso.value;
           this.sendCarga.total.value = result;
-          console.log(this.sendCarga.total.value);
           return result;
         }
         return null;
@@ -267,7 +228,7 @@
         if(this.currentStep === 'informacoes'){
           return false
         }
-        if(this.funcao == 'updateMotorista'){
+        if(this.funcao === 'updateMotorista'){
           return false
         }
         return true
@@ -315,6 +276,8 @@
         this.listArmazens();
         this.listMotoristas();
         this.getUnidadesMedida();
+        this.listNotasFiscaisSeries(1)
+        this.listCfops();
       },
       closeModal: function(){
         this.isModalOpened = false;
@@ -340,12 +303,8 @@
         });
       },
       selectNegocio: function(negocio){
-        if(this.sendCarga.negocioId.value == negocio){
-          this.sendCarga.negocioId.value = null;
-        }else{
-          this.sendCarga.negocioId.value = negocio;
-          this.goToNextStep()
-        }
+        this.sendCarga.negocioId.value = negocio.id;
+        this.goToNextStep()
       },
       listArmazens: function(){
         armazemService.listArmazens().then(response => {
@@ -362,7 +321,7 @@
         })
       },
       selectMotorista: function(motorista){
-        if(this.sendCarga.motoristaId.value == motorista.id){
+        if(this.sendCarga.motoristaId.value === motorista.id){
           this.sendCarga.motoristaId.value = null;
         }else{
           this.sendCarga.motoristaId.value = motorista.id;
@@ -370,7 +329,8 @@
         }
       },
       saveSendEntrega: function(){
-        cargaService.saveSendEntrega(this.sendCarga.getValues()).then(response => {
+        console.log(this.sendCarga.getValues());
+        entregaService.saveSendEntrega(this.sendCarga.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Carga enviada com sucesso'});
             this.closeModal();
@@ -394,34 +354,35 @@
           })
         })
       },
-
-      parseIE: function(){
-        let parsedIe = this.optionsIe.map(data => {
-          return {
-            value: data.id,
-            label: data.ie
-          }
-        });
-        return parsedIe
+      listNotasFiscaisSeries(pessoa_id){
+        notaFiscalService.listSeries(pessoa_id).then(response => {
+          this.notasFiscaisSeries = response.data;
+        })
       },
-      parseSerie: function(){
-        let parsedSerie = this.optionsSerie.map(data => {
-          return {
-            value: data.id,
-            label: String(data.id)
-          }
-        });
-        return parsedSerie
+      changeNumeroSerie(){
+        this.sendCarga.notaNumero = this.sendCarga.serie.ultima_nota_emitida + 1;
       },
-      parseCfop: function(){
-        let parsedCfop = this.optionsCfop.map(data => {
+      parseNotasFiscaisSeSeries: function(notasFiscaisSeries){
+        return  notasFiscaisSeries.map(serie => {
           return {
-            value: data.numero,
-            label: data.numero,
-            sublabel: data.descricao
+            value: serie,
+            label: serie.nome
           }
         });
-        return parsedCfop
+      },
+      listCfops(){
+        cfopService.listCfops().then(response => {
+          this.cfops = response.data;
+        });
+      },
+      parseCfops: function(cfops){
+        return cfops.map(cfop => {
+          return {
+            value: cfop.id,
+            label: String(cfop.numero),
+            sublabel: cfop.descricao
+          }
+        });
       },
     },
   }

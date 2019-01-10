@@ -48,6 +48,9 @@ export default {
       })
     });
   },
+  sendEntregaToArmazen(params){
+
+  },
   updateEntrega(id, params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ id, params).then(response => {
