@@ -3,266 +3,302 @@
     <toolbar slot="toolbar" title="Detalhes do Negocio" navigation_type="back" @navigation_clicked="backAction"></toolbar>
 
     <!--CONTRATO VIEW-->
-    <div class="row gutter-sm space-end q-ma-lg" v-if="negocio">
+    <div class="row gutter-sm space-end q-pa-md" v-if="negocio">
 
       <!--NEGOCIO-->
       <template>
-        <div :class="direita">
-          <div class="row gutter-xs">
+        <div class="col-12">
+          <q-card class="full-height">
+            <q-card-title>
+              {{negocio.tipo}}
+              <span class="gt-xs">
+                {{negocio.numero_pedido}} / {{negocio.numero_contrato}} - {{moment(negocio.emissao).calendar()}}
+              </span>
+              <span slot="subtitle" class="lt-sm">
+                {{negocio.numero_pedido}} / {{negocio.numero_contrato}} - {{moment(negocio.emissao).calendar()}}
+              </span>
+              <q-btn slot="right" flat dense icon="more_vert" round>
+                <q-popover>
+                  <q-list link class="no-border">
+                    <q-item v-close-overlay @click.native="archiveNegocio(negocio.id)" v-if="!negocio.deleted_at">
+                      <q-item-main label="Arquivar"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="deleteNegocio(negocio.id)">
+                      <q-item-main label="Excluir"/>
+                    </q-item>
+                  </q-list>
+                </q-popover>
+              </q-btn>
+            </q-card-title>
+            <q-card-separator/>
 
-            <div class="col-12">
-              {{negocio.tipo}} {{negocio.numero_pedido}} / {{negocio.numero_contrato}} - {{moment(negocio.emissao).format('DD/MM/YYYY')}}
-            </div>
+            <q-card-main class="row gutter-xs">
 
-            <div class="col-12 text-faded ">
-              Contrato de {{negocio.tipo.toLowerCase()}} com {{negocio.pessoa.nome}} emitido em {{moment(negocio.emissao).format('DD [de] MMMM [de] YYYY')}}.
-              Número do pedido {{negocio.numero_pedido}} Número do contrato {{negocio.numero_contrato}}
-            </div>
+              <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 text-faded ">
+                Contrato de {{negocio.tipo.toLowerCase()}}
+                com {{negocio.pessoa.nome}}
+                emitido em {{moment(negocio.emissao).format('ll')}}.
+                Número do pedido {{negocio.numero_pedido}}
+                Número do contrato {{negocio.numero_contrato}}
 
-            <div class="col-12" v-if="negocio.observacoes">
-              Observações
-              <p class="text-faded ">{{negocio.observacoes}}</p>
-            </div>
-
-          </div>
-        </div>
-
-        <div :class="esquerda">
-          <div class="row gutter-xs">
-            <div class="col-12">
-              <div class="row">
-                <div class="col-9 self-center">{{negocio.pessoa.nome}}</div>
-                <!--<div class="col-3 self-center" align="end">-->
-                  <!--<q-btn icon="more_vert" color="primary" flat dense round></q-btn>-->
-                <!--</div>-->
+                <p  v-if="negocio.observacoes">
+                  Observações <br/>
+                  <span class="text-faded ">{{negocio.observacoes}}</span>
+                </p>
               </div>
-            </div>
-            <div class="col-12 text-faded ">
-              {{negocio.pessoa.nome}}, {{negocio.pessoa.localizacao}}
-            </div>
-          </div>
+
+              <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                <b class="">{{negocio.pessoa.nome}}</b>
+                <p class="text-faded">
+                  {{negocio.pessoa.nome}}, {{negocio.pessoa.localizacao}}
+                </p>
+              </div>
+
+            </q-card-main>
+          </q-card>
         </div>
+
       </template>
 
-      <!--NEGOCIO CULTURAS-->
+      <!--NEGOCIO CULTURAS & NEGOCIO CULTURA FIXAÇOES-->
       <template v-for="(cultura, index) in negocio.culturas">
-        <div :class="direita">
-          <div class="row gutter-xs">
-            <div class="col-12">{{cultura.safra_cultura}}</div>
-            <div class="col-12 text-faded q-caption">
-              Entrega
-              <q-progress :percentage="cultura.entrega_porcentagem" height="6px" color="blue" animate stripe/>
-            </div>
-            <div class="col-12 text-faded q-caption">
-              Fixações
-              <q-progress :percentage="cultura.fixacao_porcentagem"  height="6px" color="blue" animate stripe/>
-            </div>
-            <div class="col-12 text-faded q-caption" v-if="false">
-              Financeiro
-              <q-progress :percentage="progressModel + 20" height="6px" color="blue" animate stripe/>
-            </div>
-            <div class="col-12" v-if="cultura.observacoes">
-              Observações
-              <p class="text-faded ">{{cultura.observacoes}}</p>
-            </div>
-          </div>
-        </div>
 
-        <div :class="esquerda">
-          <div class="row gutter-xs">
-            <div class="col-12">
-              <div class="row">
-                <div class="col-9 self-center">DETALHES</div>
-                <div class="col-3 self-center" align="end">
-                  <!--<q-btn icon="more_vert" color="primary" flat dense round></q-btn>-->
+        <div class="col-12" :key="cultura.id">
+          <q-card class="full-height">
+            <q-card-title>
+              {{cultura.safra_cultura}}
+              <q-btn slot="right" flat dense icon="more_vert" round>
+                <q-popover>
+                  <q-list link class="no-border">
+                    <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
+                      <q-item-main label="Excluir"/>
+                    </q-item>
+                  </q-list>
+                </q-popover>
+              </q-btn>
+            </q-card-title>
+            <q-card-separator/>
+
+            <q-card-main class="row gutter-sm">
+
+              <!--NEGOCIO CULTURAS-->
+              <div :class="direita">
+                <div class="row gutter-xs text-faded">
+                  <div class="col-12  q-caption">
+                    Entrega
+                    <q-progress :percentage="cultura.entrega_porcentagem" height="6px" color="blue" animate stripe/>
+                  </div>
+                  <div class="col-12  q-caption">
+                    Fixações
+                    <q-progress :percentage="cultura.fixacao_porcentagem"  height="6px" color="blue" animate stripe/>
+                  </div>
+                  <div class="col-12  q-caption" v-if="false">
+                    Financeiro
+                    <q-progress :percentage="progressModel + 20" height="6px" color="blue" animate stripe/>
+                  </div>
+                  <div class="col-12" v-if="cultura.observacoes">
+                    Observações
+                    <p>{{cultura.observacoes}}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-12">
-              <span class="text-faded">Entregue</span> 3.500 <span class="text-faded">de</span> 5.000 SC/60
-              <span class="text-faded">entre</span> 5 jan 2018 <span class="text-faded">e</span> 31 jan 2019.
-              <br/>
-              <span class="text-faded">Armazens: </span> {{cultura.armazens}}.
-              <br/>
-              <span class="text-faded">Classificação: </span>{{cultura.classificacao}}.
-            </div>
-          </div>
 
+              <div :class="esquerda">
+                <div class="row gutter-xs">
+                  <div class="col-12">
+                    <span class="text-faded">Entregue</span> 3.500
+                    <span class="text-faded">de</span> 5.000 SC/60
+                    <span class="text-faded">entre</span> 5 jan 2018
+                    <span class="text-faded">e</span> 31 jan 2019.
+                    <br/>
+                    <span class="text-faded">Armazens: </span> {{cultura.armazens}}.
+                    <br/>
+                    <span class="text-faded">Classificação: </span>{{cultura.classificacao}}.
+                  </div>
+                </div>
+              </div>
+
+              <!--NEGOCIO CULTURA FIXAÇOES-->
+              <div class="row col-12" v-for="(fixacao, index) in cultura.fixacoes">
+
+                <div :class="direita" v-if="fixacao.titulos" :key="fixacao.id">
+
+                  <div class="row col-12" v-for="(titulo, index) in fixacao.titulos.pagos" :key="titulo.total">
+                          Pagos:wewewew
+                           Total: {{titulo.total}}
+
+                    <q-list no-border highlight separator>
+                      <q-item v-for="(item, index) in titulo.itens" class="text-faded" :key="index * 3">
+                        <q-item-main >
+                          {{item[0]}} <br/>
+                          <span class="q-caption">
+                              {{item[1]}}
+                            </span>
+                        </q-item-main>
+                      </q-item>
+                    </q-list>
+
+                  </div>
+
+
+
+
+                  <q-list no-border highlight>
+
+                    <template v-for="(titulo, index) in fixacao.titulos.para_pagar">
+                      <p :key="titulo.total">
+                        ({{index}}) Total: {{titulo.total}}
+                      </p>
+                      <q-item v-for="item in titulo.itens" class="text-faded" :key="item">
+                        <q-item-main>
+                          {{item}}
+                        </q-item-main>
+                      </q-item>
+                    </template>
+
+                    <q-item>
+                      <q-item-main>
+                        <q-item-tile>
+                          Para pagar:
+                        </q-item-tile>
+                        <q-item-tile></q-item-tile>
+                      </q-item-main>
+                    </q-item>
+
+                  </q-list>
+                </div>
+
+
+
+
+                <div :class="esquerda">
+                  <div class="row gutter-xs">
+
+                    <div class="col-12 text-bold">
+                      {{fixacao.quantidade}} {{fixacao.unidade_medida_quantidade.sigla}}
+                      em {{moment(fixacao.data_fixacao).format('DD [de] MMMM [de] YYYY')}}
+                    </div>
+
+                    <div class="col-12">
+                      <div class="row gutter-xs">
+                        <div class="col-4 q-pb-xs"></div>
+                        <div class="col-4 q-pb-xs " align="end">{{fixacao.unidade_medida_preco.sigla}}</div>
+                        <div class="col-4 q-pb-xs " align="end">Total</div>
+
+                        <div class="col-4 text-faded"> Bruto </div>
+                        <div class="col-4 text-faded" align="end">{{fixacao.bruto}} {{fixacao.moeda.simbolo}}</div>
+                        <div class="col-4 text-faded" align="end">{{fixacao.total_bruto}} {{fixacao.moeda.simbolo}}</div>
+
+                        <div class="col-4 text-faded"> Impostos </div>
+                        <div class="col-4 text-faded" align="end">{{fixacao.impostos}} {{fixacao.moeda.simbolo}}</div>
+                        <div class="col-4 text-faded" align="end">{{fixacao.total_impostos}} {{fixacao.moeda.simbolo}}</div>
+
+                        <div class="col-4 text-faded"> Acréscimos </div>
+                        <div class="col-4 text-faded" align="end">{{fixacao.acrescimos}} {{fixacao.moeda.simbolo}}</div>
+                        <div class="col-4 text-faded" align="end">{{fixacao.total_acrescimos}} {{fixacao.moeda.simbolo}}</div>
+
+                        <div class="col-4 text-faded"> Descontos </div>
+                        <div class="col-4 text-faded" align="end">{{fixacao.descontos}} {{fixacao.moeda.simbolo}}</div>
+                        <div class="col-4 text-faded" align="end">{{fixacao.total_descontos}} {{fixacao.moeda.simbolo}}</div>
+
+                        <div class="col-4"> Líquido </div>
+                        <div class="col-4" align="end">{{fixacao.liquido}} {{fixacao.moeda.simbolo}}</div>
+                        <div class="col-4" align="end">{{fixacao.total_liquido}} {{fixacao.moeda.simbolo}}</div>
+
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+            </q-card-main>
+          </q-card>
         </div>
 
-        <!--NEGOCIO CULTURA FIXAÇOES-->
 
-        <template v-for="(fixacao, index) in cultura.fixacoes">
-          <!--FIXAÇOES TITULOS-->
-          <template v-if="fixacao.titulos">
-            <div :class="direita">
+
+
+      </template>
+
+      <!--TITULOS-->
+      <template v-if="negocio.titulos">
+        <div class="col-12">
+          <q-card>
+            <q-card-title>TITULOS</q-card-title>
+            <q-card-separator/>
+            <q-card-main>
               <div class="row">
-
-                <div class="col-12 q-pb-xs">FINACEIRO</div>
-
                 <div class="col-12 q-pb-xs">
                   Pagos:
                 </div>
-                <div class="row col-12" v-for="(titulo, index) in fixacao.titulos.pagos">
+                <div class="row col-12" v-for="(titulo, index) in negocio.titulos.pagos" :key="titulo.total">
                   <div class="col-12 q-pb-xs">
                     ({{index}}) Total: {{titulo.total}}
                   </div>
-                  <div class="col-12  text-faded" v-for="item in titulo.itens">
+                  <div class="col-12  text-faded" v-for="(item, index) in titulo.itens" :key="index * 4">
                     {{item[0]}} <br/><span class="q-caption">{{item[1]}}</span>
                   </div>
-                  <!--<div class="col-12  text-faded q-pb-xs">-->
-                  <!--R$ 50.000,00 em (USD 12.88593 a taxa de 3,8802) em 01 fev na conta 22610-0-->
-                  <!--</div>-->
                 </div>
 
                 <div class="col-12 q-pb-xs">
                   Para pagar:
                 </div>
-                <div class="row col-12" v-for="(titulo, index) in fixacao.titulos.para_pagar">
+                <div class="row col-12" v-for="(titulo, index) in negocio.titulos.para_pagar" :key="titulo.total">
                   <div class="col-12 q-pb-xs">
                     ({{index}}) Total: {{titulo.total}}
                   </div>
-                  <div class="col-12  text-faded" v-for="item in titulo.itens">
+                  <div class="col-12  text-faded" v-for="(item, index) in titulo.itens" :key="index * 7">
                     {{item}}
                   </div>
                 </div>
               </div>
-            </div>
-          </template>
-
-          <div :class="esquerda">
-            <div class="row gutter-xs">
-
-              <div class="col-12">
-                <div class="row">
-                  <div class="col-9 self-center">{{fixacao.quantidade}} {{fixacao.unidade_medida_quantidade.sigla}} em {{moment(fixacao.data_fixacao).format('DD [de] MMMM [de] YYYY')}}</div>
-                  <div class="col-3 self-center" align="end">
-                    <!--<q-btn icon="more_vert" color="primary" flat dense round></q-btn>-->
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-12">
-                <div class="row gutter-xs">
-                  <div class="col-4 q-pb-xs"></div>
-                  <div class="col-4 q-pb-xs " align="end">{{fixacao.unidade_medida_preco.sigla}}</div>
-                  <div class="col-4 q-pb-xs " align="end">Total</div>
-
-                  <div class="col-4 text-faded"> Bruto </div>
-                  <div class="col-4 text-faded" align="end">{{fixacao.bruto}} {{fixacao.moeda.simbolo}}</div>
-                  <div class="col-4 text-faded" align="end">{{fixacao.total_bruto}} {{fixacao.moeda.simbolo}}</div>
-
-                  <div class="col-4 text-faded"> Impostos </div>
-                  <div class="col-4 text-faded" align="end">{{fixacao.impostos}} {{fixacao.moeda.simbolo}}</div>
-                  <div class="col-4 text-faded" align="end">{{fixacao.total_impostos}} {{fixacao.moeda.simbolo}}</div>
-
-                  <div class="col-4 text-faded"> Acréscimos </div>
-                  <div class="col-4 text-faded" align="end">{{fixacao.acrescimos}} {{fixacao.moeda.simbolo}}</div>
-                  <div class="col-4 text-faded" align="end">{{fixacao.total_acrescimos}} {{fixacao.moeda.simbolo}}</div>
-
-                  <div class="col-4 text-faded"> Descontos </div>
-                  <div class="col-4 text-faded" align="end">{{fixacao.descontos}} {{fixacao.moeda.simbolo}}</div>
-                  <div class="col-4 text-faded" align="end">{{fixacao.total_descontos}} {{fixacao.moeda.simbolo}}</div>
-
-                  <div class="col-4"> Líquido </div>
-                  <div class="col-4" align="end">{{fixacao.liquido}} {{fixacao.moeda.simbolo}}</div>
-                  <div class="col-4" align="end">{{fixacao.total_liquido}} {{fixacao.moeda.simbolo}}</div>
-
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </template>
-      </template>
-
-      <!--TITULOS-->
-      <template v-if="negocio.titulos">
-        <div :class="direita">
-          <div class="row">
-
-            <div class="col-12 q-pb-xs">FINACEIRO</div>
-
-            <div class="col-12 q-pb-xs">
-              Pagos:
-            </div>
-            <div class="row col-12" v-for="(titulo, index) in negocio.titulos.pagos">
-              <div class="col-12 q-pb-xs">
-                ({{index}}) Total: {{titulo.total}}
-              </div>
-              <div class="col-12  text-faded" v-for="item in titulo.itens">
-                {{item[0]}} <br/><span class="q-caption">{{item[1]}}</span>
-              </div>
-              <!--<div class="col-12  text-faded q-pb-xs">-->
-                <!--R$ 50.000,00 em (USD 12.88593 a taxa de 3,8802) em 01 fev na conta 22610-0-->
-              <!--</div>-->
-            </div>
-
-            <div class="col-12 q-pb-xs">
-              Para pagar:
-            </div>
-            <div class="row col-12" v-for="(titulo, index) in negocio.titulos.para_pagar">
-              <div class="col-12 q-pb-xs">
-                ({{index}}) Total: {{titulo.total}}
-              </div>
-              <div class="col-12  text-faded" v-for="item in titulo.itens">
-                {{item}}
-              </div>
-            </div>
-          </div>
+            </q-card-main>
+          </q-card>
         </div>
       </template>
 
       <!--NEGOCIO PRODUTOS-->
       <template v-if="negocio.produtos">
-        <div :class="direita">
-          <div class="row">
+        <div class="col-12">
+          <q-card>
+            <q-card-title>
+              PRODUTOS
+            </q-card-title>
+            <q-card-separator/>
+            <q-card-main>
+              <div :class="$q.screen.lt.sm ? 'row gutter-y-xs  q-caption' : 'row gutter-y-xs' ">
+                <div class="col-2">
+                  Produto
+                </div>
+                <div class="col-4 text-right">
+                  Quantidade
+                </div>
+                <div class="col-2 text-right">
+                  Preço
+                </div>
+                <div class="col-4 text-right">
+                  Total
+                </div>
 
-            <div class="col-12 q-mb-xs">PRODUTOS</div>
+                <template v-for="(produto, index) in negocio.produtos">
+                  <div class="col-2 text-faded" :key="produto.nome">
+                    {{produto.nome}}
+                  </div>
+                  <div class="col-4 text-faded text-right">
+                    {{numeral(produto.quantidade).format('0,0')}} {{produto.quantidade_unidade_medida}}
+                  </div>
+                  <div class="col-2 text-faded text-right">
+                    {{numeral(produto.preco).format('0,0.00')}} {{produto.indexador.sigla}}
+                  </div>
+                  <div class="col-4 text-faded text-right">
+                    {{numeral(produto.valor_total).format('0,0.00')}} {{produto.indexador.sigla}}
+                  </div>
+                </template>
 
-            <div class="col-6 q-mb-xs">
-              Produto
-            </div>
-            <div class="col-6 q-mb-xs text-right">
-              Quantidade
-            </div>
-
-            <div class="row col-12" v-for="(produto, index) in negocio.produtos">
-              <div class="col-6 text-faded ">
-                {{produto.nome}}
               </div>
-              <div class="col-6 text-faded text-right">
-                {{produto.quantidade}} {{produto.quantidade_unidade_medida}}
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <div :class="esquerda">
-          <div class="row gutter-xs">
-            <div class="col-5 text-right">Preço</div>
-            <div class="col-5 text-right">Total</div>
-            <div class="col-2">
-              <!--<q-btn icon="more_vert" color="primary" flat dense round></q-btn>-->
-              <!--<q-btn round flat dense icon="more_vert" @click.stop>-->
-                <!--<q-popover>-->
-                  <!--<q-list link no-boder>-->
-                    <!--<q-item v-close-overlay @click.native="deleteProduto(contrato.id)">-->
-                      <!--<q-item-main label="Editar"/>-->
-                    <!--</q-item>-->
-                  <!--</q-list>-->
-                <!--</q-popover>-->
-              <!--</q-btn>-->
-            </div>
-            <div class="row col-12" v-for="(produto, index) in negocio.produtos">
-              <div class="col-5 text-faded text-right">{{produto.preco}} {{produto.indexador.sigla}}</div>
-              <div class="col-5 text-faded text-right">{{produto.valor_total}} {{produto.indexador.sigla}}</div>
-            </div>
-            <div class="col-5 text-right"> Total</div>
-            <div class="col-5 text-right">{{produtosValorTotal}} {{produtosValorTotalIndexador}}</div>
-          </div>
-
+            </q-card-main>
+          </q-card>
         </div>
       </template>
 
@@ -318,7 +354,7 @@
   import newTituloModal from 'components/negocio/NewTituloModal';
   import newProdutoModal from 'components/negocio/NewProdutoModal';
   import newFixacaoModal from 'components/negocio/NewFixacaoModal';
-  import Negocio from 'assets/js/model/negocio/Negocio';
+  import { Screen } from 'quasar'
 
   export default {
     name: "negocio-view",
@@ -338,20 +374,7 @@
         progressModel: 50,
       }
     },
-    computed: {
-      produtosValorTotal: function(){
-        let valorTotal = 0;
-
-        this.negocio.produtos.forEach(function(produto){
-          valorTotal += produto.valor_total;
-        });
-
-        return valorTotal;
-      },
-      produtosValorTotalIndexador: function(){
-        return this.negocio.produtos[0].indexador.sigla;
-      }
-    },
+    computed: {},
     methods: {
       attachCultura: function(){
         this.$refs.culturaModal.openModal(this.negocio);
@@ -366,28 +389,40 @@
         this.$refs.fixacaoModal.openModal(this.negocio);
       },
 
-      delete1: function(id){
+      archiveNegocio: function(id){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente deseja apagar esta Negocio?',
+          message: 'Realmente deseja Arquivar esta negocio?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          negocioService.archiveNegocio(id).then(response => {
+            this.getNegocioById()
+          })
+        }).catch(()=>{});
+      },
+      deleteNegocio: function(id){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar esta negocio?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
           negocioService.deleteNegocio(id).then(response => {
-            this.listCulturas()
+            this.getNegocioById()
           })
         }).catch(()=>{});
       },
 
-      delete3: function(id){
+      deleteCultura: function(id){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente deseja apagar esta Negocio?',
+          message: 'Realmente deseja apagar esta negocio?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
           negocioService.deleteNegocio(id).then(response => {
-            this.listCulturas()
+            this.getNegocioById()
           })
         }).catch(()=>{});
       },
