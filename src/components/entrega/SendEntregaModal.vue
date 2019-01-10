@@ -12,12 +12,12 @@
             Escolha o negócio
           </div>
 
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="negocio in negocios" :key="negocio.id">
-            <q-card @click.native="selectNegocio(negocio)" class="cursor-pointer	">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="negocioCultura in negocioCulturas" :key="negocioCultura.id">
+            <q-card @click.native="selectNegocioCultura(negocioCultura)" class="cursor-pointer	">
 
               <q-card-title>
-                {{negocio.nome}}
-                <q-btn v-if="sendCarga.negocioId.value == negocio" slot="right" round size="8px" icon="done" color="positive"/>
+                {{negocioCultura.nome}}
+                <q-btn v-if="sendCarga.negocioCulturaId == negocioCultura.id" slot="right" round size="8px" icon="done" color="positive"/>
               </q-card-title>
               <q-card-separator/>
 
@@ -34,9 +34,9 @@
                 <div class="col-12">
                   {{moment().format('DD MMM YYYY')}}
                 </div>
-                <div class="col-12 text-warning" v-if="negocio == 2">
-                  2 Cargas aguardando no armazém
-                </div>
+                <!--<div class="col-12 text-warning" v-if="negocio == 2">-->
+                  <!--2 Cargas aguardando no armazém-->
+                <!--</div>-->
               </q-card-main>
 
             </q-card>
@@ -56,7 +56,7 @@
             <q-list no-border separator link>
               <q-item v-for="armazem in armazens" :key="armazem.id" @click.native="selectArmazem(armazem)">
                 <q-item-side>
-                  <q-btn v-if="sendCarga.armazemId.value == armazem.id" size="8px" icon="done" color="positive" round/>
+                  <q-btn v-if="sendCarga.armazemId === armazem.id" size="8px" icon="done" color="positive" round/>
                 </q-item-side>
                 <q-item-main>
                   <q-item-tile>
@@ -87,7 +87,7 @@
                 <img src="assets/images/icon-no-image.svg" v-if="!motorista.image"/>
                 <img :src="motorista.image" v-if="motorista.image"/>
 
-                <q-card-title slot="overlay" align="end" v-if="sendCarga.motoristaId.value === motorista.id">
+                <q-card-title slot="overlay" align="end" v-if="sendCarga.motoristaId === motorista.id">
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
               </q-card-media>
@@ -119,16 +119,8 @@
       <q-step title="Informações" v-if="stepInformacoes" name="informacoes">
         <div class="row justify-center items-center gutter-sm space-end" style="min-height: 80vh">
 
-          <!--<div class="col-12 text-center q-title">-->
-            <!--Informações-->
-          <!--</div>-->
-
           <div class="col-xs-12 col-sm-8 col-md-6 col-lg-3">
             <div class="row gutter-xs">
-
-              <!--<div class="col-12">-->
-                <!--<q-select v-model="sendCarga.ie.value" float-label="IE" :options="parseIE()" align="right"/>-->
-              <!--</div>-->
 
               <div class="col-12">
                 <q-select v-model="sendCarga.serie" float-label="Série" :options="parseNotasFiscaisSeSeries(notasFiscaisSeries)" align="right" @input="changeNumeroSerie()"/>
@@ -140,15 +132,15 @@
 
               <div class="col-6">
                 <!--VIR PREECHIDO O PESO DO CAMINHAO-->
-                <q-input type="number" v-model="sendCarga.peso.value" float-label="Peso" align="right"/>
+                <q-input type="number" v-model="sendCarga.peso" float-label="Peso" align="right"/>
               </div>
 
               <div class="col-6">
-                <q-select v-model="sendCarga.unidadeMedidaId.value" float-label="Unidade Medida" :options="unidadesMedida" align="right"/>
+                <q-select v-model="sendCarga.unidadeMedidaId" float-label="Unidade Medida" :options="unidadesMedida" align="right"/>
               </div>
 
               <div class="col-6">
-                <q-input type="number" v-model="sendCarga.valor.value" float-label="Valor" align="right"/>
+                <q-input type="number" v-model="sendCarga.valor" float-label="Valor" align="right"/>
               </div>
 
               <div class="col-6">
@@ -156,7 +148,7 @@
               </div>
 
               <div class="col-12">
-                <q-select v-model="sendCarga.cfop.value" float-label="CFOP" :options="parseCfops(cfops)" align="right"/>
+                <q-select v-model="sendCarga.cfop" float-label="CFOP" :options="parseCfops(cfops)" align="right"/>
               </div>
 
               <div class="col-12">
@@ -201,7 +193,7 @@
         currentStep: 'negocio',
         sendCarga: new SendEntrega(),
         isModalOpened: false,
-        negocios: [],
+        negocioCulturas: [],
         armazens: [],
         motoristas: [],
         unidadesMedida: [],
@@ -217,9 +209,9 @@
     },
     computed: {
       totalCalc: function () {
-        if (this.sendCarga.valor.value) {
-          let result  = this.sendCarga.valor.value  * this.sendCarga.peso.value;
-          this.sendCarga.total.value = result;
+        if (this.sendCarga.valor) {
+          let result  = this.sendCarga.valor  * this.sendCarga.peso;
+          this.sendCarga.total = result;
           return result;
         }
         return null;
@@ -272,7 +264,7 @@
           break;
         }
         this.isModalOpened = true;
-        this.listNegocios();
+        this.listNegocioCulturas();
         this.listArmazens();
         this.listMotoristas();
         this.getUnidadesMedida();
@@ -283,13 +275,13 @@
         this.isModalOpened = false;
       },
       isNextStepEnabled: function(){
-        if(this.sendCarga.negocioId.value == null && this.currentStep == 'negocio'){
+        if(this.sendCarga.negocioCulturaId == null && this.currentStep === 'negocio'){
           return true
         }
-        if(this.sendCarga.motoristaId.value == null && this.currentStep == 'motorista'){
+        if(this.sendCarga.motoristaId == null && this.currentStep === 'motorista'){
           return true
         }
-        if(this.sendCarga.armazemId.value == null && this.currentStep == 'armazem'){
+        if(this.sendCarga.armazemId == null && this.currentStep === 'armazem'){
           return true
         }
         if(!this.sendCarga.isValid()){
@@ -297,13 +289,13 @@
         }
         return false;
       },
-      listNegocios: function(){
-        negocioService.listNegocios().then(response => {
-          this.negocios = response.data;
+      listNegocioCulturas: function(){
+        negocioService.listNegociosCulturasByProdutor().then(response => {
+          this.negocioCulturas = response.data;
         });
       },
-      selectNegocio: function(negocio){
-        this.sendCarga.negocioId.value = negocio.id;
+      selectNegocioCultura: function(negocioCultura){
+        this.sendCarga.negocioCulturaId = negocioCultura.id;
         this.goToNextStep()
       },
       listArmazens: function(){
@@ -312,7 +304,7 @@
         })
       },
       selectArmazem: function(armazem){
-        this.sendCarga.armazemId.value = armazem.id;
+        this.sendCarga.armazemId = armazem.id;
         this.goToNextStep()
       },
       listMotoristas: function(){
@@ -321,17 +313,13 @@
         })
       },
       selectMotorista: function(motorista){
-        if(this.sendCarga.motoristaId.value === motorista.id){
-          this.sendCarga.motoristaId.value = null;
-        }else{
-          this.sendCarga.motoristaId.value = motorista.id;
-          this.goToNextStep()
-        }
+        this.sendCarga.motoristaId = motorista.id;
+        this.goToNextStep()
       },
       saveSendEntrega: function(){
-        console.log(this.sendCarga.getValues());
-        entregaService.saveSendEntrega(this.sendCarga.getValues()).then(response => {
-          if(response.status === 201) {
+        let entregaId = this.$route.params.id;
+        entregaService.sendEntregaToArmazen(entregaId, this.sendCarga.getValues()).then(response => {
+          if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Carga enviada com sucesso'});
             this.closeModal();
             this.$root.$emit('refreshEntregasList', 'no_armazem')
@@ -378,7 +366,7 @@
       parseCfops: function(cfops){
         return cfops.map(cfop => {
           return {
-            value: cfop.id,
+            value: cfop,
             label: String(cfop.numero),
             sublabel: cfop.descricao
           }
