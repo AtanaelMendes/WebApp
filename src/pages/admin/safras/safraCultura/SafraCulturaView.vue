@@ -122,7 +122,7 @@
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
         <q-card class="full-height">
           <q-card-title>
-            Classificação diária
+            Colheita diária
           </q-card-title>
           <q-card-main>
             <grafico-colheita-diaria :height="200" :width="100"/>
@@ -206,7 +206,7 @@
             Porcentagem por caminhões
           </q-card-title>
           <q-card-main>
-            <!--<grafico-colheita-por-cultivar :height="200" :width="100"/>-->
+            <grafico-porcentagem-por-caminhao :height="200" :width="100"/>
           </q-card-main>
         </q-card>
       </div>
@@ -458,6 +458,7 @@
   import graficoColheitaPorArea from 'components/graficos/GraficoColheitaPorArea.vue'
   import graficoColheitaPorTalhao from 'components/graficos/GraficoColheitaPorTalhao.vue'
   import graficoColheitaPorCultivar from 'components/graficos/GraficoColheitaPorCultivar.vue'
+  import graficoPorcentagemPorCaminhao from 'components/graficos/GraficoPorcentagemPorCaminhao.vue'
   export default {
     name: "safra-cultura",
     components: {
@@ -472,6 +473,7 @@
       graficoColheitaPorArea,
       graficoColheitaPorTalhao,
       graficoColheitaPorCultivar,
+      graficoPorcentagemPorCaminhao,
     },
     data () {
       return {
