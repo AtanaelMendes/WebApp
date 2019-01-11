@@ -198,7 +198,7 @@
     methods: {
       openModal: function(entrega){
         this.isModalOpened = true;
-        this.listClassificacoesByCultura(entrega.culturaId);
+        this.listClassificacoesByCultura(entrega.negocios[0].negocio_cultura.safra_cultura.cultura.id);
         this.entrega = entrega;
       },
       closeModal: function(){
@@ -209,7 +209,7 @@
         if(!this.ticket.isValid()){
           return true
         }
-        if(this.ticket.negocioCulturas.length <= 0  && this.currentStep == 'negocio'){
+        if(this.ticket.negocioCulturas.length <= 0  && this.currentStep === 'negocio'){
           return true
         }
         return false;
@@ -245,27 +245,40 @@
         return textColor
       },
       saveNewTicket: function(){
-        if(this.currentStep === 'negocioQuantidade'){
-          setTimeout(() => {
-            if(!this.isFormNegocioCulturasValid()){
-              this.$q.dialog({ title: 'Atenção', message: 'Preencha os campos corretamente.', ok: 'OK', color: 'primary' });
-              return
-            }else{
-              if(this.quantidadeAlocar != 0){
-                this.$q.dialog({ title: 'Atenção', message: 'Ainda há uma quantidade para alocar.', ok: 'OK', color: 'primary' });
-                return
-              }
-              ticketService.saveNewTicket(this.ticket.getValues()).then(response => {
-                if(response.status === 201) {
-                  this.$q.notify({type: 'positive', message: 'Ticket criado com sucesso'});
-                  this.closeModal();
-                }
-              }).catch(error => {
-                this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-              });
+
+        setTimeout(() => {
+          ticketService.saveTicket(this.ticket.getValues()).then(response => {
+            if(response.status === 201) {
+              this.$q.notify({type: 'positive', message: 'Ticket criado com sucesso'});
+              this.closeModal();
             }
-          }, 300 /*ms to wait*/)
-        }
+          }).catch(error => {
+            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          });
+        }, 300 /*ms to wait*/)
+
+
+        // if(this.currentStep === 'negocioQuantidade'){
+        //   setTimeout(() => {
+        //     if(!this.isFormNegocioCulturasValid()){
+        //       this.$q.dialog({ title: 'Atenção', message: 'Preencha os campos corretamente.', ok: 'OK', color: 'primary' });
+        //       return
+        //     }else{
+        //       if(this.quantidadeAlocar != 0){
+        //         this.$q.dialog({ title: 'Atenção', message: 'Ainda há uma quantidade para alocar.', ok: 'OK', color: 'primary' });
+        //         return
+        //       }
+        //       ticketService.saveNewTicket(this.ticket.getValues()).then(response => {
+        //         if(response.status === 201) {
+        //           this.$q.notify({type: 'positive', message: 'Ticket criado com sucesso'});
+        //           this.closeModal();
+        //         }
+        //       }).catch(error => {
+        //         this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+        //       });
+        //     }
+        //   }, 300 /*ms to wait*/)
+        // }
       },
       goToNextStep(){
         if(this.currentStep === 'classificacao'){
@@ -305,10 +318,10 @@
       },
       isDesdobrar: function () {
         if(this.entrega){
-          if(this.entrega.negocios_entregas.length == 1 && this.currentStep == 'classificacao'){
+          if(this.entrega.negocios.length === 1 && this.currentStep === 'classificacao'){
             return true
           }
-          if(this.entrega.negocios_entregas.length > 1 && this.currentStep == 'negocioQuantidade'){
+          if(this.entrega.negocios.length > 1 && this.currentStep === 'negocioQuantidade'){
             return true
           }
         }

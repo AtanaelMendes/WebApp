@@ -11,9 +11,9 @@ export default {
       })
     });
   },
-  saveTicket(params){
+  saveTicket(entregaId, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/'+ produtorId + '/ticket', params).then(response => {
+      Vue.prototype.$axios.post('entrega/'+ entregaId + '/ticket', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)

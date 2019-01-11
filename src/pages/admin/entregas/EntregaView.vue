@@ -2,7 +2,7 @@
   <custom-page widthInner="60%" isParent>
     <toolbar slot="toolbar" title="Detalhes da entrega" navigation_type="back" @navigation_clicked="backAction"></toolbar>
 
-    <div class="row space-end gutter-sm q-pa-md">
+    <div class="row space-end gutter-sm q-pa-md" v-if="entrega">
 
       <!--INFO DO CAMINHAO-->
       <div class="col-12 ">
@@ -11,7 +11,8 @@
 
           <!--IMAGEM HEADER-->
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <img src="assets/images/1.jpg" class="responsive"/>
+            <img src="assets/images/icon-no-image.svg" v-if="!entrega.caminhao.image"  class="responsive"/>
+            <img :src="entrega.caminhao.image" v-if="entrega.caminhao.image"  class="responsive"/>
           </div>
 
           <!--INFO DO HEADER-->
@@ -27,11 +28,11 @@
               </q-popover>
             </q-btn>
 
-            <p>Tiburcio</p>
-            <p>Feneme  FRG 8855</p>
+            <p v-if="entrega.motorista">{{entrega.motorista.nome}}</p>
+            <p>{{entrega.caminhao.nome}}  {{entrega.caminhao.placa}}</p>
             <p><span class="text-faded">Lotação</span> {{numeral(70000).format('0,0')}} KG</p>
-            <p><span class="text-faded">Carregado em</span> {{moment('2018/12/28 15:30:45').format('lll')}}</p>
-            <p><span class="text-faded">Enviado em</span> {{moment('2018/12/28 16:30:45').format('lll')}}</p>
+            <p><span class="text-faded">Carregado em</span> {{moment(entrega.inicio_carregamento).format('lll')}}</p>
+            <p v-if="entrega.envio_armazem"><span class="text-faded">Enviado em</span> {{moment(entrega.envio_armazem).format('lll')}}</p>
             <p><span class="text-faded">Descarregado em</span> {{moment('2018/12/28 17:30:45').format('lll')}}</p>
 
           </div>
@@ -266,12 +267,12 @@
       </div>
 
       <!--PAGE STICKY BUTTOMS-->
-      <q-page-sticky position="bottom-right" :offset="[35, 35]">
+      <q-page-sticky position="bottom-right" :offset="[35, 35]" v-if="entrega">
         <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
-          <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="newTicket()">
+          <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="newTicket(entrega)" v-if="entrega.status === 'No Armazem'">
             <span class="shadow-2 text-no-wrap">Informar ticket</span>
           </q-fab-action>
-          <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="sendToWarehause()">
+          <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="sendToWarehause()" v-if="entrega.status === 'Carregando'">
             <span class="shadow-2 text-no-wrap	">Enviar para armazém</span>
           </q-fab-action>
         </q-fab>
@@ -325,13 +326,14 @@
       return {
         carga: true,
         entregaView: null,
-        entrega: {
-          culturaId: 1,
-          negocios_entregas: [
-            {id: 1, tipo_negocio: 'Troca', pessoa: 'ADM', negocio_produto_quantidade: null },
-            // {id: 2, tipo_negocio: 'Balcão', pessoa: 'ADM', negocio_produto_quantidade: null}
-          ]
-        }
+        entrega: null,
+        // entrega: {
+        //   culturaId: 1,
+        //   negocios_entregas: [
+        //     {id: 1, tipo_negocio: 'Troca', pessoa: 'ADM', negocio_produto_quantidade: null },
+        //     // {id: 2, tipo_negocio: 'Balcão', pessoa: 'ADM', negocio_produto_quantidade: null}
+        //   ]
+        // }
       }
     },
     watch: {
@@ -368,7 +370,7 @@
           color: 'primary'
         }).then(data => {
           entregaService.deleteTalhao(id).then(response => {
-            this.getEntregaById()
+            this.getEntrega()
           })
         }).catch(()=>{});
       },
@@ -396,9 +398,9 @@
           })
         }).catch(()=>{});
       },
-      getEntregaById: function(){
-        entregaService.getEntregaById(id).then(response => {
-          this.entregaView = response.data;
+      getEntrega: function(){
+        entregaService.getEntregaById(this.$route.params.id).then(response => {
+          this.entrega = response.data;
         })
       },
       backAction: function () {
@@ -406,6 +408,7 @@
       },
     },
     mounted () {
+      this.getEntrega()
       // this.$root.$on('refreshSafraList', () => {
       //   this.listSafras();
       // });

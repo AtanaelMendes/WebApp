@@ -48,8 +48,10 @@ export default class{
       emissao: this.emissao.value,
       peso_bruto_total: this.pesoBrutoTotal.value,
       peso_tara: this.pesoTara.value,
-      peso_liquido: this.pesoLiquido.value,
-      entrega_classificacao: this.entregaClassificacao,
+      //peso_bruto_produto: this.pesoBrutoTotal.value - this.pesoTara.value,
+      //peso_desconto: ,//somatorio de entregas_classificacoes.peso_desconto
+      peso_liquido: this.pesoLiquido.value,//peso_bruto_produto - peso_desconto
+      classificacoes: this.entregaClassificacao,
       negocio_culturas: this.negocioCulturas
     }
   }
