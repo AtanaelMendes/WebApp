@@ -74,13 +74,13 @@
           <div class="col-xs-8 col-sm-4 col-md-3 col-lg-2" v-if="produto.produto && produto.indexador">
 
             <q-input type="number" align="right" class="q-mb-md"
-                               v-model="quantidade" label="Quantidade"
+                               v-model="quantidade" stack-label="Quantidade"
                                :suffix="produto.produto.unidade_medida.sigla"/>
             <q-input type="number" align="right" class="q-mb-md"
-                               v-model="valorUnitario" :label="'Preço por ' + produto.produto.unidade_medida.plural"
+                               v-model="valorUnitario" :stack-label="'Preço por ' + produto.produto.unidade_medida.plural"
                                :prefix="produto.indexador.sigla"/>
             <q-input type="number" align="right" class="q-mb-md"
-                               v-model="valorTotal" label="Valor Total"
+                               v-model="valorTotal" stack-label="Valor Total"
                                :prefix="produto.indexador.sigla"/>
 
           </div>
