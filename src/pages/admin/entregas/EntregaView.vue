@@ -85,11 +85,11 @@
           </div>
 
           <!--INFO DAS PESAGENS-->
-          <div class="col-12" v-for="pesagem in 3" :key="pesagem">
+          <div class="col-12" v-for="(pesagem, index) in entrega.pesagens" :key="pesagem.id">
             <q-card>
 
               <q-card-title>
-                Pesagem {{pesagem}}
+                Pesagem {{index + 1}}
                 <q-btn slot="right" icon="more_vert" dense round flat>
                   <q-popover>
                     <q-list link class="no-border">
@@ -110,20 +110,20 @@
 
                       <q-item-tile class="row">
                         <div class="col-4">Líquido</div>
-                        <div class="col-4 text-right">{{numeral(46220).format('0,0.0')}} KG</div>
-                        <div class="col-4 text-right">{{numeral(770.33).format('0,0.0')}} SC</div>
+                        <div class="col-4 text-right">{{pesagem.liquido}}</div>
+                        <div class="col-4 text-right">{{pesagem.liquido_convertido}}</div>
                       </q-item-tile>
 
                       <q-item-tile class="row">
                         <div class="col-4">Desconto</div>
-                        <div class="col-4 text-right">{{numeral(3780).format('0,0.0')}} KG</div>
-                        <div class="col-4 text-right">{{numeral(63).format('0,0.0')}} SC</div>
+                        <div class="col-4 text-right">{{pesagem.desconto}}</div>
+                        <div class="col-4 text-right">{{pesagem.desconto_convertido}}</div>
                       </q-item-tile>
 
                       <q-item-tile class="row">
                         <div class="col-4">Bruto</div>
-                        <div class="col-4 text-right">{{numeral(50000).format('0.0')}} KG</div>
-                        <div class="col-4 text-right">{{numeral(833.33).format('0,0.00')}} SC</div>
+                        <div class="col-4 text-right">{{pesagem.bruto}}</div>
+                        <div class="col-4 text-right">{{pesagem.bruto_convertido}}</div>
                       </q-item-tile>
 
                     </q-item-main>
@@ -132,8 +132,8 @@
                   <q-item>
                     <q-item-main class="row">
                       <div class="col-12">
-                        {{moment().format('DD/MM/YYYY HH:mm')}} /
-                        Nº {{numeral(18539).format('0,0')}}
+                        {{moment(pesagem.emissao).format('DD/MM/YYYY HH:mm')}} /
+                        Nº {{pesagem.numero_ticket}}
                       </div>
                     </q-item-main>
                   </q-item>
@@ -153,51 +153,15 @@
                         </div>
                       </q-item-tile>
 
-                      <q-item-tile class="row">
+                      <q-item-tile class="row" v-for="(classificacao, index) in pesagem.classificacoes">
                         <div class="col-4">
-                          Umidade
+                          {{classificacao.nome}}
                         </div>
                         <div class="col-4 text-right">
-                          14,00
+                          {{classificacao.verificado}}
                         </div>
                         <div class="col-4 text-right">
-                          198 KG
-                        </div>
-                      </q-item-tile>
-
-                      <q-item-tile class="row">
-                        <div class="col-4">
-                          Impureza
-                        </div>
-                        <div class="col-4 text-right">
-                          0,80
-                        </div>
-                        <div class="col-4 text-right">
-                          0 KG
-                        </div>
-                      </q-item-tile>
-
-                      <q-item-tile class="row">
-                        <div class="col-4">
-                          Avariados
-                        </div>
-                        <div class="col-4 text-right">
-                          3,20
-                        </div>
-                        <div class="col-4 text-right">
-                          0 KG
-                        </div>
-                      </q-item-tile>
-
-                      <q-item-tile class="row">
-                        <div class="col-4">
-                          Quebrados
-                        </div>
-                        <div class="col-4 text-right">
-                          2,00
-                        </div>
-                        <div class="col-4 text-right">
-                          0 KG
+                          {{classificacao.desconto}}
                         </div>
                       </q-item-tile>
 
