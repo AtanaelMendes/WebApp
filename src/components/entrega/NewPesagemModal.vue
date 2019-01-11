@@ -12,11 +12,11 @@
           </div>
 
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <custom-input-text type="number" :model="ticket.numeroTicket" align="right" label="Número do ticket"/>
-            <custom-input-date-time type="datetime-local" label="Data descarga" :model="ticket.emissao"/>
-            <custom-input-text type="number" :model="ticket.pesoBrutoTotal" align="right" label="Peso bruto total" suffix="KG"/>
-            <custom-input-text type="number" :model="ticket.pesoTara" align="right" label="Peso tara" suffix="KG"/>
-            <custom-input-text type="number" :model="ticket.pesoLiquido" align="right" label="Peso líquido" suffix="KG"/>
+            <custom-input-text type="number" :model="pesagem.numeroTicket" align="right" label="Número do ticket"/>
+            <custom-input-date-time type="datetime-local" label="Data descarga" :model="pesagem.emissao"/>
+            <custom-input-text type="number" :model="pesagem.pesoBrutoTotal" align="right" label="Peso bruto total" suffix="KG"/>
+            <custom-input-text type="number" :model="pesagem.pesoTara" align="right" label="Peso tara" suffix="KG"/>
+            <custom-input-text type="number" :model="pesoLiquido" disabled="true" align="right" label="Peso líquido" suffix="KG"/>
           </div>
         </div>
       </q-step>
@@ -39,7 +39,7 @@
                 <div class="col-3 text-center text-faded q-caption">Desconto</div>
               </div>
 
-              <div v-for="classificacao in ticket.entregaClassificacao" class="row q-mb-lg">
+              <div v-for="classificacao in pesagem.entregaClassificacao" class="row q-mb-lg">
 
                 <div class="col-4  self-center">
                   {{classificacao.nome}}
@@ -108,7 +108,7 @@
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
             <div class="row justify-center">
 
-              <template v-for="negocio in ticket.negocioCulturas">
+              <template v-for="negocio in pesagem.negocioCulturas">
 
                 <div class="col-6 self-center q-mt-lg" :key="negocio.id">
                   {{negocio.tipo_negocio}} {{negocio.pessoa}}
@@ -124,7 +124,7 @@
                 <span :class="quantidadeAlocarErrorClass()"> {{numeral(quantidadeAlocar).format('0,0')}}</span>  KG
               </div>
               <div class="col-6 offset-6 text-right q-mt-sm">
-                <span class="text-faded">total</span> {{numeral(ticket.pesoLiquido.value).format('0,0')}} KG
+                <span class="text-faded">total</span> {{numeral(pesagem.pesoLiquido.value).format('0,0')}} KG
               </div>
 
             </div>
@@ -138,20 +138,20 @@
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
       <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="!isDesdobrar()"/>
-      <q-btn label="salvar" color="primary" @click="saveNewTicket" :disable="isNextStepEnabled()" v-if="isDesdobrar()"/>
+      <q-btn label="salvar" color="primary" @click="saveNewPesagem" :disable="isNextStepEnabled()" v-if="isDesdobrar()"/>
     </q-page-sticky>
 
   </q-modal>
 </template>
 <script>
-  import ticketService from 'assets/js/service/entrega/TicketService'
-  import Ticket from 'assets/js/model/entrega/Ticket'
+  import pesagemService from 'assets/js/service/entrega/PesagemService'
+  import Pesagem from 'assets/js/model/entrega/Pesagem'
   import culturaClassificacaoService from 'assets/js/service/cultura/CulturaClassificacaoService'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
   import { debounce } from 'quasar'
   export default {
-    name: "stepper-new-ticket",
+    name: "stepper-new-pesagem",
     components:{
       customInputDateTime,
       customInputText,
@@ -159,7 +159,7 @@
     data () {
       return {
         currentStep: 'dadosDaEntrega',
-        ticket: new Ticket(),
+        pesagem: new Pesagem(),
         isModalOpened: false,
         entrega: null,
         errorValue: '',
@@ -179,19 +179,24 @@
     },
     watch: {},
     computed: {
+      pesoLiquido: function(){
+        let value = this.pesagem.pesoBrutoTotal.value - this.pesagem.pesoTara.value;
+        this.pesagem.pesoLiquido.value = value;
+        return {value: value};
+      },
       totalDesc: function () {
         let soma = 0;
-        this.ticket.entregaClassificacao.forEach(function (val) {
+        this.pesagem.entregaClassificacao.forEach(function (val) {
           soma += val.peso_desconto.value
         });
         return soma
       },
       quantidadeAlocar: function () {
         let soma = 0;
-        this.ticket.negocioCulturas.forEach(function (quantidade) {
+        this.pesagem.negocioCulturas.forEach(function (quantidade) {
           soma += quantidade.negocio_produto_quantidade;
         });
-        soma = this.ticket.pesoLiquido.value - soma;
+        soma = this.pesagem.pesoLiquido.value - soma;
         return soma
       }
     },
@@ -202,21 +207,21 @@
         this.entrega = entrega;
       },
       closeModal: function(){
-        this.ticket = new Ticket();
+        this.pesagem = new Pesagem();
         this.isModalOpened = false;
       },
       isNextStepEnabled: function(){
-        if(!this.ticket.isValid()){
+        if(!this.pesagem.isValid()){
           return true
         }
-        if(this.ticket.negocioCulturas.length <= 0  && this.currentStep === 'negocio'){
+        if(this.pesagem.negocioCulturas.length <= 0  && this.currentStep === 'negocio'){
           return true
         }
         return false;
       },
       isFormEntregaClassificacaoValid: function(){
         let isValid = true;
-        for(var classificacao of this.ticket.entregaClassificacao){
+        for(var classificacao of this.pesagem.entregaClassificacao){
           if(classificacao.verificado.value === null || classificacao.peso_desconto.value === null){
             isValid = false;
           }
@@ -225,7 +230,7 @@
       },
       isFormNegocioCulturasValid: function(){
         let isValid = true;
-        for(let val of this.ticket.negocioCulturas){
+        for(let val of this.pesagem.negocioCulturas){
           if(val.negocio_produto_quantidade === null){
             isValid = false;
           }
@@ -234,7 +239,7 @@
       },
       quantidadeAlocarErrorClass: function(){
         let textColor = 'text-warning';
-        if(this.quantidadeAlocar > this.ticket.pesoLiquido.value || this.quantidadeAlocar < 0 ){
+        if(this.quantidadeAlocar > this.pesagem.pesoLiquido.value || this.quantidadeAlocar < 0 ){
           textColor = 'text-negative';
           return textColor
         }
@@ -244,12 +249,20 @@
         }
         return textColor
       },
-      saveNewTicket: function(){
+      saveNewPesagem: function(){
 
         setTimeout(() => {
-          ticketService.saveTicket(this.ticket.getValues()).then(response => {
+          if(this.currentStep === 'classificacao'){
+            if(!this.isFormEntregaClassificacaoValid()){
+              this.$q.dialog({ title: 'Atenção', message: 'Preencha os campos corretamente.', ok: 'OK', color: 'primary' });
+              return
+            }
+          }
+
+          console.log(this.pesagem.getValues());
+          pesagemService.savePesagem(this.entrega.id, this.pesagem.getValues()).then(response => {
             if(response.status === 201) {
-              this.$q.notify({type: 'positive', message: 'Ticket criado com sucesso'});
+              this.$q.notify({type: 'positive', message: 'Pesagem criado com sucesso'});
               this.closeModal();
             }
           }).catch(error => {
@@ -268,9 +281,9 @@
         //         this.$q.dialog({ title: 'Atenção', message: 'Ainda há uma quantidade para alocar.', ok: 'OK', color: 'primary' });
         //         return
         //       }
-        //       ticketService.saveNewTicket(this.ticket.getValues()).then(response => {
+        //       pesagemService.saveNewPesagem(this.pesagem.getValues()).then(response => {
         //         if(response.status === 201) {
-        //           this.$q.notify({type: 'positive', message: 'Ticket criado com sucesso'});
+        //           this.$q.notify({type: 'positive', message: 'Pesagem criado com sucesso'});
         //           this.closeModal();
         //         }
         //       }).catch(error => {
@@ -300,16 +313,15 @@
       },
       listClassificacoesByCultura(cultura_id){
         culturaClassificacaoService.listClassificacoesByCultura(cultura_id).then(response => {
-          // this.classificacoes = response.data;
-         if(this.ticket.entregaClassificacao.length <= 0){
-           response.data.forEach(function (classe) {
-             this.ticket.entregaClassificacao.push(
+         if(this.pesagem.entregaClassificacao.length <= 0){
+           response.data.forEach(function (classificacao) {
+             this.pesagem.entregaClassificacao.push(
                {
-                 classificacao_id: classe.id,
+                 classificacao_id: classificacao.id,
                  verificado: {value: null},
                  peso_desconto: {value: null},
-                 nome: classe.nome,
-                 tolerancia: classe.tolerancia
+                 nome: classificacao.nome,
+                 tolerancia: classificacao.tolerancia
                }
              )
            }, this)
@@ -328,15 +340,15 @@
         return false
       },
       toggleNegocio: function(negocio){
-        let index = this.ticket.existsNegocioCulturaById(negocio.id);
+        let index = this.pesagem.existsNegocioCulturaById(negocio.id);
         if(index > -1){
-          this.ticket.removeNegocioCultura(index)
+          this.pesagem.removeNegocioCultura(index)
         }else{
-          this.ticket.addNegocioCultura(negocio)
+          this.pesagem.addNegocioCultura(negocio)
         }
       },
       negocioisInArray: function(negocio){
-        return this.ticket.existsNegocioCulturaById(negocio.id) > -1
+        return this.pesagem.existsNegocioCulturaById(negocio.id) > -1
       },
     },
     mounted () {

@@ -84,16 +84,16 @@
             </q-card>
           </div>
 
-          <!--INFO DOS TICKETS-->
-          <div class="col-12" v-for="ticket in 3" :key="ticket">
+          <!--INFO DAS PESAGENS-->
+          <div class="col-12" v-for="pesagem in 3" :key="pesagem">
             <q-card>
 
               <q-card-title>
-                Ticket {{ticket}}
+                Pesagem {{pesagem}}
                 <q-btn slot="right" icon="more_vert" dense round flat>
                   <q-popover>
                     <q-list link class="no-border">
-                      <q-item v-close-overlay @click.native="deleteTicket()">
+                      <q-item v-close-overlay @click.native="deletePesagem()">
                         <q-item-main label="Excluir"/>
                       </q-item>
                     </q-list>
@@ -269,8 +269,8 @@
       <!--PAGE STICKY BUTTOMS-->
       <q-page-sticky position="bottom-right" :offset="[35, 35]" v-if="entrega">
         <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
-          <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="newTicket(entrega)" v-if="entrega.status === 'No Armazem'">
-            <span class="shadow-2 text-no-wrap">Informar ticket</span>
+          <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="newPesagem(entrega)" v-if="entrega.status === 'No Armazem'">
+            <span class="shadow-2 text-no-wrap">Informar Pesagem</span>
           </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="sendToWarehause()" v-if="entrega.status === 'Carregando'">
             <span class="shadow-2 text-no-wrap	">Enviar para armazém</span>
@@ -292,8 +292,8 @@
     <!--MODAL ENVIAR CARGA-->
     <send-entrega-modal ref="sendEntregaModal"/>
 
-    <!--MODAL INFORMAR TICKET-->
-    <new-ticket-modal ref="newTicketModal"/>
+    <!--MODAL INFORMAR PESAGEM-->
+    <new-pesagem-modal ref="newPesagemModal"/>
 
     <!--MODAL INFORMAR PORCENTAGEM DOS TALHOES-->
     <add-talhao-percentage-modal ref="addTalhaoPercentageModal"/>
@@ -306,10 +306,10 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import ticketService from 'assets/js/service/entrega/TicketService'
+  import pesagemService from 'assets/js/service/entrega/PesagemService'
   import entregaService from 'assets/js/service/entrega/EntregaService'
   import sendEntregaModal from 'components/entrega/SendEntregaModal'
-  import newTicketModal from 'components/entrega/NewTicketModal'
+  import newPesagemModal from 'components/entrega/NewPesagemModal'
   import addTalhaoPercentageModal from 'components/entrega/AddTalhaoPercentageModal'
   import newEntregaModal from 'components/entrega/NewEntregaModal'
   export default {
@@ -317,7 +317,7 @@
     components: {
       toolbar,
       customPage,
-      newTicketModal,
+      newPesagemModal,
       newEntregaModal,
       sendEntregaModal,
       addTalhaoPercentageModal,
@@ -351,8 +351,8 @@
       updateMotorista: function(){
         this.$refs.sendEntregaModal.openModal('updateMotorista')
       },
-      newTicket: function(){
-        this.$refs.newTicketModal.openModal(this.entrega)
+      newPesagem: function(){
+        this.$refs.newPesagemModal.openModal(this.entrega)
       },
 
       // TODO passar o id do caminhao no addTalhao
@@ -386,14 +386,14 @@
           })
         }).catch(()=>{});
       },
-      deleteTicket: function(){
+      deletePesagem: function(){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente deseja apagar este Ticket?',
+          message: 'Realmente deseja apagar esta pesagem?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          ticketService.deleteTicket(id).then(response => {
+          pesagemService.deletePesagem(id).then(response => {
             this.getCargaById()
           })
         }).catch(()=>{});
