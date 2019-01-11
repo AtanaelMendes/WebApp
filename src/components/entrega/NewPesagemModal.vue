@@ -14,9 +14,18 @@
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
             <custom-input-text type="number" :model="pesagem.numeroTicket" align="right" label="Número do ticket"/>
             <custom-input-date-time type="datetime-local" label="Data descarga" :model="pesagem.emissao"/>
-            <custom-input-text type="number" :model="pesagem.pesoBrutoTotal" align="right" label="Peso bruto total" suffix="KG"/>
-            <custom-input-text type="number" :model="pesagem.pesoTara" align="right" label="Peso tara" suffix="KG"/>
-            <custom-input-text type="number" :model="pesoLiquido" disabled="true" align="right" label="Peso líquido" suffix="KG"/>
+            <div class="row">
+              <div class="col-8 q-pr-lg">
+                <q-input class="q-mb-none" type="number" v-model="pesagem.pesoBrutoTotal.value" align="right"
+                         label="Peso bruto total" :suffix="getUnidadeMedidaById(pesagem.unidadeMedidaId).sigla"/>
+              </div>
+              <q-select class="col-4 q-pt-none" v-model="pesagem.unidadeMedidaId"  :options="parseUnidadesMedida(unidadesMedida)" align="right"/>
+            </div>
+
+            <custom-input-text type="number" :model="pesagem.pesoTara" align="right"
+                               label="Peso tara" :suffix="getUnidadeMedidaById(pesagem.unidadeMedidaId).sigla"/>
+            <custom-input-text type="number" :model="pesoLiquido" disabled="true" align="right"
+                               label="Peso líquido" :suffix="getUnidadeMedidaById(pesagem.unidadeMedidaId).sigla"/>
           </div>
         </div>
       </q-step>
@@ -56,7 +65,7 @@
 
                 <div class="col-3">
                   <!--<custom-input-text suffix="KG" align="right" type="number":model="classificacao.peso_desconto"/>-->
-                  <q-input suffix="KG" align="right" type="number" v-model="classificacao.peso_desconto.value" />
+                  <q-input :suffix="getUnidadeMedidaById(pesagem.unidadeMedidaId).sigla" align="right" type="number" v-model="classificacao.peso_desconto.value" />
                 </div>
 
               </div>
@@ -149,6 +158,7 @@
   import culturaClassificacaoService from 'assets/js/service/cultura/CulturaClassificacaoService'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
+  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import { debounce } from 'quasar'
   export default {
     name: "stepper-new-pesagem",
@@ -163,6 +173,7 @@
         isModalOpened: false,
         entrega: null,
         errorValue: '',
+        unidadesMedida: [],
         negocios:[
           {
             id: 1,
@@ -205,6 +216,8 @@
         this.isModalOpened = true;
         this.listClassificacoesByCultura(entrega.negocios[0].negocio_cultura.safra_cultura.cultura.id);
         this.entrega = entrega;
+        this.getUnidadesMedida();
+        this.pesagem.unidadeMedidaId = entrega.negocios[0].negocio_cultura.safra_cultura.cultura.default_unidade_pesagem_id;
       },
       closeModal: function(){
         this.pesagem = new Pesagem();
@@ -259,7 +272,6 @@
             }
           }
 
-          console.log(this.pesagem.getValues());
           pesagemService.savePesagem(this.entrega.id, this.pesagem.getValues()).then(response => {
             if(response.status === 201) {
               this.$q.notify({type: 'positive', message: 'Pesagem criado com sucesso'});
@@ -310,6 +322,22 @@
         }else{
           this.$refs.stepper.next();
         }
+      },
+      getUnidadesMedida:function(){
+        unidadeMedidaService.listUnidadesMedida().then(response => {
+          this.unidadesMedida = response.data;
+        })
+      },
+      getUnidadeMedidaById:function(id){
+        return this.unidadesMedida.filter(unidade => unidade.id === id)[0];
+      },
+      parseUnidadesMedida:function(unidadesMedida){
+        return unidadesMedida.map(unidade => {
+          return {
+            label: unidade.sigla,
+            value: unidade.id
+          }
+        })
       },
       listClassificacoesByCultura(cultura_id){
         culturaClassificacaoService.listClassificacoesByCultura(cultura_id).then(response => {

@@ -21,6 +21,7 @@ export default class{
     value: null,
     errorMessage: null
   };
+  unidadeMedidaId = null;
   entregaClassificacao = [];
   negocioCulturas = [];
   isValid(){
@@ -40,6 +41,9 @@ export default class{
     if(!helpers.req(this.pesoLiquido.value)){
       hasError = true;
     }
+    if(!helpers.req(this.unidadeMedidaId)){
+      hasError = true;
+    }
     return !hasError;
   };
   getValues(){
@@ -49,6 +53,7 @@ export default class{
       peso_bruto_total: this.pesoBrutoTotal.value,
       peso_tara: this.pesoTara.value,
       peso_liquido: this.pesoLiquido.value,//peso_bruto_produto - peso_desconto
+      unidade_medida_id: this.unidadeMedidaId,
       classificacoes: this.entregaClassificacao.map(function(classificacao){
         return {
           classificacao_id: classificacao.classificacao_id,
