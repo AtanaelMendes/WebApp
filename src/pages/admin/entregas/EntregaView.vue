@@ -67,8 +67,8 @@
               <q-card-separator/>
 
               <q-card-main>
-                <q-list link no-border>
-                  <q-item v-for="carga in 3" :key="carga">
+                <q-list link no-border separator>
+                  <q-item class="q-px-none" v-for="carga in 3" :key="carga">
                     <q-item-main>
                       <q-item-tile>
                         Soja 2018/2019
@@ -105,7 +105,7 @@
               <q-card-main>
                 <q-list link no-border>
 
-                  <q-item>
+                  <q-item class="q-px-none">
                     <q-item-main >
 
                       <q-item-tile class="row">
@@ -129,7 +129,7 @@
                     </q-item-main>
                   </q-item>
 
-                  <q-item>
+                  <q-item class="q-px-none">
                     <q-item-main class="row">
                       <div class="col-12">
                         {{moment(pesagem.emissao).format('DD/MM/YYYY HH:mm')}} /
@@ -138,7 +138,7 @@
                     </q-item-main>
                   </q-item>
 
-                  <q-item>
+                  <q-item class="q-px-none">
                     <q-item-main>
 
                       <q-item-tile class="row">
@@ -177,25 +177,19 @@
         </div>
       </div>
 
-      <!--INFO DAS ENTREGAS-->
+      <!--INFO DOS NEGÓCIOS-->
       <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
         <div class="row gutter-y-sm">
 
-          <div class="col-12" v-for="entrega in 3" :key="entrega">
+          <div class="col-12" >
             <q-card>
               <q-card-title>
-                Troca ADM {{entrega}}
+                Negócios
                 <q-btn slot="right" icon="more_vert" dense round flat>
                   <q-popover>
                     <q-list link class="no-border">
-                      <q-item v-close-overlay @click.native="updateNota()">
-                        <q-item-main label="Alterar nota"/>
-                      </q-item>
-                      <q-item v-close-overlay @click.native="desdobrarCarga()">
-                        <q-item-main label="Desdobrar carga"/>
-                      </q-item>
-                      <q-item v-close-overlay @click.native="deleteNegocio()">
-                        <q-item-main label="Excluir negócio"/>
+                      <q-item v-close-overlay @click.native="novoNegocio(entrega)">
+                        <q-item-main label="Adicionar novo negócio"/>
                       </q-item>
                     </q-list>
                   </q-popover>
@@ -204,24 +198,40 @@
               <q-card-separator/>
 
               <q-card-main>
-                <q-item>
-                  <q-item-main>
+                <q-list link no-border separator>
+                  <q-item class="q-px-none" v-for="negocio in entrega.negocios" :key="negocio.id">
+                    <q-item-main>
 
-                    <q-item-tile>
-                      Bunge
-                    </q-item-tile>
-                    <q-item-tile>
-                      Nota
-                    </q-item-tile>
-                    <q-item-tile>
-                      Vitório 1-1234 {{numeral(30000).format('0,0')}} 0,85 {{numeral(25500).format('0,0.00')}}
-                    </q-item-tile>
-                    <q-item-tile>
-                      5101 - Venda Produção estabelecimento {{moment('2018/12/19').format('DD MMM YYYY')}}
-                    </q-item-tile>
+                      <q-item-tile>
+                        Bunge<!--{{negocio.negocio_cultura.negocio.nome}}-->
+                      </q-item-tile>
+                      <q-item-tile>
+                        Nota
+                      </q-item-tile>
+                      <q-item-tile>
+                        Vitório 1-1234 {{numeral(30000).format('0,0')}} 0,85 {{numeral(25500).format('0,0.00')}}
+                      </q-item-tile>
+                      <q-item-tile>
+                        5101 - Venda Produção estabelecimento {{moment(negocio.negocio_cultura.negocio.emissao).format('DD MMM YYYY')}}
+                      </q-item-tile>
 
-                  </q-item-main>
-                </q-item>
+                    </q-item-main>
+                    <q-item-side class="self-start">
+                      <q-btn icon="more_vert" dense round flat>
+                        <q-popover>
+                          <q-list link class="no-border">
+                            <q-item v-close-overlay @click.native="updateNota(negocio)">
+                              <q-item-main label="Alterar nota"/>
+                            </q-item>
+                            <q-item v-close-overlay @click.native="deleteNegocio(negocio)">
+                              <q-item-main label="Excluir negócio"/>
+                            </q-item>
+                          </q-list>
+                        </q-popover>
+                      </q-btn>
+                    </q-item-side>
+                  </q-item>
+                </q-list>
               </q-card-main>
 
             </q-card>
@@ -306,11 +316,11 @@
       sendToWarehause: function(){
         this.$refs.sendEntregaModal.openModal('sendEntrega')
       },
-      updateNota: function(){
-        this.$refs.sendEntregaModal.openModal('updateNota')
+      updateNota: function(negocio){
+        this.$refs.sendEntregaModal.openModal('updateNota', null)
       },
-      desdobrarCarga: function(){
-        this.$refs.sendEntregaModal.openModal('desdobrarCarga')
+      novoNegocio: function(entrega){
+        this.$refs.sendEntregaModal.openModal('novoNegocio', entrega)
       },
       updateMotorista: function(){
         this.$refs.sendEntregaModal.openModal('updateMotorista')
@@ -373,9 +383,9 @@
     },
     mounted () {
       this.getEntrega()
-      // this.$root.$on('refreshSafraList', () => {
-      //   this.listSafras();
-      // });
+      this.$root.$on('refreshEntregaView', () => {
+        this.getEntrega()
+      });
     },
   }
   // this.$q.notify({type: 'negative', message: 'aqui'})

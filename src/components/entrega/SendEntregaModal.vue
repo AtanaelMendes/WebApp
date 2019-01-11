@@ -17,7 +17,7 @@
 
               <q-card-title>
                 {{negocioCultura.nome}}
-                <q-btn v-if="sendCarga.negocioCulturaId == negocioCultura.id" slot="right" round size="8px" icon="done" color="positive"/>
+                <q-btn v-if="sendEntrega.negocioCulturaId == negocioCultura.id" slot="right" round size="8px" icon="done" color="positive"/>
               </q-card-title>
               <q-card-separator/>
 
@@ -41,6 +41,10 @@
 
             </q-card>
           </div>
+          <div v-if="negocioCulturas.length === 0" class="list-empty">
+            <q-icon name="warning" />
+            <span>Nenhum negócio disponível para seleção</span>
+          </div>
         </div>
       </q-step>
 
@@ -56,7 +60,7 @@
             <q-list no-border separator link>
               <q-item v-for="armazem in armazens" :key="armazem.id" @click.native="selectArmazem(armazem)">
                 <q-item-side>
-                  <q-btn v-if="sendCarga.armazemId === armazem.id" size="8px" icon="done" color="positive" round/>
+                  <q-btn v-if="sendEntrega.armazemId === armazem.id" size="8px" icon="done" color="positive" round/>
                 </q-item-side>
                 <q-item-main>
                   <q-item-tile>
@@ -87,7 +91,7 @@
                 <img src="assets/images/icon-no-image.svg" v-if="!motorista.image"/>
                 <img :src="motorista.image" v-if="motorista.image"/>
 
-                <q-card-title slot="overlay" align="end" v-if="sendCarga.motoristaId === motorista.id">
+                <q-card-title slot="overlay" align="end" v-if="sendEntrega.motoristaId === motorista.id">
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
               </q-card-media>
@@ -123,24 +127,24 @@
             <div class="row gutter-xs">
 
               <div class="col-12">
-                <q-select v-model="sendCarga.serie" float-label="Série" :options="parseNotasFiscaisSeSeries(notasFiscaisSeries)" align="right" @input="changeNumeroSerie()"/>
+                <q-select v-model="sendEntrega.serie" float-label="Série" :options="parseNotasFiscaisSeSeries(notasFiscaisSeries)" align="right" @input="changeNumeroSerie()"/>
               </div>
 
               <div class="col-12">
-                <q-input type="number" v-model="sendCarga.notaNumero" float-label="Numero da nota" align="right"/>
+                <q-input type="number" v-model="sendEntrega.notaNumero" float-label="Numero da nota" align="right"/>
               </div>
 
               <div class="col-6">
                 <!--VIR PREECHIDO O PESO DO CAMINHAO-->
-                <q-input type="number" v-model="sendCarga.peso" float-label="Peso" align="right"/>
+                <q-input type="number" v-model="sendEntrega.peso" float-label="Peso" align="right"/>
               </div>
 
               <div class="col-6">
-                <q-select v-model="sendCarga.unidadeMedidaId" float-label="Unidade Medida" :options="unidadesMedida" align="right"/>
+                <q-select v-model="sendEntrega.unidadeMedidaId" float-label="Unidade Medida" :options="unidadesMedida" align="right"/>
               </div>
 
               <div class="col-6">
-                <q-input type="number" v-model="sendCarga.valor" float-label="Valor" align="right"/>
+                <q-input type="number" v-model="sendEntrega.valor" float-label="Valor" align="right"/>
               </div>
 
               <div class="col-6">
@@ -148,11 +152,11 @@
               </div>
 
               <div class="col-12">
-                <q-select v-model="sendCarga.cfop" float-label="CFOP" :options="parseCfops(cfops)" align="right"/>
+                <q-select v-model="sendEntrega.cfop" float-label="CFOP" :options="parseCfops(cfops)" align="right"/>
               </div>
 
               <div class="col-12">
-                <custom-input-date-time type="date" label="Emissão" :model="sendCarga.emissao"/>
+                <custom-input-date-time type="date" label="Emissão" :model="sendEntrega.emissao"/>
               </div>
 
             </div>
@@ -165,7 +169,7 @@
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
       <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="isBtnVisible"/>
-      <q-btn label="salvar" color="primary" @click="saveSendEntrega" :disable="isNextStepEnabled()" v-if="!isBtnVisible"/>
+      <q-btn label="salvar" color="primary" @click="save" :disable="isNextStepEnabled()" v-if="!isBtnVisible"/>
     </q-page-sticky>
 
   </q-modal>
@@ -191,12 +195,14 @@
     data () {
       return {
         currentStep: 'negocio',
-        sendCarga: new SendEntrega(),
+        sendEntrega: new SendEntrega(),
         isModalOpened: false,
         negocioCulturas: [],
         armazens: [],
         motoristas: [],
         unidadesMedida: [],
+        selectedNegocio: null, //TODO: Apagar se não estiver usando
+        selectedEntrega: null,
 
         stepNegocio: false,
         stepArmazem: false,
@@ -209,9 +215,9 @@
     },
     computed: {
       totalCalc: function () {
-        if (this.sendCarga.valor) {
-          let result  = this.sendCarga.valor  * this.sendCarga.peso;
-          this.sendCarga.total = result;
+        if (this.sendEntrega.valor) {
+          let result  = this.sendEntrega.valor  * this.sendEntrega.peso;
+          this.sendEntrega.total = result;
           return result;
         }
         return null;
@@ -228,7 +234,7 @@
     },
     methods: {
       // FUNCAO = sendEntrega, updateNota, desdobrarCarga
-      openModal: function(funcao){
+      openModal: function(funcao, entrega = null){
         this.funcao = funcao;
         switch (funcao) {
           case 'sendEntrega':
@@ -247,7 +253,9 @@
             this.stepInformacoes = true;
           break;
 
-          case 'desdobrarCarga':
+          case 'novoNegocio':
+            this.selectedEntrega = entrega;
+            //this.sendEntrega.negocioCulturaId = negocio.negocio_cultura.safra_cultura.id;
             this.currentStep = 'negocio';
             this.stepNegocio = true;
             this.stepArmazem = false;
@@ -275,16 +283,16 @@
         this.isModalOpened = false;
       },
       isNextStepEnabled: function(){
-        if(this.sendCarga.negocioCulturaId == null && this.currentStep === 'negocio'){
+        if(this.sendEntrega.negocioCulturaId == null && this.currentStep === 'negocio'){
           return true
         }
-        if(this.sendCarga.motoristaId == null && this.currentStep === 'motorista'){
+        if(this.sendEntrega.motoristaId == null && this.currentStep === 'motorista'){
           return true
         }
-        if(this.sendCarga.armazemId == null && this.currentStep === 'armazem'){
+        if(this.sendEntrega.armazemId == null && this.currentStep === 'armazem'){
           return true
         }
-        if(!this.sendCarga.isValid()){
+        if(!this.sendEntrega.isValid()){
           return true
         }
         return false;
@@ -292,10 +300,18 @@
       listNegocioCulturas: function(){
         negocioService.listNegociosCulturasByProdutor().then(response => {
           this.negocioCulturas = response.data;
+
+          if(this.funcao === 'novoNegocio'){
+            this.negocioCulturas = this.negocioCulturas.filter(negocioCultura => {
+              return this.selectedEntrega.negocios.find(
+                negocio => negocio.negocio_cultura.id !== negocioCultura.id
+              ) === undefined;
+            })
+          }
         });
       },
       selectNegocioCultura: function(negocioCultura){
-        this.sendCarga.negocioCulturaId = negocioCultura.id;
+        this.sendEntrega.negocioCulturaId = negocioCultura.id;
         this.goToNextStep()
       },
       listArmazens: function(){
@@ -304,7 +320,7 @@
         })
       },
       selectArmazem: function(armazem){
-        this.sendCarga.armazemId = armazem.id;
+        this.sendEntrega.armazemId = armazem.id;
         this.goToNextStep()
       },
       listMotoristas: function(){
@@ -313,16 +329,38 @@
         })
       },
       selectMotorista: function(motorista){
-        this.sendCarga.motoristaId = motorista.id;
+        this.sendEntrega.motoristaId = motorista.id;
         this.goToNextStep()
+      },
+      save:function(){
+        switch (this.funcao) {
+          case 'sendEntrega':
+            this.saveSendEntrega();
+            break;
+          case 'novoNegocio':
+            this.addNegocioToEntrega();
+            break;
+        }
       },
       saveSendEntrega: function(){
         let entregaId = this.$route.params.id;
-        entregaService.sendEntregaToArmazen(entregaId, this.sendCarga.getValues()).then(response => {
+        entregaService.sendEntregaToArmazen(entregaId, this.sendEntrega.getValues()).then(response => {
           if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Carga enviada com sucesso'});
             this.closeModal();
             this.$root.$emit('refreshEntregasList', 'no_armazem')
+          }
+        }).catch(error => {
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+        });
+      },
+      addNegocioToEntrega: function(){
+        let entregaId = this.$route.params.id;
+        entregaService.addNegocioToEntrega(entregaId, this.sendEntrega.getValues()).then(response => {
+          if(response.status === 201) {
+            this.$q.notify({type: 'positive', message: 'Negócio adicionado com sucesso'});
+            this.closeModal();
+            this.$root.$emit('refreshEntregaView')
           }
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -348,7 +386,7 @@
         })
       },
       changeNumeroSerie(){
-        this.sendCarga.notaNumero = this.sendCarga.serie.ultima_nota_emitida + 1;
+        this.sendEntrega.notaNumero = this.sendEntrega.serie.ultima_nota_emitida + 1;
       },
       parseNotasFiscaisSeSeries: function(notasFiscaisSeries){
         return  notasFiscaisSeries.map(serie => {
@@ -375,8 +413,24 @@
     },
   }
 </script>
-<style>
+<style scoped>
   .space-end{
     margin-bottom: 150px;
+  }
+
+  .list-empty{
+    height: 55px;
+    text-align: center;
+    padding-top: 15px;
+  }
+  .list-empty span{
+    color: #8c8c8c;
+    font-weight: 300;
+    font-size: 15px;
+  }
+  .list-empty i{
+    color: #ffb500;
+    font-size: 20px;
+    margin-right: 6px;
   }
 </style>
