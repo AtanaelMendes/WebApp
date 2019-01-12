@@ -153,7 +153,7 @@
                         </div>
                       </q-item-tile>
 
-                      <q-item-tile class="row" v-for="(classificacao, index) in pesagem.classificacoes">
+                      <q-item-tile class="row" v-for="classificacao in pesagem.classificacoes" :key="classificacao.id">
                         <div class="col-4">
                           {{classificacao.nome}}
                         </div>

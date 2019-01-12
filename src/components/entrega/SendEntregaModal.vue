@@ -243,7 +243,7 @@
             this.stepArmazem = true;
             this.stepMotorista = true;
             this.stepInformacoes = true;
-          break;
+            break;
 
           case 'updateNota':
             this.currentStep = 'informacoes';
@@ -251,7 +251,7 @@
             this.stepArmazem = false;
             this.stepMotorista = false;
             this.stepInformacoes = true;
-          break;
+            break;
 
           case 'novoNegocio':
             this.selectedEntrega = entrega;
@@ -261,7 +261,7 @@
             this.stepArmazem = false;
             this.stepMotorista = false;
             this.stepInformacoes = true;
-          break;
+            break;
 
           case 'updateMotorista':
             this.currentStep = 'motorista';
@@ -269,7 +269,7 @@
             this.stepArmazem = false;
             this.stepMotorista = true;
             this.stepInformacoes = false;
-          break;
+            break;
         }
         this.isModalOpened = true;
         this.listNegocioCulturas();
