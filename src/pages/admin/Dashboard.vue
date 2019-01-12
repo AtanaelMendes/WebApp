@@ -1,9 +1,9 @@
 <template>
 
   <custom-page>
-    <toolbar slot="toolbar" title="teste" navigation_type="menu" @navigation_clicked="test"></toolbar>
+    <toolbar slot="toolbar" title="Dashboard" navigation_type="menu" @navigation_clicked="test"></toolbar>
 
-    <div class="row">
+    <div class="row" v-if="false">
 
       <div :class="column">
 
