@@ -57,9 +57,6 @@
                       <q-item v-close-overlay @click.native="addTalhao()">
                         <q-item-main label="Adiconar talhão"/>
                       </q-item>
-                      <q-item v-close-overlay @click.native="deleteTalhao()">
-                        <q-item-main label="Excluir talhão"/>
-                      </q-item>
                     </q-list>
                   </q-popover>
                 </q-btn>
@@ -77,6 +74,17 @@
                         {{entregaTalhao.percentual}}% - {{entregaTalhao.cultivar}} {{entregaTalhao.area}} - {{entregaTalhao.talhao}}
                       </q-item-tile>
                     </q-item-main>
+                    <q-item-side class="self-start">
+                      <q-btn icon="more_vert" dense round flat>
+                        <q-popover>
+                          <q-list link class="no-border">
+                            <q-item v-close-overlay @click.native="deleteTalhao(entregaTalhao.id)">
+                              <q-item-main label="Excluir"/>
+                            </q-item>
+                          </q-list>
+                        </q-popover>
+                      </q-btn>
+                    </q-item-side>
                   </q-item>
                 </q-list>
               </q-card-main>

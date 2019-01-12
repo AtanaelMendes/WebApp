@@ -149,12 +149,12 @@ export default {
     });
   },
   deleteTalhao(id){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('produtor/'+ produtorId + '/entrega/' + id).then(response => {
-        resolve(response)
-      }).catch(error => {
-        reject(error.response)
-      })
-    });
+    // return new Promise((resolve, reject) => {
+    //   Vue.prototype.$axios.delete('produtor/'+ produtorId + '/entrega/' + id).then(response => {
+    //     resolve(response)
+    //   }).catch(error => {
+    //     reject(error.response)
+    //   })
+    // });
   },
 }
