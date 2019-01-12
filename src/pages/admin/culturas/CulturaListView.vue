@@ -3,7 +3,7 @@
     <toolbar slot="toolbar" title="Cultivares" searchable navigation_type="menu" >
     </toolbar>
 
-    <div class="row q-pa-md gutter-sm space-end">
+    <div class="row q-pa-md gutter-sm space-end" v-if="culturas.length > 0">
       <template v-for="cultura in culturas">
 
         <!--HEADER CULTURA-->
@@ -179,12 +179,12 @@
     </div>
 
     <!--EMPTY LIST-->
-    <div class="column q-ma-xl items-center" v-if="culturas.length === 0 && marcasSemCultivares.length === 0">
-      <div class="col-6">
-        <img src="assets/images/sad_2.svg" class="responsive"/>
-      </div>
-      <div class="col-6 text-justify">
-        <span>Nenhum resultado encontrado.</span>
+    <div class="col-12" v-if="culturas.length === 0 && marcasSemCultivares.length === 0">
+      <div class="row justify-center items-center" style="min-height: 40vh">
+        <div class="col-6 text-center">
+          <img src="assets/images/sad_2.svg" class="responsive"/>
+          <p>Nenhum resultado encontrado.</p>
+        </div>
       </div>
     </div>
 

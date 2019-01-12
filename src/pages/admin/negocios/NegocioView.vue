@@ -118,6 +118,9 @@
 
                 <!--NEGOCIO CULTURA FIXAÇOES-->
                 <template v-for="(fixacao, index) in cultura.fixacoes" >
+                  <div class="col-12">
+                    <q-card-separator/>
+                  </div>
                   <div :class="direita" v-if="fixacao.titulos" :key="fixacao.id">
 
                     <!--TITULOS PAGOS-->
@@ -180,12 +183,24 @@
                   </div>
 
                   <!--FIXACAO DESCONTOS-->
-                  <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 q-mb-md">
+                  <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                     <div class="row gutter-xs">
 
-                      <div class="col-12 text-bold">
+                      <div class="col-9 text-bold self-center">
                         {{numeral(fixacao.quantidade).format('0,0')}} {{fixacao.unidade_medida_quantidade.sigla}}
                         em {{moment(fixacao.data_fixacao).format('DD [de] MMMM [de] YYYY')}}
+                      </div>
+
+                      <div class="col-3">
+                        <q-btn class="float-right" color="grey-7" flat dense icon="more_vert" round>
+                          <q-popover>
+                            <q-list link class="no-border">
+                              <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
+                                <q-item-main label="Excluir"/>
+                              </q-item>
+                            </q-list>
+                          </q-popover>
+                        </q-btn>
                       </div>
 
                       <div class="col-12">
