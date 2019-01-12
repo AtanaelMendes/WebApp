@@ -179,12 +179,12 @@
     </div>
 
     <!--EMPTY LIST-->
-    <div class="column q-ma-xl items-center" v-if="safras.length <= 0">
-      <div class="col-6">
-        <img src="assets/images/sad_2.svg" class="responsive"/>
-      </div>
-      <div class="col-6 text-justify">
-        <span>Nenhum resultado encontrado.</span>
+    <div class="col-12" v-if="safras.length <= 0">
+      <div class="row justify-center items-center" style="min-height: 40vh">
+        <div class="col-6 text-center">
+          <img src="assets/images/sad_2.svg" class="responsive"/>
+          <p>Nenhum resultado encontrado.</p>
+        </div>
       </div>
     </div>
 

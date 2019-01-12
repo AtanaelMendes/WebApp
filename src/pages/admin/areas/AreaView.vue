@@ -52,7 +52,6 @@
           </div>
 
         </div>
-        <!--FIM INFORMACOES-->
 
         <!--TALHOES-->
         <div class="row q-px-md gutter-sm">
@@ -109,13 +108,13 @@
               </q-item>
               <q-card-main>
                 <div class="row">
-                  <div>{{talhao.tamanho}},&nbsp{{talhao.unidade.nome}}</div>
+                  <div>{{talhao.tamanho}}&nbsp{{talhao.unidade.nome}}</div>
                 </div>
               </q-card-main>
             </q-card>
           </div>
         </div>
-        <!--FIM TALHOES-->
+
       </div>
     </div>
 

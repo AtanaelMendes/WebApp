@@ -4,7 +4,7 @@
     </toolbar>
 
     <!--LISTA DE CONTRATOS-->
-    <div class="row gutter-sm space-end q-pa-md">
+    <div class="row gutter-sm space-end q-pa-md" v-if="negocios.length > 0">
       <div class="col-xs-12 col-sm-6 col-md- 4 col-lg-3" v-for="negocio in negocios" :key="negocio.id">
 
         <q-card>
@@ -41,12 +41,12 @@
     </div>
 
     <!--EMPTY LIST-->
-    <div class="column q-ma-xl items-center" v-if="negocios.length <= 0">
-      <div class="col-6">
-        <img src="assets/images/sad_2.svg" class="responsive"/>
-      </div>
-      <div class="col-6 text-justify">
-        <span>Nenhum resultado encontrado.</span>
+    <div class="col-12" v-if="negocios.length <= 0">
+      <div class="row justify-center items-center" style="min-height: 40vh">
+        <div class="col-6 text-center">
+          <img src="assets/images/sad_2.svg" class="responsive"/>
+          <p>Nenhum resultado encontrado.</p>
+        </div>
       </div>
     </div>
 
