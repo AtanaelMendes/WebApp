@@ -68,13 +68,13 @@
 
               <q-card-main>
                 <q-list link no-border separator>
-                  <q-item class="q-px-none" v-for="carga in 3" :key="carga">
+                  <q-item class="q-px-none" v-for="entregaTalhao in entrega.talhoes" :key="entregaTalhao.id">
                     <q-item-main>
                       <q-item-tile>
-                        Soja 2018/2019
+                        {{entregaTalhao.nome}}
                       </q-item-tile>
                       <q-item-tile sublabel>
-                        33% Y30 Caroline talhão fundos
+                        {{entregaTalhao.percentual}}% - {{entregaTalhao.cultivar}} {{entregaTalhao.area}} - {{entregaTalhao.talhao}}
                       </q-item-tile>
                     </q-item-main>
                   </q-item>
@@ -331,7 +331,7 @@
 
       // TODO passar o id do caminhao no addTalhao
       addTalhao: function(){
-        this.$refs.entregaModal.openModal(1)
+        this.$refs.entregaModal.openModal(this.entrega)
       },
       addTalhaoPercentage: function(){
         this.$refs.addTalhaoPercentageModal.openModal()

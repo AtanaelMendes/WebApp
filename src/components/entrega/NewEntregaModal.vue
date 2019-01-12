@@ -158,7 +158,7 @@
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
       <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="currentStep != 'escolherCultivar' "/>
-      <q-btn label="salvar" color="primary" @click="saveNovaEntrega" :disable="isNextStepEnabled()" v-if="currentStep == 'escolherCultivar' "/>
+      <q-btn label="salvar" color="primary" @click="save" :disable="isNextStepEnabled()" v-if="currentStep == 'escolherCultivar' "/>
     </q-page-sticky>
 
   </q-modal>
@@ -195,18 +195,23 @@
       }
     },
     methods: {
-      openModal: function(caminhaoId = null){
+      openModal: function(entrega = null){
         this.isModalOpened = true;
         this.novaEntrega = new NovaEntrega();
         this.selectedSafraCulturaId = null;
         this.selectedAreaId = null;
         this.selectedTalhaoId = null;
         this.selectedCultivarId = null;
+        this.currentStep = 'escolherCaminhao';
 
         this.listSafraCulturas();
-        if(caminhaoId){
+        if(entrega){
           this.addNewTalhaoMode = true;
-          this.selectCaminhao(caminhaoId);
+          this.novaEntrega.id = entrega.id;
+          //this.currentStep = 'escolherSafra';
+          this.selectCaminhao(entrega.caminhao.id);
+          //this.novaEntrega.caminhaoId = caminhaoId;
+          //this.currentStep = 'escolherSafra';
         }else{
           this.listCaminhoes();
           this.addNewTalhaoMode = false;
@@ -330,6 +335,13 @@
         this.selectedCultivarId = cultivar.id;
         //this.saveNovaEntrega();
       },
+      save:function(){
+        if(!this.addNewTalhaoMode){
+          this.saveNovaEntrega();
+        }else{
+          this.addNovoTalhao();
+        }
+      },
       saveNovaEntrega: function(){
         let filteredSafraCulturaTalhoes = this.safraCulturaTalhoes.filter(safraCulturaTalhao => {
           return safraCulturaTalhao.talhao.id === this.selectedTalhaoId
@@ -350,8 +362,45 @@
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
       },
+      addNovoTalhao: function(){
+        //TODO: Código repetido com o saveNovaEntrega. Separar em outro metodo
+        let filteredSafraCulturaTalhoes = this.safraCulturaTalhoes.filter(safraCulturaTalhao => {
+          return safraCulturaTalhao.talhao.id === this.selectedTalhaoId
+            && safraCulturaTalhao.talhao.area.id === this.selectedAreaId
+            && safraCulturaTalhao.cultivar.id === this.selectedCultivarId;
+
+        });
+
+        this.novaEntrega.safraCulturaTalhaoId = filteredSafraCulturaTalhoes[0].id;
+
+        entregaService.addTalhaoToEntrega(this.novaEntrega.id, this.novaEntrega.getValues()).then(response => {
+          if(response.status === 201) {
+            this.$q.notify({type: 'positive', message: 'Talhao adicionado com sucesso'});
+            this.closeModal();
+            this.$root.$emit('refreshEntregaView')
+          }
+        }).catch(error => {
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+        });
+      },
       goToNextStep(){
-        this.$refs.stepperNovaEntrega.next();
+        //this.$refs.stepperNovaEntrega.next();
+        switch (this.currentStep) {
+          case 'escolherCaminhao':
+            this.$refs.stepperNovaEntrega.goToStep('escolherSafra');
+            break;
+          case 'escolherSafra':
+            this.$refs.stepperNovaEntrega.goToStep('escolherArea');
+            break;
+          case 'escolherArea':
+            this.$refs.stepperNovaEntrega.goToStep('escolherTalhao');
+            break;
+          case 'escolherTalhao':
+            this.$refs.stepperNovaEntrega.goToStep('escolherCultivar');
+            break;
+          case 'escolherCultivar':
+            break;
+        }
       }
     },
   }
