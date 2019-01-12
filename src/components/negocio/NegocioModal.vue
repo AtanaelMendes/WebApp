@@ -67,8 +67,8 @@
 
           <div class="col-3">
             <custom-input-datetime :model="negocio.emissao" type="date" label="Data emissão"/>
-            <custom-input-text :model="negocio.numeroContrato" type="number" label="Número do contrato"/>
-            <custom-input-text :model="negocio.numeroPedido" type="number" label="Número do Pedido"/>
+            <custom-input-text :model="negocio.numeroContrato" label="Número do contrato"/>
+            <custom-input-text :model="negocio.numeroPedido" label="Número do Pedido"/>
           </div>
           <div class="col-3">
             <q-input v-model="negocio.observacoes.value" type="textarea" float-label="Observações"/>
