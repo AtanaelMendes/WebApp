@@ -87,10 +87,10 @@
             De qual negócio
           </div>
 
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="negocio in entrega.negocios_entregas" :key="negocio.id">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="negocio in entrega.negocios" :key="negocio.id">
             <q-card class="cursor-pointer" @click.native="toggleNegocio(negocio)">
               <q-card-title>
-                {{negocio.tipo_negocio}} {{negocio.pessoa}}
+                {{negocio.negocio_cultura.negocio.nome}}
                 <q-btn slot="right" icon="done" round color="positive" size="8px" v-if="negocioisInArray(negocio)"/>
               </q-card-title>
               <q-card-separator/>
@@ -124,16 +124,16 @@
                 </div>
 
                 <div class="col-6">
-                  <q-input type="number" v-model="negocio.negocio_produto_quantidade" suffix="KG" align="right"/>
+                  <q-input type="number" v-model="negocio.negocio_produto_quantidade" :suffix="getUnidadeMedidaById(pesagem.unidadeMedidaId).sigla" align="right"/>
                 </div>
 
               </template>
               <div class="col-6 offset-6 text-right q-mt-sm">
                 <span class="text-faded">Alocar</span>&nbsp
-                <span :class="quantidadeAlocarErrorClass()"> {{numeral(quantidadeAlocar).format('0,0')}}</span>  KG
+                <span :class="quantidadeAlocarErrorClass()"> {{numeral(quantidadeAlocar).format('0,0')}}</span>  {{getUnidadeMedidaById(pesagem.unidadeMedidaId).sigla}}
               </div>
               <div class="col-6 offset-6 text-right q-mt-sm">
-                <span class="text-faded">total</span> {{numeral(pesagem.pesoLiquido.value).format('0,0')}} KG
+                <span class="text-faded">total</span> {{numeral(pesagem.pesoLiquido.value).format('0,0')}} {{getUnidadeMedidaById(pesagem.unidadeMedidaId).sigla}}
               </div>
 
             </div>
@@ -174,18 +174,6 @@
         entrega: null,
         errorValue: '',
         unidadesMedida: [],
-        negocios:[
-          {
-            id: 1,
-            negocio: 'ADM Troca',
-            quantidade: null
-          },
-          {
-            id: 2,
-            negocio: 'ADM Balcão',
-            quantidade: null
-          }
-        ],
       }
     },
     watch: {},
@@ -272,38 +260,28 @@
             }
           }
 
+          if(this.currentStep === 'negocioQuantidade'){
+            if(!this.isFormNegocioCulturasValid()){
+              this.$q.dialog({ title: 'Atenção', message: 'Preencha os campos corretamente.', ok: 'OK', color: 'primary' });
+              return
+            }
+            if(this.quantidadeAlocar !== 0){
+              this.$q.dialog({ title: 'Atenção', message: 'Ainda há uma quantidade para alocar.', ok: 'OK', color: 'primary' });
+              return
+            }
+          }
+
           pesagemService.savePesagem(this.entrega.id, this.pesagem.getValues()).then(response => {
             if(response.status === 201) {
-              this.$q.notify({type: 'positive', message: 'Pesagem criado com sucesso'});
+              this.$q.notify({type: 'positive', message: 'Pesagem criada com sucesso'});
               this.closeModal();
+              this.$root.$emit('refreshEntregasList', 'no_armazem')
+              this.$root.$emit('refreshEntregasList', 'entregue')
             }
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           });
         }, 300 /*ms to wait*/)
-
-
-        // if(this.currentStep === 'negocioQuantidade'){
-        //   setTimeout(() => {
-        //     if(!this.isFormNegocioCulturasValid()){
-        //       this.$q.dialog({ title: 'Atenção', message: 'Preencha os campos corretamente.', ok: 'OK', color: 'primary' });
-        //       return
-        //     }else{
-        //       if(this.quantidadeAlocar != 0){
-        //         this.$q.dialog({ title: 'Atenção', message: 'Ainda há uma quantidade para alocar.', ok: 'OK', color: 'primary' });
-        //         return
-        //       }
-        //       pesagemService.saveNewPesagem(this.pesagem.getValues()).then(response => {
-        //         if(response.status === 201) {
-        //           this.$q.notify({type: 'positive', message: 'Pesagem criado com sucesso'});
-        //           this.closeModal();
-        //         }
-        //       }).catch(error => {
-        //         this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-        //       });
-        //     }
-        //   }, 300 /*ms to wait*/)
-        // }
       },
       goToNextStep(){
         if(this.currentStep === 'classificacao'){
