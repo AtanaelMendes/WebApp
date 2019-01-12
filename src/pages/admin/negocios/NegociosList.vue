@@ -9,7 +9,7 @@
 
         <q-card>
           <q-card-title @click.native="viewNegocio(negocio.id)">
-            Negocio {{negocio.numero_contrato}}
+            Negocio Nº: {{negocio.numero_contrato}}
             <div slot="right">
               <q-btn round flat dense icon="more_vert" @click.stop>
                 <q-popover>

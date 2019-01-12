@@ -85,6 +85,15 @@ export default {
       })
     });
   },
+  deleteCultura(negocioId, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.delete('negocio/'+ negocioId + '/cultura/' + id).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
   listNegociosCulturas(negocioId){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.get('negocio/'+ negocioId + '/cultura?filter=without_empty').then(response => {
@@ -113,9 +122,27 @@ export default {
       })
     });
   },
+  deleteTitulo(negocioId, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.delete('negocio/'+ negocioId + '/titulo/' + id).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
   saveAttachProduto(negocioId, negocioProduto){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.post('negocio/'+ negocioId + '/produto', negocioProduto).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
+  deleteProduto(negocioId, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.delete('negocio/'+ negocioId + '/produto/' + id).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)

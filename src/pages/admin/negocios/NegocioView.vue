@@ -64,7 +64,7 @@
               <q-btn slot="right" flat dense icon="more_vert" round>
                 <q-popover>
                   <q-list link class="no-border">
-                    <q-item v-close-overlay @click.native="">
+                    <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
                       <q-item-main label="Excluir"/>
                     </q-item>
                   </q-list>
@@ -156,9 +156,9 @@
                               </q-item-main>
                             </q-item>
 
-                            <q-item v-for="item in titulo.itens" class="text-faded q-px-none" :key="item">
+                            <q-item v-for="item in titulo.itens" class="text-faded q-px-none" :key="item.id">
                               <q-item-main>
-                                {{item}}
+                                {{item.titulo}}
                               </q-item-main>
                               <q-item-side>
                                 <q-btn dense flat icon="more_vert" round>
@@ -273,15 +273,15 @@
                       </q-item-main>
                     </q-item>
 
-                    <q-item class="text-faded q-px-none" v-for="(item, index) in titulo.itens" :key="index * 7">
+                    <q-item class="text-faded q-px-none" v-for="item in titulo.itens" :key="item.id">
                       <q-item-main>
-                        {{item}}
+                        {{item.titulo}}
                       </q-item-main>
                       <q-item-side>
                         <q-btn flat dense icon="more_vert" round>
                           <q-popover>
                             <q-list link class="no-border">
-                              <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
+                              <q-item v-close-overlay @click.native="deleteTitulo(item.id)">
                                 <q-item-main label="Excluir"/>
                               </q-item>
                             </q-list>
@@ -346,7 +346,7 @@
                       <q-btn flat dense icon="more_vert" round>
                         <q-popover>
                           <q-list link class="no-border">
-                            <q-item v-close-overlay @click.native="">
+                            <q-item v-close-overlay @click.native="deleteProduto(produto.id)">
                               <q-item-main label="Excluir"/>
                             </q-item>
                           </q-list>
@@ -477,12 +477,48 @@
       deleteCultura: function(id){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente deseja apagar esta negocio?',
+          message: 'Realmente deseja apagar esta cultura do negócio?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          negocioService.deleteNegocio(id).then(response => {
-            this.getNegocioById()
+          negocioService.deleteCultura(this.negocio.id, id).then(response => {
+            if(response.status === 200){
+              this.getNegocioById()
+            }
+          }).catch(error => {
+            console.log(error)
+            if(error.status === 422){
+              this.$q.dialog({
+                title: 'Erro', message: 'Não é possível apagar esta cultura! Erro: ' + error.data, ok: 'Ok', color: 'primary'})
+            }
+          })
+        }).catch(()=>{});
+      },
+      deleteTitulo:function(id){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar este título?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          negocioService.deleteTitulo(this.negocio.id, id).then(response => {
+            if(response.status === 200){
+              this.getNegocioById()
+            }
+          })
+        }).catch(()=>{});
+      },
+      deleteProduto:function(id){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja desvincular este produto do negócio?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          negocioService.deleteProduto(this.negocio.id, id).then(response => {
+            if(response.status === 200){
+              this.getNegocioById()
+            }
           })
         }).catch(()=>{});
       },
