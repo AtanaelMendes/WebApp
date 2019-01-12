@@ -75,6 +75,24 @@ export default {
       })
     });
   },
+  listTalhoesFromEntrega(entrega_id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega/' + entrega_id + '/talhoes').then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  updateTalhoesPercentual(entrega_id, params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/talhoes', params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
   updateEntrega(id, params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ id, params).then(response => {

@@ -6,22 +6,22 @@
       </div>
       <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
 
-        <div class="row q-mb-lg" v-for="talhao in talhaoForm" :key="talhao.id">
+        <div class="row q-mb-lg" v-for="entregaTalhao in talhoes" :key="entregaTalhao.id">
 
           <div class="col-xs-6 col-lg-3 self-center" >
-            {{talhao.area}}
+            {{entregaTalhao.area}}
           </div>
 
           <div class="col-xs-6 col-lg-3 self-center">
-            {{talhao.nome}}
+            {{entregaTalhao.talhao}}
           </div>
 
           <div class="col-xs-6 col-lg-3 self-center">
-            {{talhao.cultivar}}
+            {{entregaTalhao.cultivar}}
           </div>
 
           <div class="col-xs-6 col-lg-3">
-            <q-input type="number" v-model="talhao.porcentagem" suffix="%" align="right"/>
+            <q-input type="number" v-model="entregaTalhao.percentual" suffix="%" align="right"/>
           </div>
 
         </div>
@@ -49,36 +49,40 @@
     data () {
       return {
         isModalOpened: false,
-        area: {
-          id: 1,
-          nome: 'Caroline',
-          safraCulturaTalhao: [
-            {
-              id: 1,
-              nome: 'Talhão fundo',
-              cultivar: 'Y30',
-            },
-            {
-              id: 2,
-              nome: 'Talhão frente',
-              cultivar: 'Y30',
-            },
-            {
-              id: 3,
-              nome: 'Talhão subida',
-              cultivar: 'Y30',
-            }
-          ],
-        },
-        talhaoForm: [],
+        entrega: null,
+        talhoes: [],
+        // area: {
+        //   id: 1,
+        //   nome: 'Caroline',
+        //   safraCulturaTalhao: [
+        //     {
+        //       id: 1,
+        //       nome: 'Talhão fundo',
+        //       cultivar: 'Y30',
+        //     },
+        //     {
+        //       id: 2,
+        //       nome: 'Talhão frente',
+        //       cultivar: 'Y30',
+        //     },
+        //     {
+        //       id: 3,
+        //       nome: 'Talhão subida',
+        //       cultivar: 'Y30',
+        //     }
+        //   ],
+        // },
+        //talhaoForm: [],
       }
     },
     watch: {},
     computed: {
     },
     methods: {
-      openModal: function(){
+      openModal: function(entrega){
         this.isModalOpened = true;
+        this.entrega = entrega;
+        this.listTalhaoes(entrega.id);
       },
       closeModal: function(){
         this.isModalOpened = false;
@@ -105,27 +109,20 @@
       },
       talhaoformIsValid: function(){
         let isValid = true;
-        this.talhaoForm.forEach(function (form) {
-          if(form.porcentagem == null){
+        this.talhoes.forEach(function (talhao) {
+          if(talhao.percentual == null){
             isValid = false
           }
         });
         return isValid
       },
       talhaoformDivisaoIsValid: function(){
-        let isValid = true;
         let somaPorcentagem = 0;
-        this.talhaoForm.forEach(function (form) {
-          somaPorcentagem += form.porcentagem;
+        this.talhoes.forEach(function (talhao) {
+          somaPorcentagem += talhao.percentual;
         });
-        if(somaPorcentagem > 100){
-          isValid = false
-        }
-        if(somaPorcentagem < 99.99){
-          isValid = false
-        }
-        console.log(somaPorcentagem)
-        return isValid
+
+        return somaPorcentagem === 100
       },
       saveTalhaoPercentage: function(){
         setTimeout(() => {
@@ -133,23 +130,36 @@
             this.$q.dialog({ title: 'Atenção', message: 'Preencha os campos corretamente.', ok: 'OK', color: 'primary' });
             return
           }else if(!this.talhaoformDivisaoIsValid()){
-            this.$q.dialog({ title: 'Atenção', message: 'A divisão é diferente de 100%.', ok: 'OK', color: 'primary' });
+            this.$q.dialog({ title: 'Atenção', message: 'A soma dos percentuais é diferente de 100%', ok: 'OK', color: 'primary' });
           }else{
-            this.$q.notify({message: 'descomentar a funcao de salvar'})
-            // entregaService.saveTalhaoPercentage(this.talhaoForm).then(response => {
-            //   if(response.status === 200) {
-            //     this.$q.notify({type: 'positive', message: 'Salvo com sucesso'});
-            //     this.closeModal();
-            //   }
-            // }).catch(error => {
-            //   this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-            // });
+
+            let talhoesPost = this.talhoes.map(talhao => {
+              return {
+                id: talhao.id,
+                percentual: talhao.percentual,
+              }
+            });
+
+            entregaService.updateTalhoesPercentual(this.entrega.id, {talhoes: talhoesPost}).then(response => {
+              if(response.status === 200) {
+                this.$q.notify({type: 'positive', message: 'Percentuais atualizado com sucesso!'});
+                this.closeModal();
+                this.$root.$emit('refreshEntregaView')
+              }
+            }).catch(error => {
+              this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+            });
           }
         }, 300 /*ms to wait*/)
       },
+      listTalhaoes: function(entregaId){
+        entregaService.listTalhoesFromEntrega(entregaId).then(response => {
+          this.talhoes = response.data;
+        })
+      },
     },
     created () {
-      this.generateTalhaoPercentageForm();
+      //this.generateTalhaoPercentageForm();
       // this.$root.$on('refreshSafraList', () => {
       //   this.listSafras();
       // });

@@ -33,7 +33,7 @@
             <p><span class="text-faded">Lotação</span> {{numeral(70000).format('0,0')}} KG</p>
             <p><span class="text-faded">Carregado em</span> {{moment(entrega.inicio_carregamento).format('lll')}}</p>
             <p v-if="entrega.envio_armazem"><span class="text-faded">Enviado em</span> {{moment(entrega.envio_armazem).format('lll')}}</p>
-            <p><span class="text-faded">Descarregado em</span> {{moment('2018/12/28 17:30:45').format('lll')}}</p>
+            <p v-if="false"><span class="text-faded">Descarregado em</span> {{moment('2018/12/28 17:30:45').format('lll')}}</p>
 
           </div>
         </q-card>
@@ -203,7 +203,7 @@
                     <q-item-main>
 
                       <q-item-tile>
-                        Bunge<!--{{negocio.negocio_cultura.negocio.nome}}-->
+                        {{negocio.negocio_cultura.negocio.nome}}
                       </q-item-tile>
                       <q-item-tile>
                         Nota
@@ -334,7 +334,7 @@
         this.$refs.entregaModal.openModal(this.entrega)
       },
       addTalhaoPercentage: function(){
-        this.$refs.addTalhaoPercentageModal.openModal()
+        this.$refs.addTalhaoPercentageModal.openModal(this.entrega)
       },
       deleteTalhao: function(id){
         this.$q.dialog({

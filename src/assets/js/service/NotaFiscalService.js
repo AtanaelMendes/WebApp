@@ -1,4 +1,5 @@
 import Vue from 'vue'
+const produtorId = localStorage.getItem('account.produtor_id');
 export default {
   listNotas(filter){
     return new Promise((resolve, reject) => {
@@ -12,10 +13,9 @@ export default {
   },
   getNotaById(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios({ url: 'produtos-nfe', baseURL: 'http://demo3716022.mockable.io/' } ).then( response =>{
-        // console.log(response)
+      Vue.prototype.$axios.get('produtor/' + produtorId + '/nota_fiscal/' + id).then(response => {
         resolve(response);
-      }).catch(error =>{
+      }).catch(error => {
         reject(error)
       })
     });
