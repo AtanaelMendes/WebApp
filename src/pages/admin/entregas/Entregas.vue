@@ -115,49 +115,49 @@
     </div>
 
     <!--TAB ENTREGUE-->
-    <div class="row gutter-sm space-end" v-if="tabs == 'entregue' ">
+    <div class="row gutter-sm space-end" v-if="tabs === 'entregue' ">
       <div class="col-12">
         <q-list no-border link separator>
 
-          <q-item multiline v-for="cargaEntregue in 30" :key="cargaEntregue" @click.native="viewCarga(cargaEntregue)">
+          <q-item multiline v-for="entrega in entregasEntregues" :key="entrega.id" @click.native="viewCarga(entrega.id)">
             <div class="gt-sm">
-              <q-item-side avatar="assets/images/1.jpg" class="gt-sm"/>
+              <q-item-side avatar="assets/images/icon-no-image.svg" class="gt-sm" v-if="!entrega.image"/>
+              <q-item-side :avatar="entrega.image" class="gt-sm" v-if="entrega.image"/>
             </div>
-            <q-item-side image="assets/images/1.jpg" class="lt-md"/>
+            <q-item-side image="assets/images/icon-no-image.svg" class="lt-md" v-if="!entrega.image"/>
+            <q-item-side :image="entrega.image" class="lt-md" v-if="entrega.image"/>
             <q-item-main>
               <q-item-tile class="content-center">
                 <div class="row">
                   <div class="col-sm-12 col-md-6">
-                    Madenorte
+                    {{entrega.armazem}}
                   </div>
                   <div class="col-sm-12 col-md-6">
-                    {{numeral(49000).format('0,0')}}
-                    ({{numeral(50000).format('0,0')}} -
-                    {{numeral(10000).format('0,0')}}) KG
+                    {{entrega.peso}}
                   </div>
                 </div>
               </q-item-tile>
               <q-item-tile sublabel>
                 <div class="row">
                   <div class="col-sm-12 col-md-6">
-                    Crotalaria 2018/2019
+                    {{entrega.safra}}
                   </div>
                   <div class="col-sm-12 col-md-6">
-                    Fulano da Silva
+                    {{entrega.motorista}}
                   </div>
                   <div class="col-xs-12 col-sm-12 col-md-6 lt-md">
-                    28 dez 17:45 <br>
-                    HGT 9966
+                    {{moment(entrega.entregue).format('DD MMM YYYY')}} <br>
+                    {{entrega.caminhao.placa}}
                   </div>
                 </div>
               </q-item-tile>
             </q-item-main>
             <q-item-side right class="gt-sm">
               <q-item-tile stamp>
-                28 dez 17:45
+                {{moment(entrega.entregue).format('DD MMM YYYY')}}
               </q-item-tile>
               <q-item-tile sublabel>
-                HGT 9966
+                {{entrega.caminhao.placa}}
               </q-item-tile>
             </q-item-side>
           </q-item>
@@ -166,7 +166,7 @@
       </div>
 
       <!--EMPTY LIST-->
-      <div class="col-12" v-if="cargasEntregue <= 0">
+      <div class="col-12" v-if="entregasEntregues <= 0">
         <div class="row justify-center items-center" style="min-height: 40vh">
           <div class="col-6 text-center">
             <img src="assets/images/sad_2.svg" class="responsive"/>
@@ -203,7 +203,7 @@
         entregas: [],
         entregasCarregando:[],
         entregasNoArmazem:[],
-        cargasEntregue:[],
+        entregasEntregues:[],
       }
     },
     methods: {
@@ -221,7 +221,9 @@
         })
       },
       listEntregasEntregues: function () {
-
+        entregaService.listCargasEntregues().then(response => {
+          this.entregasEntregues = response.data;
+        })
       },
       viewCarga: function (id) {
         this.$router.push({name: 'entrega_view', params: {id:id}});
@@ -230,6 +232,8 @@
     mounted () {
       this.listEntregasCarregando();
       this.listEntregasNoArmazem();
+      this.listEntregasEntregues();
+
       this.$root.$on('refreshEntregasList', (status) => {
         switch (status) {
           case 'carregando':

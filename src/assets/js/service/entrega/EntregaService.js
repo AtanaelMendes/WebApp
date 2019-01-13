@@ -22,7 +22,7 @@ export default {
   },
   listCargasEntregues(){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entregas?staus=entregues').then( response => {
+      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=entregue').then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)

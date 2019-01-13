@@ -208,8 +208,8 @@
         this.pesagem.unidadeMedidaId = entrega.negocios[0].negocio_cultura.safra_cultura.cultura.default_unidade_pesagem_id;
       },
       closeModal: function(){
-        this.pesagem = new Pesagem();
         this.isModalOpened = false;
+        this.pesagem = new Pesagem();
       },
       isNextStepEnabled: function(){
         if(!this.pesagem.isValid()){

@@ -4,7 +4,7 @@
     <q-stepper key="novaEntrega" ref="stepperNovaEntrega" contractable color="positive" v-model="currentStep" class="no-shadow">
 
       <!--PASSO 1 ESCOLHER CAMINHAO -->
-      <q-step default title="Escolher caminhão" name="escolherCaminhao" v-if="!addNewTalhaoMode">
+      <q-step default title="Caminhão" name="escolherCaminhao" v-if="!addNewTalhaoMode">
         <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
 
           <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="caminhao in caminhoes" :key="caminhao.id">
@@ -43,7 +43,7 @@
       </q-step>
 
       <!--PASSO 2 ESCOLHER SAFRA -->
-      <q-step title="Escolher Safra" name="escolherSafra">
+      <q-step title="Safra" name="escolherSafra">
         <div class="row justify-center items-center gutter-sm" style="min-height: 80vh" >
 
           <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="safraCultura in safraCulturas" :key="safraCultura.id" >
@@ -75,7 +75,7 @@
       </q-step>
 
       <!--PASSO 3 ESCOLHER AREA -->
-      <q-step title="Escolher área" name="escolherArea">
+      <q-step title="Área" name="escolherArea">
         <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
 
           <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="area in areas" :key="area.id">
@@ -100,7 +100,7 @@
       </q-step>
 
       <!--PASSO 4 ESCOLHER TALHAO -->
-      <q-step title="Escolher Talhão" name="escolherTalhao">
+      <q-step title="Talhão" name="escolherTalhao">
         <div class="row justify-center items-center gutter-sm space-end" style="min-height: 80vh">
           <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2" v-for="talhao in talhoes" :key="talhao.id">
             <q-card>
@@ -128,7 +128,7 @@
       </q-step>
 
       <!--PASSO 5 ESCOLHER CULTIVAR -->
-      <q-step title="Escolher cultivar" name="escolherCultivar">
+      <q-step title="Cultivar" name="escolherCultivar">
         <div class="row justify-center items-center gutter-sm space-end" style="min-height: 80vh">
           <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2" v-for="cultivar in cultivares" :key="cultivar.id">
             <q-card>

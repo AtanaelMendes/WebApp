@@ -33,7 +33,7 @@
             <p><span class="text-faded">Lotação</span> {{numeral(70000).format('0,0')}} KG</p>
             <p><span class="text-faded">Carregado em</span> {{moment(entrega.inicio_carregamento).format('lll')}}</p>
             <p v-if="entrega.envio_armazem"><span class="text-faded">Enviado em</span> {{moment(entrega.envio_armazem).format('lll')}}</p>
-            <p v-if="false"><span class="text-faded">Descarregado em</span> {{moment('2018/12/28 17:30:45').format('lll')}}</p>
+            <p v-if="entrega.entregue"><span class="text-faded">Descarregado em</span> {{moment(entrega.entregue).format('lll')}}</p>
 
           </div>
         </q-card>
@@ -51,7 +51,7 @@
                 <q-btn slot="right" dense icon="more_vert" round flat>
                   <q-popover>
                     <q-list link class="no-border">
-                      <q-item v-close-overlay @click.native="addTalhaoPercentage()">
+                      <q-item v-close-overlay @click.native="addTalhaoPercentage()" v-if="entrega.talhoes.length > 1">
                         <q-item-main label="Definir Porc. dos talhões"/>
                       </q-item>
                       <q-item v-close-overlay @click.native="addTalhao()">
@@ -74,7 +74,7 @@
                         {{entregaTalhao.percentual}}% - {{entregaTalhao.cultivar}} {{entregaTalhao.area}} - {{entregaTalhao.talhao}}
                       </q-item-tile>
                     </q-item-main>
-                    <q-item-side class="self-start">
+                    <q-item-side class="self-start" v-if="entrega.talhoes.length > 1">
                       <q-btn icon="more_vert" dense round flat>
                         <q-popover>
                           <q-list link class="no-border">
@@ -186,7 +186,7 @@
       </div>
 
       <!--INFO DOS NEGÓCIOS-->
-      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" v-if="entrega.negocios.length > 0">
         <div class="row gutter-y-sm">
 
           <div class="col-12" >
@@ -217,11 +217,21 @@
                         Nota
                       </q-item-tile>
                       <q-item-tile>
-                        Vitório 1-1234 {{numeral(30000).format('0,0')}} 0,85 {{numeral(25500).format('0,0.00')}}
+                        <q-item v-for="nota_fiscal_item in negocio.notas_fiscais_itens" :key="nota_fiscal_item.id">
+                          <q-item-main>
+                            <q-item-tile>
+                              {{nota_fiscal_item.nota_fiscal.nota_fiscal_serie.nome}} - {{nota_fiscal_item.nota_fiscal.nota_fiscal_serie.serie}} -
+                              {{nota_fiscal_item.nota_fiscal.numero}} -
+                              {{nota_fiscal_item.quantidade}} -
+                              {{nota_fiscal_item.valor_unitario}} - {{nota_fiscal_item.valor_total}}
+                            </q-item-tile>
+                            <q-item-tile sublabel>
+                              {{nota_fiscal_item.cfop.numero}} - {{nota_fiscal_item.cfop.descricao}} - {{moment(nota_fiscal_item.nota_fiscal_emissao).format('DD MMM YYYY')}}
+                            </q-item-tile>
+                          </q-item-main>
+                        </q-item>
                       </q-item-tile>
-                      <q-item-tile>
-                        5101 - Venda Produção estabelecimento {{moment(negocio.negocio_cultura.negocio.emissao).format('DD MMM YYYY')}}
-                      </q-item-tile>
+
 
                     </q-item-main>
                     <q-item-side class="self-start">
