@@ -68,7 +68,16 @@ export default {
   },
   addTalhaoToEntrega(entrega_id, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/novo_talhao', params).then(response => {
+      Vue.prototype.$axios.post('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/talhao', params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
+  delteTalhaoOfEntrega(entrega_id, talhao_id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.delete('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/talhao/' + talhao_id).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
@@ -147,23 +156,5 @@ export default {
         reject(error.response)
       })
     });
-  },
-  saveAddTalhao(params){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ id, params).then(response => {
-        resolve(response)
-      }).catch(error => {
-        reject(error.response)
-      })
-    });
-  },
-  deleteTalhao(id){
-    // return new Promise((resolve, reject) => {
-    //   Vue.prototype.$axios.delete('produtor/'+ produtorId + '/entrega/' + id).then(response => {
-    //     resolve(response)
-    //   }).catch(error => {
-    //     reject(error.response)
-    //   })
-    // });
   },
 }

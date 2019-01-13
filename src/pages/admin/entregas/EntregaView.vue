@@ -361,10 +361,15 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          entregaService.deleteTalhao(id).then(response => {
-            this.getEntrega()
+          entregaService.delteTalhaoOfEntrega(this.entrega.id, id).then(response => {
+            if(response.status === 200) {
+              this.$q.notify({type: 'positive', message: 'Talhão removido com sucesso'});
+              this.getEntrega()
+            }
           })
-        }).catch(()=>{});
+        }).catch(()=>{
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+        });
       },
       deleteNegocio: function(){
         this.$q.dialog({
@@ -376,7 +381,9 @@
           negocioService.deleteNegocio(id).then(response => {
             this.listCulturas()
           })
-        }).catch(()=>{});
+        }).catch(()=>{
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+        });
       },
       deletePesagem: function(){
         this.$q.dialog({
