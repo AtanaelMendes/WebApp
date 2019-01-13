@@ -61,7 +61,12 @@ export default class{
           verificado: classificacao.verificado.value,
         };
       }),
-      negocio_culturas: this.negocioCulturas
+      negocio_culturas: this.negocioCulturas.map(function (negocio) {
+        return {
+          id: negocio.id,
+          quantidade: negocio.negocio_produto_quantidade,
+        }
+      })
     }
   }
 
