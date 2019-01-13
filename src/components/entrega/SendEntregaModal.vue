@@ -172,7 +172,7 @@
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
       <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="isBtnVisible"/>
-      <q-btn label="salvar" color="primary" @click="save" :disable="isNextStepEnabled()" v-if="!isBtnVisible"/>
+      <q-btn label="salvar" color="primary" @click="save" :disable="isSaveButtonEnabled()" v-if="!isBtnVisible"/>
     </q-page-sticky>
 
   </q-modal>
@@ -267,6 +267,8 @@
             break;
 
           case 'updateMotorista':
+            this.selectedEntrega = entrega;
+            this.sendEntrega.motoristaId = entrega.motorista.id;
             this.currentStep = 'motorista';
             this.stepNegocio = false;
             this.stepArmazem = false;
@@ -295,10 +297,20 @@
         if(this.sendEntrega.armazemId == null && this.currentStep === 'armazem'){
           return true
         }
-        if(!this.sendEntrega.isValid()){
-          return true
-        }
+
         return false;
+      },
+      isSaveButtonEnabled: function(){
+        switch (this.funcao) {
+          case 'sendEntrega':
+            return this.sendEntrega.isValid();
+          case 'updateNota':
+            break
+          case 'novoNegocio':
+            break;
+          case 'updateMotorista':
+            return this.sendEntrega.negocioCulturaId != null
+        }
       },
       listNegocioCulturas: function(){
         negocioService.listNegociosCulturasByProdutor().then(response => {
@@ -343,6 +355,9 @@
           case 'novoNegocio':
             this.addNegocioToEntrega();
             break;
+          case 'updateMotorista':
+            this.updateMotorista();
+            break;
         }
       },
       saveSendEntrega: function(){
@@ -362,6 +377,22 @@
         entregaService.addNegocioToEntrega(entregaId, this.sendEntrega.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Negócio adicionado com sucesso'});
+            this.closeModal();
+            this.$root.$emit('refreshEntregaView')
+          }
+        }).catch(error => {
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+        });
+      },
+      updateMotorista: function(){
+        let entregaId = this.$route.params.id;
+        let param = {
+          motorista_id: this.sendEntrega.motoristaId,
+          motorista_nome: null
+        };
+        entregaService.updateMotorista(entregaId, param).then(response => {
+          if(response.status === 200) {
+            this.$q.notify({type: 'positive', message: 'Motorista atualizado com sucesso'});
             this.closeModal();
             this.$root.$emit('refreshEntregaView')
           }

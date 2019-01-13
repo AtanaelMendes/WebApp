@@ -21,7 +21,7 @@
             <q-btn class="float-right" icon="more_vert" round flat>
               <q-popover>
                 <q-list link class="no-border">
-                  <q-item v-close-overlay @click.native="updateMotorista()">
+                  <q-item v-close-overlay @click.native="updateMotorista(entrega)">
                     <q-item-main label="Alterar Motorista"/>
                   </q-item>
                 </q-list>
@@ -340,8 +340,8 @@
       novoNegocio: function(entrega){
         this.$refs.sendEntregaModal.openModal('novoNegocio', entrega)
       },
-      updateMotorista: function(){
-        this.$refs.sendEntregaModal.openModal('updateMotorista')
+      updateMotorista: function(entrega){
+        this.$refs.sendEntregaModal.openModal('updateMotorista', entrega)
       },
       newPesagem: function(){
         this.$refs.newPesagemModal.openModal(this.entrega)
