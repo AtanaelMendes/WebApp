@@ -16,23 +16,26 @@
             <q-card @click.native="selectNegocioCultura(negocioCultura)" class="cursor-pointer	">
 
               <q-card-title>
-                {{negocioCultura.nome}}
+                {{negocioCultura.pessoa}}
                 <q-btn v-if="sendEntrega.negocioCulturaId == negocioCultura.id" slot="right" round size="8px" icon="done" color="positive"/>
               </q-card-title>
               <q-card-separator/>
 
               <q-card-main class="row gutter-y-xs">
                 <div class="col-12">
-                  {{numeral(30000).format('0,0')}} SC
+                  {{negocioCultura.quantidade}}
+                </div>
+                <div class="col-12" v-if="negocioCultura.quantidade_entregue">
+                  {{negocioCultura.quantidade_entregue}} Entregue
+                </div>
+                <div class="col-12 text-warning" v-if="!negocioCultura.quantidade_entregue">
+                  Nenhuma quantidade entregue ainda
+                </div>
+                <div class="col-12" v-if="negocioCultura.quantidade_restante">
+                  {{negocioCultura.quantidade_restante}} Restante
                 </div>
                 <div class="col-12">
-                  {{numeral(28000).format('0,0')}} SC Entregue
-                </div>
-                <div class="col-12">
-                  {{numeral(2000).format('0,0')}} SC Restante
-                </div>
-                <div class="col-12">
-                  {{moment().format('DD MMM YYYY')}}
+                  {{moment(negocioCultura.prazo_entrega_final).format('DD MMM YYYY')}}
                 </div>
                 <!--<div class="col-12 text-warning" v-if="negocio == 2">-->
                   <!--2 Cargas aguardando no armazém-->
