@@ -14,8 +14,8 @@
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
             <custom-input-text type="number" :model="pesagem.numeroTicket" align="right" label="Número do ticket"/>
             <custom-input-date-time type="datetime-local" label="Data descarga" :model="pesagem.emissao"/>
-            <div class="row">
-              <div class="col-8 q-pr-lg">
+            <div class="row q-mb-lg">
+              <div class="col-8 q-pr-lg ">
 
                   <q-input class="q-mb-none" type="number" v-model="pesagem.pesoBrutoTotal.value" align="right"
                            float-label="Peso bruto total" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>
