@@ -281,7 +281,6 @@
         }
         this.isModalOpened = true;
         this.listNegocioCulturas();
-        this.listArmazens();
         this.listMotoristas();
         this.getUnidadesMedida();
         this.listNotasFiscaisSeries(1)
@@ -330,10 +329,11 @@
       },
       selectNegocioCultura: function(negocioCultura){
         this.sendEntrega.negocioCulturaId = negocioCultura.id;
+        this.listArmazensByNegocioCultura(negocioCultura.id);
         this.goToNextStep()
       },
-      listArmazens: function(){
-        armazemService.listArmazens().then(response => {
+      listArmazensByNegocioCultura: function(negocioCulturaId){
+        negocioService.listArmazensByNegocioCultura(negocioCulturaId).then(response => {
           this.armazens = response.data;
         })
       },

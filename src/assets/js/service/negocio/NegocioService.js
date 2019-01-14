@@ -112,6 +112,15 @@ export default {
       })
     });
   },
+  listArmazensByNegocioCultura(negocioCulturaId){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('negocio/cultura/' + negocioCulturaId + '/armazem').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
 
   saveAttachTitulo(negocioId, negocioTitulo){
     return new Promise((resolve, reject) => {
