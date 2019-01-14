@@ -130,7 +130,6 @@
         this.pessoa.cpf.value = data.cpf
         this.pessoa.cnpj.value = data.cnpj
         this.pessoa.razaoSocial.value = data.razao_social
-        this.pessoa.nomeFantasia.value = data.nome_fantasia
         this.pessoa.inscricaoEstadual.value = data.inscricao_estadual
         this.pessoa.uf.value = data.uf
         this.pessoa.inscricaoMunicipal.value = data.inscricao_municipal
