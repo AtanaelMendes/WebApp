@@ -1,31 +1,28 @@
 <template>
   <q-layout view="hHh Lpr lFf">
     <q-page-container class="background">
-      <q-page class="row justify-center">
-        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-6 text-center">
+      <q-page>
+        <div class="row justify-center items-center" style="height: 100vh">
+          <div class="col-xs-10 col-sm-5 col-md-4 col-lg-3 col-xl-2">
+            <q-card class="card-login" >
+              <q-card-main class="titulo text-center">
+                AgroProject
+              </q-card-main>
+              <q-card-main>
+                <div>
+                  <form @keyup.enter="login">
+                    <custom-input-text type="email" placeholder="Digite seu email" label="Email" :model="form.email" />
 
-          <h2 class="title">AgroProject</h2>
-          <q-card class="login" color="white" text-color="black" inline>
-            <q-card-title >
-              Bem vindo ao AgroProject
-            </q-card-title>
-            <q-card-main class="gutter-y-sm">
-              <div>
-                <form @keyup.enter="login">
-                  <custom-input-text type="email" placeholder="Digite seu email" label="Email" :model="form.email" />
+                    <custom-input-text type="password" placeholder="Digite sua senha" label="Senha" :model="form.password" />
+                  </form>
+                </div>
 
-                  <custom-input-text type="password" placeholder="Digite sua senha" label="Senha" :model="form.password" />
-                </form>
-              </div>
+                <q-btn class="full-width q-mt-lg" color="primary" rounded push @click="login" label="entrar"/>
+                <q-btn  @click="openPasswordRecoveryModal" class="full-width"  color="secondary" flat label="esqueci minha senha"/>
 
-              <q-btn class="full-width q-mt-lg" color="primary" rounded push @click="login" label="entrar"/>
-
-              <div align="end">
-                <q-btn  @click="openPasswordRecoveryModal" color="secondary" flat label="esqueci minha senha"/>
-              </div>
-
-            </q-card-main>
-          </q-card>
+              </q-card-main>
+            </q-card>
+          </div>
         </div>
       </q-page>
     </q-page-container>
@@ -192,11 +189,14 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
-    background-color: #05614f99;
-    background-blend-mode: darken;
   }
-  .title{
-    color: white;
+  .card-login {
+    background-color: #FFFFFFC9;
+  }
+  .titulo{
+    color: #00605f;
+    font-size: 40px;
+    text-shadow: 0 0 3px white, 0 0 5px white;
     font-weight: 800;
   }
 </style>
