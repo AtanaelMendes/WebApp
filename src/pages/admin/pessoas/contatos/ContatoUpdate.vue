@@ -11,24 +11,21 @@
         width: '8px',
         opacity: 1}">
 
-      <div class="row q-pa-md gutter-md">
-        <div class="col-xs-12 col-md-6 col-lg-6">
+      <div class="row q-pa-md gutter-sm">
 
-          <!--TOGGLE FISCAL COBRANCA-->
-          <div class="row">
-            <div class="col-6">
-              <q-toggle color="deep-orange" label="Fiscal" v-model="contato.isFiscal" />
-            </div>
-            <div class="col-6">
-              <q-toggle color="deep-orange" label="Cobrança" v-model="contato.isCobranca" />
-            </div>
-          </div>
-          <!-- FIM TOGGLE FISCAL COBRANCA-->
+        <!--TOGGLE FISCAL COBRANCA-->
+        <div class="col-4">
+          <q-toggle color="deep-orange" label="Fiscal" v-model="contato.isFiscal" />
+        </div>
+        <div class="col-4">
+          <q-toggle color="deep-orange" label="Cobrança" v-model="contato.isCobranca" />
+        </div>
 
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
           <form>
+
             <!--IMPUT NOME-->
             <custom-input-text type="text" label="Nome" :model="contato.nome" />
-            <!-- FIM IMPUT NOME-->
 
             <!--IMPUT TELEFONE-->
             <q-list no-border link>
@@ -54,7 +51,6 @@
                 <q-btn  color="deep-orange " label="Novo Telefone" @click="openAddPhoneDialog()" />
               </div>
             </q-list>
-            <!--FIM IMPUT TELEFONE-->
 
             <!--IMPUT EMAIL-->
             <q-list no-border link>
@@ -79,7 +75,7 @@
                 <q-btn  color="deep-orange " label="Novo Email" @click="openAddEmailDialog()" />
               </div>
             </q-list>
-            <!--FIM IMPUT EMAIL-->
+
           </form>
         </div>
       </div>

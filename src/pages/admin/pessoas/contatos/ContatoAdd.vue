@@ -11,19 +11,18 @@
         width: '8px',
         opacity: 1}">
 
-      <div class="row q-pa-md gutter-md">
-        <div class="col-xs-12 col-md-6 col-lg-6">
+      <div class="row q-pa-md gutter-sm">
 
-          <!--TOGGLE FISCAL COBRANCA-->
-          <div class="row">
-            <div class="col-6">
-              <q-toggle color="deep-orange" label="Fiscal" v-model="contato.isFiscal" />
-            </div>
-            <div class="col-6">
-              <q-toggle color="deep-orange" label="Cobrança" v-model="contato.isCobranca" />
-            </div>
-          </div>
-          <!-- FIM TOGGLE FISCAL COBRANCA-->
+        <!--TOGGLE FISCAL COBRANCA-->
+        <div class="col-4">
+          <q-toggle color="deep-orange" label="Fiscal" v-model="contato.isFiscal" />
+        </div>
+        <div class="col-4">
+          <q-toggle color="deep-orange" label="Cobrança" v-model="contato.isCobranca" />
+        </div>
+
+
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
 
           <form>
             <!--IMPUT NOME-->
@@ -54,7 +53,6 @@
                 <q-btn  color="deep-orange " label="Novo Telefone" @click="openAddPhoneDialog()" />
               </div>
             </q-list>
-            <!--FIM IMPUT TELEFONE-->
 
             <!--IMPUT EMAIL-->
             <q-list no-border link>
@@ -63,7 +61,9 @@
               <q-item v-for="(email, index) in contato.emails" :key="index" @click.native="openEditEmailDialog(email, index)">
                 <q-item-side icon="email" inverted color="light-green-4" />
                 <q-item-main>
-                  <q-item-tile label>{{email.endereco.value}}</q-item-tile>
+                  <q-item-tile style="overflow: hidden">
+                    {{email.endereco.value}}
+                  </q-item-tile>
                 </q-item-main>
                 <q-item-side>
                   <q-btn rounded dense flat color="red" icon="close" @click.stop="removeEmail(index)" />
