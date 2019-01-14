@@ -42,17 +42,15 @@
               </div>
             </q-field>
 
-            <custom-input-text type="text" label="Nome" :model="pessoa.nome" maxlength="20"/>
+            <custom-input-text label="Nome" :model="pessoa.nome" maxlength="100"/>
 
-            <custom-input-text key="cpf" type="text" label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1"/>
+            <custom-input-text label="Nome Fantasia" :model="pessoa.nomeFantasia" maxlength="100"/>
 
-            <custom-input-text key="cnpj" type="text" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2"/>
+            <custom-input-text key="cpf" label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1"/>
 
-            <div v-if="pessoa.pessoaType === 2">
-              <custom-input-text type="text" label="Razão Social" :model="pessoa.razaoSocial"/>
+            <custom-input-text key="cnpj" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2"/>
 
-              <custom-input-text type="text" label="Nome Fantasia" :model="pessoa.nomeFantasia"/>
-            </div>
+            <custom-input-text  label="Razão Social" :model="pessoa.razaoSocial" v-if="pessoa.pessoaType === 2" maxlength="100"/>
 
             <q-item class="q-px-none">
               <q-item-main>
@@ -70,14 +68,12 @@
       </div>
     </q-scroll-area>
 
-
-
     <q-dialog v-model="newGrupoEconomicoDialog" prevent-close>
       <span slot="title">Novo Grupo Econômico</span>
       <span slot="message">Crie um novo Grupo Econômico preenchendo o campo abaixo</span>
 
       <div slot="body">
-        <form @keyup.enter="createGrupoEconomico()">
+        <form @keyup.enter.prevent.default="createGrupoEconomico()">
           <custom-input-text type="text" label="Grupo Econômico" :model="grupoEconomico.nome" />
         </form>
       </div>

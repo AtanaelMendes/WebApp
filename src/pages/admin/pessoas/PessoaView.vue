@@ -193,8 +193,8 @@
               </q-item-side>
             </q-item>
           </div>
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6" v-for="localizacao in localizacoes" :key="localizacao.id">
 
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6" v-for="localizacao in localizacoes" :key="localizacao.id">
             <q-card>
 
               <q-item class="bg-negative text-white" v-if="localizacao.deleted_at">
@@ -205,7 +205,6 @@
               </q-item>
 
               <q-card-main>
-
                 <q-list no-border>
 
                   <q-chip small color="teal" class="q-mr-xs" v-if="localizacao.is_cobranca">Cobrança</q-chip>

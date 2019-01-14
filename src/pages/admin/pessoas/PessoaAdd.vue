@@ -46,17 +46,15 @@
             </div>
           </q-field>
 
-          <custom-input-text type="text" label="Nome" :model="pessoa.nome" maxlength="20"/>
+          <custom-input-text type="text" label="Nome" :model="pessoa.nome" maxlength="100"/>
+
+          <custom-input-text type="text" label="Nome Fantasia" :model="pessoa.nomeFantasia" maxlength="100"/>
 
           <custom-input-text key="cpf" type="text" label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1"/>
 
           <custom-input-text key="cnpj" type="text" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2"/>
 
-          <div v-if="pessoa.pessoaType === 2">
-            <custom-input-text type="text" label="Razão Social" :model="pessoa.razaoSocial"/>
-
-            <custom-input-text type="text" label="Nome Fantasia" :model="pessoa.nomeFantasia"/>
-          </div>
+          <custom-input-text type="text" label="Razão Social" :model="pessoa.razaoSocial" v-if="pessoa.pessoaType === 2" maxlength="100"/>
 
           <q-item class="q-px-none">
             <!--<q-item-side>-->
@@ -114,7 +112,7 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import PessoaService from 'assets/js/service/PessoaService'
-  import GrupoEconomicoService from 'assets/js/service/GrupoEconomicoService'
+  import grupoEconomicoService from 'assets/js/service/GrupoEconomicoService'
   import Pessoa from 'assets/js/model/Pessoa'
   import GrupoEconomico from 'assets/js/model/GrupoEconomico'
   import estadoSiglaSelect from 'components/EstadoSiglaSelect.vue'
@@ -177,7 +175,7 @@
         if(!this.grupoEconomico.isValid(this)){
           return;
         }
-        GrupoEconomicoService.saveGrupoEconomico(this.grupoEconomico.getValues()).then(response => {
+        grupoEconomicoService.saveGrupoEconomico(this.grupoEconomico.getValues()).then(response => {
           this.$q.notify({type: 'positive', message: 'Grupo Econômico criado com sucesso'});
           this.closeNovoGrupoEconomicoDialog();
           this.grupoEconomicoSearchTerms = response.data.nome;
@@ -189,7 +187,7 @@
         })
       },
       searchGrupoEconomico (terms, done) {
-        GrupoEconomicoService.searchGrupoEconomico(terms).then(response => {
+        grupoEconomicoService.searchGrupoEconomico(terms).then(response => {
           this.tempGrupoEconomicoList = response;
           done(response)
         });

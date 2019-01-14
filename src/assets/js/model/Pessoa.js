@@ -42,7 +42,7 @@ export default class {
   };
 
   constructor(pessoaType, pessoa) {
-    this.pessoaType = pessoaType
+    this.pessoaType = pessoaType;
     if (pessoa !== undefined || pessoa != null) {
       this.nome.value = pessoa.nome.value;
       this.grupoEconomico.value = pessoa.grupoEconomico.value;
@@ -126,7 +126,7 @@ export default class {
         inscricao_estadual: this.inscricaoEstadual.value,
         inscricao_municipal: this.inscricaoMunicipal.value,
         razao_social: null,
-        nome_fantasia: null
+        nome_fantasia: this.nomeFantasia.value
       }
     } else if (this.pessoaType === 2) {
       return {
