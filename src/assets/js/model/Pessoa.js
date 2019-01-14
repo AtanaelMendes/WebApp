@@ -53,6 +53,18 @@ export default class {
   isValid() {
     let hasError = false;
 
+    if (this.inscricaoEstadual.value != null) {
+      if (!helpers.req(this.uf.value)) {
+        this.uf.errorMessage = "Selecione um estado.";
+        hasError = true;
+      } else {
+        if (!inscricaoEstadualValidator.validar(this.uf.value, this.inscricaoEstadual.value)) {
+          this.inscricaoEstadual.errorMessage = "Inscrição Inválida";
+          hasError = true;
+        }
+      }
+    }
+
     if (!helpers.req(this.nome.value)) {
       this.nome.errorMessage = "Digite um nome";
       hasError = true;
@@ -88,17 +100,6 @@ export default class {
         hasError = true;
       }
 
-      if (this.inscricaoEstadual.value != null) {
-        if (!helpers.req(this.uf.value)) {
-          this.uf.errorMessage = "Selecione um estado.";
-          hasError = true;
-        } else {
-          if (!inscricaoEstadualValidator.validar(this.uf.value, this.inscricaoEstadual.value)) {
-            this.inscricaoEstadual.errorMessage = "Inscrição Inválida";
-            hasError = true;
-          }
-        }
-      }
     }
     return !hasError;
   };
