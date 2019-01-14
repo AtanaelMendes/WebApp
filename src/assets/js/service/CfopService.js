@@ -11,4 +11,13 @@ export default {
       })
     });
   },
+  getCfopByNumero(numero) {
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('/cfop/' + numero).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
 }
