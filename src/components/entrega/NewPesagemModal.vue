@@ -16,8 +16,10 @@
             <custom-input-date-time type="datetime-local" label="Data descarga" :model="pesagem.emissao"/>
             <div class="row">
               <div class="col-8 q-pr-lg">
-                <q-input class="q-mb-none" type="number" v-model="pesagem.pesoBrutoTotal.value" align="right"
-                         label="Peso bruto total" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>
+
+                  <q-input class="q-mb-none" type="number" v-model="pesagem.pesoBrutoTotal.value" align="right"
+                           float-label="Peso bruto total" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>
+
               </div>
               <q-select class="col-4 q-pt-none" v-model="pesagem.unidadeMedidaId"  :options="parseUnidadesMedida(unidadesMedida)" align="right"/>
             </div>
