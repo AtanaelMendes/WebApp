@@ -245,6 +245,11 @@
           case 'entregue':
             this.listEntregasEntregues();
             break;
+          case  'all':
+            this.listEntregasCarregando();
+            this.listEntregasNoArmazem();
+            this.listEntregasEntregues();
+            break;
         }
       });
     },

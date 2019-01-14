@@ -372,7 +372,8 @@
           if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Carga enviada com sucesso'});
             this.closeModal();
-            this.$root.$emit('refreshEntregasList', 'no_armazem')
+            this.$root.$emit('refreshEntregasList', 'all');
+            this.$root.$emit('refreshEntregaView')
           }
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})

@@ -18,7 +18,7 @@
           <!--INFO DO HEADER-->
           <div class="col-xs-12 col-sm-6 col-md-8 col-lg-9 q-pa-sm">
 
-            <q-btn class="float-right" icon="more_vert" round flat>
+            <q-btn class="float-right" icon="more_vert" round flat v-if="entrega.status === 'No Armazem'">
               <q-popover>
                 <q-list link class="no-border">
                   <q-item v-close-overlay @click.native="updateMotorista(entrega)">
