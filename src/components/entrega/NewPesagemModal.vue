@@ -17,15 +17,15 @@
             <div class="row">
               <div class="col-8 q-pr-lg">
                 <q-input class="q-mb-none" type="number" v-model="pesagem.pesoBrutoTotal.value" align="right"
-                         label="Peso bruto total" :suffix="getUnidadeMedidaById(pesagem.unidadeMedidaId).sigla"/>
+                         label="Peso bruto total" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>
               </div>
               <q-select class="col-4 q-pt-none" v-model="pesagem.unidadeMedidaId"  :options="parseUnidadesMedida(unidadesMedida)" align="right"/>
             </div>
 
             <custom-input-text type="number" :model="pesagem.pesoTara" align="right"
-                               label="Peso tara" :suffix="getUnidadeMedidaById(pesagem.unidadeMedidaId).sigla"/>
+                               label="Peso tara" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>
             <custom-input-text type="number" :model="pesoLiquido" disabled="true" align="right"
-                               label="Peso líquido" :suffix="getUnidadeMedidaById(pesagem.unidadeMedidaId).sigla"/>
+                               label="Peso líquido" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>
           </div>
         </div>
       </q-step>
@@ -65,7 +65,7 @@
 
                 <div class="col-3">
                   <!--<custom-input-text suffix="KG" align="right" type="number":model="classificacao.peso_desconto"/>-->
-                  <q-input :suffix="getUnidadeMedidaById(pesagem.unidadeMedidaId).sigla" align="right" type="number" v-model="classificacao.peso_desconto.value" />
+                  <q-input :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)" align="right" type="number" v-model="classificacao.peso_desconto.value" />
                 </div>
 
               </div>
@@ -124,16 +124,16 @@
                 </div>
 
                 <div class="col-6">
-                  <q-input type="number" v-model="negocio.negocio_produto_quantidade" :suffix="getUnidadeMedidaById(pesagem.unidadeMedidaId).sigla" align="right"/>
+                  <q-input type="number" v-model="negocio.negocio_produto_quantidade" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)" align="right"/>
                 </div>
 
               </template>
               <div class="col-6 offset-6 text-right q-mt-sm">
                 <span class="text-faded">Alocar</span>&nbsp
-                <span :class="quantidadeAlocarErrorClass()"> {{numeral(quantidadeAlocar).format('0,0')}}</span>  {{getUnidadeMedidaById(pesagem.unidadeMedidaId).sigla}}
+                <span :class="quantidadeAlocarErrorClass()"> {{numeral(quantidadeAlocar).format('0,0')}}</span>  {{getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)}}
               </div>
               <div class="col-6 offset-6 text-right q-mt-sm">
-                <span class="text-faded">total</span> {{numeral(pesagem.pesoLiquido.value).format('0,0')}} {{getUnidadeMedidaById(pesagem.unidadeMedidaId).sigla}}
+                <span class="text-faded">total</span> {{numeral(pesagem.pesoLiquido.value).format('0,0')}} {{getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)}}
               </div>
 
             </div>
@@ -308,6 +308,10 @@
       },
       getUnidadeMedidaById:function(id){
         return this.unidadesMedida.filter(unidade => unidade.id === id)[0];
+      },
+      getUnidadeMedidaSiglaById:function(id){
+        let unidadeMedida = this.getUnidadeMedidaById(id);
+        return unidadeMedida ? unidadeMedida.sigla : '';
       },
       parseUnidadesMedida:function(unidadesMedida){
         return unidadesMedida.map(unidade => {
