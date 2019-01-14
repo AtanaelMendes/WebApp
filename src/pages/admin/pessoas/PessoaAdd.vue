@@ -45,14 +45,11 @@
           <!--INPUT NOME-->
           <custom-input-text type="text" label="Nome" :model="pessoa.nome" maxlength="100"/>
 
-          <!--INPUT NOME FANTASIA-->
-          <custom-input-text type="text" label="Nome Fantasia" :model="pessoa.nomeFantasia" maxlength="100" v-if="pessoa.pessoaType === 1"/>
+          <!--INPUT RAZAO SOCIAL-->
+          <custom-input-text type="text" label="Razão Social" :model="pessoa.razaoSocial" maxlength="100"/>
 
           <!--INPUT CPF-->
           <custom-input-text key="cpf" type="text" label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1" @blur="pessoaTypeChanged"/>
-
-          <!--INPUT RAZAO SOCIAL-->
-          <custom-input-text type="text" label="Razão Social" :model="pessoa.razaoSocial" v-if="pessoa.pessoaType === 2" maxlength="100"/>
 
           <!--INPUT CNPJ-->
           <custom-input-text key="cnpj" type="text" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2" @blur="pessoaTypeChanged"/>

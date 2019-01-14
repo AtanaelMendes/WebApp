@@ -110,73 +110,82 @@
             </q-item>
           </div>
 
-          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-for="(contato, index) in contatos" :key="contato.nome">
+          <div class="col-12" v-for="(contato, index) in contatos" :key="contato.nome">
             <q-card>
-              <q-card-title class="q-pb-none q-pt-sm">
-                {{contato.nome}}
-                <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
-                  <q-popover>
-                    <q-list link class="no-border">
-                      <q-item v-close-overlay>
-                        <q-item-main @click.native="updateContato(contato.id)" label="Editar" />
-                      </q-item>
-                      <q-item v-close-overlay v-if="!contato.deleted_at">
-                        <q-item-main @click.native="archiveContato(contato.id)"  label="Arquivar"/>
-                      </q-item>
-                      <q-item v-close-overlay v-if="contato.deleted_at">
-                        <q-item-main @click.native="restoreContato(contato.id)"  label="Ativar"/>
-                      </q-item>
-                      <q-item v-close-overlay>
-                        <q-item-main @click.native="deleteContato(contato.id)" label="Excluir"/>
-                      </q-item>
-                    </q-list>
-                  </q-popover>
-                </q-btn>
-              </q-card-title>
 
-              <q-item v-if="contato.deleted_at" class="bg-negative text-white" dense inset>
-                <q-item-main class="text-center">
+              <q-item v-if="contato.deleted_at" class="bg-negative text-white">
+                <q-item-side>
+                  <q-icon name="phonelink_erase" size="25px" color="white"/>
+                </q-item-side>
+                <q-item-main>
                   Contato Inativo
                 </q-item-main>
               </q-item>
 
-              <q-list no-border>
+              <q-card-main>
+                <q-list no-border>
 
-                <q-item dense >
-                  <q-item-main>
-                    <q-chip v-if="contato.is_cobranca" small color="teal" class="q-ma-xs">Cobrança</q-chip>
-                    <q-chip v-if="contato.is_fiscal" small color="teal" class="q-ma-xs">Fiscal</q-chip>
-                  </q-item-main>
-                </q-item>
-                <q-item-separator />
+                  <q-btn class="float-right" color="grey-7" round flat dense icon="more_vert">
+                    <q-popover>
+                      <q-list link class="no-border">
+                        <q-item v-close-overlay>
+                          <q-item-main @click.native="updateContato(contato.id)" label="Editar" />
+                        </q-item>
+                        <q-item v-close-overlay v-if="!contato.deleted_at">
+                          <q-item-main @click.native="archiveContato(contato.id)"  label="Arquivar"/>
+                        </q-item>
+                        <q-item v-close-overlay v-if="contato.deleted_at">
+                          <q-item-main @click.native="restoreContato(contato.id)"  label="Ativar"/>
+                        </q-item>
+                        <q-item v-close-overlay>
+                          <q-item-main @click.native="deleteContato(contato.id)" label="Excluir"/>
+                        </q-item>
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
 
-                <q-item v-for="(telefone, index) in getFilteredTelefones(contato.telefones, 'celular')" :key="telefone.numero">
-                  <q-item-side color="deep-orange" icon="phone_iphone" v-if="index === 0"/>
-                  <q-item-main inset>
-                    <q-item-tile>
-                      {{telefone.numero}}
-                    </q-item-tile>
-                  </q-item-main>
-                </q-item>
+                  <q-item v-if="contato.nome" class="q-px-none">
+                    <q-item-main>
+                      <span class="self-center">{{contato.nome}}</span>
+                    </q-item-main>
+                  </q-item>
 
-                <q-item v-for="(telefone, index) in getFilteredTelefones(contato.telefones, 'fixo')" :key="telefone.numero">
-                  <q-item-side color="deep-orange" icon="phone" v-if="index === 0"/>
-                  <q-item-main inset>
-                    <q-item-tile>
-                      {{telefone.numero}}
-                    </q-item-tile>
-                  </q-item-main>
-                </q-item>
+                  <q-item class="q-px-none" v-if="contato.is_cobranca || contato.is_fiscal">
+                    <q-item-main>
+                      <q-chip v-if="contato.is_cobranca" small color="teal" class="q-mr-xs">Cobrança</q-chip>
+                      <q-chip v-if="contato.is_fiscal" small color="teal">Fiscal</q-chip>
+                    </q-item-main>
+                  </q-item>
 
-                <q-item v-for="(email, index) in contato.emails" :key="email.endereco">
-                  <q-item-side class="q-pa-none" icon="email" color="deep-orange" v-if="index === 0"/>
-                  <q-item-main inset>
-                    <q-item-tile>
-                      {{email.endereco}}
-                    </q-item-tile>
-                  </q-item-main>
-                </q-item>
-              </q-list>
+                  <q-item v-for="(telefone, index) in getFilteredTelefones(contato.telefones, 'celular')" :key="telefone.numero" class="q-px-none">
+                    <q-item-side color="deep-orange" icon="phone_iphone" v-if="index === 0"/>
+                    <q-item-main>
+                      <a :href=" 'tel:'+telefone.numero" style="text-decoration: none;">
+                        {{telefone.numero}}
+                      </a>
+                    </q-item-main>
+                  </q-item>
+
+                  <q-item v-for="(telefone, index) in getFilteredTelefones(contato.telefones, 'fixo')" :key="telefone.numero" class="q-px-none">
+                    <q-item-side color="deep-orange" icon="phone" v-if="index === 0"/>
+                    <q-item-main>
+                      <a :href=" 'tel:'+telefone.numero" style="text-decoration: none;">
+                        {{telefone.numero}}
+                      </a>
+                    </q-item-main>
+                  </q-item>
+
+                  <q-item v-for="(email, index) in contato.emails" :key="email.endereco" class="q-px-none">
+                    <q-item-side class="q-pa-none" icon="email" color="deep-orange" v-if="index === 0"/>
+                    <q-item-main>
+                      <a :href=" 'mailto:'+email.endereco" style="text-decoration: none;">
+                        {{email.endereco}}
+                      </a>
+                    </q-item-main>
+                  </q-item>
+                </q-list>
+
+              </q-card-main>
             </q-card>
           </div>
         </div>
@@ -194,14 +203,16 @@
             </q-item>
           </div>
 
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6" v-for="localizacao in localizacoes" :key="localizacao.id">
+          <div class="col-12" v-for="localizacao in localizacoes" :key="localizacao.id">
             <q-card>
 
               <q-item class="bg-negative text-white" v-if="localizacao.deleted_at">
                 <q-item-side>
                   <q-icon name="place" size="25px" color="white"/>
                 </q-item-side>
-                <q-item-main>Localização inativa</q-item-main>
+                <q-item-main>
+                  Localização inativa
+                </q-item-main>
               </q-item>
 
               <q-card-main>
@@ -230,13 +241,33 @@
 
                   <q-item class="q-px-none">
                     <q-item-main>
-                      {{localizacao.endereco}},&nbsp{{localizacao.numero}}
+                      <a
+                        style="text-decoration: none"
+                        :href=" 'http://maps.google.com/maps?q='+
+                        localizacao.bairro + ', ' +
+                        localizacao.endereco + ', ' +
+                        localizacao.numero + ', ' +
+                        localizacao.cidade.nome + ', ' +
+                        localizacao.cidade.estado.sigla"
+                      >
+                        {{localizacao.endereco}},&nbsp{{localizacao.numero}}
+                      </a>
                     </q-item-main>
                   </q-item>
 
                   <q-item class="q-px-none">
                     <q-item-main>
-                      {{localizacao.bairro}},&nbsp{{localizacao.cidade.nome}}-{{localizacao.cidade.estado.sigla}}
+                      <a
+                        style="text-decoration: none"
+                        :href=" 'http://maps.google.com/maps?q='+
+                        localizacao.bairro + ', ' +
+                        localizacao.endereco + ', ' +
+                        localizacao.numero + ', ' +
+                        localizacao.cidade.nome + ', ' +
+                        localizacao.cidade.estado.sigla"
+                      >
+                        {{localizacao.bairro}},&nbsp{{localizacao.cidade.nome}}-{{localizacao.cidade.estado.sigla}}
+                      </a>
                     </q-item-main>
                   </q-item>
 

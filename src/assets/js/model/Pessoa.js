@@ -36,11 +36,6 @@ export default class {
     value: null,
     errorMessage: null
   };
-  nomeFantasia = {
-    value: null,
-    errorMessage: null
-  };
-
   constructor(pessoaType, pessoa) {
     this.pessoaType = pessoaType;
     if (pessoa !== undefined || pessoa != null) {
@@ -51,7 +46,6 @@ export default class {
       this.inscricaoEstadual.value = pessoa.inscricaoEstadual.value;
       this.uf.value = pessoa.uf.value;
       this.inscricaoMunicipal.value = pessoa.inscricaoMunicipal.value;
-      this.nomeFantasia.value = pessoa.nomeFantasia.value;
       this.razaoSocial.value = pessoa.razaoSocial.value;
     }
   };
@@ -94,11 +88,6 @@ export default class {
         hasError = true;
       }
 
-      if (!helpers.req(this.nomeFantasia.value)) {
-        this.nomeFantasia.errorMessage = "Digite um nome fantasia";
-        hasError = true;
-      }
-
       if (this.inscricaoEstadual.value != null) {
         if (!helpers.req(this.uf.value)) {
           this.uf.errorMessage = "Selecione um estado.";
@@ -110,7 +99,6 @@ export default class {
           }
         }
       }
-      
     }
     return !hasError;
   };
@@ -118,27 +106,25 @@ export default class {
   getValues(){
     if (this.pessoaType === 1) {
       return {
-        nome: this.nome.value,
         grupo_economico_id: this.grupoEconomico.value,
+        nome: this.nome.value,
         cpf: this.cpf.value,
         cnpj: null,
-        uf: this.uf.value,
+        razao_social: this.razaoSocial.value,
         inscricao_estadual: this.inscricaoEstadual.value,
+        uf: this.uf.value,
         inscricao_municipal: this.inscricaoMunicipal.value,
-        razao_social: null,
-        nome_fantasia: this.nomeFantasia.value
       }
     } else if (this.pessoaType === 2) {
       return {
-        nome: this.nome.value,
         grupo_economico_id: this.grupoEconomico.value,
+        nome: this.nome.value,
         cpf: null,
         cnpj: this.cnpj.value,
-        uf: this.uf.value,
-        inscricao_estadual: this.inscricaoEstadual.value,
-        inscricao_municipal: this.inscricaoMunicipal.value,
         razao_social: this.razaoSocial.value,
-        nome_fantasia: null
+        inscricao_estadual: this.inscricaoEstadual.value,
+        uf: this.uf.value,
+        inscricao_municipal: this.inscricaoMunicipal.value,
       }
     }
   };
