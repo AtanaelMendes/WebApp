@@ -138,7 +138,7 @@ export default class {
         inscricao_estadual: this.inscricaoEstadual.value,
         inscricao_municipal: this.inscricaoMunicipal.value,
         razao_social: this.razaoSocial.value,
-        nome_fantasia: this.nomeFantasia.value
+        nome_fantasia: null
       }
     }
   };

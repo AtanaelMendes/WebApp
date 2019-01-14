@@ -4,69 +4,70 @@
       <q-btn slot="action_itens" flat dense round icon="done" @click="updatePessoa()"/>
     </toolbar>
 
-    <q-scroll-area style="height: 150vh" :thumb-style="{
-        right: '4px',
-        borderRadius: '5px',
-        background: '#dfdfdf',
-        width: '8px',
-        opacity: 1}">
-      <div class="row q-pa-md">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-          <form>
+    <div class="row q-pa-md space-end">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <form @keyup.enter="updatePessoa()">
 
-            <q-field>
-              <q-btn-toggle
-                v-model="pessoa.pessoaType"
-                toggle-color="primary"
-                inverted
-                @input="pessoaTypeChanged"
-                :options="[{label: 'Física', value: 1},{label: 'Jurídica', value: 2}]"
-              />
-            </q-field>
+          <!--TOGGLE PESSOA FISICA JURIDICA-->
+          <q-field>
+            <q-btn-toggle
+              inverted
+              toggle-color="primary"
+              v-model="pessoa.pessoaType"
+              :options="[{label: 'Física', value: 1},{label: 'Jurídica', value: 2}]"
+            />
+          </q-field>
 
-            <q-field :error="pessoa.grupoEconomico.errorMessage != null" class="q-mt-sm">
-              <q-item class="q-px-none">
-                <q-item-main>
-                  <q-input v-model="grupoEconomicoSearchTerms" placeholder="Grupo Econômico" :after="[{icon:'arrow_drop_down'}]" @blur="checkGrupoEconomicoInput">
-                    <q-autocomplete @search="search" @selected="setGrupoEconomico" :min-characters="0" :debounce="500" value-field="label"/>
-                  </q-input>
-                </q-item-main>
-
-                <q-item-side>
-                  <q-btn color="deep-orange" rounded size="md" icon="add" @click.native="openNovoGrupoEconomicoDialog()" class="q-px-sm"/>
-                </q-item-side>
-              </q-item>
-
-              <div class="q-field-bottom row no-wrap" >
-                <div class="q-field-error col" v-if="pessoa.grupoEconomico.errorMessage != null" >{{pessoa.grupoEconomico.errorMessage}}</div>
-              </div>
-            </q-field>
-
-            <custom-input-text label="Nome" :model="pessoa.nome" maxlength="100"/>
-
-            <custom-input-text label="Nome Fantasia" :model="pessoa.nomeFantasia" maxlength="100"/>
-
-            <custom-input-text key="cpf" label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1"/>
-
-            <custom-input-text key="cnpj" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2"/>
-
-            <custom-input-text  label="Razão Social" :model="pessoa.razaoSocial" v-if="pessoa.pessoaType === 2" maxlength="100"/>
-
+          <!--INPUT GRUPO ECONOMICO-->
+          <q-field :error="pessoa.grupoEconomico.errorMessage != null" class="q-mt-sm">
             <q-item class="q-px-none">
               <q-item-main>
-                <custom-input-text type="text" label="Inscrição Estadual" maxlength="14" :model="pessoa.inscricaoEstadual"/>
+                <q-input v-model="grupoEconomicoSearchTerms" placeholder="Grupo Econômico" :after="[{icon:'arrow_drop_down'}]" @blur="checkGrupoEconomicoInput">
+                  <q-autocomplete @search="search" @selected="setGrupoEconomico" :min-characters="0" :debounce="500" value-field="label"/>
+                </q-input>
               </q-item-main>
+
               <q-item-side>
-                <estado-sigla-select label="UF" :model="pessoa.uf"/>
+                <q-btn color="deep-orange" rounded size="md" icon="add" @click.native="openNovoGrupoEconomicoDialog()" class="q-px-sm"/>
               </q-item-side>
             </q-item>
 
-            <custom-input-text type="text" label="Inscrição Municipal" :model="pessoa.inscricaoMunicipal"/>
+            <div class="q-field-bottom row no-wrap" >
+              <div class="q-field-error col" v-if="pessoa.grupoEconomico.errorMessage != null" >{{pessoa.grupoEconomico.errorMessage}}</div>
+            </div>
+          </q-field>
 
-          </form>
-        </div>
+          <!--INPUT NOME-->
+          <custom-input-text label="Nome" :model="pessoa.nome" maxlength="100"/>
+
+          <!--INPUT NOME FANTASIA-->
+          <custom-input-text label="Nome Fantasia" :model="pessoa.nomeFantasia" maxlength="100" v-if="pessoa.pessoaType === 1"/>
+
+          <!--INPUT CPF-->
+          <custom-input-text key="cpf" label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1"/>
+
+          <!--INPUT RAZAO SOCIAL-->
+          <custom-input-text  label="Razão Social" :model="pessoa.razaoSocial" v-if="pessoa.pessoaType === 2" maxlength="100"/>
+
+          <!--INPUT CNPJ-->
+          <custom-input-text key="cnpj" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2"/>
+
+          <!--INPUT INSCRICAO ESTADUAL-->
+          <q-item class="q-px-none">
+            <q-item-main>
+              <custom-input-text type="text" label="Inscrição Estadual" maxlength="14" :model="pessoa.inscricaoEstadual"/>
+            </q-item-main>
+            <q-item-side>
+              <estado-sigla-select label="UF" :model="pessoa.uf"/>
+            </q-item-side>
+          </q-item>
+
+          <!--INPUT INSCRICAO MUNICIPAL-->
+          <custom-input-text type="text" label="Inscrição Municipal" :model="pessoa.inscricaoMunicipal"/>
+
+        </form>
       </div>
-    </q-scroll-area>
+    </div>
 
     <q-dialog v-model="newGrupoEconomicoDialog" prevent-close>
       <span slot="title">Novo Grupo Econômico</span>
@@ -165,10 +166,13 @@
           done(response)
         });
       },
-      pessoaTypeChanged: function(value){
-        //this.pessoa = new Pessoa(value)
-        //this.grupoEconomicoSearchTerms = ''
-        //this.tempGrupoEconomicoList = []
+      pessoaTypeChanged: function(){
+        // if(value === 1){
+        //   this.pessoa.cnpj = null
+        // }
+        // if(value === 2){
+        //   this.pessoa.cpf = null
+        // }
       },
       createGrupoEconomico: function(){
         if(!this.grupoEconomico.isValid(this)){
@@ -217,4 +221,7 @@
 </script>
 
 <style>
+  .space-end{
+    margin-bottom: 150px;
+  }
 </style>

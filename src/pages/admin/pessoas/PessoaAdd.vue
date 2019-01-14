@@ -6,24 +6,20 @@
 
     <!--INFORMACOES BASICAS-->
     <div class="row q-pa-md space-end">
-      <div class="col-12">
-        <q-item class="custom-header q-title q-px-none">
-          Informaçẽs básicas
-        </q-item>
-      </div>
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-
         <form @keyup.enter="savePessoa()">
+
+          <!--TOGGLE PESSOA FISICA JURIDICA-->
           <q-field>
             <q-btn-toggle
-              v-model="pessoa.pessoaType"
-              toggle-color="primary"
               inverted
-              @input="pessoaTypeChanged"
+              toggle-color="primary"
+              v-model="pessoa.pessoaType"
               :options="[{label: 'Física', value: 1},{label: 'Jurídica', value: 2}]"
             />
           </q-field>
 
+          <!--INPUT GRUPO ECONOMICO-->
           <q-field :error="pessoa.grupoEconomico.errorMessage != null" class="q-mt-sm">
             <q-item class="q-px-none">
               <q-item-main>
@@ -46,16 +42,22 @@
             </div>
           </q-field>
 
+          <!--INPUT NOME-->
           <custom-input-text type="text" label="Nome" :model="pessoa.nome" maxlength="100"/>
 
-          <custom-input-text type="text" label="Nome Fantasia" :model="pessoa.nomeFantasia" maxlength="100"/>
+          <!--INPUT NOME FANTASIA-->
+          <custom-input-text type="text" label="Nome Fantasia" :model="pessoa.nomeFantasia" maxlength="100" v-if="pessoa.pessoaType === 1"/>
 
-          <custom-input-text key="cpf" type="text" label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1"/>
+          <!--INPUT CPF-->
+          <custom-input-text key="cpf" type="text" label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1" @blur="pessoaTypeChanged"/>
 
-          <custom-input-text key="cnpj" type="text" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2"/>
-
+          <!--INPUT RAZAO SOCIAL-->
           <custom-input-text type="text" label="Razão Social" :model="pessoa.razaoSocial" v-if="pessoa.pessoaType === 2" maxlength="100"/>
 
+          <!--INPUT CNPJ-->
+          <custom-input-text key="cnpj" type="text" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2" @blur="pessoaTypeChanged"/>
+
+          <!--INPUT INSCRICAO ESTADUAL-->
           <q-item class="q-px-none">
             <!--<q-item-side>-->
               <!--<q-btn label="Testar" @click="testaInscricoesEstaduais" />-->
@@ -68,25 +70,12 @@
             </q-item-side>
           </q-item>
 
+          <!--INPUT INSCRICAO MUNICIPAL-->
           <custom-input-text type="text" label="Inscrição Municipal" :model="pessoa.inscricaoMunicipal"/>
 
         </form>
       </div>
     </div>
-    <!--FIM INFORMACOES BASICAS-->
-
-    <!--CONTATO-->
-    <!--<div class="row q-pa-md">-->
-      <!--<div class="col-12">-->
-        <!--<q-item class="custom-header q-title q-px-none">-->
-          <!--Contato-->
-        <!--</q-item>-->
-      <!--</div>-->
-      <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">-->
-
-      <!--</div>-->
-    <!--</div>-->
-    <!--FIM CONTATO-->
 
     <!--DIALOG NEW GRUPO ECONOMICO-->
     <q-dialog v-model="newGrupoEconomicoDialog" prevent-close>
@@ -102,7 +91,6 @@
         <q-btn flat @click="createGrupoEconomico()"  label="Salvar"/>
       </template>
     </q-dialog>
-    <!--FIM DIALOG NEW GRUPO ECONOMICO-->
 
   </custom-page>
 </template>
@@ -142,10 +130,13 @@
         console.log("finalizado testes.")
 
       },
-      pessoaTypeChanged: function(value){
-        this.pessoa = new Pessoa(value)
-        this.grupoEconomicoSearchTerms = ''
-        this.tempGrupoEconomicoList = []
+      pessoaTypeChanged: function(){
+        if(this.pessoa.pessoaType === 1){
+          this.pessoa.cnpj.value = null
+        }
+        if(this.pessoa.pessoaType === 2){
+          this.pessoa.cpf.value = null
+        }
       },
       savePessoa: function(){
         if(!this.pessoa.isValid()){
