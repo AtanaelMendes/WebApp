@@ -23,16 +23,16 @@
 
               <q-card-main class="row gutter-y-xs">
                 <div class="col-12">
-                  {{negocioCultura.quantidade}}
+                  {{numeral(parseFloat(negocioCultura.quantidade)).format('0,0')}} {{negocioCultura.unidade_medida_sigla}}
                 </div>
                 <div class="col-12" v-if="negocioCultura.quantidade_entregue">
-                  {{negocioCultura.quantidade_entregue}} Entregue
+                  {{numeral(parseFloat(negocioCultura.quantidade_entregue)).format('0,0')}} {{negocioCultura.unidade_medida_sigla}} Entregue
                 </div>
                 <div class="col-12 text-warning" v-if="!negocioCultura.quantidade_entregue">
                   Nenhuma quantidade entregue ainda
                 </div>
                 <div class="col-12" v-if="negocioCultura.quantidade_restante">
-                  {{negocioCultura.quantidade_restante}} Restante
+                  {{numeral(parseFloat(negocioCultura.quantidade_restante)).format('0,0')}} {{negocioCultura.unidade_medida_sigla}} Restante
                 </div>
                 <div class="col-12">
                   {{moment(negocioCultura.prazo_entrega_final).format('DD MMM YYYY')}}
