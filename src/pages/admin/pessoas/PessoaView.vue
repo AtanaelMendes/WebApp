@@ -96,7 +96,6 @@
 
           </div>
         </div>
-        <!--FIM PESSOA INFO-->
 
         <!--CONTATO LIST-->
         <div class="row gutter-sm q-pa-md">
@@ -181,7 +180,6 @@
             </q-card>
           </div>
         </div>
-        <!--FIM CONTATO LIST-->
 
         <!--LOCALIZACAO LIST-->
         <div class="row gutter-sm q-pa-md">
@@ -195,29 +193,9 @@
               </q-item-side>
             </q-item>
           </div>
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6" v-for="localizacao in localizacoes" :key="localizacao.id">
 
-            <q-card >
-              <q-card-title class=" relative-position">
-                <q-chip small color="teal" class="q-mx-xs" v-if="localizacao.is_cobranca">Cobrança</q-chip>
-                <q-chip small color="teal" class="q-mx-xs" v-if="localizacao.is_fiscal">Fiscal</q-chip>
-                <q-btn round flat dense icon="more_vert" slot="right" style="margin-right: -15px;">
-                  <q-popover>
-                    <q-list link class="no-border">
-                      <q-item v-close-overlay>
-                        <q-item-main @click.native="updateLocalizacao(localizacao.id)" label="Editar"/>
-                      </q-item>
-                      <q-item v-close-overlay>
-                        <q-item-main @click.native="archiveLocalizacao(localizacao.id)" label="Arquivar"/>
-                      </q-item>
-                      <q-item v-close-overlay>
-                        <q-item-main @click.native="deleteLocalizacao(localizacao.id)" label="Excluir"/>
-                      </q-item>
-                    </q-list>
-                  </q-popover>
-                </q-btn>
-              </q-card-title>
-              <q-card-separator/>
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 col-xl-6" v-for="localizacao in localizacoes" :key="localizacao.id">
+            <q-card>
 
               <q-item class="bg-negative text-white" v-if="localizacao.deleted_at">
                 <q-item-side>
@@ -229,19 +207,40 @@
               <q-card-main>
                 <q-list no-border>
 
-                  <q-item>
+                  <q-chip small color="teal" class="q-mr-xs" v-if="localizacao.is_cobranca">Cobrança</q-chip>
+                  <q-chip small color="teal" v-if="localizacao.is_fiscal">Fiscal</q-chip>
+                  <q-btn class="float-right" color="grey-7" round flat dense icon="more_vert" >
+                    <q-popover>
+                      <q-list link class="no-border">
+                        <q-item v-close-overlay>
+                          <q-item-main @click.native="updateLocalizacao(localizacao.id)" label="Editar"/>
+                        </q-item>
+                        <q-item v-close-overlay v-if="!localizacao.deleted_at">
+                          <q-item-main @click.native="archiveLocalizacao(localizacao.id)" label="Arquivar"/>
+                        </q-item>
+                        <q-item v-close-overlay v-if="localizacao.deleted_at">
+                          <q-item-main @click.native="restoreLocalizacao(localizacao.id)" label="Ativar"/>
+                        </q-item>
+                        <q-item v-close-overlay>
+                          <q-item-main @click.native="deleteLocalizacao(localizacao.id)" label="Excluir"/>
+                        </q-item>
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
+
+                  <q-item class="q-px-none">
                     <q-item-main>
                       {{localizacao.endereco}},&nbsp{{localizacao.numero}}
                     </q-item-main>
                   </q-item>
 
-                  <q-item>
+                  <q-item class="q-px-none">
                     <q-item-main>
                       {{localizacao.bairro}},&nbsp{{localizacao.cidade.nome}}-{{localizacao.cidade.estado.sigla}}
                     </q-item-main>
                   </q-item>
 
-                  <q-item v-if="localizacao.complemento">
+                  <q-item v-if="localizacao.complemento" class="q-px-none">
                     <q-item-main>
                       <q-item-tile>
                         {{localizacao.complemento}}
@@ -249,7 +248,7 @@
                     </q-item-main>
                   </q-item>
 
-                  <q-item>
+                  <q-item class="q-px-none">
                     <q-item-main>
                       {{localizacao.cep}}
                     </q-item-main>
@@ -260,7 +259,6 @@
             </q-card>
           </div>
         </div>
-        <!--FIM LOCALIZACAO LIST-->
 
       </div>
     </div>
@@ -438,6 +436,19 @@
         }).then(data => {
           localizacaoService.archiveLocalizacao(this.$route.params.id, localizacaoId).then(response => {
             this.$q.notify({type: 'positive', message: 'Endereço Arquivado com sucesso'})
+            this.listLocalizacoes(this.$route.params.id)
+          });
+        });
+      },
+      restoreLocalizacao: function(localizacaoId) {
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente ativar essa localizaçao?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          localizacaoService.restoreLocalizacao(this.$route.params.id, localizacaoId).then(response => {
+            this.$q.notify({type: 'positive', message: 'Endereço Ativado com sucesso'});
             this.listLocalizacoes(this.$route.params.id)
           });
         });

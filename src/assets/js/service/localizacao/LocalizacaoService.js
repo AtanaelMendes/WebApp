@@ -19,6 +19,15 @@ export default {
       })
     });
   },
+  restoreLocalizacao(pessoaId, localizacaoId){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('/pessoa/' + pessoaId + '/localizacao/' + localizacaoId + '/restore').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   listLocalizacao: function(){
     return new Promise((resolve, reject) => {
       this.listLocalizacoesByProdutor(localStorage.getItem('account.produtor_id')).then(response => {

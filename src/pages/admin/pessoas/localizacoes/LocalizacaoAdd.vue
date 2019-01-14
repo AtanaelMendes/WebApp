@@ -42,7 +42,7 @@
             <custom-input-text class="capitalize" type="text" label="Endereço" :model="localizacao.endereco" />
 
             <!--NUMERO-->
-            <custom-input-text class="capitalize" type="number" label="numero" :model="localizacao.numero" />
+            <custom-input-text class="capitalize" label="numero" :model="localizacao.numero" />
 
             <!--COMPLEMENTO-->
             <custom-input-text class="capitalize" type="text" label="Complemento" :model="localizacao.complemento" />
@@ -86,17 +86,17 @@
         this.localizacao.cidadeId.value = value.id;
       },
       saveLocalizacao: function(){
-        if(this.localizacao.isFiscal.value == false && this.localizacao.isCobranca.value == false){
-          this.typeError = 'Escolha ao menos um tipo de endereço'
-          return
-        }else{
-          this.typeError = null
-        }
+        // if(this.localizacao.isFiscal.value == false && this.localizacao.isCobranca.value == false){
+        //   this.typeError = 'Escolha ao menos um tipo de endereço'
+        //   return
+        // }else{
+        //   this.typeError = null
+        // }
         if(!this.localizacao.isValid()){
           return
         }
         localizacaoService.saveLocalizacao(this.$route.params.id, this.localizacao.getValues()).then( response => {
-          this.$q.notify({type: 'positive', message: 'Localização criada com sucesso'})
+          this.$q.notify({type: 'positive', message: 'Localização criada com sucesso'});
           this.$router.go(-1);
         }).catch(error => {
           this.$q.notify({type: 'negative', message: error.request.response})
