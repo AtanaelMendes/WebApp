@@ -229,20 +229,28 @@
                               {{nota_fiscal_item.cfop.numero}} - {{nota_fiscal_item.cfop.descricao}} - {{moment(nota_fiscal_item.nota_fiscal_emissao).format('DD MMM YYYY')}}
                             </q-item-tile>
                           </q-item-main>
+                          <q-item-side class="self-start" >
+                            <q-btn icon="more_vert" dense round flat>
+                              <q-popover>
+                                <q-list link class="no-border">
+                                  <q-item v-close-overlay @click.native="updateNota(nota_fiscal_item)">
+                                    <q-item-main label="Alterar nota"/>
+                                  </q-item>
+                                </q-list>
+                              </q-popover>
+                            </q-btn>
+                          </q-item-side>
                         </q-item>
                       </q-item-tile>
 
 
                     </q-item-main>
-                    <q-item-side class="self-start">
+                    <q-item-side class="self-start" v-if="entrega.negocios.length > 1">
                       <q-btn icon="more_vert" dense round flat>
                         <q-popover>
                           <q-list link class="no-border">
-                            <q-item v-close-overlay @click.native="updateNota(negocio)">
-                              <q-item-main label="Alterar nota"/>
-                            </q-item>
-                            <q-item v-close-overlay @click.native="deleteNegocio(negocio)">
-                              <q-item-main label="Excluir negócio"/>
+                            <q-item v-close-overlay @click.native="deleteNegocio(negocio.id)">
+                              <q-item-main label="Excluir"/>
                             </q-item>
                           </q-list>
                         </q-popover>
@@ -332,10 +340,10 @@
     },
     methods: {
       sendToWarehause: function(){
-        this.$refs.sendEntregaModal.openModal('sendEntrega')
+        this.$refs.sendEntregaModal.openModal('sendEntrega', null)
       },
       updateNota: function(negocio){
-        this.$refs.sendEntregaModal.openModal('updateNota', null)
+        this.$refs.sendEntregaModal.openModal('updateNota', negocio)
       },
       novoNegocio: function(entrega){
         this.$refs.sendEntregaModal.openModal('novoNegocio', entrega)
@@ -366,24 +374,27 @@
               this.$q.notify({type: 'positive', message: 'Talhão removido com sucesso'});
               this.getEntrega()
             }
-          })
-        }).catch(()=>{
-          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-        });
+          }).catch(error => {
+            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          });
+        }).catch(()=>{});
       },
-      deleteNegocio: function(){
+      deleteNegocio: function(id){
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente deseja apagar esta Negocio?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          negocioService.deleteNegocio(id).then(response => {
-            this.listCulturas()
-          })
-        }).catch(()=>{
-          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-        });
+          entregaService.delteNegocioOfEntrega(this.entrega.id, id).then(response => {
+            if(response.status === 200) {
+              this.$q.notify({type: 'positive', message: 'Negócio removido com sucesso'});
+              this.getEntrega()
+            }
+          }).catch(error => {
+            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          });
+        }).catch(()=>{});
       },
       deletePesagem: function(){
         this.$q.dialog({

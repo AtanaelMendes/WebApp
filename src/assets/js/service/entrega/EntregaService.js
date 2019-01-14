@@ -59,7 +59,16 @@ export default {
   },
   addNegocioToEntrega(entrega_id, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/novo_negocio', params).then(response => {
+      Vue.prototype.$axios.post('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/negocio', params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
+  delteNegocioOfEntrega(entrega_id, negocio_id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.delete('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/negocio/' + negocio_id).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
@@ -105,6 +114,15 @@ export default {
   updateMotorista(entrega_id, params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/motorista', params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
+  updateNotaFiscalItemOfNegocio(entrega_id, id, params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/nota_fiscal_item/' + id, params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)

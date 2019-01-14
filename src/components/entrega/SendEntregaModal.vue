@@ -172,7 +172,7 @@
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
       <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="isBtnVisible"/>
-      <q-btn label="salvar" color="primary" @click="save" :disable="isSaveButtonEnabled()" v-if="!isBtnVisible"/>
+      <q-btn label="salvar" color="primary" @click="save" :disable="!isSaveButtonEnabled()" v-if="!isBtnVisible"/>
     </q-page-sticky>
 
   </q-modal>
@@ -237,8 +237,9 @@
     },
     methods: {
       // FUNCAO = sendEntrega, updateNota, desdobrarCarga
-      openModal: function(funcao, entrega = null){
+      openModal: function(funcao, object = null){
         this.funcao = funcao;
+        this.sendEntrega = new SendEntrega()
         switch (funcao) {
           case 'sendEntrega':
             this.currentStep = 'negocio';
@@ -249,6 +250,8 @@
             break;
 
           case 'updateNota':
+            this.selectedNegocio = object;
+
             this.currentStep = 'informacoes';
             this.stepNegocio = false;
             this.stepArmazem = false;
@@ -257,7 +260,7 @@
             break;
 
           case 'novoNegocio':
-            this.selectedEntrega = entrega;
+            this.selectedEntrega = object;
             //this.sendEntrega.negocioCulturaId = negocio.negocio_cultura.safra_cultura.id;
             this.currentStep = 'negocio';
             this.stepNegocio = true;
@@ -267,8 +270,8 @@
             break;
 
           case 'updateMotorista':
-            this.selectedEntrega = entrega;
-            this.sendEntrega.motoristaId = entrega.motorista.id;
+            this.selectedEntrega = object;
+            this.sendEntrega.motoristaId = object.motorista.id;
             this.currentStep = 'motorista';
             this.stepNegocio = false;
             this.stepArmazem = false;
@@ -305,11 +308,11 @@
           case 'sendEntrega':
             return this.sendEntrega.isValid();
           case 'updateNota':
-            break
+            return this.sendEntrega.isValid();
           case 'novoNegocio':
-            break;
+            return this.sendEntrega.isValid();
           case 'updateMotorista':
-            return this.sendEntrega.negocioCulturaId != null
+            return this.sendEntrega.motoristaId != null
         }
       },
       listNegocioCulturas: function(){
@@ -352,6 +355,9 @@
           case 'sendEntrega':
             this.saveSendEntrega();
             break;
+            case 'updateNota':
+              this.updateNota();
+            break;
           case 'novoNegocio':
             this.addNegocioToEntrega();
             break;
@@ -393,6 +399,20 @@
         entregaService.updateMotorista(entregaId, param).then(response => {
           if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Motorista atualizado com sucesso'});
+            this.closeModal();
+            this.$root.$emit('refreshEntregaView')
+          }
+        }).catch(error => {
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+        });
+      },
+
+      updateNota: function(){
+        let entregaId = this.$route.params.id;
+
+        entregaService.updateNotaFiscalItemOfNegocio(entregaId, this.selectedNegocio.id, this.sendEntrega.getValues()).then(response => {
+          if(response.status === 200) {
+            this.$q.notify({type: 'positive', message: 'Nota atualizada com sucesso'});
             this.closeModal();
             this.$root.$emit('refreshEntregaView')
           }
