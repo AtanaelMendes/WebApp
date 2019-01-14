@@ -23,16 +23,16 @@
 
               <q-card-main class="row gutter-y-xs">
                 <div class="col-12">
-                  {{negocioCultura.quantidade}}
+                  {{numeral(parseFloat(negocioCultura.quantidade)).format('0,0')}} {{negocioCultura.unidade_medida_sigla}}
                 </div>
                 <div class="col-12" v-if="negocioCultura.quantidade_entregue">
-                  {{negocioCultura.quantidade_entregue}} Entregue
+                  {{numeral(parseFloat(negocioCultura.quantidade_entregue)).format('0,0')}} {{negocioCultura.unidade_medida_sigla}} Entregue
                 </div>
                 <div class="col-12 text-warning" v-if="!negocioCultura.quantidade_entregue">
                   Nenhuma quantidade entregue ainda
                 </div>
                 <div class="col-12" v-if="negocioCultura.quantidade_restante">
-                  {{negocioCultura.quantidade_restante}} Restante
+                  {{numeral(parseFloat(negocioCultura.quantidade_restante)).format('0,0')}} {{negocioCultura.unidade_medida_sigla}} Restante
                 </div>
                 <div class="col-12">
                   {{moment(negocioCultura.prazo_entrega_final).format('DD MMM YYYY')}}
@@ -154,8 +154,15 @@
                 <q-input type="number" v-model="totalCalc" float-label="Total" align="right"/>
               </div>
 
-              <div class="col-12">
-                <q-select v-model="sendEntrega.cfop" float-label="CFOP" :options="parseCfops(cfops)" align="right"/>
+              <div class="col-6">
+                <q-input type="number" v-model="cfopSearchText" float-label="CFOP" @blur="getCfopByNumero()" />
+                <!--<q-select v-model="sendEntrega.cfop" float-label="CFOP" :options="parseCfops(cfops)" align="right"/>-->
+              </div>
+              <div class="col-12" v-if="cfopDescricao">
+                <span class="q-caption text-faded">{{cfopDescricao}}</span>
+              </div>
+              <div class="col-6 self-center" v-if="cfopError">
+                <span class="q-body-1 text-negative" >CFOP não encontrado!</span>
               </div>
 
               <div class="col-12">
@@ -213,7 +220,9 @@
         stepInformacoes: false,
         funcao: '',
         notasFiscaisSeries:[],
-        cfops: [],
+        cfopSearchText: null,
+        cfopDescricao: null,
+        cfopError: false,
       }
     },
     computed: {
@@ -281,11 +290,9 @@
         }
         this.isModalOpened = true;
         this.listNegocioCulturas();
-        this.listArmazens();
         this.listMotoristas();
         this.getUnidadesMedida();
         this.listNotasFiscaisSeries(1)
-        this.listCfops();
       },
       closeModal: function(){
         this.isModalOpened = false;
@@ -330,10 +337,11 @@
       },
       selectNegocioCultura: function(negocioCultura){
         this.sendEntrega.negocioCulturaId = negocioCultura.id;
+        this.listArmazensByNegocioCultura(negocioCultura.id);
         this.goToNextStep()
       },
-      listArmazens: function(){
-        armazemService.listArmazens().then(response => {
+      listArmazensByNegocioCultura: function(negocioCulturaId){
+        negocioService.listArmazensByNegocioCultura(negocioCulturaId).then(response => {
           this.armazens = response.data;
         })
       },
@@ -451,19 +459,19 @@
           }
         });
       },
-      listCfops(){
-        cfopService.listCfops().then(response => {
-          this.cfops = response.data;
-        });
-      },
-      parseCfops: function(cfops){
-        return cfops.map(cfop => {
-          return {
-            value: cfop,
-            label: String(cfop.numero),
-            sublabel: cfop.descricao
+      getCfopByNumero(){
+        let numero = this.cfopSearchText;
+        cfopService.getCfopByNumero(numero).then(response => {
+          if(response.status === 200){
+            this.cfopDescricao = response.data.descricao;
+            this.sendEntrega.cfop = response.data;
+            this.cfopError = false;
           }
-        });
+        }).catch(error => {
+          this.cfopDescricao = null;
+          this.cfopError = true;
+          this.sendEntrega.cfop = null;
+        })
       },
     },
   }
