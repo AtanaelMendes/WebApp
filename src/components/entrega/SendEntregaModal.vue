@@ -167,7 +167,7 @@
 
               <div class="col-12">
                 <!--<custom-input-date-time type="date" label="Emissão" :model="sendEntrega.emissao"/>-->
-                <q-input type="date" v-model="sendEntrega.emissao.value" float-label="Emissão" align="center"  />
+                <q-datetime v-model="sendEntrega.emissao.value" float-label="Emissão" type="date" align="center" />
               </div>
 
             </div>
