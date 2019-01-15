@@ -1,12 +1,12 @@
 let uf = null;
 let ie = null;
-let regExpr = '/[^a-zA-Z0-9-. ]/g;';
+// let regExpr = '/[^a-zA-Z0-9-. ]/g;';
 // inscricaoEstadualValidator
 export default {
   validar(UF, IE){
     uf = UF.toUpperCase();
-    ie = IE;
-    // ie = IE.replace(regExpr, "");
+    // ie = IE;
+    ie = IE.replace(/[^0-9]/g, '');
 
     switch(uf){
       case "AC":

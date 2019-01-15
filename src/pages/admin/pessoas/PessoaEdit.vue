@@ -121,18 +121,18 @@
         if(data.cnpj != null){
           this.pessoa.pessoaType = 2
         }
-        this.tempGrupoEconomicoList.id = data.grupo_economico.id
-        this.tempGrupoEconomicoList.label = data.grupo_economico.nome
-        this.grupoEconomicoSearchTerms = data.grupo_economico.nome
+        this.tempGrupoEconomicoList.id = data.grupo_economico.id;
+        this.tempGrupoEconomicoList.label = data.grupo_economico.nome;
+        this.grupoEconomicoSearchTerms = data.grupo_economico.nome;
 
-        this.pessoa.grupoEconomico.value = data.grupo_economico.id
-        this.pessoa.nome.value = data.nome
-        this.pessoa.cpf.value = data.cpf
-        this.pessoa.cnpj.value = data.cnpj
-        this.pessoa.razaoSocial.value = data.razao_social
-        this.pessoa.inscricaoEstadual.value = data.inscricao_estadual
-        this.pessoa.uf.value = data.uf
-        this.pessoa.inscricaoMunicipal.value = data.inscricao_municipal
+        this.pessoa.grupoEconomico.value = data.grupo_economico.id;
+        this.pessoa.nome.value = data.nome;
+        this.pessoa.cpf.value = data.cpf;
+        this.pessoa.cnpj.value = data.cnpj;
+        this.pessoa.razaoSocial.value = data.razao_social;
+        this.pessoa.inscricaoEstadual.value = data.inscricao_estadual;
+        this.pessoa.uf.value = data.uf;
+        this.pessoa.inscricaoMunicipal.value = data.inscricao_municipal;
 
 
       },
