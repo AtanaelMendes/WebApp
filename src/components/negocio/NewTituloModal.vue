@@ -107,7 +107,8 @@
                     </div>
 
                     <div class="col-xs-8 col-lg-3">
-                      <custom-input-datetime :key="parcela.numero" type="date" :model="parcela.vencimento"/>
+                      <q-datetime v-model="parcela.vencimento.value" type="date" :key="parcela.numero"
+                                  align="center" modal format="DD/MM/YYYY"/>
                     </div>
 
                     <div class="col-xs-6 col-lg-3 self-center text-center">

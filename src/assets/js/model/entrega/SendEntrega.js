@@ -12,7 +12,7 @@ export default class{
   total = null;
   cfop = null;
   emissao = {
-    value: moment().format('YYYY-MM-DD'),
+    value: new Date(),
     errorMessage: null
   };
 

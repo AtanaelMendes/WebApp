@@ -92,18 +92,13 @@
                 />
               </div>
               <div class="col-8">
-                <custom-input-datetime
-                  type="date"
-                  :disable="!hasPrazoDefined"
-                  label="Prazo inicial"
-                  :model="cultura.prazoEntregaInicial"
-                />
-                <custom-input-datetime
-                  type="date"
-                  :disable="!hasPrazoDefined"
-                  label="Prazo final"
-                  :model="cultura.prazoEntregaFinal"
-                />
+                <q-datetime v-model="cultura.prazoEntregaInicial.value" type="date"
+                            float-label="Prazo inicial" :disable="!hasPrazoDefined"
+                            align="center" modal format="DD/MM/YYYY"/>
+
+                <q-datetime v-model="cultura.prazoEntregaFinal.value" type="date"
+                            float-label="Prazo final" :disable="!hasPrazoDefined"
+                            align="center" modal format="DD/MM/YYYY"/>
               </div>
             </div>
 

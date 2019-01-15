@@ -66,7 +66,8 @@
         <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
 
           <div class="col-3">
-            <custom-input-datetime :model="negocio.emissao" type="date" label="Data emissão"/>
+            <q-datetime v-model="negocio.emissao.value" float-label="Emissão"
+                        type="date" align="center" format="DD/MM/YYYY" modal/>
             <custom-input-text :model="negocio.numeroContrato" label="Número do contrato"/>
             <custom-input-text :model="negocio.numeroPedido" label="Número do Pedido"/>
           </div>
