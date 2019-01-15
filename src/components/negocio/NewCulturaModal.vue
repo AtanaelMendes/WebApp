@@ -10,7 +10,7 @@
             <q-card @click.native="selectSafraCultura(safraCultura)">
               <q-card-media overlay-position="full">
 
-                <img src="assets/images/icon-no-image.svg" v-if="!safraCultura.cultura.image"/>
+                <img src="statics/images/no-image-16-10.svg" v-if="!safraCultura.cultura.image"/>
                 <img :src="safraCultura.cultura.image" v-if="safraCultura.cultura.image"/>
 
                 <q-card-title slot="overlay" align="end" v-if="cultura.safraCulturaId.value == safraCultura.id">

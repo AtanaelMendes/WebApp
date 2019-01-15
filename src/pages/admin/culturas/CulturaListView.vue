@@ -72,7 +72,7 @@
                   </div>
                 </q-card-title>
 
-                <img src="assets/images/icon-no-image.svg" v-if="!marca.image"/>
+                <img src="statics/images/no-image-16-10.svg" v-if="!marca.image"/>
                 <img :src="marca.image" v-if="marca.image"/>
               </q-card-media>
             </q-card>
@@ -171,7 +171,7 @@
                 </q-btn>
               </div>
             </q-card-title>
-            <img src="assets/images/icon-no-image.svg" v-if="!marca.image"/>
+            <img src="statics/images/no-image-16-10.svg" v-if="!marca.image"/>
             <img :src="marca.image" v-if="marca.image"/>
           </q-card-media>
         </q-card>
@@ -180,12 +180,7 @@
 
     <!--EMPTY LIST-->
     <div class="col-12" v-if="culturas.length === 0 && marcasSemCultivares.length === 0">
-      <div class="row justify-center items-center" style="min-height: 40vh">
-        <div class="col-6 text-center">
-          <img src="assets/images/sad_2.svg" class="responsive"/>
-          <p>Nenhum resultado encontrado.</p>
-        </div>
-      </div>
+      <sem-resultados />
     </div>
 
     <!--PAGE STICKY BUTTOMS-->
@@ -458,7 +453,7 @@
               <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in culturas" :key="cultura.nome">
                 <q-card @click.native="selectCultura(cultura.id)">
                   <q-card-media overlay-position="full">
-                    <img src="assets/images/icon-no-image.svg" v-if="!cultura.image"/>
+                    <img src="statics/images/no-image-16-10.svg" v-if="!cultura.image"/>
                     <img :src="cultura.image" v-if="cultura.image"/>
                     <q-card-title slot="overlay" align="end" v-if="cultura.id === cultivar.culturaId">
                       <q-icon name="check_circle" size="30px" color="positive"/>
@@ -486,7 +481,7 @@
               <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="marca in marcas" :key="marca.nome">
                 <q-card @click.native="selectMarca(marca.id)">
                   <q-card-media overlay-position="full">
-                    <img src="assets/images/icon-no-image.svg" v-if="!marca.image_path"/>
+                    <img src="statics/images/no-image-16-10.svg" v-if="!marca.image_path"/>
                     <img :src="marca.image_path" v-if="marca.image_path"/>
                     <q-card-title slot="overlay" align="end" v-if="marca.id === cultivar.marcaId">
                       <q-icon name="check_circle" size="30px" color="positive"/>
@@ -759,10 +754,12 @@
     import Cultivar from 'assets/js/model/cultura/Cultivar'
     import culturaService from 'assets/js/service/cultura/CulturaService'
     import imapeUpload from 'components/ImageUpload'
+    import semResultados from 'components/SemResultados'
 
     export default {
       name: "cultura-list-view",
       components: {
+        semResultados,
         toolbar,
         customPage,
         customInputText,

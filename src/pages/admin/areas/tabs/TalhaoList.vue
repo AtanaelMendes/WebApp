@@ -34,8 +34,7 @@
       </div>
     </div>
     <div v-if="isEmptyList" class="no-result">
-      <img src="~/assets/images/sad_2.svg"/>
-      <span>Nenhum resultado encontrado.</span>
+      <sem-resultados />
     </div>
 
   </q-scroll-area>
@@ -43,8 +42,13 @@
 
 <script>
   import talhaoService from 'assets/js/service/area/TalhaoService'
+  import semResultados from 'components/SemResultados'
+
   export default {
     name: "dashboard",
+    components: {
+      semResultados
+    },
     data(){
       return{
         isEmptyList: false,

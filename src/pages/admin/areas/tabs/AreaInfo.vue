@@ -36,8 +36,7 @@
 
     </div>
     <div class="no-result" v-else>
-      <img src="~/assets/images/sad_2.svg"/>
-      <span>Nenhum resultado encontrado.</span>
+      <sem-resultados />
     </div>
 
   </q-scroll-area>
@@ -45,8 +44,13 @@
 
 <script>
   import areaService from 'assets/js/service/area/AreaService'
+  import semResultados from 'components/SemResultados'
+
   export default {
     name: "area-info",
+    components: {
+      semResultados
+    },
     data(){
       return{
         area: null,

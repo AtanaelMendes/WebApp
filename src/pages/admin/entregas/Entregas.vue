@@ -18,7 +18,7 @@
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="entrega in entregasCarregando" :key="entrega.id">
         <q-card @click.native="viewCarga(entrega.id)">
           <q-card-media>
-            <img src="assets/images/icon-no-image.svg" v-if="!entrega.caminhao.image"/>
+            <img src="statics/images/no-image-16-10.svg" v-if="!entrega.caminhao.image"/>
             <img :src="entrega.caminhao.image" v-if="entrega.caminhao.image"/>
           </q-card-media>
           <q-card-separator/>
@@ -51,12 +51,7 @@
 
       <!--EMPTY LIST-->
       <div class="col-12" v-if="entregasCarregando <= 0">
-        <div class="row justify-center items-center" style="min-height: 40vh">
-          <div class="col-6 text-center">
-            <img src="assets/images/sad_2.svg" class="responsive"/>
-            <p>Nenhum resultado encontrado.</p>
-          </div>
-        </div>
+        <sem-resultados />
       </div>
 
       <!--PAGE STICKY BUTTOMS-->
@@ -75,7 +70,7 @@
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="entrega in entregasNoArmazem" :key="entrega.id">
         <q-card @click.native="viewCarga(entrega.id)">
           <q-card-media>
-            <img src="assets/images/icon-no-image.svg" v-if="!entrega.caminhao.image"/>
+            <img src="statics/images/no-image-16-10.svg" v-if="!entrega.caminhao.image"/>
             <img :src="entrega.caminhao.image" v-if="entrega.caminhao.image"/>
           </q-card-media>
           <q-card-separator/>
@@ -105,12 +100,7 @@
 
       <!--EMPTY LIST-->
       <div class="col-12" v-if="entregasNoArmazem <= 0">
-        <div class="row justify-center items-center" style="min-height: 40vh">
-          <div class="col-6 text-center">
-            <img src="assets/images/sad_2.svg" class="responsive"/>
-            <p>Nenhum resultado encontrado.</p>
-          </div>
-        </div>
+        <sem-resultados />
       </div>
     </div>
 
@@ -121,10 +111,10 @@
 
           <q-item multiline v-for="entrega in entregasEntregues" :key="entrega.id" @click.native="viewCarga(entrega.id)">
             <div class="gt-sm">
-              <q-item-side avatar="assets/images/icon-no-image.svg" class="gt-sm" v-if="!entrega.caminhao.image"/>
+              <q-item-side avatar="statics/images/no-image-16-10.svg" class="gt-sm" v-if="!entrega.caminhao.image"/>
               <q-item-side :avatar="entrega.caminhao.image" class="gt-sm" v-if="entrega.caminhao.image"/>
             </div>
-            <q-item-side image="assets/images/icon-no-image.svg" class="lt-md" v-if="!entrega.caminhao.image"/>
+            <q-item-side image="statics/images/no-image-16-10.svg" class="lt-md" v-if="!entrega.caminhao.image"/>
             <q-item-side :image="entrega.caminhao.image" class="lt-md" v-if="entrega.caminhao.image"/>
             <q-item-main>
               <q-item-tile class="content-center">
@@ -167,12 +157,7 @@
 
       <!--EMPTY LIST-->
       <div class="col-12" v-if="entregasEntregues <= 0">
-        <div class="row justify-center items-center" style="min-height: 40vh">
-          <div class="col-6 text-center">
-            <img src="assets/images/sad_2.svg" class="responsive"/>
-            <p>Nenhum resultado encontrado.</p>
-          </div>
-        </div>
+        <sem-resultados />
       </div>
     </div>
 
@@ -188,9 +173,12 @@
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import entregaService from 'assets/js/service/entrega/EntregaService'
   import NewEntregaModal from 'components/entrega/NewEntregaModal'
+  import semResultados from 'components/SemResultados'
+
   export default {
     name: "entregas",
     components: {
+      semResultados,
       toolbar,
       customPage,
       customInputText,

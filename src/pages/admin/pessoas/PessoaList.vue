@@ -45,8 +45,7 @@
         </q-list>
 
         <div v-if="isEmptyList" class="no-result">
-          <img src="~/assets/images/sad_2.svg"/>
-          <span>Nenhum resultado encontrado.</span>
+          <sem-resultados />
         </div>
 
       </div>
@@ -63,9 +62,12 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import pessoaService from 'assets/js/service/PessoaService'
+  import semResultados from 'components/SemResultados'
+
   export default {
     name: "PessoasList",
     components: {
+      semResultados,
       toolbar,
       customPage
     },

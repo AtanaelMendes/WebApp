@@ -42,12 +42,7 @@
 
     <!--EMPTY LIST-->
     <div class="col-12" v-if="negocios.length <= 0">
-      <div class="row justify-center items-center" style="min-height: 40vh">
-        <div class="col-6 text-center">
-          <img src="assets/images/sad_2.svg" class="responsive"/>
-          <p>Nenhum resultado encontrado.</p>
-        </div>
-      </div>
+      <sem-resultados />
     </div>
 
     <!--PAGE STICKY BUTTOMS-->
@@ -69,10 +64,12 @@
   import customPage from 'components/CustomPage.vue'
   import negocioService from 'assets/js/service/negocio/NegocioService'
   import negocioModal from 'components/negocio/NegocioModal';
+  import semResultados from 'components/SemResultados'
 
   export default {
     name: "negocios",
     components: {
+      semResultados,
       toolbar,
       customPage,
       negocioModal,

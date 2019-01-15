@@ -32,7 +32,7 @@
 
           <!--IMAGEM-->
           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5" style="max-height: 200px; overflow: hidden">
-            <img src="assets/images/icon-no-image.svg" v-if="!area.image_path"/>
+            <img src="statics/images/no-image-16-10.svg" v-if="!area.image_path"/>
             <img :src="area.image_path" v-if="area.image_path" class="full-width"/>
           </div>
 
@@ -104,7 +104,7 @@
               </div>
             </q-card-title>
 
-            <img src="assets/images/icon-no-image.svg" v-if="!talhao.image_path"/>
+            <img src="statics/images/no-image-16-10.svg" v-if="!talhao.image_path"/>
             <img :src="talhao.image_path" v-if="talhao.image_path"/>
           </q-card-media>
 

@@ -48,8 +48,7 @@
 
 
     <div v-if="isEmptyList" class="no-result">
-      <img src="~/assets/images/sad_2.svg"/>
-      <span>Nenhum resultado encontrado.</span>
+      <sem-resultados />
     </div>
 
     <q-btn slot="fab-container" round color="deep-orange" @click="addArea()" icon="add" size="20px" />
@@ -61,11 +60,14 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import areaService from 'assets/js/service/area/AreaService'
+  import semResultados from 'components/SemResultados'
+
   export default {
     name: "area-list",
     components: {
       toolbar,
-      customPage
+      customPage,
+      semResultados
     },
     data () {
       return {

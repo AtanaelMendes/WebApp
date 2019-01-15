@@ -180,12 +180,7 @@
 
     <!--EMPTY LIST-->
     <div class="col-12" v-if="safras.length <= 0">
-      <div class="row justify-center items-center" style="min-height: 40vh">
-        <div class="col-6 text-center">
-          <img src="assets/images/sad_2.svg" class="responsive"/>
-          <p>Nenhum resultado encontrado.</p>
-        </div>
-      </div>
+      <sem-resultados />
     </div>
 
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
@@ -203,9 +198,7 @@
             <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in culturas" :key="cultura.id">
               <q-card @click.native="setCultura(cultura)">
                 <q-card-media overlay-position="full">
-                  <!--<img src="assets/images/soja250x250.jpg"/>-->
-
-                  <img src="assets/images/icon-no-image.svg" v-if="!cultura.image_path"/>
+                  <img src="statics/images/no-image-16-10.svg" v-if="!cultura.image_path"/>
                   <img :src="cultura.image_path" v-if="cultura.image_path"/>
 
                   <q-card-title slot="overlay" align="end" v-if="cultura.id === safraCultura.cultura_id">
@@ -220,12 +213,7 @@
           </div>
           <!--EMPTY LIST-->
           <div class="column q-ma-xl items-center" v-if="culturas.length <= 0">
-            <div class="col-6">
-              <img src="assets/images/sad_2.svg" class="responsive"/>
-            </div>
-            <div class="col-6 text-justify">
-              <span>Nenhum talhão com espaço disponível encontrado.</span>
-            </div>
+            <sem-resultados mensagem="Nenhum talhão com espaço disponível encontrado." />
           </div>
         </q-step>
 
@@ -252,7 +240,7 @@
                 <q-card-media overlay-position="full">
                   <!--<img src="assets/images/confinamento250x250.jpg"/>-->
 
-                  <img src="assets/images/icon-no-image.svg" v-if="!area.image_path"/>
+                  <img src="statics/images/no-image-16-10.svg" v-if="!area.image_path"/>
                   <img :src="area.image_path" v-if="area.image_path"/>
 
                   <q-card-title slot="overlay" align="end" v-if="area.id === selectedArea.id">
@@ -276,7 +264,7 @@
               <q-card>
                 <q-card-media overlay-position="full" @click.native="toggleTalhao(talhao)">
 
-                  <img src="assets/images/icon-no-image.svg" v-if="!talhao.image_path"/>
+                  <img src="statics/images/no-image-16-10.svg" v-if="!talhao.image_path"/>
                   <img :src="talhao.image_path" v-if="talhao.image_path"/>
 
                   <q-card-title slot="overlay" align="end" v-if="safraCultura.getTalhaoById(talhao.id).tamanho > 0">
@@ -337,12 +325,7 @@
 
           <!--EMPTY LIST-->
           <div class="column q-ma-xl items-center" v-if="talhoes.length <= 0">
-            <div class="col-6">
-              <img src="assets/images/sad_2.svg" class="responsive"/>
-            </div>
-            <div class="col-6 text-justify">
-              <span>Nenhum talhão com espaço disponível encontrado.</span>
-            </div>
+            <sem-resultados mensagem="Nenhum talhão com espaço disponível encontrado." />
           </div>
         </q-step>
 
@@ -513,6 +496,8 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
+  import semResultados from 'components/SemResultados'
+
   // SAFRA
   import safraService from 'assets/js/service/safra/SafraService'
   import safra from 'assets/js/model/safra/Safra'
@@ -524,9 +509,11 @@
   import talhaoService from 'assets/js/service/area/TalhaoService'
   import areaService from 'assets/js/service/area/AreaService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
+
     export default {
       name: "safra-list",
       components: {
+        semResultados,
         toolbar,
         customPage,
       },

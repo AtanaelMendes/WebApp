@@ -10,7 +10,7 @@
           <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="caminhao in caminhoes" :key="caminhao.id">
             <q-card @click.native="selectCaminhao(caminhao.id)">
               <q-card-media overlay-position="full">
-                <img src="assets/images/icon-no-image.svg" v-if="!caminhao.image"/>
+                <img src="statics/images/no-image-16-10.svg" v-if="!caminhao.image"/>
                 <img :src="caminhao.image" v-if="caminhao.image"/>
                 <q-card-title slot="overlay" align="end" v-if="caminhao.id === novaEntrega.caminhaoId">
                   <q-icon name="check_circle" size="30px" color="positive"/>
@@ -49,7 +49,7 @@
           <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="safraCultura in safraCulturas" :key="safraCultura.id" >
             <q-card @click.native="selectSafraCultura(safraCultura)">
               <q-card-media overlay-position="full">
-                <img src="assets/images/icon-no-image.svg" v-if="!safraCultura.cultura.image"/>
+                <img src="statics/images/no-image-16-10.svg" v-if="!safraCultura.cultura.image"/>
                 <img :src="safraCultura.cultura.image" v-if="safraCultura.cultura.image"/>
 
                 <q-card-title slot="overlay" align="end" v-if="selectedSafraCulturaId === safraCultura.id">
@@ -82,7 +82,7 @@
             <q-card @click.native="selectArea(area)">
               <q-card-media overlay-position="full">
 
-                <img src="assets/images/icon-no-image.svg" v-if="!area.image_path"/>
+                <img src="statics/images/no-image-16-10.svg" v-if="!area.image_path"/>
                 <img :src="area.image_path" v-if="area.image_path"/>
 
                 <q-card-title slot="overlay" align="end" v-if="area.id === selectedAreaId">
@@ -106,7 +106,7 @@
             <q-card>
               <q-card-media overlay-position="full" @click.native="selectTalhao(talhao)">
 
-                <img src="assets/images/icon-no-image.svg" v-if="!talhao.image_path"/>
+                <img src="statics/images/no-image-16-10.svg" v-if="!talhao.image_path"/>
                 <img :src="talhao.image_path" v-if="talhao.image_path"/>
 
                 <q-card-title slot="overlay" align="end" v-if="talhao.id === selectedTalhaoId">
@@ -134,7 +134,7 @@
             <q-card>
               <q-card-media overlay-position="full" @click.native="selectCultivar(cultivar)">
 
-                <img src="assets/images/icon-no-image.svg" v-if="!cultivar.image_path"/>
+                <img src="statics/images/no-image-16-10.svg" v-if="!cultivar.image_path"/>
                 <img :src="cultivar.image_path" v-if="cultivar.image_path"/>
 
                 <q-card-title slot="overlay" align="end" v-if="cultivar.id === selectedCultivarId">

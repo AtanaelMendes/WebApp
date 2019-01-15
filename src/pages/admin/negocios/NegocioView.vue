@@ -381,12 +381,7 @@
 
     <!--EMPTY LIST-->
     <div class="column q-ma-xl items-center" v-if="!negocio">
-      <div class="col-6">
-        <img src="assets/images/sad_2.svg" class="responsive"/>
-      </div>
-      <div class="col-6 text-justify">
-        <span>Nenhum resultado encontrado.</span>
-      </div>
+      <sem-resultados />
     </div>
 
     <!--PAGE STICKY BUTTOMS-->
@@ -429,11 +424,13 @@
   import newTituloModal from 'components/negocio/NewTituloModal';
   import newProdutoModal from 'components/negocio/NewProdutoModal';
   import newFixacaoModal from 'components/negocio/NewFixacaoModal';
+  import semResultados from 'components/SemResultados'
   import { Screen } from 'quasar'
 
   export default {
     name: "negocio-view",
     components: {
+      semResultados,
       toolbar,
       customPage,
       newCulturaModal,

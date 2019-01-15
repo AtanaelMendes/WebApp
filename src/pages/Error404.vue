@@ -2,16 +2,16 @@
   <div class="fixed-center text-center">
     <p>
       <img
-        src="~assets/images/sad.svg"
-        style="width:30vw;max-width:150px;"
+        src="/statics/images/vin-diesel.gif"
+        style="max-height:50vh; max-width:100vw"
       >
     </p>
-    <p class="text-faded">Sorry, nothing here...<strong>(404)</strong></p>
+    <p class="text-faded">Desculpe, nada aqui...<strong>(404)</strong></p>
     <q-btn
       color="secondary"
       style="width:200px;"
       @click="$router.push('/')"
-    >Go back</q-btn>
+    >Voltar</q-btn>
   </div>
 </template>
 

@@ -11,7 +11,7 @@
 
           <!--IMAGEM HEADER-->
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <img src="assets/images/icon-no-image.svg" v-if="!entrega.caminhao.image"  class="responsive"/>
+            <img src="statics/images/no-image-16-10.svg" v-if="!entrega.caminhao.image"  class="responsive"/>
             <img :src="entrega.caminhao.image" v-if="entrega.caminhao.image"  class="responsive"/>
           </div>
 
@@ -281,12 +281,7 @@
 
     <!--EMPTY LIST-->
     <div class="col-12" v-if="!carga">
-      <div class="row justify-center items-center" style="min-height: 40vh">
-        <div class="col-6 text-center">
-          <img src="assets/images/sad_2.svg" class="responsive"/>
-          <p>Nenhum resultado encontrado.</p>
-        </div>
-      </div>
+      <sem-resultados />
     </div>
 
     <!--MODAL ENVIAR CARGA-->
@@ -312,9 +307,12 @@
   import newPesagemModal from 'components/entrega/NewPesagemModal'
   import addTalhaoPercentageModal from 'components/entrega/AddTalhaoPercentageModal'
   import newEntregaModal from 'components/entrega/NewEntregaModal'
+  import semResultados from 'components/SemResultados'
+
   export default {
     name: "carga-view",
     components: {
+      semResultados,
       toolbar,
       customPage,
       newPesagemModal,

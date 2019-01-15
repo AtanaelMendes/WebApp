@@ -50,8 +50,7 @@
 
 
     <div v-if="isEmptyList" class="no-result">
-      <img src="~/assets/images/sad_2.svg"/>
-      <span>Nenhum resultado encontrado.</span>
+      <sem-resultados />
     </div>
 
     <q-btn
@@ -70,10 +69,12 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import userService from 'assets/js/service/UserService'
+  import semResultados from 'components/SemResultados'
 
     export default {
       name: "UserList",
       components: {
+        semResultados,
         toolbar,
         customPage
       },

@@ -13,7 +13,7 @@
           <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
             <div style="max-height: 200px; overflow: hidden">
               <img :src="safraCultura.cultura.image" class="responsive" v-if="safraCultura.cultura.image"/>
-              <img src="assets/images/icon-no-image.svg" class="responsive" style="margin-top:-200px" v-if="!safraCultura.cultura.image"/>
+              <img src="statics/images/no-image-16-10.svg" class="responsive" style="margin-top:-200px" v-if="!safraCultura.cultura.image"/>
             </div>
           </div>
 
@@ -217,7 +217,7 @@
 
           <q-card class="full-height">
             <q-card-media>
-              <img src="assets/images/icon-no-image.svg" v-if="!culturaTalhao.talhao.image"/>
+              <img src="statics/images/no-image-16-10.svg" v-if="!culturaTalhao.talhao.image"/>
               <img :src="culturaTalhao.talhao.image" v-if="culturaTalhao.talhao.image"/>
             </q-card-media>
             <q-card-separator/>
@@ -391,7 +391,7 @@
             <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="marca in marcas" :key="marca.id">
               <q-card @click.native="chooseMarca(marca.id)">
                 <q-card-media overlay-position="full">
-                  <img src="assets/images/icon-no-image.svg" v-if="!marca.image_path"/>
+                  <img src="statics/images/no-image-16-10.svg" v-if="!marca.image_path"/>
                   <img :src="marca.image_path" v-if="marca.image_path"/>
                   <q-card-title slot="overlay" align="end" v-if="marca.id === selectedMarcaId">
                     <q-icon name="check_circle" size="30px" color="positive"/>
