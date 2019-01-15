@@ -31,16 +31,13 @@ const routes = [
           // { name: 'edit_area', path: 'edit/:id', component: () => import('pages/admin/notasFiscais/AreaEdit.vue') }
         ]
       },
-      { name: 'areas', path: 'areas', component: () => import('pages/admin/areas/AreaList.vue'),
-        children: [
-          { name: 'view_area', path: 'view/:id', component: () => import('pages/admin/areas/AreaView.vue') },
-          { name: 'add_area', path: 'add', component: () => import('pages/admin/areas/AreaAdd.vue') },
-          { name: 'edit_area', path: 'edit/:id', component: () => import('pages/admin/areas/AreaEdit.vue') },
-          // { name: 'list_talhao', path: 'list/:id', component: () => import('pages/admin/areas/TalhaoList.vue') },
-          { name: 'add_talhao', path: 'add/:id', component: () => import('pages/admin/areas/talhao/TalhaoAdd.vue') },
-          { name: 'edit_talhao', path: ':id/edit/:talhaoId', component: () => import('pages/admin/areas/talhao/TalhaoEdit.vue') }
-        ]
-      },
+      { name: 'areas', path: 'areas', component: () => import('pages/admin/areas/AreaList.vue')},
+      { name: 'add_area', path: 'add', component: () => import('pages/admin/areas/AreaAdd.vue') },
+      { name: 'view_area', path: 'view/:id', component: () => import('pages/admin/areas/AreaView.vue') },
+      { name: 'edit_area', path: 'edit/:id', component: () => import('pages/admin/areas/AreaEdit.vue') },
+      { name: 'add_talhao', path: 'add/:id', component: () => import('pages/admin/areas/talhao/TalhaoAdd.vue') },
+      { name: 'edit_talhao', path: ':id/edit/:talhaoId', component: () => import('pages/admin/areas/talhao/TalhaoEdit.vue') },
+
       { name: 'safras', path: 'safras', component: () => import('pages/admin/safras/SafraList.vue')},
       { name: 'add_safra', path: 'safras/add', component: () => import('pages/admin/safras/SafraAdd.vue') },
       { name: 'view_safra_cultura', path: 'safras/:safra_id/safra_cultura/view/:id', component: () => import('pages/admin/safras/safraCultura/SafraCulturaView.vue') },

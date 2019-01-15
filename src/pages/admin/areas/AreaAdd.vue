@@ -1,20 +1,18 @@
 <template>
   <custom-page isChild>
-    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Nova Área">
+    <toolbar slot="toolbar" navigation_type="back" @navigation_clicked="backAction" title="Nova Área">
       <q-btn slot="action_itens" flat icon="done" dense round @click="saveArea()"/>
     </toolbar>
 
-    <form class="q-pa-md">
-
-      <div class="row">
-        <div class="col-sm-12 col-lg-6">
+    <div class="row q-pa-md gutter-sm justify-center">
+      <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
+        <form @keyup.enter="saveArea()">
           <custom-input-text type="text" label="Nome" :model="area.nome" maxlength="20"/>
-
           <localizacao-select label="Localização" :model="area.localizacao" :options="localizacaoOptions"/>
-
-        </div>
+        </form>
       </div>
-    </form>
+    </div>
+
   </custom-page>
 </template>
 

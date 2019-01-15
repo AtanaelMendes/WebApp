@@ -1,21 +1,21 @@
 <template>
-  <custom-page isChild style="background: #fdfdfd">
-    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction">
+  <custom-page widthInner="60%" isParent>
+    <toolbar slot="toolbar" navigation_type="back" @navigation_clicked="backAction">
       <template slot="action_itens" v-if="area">
         <q-btn flat round dense icon="edit" @click.native="updateArea"/>
         <q-btn flat round dense icon="more_vert" >
           <q-popover anchor="bottom left">
             <q-list link>
-              <q-item @click.native="addFotoArea(area.id)">
+              <q-item @click.native="addFotoArea(area.id)" v-close-overlay>
                 <q-item-main label="Atualizar Foto"/>
               </q-item>
-              <q-item  @click.native="archiveArea(area.id)" v-if="!area.deleted_at">
+              <q-item  @click.native="archiveArea(area.id)" v-if="!area.deleted_at" v-close-overlay>
                 <q-item-main label="Arquivar area"  />
               </q-item>
-              <q-item  @click.native="deleteArea(area.id)">
+              <q-item  @click.native="deleteArea(area.id)" v-close-overlay>
                 <q-item-main label="Excluir area"  />
               </q-item>
-              <q-item  @click.native="restoreArea(area.id)" v-if="area.deleted_at">
+              <q-item  @click.native="restoreArea(area.id)" v-if="area.deleted_at" v-close-overlay>
                 <q-item-main label="Ativar area"  />
               </q-item>
             </q-list>
@@ -24,21 +24,32 @@
       </template>
     </toolbar>
 
-    <div class="row space-end">
-      <div class="col-12">
+    <div class="row q-pa-md gutter-sm space-end">
 
-        <!--INFORMACOES-->
-        <div v-if="area" class="row gutter-sm q-mb-lg">
+      <!--AREA-->
+      <div class="col-12" v-if="area">
+        <q-card class="row">
 
-          <div class="col-12">
-            <q-item>
-              <q-item-main>
-                <q-item-tile class="q-title">{{area.nome}}</q-item-tile>
-              </q-item-main>
-            </q-item>
+          <!--IMAGEM-->
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5" style="max-height: 200px; overflow: hidden">
+            <img src="assets/images/icon-no-image.svg" v-if="!area.image_path"/>
+            <img :src="area.image_path" v-if="area.image_path" class="full-width"/>
           </div>
 
-          <div :class="coluna">
+          <!--INFORMACOES-->
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-7">
+
+            <q-item>
+              <q-item-main >
+                <q-item-tile class="q-title">
+                  {{area.nome}}
+                </q-item-tile>
+                <q-item-tile class="text-faded">
+                  {{numeral(areaTotal).format('0,0')}} Hectares
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+
             <q-item>
               <q-item-main>
                 <q-item-tile class="q-subheading">
@@ -49,72 +60,71 @@
                 </q-item-tile>
               </q-item-main>
             </q-item>
+
           </div>
 
-        </div>
-
-        <!--TALHOES-->
-        <div class="row q-px-md gutter-sm">
-          <div class="col-12">
-            <q-item class="custom-header">
-              <q-item-main class="q-title">
-                Talhões
-              </q-item-main>
-              <q-item-side>
-                <q-btn round size="md" icon="add" @click="addtalhao" color="deep-orange"/>
-              </q-item-side>
-            </q-item>
-          </div>
-          <div class="col-6" v-for="talhao in talhoes" :key="talhao.id">
-            <q-card color="white" text-color="black">
-
-              <q-card-media overlay-position="top">
-                <q-card-title slot="overlay">
-                  {{talhao.nome}}
-                  <div slot="right">
-                    <q-btn round flat dense icon="more_vert" color="white">
-                      <q-popover>
-                        <q-list link>
-                          <q-item v-close-overlay @click.native="addFotoTalhao(talhao.id)">
-                            <q-item-main label="Atualizar Foto"/>
-                          </q-item>
-                          <q-item v-close-overlay @click.native="updateTalhao(talhao.id)">
-                            <q-item-main label="Editar"/>
-                          </q-item>
-                          <q-item v-close-overlay @click.native="archiveTalhao(talhao.id)" v-if="!talhao.deleted_at">
-                            <q-item-main label="Arquivar"/>
-                          </q-item>
-                          <q-item v-close-overlay @click.native="restoreTalhao(talhao.id)" v-if="talhao.deleted_at">
-                            <q-item-main label="Ativar"/>
-                          </q-item>
-                          <q-item v-close-overlay @click.native="deleteTalhao(talhao.id)">
-                            <q-item-main label="Excluir"/>
-                          </q-item>
-                        </q-list>
-                      </q-popover>
-                    </q-btn>
-                  </div>
-                </q-card-title>
-
-                <img src="assets/images/icon-no-image.svg" v-if="!talhao.image_path"/>
-                <img :src="talhao.image_path" v-if="talhao.image_path"/>
-              </q-card-media>
-
-
-              <q-item v-if="talhao.deleted_at" class="bg-negative text-white" dense inset>
-                <q-item-main class="text-center">
-                  Talhão Inativo
-                </q-item-main>
-              </q-item>
-              <q-card-main>
-                {{numeral(talhao.tamanho).format('0,0')}}&nbsp{{talhao.unidade.nome}}
-              </q-card-main>
-            </q-card>
-          </div>
-        </div>
-
+        </q-card>
       </div>
+
+      <!--TALHOES-->
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="talhao in talhoes" :key="talhao.id">
+        <q-card color="white" text-color="black">
+
+          <q-item v-if="talhao.deleted_at" class="bg-negative text-white">
+            <q-item-main class="text-center">
+              Talhão Inativo
+            </q-item-main>
+          </q-item>
+
+          <q-card-media overlay-position="top">
+            <q-card-title slot="overlay">
+              {{talhao.nome}}
+              <div slot="right">
+                <q-btn round flat dense icon="more_vert" color="white">
+                  <q-popover>
+                    <q-list link>
+                      <q-item v-close-overlay @click.native="addFotoTalhao(talhao.id)">
+                        <q-item-main label="Atualizar Foto"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="updateTalhao(talhao.id)">
+                        <q-item-main label="Editar"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="archiveTalhao(talhao.id)" v-if="!talhao.deleted_at">
+                        <q-item-main label="Arquivar"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="restoreTalhao(talhao.id)" v-if="talhao.deleted_at">
+                        <q-item-main label="Ativar"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="deleteTalhao(talhao.id)">
+                        <q-item-main label="Excluir"/>
+                      </q-item>
+                    </q-list>
+                  </q-popover>
+                </q-btn>
+              </div>
+            </q-card-title>
+
+            <img src="assets/images/icon-no-image.svg" v-if="!talhao.image_path"/>
+            <img :src="talhao.image_path" v-if="talhao.image_path"/>
+          </q-card-media>
+
+          <q-card-main>
+            {{numeral(talhao.tamanho).format('0,0')}}&nbsp{{talhao.unidade.nome}}
+          </q-card-main>
+
+        </q-card>
+      </div>
+
     </div>
+
+    <!--PAGE STICKY BUTTOMS-->
+    <q-page-sticky position="bottom-right" :offset="[35, 35]">
+      <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
+        <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="addtalhao">
+          <span class="shadow-2 text-no-wrap">Novo Talhão</span>
+        </q-fab-action>
+      </q-fab>
+    </q-page-sticky>
 
     <!--MODAL ADD FOTO AREA-->
     <q-modal v-model="modalAddFotoArea" maximized no-backdrop-dismiss>
@@ -187,6 +197,15 @@
       talhaoImageUrl: function(){
         let area_id = this.$route.params.id;
         return '/area/' + area_id + '/talhao/' + this.selectedTalhaoId + '/image';
+      },
+      areaTotal: function () {
+        if(this.talhoes.length > 0){
+          let soma = 0;
+          this.talhoes.forEach(function (talhao) {
+            soma += parseFloat(talhao.tamanho)
+          });
+          return soma
+        }
       }
     },
     data(){
@@ -242,7 +261,7 @@
           color: 'primary'
         }).then(data => {
           areaService.archiveArea(this.areaId).then(response => {
-            this.$q.notify({type: 'positive', message: 'Área arquivada'})
+            this.$q.notify({type: 'positive', message: 'Área arquivada'});
             this.$router.push({name:'areas'})
           })
         });
@@ -255,7 +274,7 @@
           color: 'primary'
         }).then(data => {
           areaService.restoreArea(this.areaId).then(response => {
-            this.$q.notify({type: 'positive', message: 'Área ativada'})
+            this.$q.notify({type: 'positive', message: 'Área ativada'});
             this.getAreaById(this.$route.params.id);
           })
         });
@@ -268,7 +287,7 @@
           color: 'primary'
         }).then(data => {
           areaService.deleteArea(this.areaId).then(response => {
-            this.$q.notify({type: 'positive', message: 'Área excluida'})
+            this.$q.notify({type: 'positive', message: 'Área excluida'});
             this.$router.push({name:'areas'})
 
             this.$root.$emit('refreshAreaList')
@@ -319,7 +338,7 @@
           color: 'primary'
         }).then(data => {
           talhaoService.restoreTalhao(this.areaId, talhaoId).then(response => {
-            this.$q.notify({type: 'positive', message: 'Talhão ativado com suceso'})
+            this.$q.notify({type: 'positive', message: 'Talhão ativado com suceso'});
             this.listTalhoes(this.$route.params.id);
           })
         });
@@ -332,7 +351,7 @@
           color: 'primary'
         }).then(data => {
           talhaoService.deleteTalhao(this.areaId, talhaoId).then(response => {
-            this.$q.notify({type: 'positive', message: 'Talhão excluido com sucesso'})
+            this.$q.notify({type: 'positive', message: 'Talhão excluido com sucesso'});
             this.listTalhoes(this.$route.params.id);
           })
         });
@@ -343,34 +362,24 @@
       }
     },
     mounted(){
-      this.listTalhoes(this.$route.params.id);
+      this.$root.$on('refreshTalhaoList', () => {
+        this.listTalhoes(this.$route.params.id);
+      });
       this.getAreaById(this.$route.params.id);
+      this.listTalhoes(this.$route.params.id);
     }
   }
 </script>
 
 <style>
   .space-end{
-    margin-bottom: 150px;
+    margin-bottom: 200px;
   }
-  .custom-header{
-    border-top: 1px solid #c5c5c5;
-  }
-  .no-result{
-    text-align: center;
-    padding-top: 150px;
-  }
-
-  .no-result img{
-    width: 120px;
-    height: auto;
-  }
-
-  .no-result span{
-    display: block;
-    margin-top: 30px;
-    font-size: 25px;
-    font-weight: 300;
-    color: #ababab;
+  .custom-fab .q-fab-actions .q-btn  span{
+    position: absolute;
+    background: white;
+    right: 46px;
+    border-radius: 6px;
+    padding: 7px 10px;
   }
 </style>

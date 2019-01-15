@@ -1,23 +1,24 @@
 <template>
   <custom-page isChild>
-    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Editar Talhão">
+    <toolbar slot="toolbar" navigation_type="back" @navigation_clicked="backAction" title="Editar Talhão">
       <q-btn slot="action_itens" flat icon="done" round dense @click="updatetalhao()"/>
     </toolbar>
 
-    <form class="q-pa-md">
+    <div class="row q-pa-md gutter-sm justify-center">
 
-      <div class="row">
-        <div class="col-sm-12 col-lg-6">
-
-          <custom-input-text type="text" label="Nome" :model="talhao.nome" maxlength="20"/>
-
-          <custom-input-text type="number" label="Tamanho" :model="talhao.tamanho" maxlength="20"/>
-
-          <unidade-area-select label="Unidade da Área" :model="talhao.unidadeAreaId" :options="unidadeAreaOptions" />
-
-        </div>
+      <div class="col-12 text-center q-title">
+        {{talhaoData.nome}}, {{talhaoData.area.nome}}
       </div>
-    </form>
+
+      <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
+        <form @keyup.enter="updatetalhao()">
+          <custom-input-text type="text" label="Nome" :model="talhao.nome" maxlength="20"/>
+          <custom-input-text type="number" label="Tamanho" :model="talhao.tamanho" maxlength="20"/>
+          <unidade-area-select label="Unidade da Área" :model="talhao.unidadeAreaId" :options="unidadeAreaOptions" />
+        </form>
+      </div>
+    </div>
+
   </custom-page>
 </template>
 
@@ -28,8 +29,6 @@
   import unidadeAreaSelect from 'components/UnidadeAreaSelect.vue'
   import talhao from 'assets/js/model/area/Talhao'
   import talhaoService from 'assets/js/service/area/TalhaoService'
-  //import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
-
   export default {
     name: "talhao-add",
     components: {
@@ -42,6 +41,7 @@
       return {
         unidadeAreaOptions: [],
         talhao: new talhao(),
+        talhaoData: null,
         areaId: this.$route.params.id,
         talhaoId: this.$route.params.talhaoId
       }
@@ -55,7 +55,8 @@
       },
       getTalhaoById: function(){
         talhaoService.getTalhaoById(this.areaId, this.talhaoId).then(data => {
-          this.fillForm(data)
+          this.fillForm(data);
+          this.talhaoData = data
           // console.log(data)
         })
       },
@@ -66,9 +67,9 @@
         talhaoService.updateTalhao(this.areaId, this.talhaoId, this.talhao.getValues()).then(response => {
           if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Talhão atualizado com sucesso'});
-            // this.$router.push({name: 'areas'});
+            this.$root.$emit('refreshTalhaoList');
             this.$router.go(-1);
-            this.$root.$emit('refreshAreaList')
+            // this.$router.push({name: 'areas'});
           }
         });
       },

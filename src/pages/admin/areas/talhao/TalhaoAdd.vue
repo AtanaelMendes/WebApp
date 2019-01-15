@@ -1,23 +1,19 @@
 <template>
   <custom-page isChild>
-    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction" title="Novo Talhão">
+    <toolbar slot="toolbar" navigation_type="back" @navigation_clicked="backAction" title="Novo Talhão">
       <q-btn slot="action_itens" flat icon="done" round dense @click="saveTalhao()"/>
     </toolbar>
 
-    <form class="q-pa-md">
-
-      <div class="row">
-        <div class="col-sm-12 col-lg-6">
-
+    <div class="row q-pa-md gutter-sm justify-center">
+      <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
+        <form @keyup.enter="saveTalhao()">
           <custom-input-text type="text" label="Nome" :model="talhao.nome" maxlength="20"/>
-
           <custom-input-text type="number" label="Tamanho" :model="talhao.tamanho" maxlength="20"/>
-
           <unidade-area-select label="Unidade da Área" :model="talhao.unidadeAreaId" :options="unidadeAreaOptions" />
-
-        </div>
+        </form>
       </div>
-    </form>
+    </div>
+
   </custom-page>
 </template>
 

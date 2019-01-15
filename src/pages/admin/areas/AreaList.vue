@@ -94,6 +94,7 @@
       },
       selectArea: function(id) {
         this.$router.push({name: 'view_area', params: {id:id}});
+        // this.$router.push({name: 'negocio_view', params: {id:id}});
         // this.$router.push({name: 'add_pessoa'});
       },
       addArea: function(){
