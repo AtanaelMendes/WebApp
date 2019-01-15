@@ -13,7 +13,8 @@
 
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
             <custom-input-text type="number" :model="pesagem.numeroTicket" align="right" label="Número do ticket"/>
-            <custom-input-date-time type="datetime-local" label="Data descarga" :model="pesagem.emissao"/>
+            <q-datetime v-model="pesagem.emissao.value" type="datetime" label="Data descarga"
+                        align="center" modal format="DD/MM/YYYY HH:mm"/>
             <div class="row q-mb-lg">
               <div class="col-8 q-pr-lg ">
 
@@ -279,6 +280,7 @@
               this.closeModal();
               this.$root.$emit('refreshEntregasList', 'no_armazem')
               this.$root.$emit('refreshEntregasList', 'entregue')
+              this.$root.$emit('refreshEntregaView')
             }
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
