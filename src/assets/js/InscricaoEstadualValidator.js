@@ -1,10 +1,12 @@
 let uf = null;
 let ie = null;
+// let regExpr = '/[^a-zA-Z0-9-. ]/g;';
 // inscricaoEstadualValidator
 export default {
   validar(UF, IE){
     uf = UF.toUpperCase();
-    ie = IE;
+    // ie = IE;
+    ie = IE.replace(/[^0-9]/g, '');
 
     switch(uf){
       case "AC":
@@ -62,7 +64,7 @@ export default {
       case "TO":
         return validateTO();
     }
-  },//end validar()
+  },
 
   testaInscricoesEstaduais(){
     let validos = [
@@ -137,7 +139,7 @@ export default {
       ['317085035', 'SE'],
       ['36038217095', 'TO'],
       ['290227837', 'TO'],
-    ]
+    ];
 
     console.log("testando os validos:")
     for(var inscr of validos){
@@ -145,7 +147,6 @@ export default {
         console.log("falhou em: " + inscr[1])
       }
     }
-
     console.log("testando os inválidos:")
     for(var inscr of invalidos){
       if(this.validar(inscr[1], inscr[0])){
