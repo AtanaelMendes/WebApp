@@ -12,4 +12,14 @@ export default {
       })
     });
   },
+  saveMotorista(params){
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.post('produtor/' + produtor_id + '/motorista', params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
 }

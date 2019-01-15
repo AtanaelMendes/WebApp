@@ -108,7 +108,7 @@
           </div>
 
           <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2" >
-            <q-card @click.native=""  class="cursor-pointer">
+            <q-card @click.native="newMotoristaDialog"  class="cursor-pointer">
               <q-card-media align="center">
                 <q-icon name="add" color="primary" flat size="200px" />
               </q-card-media>
@@ -359,6 +359,25 @@
       selectMotorista: function(motorista){
         this.sendEntrega.motoristaId = motorista.id;
         this.goToNextStep()
+      },
+      newMotoristaDialog: function(){
+        this.$q.dialog({
+          title: 'Novo motorista',
+          //message: 'Modern front-end framework on steroids.',
+          prompt: {
+            model: '',
+            type: 'text' // optional
+          },
+          cancel: true,
+          color: 'secondary'
+        }).then(data => {
+          motoristaService.saveMotorista({nome: data}).then(response => {
+            if(response.status === 201){
+              this.sendEntrega.motoristaId = response.data.id;
+              this.listMotoristas();
+            }
+          })
+        }).catch(() => {})
       },
       save:function(){
         switch (this.funcao) {
