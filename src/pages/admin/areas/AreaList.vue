@@ -34,7 +34,10 @@
                 {{area.nome}}
               </q-item-tile>
               <q-item-tile sublabel>
-                {{area.localizacao.bairro}},&nbsp{{area.localizacao.cidade.nome}}-{{area.localizacao.cidade.estado.sigla}}
+                <span>{{area.localizacao.endereco}}</span>,&nbsp
+                <span>{{area.localizacao.bairro}}</span>,&nbsp
+                <span>{{area.localizacao.cidade.nome}}-</span>
+                <span>{{area.localizacao.cidade.estado.sigla}}</span>
               </q-item-tile>
             </q-item-main>
           </q-item>

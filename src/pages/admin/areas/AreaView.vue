@@ -9,13 +9,13 @@
               <q-item @click.native="addFotoArea(area.id)">
                 <q-item-main label="Atualizar Foto"/>
               </q-item>
-              <q-item dense @click.native="archiveArea(area.id)" v-if="!area.deleted_at">
+              <q-item  @click.native="archiveArea(area.id)" v-if="!area.deleted_at">
                 <q-item-main label="Arquivar area"  />
               </q-item>
-              <q-item dense @click.native="deleteArea(area.id)">
+              <q-item  @click.native="deleteArea(area.id)">
                 <q-item-main label="Excluir area"  />
               </q-item>
-              <q-item dense @click.native="restoreArea(area.id)" v-if="area.deleted_at">
+              <q-item  @click.native="restoreArea(area.id)" v-if="area.deleted_at">
                 <q-item-main label="Ativar area"  />
               </q-item>
             </q-list>
@@ -88,7 +88,7 @@
                             <q-item-main label="Ativar"/>
                           </q-item>
                           <q-item v-close-overlay @click.native="deleteTalhao(talhao.id)">
-                            <q-item-main label="Apagar"/>
+                            <q-item-main label="Excluir"/>
                           </q-item>
                         </q-list>
                       </q-popover>
@@ -107,9 +107,7 @@
                 </q-item-main>
               </q-item>
               <q-card-main>
-                <div class="row">
-                  <div>{{talhao.tamanho}}&nbsp{{talhao.unidade.nome}}</div>
-                </div>
+                {{numeral(talhao.tamanho).format('0,0')}}&nbsp{{talhao.unidade.nome}}
               </q-card-main>
             </q-card>
           </div>

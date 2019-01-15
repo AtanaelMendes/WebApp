@@ -52,9 +52,9 @@
         }
         areaService.saveArea(this.area.getValues()).then(response => {
           if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Area criada com sucesso'});
-            this.$router.push({name: 'areas'});
+            this.$q.notify({type: 'positive', message: 'Área criada com sucesso'});
             this.$root.$emit('refreshAreaList')
+            this.$router.push({name: 'areas'});
           }
         });
       },

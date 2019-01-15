@@ -52,7 +52,8 @@
         talhaoService.saveTalhao(this.$route.params.id, this.talhao.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Talhão criado com sucesso'});
-            this.$router.push({name: 'areas'});
+            // this.$router.push({name: 'areas'});
+            this.$router.go(-1);
             this.$root.$emit('refreshAreaList');
           }
         });
