@@ -121,11 +121,11 @@
 
           <q-item multiline v-for="entrega in entregasEntregues" :key="entrega.id" @click.native="viewCarga(entrega.id)">
             <div class="gt-sm">
-              <q-item-side avatar="assets/images/icon-no-image.svg" class="gt-sm" v-if="!entrega.image"/>
-              <q-item-side :avatar="entrega.image" class="gt-sm" v-if="entrega.image"/>
+              <q-item-side avatar="assets/images/icon-no-image.svg" class="gt-sm" v-if="!entrega.caminhao.image"/>
+              <q-item-side :avatar="entrega.caminhao.image" class="gt-sm" v-if="entrega.caminhao.image"/>
             </div>
-            <q-item-side image="assets/images/icon-no-image.svg" class="lt-md" v-if="!entrega.image"/>
-            <q-item-side :image="entrega.image" class="lt-md" v-if="entrega.image"/>
+            <q-item-side image="assets/images/icon-no-image.svg" class="lt-md" v-if="!entrega.caminhao.image"/>
+            <q-item-side :image="entrega.caminhao.image" class="lt-md" v-if="entrega.caminhao.image"/>
             <q-item-main>
               <q-item-tile class="content-center">
                 <div class="row">
