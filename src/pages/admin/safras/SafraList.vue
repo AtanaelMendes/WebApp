@@ -15,7 +15,6 @@
               <span v-if="safra.is_safrinha">Safrinha</span>
             </div>
             <div class="col-4" align="end">
-              <q-btn class="q-mx-xs" icon="add" dense color="primary" @click="addSafraCultura(safra.id)" flat round/>
               <q-checkbox class="q-mx-xs"
                 @input="favoriteSafra(safra.id, safra.is_favorite)"
                 color="deep-orange"
@@ -23,9 +22,12 @@
                 v-model="safra.is_favorite"
                 unchecked-icon="outlined_flag"
               />
-              <q-btn round flat dense icon="more_vert">
+              <q-btn round flat dense icon="more_vert" color="grey-7">
                 <q-popover>
                   <q-list link class="no-border">
+                    <q-item v-close-overlay @click.native="addSafraCultura(safra.id)">
+                      <q-item-main label="Adicionar safra cultura"/>
+                    </q-item>
                     <q-item v-close-overlay @click.native="editSafra(safra)">
                       <q-item-main label="Editar"/>
                     </q-item>
@@ -49,10 +51,10 @@
         <template v-if="safra.safra_culturas.length > 0">
           <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" v-for="safraCultura in safra.safra_culturas" :key="safraCultura.id">
 
-            <q-card>
-              <q-card-title class="q-py-xs">
+            <q-card class="cursor-pointer" @click.native="viewSafraCultura(safra.id, safraCultura.id)">
+              <q-card-title>
                 {{safraCultura.nome}}
-                <q-btn round flat dense icon="more_vert" slot="right">
+                <q-btn @click.stop round flat dense icon="more_vert" slot="right">
                   <q-popover>
                     <q-list link class="no-border">
                       <q-item v-close-overlay v-if="!safraCultura.deleted_at" @click.native="editSafraCultura(safra.id, safraCultura)">
@@ -73,31 +75,25 @@
               </q-card-title>
               <q-card-separator/>
 
-              <q-card-main class="q-pa-xs" @click.native="viewSafraCultura(safra.id, safraCultura.id)">
-                <div class="row gutter-y-xs q-pa-md">
+              <q-card-main>
+                <div class="row gutter-y-xs">
 
                   <div class="col-12 text-faded">
                     Total {{safraCultura.area.plantado + " " + safraCultura.view_unidade_area.plural}}
                   </div>
 
-                  <div class="col-12">
-                    <div class="row">
+                  <div class="col-12 q-caption text-faded">
+                    Estimativa
+                  </div>
 
-                      <div class="col-12 q-caption text-faded">
-                        Estimativa
-                      </div>
+                  <div class="col-6">
+                    <!--55 Sc/Ha-->
+                    {{safraCultura.estimativa.valor  + " " + safraCultura.view_unidade_medida.sigla + "/" + safraCultura.view_unidade_area.sigla}}
+                  </div>
 
-                      <div class="col-6">
-                        <!--55 Sc/Ha-->
-                        {{safraCultura.estimativa.valor  + " " + safraCultura.view_unidade_medida.sigla + "/" + safraCultura.view_unidade_area.sigla}}
-                      </div>
-
-                      <div class="col-6">
-                        <!--27.500 Sacas-->
-                        {{safraCultura.estimativa.total + " " + safraCultura.view_unidade_medida.plural}}
-                      </div>
-
-                    </div>
+                  <div class="col-6">
+                    <!--27.500 Sacas-->
+                    {{safraCultura.estimativa.total + " " + safraCultura.view_unidade_medida.plural}}
                   </div>
 
                   <div class="col-12" style="display: none">

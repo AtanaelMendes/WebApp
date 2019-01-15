@@ -222,7 +222,7 @@
             </q-card-media>
             <q-card-separator/>
 
-            <q-card-title class="q-py-sm q-px-none q-pl-md">
+            <q-card-title>
               {{culturaTalhao.talhao.nome}}
               <q-btn round flat dense icon="more_vert" slot="right">
                 <q-popover>

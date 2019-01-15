@@ -5,13 +5,13 @@
 
     <!--LISTA DE CONTRATOS-->
     <div class="row gutter-sm space-end q-pa-md" v-if="negocios.length > 0">
-      <div class="col-xs-12 col-sm-6 col-md- 4 col-lg-3" v-for="negocio in negocios" :key="negocio.id">
+      <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4" v-for="negocio in negocios" :key="negocio.id">
 
-        <q-card>
-          <q-card-title @click.native="viewNegocio(negocio.id)">
+        <q-card @click.native="viewNegocio(negocio.id)" class="cursor-pointer">
+          <q-card-title >
             Negocio Nº: {{negocio.numero_contrato}}
             <div slot="right">
-              <q-btn round flat dense icon="more_vert" @click.stop>
+              <q-btn @click.stop round flat dense icon="more_vert" @click.stop>
                 <q-popover>
                   <q-list link no-boder>
                     <q-item v-close-overlay @click.native="editNegocio(negocio.id)">
