@@ -16,10 +16,14 @@ export default class{
     value: null,
     errorMessage: null
   };
+  defaultUnidadePesagemId = {
+    value: null,
+    errorMessage: null
+  };
   defaultUnidadePrecoId = {
     value: null,
     errorMessage: null
-  }
+  };
 
   constructor(cultura){
     if(cultura !== undefined || cultura != null){
@@ -28,6 +32,7 @@ export default class{
       this.defaultUnidadeMedidaId.value = cultura.defaultUnidadeMedidaId.value;
       this.defaultUnidadeAreaId.value = cultura.defaultUnidadeAreaId.value;
       this.defaultUnidadePrecoId.value = cultura.defaultUnidadePrecoId.value;
+      this.defaultUnidadePesagemId.value = cultura.defaultUnidadePesagemId.value;
     }
   }
 
@@ -53,6 +58,11 @@ export default class{
       hasError = true;
     }
 
+    if (!helpers.req(this.defaultUnidadePesagemId.value)) {
+      this.defaultUnidadePesagemId.errorMessage = "Selecione uma unidade de peso";
+      hasError = true;
+    }
+
     if (!helpers.req(this.defaultUnidadeAreaId.value)) {
       this.defaultUnidadeAreaId.errorMessage = "Selecione uma unidade de área";
       hasError = true;
@@ -71,7 +81,8 @@ export default class{
       default_estimativa: this.defaultEstimativa.value,
       default_unidade_medida_id: this.defaultUnidadeMedidaId.value,
       default_unidade_area_id: this.defaultUnidadeAreaId.value,
-      default_unidade_preco_id: this.defaultUnidadePrecoId.value
+      default_unidade_preco_id: this.defaultUnidadePrecoId.value,
+      default_unidade_pesagem_id: this.defaultUnidadePesagemId.value
     }
   }
 }

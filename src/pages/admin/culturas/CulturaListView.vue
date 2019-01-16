@@ -8,33 +8,73 @@
 
         <!--HEADER CULTURA-->
         <div class="col-12" :key="cultura.nome">
-          <div class="row q-pa-md bg-blue-grey-1">
+          <div class="row bg-blue-grey-1">
 
-            <div class="col-6 q-title self-center">
-              {{cultura.nome}}
+            <div class="col-12">
+              <q-item>
+                <q-item-side>
+                  <q-item-tile avatar>
+                    <img src="statics/images/no-image-1-1.svg" v-if="!cultura.image"/>
+                    <img :src="cultura.image" v-if="cultura.image" class="fit"/>
+                  </q-item-tile>
+                </q-item-side>
+                <q-item-main class="q-title">
+                  {{cultura.nome}}
+                </q-item-main>
+                <q-item-side>
+                  <q-btn dense class="q-mr-xs" icon="edit" @click.native="editCultura(cultura)" flat round color="primary"/>
+                  <q-btn color="grey-7" round flat dense icon="more_vert">
+                    <q-popover>
+                      <q-list link class="no-border">
+                        <q-item v-close-overlay @click.native="addFotoCultura(cultura.id)">
+                          <q-item-main label="Atualizar Foto"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="archiveCultura(cultura.id)" v-if="!cultura.deleted_at">
+                          <q-item-main label="Arquivar"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="restoreCultura(cultura.id)" v-if="cultura.deleted_at">
+                          <q-item-main label="Ativar"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
+                          <q-item-main label="Excluir"/>
+                        </q-item>
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
+                </q-item-side>
+              </q-item>
             </div>
 
-            <div class="col-6" align="end">
-              <q-btn dense class="q-mr-xs" icon="edit" @click.native="editCultura(cultura)" flat round color="primary"/>
-              <q-btn round flat dense icon="more_vert">
-                <q-popover>
-                  <q-list link class="no-border">
-                    <q-item v-close-overlay @click.native="addFotoCultura(cultura.id)">
-                      <q-item-main label="Atualizar Foto"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="archiveCultura(cultura.id)" v-if="!cultura.deleted_at">
-                      <q-item-main label="Arquivar"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="restoreCultura(cultura.id)" v-if="cultura.deleted_at">
-                      <q-item-main label="Ativar"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
-                      <q-item-main label="Excluir"/>
-                    </q-item>
-                  </q-list>
-                </q-popover>
-              </q-btn>
-            </div>
+            <!--<div class="col-6 q-title self-center q-pa-md">-->
+              <!--{{cultura.nome}}-->
+            <!--</div>-->
+
+            <!--<div class="col-6" style="max-height: 50px; overflow: hidden">-->
+              <!--<img :src="cultura.image" v-if="cultura.image" class="full-width"/>-->
+            <!--</div>-->
+
+            <!--<div class="col-6 self-center" align="end">-->
+              <!--<q-btn dense class="q-mr-xs" icon="edit" @click.native="editCultura(cultura)" flat round color="primary"/>-->
+              <!--<q-btn color="grey-7" round flat dense icon="more_vert">-->
+                <!--<q-popover>-->
+                  <!--<q-list link class="no-border">-->
+                    <!--<q-item v-close-overlay @click.native="addFotoCultura(cultura.id)">-->
+                      <!--<q-item-main label="Atualizar Foto"/>-->
+                    <!--</q-item>-->
+                    <!--<q-item v-close-overlay @click.native="archiveCultura(cultura.id)" v-if="!cultura.deleted_at">-->
+                      <!--<q-item-main label="Arquivar"/>-->
+                    <!--</q-item>-->
+                    <!--<q-item v-close-overlay @click.native="restoreCultura(cultura.id)" v-if="cultura.deleted_at">-->
+                      <!--<q-item-main label="Ativar"/>-->
+                    <!--</q-item>-->
+                    <!--<q-item v-close-overlay @click.native="deleteCultura(cultura.id)">-->
+                      <!--<q-item-main label="Excluir"/>-->
+                    <!--</q-item>-->
+                  <!--</q-list>-->
+                <!--</q-popover>-->
+              <!--</q-btn>-->
+            <!--</div>-->
+
           </div>
         </div>
 
@@ -71,7 +111,6 @@
                     </q-btn>
                   </div>
                 </q-card-title>
-
                 <img src="statics/images/no-image-16-10.svg" v-if="!marca.image"/>
                 <img :src="marca.image" v-if="marca.image"/>
               </q-card-media>
@@ -80,6 +119,12 @@
 
           <!--CULTIVARES-->
           <div class="col-xs-12 col-sm-12 col-md-7 col-lg-9">
+
+            <!--<q-item style="max-height: 100px; overflow: hidden">-->
+              <!--<q-item-main>-->
+                <!--<img :src="cultura.image" v-if="cultura.image" class="full-width"/>-->
+              <!--</q-item-main>-->
+            <!--</q-item>-->
 
             <q-list separator no-border highlight>
               <q-item v-for="cultivar in marca.cultivares" :key="cultivar.nome">
@@ -171,8 +216,8 @@
                 </q-btn>
               </div>
             </q-card-title>
-            <img src="statics/images/no-image-16-10.svg" v-if="!marca.image"/>
-            <img :src="marca.image" v-if="marca.image"/>
+            <img src="statics/images/no-image-16-10.svg" v-if="!marca.image_path"/>
+            <img :src="marca.image_path" v-if="marca.image_path"/>
           </q-card-media>
         </q-card>
       </div>
@@ -202,88 +247,110 @@
     <template>
       <!--MODAL NEW CULTURA-->
       <q-modal v-model="modalNewCultura" minimized no-backdrop-dismiss>
-        <div class="row q-ma-lg">
-          <div class="col-12">
+        <div class="q-pa-md">
+
+          <div class="row gutter-x-sm">
 
             <!--NOME-->
-            <div class="row justify-around">
-              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                <custom-input-text label="Nome" :model="cultura.nome" />
-              </div>
-              <div class="col-sm-6 col-lg-6"/>
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+              <custom-input-text label="Nome" :model="cultura.nome" />
             </div>
 
-            <div class="row gutter-xs justify-around">
+            <!--ESTIMATIVA-->
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+              <custom-input-text type="number" label="Estimativa" :model="cultura.defaultEstimativa" />
+            </div>
 
-              <!--ESTIMATIVA-->
-              <div class="col-xs-4 col-sm-6 col-md-2 col-lg-3">
-                <custom-input-text type="number" label="Estimativa" :model="cultura.defaultEstimativa" />
-              </div>
+          </div>
 
-              <!--SELECT UNIDADE MEDIDA-->
-              <div class="col-xs-8 col-sm-6 col-md-4 col-lg-4">
-                <q-field :error="cultura.defaultUnidadeMedidaId.errorMessage != null">
-                  <q-select
-                    @input="clearErrorMessage"
-                    float-label="Unidade Medida"
-                    :options="unidadeMedidaOptions"
-                    v-model="cultura.defaultUnidadeMedidaId.value"
-                  />
-                </q-field>
-                <div class="q-field-bottom row">
-                  <div class="text-negative" v-if="cultura.defaultUnidadeMedidaId.errorMessage != null" >
-                    {{cultura.defaultUnidadeMedidaId.errorMessage}}
-                  </div>
-                </div>
-              </div>
+          <div class="row gutter-x-sm">
 
-              <div class="col-xs-4 col-sm-1 col-md-1 col-lg-1 self-center">
-                Por
-              </div>
-
-              <!--SELECT UNIDADE AREA-->
-              <div class="col-xs-8 col-sm-6 col-md-4 col-lg-4">
-                <q-field :error="cultura.defaultUnidadeAreaId.errorMessage != null">
-                  <q-select
-                    @input="clearErrorMessage"
-                    float-label="Unidade área"
-                    :options="unidadeAreaOptions"
-                    v-model="cultura.defaultUnidadeAreaId.value"
-                  />
-                </q-field>
-                <div class="q-field-bottom row">
-                  <div class="text-negative" v-if="cultura.defaultUnidadeAreaId.errorMessage != null" >
-                    {{cultura.defaultUnidadeAreaId.errorMessage}}
-                  </div>
+            <!--SELECT UNIDADE MEDIDA-->
+            <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+              <q-field :error="cultura.defaultUnidadeMedidaId.errorMessage != null">
+                <q-select
+                  @input="clearErrorMessage"
+                  float-label="Unidade Medida"
+                  :options="unidadeMedidaOptions"
+                  v-model="cultura.defaultUnidadeMedidaId.value"
+                />
+              </q-field>
+              <div class="q-field-bottom row">
+                <div class="text-negative" v-if="cultura.defaultUnidadeMedidaId.errorMessage != null" >
+                  {{cultura.defaultUnidadeMedidaId.errorMessage}}
                 </div>
               </div>
             </div>
 
-            <div class="row">
-              <!--SELECT UNIDADE AREA-->
-              <div class="col-8">
-                <q-field :error="cultura.defaultUnidadePrecoId.errorMessage != null">
-                  <q-select
-                    @input="clearErrorMessage"
-                    float-label="Unidade preço padrão"
-                    :options="unidadeMedidaOptions"
-                    v-model="cultura.defaultUnidadePrecoId.value"
-                  />
-                </q-field>
-                <div class="q-field-bottom row">
-                  <div class="text-negative" v-if="cultura.defaultUnidadePrecoId.errorMessage != null" >
-                    {{cultura.defaultUnidadePrecoId.errorMessage}}
-                  </div>
+            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 self-center text-center">
+              Por
+            </div>
+
+            <!--SELECT UNIDADE AREA-->
+            <div class="col-xs-10 col-sm-10 col-md-5 col-lg-5">
+              <q-field :error="cultura.defaultUnidadeAreaId.errorMessage != null">
+                <q-select
+                  @input="clearErrorMessage"
+                  float-label="Unidade área"
+                  :options="unidadeAreaOptions"
+                  v-model="cultura.defaultUnidadeAreaId.value"
+                />
+              </q-field>
+              <div class="q-field-bottom row">
+                <div class="text-negative" v-if="cultura.defaultUnidadeAreaId.errorMessage != null" >
+                  {{cultura.defaultUnidadeAreaId.errorMessage}}
                 </div>
               </div>
+            </div>
+
+          </div>
+
+          <div class="row gutter-x-sm">
+
+            <!--UNIDADE DE PRECO-->
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+              <q-field :error="cultura.defaultUnidadePrecoId.errorMessage != null">
+                <q-select
+                  @input="clearErrorMessage"
+                  float-label="Unidade preço padrão"
+                  :options="unidadeMedidaOptions"
+                  v-model="cultura.defaultUnidadePrecoId.value"
+                />
+              </q-field>
+              <div class="q-field-bottom row">
+                <div class="text-negative" v-if="cultura.defaultUnidadePrecoId.errorMessage != null" >
+                  {{cultura.defaultUnidadePrecoId.errorMessage}}
+                </div>
+              </div>
+            </div>
+
+            <!--UNIDADE DE PESO-->
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+              <q-field :error="cultura.defaultUnidadePrecoId.errorMessage != null">
+                <q-select
+                  @input="clearErrorMessage"
+                  float-label="Unidade peso padrão"
+                  :options="unidadeMedidaOptions"
+                  v-model="cultura.defaultUnidadePesagemId.value"
+                />
+              </q-field>
+              <div class="q-field-bottom row">
+                <div class="text-negative" v-if="cultura.defaultUnidadePesagemId.errorMessage != null" >
+                  {{cultura.defaultUnidadePrecoId.errorMessage}}
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!--BOTOES CANCELAR SALVAR-->
+          <div class="row">
+            <div class="col-12" align="end">
+              <q-btn @click.native="closeModalNewCultura" color="primary" label="Cancelar" class="q-mr-xs"/>
+              <q-btn @click.native="saveCultura" color="primary" label="Salvar"/>
             </div>
           </div>
-        </div>
-        <div class="row q-ma-sm">
-          <div class="col-12" align="end">
-            <q-btn @click.native="closeModalNewCultura" color="primary" label="Cancelar" class="q-mr-xs"/>
-            <q-btn @click.native="saveCultura" color="primary" label="Salvar"/>
-          </div>
+
         </div>
       </q-modal>
 
@@ -848,6 +915,7 @@
           culturaService.saveCultura(this.cultura.getValues()).then(response => {
             if(response.status === 201) {
               this.$q.notify({type: 'positive', message: 'Cultura criada com sucesso'});
+              this.cultura = new Cultura();
               this.listCulturas();
               this.closeModalNewCultura();
             }
@@ -936,6 +1004,7 @@
           culturaService.saveMarca(this.marca.getValues()).then(response => {
             if(response.status === 201) {
               this.$q.notify({type: 'positive', message: 'Marca criada com sucesso'});
+              this.marca = new Marca();
               this.listCulturas();
               this.listMarcas();
               this.listMarcasSemCultivares();
@@ -1060,6 +1129,7 @@
           culturaService.saveCultivar(this.cultivar.culturaId, this.cultivar.getValues()).then(response => {
             if(response.status === 201) {
               this.$q.notify({type: 'positive', message: 'Cultivar criado com sucesso'});
+              this.cultivar = new Cultivar();
               this.listCulturas();
               this.listMarcasSemCultivares();
               this.closeModalAddCultivar();
