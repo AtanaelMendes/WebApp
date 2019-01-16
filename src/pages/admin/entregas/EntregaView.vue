@@ -10,13 +10,13 @@
         <q-card class="row">
 
           <!--IMAGEM HEADER-->
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <img src="statics/images/no-image-16-10.svg" v-if="!entrega.caminhao.image"  class="responsive"/>
-            <img :src="entrega.caminhao.image" v-if="entrega.caminhao.image"  class="responsive"/>
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5" style="max-height: 200px; overflow: hidden">
+            <img src="statics/images/no-image-16-10.svg" v-if="!entrega.caminhao.image" class="fit"/>
+            <img :src="entrega.caminhao.image" v-if="entrega.caminhao.image"  class="fit"/>
           </div>
 
           <!--INFO DO HEADER-->
-          <div class="col-xs-12 col-sm-6 col-md-8 col-lg-9 q-pa-sm">
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-7 q-pa-sm">
 
             <q-btn class="float-right" icon="more_vert" round flat v-if="entrega.status === 'No Armazem'">
               <q-popover>

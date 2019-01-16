@@ -16,7 +16,7 @@
     <div class="row gutter-sm space-end q-pa-md" v-if="tabs === 'carregando' ">
 
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="entrega in entregasCarregando" :key="entrega.id">
-        <q-card @click.native="viewCarga(entrega.id)">
+        <q-card @click.native="viewCarga(entrega.id)" class="cursor-pointer">
           <q-card-media>
             <img src="statics/images/no-image-16-10.svg" v-if="!entrega.caminhao.image"/>
             <img :src="entrega.caminhao.image" v-if="entrega.caminhao.image"/>
@@ -68,7 +68,7 @@
     <div class="row gutter-sm space-end q-pa-md" v-if="tabs == 'no-armazem' ">
 
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="entrega in entregasNoArmazem" :key="entrega.id">
-        <q-card @click.native="viewCarga(entrega.id)">
+        <q-card @click.native="viewCarga(entrega.id)" class="cursor-pointer">
           <q-card-media>
             <img src="statics/images/no-image-16-10.svg" v-if="!entrega.caminhao.image"/>
             <img :src="entrega.caminhao.image" v-if="entrega.caminhao.image"/>
