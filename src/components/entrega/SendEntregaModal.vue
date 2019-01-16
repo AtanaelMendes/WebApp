@@ -331,7 +331,7 @@
           if(this.funcao === 'novoNegocio'){
             this.negocioCulturas = this.negocioCulturas.filter(negocioCultura => {
               return this.selectedEntrega.negocios.find(
-                negocio => negocio.negocio_cultura.id !== negocioCultura.id
+                negocio => negocio.negocio_cultura.id === negocioCultura.id
               ) === undefined;
             })
           }
