@@ -47,10 +47,10 @@ export default class{
       hasError = true;
     }
 
-    if(!helpers.req(this.numeroPedido.value)){
-      this.numeroPedido.errorMessage = "Informe o número do pedio";
-      hasError = true;
-    }
+    // if(!helpers.req(this.numeroPedido.value)){
+    //   this.numeroPedido.errorMessage = "Informe o número do pedio";
+    //   hasError = true;
+    // }
 
     if(!helpers.req(this.numeroContrato.value)){
       this.numeroContrato.errorMessage = "Informe o número do negócio";

@@ -1,6 +1,6 @@
 <template>
   <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Negocios" searchable navigation_type="menu" >
+    <toolbar slot="toolbar" title="Negócios" searchable navigation_type="menu" >
     </toolbar>
 
     <!--LISTA DE CONTRATOS-->
@@ -9,7 +9,7 @@
 
         <q-card @click.native="viewNegocio(negocio.id)" class="cursor-pointer">
           <q-card-title >
-            Negocio Nº: {{negocio.numero_contrato}}
+            {{negocio.numero_contrato}}
             <div slot="right">
               <q-btn @click.stop round flat dense icon="more_vert" @click.stop>
                 <q-popover>
@@ -33,7 +33,19 @@
           </q-card-title>
           <q-card-separator/>
           <q-card-main>
-            Informações do negócio
+            <q-item>
+              <q-item-main>
+                <q-item-tile>
+                  {{negocio.nome}}
+                </q-item-tile>
+              </q-item-main>
+              <q-item-side>
+                <q-item-tile>
+                  {{negocio.tipo}}
+                </q-item-tile>
+
+              </q-item-side>
+            </q-item>
           </q-card-main>
         </q-card>
 
