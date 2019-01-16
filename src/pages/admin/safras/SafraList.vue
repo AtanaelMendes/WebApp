@@ -191,7 +191,7 @@
         <!--PASSO 1 ADICIONAR CULTURAS-->
         <q-step default title="Culturas" name="cultura">
           <div style="min-height: 80vh" class="row items-center gutter-sm justify-center" v-if="culturas.length > 0">
-            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in culturas" :key="cultura.id">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in culturas" :key="cultura.nome">
               <q-card @click.native="setCultura(cultura)">
                 <q-card-media overlay-position="full">
                   <img src="statics/images/no-image-16-10.svg" v-if="!cultura.image_path"/>
@@ -231,7 +231,7 @@
         <!--PASSO 3 ADICIONAR AREA-->
         <q-step title="Área" name="area">
           <div style="min-height:80vh" class="row gutter-sm justify-center items-center">
-            <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3" v-for="area in areas" :key="area.id">
+            <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3" v-for="area in areas" :key="area.nome">
               <q-card @click.native="setArea(area)">
                 <q-card-media overlay-position="full">
                   <!--<img src="assets/images/confinamento250x250.jpg"/>-->
@@ -256,7 +256,7 @@
         <!--PASSO 4 ADICIONAR TALHOES-->
         <q-step title=" Selecionar Talhões" name="talhoes">
           <div style="min-height:80vh" class="row gutter-sm justify-center items-center space-end" v-if="talhoes.length > 0">
-            <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3" v-for="talhao in talhoes" :key="talhao.id">
+            <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3" v-for="talhao in talhoes" :key="talhao.nome">
               <q-card>
                 <q-card-media overlay-position="full" @click.native="toggleTalhao(talhao)">
 
@@ -329,22 +329,23 @@
         <q-step default title="Finalizar" name="finalizar">
           <div style="min-height: 80vh" class="row items-center justify-center gutter-sm">
             <div class="col-xs-12 col-md-6 col-lg-3">
-            <q-list link>
+            <q-list separator>
               <q-list-header>{{safraCultura.culturaNome}}</q-list-header>
               <q-item>
                 <q-item-main label>
                   {{selectedArea.nome}}
                 </q-item-main>
               </q-item>
-              <q-item-separator/>
-              <q-item v-for="talhao in safraCultura.talhoes" :key="talhao.id" separator dense>
-                <q-item-main>
-                  <div class="row">
-                    <div class="col-6">{{talhao.nome}}</div>
-                    <div class="col-6">{{talhao.tamanho}},&nbsp<span class="text-faded q-caption">{{getUnidadeAreaById(safraCultura.view_unidade_area_id).plural}}</span></div>
-                  </div>
-                </q-item-main>
-              </q-item>
+              <template v-for="talhao in safraCultura.talhoes">
+                <q-item :key="talhao.nome" v-if="talhao.tamanho > 0">
+                  <q-item-main>
+                    <div class="row">
+                      <div class="col-6">{{talhao.nome}}</div>
+                      <div class="col-6">{{talhao.tamanho}},&nbsp<span class="text-faded q-caption">{{getUnidadeAreaById(safraCultura.view_unidade_area_id).plural}}</span></div>
+                    </div>
+                  </q-item-main>
+                </q-item>
+              </template>
             </q-list>
           </div>
           </div>
