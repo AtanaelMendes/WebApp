@@ -42,7 +42,7 @@
 
     <!--EMPTY LIST-->
     <div class="col-12" v-if="negocios.length <= 0">
-      <no-results />
+      <ap-no-results />
     </div>
 
     <!--PAGE STICKY BUTTOMS-->
@@ -64,12 +64,12 @@
   import customPage from 'components/CustomPage.vue'
   import negocioService from 'assets/js/service/negocio/NegocioService'
   import negocioModal from 'components/negocio/NegocioModal';
-  import noResults from 'components/NoResults'
+  import apNoResults from 'components/ApNoResults'
 
   export default {
     name: "negocios",
     components: {
-      noResults,
+      apNoResults,
       toolbar,
       customPage,
       negocioModal,

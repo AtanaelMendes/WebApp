@@ -48,7 +48,7 @@
 
 
     <div v-if="isEmptyList" class="no-result">
-      <no-results />
+      <ap-no-results />
     </div>
 
     <q-btn slot="fab-container" round color="deep-orange" @click="addArea()" icon="add" size="20px" />
@@ -60,14 +60,14 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import areaService from 'assets/js/service/area/AreaService'
-  import noResults from 'components/NoResults'
+  import apNoResults from 'components/ApNoResults'
 
   export default {
     name: "area-list",
     components: {
       toolbar,
       customPage,
-      noResults
+      apNoResults
     },
     data () {
       return {

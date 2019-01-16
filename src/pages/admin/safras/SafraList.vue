@@ -176,7 +176,7 @@
 
     <!--EMPTY LIST-->
     <div class="col-12" v-if="safras.length <= 0">
-      <no-results />
+      <ap-no-results />
     </div>
 
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
@@ -209,7 +209,7 @@
           </div>
           <!--EMPTY LIST-->
           <div class="column q-ma-xl items-center" v-if="culturas.length <= 0">
-            <no-results mensagem="Nenhum talhão com espaço disponível encontrado." />
+            <ap-no-results mensagem="Nenhum talhão com espaço disponível encontrado." />
           </div>
         </q-step>
 
@@ -321,7 +321,7 @@
 
           <!--EMPTY LIST-->
           <div class="column q-ma-xl items-center" v-if="talhoes.length <= 0">
-            <no-results mensagem="Nenhum talhão com espaço disponível encontrado." />
+            <ap-no-results mensagem="Nenhum talhão com espaço disponível encontrado." />
           </div>
         </q-step>
 
@@ -492,7 +492,7 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import noResults from 'components/NoResults'
+  import apNoResults from 'components/ApNoResults'
 
   // SAFRA
   import safraService from 'assets/js/service/safra/SafraService'
@@ -509,7 +509,7 @@
     export default {
       name: "safra-list",
       components: {
-        noResults,
+        apNoResults,
         toolbar,
         customPage,
       },

@@ -10,9 +10,8 @@
         <q-card class="row">
 
           <!--IMAGEM HEADER-->
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5" style="max-height: 200px; overflow: hidden">
-            <img src="statics/images/no-image-16-10.svg" v-if="!entrega.caminhao.image" class="responsive"/>
-            <img :src="entrega.caminhao.image" v-if="entrega.caminhao.image"  class="responsive"/>
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5" style="">
+            <ap-image size="400x250" :file-name="entrega.caminhao.file_name" />
           </div>
 
           <!--INFO DO HEADER-->
@@ -281,7 +280,7 @@
 
     <!--EMPTY LIST-->
     <div class="col-12" v-if="!carga">
-      <no-results />
+      <ap-no-results />
     </div>
 
     <!--MODAL ENVIAR CARGA-->
@@ -307,18 +306,20 @@
   import newPesagemModal from 'components/entrega/NewPesagemModal'
   import addTalhaoPercentageModal from 'components/entrega/AddTalhaoPercentageModal'
   import newEntregaModal from 'components/entrega/NewEntregaModal'
-  import noResults from 'components/NoResults'
+  import apNoResults from 'components/ApNoResults'
+  import apImage from 'components/ApImage'
 
   export default {
     name: "carga-view",
     components: {
-      noResults,
+      apNoResults,
       toolbar,
       customPage,
       newPesagemModal,
       newEntregaModal,
       sendEntregaModal,
       addTalhaoPercentageModal,
+      apImage,
     },
     data () {
       return {

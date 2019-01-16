@@ -45,7 +45,7 @@
         </q-list>
 
         <div v-if="isEmptyList" class="no-result">
-          <no-results />
+          <ap-no-results />
         </div>
 
       </div>
@@ -62,12 +62,12 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import pessoaService from 'assets/js/service/PessoaService'
-  import noResults from 'components/NoResults'
+  import apNoResults from 'components/ApNoResults'
 
   export default {
     name: "PessoasList",
     components: {
-      noResults,
+      apNoResults,
       toolbar,
       customPage
     },

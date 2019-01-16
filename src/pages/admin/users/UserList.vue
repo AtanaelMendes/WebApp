@@ -50,7 +50,7 @@
 
 
     <div v-if="isEmptyList" class="no-result">
-      <no-results />
+      <ap-no-results />
     </div>
 
     <q-btn
@@ -69,12 +69,12 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import userService from 'assets/js/service/UserService'
-  import noResults from 'components/NoResults'
+  import apNoResults from 'components/ApNoResults'
 
     export default {
       name: "UserList",
       components: {
-        noResults,
+        apNoResults,
         toolbar,
         customPage
       },

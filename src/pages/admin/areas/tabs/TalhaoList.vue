@@ -34,7 +34,7 @@
       </div>
     </div>
     <div v-if="isEmptyList" class="no-result">
-      <no-results />
+      <ap-no-results />
     </div>
 
   </q-scroll-area>
@@ -42,12 +42,12 @@
 
 <script>
   import talhaoService from 'assets/js/service/area/TalhaoService'
-  import noResults from 'components/NoResults'
+  import apNoResults from 'components/ApNoResults'
 
   export default {
     name: "dashboard",
     components: {
-      noResults
+      apNoResults
     },
     data(){
       return{

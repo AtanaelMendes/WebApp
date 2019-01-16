@@ -36,7 +36,7 @@
 
     </div>
     <div class="no-result" v-else>
-      <no-results />
+      <ap-no-results />
     </div>
 
   </q-scroll-area>
@@ -44,12 +44,12 @@
 
 <script>
   import areaService from 'assets/js/service/area/AreaService'
-  import noResults from 'components/NoResults'
+  import apNoResults from 'components/ApNoResults'
 
   export default {
     name: "area-info",
     components: {
-      noResults
+      apNoResults
     },
     data(){
       return{
