@@ -13,6 +13,10 @@ export default class{
     value: null,
     errorMessage: null
   };
+  pesoBrutoProduto = {
+    value: null,
+    errorMessage: null
+  };
   pesoTara = {
     value: null,
     errorMessage: null
@@ -38,7 +42,7 @@ export default class{
     if(!helpers.req(this.pesoTara.value)){
       hasError = true;
     }
-    if(!helpers.req(this.pesoLiquido.value)){
+    if(!helpers.req(this.pesoBrutoProduto.value)){
       hasError = true;
     }
     if(!helpers.req(this.unidadeMedidaId)){
@@ -50,9 +54,13 @@ export default class{
     return{
       numero_ticket: this.numeroTicket.value,
       emissao: this.emissao.value,
+      peso_bruto_produto: this.pesoBrutoProduto.value,
       peso_bruto_total: this.pesoBrutoTotal.value,
       peso_tara: this.pesoTara.value,
-      peso_liquido: this.pesoLiquido.value,//peso_bruto_produto - peso_desconto
+      peso_liquido: this.pesoLiquido.value,
+      peso_desconto: this.entregaClassificacao.reduce(function (accumulator, classificacao) {
+        return accumulator + classificacao.peso_desconto.value;
+      }, 0),
       unidade_medida_id: this.unidadeMedidaId,
       classificacoes: this.entregaClassificacao.map(function(classificacao){
         return {
@@ -61,15 +69,9 @@ export default class{
           verificado: classificacao.verificado.value,
         };
       }),
-      negocio_culturas: this.negocioCulturas.map(function (negocio) {
-        return {
-          id: negocio.id,
-          quantidade: negocio.negocio_produto_quantidade,
-        }
-      })
+      negocio_culturas: this.negocioCulturas,
     }
   }
-
 
   addNegocioCultura(negocioCultura){
     this.negocioCulturas.push(negocioCultura);

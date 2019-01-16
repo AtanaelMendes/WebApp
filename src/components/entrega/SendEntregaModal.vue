@@ -143,7 +143,7 @@
               </div>
 
               <div class="col-6">
-                <q-select v-model="sendEntrega.unidadeMedidaId" float-label="Unidade Medida" :options="unidadesMedida" align="right"/>
+                <q-select v-model="sendEntrega.unidadeMedidaId" float-label="Unidade Medida" :options="parseUnidadesMedida(unidadesMedida)" align="right"/>
               </div>
 
               <div class="col-6">
@@ -188,7 +188,6 @@
 </template>
 <script>
   import entregaService from 'assets/js/service/entrega/EntregaService'
-  import armazemService from 'assets/js/service/armazem/ArmazemService'
   import motoristaService from 'assets/js/service/motorista/MotoristaService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import SendEntrega from 'assets/js/model/entrega/SendEntrega'
@@ -197,6 +196,7 @@
   import negocioService from 'assets/js/service/negocio/NegocioService'
   import notaFiscalService from 'assets/js/service/NotaFiscalService'
   import cfopService from 'assets/js/service/CfopService'
+  import AgroUtils from "../../assets/js/AgroUtils";
 
   export default {
     name: "stepper-send-carga",
@@ -230,7 +230,7 @@
     computed: {
       totalCalc: function () {
         if (this.sendEntrega.valor) {
-          let result  = this.sendEntrega.valor  * this.sendEntrega.peso;
+          let result  = AgroUtils.math.round(this.sendEntrega.valor  * this.sendEntrega.peso);
           this.sendEntrega.total = result;
           return result;
         }
@@ -338,6 +338,7 @@
         });
       },
       selectNegocioCultura: function(negocioCultura){
+        this.sendEntrega.unidadeMedidaId = negocioCultura.safra_cultura.cultura.default_unidade_pesagem_id;
         this.sendEntrega.negocioCulturaId = negocioCultura.id;
         this.listArmazensByNegocioCultura(negocioCultura.id);
         this.goToNextStep()
@@ -456,12 +457,15 @@
 
       getUnidadesMedida:function(){
         unidadeMedidaService.listUnidadesMedida().then(response => {
-          this.unidadesMedida = response.data.map(unidade => {
-            return {
-              label: unidade.nome,
-              value: unidade
-            }
-          })
+          this.unidadesMedida = response.data;
+        })
+      },
+      parseUnidadesMedida(unidadesMedida){
+        return unidadesMedida.map(unidade => {
+          return {
+            label: unidade.sigla,
+            value: unidade.id
+          }
         })
       },
       listNotasFiscaisSeries(pessoa_id){
