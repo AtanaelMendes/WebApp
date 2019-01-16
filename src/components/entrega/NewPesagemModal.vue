@@ -27,8 +27,8 @@
 
             <custom-input-text type="number" :model="pesagem.pesoTara" align="right"
                                label="Peso tara" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>
-            <custom-input-text type="number" :model="pesoLiquido" disabled="true" align="right"
-                               label="Peso líquido" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>
+            <custom-input-text type="number" :model="pesoBrutoProduto" disabled="true" align="right"
+                               label="Peso produto" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>
           </div>
         </div>
       </q-step>
@@ -74,7 +74,10 @@
               </div>
 
               <div class="col-12 text-right">
-                Total {{totalDesc}} kg
+                Total Descontos {{totalDesc}} {{getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)}}
+              </div>
+              <div class="col-12 text-right">
+                Total Líquido {{totalLiquido}} {{getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)}}
               </div>
             </div>
           </div>
@@ -127,7 +130,7 @@
                 </div>
 
                 <div class="col-6">
-                  <q-input type="number" v-model="negocio.negocio_produto_quantidade" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)" align="right"/>
+                  <q-input type="number" v-model="negocio.quantidade" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)" align="right"/>
                 </div>
 
               </template>
@@ -136,7 +139,7 @@
                 <span :class="quantidadeAlocarErrorClass()"> {{numeral(quantidadeAlocar).format('0,0')}}</span>  {{getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)}}
               </div>
               <div class="col-6 offset-6 text-right q-mt-sm">
-                <span class="text-faded">total</span> {{numeral(pesagem.pesoLiquido.value).format('0,0')}} {{getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)}}
+                <span class="text-faded">Total</span> {{numeral(pesagem.pesoLiquido.value).format('0,0')}} {{getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)}}
               </div>
 
             </div>
@@ -181,9 +184,9 @@
     },
     watch: {},
     computed: {
-      pesoLiquido: function(){
+      pesoBrutoProduto: function(){
         let value = this.pesagem.pesoBrutoTotal.value - this.pesagem.pesoTara.value;
-        this.pesagem.pesoLiquido.value = value;
+        this.pesagem.pesoBrutoProduto.value = value;
         return {value: value};
       },
       totalDesc: function () {
@@ -193,10 +196,15 @@
         });
         return soma
       },
+      totalLiquido: function () {
+        let pesoLiquido = this.pesagem.pesoBrutoProduto.value - this.totalDesc;
+        this.pesagem.pesoLiquido.value = pesoLiquido;
+        return pesoLiquido;
+      },
       quantidadeAlocar: function () {
         let soma = 0;
-        this.pesagem.negocioCulturas.forEach(function (quantidade) {
-          soma += quantidade.negocio_produto_quantidade;
+        this.pesagem.negocioCulturas.forEach(function (negocioCultura) {
+          soma += negocioCultura.quantidade;
         });
         soma = this.pesagem.pesoLiquido.value - soma;
         return soma
@@ -205,6 +213,7 @@
     methods: {
       openModal: function(entrega){
         this.isModalOpened = true;
+        this.currentStep = 'dadosDaEntrega';
         this.listClassificacoesByCultura(entrega.negocios[0].negocio_cultura.safra_cultura.cultura.id);
         this.entrega = entrega;
         this.getUnidadesMedida();
@@ -235,7 +244,7 @@
       isFormNegocioCulturasValid: function(){
         let isValid = true;
         for(let val of this.pesagem.negocioCulturas){
-          if(val.negocio_produto_quantidade === null){
+          if(val.quantidade === null){
             isValid = false;
           }
         }
@@ -278,8 +287,8 @@
             if(response.status === 201) {
               this.$q.notify({type: 'positive', message: 'Pesagem criada com sucesso'});
               this.closeModal();
-              this.$root.$emit('refreshEntregasList', 'no_armazem')
-              this.$root.$emit('refreshEntregasList', 'entregue')
+              this.$root.$emit('refreshEntregasList', 'no_armazem');
+              this.$root.$emit('refreshEntregasList', 'entregue');
               this.$root.$emit('refreshEntregaView')
             }
           }).catch(error => {
@@ -358,22 +367,18 @@
         if(index > -1){
           this.pesagem.removeNegocioCultura(index)
         }else{
-          this.pesagem.addNegocioCultura(negocio)
+          this.pesagem.addNegocioCultura({
+            id: negocio.id,
+            quantidade: null,
+          })
         }
       },
       negocioisInArray: function(negocio){
         return this.pesagem.existsNegocioCulturaById(negocio.id) > -1
       },
     },
-    mounted () {
-      // this.$root.$on('refreshSafraList', () => {
-      //   this.listSafras();
-      // });
-    },
   }
 </script>
 <style>
-  .space-end{
-    margin-bottom: 150px;
-  }
+
 </style>
