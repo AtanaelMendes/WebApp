@@ -53,7 +53,7 @@ export default class{
       nota_fiscal_serie_id: this.serie.id,
       numero: this.notaNumero,
       peso: this.peso,
-      unidade_medida_id: this.unidadeMedidaId.id,
+      unidade_medida_id: this.unidadeMedidaId,
       valor_unitario: this.valor,
       valor_total: this.total,
       cfop_id: this.cfop.id,

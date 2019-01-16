@@ -272,7 +272,7 @@
           <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="newPesagem(entrega)" v-if="entrega.status === 'No Armazem'">
             <span class="shadow-2 text-no-wrap">Informar Pesagem</span>
           </q-fab-action>
-          <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="sendToWarehause()" v-if="entrega.status === 'Carregando'">
+          <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="sendToArmazem()" v-if="entrega.status === 'Carregando'">
             <span class="shadow-2 text-no-wrap	">Enviar para armazém</span>
           </q-fab-action>
         </q-fab>
@@ -325,19 +325,12 @@
         carga: true,
         entregaView: null,
         entrega: null,
-        // entrega: {
-        //   culturaId: 1,
-        //   negocios_entregas: [
-        //     {id: 1, tipo_negocio: 'Troca', pessoa: 'ADM', negocio_produto_quantidade: null },
-        //     // {id: 2, tipo_negocio: 'Balcão', pessoa: 'ADM', negocio_produto_quantidade: null}
-        //   ]
-        // }
       }
     },
     watch: {
     },
     methods: {
-      sendToWarehause: function(){
+      sendToArmazem: function(){
         this.$refs.sendEntregaModal.openModal('sendEntrega', null)
       },
       updateNota: function(negocio){
