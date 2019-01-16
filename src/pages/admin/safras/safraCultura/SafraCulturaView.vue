@@ -10,11 +10,9 @@
         <q-card class="row">
 
           <!--IMAGEM HEADER-->
-          <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-            <div style="max-height: 200px; overflow: hidden">
-              <img :src="safraCultura.cultura.image" class="responsive" v-if="safraCultura.cultura.image"/>
-              <img src="statics/images/no-image-16-10.svg" class="responsive" style="margin-top:-200px" v-if="!safraCultura.cultura.image"/>
-            </div>
+          <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8" style="max-height: 200px; overflow: hidden">
+            <img :src="safraCultura.cultura.image" class="fit" v-if="safraCultura.cultura.image"/>
+            <img src="statics/images/no-image-16-10.svg" class="fit" v-if="!safraCultura.cultura.image"/>
           </div>
 
           <!--INFO DO HEADER-->

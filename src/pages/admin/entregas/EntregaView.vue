@@ -11,7 +11,7 @@
 
           <!--IMAGEM HEADER-->
           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5" style="max-height: 200px; overflow: hidden">
-            <img src="statics/images/no-image-16-10.svg" v-if="!entrega.caminhao.image"/>
+            <img src="statics/images/no-image-16-10.svg" v-if="!entrega.caminhao.image" class="fit"/>
             <img :src="entrega.caminhao.image" v-if="entrega.caminhao.image"  class="fit"/>
           </div>
 
