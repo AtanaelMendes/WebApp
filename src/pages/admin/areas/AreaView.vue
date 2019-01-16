@@ -33,7 +33,7 @@
           <!--IMAGEM-->
           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5" style="max-height: 200px; overflow: hidden">
             <img src="statics/images/no-image-16-10.svg" v-if="!area.image_path"/>
-            <img :src="area.image_path" v-if="area.image_path" class="full-width"/>
+            <img :src="area.image_path" v-if="area.image_path" class="fit"/>
           </div>
 
           <!--INFORMACOES-->
