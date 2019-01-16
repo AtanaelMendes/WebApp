@@ -36,7 +36,7 @@
 
     </div>
     <div class="no-result" v-else>
-      <sem-resultados />
+      <no-results />
     </div>
 
   </q-scroll-area>
@@ -44,12 +44,12 @@
 
 <script>
   import areaService from 'assets/js/service/area/AreaService'
-  import semResultados from 'components/SemResultados'
+  import noResults from 'components/NoResults'
 
   export default {
     name: "area-info",
     components: {
-      semResultados
+      noResults
     },
     data(){
       return{

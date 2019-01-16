@@ -51,7 +51,7 @@
 
       <!--EMPTY LIST-->
       <div class="col-12" v-if="entregasCarregando <= 0">
-        <sem-resultados />
+        <no-results />
       </div>
 
       <!--PAGE STICKY BUTTOMS-->
@@ -100,7 +100,7 @@
 
       <!--EMPTY LIST-->
       <div class="col-12" v-if="entregasNoArmazem <= 0">
-        <sem-resultados />
+        <no-results />
       </div>
     </div>
 
@@ -157,7 +157,7 @@
 
       <!--EMPTY LIST-->
       <div class="col-12" v-if="entregasEntregues <= 0">
-        <sem-resultados />
+        <no-results />
       </div>
     </div>
 
@@ -173,12 +173,12 @@
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import entregaService from 'assets/js/service/entrega/EntregaService'
   import NewEntregaModal from 'components/entrega/NewEntregaModal'
-  import semResultados from 'components/SemResultados'
+  import noResults from 'components/NoResults'
 
   export default {
     name: "entregas",
     components: {
-      semResultados,
+      noResults,
       toolbar,
       customPage,
       customInputText,

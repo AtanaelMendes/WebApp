@@ -50,7 +50,7 @@
 
 
     <div v-if="isEmptyList" class="no-result">
-      <sem-resultados />
+      <no-results />
     </div>
 
     <q-btn
@@ -69,12 +69,12 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import userService from 'assets/js/service/UserService'
-  import semResultados from 'components/SemResultados'
+  import noResults from 'components/NoResults'
 
     export default {
       name: "UserList",
       components: {
-        semResultados,
+        noResults,
         toolbar,
         customPage
       },

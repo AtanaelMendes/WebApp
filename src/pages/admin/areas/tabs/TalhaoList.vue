@@ -34,7 +34,7 @@
       </div>
     </div>
     <div v-if="isEmptyList" class="no-result">
-      <sem-resultados />
+      <no-results />
     </div>
 
   </q-scroll-area>
@@ -42,12 +42,12 @@
 
 <script>
   import talhaoService from 'assets/js/service/area/TalhaoService'
-  import semResultados from 'components/SemResultados'
+  import noResults from 'components/NoResults'
 
   export default {
     name: "dashboard",
     components: {
-      semResultados
+      noResults
     },
     data(){
       return{

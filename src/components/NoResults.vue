@@ -8,7 +8,7 @@
 </template>
 <script>
 export default {
-  name: "sem-resultados",
+  name: "no-results",
   props: {
     mensagem: {
       type: String,

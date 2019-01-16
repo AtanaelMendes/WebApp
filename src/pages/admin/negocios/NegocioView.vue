@@ -381,7 +381,7 @@
 
     <!--EMPTY LIST-->
     <div class="column q-ma-xl items-center" v-if="!negocio">
-      <sem-resultados />
+      <no-results />
     </div>
 
     <!--PAGE STICKY BUTTOMS-->
@@ -424,13 +424,13 @@
   import newTituloModal from 'components/negocio/NewTituloModal';
   import newProdutoModal from 'components/negocio/NewProdutoModal';
   import newFixacaoModal from 'components/negocio/NewFixacaoModal';
-  import semResultados from 'components/SemResultados'
+  import noResults from 'components/NoResults'
   import { Screen } from 'quasar'
 
   export default {
     name: "negocio-view",
     components: {
-      semResultados,
+      noResults,
       toolbar,
       customPage,
       newCulturaModal,

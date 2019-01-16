@@ -225,7 +225,7 @@
 
     <!--EMPTY LIST-->
     <div class="col-12" v-if="culturas.length === 0 && marcasSemCultivares.length === 0">
-      <sem-resultados />
+      <no-results />
     </div>
 
     <!--PAGE STICKY BUTTOMS-->
@@ -821,12 +821,12 @@
     import Cultivar from 'assets/js/model/cultura/Cultivar'
     import culturaService from 'assets/js/service/cultura/CulturaService'
     import imapeUpload from 'components/ImageUpload'
-    import semResultados from 'components/SemResultados'
+    import noResults from 'components/NoResults'
 
     export default {
       name: "cultura-list-view",
       components: {
-        semResultados,
+        noResults,
         toolbar,
         customPage,
         customInputText,

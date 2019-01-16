@@ -42,7 +42,7 @@
 
     <!--EMPTY LIST-->
     <div class="col-12" v-if="negocios.length <= 0">
-      <sem-resultados />
+      <no-results />
     </div>
 
     <!--PAGE STICKY BUTTOMS-->
@@ -64,12 +64,12 @@
   import customPage from 'components/CustomPage.vue'
   import negocioService from 'assets/js/service/negocio/NegocioService'
   import negocioModal from 'components/negocio/NegocioModal';
-  import semResultados from 'components/SemResultados'
+  import noResults from 'components/NoResults'
 
   export default {
     name: "negocios",
     components: {
-      semResultados,
+      noResults,
       toolbar,
       customPage,
       negocioModal,
