@@ -1,4 +1,10 @@
 export default {
+  math: {
+    round(value, precision = 2){
+      return Math.round(value * Math.pow(10, precision)) / Math.pow(10, precision);
+    },
+  },
+
   serialize(obj) {
     var query = [];
     for (var property in obj)

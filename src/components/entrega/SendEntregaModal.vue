@@ -196,6 +196,7 @@
   import negocioService from 'assets/js/service/negocio/NegocioService'
   import notaFiscalService from 'assets/js/service/NotaFiscalService'
   import cfopService from 'assets/js/service/CfopService'
+  import AgroUtils from "../../assets/js/AgroUtils";
 
   export default {
     name: "stepper-send-carga",
@@ -229,7 +230,7 @@
     computed: {
       totalCalc: function () {
         if (this.sendEntrega.valor) {
-          let result  = this.sendEntrega.valor  * this.sendEntrega.peso;
+          let result  = AgroUtils.math.round(this.sendEntrega.valor  * this.sendEntrega.peso);
           this.sendEntrega.total = result;
           return result;
         }
