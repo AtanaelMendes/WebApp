@@ -10,8 +10,8 @@
         <q-card class="row">
 
           <!--IMAGEM HEADER-->
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5" style="">
-            <ap-image size="400x250" :file-name="entrega.caminhao.file_name" />
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5 items-center">
+            <ap-image size="400x250" :file-name="entrega.caminhao.image_file_name" />
           </div>
 
           <!--INFO DO HEADER-->
@@ -27,12 +27,80 @@
               </q-popover>
             </q-btn>
 
-            <p v-if="entrega.motorista">{{entrega.motorista.nome}}</p>
-            <p>{{entrega.caminhao.nome}}  {{entrega.caminhao.placa}}</p>
-            <p><span class="text-faded">Lotação</span> {{numeral(70000).format('0,0')}} KG</p>
-            <p><span class="text-faded">Carregado em</span> {{moment(entrega.inicio_carregamento).format('lll')}}</p>
-            <p v-if="entrega.envio_armazem"><span class="text-faded">Enviado em</span> {{moment(entrega.envio_armazem).format('lll')}}</p>
-            <p v-if="entrega.entregue"><span class="text-faded">Descarregado em</span> {{moment(entrega.entregue).format('lll')}}</p>
+            <q-list>
+
+              <q-item>
+                <q-item-side>
+                  <q-item-tile color="grey" icon="mdi-truck" />
+                </q-item-side>
+                <q-item-main>
+                  <q-item-tile label>{{entrega.caminhao.nome}}</q-item-tile>
+                  <q-item-tile sublabel>{{entrega.caminhao.placa}}</q-item-tile>
+                </q-item-main>
+              </q-item>
+
+              <q-item>
+                <q-item-side>
+                  <q-item-tile :color="statusIconColor" icon="info" />
+                </q-item-side>
+                <q-item-main>
+                  <q-item-tile label>{{entrega.status}}</q-item-tile>
+                  <q-item-tile v-if="entrega.motorista" sublabel>{{entrega.motorista.nome}}</q-item-tile>
+                </q-item-main>
+              </q-item>
+
+              <q-item>
+                <q-item-side>
+                  <q-item-tile :color="pesoIconColor" icon="mdi-scale" />
+                </q-item-side>
+                <q-item-main>
+                  <template v-if="entrega.total_peso_liquido > 0">
+                    <q-item-tile label>
+                      {{numeral(entrega.total_peso_liquido).format('0,0')}}
+                      {{entrega.total_peso_unidade_medida_sigla}}
+                    </q-item-tile>
+                    <q-item-tile sublabel>
+                      Bruto {{numeral(entrega.total_peso_bruto_produto).format('0,0')}}
+                      Desconto {{numeral(entrega.total_peso_desconto).format('0,0')}}
+                    </q-item-tile>
+                  </template>
+                  <template v-else>
+                    <q-item-tile label>
+                      {{numeral(entrega.caminhao.lotacao).format('0,0')}}
+                      {{entrega.caminhao.unidade_medida_sigla}}
+                    </q-item-tile>
+                    <q-item-tile sublabel>Lotação do caminhão. Pesagem ainda não informada!</q-item-tile>
+                  </template>
+                </q-item-main>
+              </q-item>
+
+              <q-item>
+                <q-item-side>
+                  <q-item-tile color="amber" icon="mdi-calendar" />
+                </q-item-side>
+                <q-item-main>
+                  <q-item-tile label>
+                    Carregado
+                    <abbr :title="moment(entrega.inicio_carregamento).format('lll')">
+                      {{moment(entrega.inicio_carregamento).fromNow()}}
+                    </abbr>
+                  </q-item-tile>
+                  <q-item-tile sublabel v-if="entrega.envio_armazem">
+                    Enviado para armazem depois de
+                    <abbr :title="moment(entrega.envio_armazem).format('lll')">
+                      {{moment(entrega.envio_armazem).from(entrega.inicio_carregamento, true)}}
+                    </abbr>.
+                    <template v-if="entrega.entregue">
+                      Demorou
+                      <abbr :title="moment(entrega.entregue).format('lll')">
+                        {{moment(entrega.entregue).from(entrega.envio_armazem, true)}}
+                      </abbr>
+                      para descarregar.
+                    </template>
+                  </q-item-tile>
+                </q-item-main>
+              </q-item>
+            </q-list>
 
           </div>
         </q-card>
@@ -329,6 +397,23 @@
       }
     },
     watch: {
+    },
+    computed: {
+      statusIconColor: function() {
+        if (this.entrega.status == 'No Armazem') {
+          return 'warning'
+        }
+        if (this.entrega.status == 'Entregue') {
+          return 'positive'
+        }
+        return 'negative'
+      },
+      pesoIconColor: function () {
+        if (this.entrega.total_peso_liquido > 0) {
+          return 'primary'
+        }
+        return 'red'
+      }
     },
     methods: {
       sendToArmazem: function(){
