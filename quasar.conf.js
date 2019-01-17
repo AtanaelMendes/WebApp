@@ -9,7 +9,8 @@ module.exports = function (ctx) {
       'vuelidate',
       'moment',
       'numeral',
-      'croppa'
+      'croppa',
+      'lodash'
     ],
     css: [
       'app.styl'

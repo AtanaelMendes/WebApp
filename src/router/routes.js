@@ -47,7 +47,7 @@ const routes = [
       { name: 'negocios', path: 'negocios', component: () => import('pages/admin/negocios/NegociosList.vue')},
       { name: 'negocio_view', path: 'negocios/:id/view', component: () => import('pages/admin/negocios/NegocioView.vue')},
 
-      { name: 'entregas', path: 'entregas', component: () => import('pages/admin/entregas/Entregas.vue')},
+      { name: 'entregas', path: 'entregas', component: () => import('pages/admin/entregas/EntregasList.vue')},
       { name: 'entrega_view', path: 'entrega/:id/view', component: () => import('pages/admin/entregas/EntregaView.vue')},
 
       { path: 'teste', component: () => import('pages/admin/TestFather.vue'),

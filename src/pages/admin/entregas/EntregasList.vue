@@ -16,36 +16,35 @@
     <div class="row gutter-sm space-end q-pa-md" v-if="tabs === 'carregando' ">
 
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="entrega in entregasCarregando" :key="entrega.id">
+
         <q-card @click.native="viewCarga(entrega.id)" class="cursor-pointer">
-          <q-card-media>
-            <img src="statics/images/no-image-16-10.svg" v-if="!entrega.caminhao.image"/>
-            <img :src="entrega.caminhao.image" v-if="entrega.caminhao.image"/>
+          <q-card-media overlay-position="top">
+            <q-card-title slot="overlay">
+              {{entrega.caminhao.placa}}
+              {{ entrega.caminhao.nome }}
+              <span slot="subtitle">
+                {{moment(entrega.inicio_carregamento).fromNow()}}
+              </span>
+            </q-card-title>
+            <ap-image size="400x250" :file-name="entrega.caminhao.image_file_name" />
           </q-card-media>
-          <q-card-separator/>
 
-          <q-card-title class="q-py-xs">
-            <div>
-            {{ entrega.caminhao.nome }}
-              <span class="text-faded float-right q-body-1">{{entrega.caminhao.placa}}</span>
-            </div>
-            <span slot="subtitle">Início do carregamamento {{moment(entrega.inicio_carregamento).fromNow()}}</span>
-          </q-card-title>
-          <q-card-separator/>
+          <q-list>
+            <q-item v-for="safra_cultura_talhao in entrega.safra_culturas_talhoes">
+              <q-item-side icon="spa" />
+              <q-item-main>
+                <q-item-tile label>
+                  {{safra_cultura_talhao.area}}
+                  {{safra_cultura_talhao.talhao}}
+                </q-item-tile>
+                <q-item-tile sublabel>
+                  {{safra_cultura_talhao.cultivar.marca}}
+                  {{safra_cultura_talhao.cultivar.nome}}
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+          </q-list>
 
-          <q-card-main class="gutter-y-xs">
-            <div class="col-12" v-for="safra_cultura_talhao in entrega.safra_culturas_talhoes">
-              <span class="q-subheading">{{safra_cultura_talhao.safra}}</span>
-              <span class="float-right q-subheading">{{safra_cultura_talhao.percentual}}%</span>
-              <div class="q-pl-sm q-my-xs">
-                <span class="text-faded q-body-1">{{safra_cultura_talhao.area}}</span>
-                <span class="text-faded float-right q-body-1">{{safra_cultura_talhao.talhao}}</span>
-              </div>
-              <div class="q-pl-sm q-my-xs">
-                <span class="text-faded q-body-1">{{safra_cultura_talhao.cultivar.nome}}</span>
-                <span class="text-faded float-right q-body-1">{{safra_cultura_talhao.cultivar.marca}}</span>
-              </div>
-            </div>
-          </q-card-main>
         </q-card>
       </div>
 
@@ -56,45 +55,59 @@
 
       <!--PAGE STICKY BUTTOMS-->
       <q-page-sticky position="bottom-right" :offset="[35, 35]">
-        <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
-          <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="novaEntrega()">
-            <span class="shadow-2 text-no-wrap">Nova Entrega</span>
-          </q-fab-action>
-        </q-fab>
+        <q-btn
+          color="deep-orange"
+          icon="add"
+          @click="novaEntrega()"
+          round
+          size="19px"
+        />
       </q-page-sticky>
+
     </div>
 
     <!--TAB NO ARMAZEM-->
     <div class="row gutter-sm space-end q-pa-md" v-if="tabs == 'no-armazem' ">
 
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="entrega in entregasNoArmazem" :key="entrega.id">
+
+
         <q-card @click.native="viewCarga(entrega.id)" class="cursor-pointer">
-          <q-card-media>
-            <img src="statics/images/no-image-16-10.svg" v-if="!entrega.caminhao.image"/>
-            <img :src="entrega.caminhao.image" v-if="entrega.caminhao.image"/>
-          </q-card-media>
-          <q-card-separator/>
-
-          <q-card-title class="q-py-xs">
-            <div>
+          <q-card-media overlay-position="top">
+            <q-card-title slot="overlay">
+              {{entrega.caminhao.placa}}
               {{ entrega.caminhao.nome }}
-              <span class="text-faded float-right q-body-1">{{entrega.caminhao.placa}}</span>
-            </div>
-            <span slot="subtitle">Enviado para o armazém {{moment(entrega.inicio_carregamento).fromNow()}}</span>
-          </q-card-title>
-          <q-card-separator/>
+              <span slot="subtitle">
+                {{moment(entrega.envio_armazem).fromNow()}}
+              </span>
+            </q-card-title>
+            <ap-image size="400x250" :file-name="entrega.caminhao.image_file_name" />
+          </q-card-media>
+          <q-list>
 
-          <q-card-main class="gutter-y-xs">
-            <div class="col-12">
-              <span class="q-subheading">{{entrega.armazem.nome}}</span>
-              <div class="q-my-xs ">
-                <span class="text-faded q-body-1">{{entrega.armazem.localizacao}}</span>
-              </div>
-              <div class="q-mt-md">Motorista:
-                <span class="text-faded q-body-1">{{entrega.motorista}}</span>
-              </div>
-            </div>
-          </q-card-main>
+            <!-- MOTORISTA -->
+            <q-item>
+              <q-item-side :avatar="makeUrl(entrega.motorista.image_file_name, '125x125')" />
+              <q-item-main>
+                <q-item-tile>
+                  {{entrega.motorista.nome}}
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+
+            <q-item>
+              <q-item-side icon="place" />
+              <q-item-main>
+                <q-item-tile label>
+                  {{entrega.armazem.nome}}
+                </q-item-tile>
+                <q-item-tile sublabel>
+                  {{entrega.armazem.localizacao}}
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+
+          </q-list>
         </q-card>
       </div>
 
@@ -108,14 +121,8 @@
     <div class="row gutter-sm space-end" v-if="tabs === 'entregue' ">
       <div class="col-12">
         <q-list no-border link separator>
-
           <q-item multiline v-for="entrega in entregasEntregues" :key="entrega.id" @click.native="viewCarga(entrega.id)">
-            <div class="gt-sm">
-              <q-item-side avatar="statics/images/no-image-16-10.svg" class="gt-sm" v-if="!entrega.caminhao.image"/>
-              <q-item-side :avatar="entrega.caminhao.image" class="gt-sm" v-if="entrega.caminhao.image"/>
-            </div>
-            <q-item-side image="statics/images/no-image-16-10.svg" class="lt-md" v-if="!entrega.caminhao.image"/>
-            <q-item-side :image="entrega.caminhao.image" class="lt-md" v-if="entrega.caminhao.image"/>
+            <q-item-side :image="makeUrl(entrega.caminhao.image_file_name, '200x125')" />
             <q-item-main>
               <q-item-tile class="content-center">
                 <div class="row">
@@ -174,6 +181,8 @@
   import entregaService from 'assets/js/service/entrega/EntregaService'
   import NewEntregaModal from 'components/entrega/NewEntregaModal'
   import apNoResults from 'components/ApNoResults'
+  import apImage from 'components/ApImage'
+  import agroUtils from 'assets/js/AgroUtils'
 
   export default {
     name: "entregas",
@@ -183,7 +192,8 @@
       customPage,
       customInputText,
       customInputDatetime,
-      NewEntregaModal
+      NewEntregaModal,
+      apImage,
     },
     data () {
       return {
@@ -195,6 +205,9 @@
       }
     },
     methods: {
+      makeUrl: function (image_file_name, size) {
+        return agroUtils.image.makeUrl(image_file_name, size)
+      },
       novaEntrega: function(){
         this.$refs.entregaModal.openModal()
       },

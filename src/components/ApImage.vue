@@ -10,6 +10,8 @@
   </div>
 </template>
 <script>
+import AgroUtils from 'assets/js/AgroUtils'
+
 export default {
   name: "ap-image",
   props: {
@@ -34,7 +36,7 @@ export default {
   },
   computed: {
     fullUrl: function () {
-      return process.env.API_URL + '/images/' + this.size + '/' + this.fileName
+      return AgroUtils.image.makeUrl(this.fileName, this.size)
     },
     validSize: function () {
       return [

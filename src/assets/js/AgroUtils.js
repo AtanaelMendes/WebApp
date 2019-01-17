@@ -16,6 +16,13 @@ export default {
     return query.join("&");
   },
 
+  image: {
+    makeUrl (fileName, size) {
+      return process.env.API_URL + '/images/' + size + '/' + fileName
+    }
+
+  },
+
   compare( x, y ) {
     if ( x === y ) return true;
     // if both x and y are null or undefined and exactly the same
