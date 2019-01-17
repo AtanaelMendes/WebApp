@@ -6,7 +6,8 @@ services:
       './.docker'
     volumes:
       - ./:/app
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     ports:
       - 8080:8080
     tty: true
-
