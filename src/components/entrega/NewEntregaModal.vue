@@ -7,31 +7,28 @@
       <q-step default title="Caminhão" name="escolherCaminhao" v-if="!addNewTalhaoMode">
         <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
 
-          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="caminhao in caminhoes" :key="caminhao.id">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="caminhao in caminhoes" :key="caminhao.id">
             <q-card @click.native="selectCaminhao(caminhao.id)">
               <q-card-media overlay-position="full">
-                <img src="statics/images/no-image-16-10.svg" v-if="!caminhao.image"/>
-                <img :src="caminhao.image" v-if="caminhao.image"/>
+                <ap-image size="800x500" :file-name="caminhao.image_file_name" />
                 <q-card-title slot="overlay" align="end" v-if="caminhao.id === novaEntrega.caminhaoId">
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
               </q-card-media>
-              <q-card-separator/>
-              <q-card-title>
-                {{caminhao.nome}}
-              </q-card-title>
-              <q-card-separator/>
-              <q-card-main class="row">
-                <div class="col-12">
-                  <span class="text-faded">Motorista:</span> {{caminhao.motorista}}
-                </div>
-                <div class="col-12">
-                  <span class="text-faded">Placa:</span> {{caminhao.placa}}
-                </div>
-                <div class="col-12">
-                  <span class="text-faded">Tara:</span> {{caminhao.tara}}
-                </div>
-              </q-card-main>
+              <q-list>
+                <q-item>
+                  <q-item-main>
+                    <q-item-tile label>
+                      {{caminhao.placa}}
+                      {{caminhao.nome}}
+                    </q-item-tile>
+                    <q-item-tile sublabel v-if="caminhao.lotacao">
+                      {{numeral(caminhao.lotacao).format('0,0')}}
+                      {{caminhao.unidade_medida_sigla}}
+                    </q-item-tile>
+                  </q-item-main>
+                </q-item>
+              </q-list>
             </q-card>
           </div>
 
@@ -39,6 +36,7 @@
             <q-icon name="warning" />
             <span>Nenhum caminhão encontrado</span>
           </div>
+
         </div>
       </q-step>
 
@@ -46,28 +44,20 @@
       <q-step title="Safra" name="escolherSafra">
         <div class="row justify-center items-center gutter-sm" style="min-height: 80vh" >
 
-          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="safraCultura in safraCulturas" :key="safraCultura.id" >
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="safraCultura in safraCulturas" :key="safraCultura.id" >
             <q-card @click.native="selectSafraCultura(safraCultura)">
               <q-card-media overlay-position="full">
-                <img src="statics/images/no-image-16-10.svg" v-if="!safraCultura.cultura.image"/>
-                <img :src="safraCultura.cultura.image" v-if="safraCultura.cultura.image"/>
-
+                <ap-image size="800x500" :file-name="safraCultura.cultura.image_file_name" />
                 <q-card-title slot="overlay" align="end" v-if="selectedSafraCulturaId === safraCultura.id">
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
               </q-card-media>
 
-              <q-card-title>
+              <q-card-title class="q-py-xs">
                 {{safraCultura.cultura.nome}}
-                <span class="text-faded q-caption" v-if="safraCultura.safra.is_safrinha">
-                  Safrinha
-                </span>
-
+                {{safraCultura.safra.ano_inicio}}/{{safraCultura.safra.ano_fim}}
               </q-card-title>
-              <q-card-separator/>
-              <q-card-main>
-                Safra {{safraCultura.safra.ano_inicio}}/{{safraCultura.safra.ano_fim}}
-              </q-card-main>
+
             </q-card>
           </div>
 
@@ -78,13 +68,10 @@
       <q-step title="Área" name="escolherArea">
         <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
 
-          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="area in areas" :key="area.id">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="area in areas" :key="area.id">
             <q-card @click.native="selectArea(area)">
               <q-card-media overlay-position="full">
-
-                <img src="statics/images/no-image-16-10.svg" v-if="!area.image_path"/>
-                <img :src="area.image_path" v-if="area.image_path"/>
-
+                <ap-image size="800x500" :file-name="area.image_file_name" />
                 <q-card-title slot="overlay" align="end" v-if="area.id === selectedAreaId">
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
@@ -102,20 +89,17 @@
       <!--PASSO 4 ESCOLHER TALHAO -->
       <q-step title="Talhão" name="escolherTalhao">
         <div class="row justify-center items-center gutter-sm space-end" style="min-height: 80vh">
-          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2" v-for="talhao in talhoes" :key="talhao.id">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="talhao in talhoes" :key="talhao.id">
             <q-card>
               <q-card-media overlay-position="full" @click.native="selectTalhao(talhao)">
-
-                <img src="statics/images/no-image-16-10.svg" v-if="!talhao.image_path"/>
-                <img :src="talhao.image_path" v-if="talhao.image_path"/>
-
+                <ap-image size="800x500" :file-name="talhao.image_file_name" />
                 <q-card-title slot="overlay" align="end" v-if="talhao.id === selectedTalhaoId">
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
               </q-card-media>
 
-              <q-card-title class="q-py-xs">
-                {{talhao.nome}}
+              <q-card-title class="q-py-xs" style="overflow: hidden; text-overflow: ellipsis; white-space:nowrap">
+                  {{talhao.nome}}
               </q-card-title>
 
             </q-card>
@@ -130,24 +114,20 @@
       <!--PASSO 5 ESCOLHER CULTIVAR -->
       <q-step title="Cultivar" name="escolherCultivar">
         <div class="row justify-center items-center gutter-sm space-end" style="min-height: 80vh">
-          <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2" v-for="cultivar in cultivares" :key="cultivar.id">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="cultivar in cultivares" :key="cultivar.id">
             <q-card>
               <q-card-media overlay-position="full" @click.native="selectCultivar(cultivar)">
 
-                <img src="statics/images/no-image-16-10.svg" v-if="!cultivar.image_path"/>
-                <img :src="cultivar.image_path" v-if="cultivar.image_path"/>
+                <ap-image size="800x500" :file-name="cultivar.marca.image_file_name" />
 
                 <q-card-title slot="overlay" align="end" v-if="cultivar.id === selectedCultivarId">
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
               </q-card-media>
               <q-card-title class="q-py-xs">
+                {{cultivar.marca.nome}}
                 {{cultivar.nome}}
               </q-card-title>
-              <q-card-separator/>
-              <q-card-main>
-                {{cultivar.marca.nome}}
-              </q-card-main>
             </q-card>
           </div>
         </div>
@@ -170,11 +150,14 @@
   import NovaEntrega from 'assets/js/model/entrega/NewEntrega'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
+  import apImage from 'components/ApImage'
+
   export default {
     name: "stepper-nova-carga",
     components:{
       customInputText,
-      customInputDatetime
+      customInputDatetime,
+      apImage,
     },
     data () {
       return {
