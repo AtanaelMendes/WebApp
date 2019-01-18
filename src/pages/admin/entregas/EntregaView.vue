@@ -269,7 +269,7 @@
                                 <q-item v-close-overlay @click.native="addTalhaoPercentage()" v-if="entrega.safra_cultura.talhoes.length > 1">
                                   <q-item-main label="Definir Percentuais"/>
                                 </q-item>
-                                <q-item v-close-overlay @click.native="addTalhao()">
+                                <q-item v-close-overlay @click.native="addTalhao(entrega)">
                                   <q-item-main label="Adiconar Talhão / Cultivar"/>
                                 </q-item>
                               </q-list>
@@ -562,8 +562,8 @@
       },
 
       // TODO passar o id do caminhao no addTalhao
-      addTalhao: function(){
-        this.$refs.entregaModal.openModal(this.entrega)
+      addTalhao: function(entrega){
+        this.$refs.entregaModal.openModal(entrega)
       },
       addTalhaoPercentage: function(){
         this.$refs.addTalhaoPercentageModal.openModal(this.entrega)

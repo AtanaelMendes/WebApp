@@ -175,6 +175,7 @@
         selectedTalhaoId: null,
         selectedCultivarId: null,
         addNewTalhaoMode: false,
+        selectedEntrega: null,
       }
     },
     methods: {
@@ -191,11 +192,13 @@
         if(entrega){
           this.addNewTalhaoMode = true;
           this.novaEntrega.id = entrega.id;
+          this.selectedEntrega = entrega;
           //this.currentStep = 'escolherSafra';
           this.selectCaminhao(entrega.caminhao.id);
           //this.novaEntrega.caminhaoId = caminhaoId;
           //this.currentStep = 'escolherSafra';
         }else{
+          this.selectedEntrega = null;
           this.listCaminhoes();
           this.addNewTalhaoMode = false;
         }
@@ -281,6 +284,14 @@
       listSafraCulturaTalhaoBySafraCultura(safra_cultura_id){
         safraCulturaService.listFullSafraCulturaTalhao(safra_cultura_id).then(response => {
           this.safraCulturaTalhoes = response.data;
+
+          //Removendo os safra_cultura_talhoes já cadastrados
+          this.safraCulturaTalhoes = this.safraCulturaTalhoes.filter(safraCulturaTalhao => {
+            return this.selectedEntrega.safra_cultura.talhoes.find(
+              talhao => talhao.safra_cultura_talhao.id === safraCulturaTalhao.id
+            ) === undefined;
+          });
+
           if(this.safraCulturaTalhoes.length === 1){
             //TODO: Já selecionar o id de safraCulturaTalhao e enviar
             console.log('saveEntrega')
