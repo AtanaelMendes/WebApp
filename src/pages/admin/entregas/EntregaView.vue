@@ -617,7 +617,8 @@
         })
       },
       backAction: function () {
-        this.$router.push({name: 'entregas'});
+        //this.$router.push({name: 'entregas'});
+        this.$router.back();
       },
     },
     mounted () {

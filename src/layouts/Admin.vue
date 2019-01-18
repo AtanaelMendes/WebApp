@@ -74,8 +74,8 @@
           <q-item-main label="Negócios" />
         </q-item>
 
-        <!--CONTRATOS-->
-        <q-item @click.native="$router.push({name:'entregas'})">
+        <!--ENTREGAS-->
+        <q-item @click.native="$router.push({name:'entregas', query: { status: 'carregando' }})">
           <q-item-side icon="local_shipping"/>
           <q-item-main label="Entregas" />
         </q-item>

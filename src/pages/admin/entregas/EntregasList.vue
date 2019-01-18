@@ -3,10 +3,10 @@
     <toolbar slot="toolbar" title="Entregas" navigation_type="menu" >
 
       <div slot="tabs">
-        <q-tabs v-model="tabs">
-          <q-tab slot="title" name="carregando" label="Carregando" default></q-tab>
-          <q-tab slot="title" name="no-armazem" label="No armazém"></q-tab>
-          <q-tab slot="title" name="entregue" label="Entregue"></q-tab>
+        <q-tabs v-model="tabs" ref="tabs">
+          <q-route-tab slot="title" :to="{ name: 'entregas', query: { status: 'carregando' }}" default name="carregando" label="Carregando" ></q-route-tab>
+          <q-route-tab slot="title" :to="{ name: 'entregas', query: { status: 'no-armazem' }}" name="no-armazem" label="No armazém" ></q-route-tab>
+          <q-route-tab slot="title" :to="{ name: 'entregas', query: { status: 'entregue' }}" name="entregue" label="Entregue" ></q-route-tab>
         </q-tabs>
       </div>
 
@@ -67,7 +67,7 @@
     </div>
 
     <!--TAB NO ARMAZEM-->
-    <div class="row gutter-sm space-end q-pa-md" v-if="tabs == 'no-armazem' ">
+    <div class="row gutter-sm space-end q-pa-md" v-if="tabs === 'no-armazem' ">
 
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="entrega in entregasNoArmazem" :key="entrega.id">
 
@@ -195,6 +195,12 @@
       NewEntregaModal,
       apImage,
     },
+    watch: {
+      // '$route' (to, from) {
+      //   console.log(to.query.status)
+      //   this.re
+      // }
+    },
     data () {
       return {
         tabs: 'carregando',
@@ -205,6 +211,9 @@
       }
     },
     methods: {
+      switchTab(value){
+        //this.$router.push('?status=' + value)
+      },
       makeUrl: function (image_file_name, size) {
         return agroUtils.image.makeUrl(image_file_name, size)
       },
