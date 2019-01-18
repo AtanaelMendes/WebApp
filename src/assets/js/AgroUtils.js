@@ -18,6 +18,18 @@ export default {
 
   image: {
     makeUrl (fileName, size) {
+      console.log(fileName)
+      if (fileName == null) {
+        if ([
+          '500x500',
+          '250x250',
+          '125x125'
+        ].indexOf(size)) {
+          return '/statics/images/no-image-1-1.svg'
+        } else {
+          return '/statics/images/no-image-16-10.svg'
+        }
+      }
       return process.env.API_URL + '/images/' + size + '/' + fileName
     }
 

@@ -864,7 +864,4 @@
     }
 </script>
 <style>
-  .space-end{
-    margin-bottom: 150px;
-  }
 </style>

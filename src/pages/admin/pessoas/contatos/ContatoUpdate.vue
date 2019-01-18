@@ -327,10 +327,6 @@
 </script>
 
 <style>
-  .space-end{
-    margin-bottom: 150px;
-  }
-
   .custom-footer{
     padding: 6px;
     border-top: 1px solid #cccccc;

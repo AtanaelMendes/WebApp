@@ -184,5 +184,8 @@ export default {
   .layout-drawer .q-list-link .q-item:hover{
     background: rgba(217, 217, 217, 0.3);
   }
+  .space-end{
+    margin-bottom: 70px;
+  }
 
 </style>

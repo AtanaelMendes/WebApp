@@ -124,9 +124,9 @@
                       </q-popover>
                     </q-btn>
                   </q-card-title>
-                  <q-card-separator />
                   <q-list dense>
                     <template v-for="negocio in entrega.negocios">
+                      <q-card-separator />
                       <q-list-header>
                         <div class="float-right">
                           <q-btn icon="more_vert" dense round flat>
@@ -222,7 +222,7 @@
                         </q-item>
 
                         <!-- VALOR -->
-                        <q-item>
+                        <q-item class="q-mb-md">
                           <q-item-side />
                           <q-item-main>
                             <q-item-tile label>
@@ -304,7 +304,7 @@
                             <q-btn icon="more_vert" dense round flat>
                               <q-popover>
                                 <q-list link class="no-border">
-                                  <q-item v-close-overlay @click.native="deleteTalhao(entregaTalhao.id)">
+                                  <q-item v-close-overlay @click.native="deleteTalhao(sct.id)">
                                     <q-item-main label="Excluir"/>
                                   </q-item>
                                 </q-list>
@@ -446,7 +446,7 @@
           color="deep-orange"
           icon="mdi-share"
           label="Enviar Para Armazem"
-          @click="sendToArmazem()"
+          @click="sendToArmazem(entrega)"
           v-if="entrega.status === 'Carregando'"
           size="19px"
         />
@@ -542,8 +542,8 @@
       makeUrl: function (image_file_name, size) {
         return agroUtils.image.makeUrl(image_file_name, size)
       },
-      sendToArmazem: function(){
-        this.$refs.sendEntregaModal.openModal('sendEntrega', null)
+      sendToArmazem: function(entrega){
+        this.$refs.sendEntregaModal.openModal('sendEntrega', entrega)
       },
       updateNota: function(negocio){
         this.$refs.sendEntregaModal.openModal('updateNota', negocio)
@@ -630,9 +630,6 @@
   // this.$q.notify({type: 'negative', message: 'aqui'})
 </script>
 <style scoped>
-  .space-end{
-    margin-bottom: 200px;
-  }
   .custom-fab .q-fab-actions .q-btn  span{
     position: absolute;
     background: white;

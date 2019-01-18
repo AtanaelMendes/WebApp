@@ -389,10 +389,6 @@
   }
 </script>
 <style scoped>
-  .space-end{
-    margin-bottom: 150px;
-  }
-
   .list-empty{
     height: 55px;
     text-align: center;

@@ -205,9 +205,6 @@
 </script>
 
 <style>
-  .space-end{
-    margin-bottom: 150px;
-  }
   .no-result{
     text-align: center;
     padding-top: 150px;

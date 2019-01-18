@@ -5,42 +5,84 @@
 
       <!--PASSO 1 ESCOLHER NEGOCIO-->
       <!--TODO ordenar por data vencimento-->
-      <q-step default title="Escolher Negócico" v-if="stepNegocio" name="negocio">
-        <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
-
-          <div class="col-12 text-center q-title">
-            Escolha o negócio
-          </div>
+      <q-step default title="Negócico" v-if="stepNegocio" name="negocio">
+        <div class="row justify-center items-center gutter-sm space-end" style="min-height: 80vh">
 
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="negocioCultura in negocioCulturas" :key="negocioCultura.id">
+
             <q-card @click.native="selectNegocioCultura(negocioCultura)" class="cursor-pointer	">
 
               <q-card-title>
-                {{negocioCultura.pessoa}}
+                {{negocioCultura.negocio.pessoa}}
                 <q-btn v-if="sendEntrega.negocioCulturaId == negocioCultura.id" slot="right" round size="8px" icon="done" color="positive"/>
+                <span slot="subtitle" v-if="negocioCultura.negocio.numero_contrato != ''">
+                  {{negocioCultura.negocio.numero_contrato}}
+                </span>
               </q-card-title>
-              <q-card-separator/>
+              <q-card-separator />
+              <q-list dense>
 
-              <q-card-main class="row gutter-y-xs">
-                <div class="col-12">
-                  {{numeral(parseFloat(negocioCultura.quantidade)).format('0,0')}} {{negocioCultura.unidade_medida_sigla}}
-                </div>
-                <div class="col-12" v-if="negocioCultura.quantidade_entregue">
-                  {{numeral(parseFloat(negocioCultura.quantidade_entregue)).format('0,0')}} {{negocioCultura.unidade_medida_sigla}} Entregue
-                </div>
-                <div class="col-12 text-warning" v-if="!negocioCultura.quantidade_entregue">
-                  Nenhuma quantidade entregue ainda
-                </div>
-                <div class="col-12" v-if="negocioCultura.quantidade_restante">
-                  {{numeral(parseFloat(negocioCultura.quantidade_restante)).format('0,0')}} {{negocioCultura.unidade_medida_sigla}} Restante
-                </div>
-                <div class="col-12">
-                  {{moment(negocioCultura.prazo_entrega_final).format('DD MMM YYYY')}}
-                </div>
-                <!--<div class="col-12 text-warning" v-if="negocio == 2">-->
-                  <!--2 Cargas aguardando no armazém-->
-                <!--</div>-->
-              </q-card-main>
+                <!-- Prazo -->
+                <q-item>
+                  <q-item-side icon="mdi-calendar" />
+                  <q-item-main>
+                    <q-item-tile label>
+                      {{moment(negocioCultura.prazo_entrega_final).format('DD/MMM/YYYY')}}
+                    </q-item-tile>
+                    <q-item-tile sublabel>
+                      {{moment(negocioCultura.prazo_entrega_final).fromNow()}}
+                    </q-item-tile>
+                  </q-item-main>
+                </q-item>
+
+                <!-- Quantidade -->
+                <q-item>
+                  <q-item-side icon="mdi-scale" />
+                  <q-item-main>
+                    <q-item-tile label>
+                      {{numeral(negocioCultura.quantidade).format('0,0')}} {{negocioCultura.unidade_medida_sigla}}
+                    </q-item-tile>
+                    <q-item-tile sublabel>
+                      Quantidade Total
+                    </q-item-tile>
+                  </q-item-main>
+                </q-item>
+
+                <!-- entregue -->
+                <q-item>
+                  <q-item-side icon="mdi-arrow-top-right" color="green" />
+                  <q-item-main v-if="negocioCultura.quantidade_entregue">
+                    <q-item-tile label>
+                      {{numeral(negocioCultura.quantidade_entregue).format('0,0')}} {{negocioCultura.unidade_medida_sigla}}
+                    </q-item-tile>
+                    <q-item-tile sublabel>
+                      Já Entregue
+                    </q-item-tile>
+                  </q-item-main>
+                  <q-item-main v-else>
+                    Nada entregue
+                  </q-item-main>
+
+                </q-item>
+
+                <!-- Quantidade -->
+                <q-item>
+                  <q-item-side icon="mdi-arrow-bottom-left" color="red" />
+                  <q-item-main>
+                    <q-item-tile label>
+                      {{numeral(negocioCultura.quantidade_restante).format('0,0')}} {{negocioCultura.unidade_medida_sigla}}
+                    </q-item-tile>
+                    <q-item-tile sublabel>
+                      Faltando
+                      <span class="text-negative" v-if="negocioCultura.entregas_pendentes">
+                        <br />{{negocioCultura.entregas_pendentes}} Cargas aguardando no armazém
+                      </span>
+                    </q-item-tile>
+                  </q-item-main>
+                </q-item>
+
+              </q-list>
+
 
             </q-card>
           </div>
@@ -52,8 +94,9 @@
       </q-step>
 
       <!--PASSO 2 ESCOLHER ARMAZEM -->
-      <q-step title="Escolher Armazém" v-if="stepArmazem" name="armazem">
-        <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
+      <q-step title="Armazém" v-if="stepArmazem" name="armazem">
+
+        <div class="row justify-center gutter-sm" style="">
 
           <div class="col-12 text-center q-title">
             Escolha o Armazém
@@ -81,94 +124,78 @@
       </q-step>
 
       <!--PASSO 3 ESCOLHER MOTORISTA -->
-      <q-step title="Escolher Motorista" v-if="stepMotorista" name="motorista">
+      <q-step title="Motorista" v-if="stepMotorista" name="motorista">
         <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
 
-          <div class="col-12 text-center q-title">
-            Escolha o Motorista
-          </div>
-
-          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2" v-for="motorista in motoristas" :key="motorista.id">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="motorista in motoristas" :key="motorista.id">
             <q-card @click.native="selectMotorista(motorista)" class="cursor-pointer">
               <q-card-media overlay-position="full">
-                <img src="statics/images/no-image-16-10.svg" v-if="!motorista.image"/>
-                <img :src="motorista.image" v-if="motorista.image"/>
-
+                <ap-image size="800x500" :file-name="motorista.image_file_name" />
                 <q-card-title slot="overlay" align="end" v-if="sendEntrega.motoristaId === motorista.id">
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
               </q-card-media>
-              <q-card-separator/>
-
               <q-card-main>
                 {{motorista.nome}}
               </q-card-main>
-
             </q-card>
           </div>
 
-          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2" >
-            <q-card @click.native="newMotoristaDialog"  class="cursor-pointer">
-              <q-card-media align="center">
-                <q-icon name="add" color="primary" flat size="200px" />
-              </q-card-media>
-              <q-card-separator/>
-              <q-card-main>
-                Novo motorista
-              </q-card-main>
-            </q-card>
-          </div>
+
+          <q-btn
+            color="deep-orange"
+            icon="mdi-account-plus"
+            round
+            @click="newMotoristaDialog()"
+            size="33px"
+            class="q-ma-xl"
+          />
 
         </div>
       </q-step>
 
       <!--PASSO 4 INFORMACOES -->
-      <q-step title="Informações" v-if="stepInformacoes" name="informacoes">
-        <div class="row justify-center items-center gutter-sm space-end" style="min-height: 80vh">
+      <q-step title="Nota Fiscal" v-if="stepInformacoes" name="informacoes">
+        <div class="row justify-center gutter-sm space-end" style="">
 
-          <div class="col-xs-12 col-sm-8 col-md-6 col-lg-3">
+          <div class="col-xs-12 col-sm-9 col-md-7 col-lg-5 col-xl-3">
             <div class="row gutter-xs">
 
-              <div class="col-12">
-                <q-select v-model="sendEntrega.serie" float-label="Série" :options="parseNotasFiscaisSeSeries(notasFiscaisSeries)" align="right" @input="changeNumeroSerie()"/>
+
+              <div class="col-7">
+                <q-select v-model="sendEntrega.serie" float-label="Série" :options="parseNotasFiscaisSeSeries(notasFiscaisSeries)" @input="changeNumeroSerie()"/>
               </div>
 
-              <div class="col-12">
-                <q-input type="number" v-model="sendEntrega.notaNumero" float-label="Numero da nota" align="right"/>
+              <div class="col-5">
+                <q-input type="number" v-model="sendEntrega.notaNumero" float-label="Numero" align="right"/>
               </div>
 
-              <div class="col-6">
-                <!--VIR PREECHIDO O PESO DO CAMINHAO-->
-                <q-input type="number" v-model="sendEntrega.peso" float-label="Peso" align="right"/>
+              <div class="col-7">
+                <q-datetime v-model="sendEntrega.emissao.value" float-label="Emissão" type="date" align="center" format="DD/MM/YYYY" modal/>
               </div>
 
-              <div class="col-6">
-                <q-select v-model="sendEntrega.unidadeMedidaId" float-label="Unidade Medida" :options="parseUnidadesMedida(unidadesMedida)" align="right"/>
+              <div class="col-5">
+                <q-select v-model="sendEntrega.unidadeMedidaId" float-label="Unidade" :options="parseUnidadesMedida(unidadesMedida)" align="right"/>
               </div>
 
-              <div class="col-6">
-                <q-input type="number" v-model="sendEntrega.valor" float-label="Valor" align="right"/>
+              <div class="col-4">
+                <q-input type="number" v-model="sendEntrega.peso" @input="calculaTotal()" float-label="Peso" align="right"/>
               </div>
 
-              <div class="col-6">
-                <q-input type="number" v-model="totalCalc" float-label="Total" align="right"/>
+              <div class="col-3">
+                <q-input type="number" v-model="sendEntrega.valor" @input="calculaTotal()" float-label="Valor" align="right"/>
               </div>
 
-              <div class="col-6">
-                <q-input type="number" v-model="cfopSearchText" float-label="CFOP" @blur="getCfopByNumero()" />
-                <!--<q-select v-model="sendEntrega.cfop" float-label="CFOP" :options="parseCfops(cfops)" align="right"/>-->
-              </div>
-              <div class="col-12" v-if="cfopDescricao">
-                <span class="q-caption text-faded">{{cfopDescricao}}</span>
-              </div>
-              <div class="col-6 self-center" v-if="cfopError">
-                <span class="q-body-1 text-negative" >CFOP não encontrado!</span>
+              <div class="col-5">
+                <q-input type="number" v-model="sendEntrega.total" @input="calculaValor()" float-label="Total" align="right"/>
               </div>
 
-              <div class="col-12">
-
-                <q-datetime v-model="sendEntrega.emissao.value" float-label="Emissão"
-                            type="date" align="center" format="DD/MM/YYYY" modal/>
+              <div class="col-4">
+                <q-input type="number" v-model="cfopSearchText" float-label="CFOP" @input="getCfopByNumero()" align="center" />
+              </div>
+              <div class="col-8 self-center" >
+                <span class="q-caption text-faded" v-if="cfopDescricao">{{cfopDescricao}}</span>
+                <span class="q-caption text-negative" v-if="cfopError">CFOP não encontrado!</span>
               </div>
 
             </div>
@@ -196,6 +223,7 @@
   import negocioService from 'assets/js/service/negocio/NegocioService'
   import notaFiscalService from 'assets/js/service/NotaFiscalService'
   import cfopService from 'assets/js/service/CfopService'
+  import apImage from 'components/ApImage'
   import AgroUtils from "../../assets/js/AgroUtils";
 
   export default {
@@ -203,6 +231,7 @@
     components:{
       customInputDateTime,
       customInputText,
+      apImage,
     },
     data () {
       return {
@@ -228,14 +257,6 @@
       }
     },
     computed: {
-      totalCalc: function () {
-        if (this.sendEntrega.valor) {
-          let result  = AgroUtils.math.round(this.sendEntrega.valor  * this.sendEntrega.peso);
-          this.sendEntrega.total = result;
-          return result;
-        }
-        return null;
-      },
       isBtnVisible: function () {
         if(this.currentStep === 'informacoes'){
           return false
@@ -248,6 +269,18 @@
     },
     methods: {
       // FUNCAO = sendEntrega, updateNota, desdobrarCarga
+      calculaTotal: function () {
+        console.log('aqui calculaTotal')
+        this.sendEntrega.total = AgroUtils.math.round(this.sendEntrega.valor  * this.sendEntrega.peso)
+      },
+      calculaValor: function() {
+        console.log('aqui calculaValor')
+        if (this.sendEntrega.peso > 0) {
+          this.sendEntrega.valor = AgroUtils.math.round(this.sendEntrega.total / this.sendEntrega.peso)
+        } else {
+          this.sendEntrega.valor = this.sendEntrega.total
+        }
+      },
       openModal: function(funcao, object = null){
         this.funcao = funcao;
         this.sendEntrega = new SendEntrega()
@@ -258,6 +291,7 @@
             this.stepArmazem = true;
             this.stepMotorista = true;
             this.stepInformacoes = true;
+            this.sendEntrega.peso = object.caminhao.lotacao;
             break;
 
           case 'updateNota':
@@ -502,9 +536,6 @@
   }
 </script>
 <style scoped>
-  .space-end{
-    margin-bottom: 150px;
-  }
 
   .list-empty{
     height: 55px;
@@ -514,11 +545,12 @@
   .list-empty span{
     color: #8c8c8c;
     font-weight: 300;
-    font-size: 15px;
   }
+    font-size: 15px;
   .list-empty i{
     color: #ffb500;
     font-size: 20px;
     margin-right: 6px;
   }
+
 </style>

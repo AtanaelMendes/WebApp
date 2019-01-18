@@ -167,9 +167,6 @@
 </script>
 
 <style scoped>
-  .space-end{
-    margin-bottom: 150px;
-  }
   .chip-container {
     min-height: 150px ;
     padding: 10px 8px;

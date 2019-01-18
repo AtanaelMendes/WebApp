@@ -555,9 +555,6 @@
 
 </script>
 <style scoped>
-  .space-end{
-    margin-bottom: 200px;
-  }
   .custom-title{
     font-size: 18px;
     font-weight: 400;

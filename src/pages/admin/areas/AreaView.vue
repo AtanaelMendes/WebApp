@@ -372,9 +372,6 @@
 </script>
 
 <style>
-  .space-end{
-    margin-bottom: 200px;
-  }
   .custom-fab .q-fab-actions .q-btn  span{
     position: absolute;
     background: white;

@@ -30,7 +30,7 @@
           </q-card-media>
 
           <q-list>
-            <q-item v-for="safra_cultura_talhao in entrega.safra_culturas_talhoes">
+            <q-item v-for="safra_cultura_talhao in entrega.safra_culturas_talhoes" :key="safra_cultura_talhao.id">
               <q-item-side icon="spa" />
               <q-item-main>
                 <q-item-tile label>
@@ -258,9 +258,6 @@
   // this.$q.notify({type: 'negative', message: 'aqui'})
 </script>
 <style scoped>
-  .space-end{
-    margin-bottom: 200px;
-  }
   .custom-fab .q-fab-actions .q-btn  span{
     position: absolute;
     background: white;

@@ -632,10 +632,6 @@
   }
 </script>
 <style>
-  .space-end{
-    margin-bottom: 200px;
-  }
-
   .cultivar-empty{
     height: 55px;
     text-align: center;
