@@ -441,22 +441,22 @@
       </div>
 
       <!--PAGE STICKY BUTTOMS-->
-      <q-page-sticky position="bottom-right" :offset="[35, 35]">
+      <q-page-sticky position="bottom-right"
+                     :offset="$q.screen.lt.sm ? [0, 0] : [35, 35]"
+                     :expand="$q.screen.lt.sm" :class="$q.screen.lt.sm ? 'full-width' : ''">
         <q-btn
           color="deep-orange"
           icon="mdi-share"
-          label="Enviar Para Armazem"
+          label="Enviar Para Armazem" class="full-width"
           @click="sendToArmazem(entrega)"
           v-if="entrega.status === 'Carregando'"
-          size="19px"
         />
         <q-btn
           color="deep-orange"
           icon="mdi-scale"
           label="Informar Pesagem"
-          @click="newPesagem(entrega)"
+          @click="newPesagem(entrega)" class="full-width"
           v-if="entrega.status === 'No Armazem'"
-          size="19px"
         />
       </q-page-sticky>
 

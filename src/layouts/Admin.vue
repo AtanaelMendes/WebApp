@@ -185,7 +185,7 @@ export default {
     background: rgba(217, 217, 217, 0.3);
   }
   .space-end{
-    margin-bottom: 70px;
+    margin-bottom: 90px;
   }
 
 </style>
