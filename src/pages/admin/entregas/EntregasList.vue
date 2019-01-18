@@ -26,7 +26,7 @@
                 {{moment(entrega.inicio_carregamento).fromNow()}}
               </span>
             </q-card-title>
-            <ap-image size="400x250" :file-name="entrega.caminhao.image_file_name" />
+            <ap-image size="800x500" :file-name="entrega.caminhao.image_file_name" />
           </q-card-media>
 
           <q-list>
@@ -81,7 +81,7 @@
                 {{moment(entrega.envio_armazem).fromNow()}}
               </span>
             </q-card-title>
-            <ap-image size="400x250" :file-name="entrega.caminhao.image_file_name" />
+            <ap-image size="800x500" :file-name="entrega.caminhao.image_file_name" />
           </q-card-media>
           <q-list>
 
