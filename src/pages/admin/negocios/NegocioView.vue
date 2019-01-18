@@ -541,7 +541,7 @@
         });
       },
       backAction: function () {
-        this.$router.push({name: 'negocios'});
+        this.$router.back();
       },
     },
     mounted () {

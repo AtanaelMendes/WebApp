@@ -155,7 +155,7 @@
         })
       },
       backAction: function () {
-        this.$router.push({name: 'users'});
+        this.$router.back()
       }
     },
     mounted(){

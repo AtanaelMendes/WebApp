@@ -412,7 +412,7 @@
         this.$refs.currentStep.next()
       },
       backAction: function () {
-        this.$router.push({name: 'safras'});
+        this.$router.back()
       }
     },
     mounted(){

@@ -99,8 +99,7 @@
         })
       },
       backAction: function () {
-        //this.$router.go(-1);
-        this.$router.push({name:'notas-fiscais'})
+        this.$router.back()
       }
     },
     mounted(){

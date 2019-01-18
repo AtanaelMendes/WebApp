@@ -195,7 +195,7 @@
         }
       },
       backAction: function () {
-        this.$router.push({name: 'pessoas'});
+        this.$router.back()
       }
     },
     beforeDestroy(){

@@ -317,7 +317,7 @@
         return value === 0 ? 'phone' : 'phone_iphone'
       },
       backAction: function () {
-        this.$router.go(-1);
+        this.$router.back()
       }
     },
     mounted(){

@@ -620,7 +620,7 @@
       //   }).reduce((a, b) => a + b);
       // },
       backAction: function () {
-        this.$router.push({name: 'safras'});
+        this.$router.back()
       }
     },
     mounted () {
