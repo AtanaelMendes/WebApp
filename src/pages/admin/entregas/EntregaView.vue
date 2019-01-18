@@ -132,6 +132,9 @@
                           <q-btn icon="more_vert" dense round flat>
                             <q-popover>
                               <q-list link class="no-border">
+                                <q-item v-close-overlay @click.native="viewNegocio(negocio.negocio_cultura.negocio.id)">
+                                  <q-item-main label="Visualizar"/>
+                                </q-item>
                                 <q-item v-close-overlay @click.native="deleteNegocio(negocio.id)">
                                   <q-item-main label="Excluir"/>
                                 </q-item>
@@ -565,6 +568,9 @@
       addTalhaoPercentage: function(){
         this.$refs.addTalhaoPercentageModal.openModal(this.entrega)
       },
+      viewNegocio(id){
+        this.$router.push({name: 'negocio_view', params: {id:id}});
+      },
       deleteTalhao: function(id){
         this.$q.dialog({
           title: 'Atenção',
@@ -617,7 +623,6 @@
         })
       },
       backAction: function () {
-        //this.$router.push({name: 'entregas'});
         this.$router.back();
       },
     },
