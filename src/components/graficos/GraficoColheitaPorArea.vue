@@ -2,7 +2,6 @@
 <script>
   import { Bar } from 'vue-chartjs'
   import safraCulturaGraficoService from 'assets/js/service/safra/SafraCulturaGraficoService'
-  // import graficoService from 'assets/js/service/GraficoService'
   export default {
     name: "colheita-por-area",
     extends: Bar,
@@ -25,14 +24,11 @@
               label: 'Colhido',
               data: [],
               backgroundColor: 'rgb(220, 130, 0)',
-              borderColor: 'rgb(220, 130, 0)',
             },
             {
               label: 'Estimativa',
               data: [],
               backgroundColor: 'rgb(133, 133, 133)',
-              borderColor: 'rgb(133, 133, 133)',
-              borderWidth: 2
             },
           ]
         },
@@ -71,34 +67,30 @@
       }
     },
     methods: {
+
+      // Busca Dados da API
       getData () {
         safraCulturaGraficoService.getColheitaPorArea(this.safraId, this.safraCulturaId).then(response => {
           this.data = response.data;
           this.loaded = true;
           this.parseData();
         })
-        console.log('aqui');
       },
+
+      // Passa dados vindos da API pro grafico e monta ele
       parseData () {
         this.chartdata.labels = this.data.areas
         this.chartdata.datasets[0].data = this.data.colhido
         this.chartdata.datasets[1].data = this.data.estimativa
         this.renderChart(this.chartdata, this.options)
       },
-      getRandomInt () {
-        return Math.floor(Math.random() * (40000 - 10000 + 1)) + 5
-      },
+
     },
     mounted () {
-      console.log(this.safraCulturaId)
-      console.log(this.safraId)
       this.getData();
     }
   }
 </script>
 
 <style>
-  .color{
-    background-color: rgb(0, 5, 200)
-  }
 </style>
