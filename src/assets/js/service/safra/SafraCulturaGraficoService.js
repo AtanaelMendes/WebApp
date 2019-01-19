@@ -9,4 +9,22 @@ export default {
       })
     });
   },
+  getColheitaPorTalhao(safra_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/grafico_colheita_talhao').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  getColheitaPorCultivar(safra_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/grafico_colheita_cultivar').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
 }

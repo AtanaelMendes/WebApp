@@ -162,40 +162,64 @@
       </div> -->
 
       <!--GRAFICO COLHEITA POR AREA-->
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
         <q-card class="full-height">
           <q-card-title>
-            Colheita por área
+            Colheita por Área
+            <span slot="subtitle" class="cursor-pointer" @click="graficoPorMedia = !graficoPorMedia">
+              <template v-if="graficoPorMedia">
+                Média de {{safraCultura.cultura.estimativa_unidade_medida.sigla}}/{{safraCultura.cultura.estimativa_unidade_area.sigla}}
+              </template>
+              <template v-else>
+                Quantidade Total de {{safraCultura.cultura.estimativa_unidade_medida.sigla}}
+              </template>
+            </span>
           </q-card-title>
           <q-card-main>
-            <grafico-colheita-por-area  :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
+            <grafico-colheita-por-area :media="graficoPorMedia"  :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
+          </q-card-main>
+        </q-card>
+      </div>
+
+      <!--GRAFICO COLHEITA POR CULTIVAR-->
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <q-card class="full-height">
+          <q-card-title>
+            Colheita por Cultivar
+            <span slot="subtitle" class="cursor-pointer" @click="graficoPorMedia = !graficoPorMedia">
+              <template v-if="graficoPorMedia">
+                Média de {{safraCultura.cultura.estimativa_unidade_medida.sigla}}/{{safraCultura.cultura.estimativa_unidade_area.sigla}}
+              </template>
+              <template v-else>
+                Quantidade Total de {{safraCultura.cultura.estimativa_unidade_medida.sigla}}
+              </template>
+            </span>
+          </q-card-title>
+          <q-card-main>
+            <grafico-colheita-por-cultivar :media="graficoPorMedia" :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
           </q-card-main>
         </q-card>
       </div>
 
       <!--GRAFICO COLHEITA POR TALHAO-->
-      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      <div class="col-12">
         <q-card class="full-height">
           <q-card-title>
-            Colheita por talhão
+            Colheita por Talhão ({{safraCultura.cultura.estimativa_unidade_medida.sigla}})
+            <span slot="subtitle" class="cursor-pointer" @click="graficoPorMedia = !graficoPorMedia">
+              <template v-if="graficoPorMedia">
+                Média de {{safraCultura.cultura.estimativa_unidade_medida.sigla}}/{{safraCultura.cultura.estimativa_unidade_area.sigla}}
+              </template>
+              <template v-else>
+                Quantidade Total de {{safraCultura.cultura.estimativa_unidade_medida.sigla}}
+              </template>
+            </span>
           </q-card-title>
           <q-card-main>
-            <grafico-colheita-por-talhao :height="200" :width="100"/>
+            <grafico-colheita-por-talhao :media="graficoPorMedia" :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
           </q-card-main>
         </q-card>
-      </div> -->
-
-      <!--GRAFICO COLHEITA POR CULTIVAR-->
-      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-        <q-card class="full-height">
-          <q-card-title>
-            Colheita por cultivar
-          </q-card-title>
-          <q-card-main>
-            <grafico-colheita-por-cultivar :height="200" :width="100"/>
-          </q-card-main>
-        </q-card>
-      </div> -->
+      </div>
 
       <!--GRAFICO PORCENTAGEM CAMINHOES-->
       <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -475,6 +499,7 @@
     },
     data () {
       return {
+        graficoPorMedia: true,
         currentStep: 'marca',
         marcas: [],
         cultivares: [],

@@ -1,28 +1,37 @@
 <!--GraficoColheitaPorTalhao-->
 <script>
   import { Bar } from 'vue-chartjs'
-  // import graficoService from 'assets/js/service/GraficoService'
+  import safraCulturaGraficoService from 'assets/js/service/safra/SafraCulturaGraficoService'
   export default {
     name: "colheita-por-talhao",
     extends: Bar,
+    props: {
+      media: {
+        type: Boolean,
+        default: true
+      },
+      safraId: {
+        default: null
+      },
+      safraCulturaId: {
+        default: null
+      },
+    },
     data (){
       return {
         loaded: true,
         chartdata: {
-          labels: ['Talhao fundo', 'Talhao subida', 'Talhao frente', 'Média'],
+          labels: [],
           datasets: [
             {
               label: 'Colhido',
-              data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()],
-              backgroundColor: 'rgb(220, 130, 0)',
-              borderColor: 'rgb(220, 130, 0)',
+              data: [],
+              backgroundColor: '#00605f',
             },
             {
               label: 'Estimativa',
-              data: [20000, 30000, 40000, 90000],
-              backgroundColor: 'rgb(133, 133, 133)',
-              borderColor: 'rgb(133, 133, 133)',
-              // borderWidth: 2
+              data: [],
+              backgroundColor: '#CCCCCC',
             },
           ]
         },
@@ -43,7 +52,7 @@
           },
           scales: {
             xAxes: [{
-              display: true,
+              display: false,
               stacked: false,
               gridLines: {
                 offsetGridLines: true
@@ -60,13 +69,42 @@
         }
       }
     },
+    watch: {
+      media: function (val) {
+        this.parseData()
+      }
+    },
     methods: {
-      getRandomInt () {
-        return Math.floor(Math.random() * (40000 - 10000 + 1)) + 5
+
+      // Busca Dados da API
+      getData () {
+        safraCulturaGraficoService.getColheitaPorTalhao(this.safraId, this.safraCulturaId).then(response => {
+          this.data = response.data
+          this.loaded = true;
+          this.parseData();
+        })
       },
+
+      // Passa dados vindos da API pro grafico e monta ele
+      parseData () {
+        if (!this.loaded) {
+          return;
+        }
+        this.chartdata.labels = this.data.talhoes
+        if (this.media) {
+          this.chartdata.datasets[0].data = this.data.colhido_media
+          this.chartdata.datasets[1].data = this.data.estimativa_media
+        } else {
+          this.chartdata.datasets[0].data = this.data.colhido
+          this.chartdata.datasets[1].data = this.data.estimativa
+
+        }
+        this.renderChart(this.chartdata, this.options)
+      },
+
     },
     mounted () {
-      this.renderChart(this.chartdata, this.options)
+      this.getData();
     }
   }
 </script>

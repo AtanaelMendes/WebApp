@@ -6,6 +6,10 @@
     name: "colheita-por-area",
     extends: Bar,
     props: {
+      media: {
+        type: Boolean,
+        default: true
+      },
       safraId: {
         default: null
       },
@@ -15,20 +19,19 @@
     },
     data (){
       return {
-        loaded: true,
-        data: [],
+        loaded: false,
         chartdata: {
           labels: [],
           datasets: [
             {
               label: 'Colhido',
               data: [],
-              backgroundColor: 'rgb(220, 130, 0)',
+              backgroundColor: '#00605f',
             },
             {
               label: 'Estimativa',
               data: [],
-              backgroundColor: 'rgb(133, 133, 133)',
+              backgroundColor: '#CCCCCC',
             },
           ]
         },
@@ -49,7 +52,7 @@
           },
           scales: {
             xAxes: [{
-              display: true,
+              display: false,
               stacked: false,
               gridLines: {
                 offsetGridLines: true
@@ -66,28 +69,42 @@
         }
       }
     },
+    watch: {
+      media: function (val) {
+        this.parseData()
+      }
+    },
     methods: {
 
       // Busca Dados da API
       getData () {
         safraCulturaGraficoService.getColheitaPorArea(this.safraId, this.safraCulturaId).then(response => {
-          this.data = response.data;
-          this.loaded = true;
-          this.parseData();
+          this.data = response.data
+          this.loaded = true
+          this.parseData()
         })
       },
 
       // Passa dados vindos da API pro grafico e monta ele
       parseData () {
+        if (!this.loaded) {
+          return;
+        }
         this.chartdata.labels = this.data.areas
-        this.chartdata.datasets[0].data = this.data.colhido
-        this.chartdata.datasets[1].data = this.data.estimativa
+        if (this.media) {
+          this.chartdata.datasets[0].data = this.data.colhido_media
+          this.chartdata.datasets[1].data = this.data.estimativa_media
+        } else {
+          this.chartdata.datasets[0].data = this.data.colhido
+          this.chartdata.datasets[1].data = this.data.estimativa
+
+        }
         this.renderChart(this.chartdata, this.options)
       },
 
     },
     mounted () {
-      this.getData();
+      this.getData()
     }
   }
 </script>
