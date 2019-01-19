@@ -1,6 +1,6 @@
 <template>
-  <custom-page isParent>
-    <toolbar slot="toolbar" v-if="safraCultura" :title="safraCultura.inicio + '/' + safraCultura.fim" navigation_type="back" @navigation_clicked="backAction" >
+  <custom-page isParent v-if="safraCultura">
+    <toolbar slot="toolbar" :title="safraCultura.inicio + '/' + safraCultura.fim" navigation_type="back" @navigation_clicked="backAction" >
     </toolbar>
 
     <div class="row q-pa-md gutter-sm space-end">
