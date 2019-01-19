@@ -19,7 +19,7 @@
                     <q-card-title slot="overlay">
                       {{entrega.caminhao.placa}}
                       {{entrega.caminhao.nome}}
-                      <q-btn class="float-right" dense icon="more_vert" round flat >
+                      <q-btn class="float-right" dense icon="more_vert" round flat v-if="entrega.status !== 'Carregando'" >
                         <q-popover>
                           <q-list link class="no-border">
                             <q-item v-close-overlay @click.native="updateMotorista(entrega)">

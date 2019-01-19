@@ -18,7 +18,6 @@ export default {
 
   image: {
     makeUrl (fileName, size) {
-      console.log(fileName)
       if (fileName == null) {
         if ([
           '500x500',

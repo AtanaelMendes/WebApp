@@ -286,11 +286,13 @@
           this.safraCulturaTalhoes = response.data;
 
           //Removendo os safra_cultura_talhoes já cadastrados
-          this.safraCulturaTalhoes = this.safraCulturaTalhoes.filter(safraCulturaTalhao => {
-            return this.selectedEntrega.safra_cultura.talhoes.find(
-              talhao => talhao.safra_cultura_talhao.id === safraCulturaTalhao.id
-            ) === undefined;
-          });
+          if(this.selectedEntrega) {
+            this.safraCulturaTalhoes = this.safraCulturaTalhoes.filter(safraCulturaTalhao => {
+              return this.selectedEntrega.safra_cultura.talhoes.find(
+                talhao => talhao.safra_cultura_talhao.id === safraCulturaTalhao.id
+              ) === undefined;
+            });
+          }
 
           if(this.safraCulturaTalhoes.length === 1){
             //TODO: Já selecionar o id de safraCulturaTalhao e enviar
