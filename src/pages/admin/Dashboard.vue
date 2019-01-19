@@ -1,8 +1,7 @@
 <template>
 
   <custom-page>
-    <toolbar slot="toolbar" title="Início" navigation_type="menu" @navigation_clicked="test"></toolbar>
-
+    <toolbar slot="toolbar" title="Início" navigation_type="menu"></toolbar>
   </custom-page>
 </template>
 

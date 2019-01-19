@@ -105,7 +105,7 @@
       </div>
 
       <!--GRAFICO QUANTIDADE ENTREGA DOS ARMAZEMS-->
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
         <q-card class="full-height">
           <q-card-title>
             Entrega dos Armazéms
@@ -114,10 +114,10 @@
             <grafico-quantidade-entrega-armazems :height="200" :width="100"/>
           </q-card-main>
         </q-card>
-      </div>
+      </div> -->
 
       <!--GRAFICO COLHEITA DIARIA-->
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
         <q-card class="full-height">
           <q-card-title>
             Colheita diária
@@ -126,10 +126,10 @@
             <grafico-colheita-diaria :height="200" :width="100"/>
           </q-card-main>
         </q-card>
-      </div>
+      </div> -->
 
       <!--GRAFICO CLASSIFICACAO DIARIA-->
-      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+      <!-- <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
         <q-card class="full-height">
           <q-card-title>
             Classificação diária
@@ -138,19 +138,19 @@
             <grafico-classificacoes-diaria :height="200" :width="100"/>
           </q-card-main>
         </q-card>
-      </div>
+      </div> -->
 
       <!--GRAFICO CLASSIFICACAO MEDIA ARMAZEM-->
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
         <q-card class="full-height">
           <q-card-main>
             <grafico-classificacao-media-armazem/>
           </q-card-main>
         </q-card>
-      </div>
+      </div> -->
 
       <!--GRAFICO PORCENTAGEM ENTREGA DOS ARMAZEMS-->
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
         <q-card class="full-height">
           <q-card-title>
             Porcentagem dos Armazéms
@@ -159,7 +159,7 @@
             <grafico-porcentagem-entrega-armazems :height="200" :width="100"/>
           </q-card-main>
         </q-card>
-      </div>
+      </div> -->
 
       <!--GRAFICO COLHEITA POR AREA-->
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -168,13 +168,13 @@
             Colheita por área
           </q-card-title>
           <q-card-main>
-            <grafico-colheita-por-area :height="200" :width="100"/>
+            <grafico-colheita-por-area  :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
           </q-card-main>
         </q-card>
       </div>
 
       <!--GRAFICO COLHEITA POR TALHAO-->
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
         <q-card class="full-height">
           <q-card-title>
             Colheita por talhão
@@ -183,10 +183,10 @@
             <grafico-colheita-por-talhao :height="200" :width="100"/>
           </q-card-main>
         </q-card>
-      </div>
+      </div> -->
 
       <!--GRAFICO COLHEITA POR CULTIVAR-->
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
         <q-card class="full-height">
           <q-card-title>
             Colheita por cultivar
@@ -195,10 +195,10 @@
             <grafico-colheita-por-cultivar :height="200" :width="100"/>
           </q-card-main>
         </q-card>
-      </div>
+      </div> -->
 
-      <!--GRAFICO PORENTAGEM CAMINHOES-->
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      <!--GRAFICO PORCENTAGEM CAMINHOES-->
+      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
         <q-card class="full-height">
           <q-card-title>
             Porcentagem por caminhões
@@ -207,7 +207,7 @@
             <grafico-porcentagem-por-caminhao :height="200" :width="100"/>
           </q-card-main>
         </q-card>
-      </div>
+      </div> -->
 
       <!--TALHOES-->
       <template v-if="safraCultura">
@@ -490,6 +490,14 @@
         modalAddCultivarInfo: false,
 
       }
+    },
+    computed: {
+      safraId: function () {
+        return this.$route.params.safra_id
+      },
+      safraCulturaId: function () {
+        return this.$route.params.id
+      },
     },
     methods: {
       // ADD CULTIVAR

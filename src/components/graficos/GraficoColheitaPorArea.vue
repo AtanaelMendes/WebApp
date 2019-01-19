@@ -1,25 +1,35 @@
 <!--GraficoColheitaPorArea-->
 <script>
   import { Bar } from 'vue-chartjs'
+  import safraCulturaGraficoService from 'assets/js/service/safra/SafraCulturaGraficoService'
   // import graficoService from 'assets/js/service/GraficoService'
   export default {
     name: "colheita-por-area",
     extends: Bar,
+    props: {
+      safraId: {
+        default: null
+      },
+      safraCulturaId: {
+        default: null
+      },
+    },
     data (){
       return {
         loaded: true,
+        data: [],
         chartdata: {
-          labels: ['Sede', 'Tamoio', 'Caroline', 'Média'],
+          labels: [],
           datasets: [
             {
               label: 'Colhido',
-              data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()],
+              data: [],
               backgroundColor: 'rgb(220, 130, 0)',
               borderColor: 'rgb(220, 130, 0)',
             },
             {
               label: 'Estimativa',
-              data: [20000, 30000, 40000, 90000],
+              data: [],
               backgroundColor: 'rgb(133, 133, 133)',
               borderColor: 'rgb(133, 133, 133)',
               borderWidth: 2
@@ -61,12 +71,28 @@
       }
     },
     methods: {
+      getData () {
+        safraCulturaGraficoService.getColheitaPorArea(this.safraId, this.safraCulturaId).then(response => {
+          this.data = response.data;
+          this.loaded = true;
+          this.parseData();
+        })
+        console.log('aqui');
+      },
+      parseData () {
+        this.chartdata.labels = this.data.areas
+        this.chartdata.datasets[0].data = this.data.colhido
+        this.chartdata.datasets[1].data = this.data.estimativa
+        this.renderChart(this.chartdata, this.options)
+      },
       getRandomInt () {
         return Math.floor(Math.random() * (40000 - 10000 + 1)) + 5
       },
     },
     mounted () {
-      this.renderChart(this.chartdata, this.options)
+      console.log(this.safraCulturaId)
+      console.log(this.safraId)
+      this.getData();
     }
   }
 </script>
