@@ -105,109 +105,109 @@
       </div>
 
       <!--GRAFICO QUANTIDADE ENTREGA DOS ARMAZEMS-->
-      <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">-->
-        <!--<q-card class="full-height">-->
-          <!--<q-card-title>-->
-            <!--Entrega dos Armazéms-->
-          <!--</q-card-title>-->
-          <!--<q-card-main>-->
-            <!--<grafico-quantidade-entrega-armazems :height="200" :width="100"/>-->
-          <!--</q-card-main>-->
-        <!--</q-card>-->
-      <!--</div>-->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-card class="full-height">
+          <q-card-title>
+            Entrega dos Armazéms
+          </q-card-title>
+          <q-card-main>
+            <grafico-quantidade-entrega-armazems :height="200" :width="100"/>
+          </q-card-main>
+        </q-card>
+      </div>
 
       <!--GRAFICO COLHEITA DIARIA-->
-      <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">-->
-        <!--<q-card class="full-height">-->
-          <!--<q-card-title>-->
-            <!--Colheita diária-->
-          <!--</q-card-title>-->
-          <!--<q-card-main>-->
-            <!--<grafico-colheita-diaria :height="200" :width="100"/>-->
-          <!--</q-card-main>-->
-        <!--</q-card>-->
-      <!--</div>-->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-card class="full-height">
+          <q-card-title>
+            Colheita diária
+          </q-card-title>
+          <q-card-main>
+            <grafico-colheita-diaria :height="200" :width="100"/>
+          </q-card-main>
+        </q-card>
+      </div>
 
       <!--GRAFICO CLASSIFICACAO DIARIA-->
-      <!--<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">-->
-        <!--<q-card class="full-height">-->
-          <!--<q-card-title>-->
-            <!--Classificação diária-->
-          <!--</q-card-title>-->
-          <!--<q-card-main>-->
-            <!--<grafico-classificacoes-diaria :height="200" :width="100"/>-->
-          <!--</q-card-main>-->
-        <!--</q-card>-->
-      <!--</div>-->
+      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <q-card class="full-height">
+          <q-card-title>
+            Classificação diária
+          </q-card-title>
+          <q-card-main>
+            <grafico-classificacoes-diaria :height="200" :width="100"/>
+          </q-card-main>
+        </q-card>
+      </div>
 
       <!--GRAFICO CLASSIFICACAO MEDIA ARMAZEM-->
-      <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">-->
-        <!--<q-card class="full-height">-->
-          <!--<q-card-main>-->
-            <!--<grafico-classificacao-media-armazem/>-->
-          <!--</q-card-main>-->
-        <!--</q-card>-->
-      <!--</div>-->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-card class="full-height">
+          <q-card-main>
+            <grafico-classificacao-media-armazem/>
+          </q-card-main>
+        </q-card>
+      </div>
 
       <!--GRAFICO PORCENTAGEM ENTREGA DOS ARMAZEMS-->
-      <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">-->
-        <!--<q-card class="full-height">-->
-          <!--<q-card-title>-->
-            <!--Porcentagem dos Armazéms-->
-          <!--</q-card-title>-->
-          <!--<q-card-main>-->
-            <!--<grafico-porcentagem-entrega-armazems :height="200" :width="100"/>-->
-          <!--</q-card-main>-->
-        <!--</q-card>-->
-      <!--</div>-->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-card class="full-height">
+          <q-card-title>
+            Porcentagem dos Armazéms
+          </q-card-title>
+          <q-card-main>
+            <grafico-porcentagem-entrega-armazems :height="200" :width="100"/>
+          </q-card-main>
+        </q-card>
+      </div>
 
       <!--GRAFICO COLHEITA POR AREA-->
-      <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">-->
-        <!--<q-card class="full-height">-->
-          <!--<q-card-title>-->
-            <!--Colheita por área-->
-          <!--</q-card-title>-->
-          <!--<q-card-main>-->
-            <!--<grafico-colheita-por-area :height="200" :width="100"/>-->
-          <!--</q-card-main>-->
-        <!--</q-card>-->
-      <!--</div>-->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-card class="full-height">
+          <q-card-title>
+            Colheita por área
+          </q-card-title>
+          <q-card-main>
+            <grafico-colheita-por-area :height="200" :width="100"/>
+          </q-card-main>
+        </q-card>
+      </div>
 
       <!--GRAFICO COLHEITA POR TALHAO-->
-      <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">-->
-        <!--<q-card class="full-height">-->
-          <!--<q-card-title>-->
-            <!--Colheita por talhão-->
-          <!--</q-card-title>-->
-          <!--<q-card-main>-->
-            <!--<grafico-colheita-por-talhao :height="200" :width="100"/>-->
-          <!--</q-card-main>-->
-        <!--</q-card>-->
-      <!--</div>-->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-card class="full-height">
+          <q-card-title>
+            Colheita por talhão
+          </q-card-title>
+          <q-card-main>
+            <grafico-colheita-por-talhao :height="200" :width="100"/>
+          </q-card-main>
+        </q-card>
+      </div>
 
       <!--GRAFICO COLHEITA POR CULTIVAR-->
-      <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">-->
-        <!--<q-card class="full-height">-->
-          <!--<q-card-title>-->
-            <!--Colheita por cultivar-->
-          <!--</q-card-title>-->
-          <!--<q-card-main>-->
-            <!--<grafico-colheita-por-cultivar :height="200" :width="100"/>-->
-          <!--</q-card-main>-->
-        <!--</q-card>-->
-      <!--</div>-->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-card class="full-height">
+          <q-card-title>
+            Colheita por cultivar
+          </q-card-title>
+          <q-card-main>
+            <grafico-colheita-por-cultivar :height="200" :width="100"/>
+          </q-card-main>
+        </q-card>
+      </div>
 
       <!--GRAFICO PORENTAGEM CAMINHOES-->
-      <!--<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">-->
-        <!--<q-card class="full-height">-->
-          <!--<q-card-title>-->
-            <!--Porcentagem por caminhões-->
-          <!--</q-card-title>-->
-          <!--<q-card-main>-->
-            <!--<grafico-porcentagem-por-caminhao :height="200" :width="100"/>-->
-          <!--</q-card-main>-->
-        <!--</q-card>-->
-      <!--</div>-->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <q-card class="full-height">
+          <q-card-title>
+            Porcentagem por caminhões
+          </q-card-title>
+          <q-card-main>
+            <grafico-porcentagem-por-caminhao :height="200" :width="100"/>
+          </q-card-main>
+        </q-card>
+      </div>
 
       <!--TALHOES-->
       <template v-if="safraCultura">
