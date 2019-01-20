@@ -1,41 +1,53 @@
 <script>
-   import { Line } from 'vue-chartjs'
-  // import graficoService from 'assets/js/service/GraficoService'
+  import { Line } from 'vue-chartjs'
+  import safraCulturaGraficoService from 'assets/js/service/safra/SafraCulturaGraficoService'
   export default {
     name: "colheita-diaria",
     extends: Line,
+    props: {
+      safraId: {
+        default: null
+      },
+      safraCulturaId: {
+        default: null
+      },
+    },
     data (){
       return {
         loaded: true,
         chartdata: {
-          labels: ['Dia 25', 'Dia 26', 'Dia 27'],
+          labels: [],
           datasets: [
             {
-              label: 'Sacas',
-              data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()],
+              label: 'Líquido',
+              data: [],
               type: 'line',
               fill: false,
-              lineTension: 0,
-              backgroundColor: 'rgb(0, 127, 6)',
-              borderColor: 'rgb(0, 127, 6)',
-            },
-            {
-              label: 'Cargas',
-              data: [this.getRandomInt(), this.getRandomInt(), this.getRandomInt(), this.getRandomInt()],
-              type: 'line',
-              fill: false,
-              lineTension: 0,
-              backgroundColor: 'rgb(0, 5, 176)',
-              borderColor: 'rgb(0, 5, 176)',
+              // lineTension: 0,
+              backgroundColor: '#00605f',
+              borderColor: '#00605f',
+              yAxisID: 'y-axis-liquido',
             },
             {
               label: 'Desconto',
-              data: [1, 5, 1],
+              data: [],
               type: 'line',
               fill: false,
-              lineTension: 0,
+              // lineTension: 0,
               backgroundColor: 'rgb(255, 28, 0)',
               borderColor: 'rgb(255, 28, 0)',
+              yAxisID: 'y-axis-liquido',
+              // yAxisID: 'y-axis-desconto',
+            },
+            {
+              label: 'Cargas',
+              data: [],
+              type: 'line',
+              fill: false,
+              // lineTension: 0,
+              backgroundColor: 'rgb(0, 5, 176)',
+              borderColor: 'rgb(0, 5, 176)',
+              yAxisID: 'y-axis-cargas',
             }
           ]
         },
@@ -62,34 +74,89 @@
           scales: {
             xAxes: [{
               display: true,
+              type: 'time',
+              time: {
+                unit: 'day',
+                displayFormats: {
+                  day: 'DD/MM',
+                  week: 'DD/MM',
+                  month: 'MMM/YYYY',
+                  quarter: 'MMM/YYYY',
+                  year: 'YYYY',
+                },
+  							tooltipFormat: 'DD/MMM (ddd)'
+  						},
+  						scaleLabel: {
+  							display: true,
+  							labelString: 'Date'
+  						}
             }],
+
             yAxes: [{
-              display: true,
+							type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+							display: false,
+							position: 'left',
+							id: 'y-axis-liquido',
+
               ticks: {
                 beginAtZero: true
-              }
-            }]
+              },
+						}, {
+							type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+							display: false,
+							position: 'left',
+							id: 'y-axis-desconto',
+
+              ticks: {
+                beginAtZero: true
+              },
+						}, {
+							type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+							display: false,
+							position: 'right',
+							id: 'y-axis-cargas',
+              ticks: {
+                beginAtZero: true
+              },
+							gridLines: {
+								drawOnChartArea: false, // only want the grid lines for one axis to show up
+							},
+						}],
           }
         }
       }
     },
     methods: {
-      getRandomInt () {
-        return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+
+      // Busca Dados da API
+      getData () {
+        safraCulturaGraficoService.getColheitaDiaria(this.safraId, this.safraCulturaId).then(response => {
+          this.data = response.data
+          this.loaded = true;
+          this.parseData();
+        })
       },
-      listArmazem: function(){
+
+      // Passa dados vindos da API pro grafico e monta ele
+      parseData () {
+        if (!this.loaded) {
+          return;
+        }
+        console.log(this.data);
+        this.chartdata.labels = this.data.dias
+        this.chartdata.datasets[0].data = this.data.peso_liquido
+        this.chartdata.datasets[1].data = this.data.peso_desconto
+        this.chartdata.datasets[2].data = this.data.cargas
+        console.log(this.chartdata.datasets);
         this.renderChart(this.chartdata, this.options)
       },
 
     },
     mounted () {
-      this.listArmazem()
+      this.getData();
     }
   }
 </script>
 
 <style>
-  .color{
-background-color: rgb(0, 5, 176)
-  }
 </style>

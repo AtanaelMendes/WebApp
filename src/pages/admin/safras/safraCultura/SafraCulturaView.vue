@@ -117,16 +117,20 @@
       </div> -->
 
       <!--GRAFICO COLHEITA DIARIA-->
-      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6"> -->
+      <div class="col-12">
         <q-card class="full-height">
           <q-card-title>
-            Colheita diária
+            Colheita Diária
+            <span slot="subtitle">
+                Quantidade de {{safraCultura.cultura.estimativa_unidade_medida.sigla}}
+            </span>
           </q-card-title>
           <q-card-main>
-            <grafico-colheita-diaria :height="200" :width="100"/>
+            <grafico-colheita-diaria :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
           </q-card-main>
         </q-card>
-      </div> -->
+      </div>
 
       <!--GRAFICO CLASSIFICACAO DIARIA-->
       <!-- <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -176,7 +180,7 @@
             </span>
           </q-card-title>
           <q-card-main>
-            <grafico-colheita-por-area :media="graficoPorMedia"  :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
+            <grafico-colheita-por-area :media="graficoPorMedia" :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
           </q-card-main>
         </q-card>
       </div>
