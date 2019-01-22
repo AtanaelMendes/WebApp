@@ -1,7 +1,7 @@
 <template>
   <q-modal key="safraCultura" v-model="isModalOpened" maximized @hide="closeModal">
 
-    <q-stepper key="sendCargo" ref="stepper" contractable color="positive" v-model="currentStep" class="no-shadow" v-if="entrega">
+    <q-stepper key="sendCargo" ref="stepper" contractable color="positive" v-model="currentStep" class="no-shadow q-mb-xl" v-if="entrega">
 
       <!--PASSO 1 DADOS DA ENTREGA-->
       <q-step default title="Dados da Entrega" name="dadosDaEntrega">
@@ -379,6 +379,5 @@
     },
   }
 </script>
-<style>
-
+<style scoped>
 </style>
