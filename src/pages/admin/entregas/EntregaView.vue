@@ -450,7 +450,7 @@
         <q-btn
           color="deep-orange"
           icon="mdi-share"
-          label="Enviar Para Armazem" class="full-width"
+          label="Enviar Para Armazem" class="full-width q-pa-md"
           @click="sendToArmazem(entrega)"
           v-if="entrega.status === 'Carregando'"
         />
@@ -458,7 +458,7 @@
           color="deep-orange"
           icon="mdi-scale"
           label="Informar Pesagem"
-          @click="newPesagem(entrega)" class="full-width"
+          @click="newPesagem(entrega)" class="full-width q-pa-md"
           v-if="entrega.status === 'No Armazem'"
         />
       </q-page-sticky>
