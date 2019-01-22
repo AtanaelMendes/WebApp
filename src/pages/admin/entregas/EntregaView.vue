@@ -69,10 +69,10 @@
                         </template>
                         <template v-else>
                           <q-item-tile label>
-                            {{numeral(entrega.caminhao.lotacao).format('0,0')}}
+                            {{numeral(entrega.caminhao.estimativa_carga).format('0,0')}}
                             {{entrega.caminhao.unidade_medida_sigla}}
                           </q-item-tile>
-                          <q-item-tile sublabel>Lotação do caminhão. Pesagem ainda não informada!</q-item-tile>
+                          <q-item-tile sublabel>Estimativa <da></da> carga. Pesagem ainda não informada!</q-item-tile>
                         </template>
                       </q-item-main>
                     </q-item>
