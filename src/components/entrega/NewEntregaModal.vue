@@ -225,7 +225,7 @@
         return false;
       },
       listCaminhoes: function(){
-        caminhaoService.listCaminhoes().then(response => {
+        caminhaoService.listFreeCaminhoes().then(response => {
           this.caminhoes = response.data;
         })
       },
