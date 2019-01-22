@@ -6,7 +6,7 @@ export default class{
     errorMessage: null
   };
   emissao = {
-    value: moment().format('YYYY[-]MM[-]DD[T]hh[:]mm'),
+    value: moment(),
     errorMessage: null
   };
   pesoBrutoTotal = {
