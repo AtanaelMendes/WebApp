@@ -270,7 +270,7 @@
                                   <q-item-main label="Definir Percentuais"/>
                                 </q-item>
                                 <q-item v-close-overlay @click.native="addTalhao(entrega)">
-                                  <q-item-main label="Adiconar Talhão / Cultivar"/>
+                                  <q-item-main label="Adicionar Talhão / Cultivar"/>
                                 </q-item>
                               </q-list>
                             </q-popover>

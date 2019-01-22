@@ -41,7 +41,7 @@
       </q-step>
 
       <!--PASSO 2 ESCOLHER SAFRA -->
-      <q-step title="Safra" name="escolherSafra">
+      <q-step title="Safra" name="escolherSafra" v-if="!addNewTalhaoMode">
         <div class="row justify-center items-center gutter-sm" style="min-height: 80vh" >
 
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="safraCultura in safraCulturas" :key="safraCultura.id" >
@@ -195,6 +195,8 @@
           this.selectedEntrega = entrega;
           //this.currentStep = 'escolherSafra';
           this.selectCaminhao(entrega.caminhao.id);
+          this.selectSafraCultura(entrega.safra_cultura);
+          //this.selectArea(entre)
           //this.novaEntrega.caminhaoId = caminhaoId;
           //this.currentStep = 'escolherSafra';
         }else{
