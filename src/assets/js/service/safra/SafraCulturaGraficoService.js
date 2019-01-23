@@ -36,4 +36,31 @@ export default {
       })
     });
   },
+  getClassificacaoDiaria(safra_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/grafico_classificacao_diaria').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  getEntregaArmazem(safra_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/grafico_entrega_armazem').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  getEntregaCaminhao(safra_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/grafico_entrega_caminhao').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
 }

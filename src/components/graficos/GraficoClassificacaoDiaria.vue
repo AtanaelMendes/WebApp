@@ -2,7 +2,7 @@
   import { Line } from 'vue-chartjs'
   import safraCulturaGraficoService from 'assets/js/service/safra/SafraCulturaGraficoService'
   export default {
-    name: "grafico-colheita-diaria",
+    name: "grafico-classificacao-diaria",
     extends: Line,
     props: {
       safraId: {
@@ -16,38 +16,10 @@
       return {
         loaded: false,
         data: null,
+        colors: ['blue', 'red', 'orange', 'green', 'purple', '#00605f', 'pink', 'grey', 'cyan', 'yellow'],
         chartdata: {
           labels: [],
-          datasets: [
-            {
-              label: 'Líquido',
-              data: [],
-              type: 'line',
-              fill: false,
-              backgroundColor: '#00605f',
-              borderColor: '#00605f',
-              yAxisID: 'y-axis-liquido',
-            },
-            {
-              label: 'Desconto',
-              data: [],
-              type: 'line',
-              fill: false,
-              backgroundColor: 'rgb(255, 28, 0)',
-              borderColor: 'rgb(255, 28, 0)',
-              yAxisID: 'y-axis-liquido',
-              // yAxisID: 'y-axis-desconto',
-            },
-            {
-              label: 'Cargas',
-              data: [],
-              type: 'line',
-              fill: false,
-              backgroundColor: 'rgb(0, 5, 176)',
-              borderColor: 'rgb(0, 5, 176)',
-              yAxisID: 'y-axis-cargas',
-            }
-          ]
+          datasets: []
         },
         options: {
           responsive: true,
@@ -128,7 +100,7 @@
 
       // Busca Dados da API
       getData () {
-        safraCulturaGraficoService.getColheitaDiaria(this.safraId, this.safraCulturaId).then(response => {
+        safraCulturaGraficoService.getClassificacaoDiaria(this.safraId, this.safraCulturaId).then(response => {
           this.data = response.data
           this.loaded = true;
           this.parseData();
@@ -141,9 +113,21 @@
           return;
         }
         this.chartdata.labels = this.data.dias
-        this.chartdata.datasets[0].data = this.data.peso_liquido
-        this.chartdata.datasets[1].data = this.data.peso_desconto
-        this.chartdata.datasets[2].data = this.data.cargas
+        console.log(this.data.classificacoes[1]);
+        for (let classificacao of this.data.classificacoes) {
+          var color = this.colors.shift();
+          this.chartdata.datasets.push({
+            label: classificacao.nome,
+            data: this.data.verificado[classificacao.id],
+            type: 'line',
+            fill: false,
+            backgroundColor: color,
+            borderColor: color,
+            yAxisID: 'y-axis-liquido',
+          })
+
+        }
+
         this.renderChart(this.chartdata, this.options)
       },
 
@@ -151,8 +135,12 @@
     mounted () {
       this.getData();
     }
+
   }
 </script>
 
 <style>
+  .color{
+    background-color: rgb(176, 169, 13)
+  }
 </style>
