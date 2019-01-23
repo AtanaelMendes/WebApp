@@ -51,28 +51,6 @@
         isModalOpened: false,
         entrega: null,
         talhoes: [],
-        // area: {
-        //   id: 1,
-        //   nome: 'Caroline',
-        //   safraCulturaTalhao: [
-        //     {
-        //       id: 1,
-        //       nome: 'Talhão fundo',
-        //       cultivar: 'Y30',
-        //     },
-        //     {
-        //       id: 2,
-        //       nome: 'Talhão frente',
-        //       cultivar: 'Y30',
-        //     },
-        //     {
-        //       id: 3,
-        //       nome: 'Talhão subida',
-        //       cultivar: 'Y30',
-        //     }
-        //   ],
-        // },
-        //talhaoForm: [],
       }
     },
     watch: {},

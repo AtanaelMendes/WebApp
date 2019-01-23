@@ -89,7 +89,8 @@
 
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-      <q-btn label="salvar" color="primary" @click="saveNewPesagem" :disable="isNextStepEnabled()"/>
+      <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="currentStep === 'dadosDaEntrega'"/>
+      <q-btn label="salvar" color="primary" @click="saveNewPesagem" :disable="isNextStepEnabled()" v-if="currentStep === 'classificacao'"/>
     </q-page-sticky>
 
   </q-modal>
