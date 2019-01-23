@@ -27,7 +27,6 @@ export default class{
   };
   unidadeMedidaId = null;
   entregaClassificacao = [];
-  negocioCulturas = [];
   isValid(){
     let hasError = false;
     if(!helpers.req(this.numeroTicket.value)){
@@ -69,23 +68,6 @@ export default class{
           verificado: classificacao.verificado.value,
         };
       }),
-      negocio_culturas: this.negocioCulturas,
     }
-  }
-
-  addNegocioCultura(negocioCultura){
-    this.negocioCulturas.push(negocioCultura);
-  }
-
-  removeNegocioCultura(index){
-    this.negocioCulturas.splice(index, 1);
-  }
-
-  existsNegocioCulturaById(id){
-    return this.negocioCulturas.map(negocioCultura => negocioCultura.id).indexOf(id);
-  }
-
-  getNegocioCulturaById(id){
-    return this.negocioCulturas[this.existsNegocioCulturaById(id)]
   }
 }
