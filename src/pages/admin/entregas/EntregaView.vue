@@ -109,12 +109,12 @@
             </div>
 
             <!--INFO DOS NEGÓCIOS-->
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-6"  v-if="entrega.negocios.length > 0">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-6" v-if="entrega.negocios.length > 0">
               <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                 <q-card>
                   <q-card-title>
                     Negócios
-                    <q-btn slot="right" icon="more_vert" dense round flat>
+                    <q-btn slot="right" icon="more_vert" dense round flat >
                       <q-popover>
                         <q-list link class="no-border">
                           <q-item v-close-overlay @click.native="novoNegocio(entrega)">
@@ -135,7 +135,7 @@
                                 <q-item v-close-overlay @click.native="viewNegocio(negocio.negocio_cultura.negocio.id)">
                                   <q-item-main label="Visualizar"/>
                                 </q-item>
-                                <q-item v-close-overlay @click.native="deleteNegocio(negocio.id)">
+                                <q-item v-close-overlay @click.native="deleteNegocio(negocio.id)" v-if="entrega.negocios.length > 1">
                                   <q-item-main label="Excluir"/>
                                 </q-item>
                               </q-list>
