@@ -85,75 +85,11 @@
         </div>
       </q-step>
 
-      <!--PASSO 3 SELECIONAR O NEGOCIO -->
-      <q-step title="Selecionar Negócio" :disable="!isDesdobrar" name="negocio">
-        <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
-
-          <div class="col-12 text-center q-title">
-            De qual negócio
-          </div>
-
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="negocio in entrega.negocios" :key="negocio.id">
-            <q-card class="cursor-pointer" @click.native="toggleNegocio(negocio)">
-              <q-card-title>
-                {{negocio.negocio_cultura.negocio.nome}}
-                <q-btn slot="right" icon="done" round color="positive" size="8px" v-if="negocioisInArray(negocio)"/>
-              </q-card-title>
-              <q-card-separator/>
-
-              <q-card-main>
-                <p>Negociado {{numeral(50000).format('0,0')}}</p>
-                <p>Entregue {{numeral(40000).format('0,0')}}</p>
-                <p>Restante {{numeral(10000).format('0,0')}}</p>
-              </q-card-main>
-            </q-card>
-          </div>
-
-        </div>
-      </q-step>
-
-      <!--PASSO 4 INFORMAR AS QUANTIDADES DOS NEGOCIOS -->
-      <q-step title="Quantidade dos Negócio" :disable="!isDesdobrar" name="negocioQuantidade">
-        <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
-
-          <div class="col-12 text-center q-title">
-            Quantidade de cada neǵocio
-          </div>
-
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <div class="row justify-center">
-
-              <template v-for="negocio in pesagem.negocioCulturas">
-
-                <div class="col-6 self-center q-mt-lg" :key="negocio.id">
-                  {{negocio.tipo_negocio}} {{negocio.pessoa}}
-                </div>
-
-                <div class="col-6">
-                  <q-input type="number" v-model="negocio.quantidade" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)" align="right"/>
-                </div>
-
-              </template>
-              <div class="col-6 offset-6 text-right q-mt-sm">
-                <span class="text-faded">Alocar</span>&nbsp
-                <span :class="quantidadeAlocarErrorClass()"> {{numeral(quantidadeAlocar).format('0,0')}}</span>  {{getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)}}
-              </div>
-              <div class="col-6 offset-6 text-right q-mt-sm">
-                <span class="text-faded">Total</span> {{numeral(pesagem.pesoLiquido.value).format('0,0')}} {{getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)}}
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-      </q-step>
-
     </q-stepper>
 
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-      <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="!isDesdobrar()"/>
-      <q-btn label="salvar" color="primary" @click="saveNewPesagem" :disable="isNextStepEnabled()" v-if="isDesdobrar()"/>
+      <q-btn label="salvar" color="primary" @click="saveNewPesagem" :disable="isNextStepEnabled()"/>
     </q-page-sticky>
 
   </q-modal>
@@ -200,14 +136,6 @@
         let pesoLiquido = this.pesagem.pesoBrutoProduto.value - this.totalDesc;
         this.pesagem.pesoLiquido.value = pesoLiquido;
         return pesoLiquido;
-      },
-      quantidadeAlocar: function () {
-        let soma = 0;
-        this.pesagem.negocioCulturas.forEach(function (negocioCultura) {
-          soma += negocioCultura.quantidade;
-        });
-        soma = this.pesagem.pesoLiquido.value - soma;
-        return soma
       }
     },
     methods: {
@@ -227,9 +155,6 @@
         if(!this.pesagem.isValid()){
           return true
         }
-        if(this.pesagem.negocioCulturas.length <= 0  && this.currentStep === 'negocio'){
-          return true
-        }
         return false;
       },
       isFormEntregaClassificacaoValid: function(){
@@ -241,44 +166,12 @@
         }
         return isValid;
       },
-      isFormNegocioCulturasValid: function(){
-        let isValid = true;
-        for(let val of this.pesagem.negocioCulturas){
-          if(val.quantidade === null){
-            isValid = false;
-          }
-        }
-        return isValid;
-      },
-      quantidadeAlocarErrorClass: function(){
-        let textColor = 'text-warning';
-        if(this.quantidadeAlocar > this.pesagem.pesoLiquido.value || this.quantidadeAlocar < 0 ){
-          textColor = 'text-negative';
-          return textColor
-        }
-        if(this.quantidadeAlocar === 0){
-          textColor = 'text-positive';
-          return textColor
-        }
-        return textColor
-      },
       saveNewPesagem: function(){
 
         setTimeout(() => {
           if(this.currentStep === 'classificacao'){
             if(!this.isFormEntregaClassificacaoValid()){
               this.$q.dialog({ title: 'Atenção', message: 'Preencha os campos corretamente.', ok: 'OK', color: 'primary' });
-              return
-            }
-          }
-
-          if(this.currentStep === 'negocioQuantidade'){
-            if(!this.isFormNegocioCulturasValid()){
-              this.$q.dialog({ title: 'Atenção', message: 'Preencha os campos corretamente.', ok: 'OK', color: 'primary' });
-              return
-            }
-            if(this.quantidadeAlocar !== 0){
-              this.$q.dialog({ title: 'Atenção', message: 'Ainda há uma quantidade para alocar.', ok: 'OK', color: 'primary' });
               return
             }
           }
@@ -350,31 +243,6 @@
            }, this)
          }
         })
-      },
-      isDesdobrar: function () {
-        if(this.entrega){
-          if(this.entrega.negocios.length === 1 && this.currentStep === 'classificacao'){
-            return true
-          }
-          if(this.entrega.negocios.length > 1 && this.currentStep === 'negocioQuantidade'){
-            return true
-          }
-        }
-        return false
-      },
-      toggleNegocio: function(negocio){
-        let index = this.pesagem.existsNegocioCulturaById(negocio.id);
-        if(index > -1){
-          this.pesagem.removeNegocioCultura(index)
-        }else{
-          this.pesagem.addNegocioCultura({
-            id: negocio.id,
-            quantidade: null,
-          })
-        }
-      },
-      negocioisInArray: function(negocio){
-        return this.pesagem.existsNegocioCulturaById(negocio.id) > -1
       },
     },
   }
