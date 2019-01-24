@@ -342,7 +342,7 @@
                     <q-btn slot="right" icon="more_vert" dense round flat>
                       <q-popover>
                         <q-list link class="no-border">
-                          <q-item v-close-overlay @click.native="deletePesagem()">
+                          <q-item v-close-overlay @click.native="deletePesagem(pesagem.id)" v-if="entrega.pesagens.length > 1">
                             <q-item-main label="Excluir"/>
                           </q-item>
                         </q-list>
@@ -605,15 +605,15 @@
           });
         }).catch(()=>{});
       },
-      deletePesagem: function(){
+      deletePesagem: function(id){
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente deseja apagar esta pesagem?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          pesagemService.deletePesagem(id).then(response => {
-            this.getCargaById()
+          pesagemService.deletePesagem(this.entrega.id, id).then(response => {
+            this.getEntrega()
           })
         }).catch(()=>{});
       },

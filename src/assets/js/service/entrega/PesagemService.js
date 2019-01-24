@@ -20,9 +20,9 @@ export default {
       })
     });
   },
-  deletePesagem(id){
+  deletePesagem(entregaId, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('produtor/'+ produtorId + '/ticket/' + id).then(response => {
+      Vue.prototype.$axios.delete('entrega/'+ entregaId + '/pesagem/' + id).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
