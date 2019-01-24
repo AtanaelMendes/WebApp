@@ -459,7 +459,7 @@
           icon="mdi-scale"
           label="Informar Pesagem"
           @click="newPesagem(entrega)" class="full-width q-pa-md"
-          v-if="entrega.status === 'No Armazem'"
+          v-if="entrega.status !== 'Carregando'"
         />
       </q-page-sticky>
 
