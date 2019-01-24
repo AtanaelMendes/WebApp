@@ -33,7 +33,6 @@
           this.$router.back();
         },
         openMenu: function () {
-          console.log('openMenu')
         }
       }
     }

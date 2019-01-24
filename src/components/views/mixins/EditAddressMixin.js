@@ -16,9 +16,7 @@ export default {
         this.fillFormAddress(response.data)
         this.addressformLoaded = true
         this.modalEditAddress = true
-      }).catch( error => {
-        console.log(error.request)
-      })
+      }).catch( error => {})
     },
     deleteAddress: function (id) {
       // pessoa_id: vm.personProfile.id,
@@ -54,9 +52,7 @@ export default {
           this.modalEditAddress = false
           this.$q.notify({ type: 'positive', message: 'função de update' })
         }
-      }).catch( error => {
-        console.log(error.request)
-      })
+      }).catch( error => {})
     }
   }
 }

@@ -14,7 +14,6 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
-    console.log("beforeRouteLeave")
     if(from.name === this.routeName) {
       if (!AgroUtils.compare(this.formCloned, this.form)) {
         this.$q.dialog({

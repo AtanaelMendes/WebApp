@@ -106,7 +106,6 @@
     methods: {
       list: function(filter) {
         NotaFiscalService.listNotas(filter).then(response => {
-          // console.log(response.data)
           this.notasFiscais = response.data;
           this.isEmptyList = this.notasFiscais.length === 0;
         });

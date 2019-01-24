@@ -140,7 +140,6 @@
           return;
         }
         PessoaService.savePessoa(this.pessoa.getValues()).then(response => {
-          console.log(response.status)
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Pessoa criada com sucesso'});
             this.$router.push({name: 'pessoas'});

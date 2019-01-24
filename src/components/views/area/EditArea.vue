@@ -239,22 +239,16 @@
     methods: {
       listTalhao: function(id) {
         this.$axios.get( 'rota/' + id  ).then( response => {
-          // console.log(response)
           this.arrayTalhoes = response.data
           this.talhaoLoaded = true
-        }).catch( error => {
-          console.log(error)
-        })
+        }).catch( error => {})
       },
       loadArea: function() {
         this.$axios.get( 'rota' ).then( response => {
-          // console.log(response)
           this.areaData = response
           this.loaded = true
           this.listTalhao(this.areaData.id)
-        }).catch( error => {
-          console.log(error)
-        })
+        }).catch( error => {})
       },
       deleteTalhao: function(id) {
         let vm = this
@@ -264,10 +258,8 @@
         //   id: id
         // }
         // this.$axios.delete( 'rota'+ params ).then( response => {
-        //   // console.log(response)
         //   vm.$q.notify({type: 'positive', message: 'Excluído com sucesso'})
         // }).catch( error => {
-        //   console.log(error)
         // })
       },
       updateTalhao: function() {
@@ -292,12 +284,10 @@
         //   nome: this.UpdTalhao
         // }
         // vm.$axios.post( 'rota/'+ params ).then( response => {
-        //   console.log(response)
         // vm.$q.notify({type: 'positive', message: 'Adicionado com sucesso'})
         this.modalUpdateTalhao = false
         this.UpdTalhao = null
         // }).catch( error => {
-        //   console.log(error)
         // })
       },
       createTalhao: function () {
@@ -325,12 +315,10 @@
         //   nome: this.novoTalhao
         // }
         // vm.$axios.post( 'rota/'+ params ).then( response => {
-        //   console.log(response)
         // vm.$q.notify({type: 'positive', message: 'Adicionado com sucesso'})
           this.modalAddTalhao = false
           this.novoTalhao = null
         // }).catch( error => {
-        //   console.log(error)
         // })
       },
       updateArea: function() {
@@ -355,11 +343,8 @@
           unidade_medida_id: vm.unidadeMedidaID
         }
         vm.$axios.put( 'rota/'+ params ).then( response => {
-          // console.log(response)
           vm.$q.notify({type: 'positive', message: 'Atualizado com sucesso'})
-        }).catch( error => {
-          console.log(error)
-        })
+        }).catch( error => {})
       },
       fakeData: function() {
         let vm = this

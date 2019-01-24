@@ -141,16 +141,12 @@ export default {
       ['290227837', 'TO'],
     ];
 
-    console.log("testando os validos:")
     for(var inscr of validos){
       if(!this.validar(inscr[1], inscr[0])){
-        console.log("falhou em: " + inscr[1])
       }
     }
-    console.log("testando os inválidos:")
     for(var inscr of invalidos){
       if(this.validar(inscr[1], inscr[0])){
-        console.log("falhou em: " + inscr[1])
       }
     }
 

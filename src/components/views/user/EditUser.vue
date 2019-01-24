@@ -110,8 +110,7 @@ export default {
       let params = {
         email: vm.formUser.email,
         roles: vm.getIdsByRoles(vm.formUser.selectedRoles).join(',')
-      }
-      console.log(params)
+      };
       vm.$axios.put( 'account/'+ vm.$route.params.id, params ).then( response => {
         if (response.status == 200){
           vm.$q.notify({
@@ -127,8 +126,6 @@ export default {
             message: 'Já existe um cadastro com esse email'
           })
         }
-        console.log('Erro Ocorrido:')
-        console.log(error)
       })
     }
   },

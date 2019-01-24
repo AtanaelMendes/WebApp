@@ -169,7 +169,6 @@ export default {
           vm.details = false
         })
       }).catch( error => {
-        console.log(error.response)
       })
     },
     inactivateUser: function(id) {
@@ -188,9 +187,7 @@ export default {
           vm.listPersons(vm.filter)
           vm.details = false
         })
-      }).catch( error => {
-        console.log(error.response)
-      })
+      }).catch( error => {})
     },
     editUser: function() {
       if(this.userProfile.id) {
@@ -212,7 +209,6 @@ export default {
               message: 'Não foi possível carregar as informações'
             })
           }
-          console.log(error.response)
         })
       }
 
@@ -221,9 +217,7 @@ export default {
       let vm = this
       vm.$axios.get( 'account?' + this.serialize(val) ).then( response => {
         vm.users = response.data
-      }).catch( error => {
-        console.log(error.response)
-      })
+      }).catch( error => {})
     },
     serialize: function(obj) {
       var query = [];

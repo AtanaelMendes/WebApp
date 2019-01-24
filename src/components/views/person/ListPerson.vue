@@ -753,9 +753,7 @@ export default {
           })
           this.listPersons()
         })
-      }).catch( error => {
-        console.log(error.request)
-      })
+      }).catch( error => {})
     },
     active: function(id) {
       let vm = this
@@ -772,19 +770,14 @@ export default {
           })
           this.listPersons()
         })
-      }).catch( error => {
-        console.log(error.request)
-      })
+      }).catch( error => {})
     },
     listPersons: function() {
       this.loaded = true
       let vm = this
       vm.$axios.get( 'pessoa' ).then( response => {
         vm.listPersonsData = response.data
-        // console.log(vm.listPersonsData)
-      }).catch( error => {
-        console.log(error.request)
-      })
+      }).catch( error => {})
     },
     getPerson: function (id) {
       if(this.$q.platform.is.mobile) {
@@ -797,9 +790,7 @@ export default {
           this.getPersonContacts(id)
           this.getPersonAddress(id)
           this.listPersonLoaded = true
-        }).catch( error => {
-          console.log(error.request)
-        })
+        }).catch( error => {})
       }
     },
     getPersonContacts: function (id) {
@@ -807,18 +798,14 @@ export default {
       this.$axios( { url: '/pessoa/1/contato/', baseURL: 'https://demo3716022.mockable.io' } ).then( response => {
         vm.personContacts = response.data
         this.contactsLoaded = true
-      }).catch( error => {
-        console.log(error.request)
-      })
+      }).catch( error => {})
     },
     getPersonAddress: function (id) {
       let vm = this
       this.$axios( { url: 'pessoa/id/endereco/', baseURL: 'http://demo3716022.mockable.io/' } ).then( response => {
         vm.personAddress = response.data
         this.addressLoaded = true
-      }).catch( error => {
-        console.log(error.request)
-      })
+      }).catch( error => {})
     },
     fillFormContact: function(data) {
       this.formContact.fiscal = data.isFiscal

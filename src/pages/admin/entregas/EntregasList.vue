@@ -195,12 +195,6 @@
       NewEntregaModal,
       apImage,
     },
-    watch: {
-      // '$route' (to, from) {
-      //   console.log(to.query.status)
-      //   this.re
-      // }
-    },
     data () {
       return {
         tabs: 'carregando',

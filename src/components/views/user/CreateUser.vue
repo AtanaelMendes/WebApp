@@ -154,8 +154,6 @@ export default {
       //       message: 'Já existe um cadastro com esse email'
       //     })
       //   }
-      //   console.log('Erro Ocorrido:')
-      //   console.log(error)
       // })
     }
   },

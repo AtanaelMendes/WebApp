@@ -23,7 +23,6 @@
       },
       methods: {
         test(){
-          console.log("teste")
         },
         openChildPage(){
           this.$router.push('/admin/teste/child');

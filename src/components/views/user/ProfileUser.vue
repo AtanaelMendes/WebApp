@@ -108,10 +108,7 @@
             })
             vm.$router.push( '/usuario' )
           })
-        }).catch( error => {
-          console.log('Erro Ocorrido:')
-          console.log(error)
-        })
+        }).catch( error => {})
       },
       activateUser: function(id) {
         let vm = this
@@ -128,10 +125,7 @@
             })
             vm.$router.push( '/usuario' )
           })
-        }).catch( error => {
-          console.log('Erro Ocorrido:')
-          console.log(error)
-        })
+        }).catch( error => {})
       },
     },
     mounted() {}

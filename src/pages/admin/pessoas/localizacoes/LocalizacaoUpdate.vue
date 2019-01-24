@@ -84,7 +84,7 @@
     watch: {
       localizacao:{
         handler: function (val) {
-          console.log(this.localizacao.cidadeId)
+
         },
         deep: true
       }

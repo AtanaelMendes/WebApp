@@ -55,9 +55,7 @@ methods: {
     let vm = this
     vm.$axios.get( 'role' ).then( response => {
       vm.papeis = response.data
-    }).catch( error => {
-      console.log(error.request)
-    })
+    }).catch( error => {})
   },
 }
 }

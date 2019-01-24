@@ -14,9 +14,7 @@ export default {
       this.$axios( { url: 'pessoa/contato/1', baseURL: 'http://demo3716022.mockable.io/' } ).then( response => {
         this.fillFormContact(response.data)
         this.contactsformLoaded = true
-      }).catch( error => {
-        console.log(error.request)
-      })
+      }).catch( error => {})
     },
     deleteContact(id) {
       // pessoa_id: vm.personProfile.id,
@@ -68,9 +66,7 @@ export default {
           this.modalEditContact = false
           this.$q.notify({ type: 'positive', message: 'função de update' })
         }
-      }).catch( error => {
-        console.log(error.request)
-      })
+      }).catch( error => {})
     }
   }
 }

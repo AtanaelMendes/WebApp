@@ -48,7 +48,6 @@
         //   let marca = response.data
         //   vm.terms = marca.marca
         // }).catch(function (error) {
-        //   console.log(error)
         // })
       },
       selected (item) {
@@ -66,7 +65,6 @@
         //   done(results)
         // }).catch(function (error) {
         //   done([])
-        //   console.log(error.response)
         // })
       }
     }

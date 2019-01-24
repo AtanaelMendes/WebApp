@@ -116,15 +116,13 @@ export default {
         vm.$q.notify({
           message: 'Erro ao carregar Pedidos!',
           type: 'negative',
-        })
-        console.log(error)
+        });
       })
     },
 
   },
   mounted() {
-    this.id = this.$route.params.id
-    console.log(this.$route.params)
+    this.id = this.$route.params.id;
   }
 }
 </script>

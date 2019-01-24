@@ -434,7 +434,6 @@ export default {
         if(error.request.status == 422){
           vm.$q.notify({ type: 'negative', message: error.request.response })
         }
-        console.log(error.request)
       })
     },
     createEconomicGroup: function() {
@@ -457,7 +456,6 @@ export default {
         vm.novoGrupoEconomico = null
         vm.modalCreateGE = false
       }).catch( error => {
-        console.log(error.request)
         vm.modalCreateGE = false
       })
     },
@@ -476,8 +474,6 @@ export default {
       // vm.$axios.delete( 'account/'+ id ).then( response => {
       //   vm.contacts = response.data
       // }).catch( error => {
-      //   console.log('Erro Ocorrido:')
-      //   console.log(error.request)
       // })
     },
     fillForm: function(person){
@@ -502,9 +498,7 @@ export default {
         vm.personProfile = response.data
         this.fillForm(vm.personProfile)
         vm.loaded = true
-      }).catch( error => {
-        console.log(error.request)
-      })
+      }).catch( error => {})
     },
     formatCpf: function(cpf){
       var isCpf = CPF.validate(cpf)

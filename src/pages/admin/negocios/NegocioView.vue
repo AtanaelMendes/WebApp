@@ -498,7 +498,6 @@
               this.getNegocioById()
             }
           }).catch(error => {
-            console.log(error)
             if(error.status === 422){
               this.$q.dialog({
                 title: 'Erro', message: 'Não é possível apagar esta cultura! Erro: ' + error.data, ok: 'Ok', color: 'primary'})

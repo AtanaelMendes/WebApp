@@ -270,11 +270,9 @@
     methods: {
       // FUNCAO = sendEntrega, updateNota, desdobrarCarga
       calculaTotal: function () {
-        console.log('aqui calculaTotal')
         this.sendEntrega.total = AgroUtils.math.round(this.sendEntrega.valor  * this.sendEntrega.peso)
       },
       calculaValor: function() {
-        console.log('aqui calculaValor')
         if (this.sendEntrega.peso > 0) {
           this.sendEntrega.valor = AgroUtils.math.round(this.sendEntrega.total / this.sendEntrega.peso)
         } else {

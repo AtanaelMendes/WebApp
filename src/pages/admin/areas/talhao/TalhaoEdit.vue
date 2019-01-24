@@ -57,7 +57,6 @@
         talhaoService.getTalhaoById(this.areaId, this.talhaoId).then(data => {
           this.fillForm(data);
           this.talhaoData = data
-          // console.log(data)
         })
       },
       updatetalhao: function(){

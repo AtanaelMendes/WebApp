@@ -268,7 +268,6 @@
         );
 
         if(filteredSafraCulturaTalhoes === 1){
-          console.log('saveEntrega')
           //TODO: Já selecionar o id de safraCulturaTalhao e enviar
           //return
         }
@@ -298,7 +297,6 @@
 
           if(this.safraCulturaTalhoes.length === 1){
             //TODO: Já selecionar o id de safraCulturaTalhao e enviar
-            console.log('saveEntrega')
           }else {
             this.listAreas();
           }

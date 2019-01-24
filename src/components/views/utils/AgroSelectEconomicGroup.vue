@@ -35,9 +35,7 @@
               label: grupoEconomico.nome
             }
           })
-        }).catch(function (error) {
-          console.log(error.response)
-        })
+        }).catch(function (error) {})
       }
     },
     created () {

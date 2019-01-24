@@ -213,9 +213,7 @@
         }
         vm.$axios.post( 'rota/'+ id, params ).then( response => {
           // to do fazer algo aqui
-        }).catch( error => {
-          console.log(error.request)
-        })
+        }).catch( error => {})
       },
       createArea: function() {
         this.$v.formArea.$touch()
@@ -243,7 +241,6 @@
         //   vm.areaID = response.data
         //   this.createTalhao(vm.areaID)
         // }).catch( error => {
-        //   console.log(error.request)
         // })
       }
     },

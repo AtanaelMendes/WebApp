@@ -112,8 +112,7 @@
         if (!this.loaded) {
           return;
         }
-        this.chartdata.labels = this.data.dias
-        console.log(this.data.classificacoes[1]);
+        this.chartdata.labels = this.data.dias;
         for (let classificacao of this.data.classificacoes) {
           var color = this.colors.shift();
           this.chartdata.datasets.push({
