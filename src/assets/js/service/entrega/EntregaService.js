@@ -75,6 +75,15 @@ export default {
       })
     });
   },
+  updateNegociosQuantidade(entrega_id, params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/negocio', params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
   addTalhaoToEntrega(entrega_id, params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.post('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/talhao', params).then(response => {

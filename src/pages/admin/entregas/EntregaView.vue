@@ -117,6 +117,9 @@
                     <q-btn slot="right" icon="more_vert" dense round flat >
                       <q-popover>
                         <q-list link class="no-border">
+                          <q-item v-close-overlay @click.native="openSetNegociosQuantidadeModal(entrega)" v-if="entrega.negocios.length > 1 && entrega.status === 'Entregue'">
+                            <q-item-main label="Definir Quantidades"/>
+                          </q-item>
                           <q-item v-close-overlay @click.native="novoNegocio(entrega)">
                             <q-item-main label="Adicionar Negócio"/>
                           </q-item>
@@ -479,6 +482,9 @@
     <!--MODAL INFORMAR PORCENTAGEM DOS TALHOES-->
     <add-talhao-percentage-modal ref="addTalhaoPercentageModal"/>
 
+    <!--MODAL INFORMAR QUANTIDADE NEGÓCIOS-->
+    <set-negocios-quantidade-modal ref="setNegociosQuantidadeModal"/>
+
     <!--MODAL ADD TALHAO-->
     <new-entrega-modal ref="entregaModal"/>
 
@@ -494,6 +500,7 @@
   import sendEntregaModal from 'components/entrega/SendEntregaModal'
   import newPesagemModal from 'components/entrega/NewPesagemModal'
   import addTalhaoPercentageModal from 'components/entrega/AddTalhaoPercentageModal'
+  import setNegociosQuantidadeModal from 'components/entrega/SetNegociosQuantidadeModal'
   import newEntregaModal from 'components/entrega/NewEntregaModal'
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
@@ -509,6 +516,7 @@
       newEntregaModal,
       sendEntregaModal,
       addTalhaoPercentageModal,
+      setNegociosQuantidadeModal,
       apImage,
     },
     data () {
@@ -567,6 +575,9 @@
       },
       addTalhaoPercentage: function(){
         this.$refs.addTalhaoPercentageModal.openModal(this.entrega)
+      },
+      openSetNegociosQuantidadeModal(entrega){
+        this.$refs.setNegociosQuantidadeModal.openModal(entrega);
       },
       viewNegocio(id){
         this.$router.push({name: 'negocio_view', params: {id:id}});
