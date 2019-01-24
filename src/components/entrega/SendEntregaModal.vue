@@ -332,6 +332,9 @@
       },
       closeModal: function(){
         this.isModalOpened = false;
+        this.cfopSearchText = null;
+        this.cfopDescricao = null;
+        this.cfopError = false;
       },
       isNextStepEnabled: function(){
         if(this.sendEntrega.negocioCulturaId == null && this.currentStep === 'negocio'){
