@@ -75,7 +75,6 @@
   import customInputText from 'components/CustomInputText.vue'
   import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
   import userService from 'assets/js/service/UserService'
-  import FormMixin from 'components/mixins/FormMixin'
   import produtorSelect from 'components/ProdutorSelect.vue'
   import Produtor from 'assets/js/model/produtor/Produtor'
 
@@ -87,7 +86,6 @@
       customInputText,
       produtorSelect,
     },
-    mixins: [FormMixin],
     data(){
       return {
         roles: null,
