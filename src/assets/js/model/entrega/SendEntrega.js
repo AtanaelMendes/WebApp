@@ -17,48 +17,57 @@ export default class{
   };
 
 
-  isValid(){
+  isValid(hasNotaFiscal = true){
     let hasError = false;
-    if(!helpers.req(this.serie)){
+
+    if (!helpers.req(this.serie)) {
       hasError = true;
     }
-    if(!helpers.req(this.notaNumero)){
+    if (!helpers.req(this.notaNumero)) {
       hasError = true;
     }
-    if(!helpers.req(this.peso)){
+    if (!helpers.req(this.peso)) {
       hasError = true;
     }
-    if(!helpers.req(this.unidadeMedidaId)){
+    if (!helpers.req(this.unidadeMedidaId)) {
       hasError = true;
     }
-    if(!helpers.req(this.valor)){
+    if (!helpers.req(this.valor)) {
       hasError = true;
     }
-    if(!helpers.req(this.total)){
+    if (!helpers.req(this.total)) {
       hasError = true;
     }
-    if(!helpers.req(this.cfop)){
+    if (!helpers.req(this.cfop)) {
       hasError = true;
     }
-    if(!helpers.req(this.emissao.value)){
+    if (!helpers.req(this.emissao.value)) {
       hasError = true;
     }
-    return !hasError;
+
+    return hasNotaFiscal ? !hasError : true;
   };
-  getValues(){
-    return{
+  getValues(hasNotaFiscal = true){
+    let body = {
       negocio_cultura_id: this.negocioCulturaId,
       armazem_id: this.armazemId,
       motorista_id: this.motoristaId,
-      nota_fiscal_serie_id: this.serie.id,
-      numero: this.notaNumero,
-      peso: this.peso,
-      unidade_medida_id: this.unidadeMedidaId,
-      valor_unitario: this.valor,
-      valor_total: this.total,
-      cfop_id: this.cfop.id,
-      emissao: this.emissao.value,
-      is_saida: this.cfop.is_saida,
+    };
+
+    if(hasNotaFiscal){
+      body.nota_fiscal = {
+        nota_fiscal_serie_id: this.serie.id,
+        numero: this.notaNumero,
+        peso: this.peso,
+        unidade_medida_id: this.unidadeMedidaId,
+        valor_unitario: this.valor,
+        valor_total: this.total,
+        cfop_id: this.cfop.id,
+        emissao: this.emissao.value,
+        is_saida: this.cfop.is_saida,
+      };
     }
+
+    return body;
   }
 }

@@ -158,40 +158,49 @@
       <q-step title="Nota Fiscal" v-if="stepInformacoes" name="informacoes">
         <div class="row justify-center gutter-sm space-end" style="">
 
+          <div class="col-12" align="center" v-if="funcao !== 'updateNota'">
+            Deseja informar uma nota fiscal?
+            <q-btn-toggle
+              v-model="hasNotaFiscal"
+              toggle-color="primary"
+              :options="[{label: 'Sim', value: true},{label: 'Não', value: false}]"
+            />
+          </div>
+
           <div class="col-xs-12 col-sm-9 col-md-7 col-lg-5 col-xl-3">
             <div class="row gutter-xs">
 
 
               <div class="col-7">
-                <q-select v-model="sendEntrega.serie" float-label="Série" :options="parseNotasFiscaisSeSeries(notasFiscaisSeries)" @input="changeNumeroSerie()"/>
+                <q-select v-model="sendEntrega.serie" float-label="Série" :options="parseNotasFiscaisSeSeries(notasFiscaisSeries)" @input="changeNumeroSerie()" :disable="!hasNotaFiscal"/>
               </div>
 
               <div class="col-5">
-                <q-input type="number" v-model="sendEntrega.notaNumero" float-label="Numero" align="right"/>
+                <q-input type="number" v-model="sendEntrega.notaNumero" float-label="Numero" align="right" :disable="!hasNotaFiscal"/>
               </div>
 
               <div class="col-7">
-                <q-datetime v-model="sendEntrega.emissao.value" float-label="Emissão" type="date" align="center" format="DD/MM/YYYY" modal/>
+                <q-datetime v-model="sendEntrega.emissao.value" float-label="Emissão" type="date" align="center" format="DD/MM/YYYY" modal :disable="!hasNotaFiscal"/>
               </div>
 
               <div class="col-5">
-                <q-select v-model="sendEntrega.unidadeMedidaId" float-label="Unidade" :options="parseUnidadesMedida(unidadesMedida)" align="right"/>
+                <q-select v-model="sendEntrega.unidadeMedidaId" float-label="Unidade" :options="parseUnidadesMedida(unidadesMedida)" align="right" :disable="!hasNotaFiscal"/>
               </div>
 
               <div class="col-4">
-                <q-input type="number" v-model="sendEntrega.peso" @input="calculaTotal()" float-label="Peso" align="right"/>
+                <q-input type="number" v-model="sendEntrega.peso" @input="calculaTotal()" float-label="Peso" align="right" :disable="!hasNotaFiscal"/>
               </div>
 
               <div class="col-3">
-                <q-input type="number" v-model="sendEntrega.valor" @input="calculaTotal()" float-label="Valor" align="right"/>
+                <q-input type="number" v-model="sendEntrega.valor" @input="calculaTotal()" float-label="Valor" align="right" :disable="!hasNotaFiscal"/>
               </div>
 
               <div class="col-5">
-                <q-input type="number" v-model="sendEntrega.total" @input="calculaValor()" float-label="Total" align="right"/>
+                <q-input type="number" v-model="sendEntrega.total" @input="calculaValor()" float-label="Total" align="right" :disable="!hasNotaFiscal"/>
               </div>
 
               <div class="col-4">
-                <q-input type="number" v-model="cfopSearchText" float-label="CFOP" @input="getCfopByNumero()" align="center" />
+                <q-input type="number" v-model="cfopSearchText" float-label="CFOP" @input="getCfopByNumero()" align="center" :disable="!hasNotaFiscal"/>
               </div>
               <div class="col-8 self-center" >
                 <span class="q-caption text-faded" v-if="cfopDescricao">{{cfopDescricao}}</span>
@@ -245,6 +254,7 @@
         selectedNegocio: null, //TODO: Apagar se não estiver usando
         selectedEntrega: null,
 
+        hasNotaFiscal: true,
         stepNegocio: false,
         stepArmazem: false,
         stepMotorista: false,
@@ -294,7 +304,6 @@
 
           case 'updateNota':
             this.selectedNegocio = object;
-
             this.currentStep = 'informacoes';
             this.stepNegocio = false;
             this.stepArmazem = false;
@@ -304,7 +313,6 @@
 
           case 'novoNegocio':
             this.selectedEntrega = object;
-            //this.sendEntrega.negocioCulturaId = negocio.negocio_cultura.safra_cultura.id;
             this.currentStep = 'negocio';
             this.stepNegocio = true;
             this.stepArmazem = false;
@@ -333,6 +341,7 @@
         this.cfopSearchText = null;
         this.cfopDescricao = null;
         this.cfopError = false;
+        this.hasNotaFiscal = true;
       },
       isNextStepEnabled: function(){
         if(this.sendEntrega.negocioCulturaId == null && this.currentStep === 'negocio'){
@@ -350,11 +359,11 @@
       isSaveButtonEnabled: function(){
         switch (this.funcao) {
           case 'sendEntrega':
-            return this.sendEntrega.isValid();
+            return this.sendEntrega.isValid(this.hasNotaFiscal);
           case 'updateNota':
             return this.sendEntrega.isValid();
           case 'novoNegocio':
-            return this.sendEntrega.isValid();
+            return this.sendEntrega.isValid(this.hasNotaFiscal);
           case 'updateMotorista':
             return this.sendEntrega.motoristaId != null
         }
@@ -433,7 +442,7 @@
       },
       saveSendEntrega: function(){
         let entregaId = this.$route.params.id;
-        entregaService.sendEntregaToArmazen(entregaId, this.sendEntrega.getValues()).then(response => {
+        entregaService.sendEntregaToArmazen(entregaId, this.sendEntrega.getValues(this.hasNotaFiscal)).then(response => {
           if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Carga enviada com sucesso'});
             this.closeModal();
@@ -446,7 +455,7 @@
       },
       addNegocioToEntrega: function(){
         let entregaId = this.$route.params.id;
-        entregaService.addNegocioToEntrega(entregaId, this.sendEntrega.getValues()).then(response => {
+        entregaService.addNegocioToEntrega(entregaId, this.sendEntrega.getValues(this.hasNotaFiscal)).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Negócio adicionado com sucesso'});
             this.closeModal();
