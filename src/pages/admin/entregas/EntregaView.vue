@@ -556,8 +556,8 @@
       sendToArmazem: function(entrega){
         this.$refs.sendEntregaModal.openModal('sendEntrega', entrega)
       },
-      updateNota: function(negocio){
-        this.$refs.sendEntregaModal.openModal('updateNota', negocio)
+      updateNota: function(notaFiscalItem){
+        this.$refs.sendEntregaModal.openModal('updateNota', notaFiscalItem)
       },
       novoNegocio: function(entrega){
         this.$refs.sendEntregaModal.openModal('novoNegocio', entrega)

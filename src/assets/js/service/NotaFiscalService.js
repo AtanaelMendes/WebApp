@@ -20,6 +20,15 @@ export default {
       })
     });
   },
+  getNotaFiscalItemById(id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('produtor/' + produtorId + '/nota_fiscal_item/' + id).then(response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
   listSeries(){
     return new Promise((resolve, reject) => {
       let produtor_id = localStorage.getItem('account.produtor_id');

@@ -4,13 +4,14 @@ export default class{
   negocioCulturaId = null;
   armazemId = null;
   motoristaId = null;
-  serie = null;
+  serieId = null;
   notaNumero = null;
   peso = null;
   unidadeMedidaId = null;
   valor = null;
   total = null;
-  cfop = null;
+  cfopId = null;
+  is_saida = null;
   emissao = {
     value: new Date(),
     errorMessage: null
@@ -20,7 +21,7 @@ export default class{
   isValid(hasNotaFiscal = true){
     let hasError = false;
 
-    if (!helpers.req(this.serie)) {
+    if (!helpers.req(this.serieId)) {
       hasError = true;
     }
     if (!helpers.req(this.notaNumero)) {
@@ -38,7 +39,7 @@ export default class{
     if (!helpers.req(this.total)) {
       hasError = true;
     }
-    if (!helpers.req(this.cfop)) {
+    if (!helpers.req(this.cfopId)) {
       hasError = true;
     }
     if (!helpers.req(this.emissao.value)) {
@@ -56,15 +57,15 @@ export default class{
 
     if(hasNotaFiscal){
       body.nota_fiscal = {
-        nota_fiscal_serie_id: this.serie.id,
+        nota_fiscal_serie_id: this.serieId,
         numero: this.notaNumero,
         peso: this.peso,
         unidade_medida_id: this.unidadeMedidaId,
         valor_unitario: this.valor,
         valor_total: this.total,
-        cfop_id: this.cfop.id,
+        cfop_id: this.cfopId,
         emissao: this.emissao.value,
-        is_saida: this.cfop.is_saida,
+        is_saida: this.is_saida,
       };
     }
 

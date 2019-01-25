@@ -172,7 +172,7 @@
 
 
               <div class="col-7">
-                <q-select v-model="sendEntrega.serie" float-label="Série" :options="parseNotasFiscaisSeSeries(notasFiscaisSeries)" @input="changeNumeroSerie()" :disable="!hasNotaFiscal"/>
+                <q-select v-model="sendEntrega.serieId" float-label="Série" :options="parseNotasFiscaisSeries(notasFiscaisSeries)" @input="changeNumeroSerie()" :disable="!hasNotaFiscal"/>
               </div>
 
               <div class="col-5">
@@ -309,6 +309,7 @@
             this.stepArmazem = false;
             this.stepMotorista = false;
             this.stepInformacoes = true;
+            this.getNotaFiscalItem(object.id);
             break;
 
           case 'novoNegocio':
@@ -481,7 +482,6 @@
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
       },
-
       updateNota: function(){
         let entregaId = this.$route.params.id;
 
@@ -498,7 +498,6 @@
       goToNextStep(){
         this.$refs.stepper.next();
       },
-
       getUnidadesMedida:function(){
         unidadeMedidaService.listUnidadesMedida().then(response => {
           this.unidadesMedida = response.data;
@@ -518,12 +517,15 @@
         })
       },
       changeNumeroSerie(){
-        this.sendEntrega.notaNumero = this.sendEntrega.serie.ultima_nota_emitida + 1;
+        this.sendEntrega.notaNumero = this.getSerieById(this.sendEntrega.serieId).ultima_nota_emitida + 1;
       },
-      parseNotasFiscaisSeSeries: function(notasFiscaisSeries){
+      getSerieById(id){
+        return this.notasFiscaisSeries.find(serie => serie.id === id);
+      },
+      parseNotasFiscaisSeries: function(notasFiscaisSeries){
         return  notasFiscaisSeries.map(serie => {
           return {
-            value: serie,
+            value: serie.id,
             label: serie.nome
           }
         });
@@ -533,13 +535,29 @@
         cfopService.getCfopByNumero(numero).then(response => {
           if(response.status === 200){
             this.cfopDescricao = response.data.descricao;
-            this.sendEntrega.cfop = response.data;
+            this.sendEntrega.cfopId = response.data.id;
             this.cfopError = false;
           }
         }).catch(error => {
           this.cfopDescricao = null;
           this.cfopError = true;
-          this.sendEntrega.cfop = null;
+          this.sendEntrega.cfopId = null;
+        })
+      },
+      getNotaFiscalItem(id){
+        notaFiscalService.getNotaFiscalItemById(id).then(response => {
+          this.sendEntrega.serieId = response.data.nota_fiscal.serie.id;
+          this.sendEntrega.notaNumero = response.data.nota_fiscal.numero;
+          this.sendEntrega.emissao.value = response.data.nota_fiscal.emissao;
+          this.sendEntrega.unidadeMedidaId = response.data.unidade_medida_id;
+          this.sendEntrega.peso = response.data.quantidade;
+          this.sendEntrega.valor = response.data.valor_unitario;
+          this.sendEntrega.total = response.data.valor_total;
+          this.cfopSearchText = response.data.cfop.numero;
+          this.sendEntrega.cfopId = response.data.cfop.id;
+          this.sendEntrega.is_saida = response.data.cfop.is_saida;
+
+          this.getCfopByNumero()
         })
       },
     },
