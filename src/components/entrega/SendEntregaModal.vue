@@ -536,12 +536,14 @@
           if(response.status === 200){
             this.cfopDescricao = response.data.descricao;
             this.sendEntrega.cfopId = response.data.id;
+            this.sendEntrega.is_saida = response.data.is_saida;
             this.cfopError = false;
           }
         }).catch(error => {
           this.cfopDescricao = null;
           this.cfopError = true;
           this.sendEntrega.cfopId = null;
+          this.sendEntrega.is_saida = null;
         })
       },
       getNotaFiscalItem(id){
