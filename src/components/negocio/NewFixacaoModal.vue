@@ -559,7 +559,7 @@
       },
       saveAttachFixacao: function(){
         this.fixacao.parcelas = this.fixacaoParcelas;
-        this.fixacao.dataFixacao.value = new Date().toLocaleString();
+        this.fixacao.dataFixacao.value = new Date();
         negocioService.saveAttachFixacao(this.selectedNegocioCultura.id, this.fixacao.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Fixação vinculada com sucesso'});
