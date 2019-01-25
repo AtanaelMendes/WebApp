@@ -1,9 +1,9 @@
 <script>
-  import { Line } from 'vue-chartjs'
+  import { Bar } from 'vue-chartjs'
   import safraCulturaGraficoService from 'assets/js/service/safra/SafraCulturaGraficoService'
   export default {
     name: "grafico-colheita-diaria",
-    extends: Line,
+    extends: Bar,
     props: {
       safraId: {
         default: null
@@ -46,7 +46,15 @@
               backgroundColor: 'rgb(0, 5, 176)',
               borderColor: 'rgb(0, 5, 176)',
               yAxisID: 'y-axis-cargas',
-            }
+            },
+            {
+              type: 'bar',
+              label: 'No Armazém',
+              backgroundColor: 'orange',
+              borderColor: 'orange',
+              data: [],
+              yAxisID: 'y-axis-liquido',
+              }
           ]
         },
         options: {
@@ -144,6 +152,7 @@
         this.chartdata.datasets[0].data = this.data.peso_liquido
         this.chartdata.datasets[1].data = this.data.peso_desconto
         this.chartdata.datasets[2].data = this.data.cargas
+        this.chartdata.datasets[3].data = this.data.estimativa_carga
         this.renderChart(this.chartdata, this.options)
       },
 

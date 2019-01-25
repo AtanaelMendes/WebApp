@@ -109,6 +109,9 @@
         <q-card class="full-height">
           <q-card-title>
             Entrega Por Armazém
+            <span slot="subtitle">
+                Quantidade em {{safraCultura.cultura.estimativa_unidade_medida.sigla}}
+            </span>
           </q-card-title>
           <q-card-main>
             <grafico-entrega-armazem :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
@@ -121,6 +124,9 @@
         <q-card class="full-height">
           <q-card-title>
             Entrega Por Caminhão
+            <span slot="subtitle">
+                Quantidade em {{safraCultura.cultura.estimativa_unidade_medida.sigla}}
+            </span>
           </q-card-title>
           <q-card-main>
             <grafico-entrega-caminhao :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
@@ -136,7 +142,7 @@
           <q-card-title>
             Colheita Diária
             <span slot="subtitle">
-                Quantidade de {{safraCultura.cultura.estimativa_unidade_medida.sigla}}
+                Quantidade em {{safraCultura.cultura.estimativa_unidade_medida.sigla}}
             </span>
           </q-card-title>
           <q-card-main>
