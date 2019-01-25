@@ -135,6 +135,9 @@
                           <q-btn icon="more_vert" dense round flat>
                             <q-popover>
                               <q-list link class="no-border">
+                                <q-item v-close-overlay @click.native="addNotaFiscal(negocio)" v-if="negocio.notas_fiscais_itens.length === 0">
+                                  <q-item-main label="Adicionar Nota Fiscal"/>
+                                </q-item>
                                 <q-item v-close-overlay @click.native="viewNegocio(negocio.negocio_cultura.negocio.id)">
                                   <q-item-main label="Visualizar"/>
                                 </q-item>
@@ -555,6 +558,9 @@
       },
       sendToArmazem: function(entrega){
         this.$refs.sendEntregaModal.openModal('sendEntrega', entrega)
+      },
+      addNotaFiscal: function(negocio){
+        this.$refs.sendEntregaModal.openModal('addNota', negocio)
       },
       updateNota: function(notaFiscalItem){
         this.$refs.sendEntregaModal.openModal('updateNota', notaFiscalItem)

@@ -158,7 +158,7 @@
       <q-step title="Nota Fiscal" v-if="stepInformacoes" name="informacoes">
         <div class="row justify-center gutter-sm space-end" style="">
 
-          <div class="col-12" align="center" v-if="funcao !== 'updateNota'">
+          <div class="col-12" align="center" v-if="funcao !== 'updateNota' && funcao !== 'addNota'">
             Deseja informar uma nota fiscal?
             <q-btn-toggle
               v-model="hasNotaFiscal"
@@ -251,7 +251,8 @@
         armazens: [],
         motoristas: [],
         unidadesMedida: [],
-        selectedNegocio: null, //TODO: Apagar se não estiver usando
+        selectedNota: null,
+        selectedNegocio: null,
         selectedEntrega: null,
 
         hasNotaFiscal: true,
@@ -301,9 +302,16 @@
             this.stepInformacoes = true;
             this.sendEntrega.peso = object.caminhao.lotacao;
             break;
-
-          case 'updateNota':
+          case 'addNota':
+            console.log(object)
             this.selectedNegocio = object;
+            this.stepNegocio = false;
+            this.stepArmazem = false;
+            this.stepMotorista = false;
+            this.stepInformacoes = true;
+            break;
+          case 'updateNota':
+            this.selectedNota = object;
             this.currentStep = 'informacoes';
             this.stepNegocio = false;
             this.stepArmazem = false;
@@ -361,6 +369,8 @@
         switch (this.funcao) {
           case 'sendEntrega':
             return this.sendEntrega.isValid(this.hasNotaFiscal);
+          case 'addNota':
+            return this.sendEntrega.isValid();
           case 'updateNota':
             return this.sendEntrega.isValid();
           case 'novoNegocio':
@@ -430,8 +440,11 @@
           case 'sendEntrega':
             this.saveSendEntrega();
             break;
-            case 'updateNota':
-              this.updateNota();
+          case 'addNota':
+            this.addNota();
+            break;
+          case 'updateNota':
+            this.updateNota();
             break;
           case 'novoNegocio':
             this.addNegocioToEntrega();
@@ -482,10 +495,23 @@
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
       },
+      addNota:function(){
+        let entregaId = this.$route.params.id;
+
+        entregaService.addNotaFiscalToNegocio(entregaId, this.selectedNegocio.id, this.sendEntrega.getValues()).then(response => {
+          if(response.status === 201) {
+            this.$q.notify({type: 'positive', message: 'Nota criada com sucesso'});
+            this.closeModal();
+            this.$root.$emit('refreshEntregaView')
+          }
+        }).catch(error => {
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+        })
+      },
       updateNota: function(){
         let entregaId = this.$route.params.id;
 
-        entregaService.updateNotaFiscalItemOfNegocio(entregaId, this.selectedNegocio.id, this.sendEntrega.getValues()).then(response => {
+        entregaService.updateNotaFiscalItemOfNegocio(entregaId, this.selectedNota.id, this.sendEntrega.getValues()).then(response => {
           if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Nota atualizada com sucesso'});
             this.closeModal();

@@ -129,6 +129,15 @@ export default {
       })
     });
   },
+  addNotaFiscalToNegocio(entrega_id, negocio_id, params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.post('entrega/'+ entrega_id + '/negocio/' + negocio_id + '/nota_fiscal', params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
   updateNotaFiscalItemOfNegocio(entrega_id, id, params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/nota_fiscal_item/' + id, params).then(response => {
