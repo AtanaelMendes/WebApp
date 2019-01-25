@@ -59,7 +59,7 @@ export default {
   },
   addNegocioToEntrega(entrega_id, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/negocio', params).then(response => {
+      Vue.prototype.$axios.post('entrega/'+ entrega_id + '/negocio', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
@@ -68,7 +68,7 @@ export default {
   },
   delteNegocioOfEntrega(entrega_id, negocio_id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/negocio/' + negocio_id).then(response => {
+      Vue.prototype.$axios.delete('entrega/'+ entrega_id + '/negocio/' + negocio_id).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
@@ -77,7 +77,7 @@ export default {
   },
   updateNegociosQuantidade(entrega_id, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/negocio', params).then(response => {
+      Vue.prototype.$axios.put('entrega/'+ entrega_id + '/negocio', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
