@@ -1,10 +1,10 @@
-<!-- GraficoPorcentagemPorCaminhao -->
+<!-- GraficoEntregaPorCaminhao -->
 <script>
-  import { Pie } from 'vue-chartjs'
+  import { Bar } from 'vue-chartjs'
   import safraCulturaGraficoService from 'assets/js/service/safra/SafraCulturaGraficoService'
   export default {
     name: "grafico-entrega-caminhao",
-    extends: Pie,
+    extends: Bar,
     props: {
       safraId: {
         default: null
@@ -15,14 +15,51 @@
     },
     data (){
       return {
-        loaded: true,
+        loaded: false,
         data: null,
         chartdata: {
           labels: [],
           datasets: [
             {
+              type: 'line',
+              label: 'Cargas',
+              fill: false,
+              showLine: false,
+              pointRadius: 7,
+              pointHoverRadius: 10,
+              pointStyle: 'rectRot',
+              yAxisID: 'y-axis-quantidade',
               data: [],
-              backgroundColor: ['#00605f', 'red', 'blue', 'orange', 'pink', 'green', 'grey', 'cyan', 'purple', 'yellow'],
+              backgroundColor: 'blue',
+              pointBorderColor: 'blue',
+            },
+            {
+              type: 'line',
+              label: 'Descarregando',
+              fill: false,
+              showLine: false,
+              pointRadius: 15,
+              pointHoverRadius: 21,
+              pointStyle: 'line',
+              yAxisID: 'y-axis-peso',
+              data: [],
+              borderWidth: 5,
+              backgroundColor: 'orange',
+              pointBorderColor: 'orange',
+            },
+            {
+              label: 'Líquido',
+              stack: 'stack-peso',
+              yAxisID: 'y-axis-peso',
+              data: [],
+              backgroundColor: '#00605f',
+            },
+            {
+              label: 'Desconto',
+              stack: 'stack-peso',
+              yAxisID: 'y-axis-peso',
+              data: [],
+              backgroundColor: 'red',
             },
           ]
         },
@@ -31,16 +68,61 @@
           maintainAspectRatio: false,
           legend: {
             display: false,
-            position: 'right'
+            position: 'right',
+            // reverse: true,
+          },
+          hover: {
+            mode: 'nearest',
+            intersect: true
           },
           tooltips: {
             mode: 'index',
-            intersect: true
+            intersect: false,
+            callbacks: {
+                label: this.formatTooltipLabel,
+                // nome do caminhao completo
+                title: function(tooltipItems, data) {
+                  return data.labels[tooltipItems[0].index]
+                },
+            }
           },
+          scales: {
+						xAxes: [{
+              labelMaxWidth: 20,
+							stacked: true,
+              display: true,
+              ticks: {
+                // Mostra somente primeiras 7 letras (placa)
+                callback: function(value) {
+                  return value.substr(0, 7)
+                },
+              }
+						}],
+            yAxes: [{
+              stacked: true,
+							display: false,
+							id: 'y-axis-peso',
+						}, {
+              stacked: false,
+							display: false,
+							position: 'right',
+							id: 'y-axis-quantidade',
+						}],
+					},
         }
       }
     },
     methods: {
+
+      formatTooltipLabel (tooltipItem, data) {
+        if (isNaN(tooltipItem.yLabel)) {
+          return
+        }
+        if (tooltipItem.datasetIndex == 0) {
+          return this.numeral(tooltipItem.yLabel).format('0,0') + ' ' + data.datasets[tooltipItem.datasetIndex].label
+        }
+        return data.datasets[tooltipItem.datasetIndex].label +': ' + this.numeral(tooltipItem.yLabel).format('0,0') + ' ' + this.data.unidade_medida.sigla;
+      },
 
       // Busca Dados da API
       getData () {
@@ -57,7 +139,12 @@
           return;
         }
         this.chartdata.labels = this.data.caminhoes
-        this.chartdata.datasets[0].data = this.data.quantidades
+        // gambiarra, se apagar não mostra as cargas do ultimo caminhao
+        this.data.cargas.push(0);
+        this.chartdata.datasets[0].data = this.data.cargas
+        this.chartdata.datasets[1].data = this.data.estimativa_carga
+        this.chartdata.datasets[2].data = this.data.peso_liquido
+        this.chartdata.datasets[3].data = this.data.peso_desconto
         this.renderChart(this.chartdata, this.options)
       },
 

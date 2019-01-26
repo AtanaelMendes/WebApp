@@ -21,6 +21,33 @@
           labels: [],
           datasets: [
             {
+              type: 'line',
+              label: 'Cargas',
+              fill: false,
+              showLine: false,
+              pointRadius: 7,
+              pointHoverRadius: 10,
+              pointStyle: 'rectRot',
+              yAxisID: 'y-axis-quantidade',
+              data: [],
+              backgroundColor: 'blue',
+              pointBorderColor: 'blue',
+            },
+            {
+              type: 'line',
+              label: 'Descarregando',
+              fill: false,
+              showLine: false,
+              pointRadius: 15,
+              pointHoverRadius: 21,
+              pointStyle: 'line',
+              yAxisID: 'y-axis-peso',
+              data: [],
+              borderWidth: 5,
+              backgroundColor: 'orange',
+              pointBorderColor: 'orange',
+            },
+            {
               label: 'Líquido',
               data: [],
               type: 'line',
@@ -34,29 +61,11 @@
               data: [],
               type: 'line',
               fill: false,
-              backgroundColor: 'rgb(255, 28, 0)',
-              borderColor: 'rgb(255, 28, 0)',
+              backgroundColor: 'red',
+              borderColor: 'red',
               yAxisID: 'y-axis-peso',
               // yAxisID: 'y-axis-desconto',
             },
-            {
-              label: 'Cargas',
-              data: [],
-              type: 'line',
-              fill: false,
-              backgroundColor: 'rgb(0, 5, 176)',
-              borderColor: 'rgb(0, 5, 176)',
-              yAxisID: 'y-axis-quantidade',
-            },
-            {
-              type: 'bar',
-              label: 'Estimado',
-              fill: false,
-              backgroundColor: 'orange',
-              borderColor: 'orange',
-              data: [],
-              yAxisID: 'y-axis-peso',
-            }
           ]
         },
         options: {
@@ -68,7 +77,7 @@
             fontSize: 16
           },
           legend: {
-            display: true,
+            display: false,
             position: 'bottom'
           },
           hover: {
@@ -89,8 +98,8 @@
               time: {
                 unit: 'day',
                 displayFormats: {
-                  day: 'DD/MM',
-                  week: 'DD/MM',
+                  day: 'DD/MMM',
+                  week: 'DD/MMM',
                   month: 'MMM/YYYY',
                   quarter: 'MMM/YYYY',
                   year: 'YYYY',
@@ -98,7 +107,7 @@
   							tooltipFormat: 'DD/MMM (ddd)'
   						},
   						scaleLabel: {
-  							display: true,
+  							display: false,
   							labelString: 'Date'
   						}
             }],
@@ -130,7 +139,13 @@
     methods: {
 
       formatTooltipLabel (tooltipItem, data) {
-        return data.datasets[tooltipItem.datasetIndex].label +': ' + this.numeral(tooltipItem.yLabel).format('0,0');
+        if (isNaN(tooltipItem.yLabel)) {
+          return
+        }
+        if (tooltipItem.datasetIndex == 0) {
+          return this.numeral(tooltipItem.yLabel).format('0,0') + ' ' + data.datasets[tooltipItem.datasetIndex].label
+        }
+        return data.datasets[tooltipItem.datasetIndex].label +': ' + this.numeral(tooltipItem.yLabel).format('0,0') + ' ' + this.data.unidade_medida.sigla;
       },
 
       // Busca Dados da API
@@ -148,10 +163,10 @@
           return;
         }
         this.chartdata.labels = this.data.dias
-        this.chartdata.datasets[0].data = this.data.peso_liquido
-        this.chartdata.datasets[1].data = this.data.peso_desconto
-        this.chartdata.datasets[2].data = this.data.cargas
-        this.chartdata.datasets[3].data = this.data.estimativa_carga
+        this.chartdata.datasets[0].data = this.data.cargas
+        this.chartdata.datasets[1].data = this.data.estimativa_carga
+        this.chartdata.datasets[2].data = this.data.peso_liquido
+        this.chartdata.datasets[3].data = this.data.peso_desconto
         this.renderChart(this.chartdata, this.options)
       },
 
