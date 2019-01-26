@@ -11,8 +11,7 @@
 
           <!--IMAGEM HEADER-->
           <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8" style="max-height: 200px; overflow: hidden">
-            <img :src="safraCultura.cultura.image" class="fit" v-if="safraCultura.cultura.image"/>
-            <img src="statics/images/no-image-16-10.svg" class="fit" v-if="!safraCultura.cultura.image"/>
+            <ap-image size="800x500" :file-name="safraCultura.cultura.image_file_name" style="min-width: 100%"/>
           </div>
 
           <!--INFO DO HEADER-->
@@ -460,8 +459,11 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
+  import apImage from 'components/ApImage'
+
   import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
   import SafraCulturaTalhaoEdit from 'assets/js/model/safra/SafraCulturaTalhaoEdit'
+
   // import graficoClassificacaoMediaArmazem from 'components/graficos/GraficoClassificacaoMediaArmazem.vue'
   // import graficoQuantidadeEntregaArmazems from 'components/graficos/GraficoQuantidadeEntregaArmazems.vue'
 
@@ -473,12 +475,14 @@
   import graficoColheitaPorCultivar from 'components/graficos/GraficoColheitaPorCultivar.vue'
   import graficoEntregaArmazem from 'components/graficos/GraficoEntregaArmazem.vue'
 
+
   export default {
     name: "safra-cultura",
     components: {
       toolbar,
       customPage,
       customInputText,
+      apImage,
       // graficoClassificacaoMediaArmazem,
       // graficoQuantidadeEntregaArmazems,
 
