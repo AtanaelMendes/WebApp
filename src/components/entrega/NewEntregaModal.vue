@@ -193,12 +193,8 @@
           this.addNewTalhaoMode = true;
           this.novaEntrega.id = entrega.id;
           this.selectedEntrega = entrega;
-          //this.currentStep = 'escolherSafra';
           this.selectCaminhao(entrega.caminhao.id);
           this.selectSafraCultura(entrega.safra_cultura);
-          //this.selectArea(entre)
-          //this.novaEntrega.caminhaoId = caminhaoId;
-          //this.currentStep = 'escolherSafra';
         }else{
           this.selectedEntrega = null;
           this.listCaminhoes();
@@ -227,8 +223,12 @@
         return false;
       },
       listCaminhoes: function(){
+        this.$q.loading.show();
         caminhaoService.listFreeCaminhoes().then(response => {
           this.caminhoes = response.data;
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.loading.hide();
         })
       },
       selectCaminhao: function(caminhaoId){
@@ -236,8 +236,12 @@
         this.goToNextStep()
       },
       listSafraCulturas: function(){
+        this.$q.loading.show();
         safraCulturaService.listSafraCulturas().then(response => {
           this.safraCulturas = response.data;
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.loading.hide();
         })
       },
       selectSafraCultura: function(safraCultura){
@@ -283,6 +287,7 @@
         })
       },
       listSafraCulturaTalhaoBySafraCultura(safra_cultura_id){
+        this.$q.loading.show();
         safraCulturaService.listFullSafraCulturaTalhao(safra_cultura_id).then(response => {
           this.safraCulturaTalhoes = response.data;
 
@@ -300,6 +305,9 @@
           }else {
             this.listAreas();
           }
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.loading.hide();
         })
       },
       selectTalhao: function(talhao){
@@ -347,15 +355,17 @@
         });
 
         this.novaEntrega.safraCulturaTalhaoId = filteredSafraCulturaTalhoes[0].id;
-
+        this.$q.loading.show();
         entregaService.saveEntrega(this.novaEntrega.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Entrega criada com sucesso'});
             this.closeModal();
             this.$root.$emit('refreshEntregasList', 'carregando')
           }
+          this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          this.$q.loading.hide();
         });
       },
       addNovoTalhao: function(){
@@ -368,15 +378,17 @@
         });
 
         this.novaEntrega.safraCulturaTalhaoId = filteredSafraCulturaTalhoes[0].id;
-
+        this.$q.loading.show();
         entregaService.addTalhaoToEntrega(this.novaEntrega.id, this.novaEntrega.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Talhao adicionado com sucesso'});
             this.closeModal();
             this.$root.$emit('refreshEntregaView')
           }
+          this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          this.$q.loading.hide();
         });
       },
       goToNextStep(){

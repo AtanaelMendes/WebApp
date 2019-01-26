@@ -127,6 +127,12 @@ module.exports = function (ctx) {
         'Loading',
         'Screen',
       ],
+      config: {
+        loading: {
+          spinnerColor: 'deep-orange',
+          customClass : 'bg-loading_bg'
+        },
+      },
       // iconSet: ctx.theme.mat ? 'material-icons' : 'ionicons'
       i18n: 'pt-br' // Quasar language
     },

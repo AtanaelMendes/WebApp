@@ -177,6 +177,7 @@
             }
           }
 
+          this.$q.loading.show();
           pesagemService.savePesagem(this.entrega.id, this.pesagem.getValues()).then(response => {
             if(response.status === 201) {
               this.$q.notify({type: 'positive', message: 'Pesagem criada com sucesso'});
@@ -185,8 +186,10 @@
               this.$root.$emit('refreshEntregasList', 'entregue');
               this.$root.$emit('refreshEntregaView')
             }
+            this.$q.loading.hide();
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+            this.$q.loading.hide();
           });
         }, 300 /*ms to wait*/)
       },
@@ -209,8 +212,12 @@
         }
       },
       getUnidadesMedida:function(){
+        this.$q.loading.show();
         unidadeMedidaService.listUnidadesMedida().then(response => {
           this.unidadesMedida = response.data;
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.loading.hide();
         })
       },
       getUnidadeMedidaById:function(id){
@@ -229,6 +236,7 @@
         })
       },
       listClassificacoesByCultura(cultura_id){
+        this.$q.loading.show();
         culturaClassificacaoService.listClassificacoesByCultura(cultura_id).then(response => {
          if(this.pesagem.entregaClassificacao.length <= 0){
            response.data.forEach(function (classificacao) {
@@ -243,6 +251,9 @@
              )
            }, this)
          }
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.loading.hide();
         })
       },
     },

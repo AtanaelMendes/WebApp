@@ -3,7 +3,7 @@
     <toolbar slot="toolbar" title="Entregas" navigation_type="menu" >
 
       <div slot="tabs">
-        <q-tabs v-model="tabs" ref="tabs">
+        <q-tabs v-model="tabs" ref="tabs" @select="switchTab">
           <q-route-tab slot="title" :to="{ name: 'entregas', query: { status: 'carregando' }}" default name="carregando" label="Carregando" ></q-route-tab>
           <q-route-tab slot="title" :to="{ name: 'entregas', query: { status: 'no-armazem' }}" name="no-armazem" label="No armazém" ></q-route-tab>
           <q-route-tab slot="title" :to="{ name: 'entregas', query: { status: 'entregue' }}" name="entregue" label="Entregue" ></q-route-tab>
@@ -206,7 +206,17 @@
     },
     methods: {
       switchTab(value){
-        //this.$router.push('?status=' + value)
+        switch (value) {
+          case 'carregando':
+            this.listEntregasCarregando();
+            break;
+          case 'no-armazem':
+            this.listEntregasNoArmazem();
+            break
+          case 'entregue':
+            this.listEntregasEntregues();
+            break
+        }
       },
       makeUrl: function (image_file_name, size) {
         return agroUtils.image.makeUrl(image_file_name, size)
@@ -215,18 +225,30 @@
         this.$refs.entregaModal.openModal()
       },
       listEntregasCarregando() {
+        this.$q.loading.show();
         entregaService.listEntregasCarregando().then(response => {
           this.entregasCarregando = response.data;
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.loading.hide();
         })
       },
       listEntregasNoArmazem: function () {
+        this.$q.loading.show();
         entregaService.listEntregasNoArmazem().then(response => {
           this.entregasNoArmazem = response.data;
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.loading.hide();
         })
       },
       listEntregasEntregues: function () {
+        this.$q.loading.show();
         entregaService.listCargasEntregues().then(response => {
           this.entregasEntregues = response.data;
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.loading.hide();
         })
       },
       viewCarga: function (id) {
@@ -235,8 +257,8 @@
     },
     mounted () {
       this.listEntregasCarregando();
-      this.listEntregasNoArmazem();
-      this.listEntregasEntregues();
+      // this.listEntregasNoArmazem();
+      // this.listEntregasEntregues();
 
       this.$root.$on('refreshEntregasList', (status) => {
         switch (status) {

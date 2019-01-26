@@ -7,20 +7,22 @@
         <img src="/statics/images/no-image-user.svg" class="profile-image shadow-1"/>
         <span class="profile-name">{{currentAccount.name}}</span>
         <span class="profile-email">{{currentAccount.email}}</span>
-        <q-btn flat round dense class="settings_icon">
-          <q-icon name="settings" />
-
-          <q-popover>
-            <q-list link class="scroll" style="min-width: 200px">
-              <!--<q-item @click.native="">
-                <q-item-main label="Minha conta" />
-              </q-item>-->
-              <q-item @click.native="logout()">
-                <q-item-main label="Sair" />
-              </q-item>
-            </q-list>
-          </q-popover>
-        </q-btn>
+        <div>
+          <q-btn flat round dense class="settings_icon">
+            <q-icon name="settings" />
+            <q-popover>
+              <q-list link class="scroll" style="min-width: 200px">
+                <!--<q-item @click.native="">
+                  <q-item-main label="Minha conta" />
+                </q-item>-->
+                <q-item @click.native="logout()">
+                  <q-item-main label="Sair" />
+                </q-item>
+              </q-list>
+            </q-popover>
+          </q-btn>
+          <span class="app-version" >v. {{app_version}}</span>
+        </div>
 
       </div>
       <q-list no-border link inset-delimiter>
@@ -91,6 +93,7 @@
 
 <script>
   import accountService from 'assets/js/service/AccountService'
+  import {version} from '../../package.json';
 export default {
   name: 'Admin',
   data () {
@@ -106,6 +109,11 @@ export default {
     this.getAccountInfo();
 
     this.$root.$on('toogleLeftDrawer', this.toogleLeftDrawer)
+  },
+  computed:{
+    app_version: function () {
+      return version;
+    },
   },
   methods: {
     getAccountInfo: function(){
@@ -176,6 +184,14 @@ export default {
     right: 0;
     margin: 20px;
     color: white;
+  }
+
+  .app-version{
+    color: white;
+    font-size: 10px;
+    position: absolute;
+    top: 60px;
+    right: 28px;
   }
 
   .q-layout-drawer{
