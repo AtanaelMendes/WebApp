@@ -10,7 +10,7 @@
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="caminhao in caminhoes" :key="caminhao.id">
             <q-card @click.native="selectCaminhao(caminhao.id)">
               <q-card-media overlay-position="full">
-                <ap-image size="800x500" :file-name="caminhao.image_file_name" />
+                <ap-image size="400x250" :file-name="caminhao.image_file_name" />
                 <q-card-title slot="overlay" align="end" v-if="caminhao.id === novaEntrega.caminhaoId">
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
@@ -47,7 +47,7 @@
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="safraCultura in safraCulturas" :key="safraCultura.id" >
             <q-card @click.native="selectSafraCultura(safraCultura)">
               <q-card-media overlay-position="full">
-                <ap-image size="800x500" :file-name="safraCultura.cultura.image_file_name" />
+                <ap-image size="400x250" :file-name="safraCultura.cultura.image_file_name" />
                 <q-card-title slot="overlay" align="end" v-if="selectedSafraCulturaId === safraCultura.id">
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
@@ -71,7 +71,7 @@
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="area in areas" :key="area.id">
             <q-card @click.native="selectArea(area)">
               <q-card-media overlay-position="full">
-                <ap-image size="800x500" :file-name="area.image_file_name" />
+                <ap-image size="400x250" :file-name="area.image_file_name" />
                 <q-card-title slot="overlay" align="end" v-if="area.id === selectedAreaId">
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
@@ -92,7 +92,7 @@
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="talhao in talhoes" :key="talhao.id">
             <q-card>
               <q-card-media overlay-position="full" @click.native="selectTalhao(talhao)">
-                <ap-image size="800x500" :file-name="talhao.image_file_name" />
+                <ap-image size="400x250" :file-name="talhao.image_file_name" />
                 <q-card-title slot="overlay" align="end" v-if="talhao.id === selectedTalhaoId">
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>
@@ -118,7 +118,7 @@
             <q-card>
               <q-card-media overlay-position="full" @click.native="selectCultivar(cultivar)">
 
-                <ap-image size="800x500" :file-name="cultivar.marca.image_file_name" />
+                <ap-image size="400x250" :file-name="cultivar.marca.image_file_name" />
 
                 <q-card-title slot="overlay" align="end" v-if="cultivar.id === selectedCultivarId">
                   <q-icon name="check_circle" size="30px" color="positive"/>

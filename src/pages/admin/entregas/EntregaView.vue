@@ -31,7 +31,7 @@
                     </q-card-title>
 
                     <!-- FOTO CAMINHAO -->
-                    <ap-image size="800x500" :file-name="entrega.caminhao.image_file_name" />
+                    <ap-image size="400x250" :file-name="entrega.caminhao.image_file_name" />
                   </q-card-media>
 
                   <q-list>
@@ -284,7 +284,7 @@
                         </q-card-title>
 
                         <!-- IMAGEM CULTURA -->
-                        <ap-image size="800x500" :file-name="entrega.safra_cultura.cultura.image_file_name" />
+                        <ap-image size="400x250" :file-name="entrega.safra_cultura.cultura.image_file_name" />
                       </q-card-media>
 
                       <q-list dense>

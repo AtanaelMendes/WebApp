@@ -130,7 +130,7 @@
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="motorista in motoristas" :key="motorista.id">
             <q-card @click.native="selectMotorista(motorista)" class="cursor-pointer">
               <q-card-media overlay-position="full">
-                <ap-image size="800x500" :file-name="motorista.image_file_name" />
+                <ap-image size="400x250" :file-name="motorista.image_file_name" />
                 <q-card-title slot="overlay" align="end" v-if="sendEntrega.motoristaId === motorista.id">
                   <q-icon name="check_circle" size="30px" color="positive"/>
                 </q-card-title>

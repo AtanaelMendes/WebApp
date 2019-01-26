@@ -15,7 +15,7 @@
     <!--TAB CARREGANDO-->
     <div class="row gutter-sm space-end q-pa-md" v-if="tabs === 'carregando' ">
 
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="entrega in entregasCarregando" :key="entrega.id">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" v-for="entrega in entregasCarregando" :key="entrega.id">
 
         <q-card @click.native="viewCarga(entrega.id)" class="cursor-pointer">
           <q-card-media overlay-position="top">
@@ -26,7 +26,7 @@
                 {{moment(entrega.inicio_carregamento).fromNow()}}
               </span>
             </q-card-title>
-            <ap-image size="800x500" :file-name="entrega.caminhao.image_file_name" />
+            <ap-image size="400x250" :file-name="entrega.caminhao.image_file_name" />
           </q-card-media>
 
           <q-list>
@@ -69,9 +69,7 @@
     <!--TAB NO ARMAZEM-->
     <div class="row gutter-sm space-end q-pa-md" v-if="tabs === 'no-armazem' ">
 
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="entrega in entregasNoArmazem" :key="entrega.id">
-
-
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" v-for="entrega in entregasNoArmazem" :key="entrega.id">
         <q-card @click.native="viewCarga(entrega.id)" class="cursor-pointer">
           <q-card-media overlay-position="top">
             <q-card-title slot="overlay">
@@ -81,7 +79,7 @@
                 {{moment(entrega.envio_armazem).fromNow()}}
               </span>
             </q-card-title>
-            <ap-image size="800x500" :file-name="entrega.caminhao.image_file_name" />
+            <ap-image size="400x250" :file-name="entrega.caminhao.image_file_name" />
           </q-card-media>
           <q-list>
 
