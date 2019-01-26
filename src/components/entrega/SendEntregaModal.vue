@@ -380,6 +380,7 @@
         }
       },
       listNegocioCulturas: function(){
+        this.$q.loading.show();
         negocioService.listNegociosCulturasByProdutor().then(response => {
           this.negocioCulturas = response.data;
 
@@ -390,6 +391,7 @@
               ) === undefined;
             })
           }
+          this.$q.loading.hide();
         });
       },
       selectNegocioCultura: function(negocioCultura){
@@ -399,8 +401,10 @@
         this.goToNextStep()
       },
       listArmazensByNegocioCultura: function(negocioCulturaId){
+        this.$q.loading.show();
         negocioService.listArmazensByNegocioCultura(negocioCulturaId).then(response => {
           this.armazens = response.data;
+          this.$q.loading.hide();
         })
       },
       selectArmazem: function(armazem){
@@ -408,8 +412,12 @@
         this.goToNextStep()
       },
       listMotoristas: function(){
+        this.$q.loading.show();
         motoristaService.listMotoristas().then(response => {
           this.motoristas = response.data;
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.loading.hide();
         })
       },
       selectMotorista: function(motorista){
@@ -427,10 +435,12 @@
           cancel: true,
           color: 'secondary'
         }).then(data => {
+          this.$q.loading.show();
           motoristaService.saveMotorista({nome: data}).then(response => {
             if(response.status === 201){
               this.sendEntrega.motoristaId = response.data.id;
               this.listMotoristas();
+              this.$q.loading.hide();
             }
           })
         }).catch(() => {})
@@ -456,6 +466,7 @@
       },
       saveSendEntrega: function(){
         let entregaId = this.$route.params.id;
+        this.$q.loading.show();
         entregaService.sendEntregaToArmazen(entregaId, this.sendEntrega.getValues(this.hasNotaFiscal)).then(response => {
           if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Carga enviada com sucesso'});
@@ -463,20 +474,25 @@
             this.$root.$emit('refreshEntregasList', 'all');
             this.$root.$emit('refreshEntregaView')
           }
+          this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          this.$q.loading.hide();
         });
       },
       addNegocioToEntrega: function(){
         let entregaId = this.$route.params.id;
+        this.$q.loading.show();
         entregaService.addNegocioToEntrega(entregaId, this.sendEntrega.getValues(this.hasNotaFiscal)).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Negócio adicionado com sucesso'});
             this.closeModal();
+            this.$q.loading.hide();
             this.$root.$emit('refreshEntregaView')
           }
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          this.$q.loading.hide();
         });
       },
       updateMotorista: function(){
@@ -485,40 +501,49 @@
           motorista_id: this.sendEntrega.motoristaId,
           motorista_nome: null
         };
+        this.$q.loading.show();
         entregaService.updateMotorista(entregaId, param).then(response => {
           if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Motorista atualizado com sucesso'});
             this.closeModal();
             this.$root.$emit('refreshEntregaView')
           }
+          this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          this.$q.loading.hide();
         });
       },
       addNota:function(){
         let entregaId = this.$route.params.id;
 
+        this.$q.loading.show();
         entregaService.addNotaFiscalToNegocio(entregaId, this.selectedNegocio.id, this.sendEntrega.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Nota criada com sucesso'});
             this.closeModal();
             this.$root.$emit('refreshEntregaView')
           }
+          this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          this.$q.loading.hide();
         })
       },
       updateNota: function(){
         let entregaId = this.$route.params.id;
 
+        this.$q.loading.show();
         entregaService.updateNotaFiscalItemOfNegocio(entregaId, this.selectedNota.id, this.sendEntrega.getValues()).then(response => {
           if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Nota atualizada com sucesso'});
             this.closeModal();
             this.$root.$emit('refreshEntregaView')
           }
+          this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          this.$q.loading.hide();
         });
       },
       goToNextStep(){
@@ -573,6 +598,7 @@
         })
       },
       getNotaFiscalItem(id){
+        this.$q.loading.show();
         notaFiscalService.getNotaFiscalItemById(id).then(response => {
           this.sendEntrega.serieId = response.data.nota_fiscal.serie.id;
           this.sendEntrega.notaNumero = response.data.nota_fiscal.numero;
@@ -585,7 +611,8 @@
           this.sendEntrega.cfopId = response.data.cfop.id;
           this.sendEntrega.is_saida = response.data.cfop.is_saida;
 
-          this.getCfopByNumero()
+          this.getCfopByNumero();
+          this.$q.loading.hide();
         })
       },
     },

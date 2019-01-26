@@ -635,8 +635,12 @@
         }).catch(()=>{});
       },
       getEntrega: function(){
+        this.$q.loading.show();
         entregaService.getEntregaById(this.$route.params.id).then(response => {
+          this.$q.loading.hide();
           this.entrega = response.data;
+        }).catch(error => {
+          this.$q.loading.hide();
         })
       },
       backAction: function () {
@@ -650,7 +654,6 @@
       });
     },
   }
-  // this.$q.notify({type: 'negative', message: 'aqui'})
 </script>
 <style scoped>
   .custom-fab .q-fab-actions .q-btn  span{

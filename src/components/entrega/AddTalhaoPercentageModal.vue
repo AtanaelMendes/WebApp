@@ -118,21 +118,28 @@
               }
             });
 
+            this.$q.loading.show();
             entregaService.updateTalhoesPercentual(this.entrega.id, {talhoes: talhoesPost}).then(response => {
               if(response.status === 200) {
                 this.$q.notify({type: 'positive', message: 'Percentuais atualizado com sucesso!'});
                 this.closeModal();
                 this.$root.$emit('refreshEntregaView')
               }
+              this.$q.loading.hide();
             }).catch(error => {
               this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+              this.$q.loading.hide();
             });
           }
         }, 300 /*ms to wait*/)
       },
       listTalhaoes: function(entregaId){
+        this.$q.loading.show();
         entregaService.listTalhoesFromEntrega(entregaId).then(response => {
           this.talhoes = response.data;
+          this.$q.loading.hide();
+        }).then(error => {
+          this.$q.loading.hide();
         })
       },
     },
