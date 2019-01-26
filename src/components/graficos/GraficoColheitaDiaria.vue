@@ -1,9 +1,10 @@
 <script>
-  import { Line } from 'vue-chartjs'
+  import { Bar } from 'vue-chartjs'
   import safraCulturaGraficoService from 'assets/js/service/safra/SafraCulturaGraficoService'
+
   export default {
     name: "grafico-colheita-diaria",
-    extends: Line,
+    extends: Bar,
     props: {
       safraId: {
         default: null
@@ -26,7 +27,7 @@
               fill: false,
               backgroundColor: '#00605f',
               borderColor: '#00605f',
-              yAxisID: 'y-axis-liquido',
+              yAxisID: 'y-axis-peso',
             },
             {
               label: 'Desconto',
@@ -35,7 +36,7 @@
               fill: false,
               backgroundColor: 'rgb(255, 28, 0)',
               borderColor: 'rgb(255, 28, 0)',
-              yAxisID: 'y-axis-liquido',
+              yAxisID: 'y-axis-peso',
               // yAxisID: 'y-axis-desconto',
             },
             {
@@ -45,7 +46,16 @@
               fill: false,
               backgroundColor: 'rgb(0, 5, 176)',
               borderColor: 'rgb(0, 5, 176)',
-              yAxisID: 'y-axis-cargas',
+              yAxisID: 'y-axis-quantidade',
+            },
+            {
+              type: 'bar',
+              label: 'Estimado',
+              fill: false,
+              backgroundColor: 'orange',
+              borderColor: 'orange',
+              data: [],
+              yAxisID: 'y-axis-peso',
             }
           ]
         },
@@ -67,7 +77,10 @@
           },
           tooltips: {
             mode: 'index',
-            intersect: false
+            intersect: false,
+            callbacks: {
+                label: this.formatTooltipLabel
+            }
           },
           scales: {
             xAxes: [{
@@ -94,17 +107,7 @@
 							type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
 							display: false,
 							position: 'left',
-							id: 'y-axis-liquido',
-
-              ticks: {
-                beginAtZero: true
-              },
-						}, {
-							type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-							display: false,
-							position: 'left',
-							id: 'y-axis-desconto',
-
+							id: 'y-axis-peso',
               ticks: {
                 beginAtZero: true
               },
@@ -112,7 +115,7 @@
 							type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
 							display: false,
 							position: 'right',
-							id: 'y-axis-cargas',
+							id: 'y-axis-quantidade',
               ticks: {
                 beginAtZero: true
               },
@@ -125,6 +128,10 @@
       }
     },
     methods: {
+
+      formatTooltipLabel (tooltipItem, data) {
+        return data.datasets[tooltipItem.datasetIndex].label +': ' + this.numeral(tooltipItem.yLabel).format('0,0');
+      },
 
       // Busca Dados da API
       getData () {
@@ -144,6 +151,7 @@
         this.chartdata.datasets[0].data = this.data.peso_liquido
         this.chartdata.datasets[1].data = this.data.peso_desconto
         this.chartdata.datasets[2].data = this.data.cargas
+        this.chartdata.datasets[3].data = this.data.estimativa_carga
         this.renderChart(this.chartdata, this.options)
       },
 
