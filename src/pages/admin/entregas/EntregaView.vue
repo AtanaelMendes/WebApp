@@ -35,6 +35,17 @@
                         <q-item-tile label>{{entrega.status}}</q-item-tile>
                         <q-item-tile v-if="entrega.armazem" sublabel>{{entrega.armazem.nome}}</q-item-tile>
                       </q-item-main>
+                      <q-item-side>
+                        <q-btn class="float-right" dense icon="more_vert" round flat >
+                          <q-popover>
+                            <q-list link class="no-border">
+                              <q-item v-close-overlay @click.native="updateArmazem(entrega)">
+                                <q-item-main label="Alterar Armazém"/>
+                              </q-item>
+                            </q-list>
+                          </q-popover>
+                        </q-btn>
+                      </q-item-side>
                     </q-item>
 
                     <!-- MOTORISTA -->
@@ -573,6 +584,9 @@
       },
       updateMotorista: function(entrega){
         this.$refs.sendEntregaModal.openModal('updateMotorista', entrega)
+      },
+      updateArmazem: function(entrega){
+        this.$refs.sendEntregaModal.openModal('updateArmazem', entrega)
       },
       newPesagem: function(){
         this.$refs.newPesagemModal.openModal(this.entrega)

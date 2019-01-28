@@ -12,4 +12,13 @@ export default {
       })
     });
   },
+  listArmazensByEntrega(entregaId) {
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('produtor/' + produtorId + '/armazem/by_entrega/' + entregaId).then(response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
 }

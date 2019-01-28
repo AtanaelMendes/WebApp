@@ -224,6 +224,7 @@
 </template>
 <script>
   import entregaService from 'assets/js/service/entrega/EntregaService'
+  import armazemService from 'assets/js/service/armazem/ArmazemService'
   import motoristaService from 'assets/js/service/motorista/MotoristaService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import SendEntrega from 'assets/js/model/entrega/SendEntrega'
@@ -328,7 +329,6 @@
             this.stepMotorista = false;
             this.stepInformacoes = true;
             break;
-
           case 'updateMotorista':
             this.selectedEntrega = object;
             this.sendEntrega.motoristaId = object.motorista.id;
@@ -337,6 +337,16 @@
             this.stepArmazem = false;
             this.stepMotorista = true;
             this.stepInformacoes = false;
+            break;
+          case 'updateArmazem':
+            this.selectedEntrega = object;
+            //this.sendEntrega.motoristaId = object.motorista.id;
+            this.currentStep = 'armazem';
+            this.stepNegocio = false;
+            this.stepArmazem = true;
+            this.stepMotorista = false;
+            this.stepInformacoes = false;
+            this.listArmazensByEntrega(this.selectedEntrega.id);
             break;
         }
         this.isModalOpened = true;
@@ -424,6 +434,16 @@
       listArmazensByNegocioCultura: function(negocioCulturaId){
         this.$q.loading.show();
         negocioService.listArmazensByNegocioCultura(negocioCulturaId).then(response => {
+          this.armazens = response.data;
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.loading.hide();
+        })
+      },
+      listArmazensByEntrega: function(entregaId){
+        this.$q.loading.show();
+        armazemService.listArmazensByEntrega(entregaId).then(response => {
+          //TODO: Remover o armazem já selecionado
           this.armazens = response.data;
           this.$q.loading.hide();
         }).catch(error => {
