@@ -380,8 +380,17 @@
         }
       },
       listNegocioCulturas: function(){
-        this.$q.loading.show();
+        if(this.funcao === 'sendEntrega'){
+          this.listNegociosCulturasByProdutor();
+        }else{
+          this.listNegociosCulturasAvaliablesByEntrega()
+        }
+      },
+
+      listNegociosCulturasAvaliablesByEntrega(){
         let entregaId = this.$route.params.id;
+        this.$q.loading.show();
+
         negocioService.listAvaliablesNegociosCulturasForEntrega(entregaId).then(response => {
           this.negocioCulturas = response.data;
 
@@ -392,6 +401,17 @@
               ) === undefined;
             })
           }
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.loading.hide();
+        });
+      },
+      listNegociosCulturasByProdutor(){
+        this.$q.loading.show();
+        negocioService.listNegociosCulturasByProdutor().then(response => {
+          this.negocioCulturas = response.data;
+          this.$q.loading.hide();
+        }).catch(error => {
           this.$q.loading.hide();
         });
       },
