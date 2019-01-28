@@ -103,9 +103,9 @@ export default {
       })
     });
   },
-  listNegociosCulturasByProdutor(){
+  listAvaliablesNegociosCulturasForEntrega($entregaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('negocio/cultura/produtor/' + produtorId).then(response => {
+      Vue.prototype.$axios.get('negocio/cultura/by_entrega/' + $entregaId).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)

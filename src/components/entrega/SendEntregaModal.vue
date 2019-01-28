@@ -381,7 +381,8 @@
       },
       listNegocioCulturas: function(){
         this.$q.loading.show();
-        negocioService.listNegociosCulturasByProdutor().then(response => {
+        let entregaId = this.$route.params.id;
+        negocioService.listAvaliablesNegociosCulturasForEntrega(entregaId).then(response => {
           this.negocioCulturas = response.data;
 
           if(this.funcao === 'novoNegocio'){
@@ -404,6 +405,8 @@
         this.$q.loading.show();
         negocioService.listArmazensByNegocioCultura(negocioCulturaId).then(response => {
           this.armazens = response.data;
+          this.$q.loading.hide();
+        }).catch(error => {
           this.$q.loading.hide();
         })
       },
