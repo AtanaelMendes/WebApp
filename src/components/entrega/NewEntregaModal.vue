@@ -328,7 +328,7 @@
             }
           }else{
             if(safraCulturaTalhao.cultivar){
-              if(!this.cultivares.some(cultivar => cultivar.id = safraCulturaTalhao.cultivar.id)){
+              if(!this.cultivares.some(cultivar => cultivar.id === safraCulturaTalhao.cultivar.id)){
                 this.cultivares.push(safraCulturaTalhao.cultivar)
               }
             }
