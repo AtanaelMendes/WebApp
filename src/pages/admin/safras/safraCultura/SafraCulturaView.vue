@@ -1,6 +1,6 @@
 <template>
   <custom-page isParent v-if="safraCultura">
-    <toolbar slot="toolbar" :title="safraCultura.inicio + '/' + safraCultura.fim" navigation_type="back" @navigation_clicked="backAction" >
+    <toolbar slot="toolbar" :title="safraCultura.cultura.nome + ' ' + safraCultura.safra.ano_inicio + '/' + safraCultura.safra.ano_fim" navigation_type="back" @navigation_clicked="backAction" >
     </toolbar>
 
     <div class="row q-pa-md gutter-sm space-end">
@@ -10,101 +10,38 @@
         <q-card class="row">
 
           <!--IMAGEM HEADER-->
-          <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8" style="max-height: 200px; overflow: hidden">
-            <ap-image size="800x500" :file-name="safraCultura.cultura.image_file_name" style="min-width: 100%"/>
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
+            <q-card-media overlay-position="top" class="full-height items-center">
+              <ap-image size="800x500" :file-name="safraCultura.cultura.image_file_name"/>
+              <q-card-title slot="overlay">
+                {{safraCultura.cultura.nome}} {{safraCultura.safra.ano_inicio}}/{{safraCultura.safra.ano_fim}}
+                <span slot="subtitle">
+                  {{numeral(safraCultura.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
+                </span>
+              </q-card-title>
+            </q-card-media>
           </div>
 
           <!--INFO DO HEADER-->
-          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-            <div class="row gutter-y-xs q-pa-md">
-
-              <div class="col-12 text-faded" v-if="loaded">
-                <!--Plantio total em {{getSafraCulturaTotalArea()}} hectares (100%)-->
-                Plantio total em {{safraCultura.plantioTotal}} {{safraCultura.cultura.estimativa_unidade_area.plural}} ({{Math.round((safraCultura.plantioTotal / safraCultura.area_total) * 100)}}%)
-              </div>
-
-              <!--NEGOCIADO-->
-              <div class="col-12">
-                <!--<div class="row">-->
-
-                <!--<div class="col-6 q-caption text-faded">-->
-                <!--Negociado 000%-->
-                <!--</div>-->
-
-                <!--&lt;!&ndash;BARRA DE % DO NEGOCIADO&ndash;&gt;-->
-                <!--<div class="col-6 self-center">-->
-                <!--<q-progress color="deep-orange" :percentage="progressBuffer"/>-->
-                <!--</div>-->
-
-                <!--&lt;!&ndash;TOTAL SACAS POR HECTARE&ndash;&gt;-->
-                <!--<div class="col-6">-->
-                <!--0000 Sc/Ha-->
-                <!--</div>-->
-
-                <!--&lt;!&ndash;TOTAL DE SACAS&ndash;&gt;-->
-                <!--<div class="col-6">-->
-                <!--00000 Sacas-->
-                <!--</div>-->
-
-                <!--</div>-->
-              </div>
-
-              <!--ESTIMATIVA TOTAL-->
-              <div class="col-12">
-                <div class="row">
-
-                  <div class="col-12 q-caption text-faded">
-                    Estimativa
-                  </div>
-
-                  <!--ESTIMATIVA TOTAL DE SACAS POR HECTARE-->
-                  <div class="col-6">
-                    {{safraCultura.estimativa}} {{safraCultura.cultura.estimativa_unidade_medida.sigla}}/{{safraCultura.cultura.estimativa_unidade_area.sigla}}
-                  </div>
-
-                  <!--ESTIMATIVA TOTAL DE SACAS-->
-                  <div class="col-6">
-                    {{safraCultura.estimativa_total}} {{safraCultura.cultura.estimativa_unidade_medida.plural}}
-                  </div>
-
-                </div>
-              </div>
-
-              <!--TOTAL COLHIDO-->
-              <div class="col-12">
-                <!--<div class="row">-->
-
-                <!--<div class="col-12 q-mb-xs">-->
-                <!--<div class="row">-->
-                <!--<div class="col-6 q-caption text-faded">-->
-                <!--Colhido 000%-->
-                <!--</div>-->
-                <!--<div class="col-6 self-center">-->
-                <!--<q-progress color="deep-orange" :percentage="progressBuffer"/>-->
-                <!--</div>-->
-                <!--</div>-->
-
-                <!--</div>-->
-
-                <!--<div class="col-6">-->
-                <!--000 Sc/Ha-->
-                <!--</div>-->
-
-                <!--<div class="col-6">-->
-                <!--00000 Sacas-->
-                <!--</div>-->
-
-                <!--</div>-->
-              </div>
-
-            </div>
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
+              <safra-quantidades v-if="loaded"
+                :tamanho="safraCultura.tamanho"
+                :estimativa_total="safraCultura.estimativa_total"
+                :peso_liquido="safraCultura.peso_liquido"
+                :peso_desconto="safraCultura.peso_desconto"
+                :estimativa_carga="safraCultura.estimativa_carga"
+                :cargas="safraCultura.cargas"
+                :finalizado="safraCultura.finalizado"
+                :view_unidade_area="safraCultura.view_unidade_area"
+                :view_unidade_medida="safraCultura.view_unidade_medida"
+              />
           </div>
 
         </q-card>
       </div>
 
       <!--GRAFICO ENTREGA DOS ARMAZEMS-->
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="safraCultura.cargas>0">
         <q-card class="full-height">
           <q-card-title>
             Entrega Por Armazém
@@ -116,7 +53,7 @@
       </div>
 
       <!--GRAFICO PORCENTAGEM CAMINHOES-->
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="safraCultura.cargas>0">
         <q-card class="full-height">
           <q-card-title>
             Entrega Por Caminhão
@@ -129,8 +66,7 @@
 
 
       <!--GRAFICO COLHEITA DIARIA-->
-      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6"> -->
-      <div class="col-12">
+      <div class="col-12" v-if="safraCultura.cargas>0">
         <q-card class="full-height">
           <q-card-title>
             Colheita Diária
@@ -142,7 +78,7 @@
       </div>
 
       <!--GRAFICO CLASSIFICACAO DIARIA-->
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" v-if="safraCultura.cargas>0">
         <q-card class="full-height">
           <q-card-title>
             Classificação Diária
@@ -169,15 +105,15 @@
             Colheita por Área
             <span slot="subtitle" class="cursor-pointer" @click="graficoPorMedia = !graficoPorMedia">
               <template v-if="graficoPorMedia">
-                Média de {{safraCultura.cultura.estimativa_unidade_medida.sigla}}/{{safraCultura.cultura.estimativa_unidade_area.sigla}}
+                Média de {{safraCultura.view_unidade_medida.sigla}}/{{safraCultura.view_unidade_area.sigla}}
               </template>
               <template v-else>
-                Quantidade Total de {{safraCultura.cultura.estimativa_unidade_medida.sigla}}
+                Quantidade Total de {{safraCultura.view_unidade_medida.sigla}}
               </template>
             </span>
           </q-card-title>
           <q-card-main>
-            <grafico-colheita-por-area :media="graficoPorMedia" :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
+            <!-- <grafico-colheita-por-area :media="graficoPorMedia" :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/> -->
           </q-card-main>
         </q-card>
       </div>
@@ -189,15 +125,15 @@
             Colheita por Cultivar
             <span slot="subtitle" class="cursor-pointer" @click="graficoPorMedia = !graficoPorMedia">
               <template v-if="graficoPorMedia">
-                Média de {{safraCultura.cultura.estimativa_unidade_medida.sigla}}/{{safraCultura.cultura.estimativa_unidade_area.sigla}}
+                Média de {{safraCultura.view_unidade_medida.sigla}}/{{safraCultura.view_unidade_area.sigla}}
               </template>
               <template v-else>
-                Quantidade Total de {{safraCultura.cultura.estimativa_unidade_medida.sigla}}
+                Quantidade Total de {{safraCultura.view_unidade_medida.sigla}}
               </template>
             </span>
           </q-card-title>
           <q-card-main>
-            <grafico-colheita-por-cultivar :media="graficoPorMedia" :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
+            <!-- <grafico-colheita-por-cultivar :media="graficoPorMedia" :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/> -->
           </q-card-main>
         </q-card>
       </div>
@@ -206,18 +142,18 @@
       <div class="col-12">
         <q-card class="full-height">
           <q-card-title>
-            Colheita por Talhão ({{safraCultura.cultura.estimativa_unidade_medida.sigla}})
+            Colheita por Talhão ({{safraCultura.view_unidade_medida.sigla}})
             <a slot="subtitle" class="cursor-pointer" @click="graficoPorMedia = !graficoPorMedia">
               <template v-if="graficoPorMedia">
-                Média de {{safraCultura.cultura.estimativa_unidade_medida.sigla}}/{{safraCultura.cultura.estimativa_unidade_area.sigla}}
+                Média de {{safraCultura.view_unidade_medida.sigla}}/{{safraCultura.view_unidade_area.sigla}}
               </template>
               <template v-else>
-                Quantidade Total de {{safraCultura.cultura.estimativa_unidade_medida.sigla}}
+                Quantidade Total de {{safraCultura.view_unidade_medida.sigla}}
               </template>
             </a>
           </q-card-title>
           <q-card-main>
-            <grafico-colheita-por-talhao :media="graficoPorMedia" :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
+            <!-- <grafico-colheita-por-talhao :media="graficoPorMedia" :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/> -->
           </q-card-main>
         </q-card>
       </div>
@@ -289,11 +225,11 @@
                     </div>
 
                     <div class="col-6">
-                      {{culturaTalhao.estimativa}} {{safraCultura.cultura.estimativa_unidade_medida.sigla}}/{{safraCultura.cultura.estimativa_unidade_area.plural}}
+                      {{culturaTalhao.estimativa}} {{safraCultura.view_unidade_medida.sigla}}/{{safraCultura.view_unidade_area.plural}}
                     </div>
 
                     <div class="col-6 text-right">
-                      {{culturaTalhao.estimativa_total}} {{safraCultura.cultura.estimativa_unidade_medida.nome}}
+                      {{culturaTalhao.estimativa_total}} {{safraCultura.view_unidade_medida.nome}}
                     </div>
 
                   </div>
@@ -352,11 +288,11 @@
                     :min="0"
                     :max="selectedSafraCulturaTalhao.talhao.tamanho"
                     v-model="safraCulturaTalhao.tamanho.value"
-                    :label-value="safraCulturaTalhao.tamanho.value + ' ' + safraCultura.cultura.estimativa_unidade_area.sigla"
+                    :label-value="safraCulturaTalhao.tamanho.value + ' ' + safraCultura.view_unidade_area.sigla"
                   />
                 </div>
                 <div class="col-4">
-                  <custom-input-text  type="number" :suffix="safraCultura.cultura.estimativa_unidade_area.sigla" :model="safraCulturaTalhao.tamanho"
+                  <custom-input-text  type="number" :suffix="safraCultura.view_unidade_area.sigla" :model="safraCulturaTalhao.tamanho"
                                       @blur="checkInputMaxSize(safraCulturaTalhao.tamanho.value, selectedSafraCulturaTalhao)"
                   />
                 </div>
@@ -364,7 +300,7 @@
             </q-item>
 
             <q-list no-border dense class="q-py-none">
-              <q-list-header>Estimativa por {{safraCultura.cultura.estimativa_unidade_area.nome}}</q-list-header>
+              <q-list-header>Estimativa por {{safraCultura.view_unidade_area.nome}}</q-list-header>
               <q-item dense>
                 <div class="row gutter-x-sm">
                   <div class="col-3">
@@ -372,7 +308,7 @@
                   </div>
                   <div class="col-9 self-center">
                     <!--label de unidade-->
-                    {{safraCultura.cultura.estimativa_unidade_medida.nome}}
+                    {{safraCultura.view_unidade_medida.nome}}
                   </div>
                 </div>
               </q-item>
@@ -467,13 +403,16 @@
   // import graficoClassificacaoMediaArmazem from 'components/graficos/GraficoClassificacaoMediaArmazem.vue'
   // import graficoQuantidadeEntregaArmazems from 'components/graficos/GraficoQuantidadeEntregaArmazems.vue'
 
-  import graficoClassificacaoDiaria from 'components/graficos/GraficoClassificacaoDiaria.vue'
-  import graficoEntregaCaminhao from 'components/graficos/GraficoEntregaCaminhao.vue'
-  import graficoColheitaDiaria from 'components/graficos/GraficoColheitaDiaria.vue'
-  import graficoColheitaPorArea from 'components/graficos/GraficoColheitaPorArea.vue'
-  import graficoColheitaPorTalhao from 'components/graficos/GraficoColheitaPorTalhao.vue'
-  import graficoColheitaPorCultivar from 'components/graficos/GraficoColheitaPorCultivar.vue'
-  import graficoEntregaArmazem from 'components/graficos/GraficoEntregaArmazem.vue'
+  // import graficoColheitaPorArea from 'components/safra/graficos/GraficoColheitaPorArea.vue'
+  // import graficoColheitaPorTalhao from 'components/safra/graficos/GraficoColheitaPorTalhao.vue'
+  // import graficoColheitaPorCultivar from 'components/safra/graficos/GraficoColheitaPorCultivar.vue'
+
+  import graficoEntregaArmazem from 'components/safra/graficos/GraficoEntregaArmazem.vue'
+  import graficoEntregaCaminhao from 'components/safra/graficos/GraficoEntregaCaminhao.vue'
+  import graficoColheitaDiaria from 'components/safra/graficos/GraficoColheitaDiaria.vue'
+  import graficoClassificacaoDiaria from 'components/safra/graficos/GraficoClassificacaoDiaria.vue'
+
+  import safraQuantidades from 'components/safra/Quantidades.vue'
 
 
   export default {
@@ -486,13 +425,16 @@
       // graficoClassificacaoMediaArmazem,
       // graficoQuantidadeEntregaArmazems,
 
+      // graficoColheitaPorArea,
+      // graficoColheitaPorTalhao,
+      // graficoColheitaPorCultivar,
+
       graficoClassificacaoDiaria,
       graficoColheitaDiaria,
       graficoEntregaArmazem,
       graficoEntregaCaminhao,
-      graficoColheitaPorArea,
-      graficoColheitaPorTalhao,
-      graficoColheitaPorCultivar,
+
+      safraQuantidades,
     },
     data () {
       return {
@@ -510,7 +452,6 @@
         selectedSafraCulturaTalhao: null,
         modalEditSafraCulturaTalhao: false,
         modalAddCultivarInfo: false,
-
       }
     },
     computed: {
@@ -638,10 +579,10 @@
       },
       formatCulturaTalhaoTamanhoLabel: function(culturaTalhao) {
         if (culturaTalhao.tamanho === culturaTalhao.talhao.tamanho) {
-          return culturaTalhao.tamanho + ' ' + this.safraCultura.cultura.estimativa_unidade_area.plural + ' (100%)'
+          return culturaTalhao.tamanho + ' ' + this.safraCultura.view_unidade_area.plural + ' (100%)'
         } else {
           let porcentagem = Math.round(culturaTalhao.tamanho / culturaTalhao.talhao.tamanho * 100);
-          return culturaTalhao.tamanho + ' de ' + culturaTalhao.talhao.tamanho + ' ' + this.safraCultura.cultura.estimativa_unidade_area.nome + ' (' + porcentagem + '%)';
+          return culturaTalhao.tamanho + ' de ' + culturaTalhao.talhao.tamanho + ' ' + this.safraCultura.view_unidade_area.nome + ' (' + porcentagem + '%)';
         }
       },
       // getSafraCulturaTotalArea: function () {
