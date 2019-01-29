@@ -361,6 +361,12 @@
         this.cfopDescricao = null;
         this.cfopError = false;
         this.hasNotaFiscal = true;
+
+        this.negocioCulturas = [];
+        this.armazens = [];
+        this.motoristas = [];
+        this.unidadesMedida = [];
+        this.notasFiscaisSeries = [];
       },
       isNextStepEnabled: function(){
         if(this.sendEntrega.negocioCulturaId == null && this.currentStep === 'negocio'){
