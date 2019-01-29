@@ -48,10 +48,6 @@
                   {{safra_cultura_talhao.area}}
                   {{safra_cultura_talhao.talhao}}
                 </q-item-tile>
-                <q-item-tile sublabel>
-                  {{safra_cultura_talhao.cultivar.marca}}
-                  {{safra_cultura_talhao.cultivar.nome}}
-                </q-item-tile>
               </q-item-main>
             </q-item>
           </q-list>

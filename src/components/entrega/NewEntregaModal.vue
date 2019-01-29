@@ -106,29 +106,7 @@
           </div>
           <div v-if="talhoes.length === 0" class="list-empty">
             <q-icon name="warning" />
-            <span>Nenhum talhão cadastrado ou nenhum cultivar associado à um talhão</span>
-          </div>
-        </div>
-      </q-step>
-
-      <!--PASSO 5 ESCOLHER CULTIVAR -->
-      <q-step title="Cultivar" name="escolherCultivar">
-        <div class="row justify-center items-center gutter-sm space-end" style="min-height: 80vh">
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="cultivar in cultivares" :key="cultivar.id">
-            <q-card>
-              <q-card-media overlay-position="full" @click.native="selectCultivar(cultivar)">
-
-                <ap-image size="400x250" :file-name="cultivar.marca.image_file_name" />
-
-                <q-card-title slot="overlay" align="end" v-if="cultivar.id === selectedCultivarId">
-                  <q-icon name="check_circle" size="30px" color="positive"/>
-                </q-card-title>
-              </q-card-media>
-              <q-card-title class="q-py-xs">
-                {{cultivar.marca.nome}}
-                {{cultivar.nome}}
-              </q-card-title>
-            </q-card>
+            <span>Nenhum talhão cadastrado</span>
           </div>
         </div>
       </q-step>
@@ -137,8 +115,8 @@
 
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-      <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="currentStep != 'escolherCultivar' "/>
-      <q-btn label="salvar" color="primary" @click="save" :disable="isNextStepEnabled()" v-if="currentStep == 'escolherCultivar' "/>
+      <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="currentStep != 'escolherTalhao' "/>
+      <q-btn label="salvar" color="primary" @click="save" :disable="isNextStepEnabled()" v-if="currentStep == 'escolherTalhao' "/>
     </q-page-sticky>
 
   </q-modal>
@@ -168,12 +146,10 @@
         safraCulturas: [],
         areas: [],
         talhoes: [],
-        cultivares: [],
         safraCulturaTalhoes: [],
         selectedSafraCulturaId: null,
         selectedAreaId: null,
         selectedTalhaoId: null,
-        selectedCultivarId: null,
         addNewTalhaoMode: false,
         selectedEntrega: null,
       }
@@ -185,7 +161,6 @@
         this.selectedSafraCulturaId = null;
         this.selectedAreaId = null;
         this.selectedTalhaoId = null;
-        this.selectedCultivarId = null;
         this.currentStep = 'escolherCaminhao';
 
         this.listSafraCulturas();
@@ -217,9 +192,6 @@
         if(this.selectedTalhaoId == null && this.currentStep === 'escolherTalhao' ){
           return true
         }
-        if(this.selectedCultivarId == null && this.currentStep === 'escolherCultivar' ){
-          return true
-        }
         return false;
       },
       listCaminhoes: function(){
@@ -233,6 +205,7 @@
       },
       selectCaminhao: function(caminhaoId){
         this.novaEntrega.caminhaoId = caminhaoId;
+        this.selectedSafraCulturaId = null;
         this.goToNextStep()
       },
       listSafraCulturas: function(){
@@ -246,6 +219,7 @@
       },
       selectSafraCultura: function(safraCultura){
         this.selectedSafraCulturaId = safraCultura.id;
+        this.selectedAreaId = null;
         this.listSafraCulturaTalhaoBySafraCultura(safraCultura.id);
         this.goToNextStep()
       },
@@ -263,12 +237,13 @@
       },
       selectArea: function(area){
         this.selectedAreaId = area.id;
+        this.selectedTalhaoId = null;
         this.listTalhoesByArea(area.id);
         this.goToNextStep()
       },
       listTalhoesByArea(area_id){
         let filteredSafraCulturaTalhoes = this.safraCulturaTalhoes.filter(
-          safraCulturaTalhao => safraCulturaTalhao.talhao.area.id === area_id && safraCulturaTalhao.cultivar != null
+          safraCulturaTalhao => safraCulturaTalhao.talhao.area.id === area_id
         );
 
         if(filteredSafraCulturaTalhoes === 1){
@@ -312,32 +287,6 @@
       },
       selectTalhao: function(talhao){
         this.selectedTalhaoId = talhao.id;
-        this.listCultivares(this.selectedAreaId, talhao.id)
-        this.goToNextStep()
-      },
-      listCultivares: function(area_id, talhao_id){
-        let filteredSafraCulturaTalhoes = this.safraCulturaTalhoes.filter(safraCulturaTalhao => {
-          return safraCulturaTalhao.talhao.id === talhao_id && safraCulturaTalhao.talhao.area.id === area_id;
-        });
-
-        this.cultivares = [];
-        filteredSafraCulturaTalhoes.forEach(safraCulturaTalhao => {
-          if(this.cultivares.length === 0){
-            if(safraCulturaTalhao.cultivar){
-              this.cultivares.push(safraCulturaTalhao.cultivar);
-            }
-          }else{
-            if(safraCulturaTalhao.cultivar){
-              if(!this.cultivares.some(cultivar => cultivar.id === safraCulturaTalhao.cultivar.id)){
-                this.cultivares.push(safraCulturaTalhao.cultivar)
-              }
-            }
-          }
-        })
-      },
-      selectCultivar: function(cultivar){
-        this.selectedCultivarId = cultivar.id;
-        //this.saveNovaEntrega();
       },
       save:function(){
         if(!this.addNewTalhaoMode){
@@ -349,8 +298,7 @@
       saveNovaEntrega: function(){
         let filteredSafraCulturaTalhoes = this.safraCulturaTalhoes.filter(safraCulturaTalhao => {
           return safraCulturaTalhao.talhao.id === this.selectedTalhaoId
-            && safraCulturaTalhao.talhao.area.id === this.selectedAreaId
-            && safraCulturaTalhao.cultivar.id === this.selectedCultivarId;
+            && safraCulturaTalhao.talhao.area.id === this.selectedAreaId;
 
         });
 
@@ -372,9 +320,7 @@
         //TODO: Código repetido com o saveNovaEntrega. Separar em outro metodo
         let filteredSafraCulturaTalhoes = this.safraCulturaTalhoes.filter(safraCulturaTalhao => {
           return safraCulturaTalhao.talhao.id === this.selectedTalhaoId
-            && safraCulturaTalhao.talhao.area.id === this.selectedAreaId
-            && safraCulturaTalhao.cultivar.id === this.selectedCultivarId;
-
+            && safraCulturaTalhao.talhao.area.id === this.selectedAreaId;
         });
 
         this.novaEntrega.safraCulturaTalhaoId = filteredSafraCulturaTalhoes[0].id;
@@ -392,7 +338,6 @@
         });
       },
       goToNextStep(){
-        //this.$refs.stepperNovaEntrega.next();
         switch (this.currentStep) {
           case 'escolherCaminhao':
             this.$refs.stepperNovaEntrega.goToStep('escolherSafra');
@@ -404,9 +349,6 @@
             this.$refs.stepperNovaEntrega.goToStep('escolherTalhao');
             break;
           case 'escolherTalhao':
-            this.$refs.stepperNovaEntrega.goToStep('escolherCultivar');
-            break;
-          case 'escolherCultivar':
             break;
         }
       }

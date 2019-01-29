@@ -36,7 +36,7 @@
                         <q-item-tile v-if="entrega.armazem" sublabel>{{entrega.armazem.nome}}</q-item-tile>
                       </q-item-main>
                       <q-item-side>
-                        <q-btn class="float-right" dense icon="more_vert" round flat >
+                        <q-btn class="float-right" dense icon="more_vert" round flat v-if="entrega.armazem">
                           <q-popover>
                             <q-list link class="no-border">
                               <q-item v-close-overlay @click.native="updateArmazem(entrega)">
@@ -300,7 +300,7 @@
                                   <q-item-main label="Definir Percentuais"/>
                                 </q-item>
                                 <q-item v-close-overlay @click.native="addTalhao(entrega)">
-                                  <q-item-main label="Adicionar Talhão / Cultivar"/>
+                                  <q-item-main label="Adicionar Talhão"/>
                                 </q-item>
                               </q-list>
                             </q-popover>
@@ -322,7 +322,6 @@
                           <!-- TEXTO TALHAO -->
                           <q-item-main>
                             <q-item-tile label>{{sct.talhao.area}} - {{sct.talhao.nome}}</q-item-tile>
-                            <q-item-tile label>{{sct.cultivar.marca}} - {{sct.cultivar.nome}}</q-item-tile>
                             <q-item-tile sublabel>
                               <template v-if="sct.quantidade">
                                 {{ numeral(sct.quantidade).format('0,0') }}
