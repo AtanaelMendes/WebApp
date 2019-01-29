@@ -276,6 +276,9 @@
         if(this.funcao === 'updateMotorista'){
           return false
         }
+        if(this.funcao === 'updateArmazem'){
+          return false
+        }
         return true
       },
     },
@@ -304,7 +307,6 @@
             this.sendEntrega.peso = object.caminhao.lotacao;
             break;
           case 'addNota':
-            console.log(object)
             this.selectedNegocio = object;
             this.stepNegocio = false;
             this.stepArmazem = false;
@@ -320,7 +322,6 @@
             this.stepInformacoes = true;
             this.getNotaFiscalItem(object.id);
             break;
-
           case 'novoNegocio':
             this.selectedEntrega = object;
             this.currentStep = 'negocio';
@@ -392,7 +393,9 @@
           case 'novoNegocio':
             return this.sendEntrega.isValid(this.hasNotaFiscal);
           case 'updateMotorista':
-            return this.sendEntrega.motoristaId != null
+            return this.sendEntrega.motoristaId != null;
+          case 'updateArmazem':
+            return this.sendEntrega.armazemId != null;
         }
       },
       listNegocioCulturas: function(){
@@ -449,7 +452,7 @@
       listArmazensByEntrega: function(entregaId){
         this.$q.loading.show();
         armazemService.listArmazensByEntrega(entregaId).then(response => {
-          //TODO: Remover o armazem já selecionado
+          //TODO: Remover o armazem já selecionadooo
           this.armazens = response.data;
           this.$q.loading.hide();
         }).catch(error => {
@@ -511,6 +514,9 @@
           case 'updateMotorista':
             this.updateMotorista();
             break;
+          case 'updateArmazem':
+            this.updateArmazem();
+            break;
         }
       },
       saveSendEntrega: function(){
@@ -554,6 +560,24 @@
         entregaService.updateMotorista(entregaId, param).then(response => {
           if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Motorista atualizado com sucesso'});
+            this.closeModal();
+            this.$root.$emit('refreshEntregaView')
+          }
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          this.$q.loading.hide();
+        });
+      },
+      updateArmazem: function(){
+        let entregaId = this.$route.params.id;
+        let param = {
+          armazem_id: this.sendEntrega.armazemId,
+        };
+        this.$q.loading.show();
+        entregaService.updateArmazem(entregaId, param).then(response => {
+          if(response.status === 200) {
+            this.$q.notify({type: 'positive', message: 'Armazem atualizado com sucesso'});
             this.closeModal();
             this.$root.$emit('refreshEntregaView')
           }

@@ -129,6 +129,15 @@ export default {
       })
     });
   },
+  updateArmazem(entrega_id, params){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/armazem', params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  },
   addNotaFiscalToNegocio(entrega_id, negocio_id, params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.post('entrega/'+ entrega_id + '/negocio/' + negocio_id + '/nota_fiscal', params).then(response => {
