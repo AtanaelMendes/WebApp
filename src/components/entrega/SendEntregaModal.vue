@@ -347,7 +347,7 @@
             this.stepArmazem = true;
             this.stepMotorista = false;
             this.stepInformacoes = false;
-            this.listArmazensByEntrega(this.selectedEntrega.id);
+            this.listArmazensByEntrega(this.selectedEntrega);
             break;
         }
         this.isModalOpened = true;
@@ -449,15 +449,29 @@
           this.$q.loading.hide();
         })
       },
-      listArmazensByEntrega: function(entregaId){
+      listArmazensByEntrega: function(entrega){
+        if(entrega.negocios.length === 0) {
+          this.listArmazensByProdutor();
+          return;
+        }
+
         this.$q.loading.show();
-        armazemService.listArmazensByEntrega(entregaId).then(response => {
+        armazemService.listArmazensByEntrega(entrega.id).then(response => {
           //TODO: Remover o armazem já selecionadooo
           this.armazens = response.data;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
         })
+      },
+      listArmazensByProdutor(){
+        this.$q.loading.show();
+        armazemService.listArmazens().then(response => {
+          this.armazens = response.data;
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.loading.hide();
+        });
       },
       selectArmazem: function(armazem){
         this.sendEntrega.armazemId = armazem.id;
@@ -702,7 +716,7 @@
     color: #8c8c8c;
     font-weight: 300;
   }
-    font-size: 15px;
+
   .list-empty i{
     color: #ffb500;
     font-size: 20px;

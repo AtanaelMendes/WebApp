@@ -123,7 +123,7 @@
             </div>
 
             <!--INFO DOS NEGÓCIOS-->
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-6" v-if="entrega.negocios.length > 0">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-6" v-if="entrega.status !== 'Carregando'">
               <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                 <q-card>
                   <q-card-title>
@@ -155,7 +155,7 @@
                                 <q-item v-close-overlay @click.native="viewNegocio(negocio.negocio_cultura.negocio.id)">
                                   <q-item-main label="Visualizar"/>
                                 </q-item>
-                                <q-item v-close-overlay @click.native="deleteNegocio(negocio.id)" v-if="entrega.negocios.length > 1">
+                                <q-item v-close-overlay @click.native="deleteNegocio(negocio.id)">
                                   <q-item-main label="Excluir"/>
                                 </q-item>
                               </q-list>
@@ -259,6 +259,16 @@
                         </q-item>
 
                       </template>
+                    </template>
+                    <template v-if="entrega.negocios.length === 0">
+                      <q-item>
+                        <q-item-main>
+                          <div class="list-empty">
+                            <q-icon name="warning" />
+                            <span>Adicione um negócio para poder continuar</span>
+                          </div>
+                        </q-item-main>
+                      </q-item>
                     </template>
                   </q-list>
                 </q-card>
@@ -589,6 +599,14 @@
         this.$refs.sendEntregaModal.openModal('updateArmazem', entrega)
       },
       newPesagem: function(){
+        if(this.entrega.negocios.length === 0){
+          this.$q.dialog({
+            title: 'Atenção',
+            message: 'Adicione um negócio para poder continuar',
+            color: 'primary'
+          });
+          return;
+        }
         this.$refs.newPesagemModal.openModal(this.entrega)
       },
 
@@ -679,5 +697,20 @@
     right: 46px;
     border-radius: 6px;
     padding: 7px 10px;
+  }
+
+  .list-empty{
+    height: 55px;
+    text-align: center;
+    padding-top: 15px;
+  }
+  .list-empty span{
+    color: #8c8c8c;
+    font-weight: 300;
+  }
+  .list-empty i{
+    color: #ffb500;
+    font-size: 20px;
+    margin-right: 6px;
   }
 </style>
