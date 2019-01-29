@@ -29,7 +29,6 @@ export default {
       })
     });
   },
-
   getEntregaById(id){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega/'+ id).then( response => {

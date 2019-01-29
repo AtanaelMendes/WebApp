@@ -25,6 +25,17 @@
               <span slot="subtitle">
                 {{moment(entrega.inicio_carregamento).fromNow()}}
               </span>
+              <div slot="right">
+                <q-btn @click.stop round flat dense icon="more_vert" color="white" @click.stop>
+                  <q-popover>
+                    <q-list link no-boder>
+                      <q-item v-close-overlay @click.native="deleteEntrega(entrega.id)">
+                        <q-item-main label="Excluir"/>
+                      </q-item>
+                    </q-list>
+                  </q-popover>
+                </q-btn>
+              </div>
             </q-card-title>
             <ap-image size="400x250" :file-name="entrega.caminhao.image_file_name" />
           </q-card-media>
@@ -78,6 +89,17 @@
               <span slot="subtitle">
                 {{moment(entrega.envio_armazem).fromNow()}}
               </span>
+              <div slot="right">
+                <q-btn @click.stop round flat dense icon="more_vert" color="white" @click.stop>
+                  <q-popover>
+                    <q-list link no-boder>
+                      <q-item v-close-overlay @click.native="deleteEntrega(entrega.id)">
+                        <q-item-main label="Excluir"/>
+                      </q-item>
+                    </q-list>
+                  </q-popover>
+                </q-btn>
+              </div>
             </q-card-title>
             <ap-image size="400x250" :file-name="entrega.caminhao.image_file_name" />
           </q-card-media>
@@ -155,6 +177,18 @@
                 {{entrega.caminhao.placa}}
               </q-item-tile>
             </q-item-side>
+            <div >
+              <q-btn @click.stop round flat dense icon="more_vert"  @click.stop>
+                <q-popover>
+                  <q-list link no-boder>
+                    <q-item v-close-overlay @click.native="deleteEntrega(entrega.id)">
+                      <q-item-main label="Excluir"/>
+                    </q-item>
+                  </q-list>
+                </q-popover>
+              </q-btn>
+            </div>
+
           </q-item>
 
         </q-list>
@@ -251,12 +285,36 @@
       },
       viewCarga: function (id) {
         this.$router.push({name: 'entrega_view', params: {id:id}});
+      },
+      deleteEntrega(id){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar esta entrega?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          this.$q.loading.show();
+          entregaService.deleteEntrega(id).then(response => {
+            switch (this.tabs) {
+              case 'carregando':
+                this.listEntregasCarregando();
+                break;
+              case 'no-armazem':
+                this.listEntregasNoArmazem();
+                break
+              case 'entregue':
+                this.listEntregasEntregues();
+                break
+            };
+            this.$q.loading.hide();
+          }).catch(error => {
+            this.$q.loading.hide();
+          })
+        }).catch(()=>{});
       }
     },
     mounted () {
       this.listEntregasCarregando();
-      // this.listEntregasNoArmazem();
-      // this.listEntregasEntregues();
 
       this.$root.$on('refreshEntregasList', (status) => {
         switch (status) {

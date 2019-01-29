@@ -630,13 +630,16 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           entregaService.delteTalhaoOfEntrega(this.entrega.id, id).then(response => {
             if(response.status === 200) {
               this.$q.notify({type: 'positive', message: 'Talhão removido com sucesso'});
+              this.$q.loading.hide();
               this.getEntrega()
             }
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+            this.$q.loading.hide();
           });
         }).catch(()=>{});
       },
@@ -647,13 +650,16 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           entregaService.delteNegocioOfEntrega(this.entrega.id, id).then(response => {
             if(response.status === 200) {
               this.$q.notify({type: 'positive', message: 'Negócio removido com sucesso'});
               this.getEntrega()
             }
+            this.$q.loading.hide();
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+            this.$q.loading.hide();
           });
         }).catch(()=>{});
       },
@@ -664,8 +670,12 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           pesagemService.deletePesagem(this.entrega.id, id).then(response => {
+            this.$q.loading.hide();
             this.getEntrega()
+          }).catch(error => {
+            this.$q.loading.hide();
           })
         }).catch(()=>{});
       },
