@@ -1,6 +1,11 @@
 <template>
   <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Entregas" navigation_type="menu" >
+    <toolbar slot="toolbar" title="Entregas" navigation_type="menu">
+
+      <template slot="action_itens">
+        <q-btn flat round dense icon="tune" @click="openFilterModal" />
+        <q-btn flat round dense icon="mdi-file-export" />
+      </template>
 
       <div slot="tabs">
         <q-tabs v-model="tabs" ref="tabs" @select="switchTab">
@@ -199,6 +204,9 @@
     <!--MODAL NOVA CARGA -->
     <new-entrega-modal ref="entregaModal"/>
 
+    <!-- MODAL FILTRO -->
+    <filter-entregas-modal ref="filterEntregasModal" @on-search="filterEntregas"/>
+
   </custom-page>
 </template>
 <script>
@@ -208,9 +216,10 @@
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import entregaService from 'assets/js/service/entrega/EntregaService'
   import NewEntregaModal from 'components/entrega/NewEntregaModal'
+  import FilterEntregasModal from 'components/entrega/FilterEntregasModal'
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
-  import agroUtils from 'assets/js/AgroUtils'
+  import AgroUtils from 'assets/js/AgroUtils'
 
   export default {
     name: "entregas",
@@ -221,6 +230,7 @@
       customInputText,
       customInputDatetime,
       NewEntregaModal,
+      FilterEntregasModal,
       apImage,
     },
     data () {
@@ -240,39 +250,56 @@
             break;
           case 'no-armazem':
             this.listEntregasNoArmazem();
-            break
+            break;
           case 'entregue':
             this.listEntregasEntregues();
             break
         }
       },
       makeUrl: function (image_file_name, size) {
-        return agroUtils.image.makeUrl(image_file_name, size)
+        return AgroUtils.image.makeUrl(image_file_name, size)
       },
       novaEntrega: function(){
         this.$refs.entregaModal.openModal()
       },
-      listEntregasCarregando() {
+      openFilterModal(){
+        this.$refs.filterEntregasModal.openModal();
+      },
+      filterEntregas(filters){
+        let queryFilter = AgroUtils.serialize(filters);
+        switch (this.tabs) {
+          case 'carregando':
+            this.listEntregasCarregando(queryFilter);
+            break;
+          case 'no-armazem':
+            this.listEntregasNoArmazem(queryFilter);
+            break;
+          case 'entregue':
+            this.listEntregasEntregues(queryFilter);
+            break;
+        }
+      },
+      listEntregasCarregando(filter = null) {
         this.$q.loading.show();
-        entregaService.listEntregasCarregando().then(response => {
+        entregaService.listEntregasCarregando(filter).then(response => {
           this.entregasCarregando = response.data;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
         })
       },
-      listEntregasNoArmazem: function () {
+      listEntregasNoArmazem: function (filter = null) {
         this.$q.loading.show();
-        entregaService.listEntregasNoArmazem().then(response => {
+        entregaService.listEntregasNoArmazem(filter).then(response => {
           this.entregasNoArmazem = response.data;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
         })
       },
-      listEntregasEntregues: function () {
+      listEntregasEntregues: function (filter = null) {
         this.$q.loading.show();
-        entregaService.listCargasEntregues().then(response => {
+        entregaService.listCargasEntregues(filter).then(response => {
           this.entregasEntregues = response.data;
           this.$q.loading.hide();
         }).catch(error => {

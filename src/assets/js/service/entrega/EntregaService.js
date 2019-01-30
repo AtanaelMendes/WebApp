@@ -2,27 +2,27 @@ import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
 const produtorId = localStorage.getItem('account.produtor_id');
 export default {
-  listEntregasCarregando(){
+  listEntregasCarregando(filter = null){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=carregando').then( response => {
+      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=carregando' + (filter ? ("&" + filter) : "")).then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
       })
     });
   },
-  listEntregasNoArmazem(){
+  listEntregasNoArmazem(filter = null){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=no_armazem').then( response => {
+      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=no_armazem' + (filter ? ("&" + filter) : "")).then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
       })
     });
   },
-  listCargasEntregues(){
+  listCargasEntregues(filter = null){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=entregue').then( response => {
+      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=entregue' + (filter ? ("&" + filter) : "")).then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
@@ -198,6 +198,15 @@ export default {
         resolve(response)
       }).catch(error => {
         reject(error.response)
+      })
+    });
+  },
+  getFilterOptions(){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega/filter_option').then( response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
       })
     });
   },
