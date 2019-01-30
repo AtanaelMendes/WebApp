@@ -5,9 +5,12 @@
 
     <div class="row q-pa-md gutter-sm space-end">
 
+
       <!--HEADER-->
       <div class="col-12">
         <q-card class="row">
+
+
 
           <!--IMAGEM HEADER-->
           <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
@@ -40,8 +43,39 @@
         </q-card>
       </div>
 
+      <div class="col-12">
+
+        <q-tabs class="shadow-2"  swipeable color="primary" align="justify">
+          <!-- Tabs - notice slot="title" -->
+          <q-tab slot="title" name="tab-diaria" label="" icon="mdi-calendar" default/>
+          <q-tab slot="title" name="tab-classificacao" label="" icon="mdi-ruler" />
+          <q-tab slot="title" name="tab-caminhao" label="" icon="mdi-truck" />
+          <q-tab slot="title" name="tab-armazem" label="" icon="place"/>
+
+          <!-- Targets -->
+          <q-tab-pane name="tab-armazem">
+            Entrega Por Armazém
+            <grafico-entrega-armazem :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
+          </q-tab-pane>
+          <q-tab-pane name="tab-caminhao">
+            Entrega Por Caminhão
+            <grafico-entrega-caminhao :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
+          </q-tab-pane>
+          <q-tab-pane name="tab-diaria">
+            Colheita Diária
+            <grafico-colheita-diaria :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
+          </q-tab-pane>
+          <q-tab-pane name="tab-classificacao">
+            Classificação Diária
+            <grafico-classificacao-diaria :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="300" :width="100"/>
+          </q-tab-pane>
+        </q-tabs>
+
+      </div>
+
+
       <!--GRAFICO ENTREGA DOS ARMAZEMS-->
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="safraCultura.cargas>0">
+      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="safraCultura.cargas>0">
         <q-card class="full-height">
           <q-card-title>
             Entrega Por Armazém
@@ -50,10 +84,11 @@
             <grafico-entrega-armazem :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
           </q-card-main>
         </q-card>
-      </div>
+      </div> -->
+
 
       <!--GRAFICO PORCENTAGEM CAMINHOES-->
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="safraCultura.cargas>0">
+      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="safraCultura.cargas>0">
         <q-card class="full-height">
           <q-card-title>
             Entrega Por Caminhão
@@ -62,11 +97,11 @@
             <grafico-entrega-caminhao :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
           </q-card-main>
         </q-card>
-      </div>
+      </div> -->
 
 
       <!--GRAFICO COLHEITA DIARIA-->
-      <div class="col-12" v-if="safraCultura.cargas>0">
+      <!-- <div class="col-12" v-if="safraCultura.cargas>0">
         <q-card class="full-height">
           <q-card-title>
             Colheita Diária
@@ -75,19 +110,19 @@
             <grafico-colheita-diaria :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
           </q-card-main>
         </q-card>
-      </div>
+      </div> -->
 
       <!--GRAFICO CLASSIFICACAO DIARIA-->
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" v-if="safraCultura.cargas>0">
+      <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" v-if="safraCultura.cargas>0">
         <q-card class="full-height">
           <q-card-title>
-            Classificação Diária
+            Classificcação Diária
           </q-card-title>
           <q-card-main>
             <grafico-classificacao-diaria :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
           </q-card-main>
         </q-card>
-      </div>
+      </div> -->
 
       <!--GRAFICO CLASSIFICACAO MEDIA ARMAZEM-->
       <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
