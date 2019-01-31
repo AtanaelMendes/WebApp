@@ -10,20 +10,16 @@
       <div class="col-12">
         <q-card class="row">
 
-
-
           <!--IMAGEM HEADER-->
-          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
-            <q-card-media overlay-position="top" class="full-height items-center">
-              <ap-image size="800x500" :file-name="safraCultura.cultura.image_file_name"/>
-              <q-card-title slot="overlay">
-                {{safraCultura.cultura.nome}} {{safraCultura.safra.ano_inicio}}/{{safraCultura.safra.ano_fim}}
-                <span slot="subtitle">
-                  {{numeral(safraCultura.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
-                </span>
-              </q-card-title>
-            </q-card-media>
-          </div>
+          <q-card-media overlay-position="top" class="full-height items-center col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
+            <ap-image size="800x500" :file-name="safraCultura.cultura.image_file_name"/>
+            <q-card-title slot="overlay">
+              {{safraCultura.cultura.nome}} {{safraCultura.safra.ano_inicio}}/{{safraCultura.safra.ano_fim}}
+              <span slot="subtitle">
+                {{numeral(safraCultura.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
+              </span>
+            </q-card-title>
+          </q-card-media>
 
           <!--INFO DO HEADER-->
           <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
@@ -72,6 +68,129 @@
         </q-tabs>
 
       </div>
+
+      <div class="col-12" v-for="area in areasPorId">
+
+        <!--AREA-->
+        <q-card class="row">
+
+          <!--IMAGEM AREA-->
+          <q-card-media overlay-position="top" class="full-height items-center col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
+            <ap-image size="800x500" :file-name="area.image_file_name"/>
+            <q-card-title slot="overlay">
+              {{area.nome}}
+              <span slot="subtitle">
+                {{numeral(area.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
+              </span>
+            </q-card-title>
+          </q-card-media>
+
+          <!--INFO DA AREA-->
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
+              <safra-quantidades v-if="loaded"
+                :tamanho="area.tamanho"
+                :estimativa_total="area.estimativa_total"
+                :peso_liquido="area.peso_liquido"
+                :peso_desconto="area.peso_desconto"
+                :estimativa_carga="area.estimativa_carga"
+                :cargas="area.cargas"
+                :finalizado="area.finalizado"
+                :view_unidade_area="safraCultura.view_unidade_area"
+                :view_unidade_medida="safraCultura.view_unidade_medida"
+              >
+              </safra-quantidades>
+          </div>
+
+          <div class="col-12">
+                <q-collapsible>
+                  <template slot="header">
+                    <q-item-side icon="mdi-scale" />
+                    <q-item-main>
+                      {{area.talhoes.length}} talhoes
+                    </q-item-main>
+                  </template>
+                  <div class="row">
+                  <template v-for="talhao in area.talhoes">
+                    <!--TALHAO-->
+                    <div class="col-4">
+                    <q-card>
+
+                      <!--IMAGEM TALHAO-->
+                        <q-card-media overlay-position="top" class="full-height items-center">
+                          <ap-image size="800x500" :file-name="talhao.image_file_name"/>
+                          <q-card-title slot="overlay">
+                            {{area.nome}} {{talhao.nome}}
+                            <span slot="subtitle">
+                              {{numeral(talhao.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
+                            </span>
+                          </q-card-title>
+                        </q-card-media>
+
+                      <!--INFO DA AREA-->
+                          <safra-quantidades v-if="loaded"
+                            :tamanho="talhao.tamanho"
+                            :estimativa_total="talhao.estimativa_total"
+                            :peso_liquido="talhao.peso_liquido"
+                            :peso_desconto="talhao.peso_desconto"
+                            :estimativa_carga="talhao.estimativa_carga"
+                            :cargas="talhao.cargas"
+                            :finalizado="talhao.finalizado"
+                            :view_unidade_area="safraCultura.view_unidade_area"
+                            :view_unidade_medida="safraCultura.view_unidade_medida"
+                          />
+
+                    </q-card>
+                    </div>
+
+
+                  </template>
+                  </div>
+                </q-collapsible>
+
+          </div>
+
+        </q-card>
+
+      </div>
+
+
+      <div class="col-12" v-for="marca in safraCultura.marcas">
+
+        <!--AREA-->
+        <q-card class="row">
+
+          <!--IMAGEM AREA-->
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
+            <q-card-media overlay-position="top" class="full-height items-center">
+              <ap-image size="800x500" :file-name="marca.image_file_name"/>
+              <q-card-title slot="overlay">
+                {{marca.nome}}
+                <span slot="subtitle">
+                  {{numeral(marca.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
+                </span>
+              </q-card-title>
+            </q-card-media>
+          </div>
+
+          <!--INFO DA AREA-->
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
+              <safra-quantidades v-if="loaded"
+                :tamanho="marca.tamanho"
+                :estimativa_total="marca.estimativa_total"
+                :peso_liquido="marca.peso_liquido"
+                :peso_desconto="marca.peso_desconto"
+                :estimativa_carga="marca.estimativa_carga"
+                :cargas="marca.cargas"
+                :finalizado="marca.finalizado"
+                :view_unidade_area="safraCultura.view_unidade_area"
+                :view_unidade_medida="safraCultura.view_unidade_medida"
+              />
+          </div>
+
+        </q-card>
+
+      </div>
+
 
 
       <!--GRAFICO ENTREGA DOS ARMAZEMS-->
@@ -496,6 +615,9 @@
       safraCulturaId: function () {
         return this.$route.params.id
       },
+      areasPorId: function () {
+        return _.orderBy(this.safraCultura.areas, 'id')
+      }
     },
     methods: {
       // ADD CULTIVAR
