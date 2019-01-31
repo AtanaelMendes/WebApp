@@ -3,8 +3,8 @@
     <toolbar slot="toolbar" title="Entregas" navigation_type="menu">
 
       <template slot="action_itens">
-        <q-btn flat round dense icon="tune" @click="openFilterModal" />
-        <q-btn flat round dense icon="mdi-file-export" />
+        <q-btn flat round dense icon="mdi-filter" @click="openFilterModal" />
+        <q-btn flat round dense icon="mdi-file-excel" />
       </template>
 
       <div slot="tabs">
@@ -16,6 +16,21 @@
       </div>
 
     </toolbar>
+
+    <!-- TODO: Criar componente aqui -->
+    <div v-if="filterParams" class="q-pa-xs shadow-2 bg-grey-2">
+      <q-item dense>
+        <q-item-main>
+          <template v-for="param in filterParams" >
+            <div style="display: inline-flex"><span class="bold q-caption text-weight-light text-no-wrap">{{param.nome}}:&nbsp</span></div>
+            <div style="display: inline-flex"><span class="q-caption text-weight-medium text-no-wrap q-mr-sm">{{param.valor}}</span></div>
+          </template>
+        </q-item-main>
+        <q-item-side>
+          <q-btn flat round dense icon="mdi-filter-remove" @click="clearFilter(true)" />
+        </q-item-side>
+      </q-item>
+    </div>
 
     <!--TAB CARREGANDO-->
     <div class="row gutter-sm space-end q-pa-md" v-if="tabs === 'carregando' ">
@@ -240,10 +255,13 @@
         entregasCarregando:[],
         entregasNoArmazem:[],
         entregasEntregues:[],
+        filterParams: null,
       }
     },
     methods: {
       switchTab(value){
+        this.clearFilter();
+
         switch (value) {
           case 'carregando':
             this.listEntregasCarregando();
@@ -266,6 +284,7 @@
         this.$refs.filterEntregasModal.openModal();
       },
       filterEntregas(filters){
+        this.setFilterParams()
         let queryFilter = AgroUtils.serialize(filters);
         switch (this.tabs) {
           case 'carregando':
@@ -277,6 +296,27 @@
           case 'entregue':
             this.listEntregasEntregues(queryFilter);
             break;
+        }
+      },
+      setFilterParams(){
+        this.filterParams = this.$refs.filterEntregasModal.getFilterDesciption();
+      },
+      clearFilter(refreshList = false){
+        this.$refs.filterEntregasModal.clearForm();
+        this.filterParams = null;
+
+        if(refreshList){
+          switch (this.tabs) {
+            case 'carregando':
+              this.listEntregasCarregando();
+              break;
+            case 'no-armazem':
+              this.listEntregasNoArmazem();
+              break
+            case 'entregue':
+              this.listEntregasEntregues();
+              break
+          }
         }
       },
       listEntregasCarregando(filter = null) {
