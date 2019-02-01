@@ -10,7 +10,24 @@ const axiosInstance = axios.create({
 export default ({app, router, Vue}) => {
   Vue.prototype.$axios = axiosInstance;
 
-  let interceptorResponse = axiosInstance.interceptors.response.use(customSuccessResponse, customErrorResponse);
+  axiosInstance.interceptors.response.use(customSuccessResponse, customErrorResponse);
+
+
+  let isRefreshing = false;
+  let failedQueue = [];
+
+  const processQueue = (error, token = null) => {
+    failedQueue.forEach(prom => {
+      if (error) {
+        prom.reject(error);
+      } else {
+        prom.resolve(token);
+      }
+    });
+
+    failedQueue = [];
+  };
+
 
   axiosInstance.interceptors.request.use(function (config) {
     const AUTH_TOKEN = localStorage.getItem('auth.token');
@@ -28,44 +45,51 @@ export default ({app, router, Vue}) => {
   }
 
   function customErrorResponse(error) {
-    if(error.message === 'Network Error'){
-      Notify.create("Erro ao estabelecer uma conexão com o servidor.");
-      return Promise.reject(error);
-    }
+    const originalRequest = error.config;
 
-    if(error.response.status === 401) {
-      //Se não for response da tela de login
-      if(error.response.data.error && error.response.data.error === 'invalid_credentials'){
-        return Promise.reject(error);
+    if (error.response.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise(function(resolve, reject) {
+          failedQueue.push({resolve, reject})
+        }).then(token => {
+          originalRequest.headers['Authorization'] = 'Bearer ' + token;
+          return axiosInstance(originalRequest);
+        }).catch(err => {
+          return err
+        })
       }
-      refreshToken();
-    }
-    return Promise.reject(error);
-  }
 
-  function refreshToken () {
-    let data = {
-      grant_type: 'refresh_token',
-      client_id: process.env.CLIENT_ID,
-      client_secret: process.env.CLIENT_SECRET,
-      scope: null,
-      refresh_token: localStorage.getItem('auth.refresh_token')
-    };
+      originalRequest._retry = true;
+      isRefreshing = true;
 
-    axiosInstance.interceptors.response.eject(interceptorResponse);
+      let data = {
+        grant_type: 'refresh_token',
+        client_id: process.env.CLIENT_ID,
+        client_secret: process.env.CLIENT_SECRET,
+        scope: null,
+        refresh_token: localStorage.getItem('auth.refresh_token')
+      };
 
-    axiosInstance.post('oauth/token', data)
-      .then(function (response) {
-        localStorage.setItem('auth.token', response.data.access_token);
-        localStorage.setItem('auth.refresh_token', response.data.refresh_token);
+      return new Promise(function (resolve, reject) {
+        axiosInstance.post('oauth/token', data)
+          .then(response => {
+            localStorage.setItem('auth.token', response.data.access_token);
+            localStorage.setItem('auth.refresh_token', response.data.refresh_token);
+
+            axiosInstance.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.access_token;
+            originalRequest.headers['Authorization'] = 'Bearer ' + response.data.access_token;
+            processQueue(null, response.data.access_token);
+            resolve(axiosInstance(originalRequest));
+          })
+          .catch((err) => {
+            processQueue(err, null);
+            reject(err);
+          })
+          .then(() => { isRefreshing = false })
       })
-      .catch(function (error) {
-        localStorage.removeItem('auth.token');
-        localStorage.removeItem('auth.refresh_token');
-        router.push('/login');
-      });
+    }
 
-    interceptorResponse = axiosInstance.interceptors.response.use(customSuccessResponse, customErrorResponse);
+    return Promise.reject(error);
   }
 }
 
