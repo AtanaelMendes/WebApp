@@ -17,20 +17,7 @@
 
     </toolbar>
 
-    <!-- TODO: Criar componente aqui -->
-    <div v-if="filterParams" class="q-pa-xs shadow-2 bg-grey-2">
-      <q-item dense>
-        <q-item-main>
-          <template v-for="param in filterParams" >
-            <div style="display: inline-flex"><span class="bold q-caption text-weight-light text-no-wrap">{{param.nome}}:&nbsp</span></div>
-            <div style="display: inline-flex"><span class="q-caption text-weight-medium text-no-wrap q-mr-sm">{{param.valor}}</span></div>
-          </template>
-        </q-item-main>
-        <q-item-side>
-          <q-btn flat round dense icon="mdi-filter-remove" @click="clearFilter(true)" />
-        </q-item-side>
-      </q-item>
-    </div>
+    <ap-filter-result-bar ref="filerResultBar" @clear_button_clicked="clearFilter(true)" />
 
     <!--TAB CARREGANDO-->
     <div class="row gutter-sm space-end q-pa-md" v-if="tabs === 'carregando' ">
@@ -154,65 +141,69 @@
     </div>
 
     <!--TAB ENTREGUE-->
-    <div class="row gutter-sm space-end" v-if="tabs === 'entregue' ">
-      <div class="col-12">
-        <q-list no-border link separator>
-          <q-item multiline v-for="entrega in entregasEntregues" :key="entrega.id" @click.native="viewCarga(entrega.id)">
-            <q-item-side :image="makeUrl(entrega.caminhao.image_file_name, '200x125')" />
-            <q-item-main>
-              <q-item-tile class="content-center">
-                <div class="row">
-                  <div class="col-sm-12 col-md-6">
-                    {{entrega.armazem}}
-                  </div>
-                  <div class="col-sm-12 col-md-6">
-                    {{entrega.peso}}
-                  </div>
-                </div>
-              </q-item-tile>
-              <q-item-tile sublabel>
-                <div class="row">
-                  <div class="col-sm-12 col-md-6">
-                    {{entrega.safra}}
-                  </div>
-                  <div class="col-sm-12 col-md-6">
-                    {{entrega.motorista}}
-                  </div>
-                  <div class="col-xs-12 col-sm-12 col-md-6 lt-md">
-                    {{moment(entrega.entregue).format('DD MMM YYYY')}} <br>
-                    {{entrega.caminhao.placa}}
-                  </div>
-                </div>
-              </q-item-tile>
-            </q-item-main>
-            <q-item-side right class="gt-sm">
-              <q-item-tile stamp>
-                {{moment(entrega.entregue).format('DD MMM YYYY')}}
-              </q-item-tile>
-              <q-item-tile sublabel>
-                {{entrega.caminhao.placa}}
-              </q-item-tile>
-            </q-item-side>
-            <div >
-              <q-btn @click.stop round flat dense icon="more_vert"  @click.stop>
-                <q-popover>
-                  <q-list link no-boder>
-                    <q-item v-close-overlay @click.native="deleteEntrega(entrega.id)">
-                      <q-item-main label="Excluir"/>
-                    </q-item>
-                  </q-list>
-                </q-popover>
-              </q-btn>
-            </div>
+    <div v-if="tabs === 'entregue' ">
 
-          </q-item>
 
-        </q-list>
-      </div>
+      <div class="row gutter-sm space-end" >
+        <div class="col-12">
+          <q-list no-border link separator>
+            <q-item multiline v-for="entrega in entregasEntregues" :key="entrega.id" @click.native="viewCarga(entrega.id)">
+              <q-item-side :image="makeUrl(entrega.caminhao.image_file_name, '200x125')" />
+              <q-item-main>
+                <q-item-tile class="content-center">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                      {{entrega.armazem}}
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                      {{entrega.peso}}
+                    </div>
+                  </div>
+                </q-item-tile>
+                <q-item-tile sublabel>
+                  <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                      {{entrega.safra}}
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                      {{entrega.motorista}}
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6 lt-md">
+                      {{moment(entrega.entregue).format('DD MMM YYYY')}} <br>
+                      {{entrega.caminhao.placa}}
+                    </div>
+                  </div>
+                </q-item-tile>
+              </q-item-main>
+              <q-item-side right class="gt-sm">
+                <q-item-tile stamp>
+                  {{moment(entrega.entregue).format('DD MMM YYYY')}}
+                </q-item-tile>
+                <q-item-tile sublabel>
+                  {{entrega.caminhao.placa}}
+                </q-item-tile>
+              </q-item-side>
+              <div >
+                <q-btn @click.stop round flat dense icon="more_vert"  @click.stop>
+                  <q-popover>
+                    <q-list link no-boder>
+                      <q-item v-close-overlay @click.native="deleteEntrega(entrega.id)">
+                        <q-item-main label="Excluir"/>
+                      </q-item>
+                    </q-list>
+                  </q-popover>
+                </q-btn>
+              </div>
 
-      <!--EMPTY LIST-->
-      <div class="col-12" v-if="entregasEntregues <= 0">
-        <ap-no-results />
+            </q-item>
+
+          </q-list>
+        </div>
+
+        <!--EMPTY LIST-->
+        <div class="col-12" v-if="entregasEntregues <= 0">
+          <ap-no-results />
+        </div>
       </div>
     </div>
 
@@ -234,6 +225,7 @@
   import FilterEntregasModal from 'components/entrega/FilterEntregasModal'
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
+  import apFilterResultBar from 'components/ApFilterResultBar'
   import AgroUtils from 'assets/js/AgroUtils'
 
   export default {
@@ -247,6 +239,7 @@
       NewEntregaModal,
       FilterEntregasModal,
       apImage,
+      apFilterResultBar,
     },
     data () {
       return {
@@ -255,12 +248,22 @@
         entregasCarregando:[],
         entregasNoArmazem:[],
         entregasEntregues:[],
-        filterParams: null,
       }
+    },
+    watch: {
+      '$route' (to, from) {
+        if(from.query.status !== to.query.status){
+          this.clearFilter();
+        }
+      },
     },
     methods: {
       switchTab(value){
-        this.clearFilter();
+
+        if(this.$store.state.entrega.filter.value){
+          this.filterEntregas(this.$store.state.entrega.filter.value);
+          return;
+        }
 
         switch (value) {
           case 'carregando':
@@ -284,7 +287,8 @@
         this.$refs.filterEntregasModal.openModal();
       },
       filterEntregas(filters){
-        this.setFilterParams()
+        this.$refs.filerResultBar.show(this.$refs.filterEntregasModal.getFilterDesciption());
+
         let queryFilter = AgroUtils.serialize(filters);
         switch (this.tabs) {
           case 'carregando':
@@ -298,12 +302,9 @@
             break;
         }
       },
-      setFilterParams(){
-        this.filterParams = this.$refs.filterEntregasModal.getFilterDesciption();
-      },
       clearFilter(refreshList = false){
         this.$refs.filterEntregasModal.clearForm();
-        this.filterParams = null;
+        this.$refs.filerResultBar.hide();
 
         if(refreshList){
           switch (this.tabs) {

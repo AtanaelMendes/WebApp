@@ -103,3 +103,9 @@
     }
   }
 </script>
+
+<style scoped>
+  .q-tabs{
+    border-radius: 0px;
+  }
+</style>
