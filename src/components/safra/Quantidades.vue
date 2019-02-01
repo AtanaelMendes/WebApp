@@ -92,31 +92,9 @@
           </q-item-main>
         </q-item>
 
+        <slot></slot>
+
       </template>
-
-
-      <!--
-      <div class="col-12">
-
-
-        <div class="q-mb-md">
-        </div>
-
-        <div class="q-mb-md">
-          <b>{{numeral(cargas).format('0,0')}}</b> Cargas feitas
-        </div>
-
-        <div class="q-mb-md">
-        </div>
-
-        <br />
-        {{ numeral(cargas).format('0,0') }} Cargas
-        <br />
-        {{ numeral(estimativa_total).format('0,0') }} {{view_unidade_medida.plural}}
-        <br />
-        {{ finalizado }}
-        <br />
-      </div> -->
 
     </q-list>
 </template>
