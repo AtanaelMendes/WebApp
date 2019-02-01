@@ -1,546 +1,139 @@
 <template>
   <custom-page isParent v-if="safraCultura">
+
     <toolbar slot="toolbar" :title="safraCultura.cultura.nome + ' ' + safraCultura.safra.ano_inicio + '/' + safraCultura.safra.ano_fim" navigation_type="back" @navigation_clicked="backAction" >
+      <div slot="tabs">
+        <q-tabs v-model="activeTab">
+          <q-tab slot="title" name="tab-resumo" label="resumo" />
+          <q-tab slot="title" name="tab-areas" label="areas" default @select="ativarPrimeiraArea()"/>
+          <q-tab slot="title" name="tab-cultivares" label="cultivares"/>
+          <q-tab slot="title" name="tab-negocios" label="negocios"/>
+        </q-tabs>
+      </div>
     </toolbar>
 
-    <div class="row q-pa-md gutter-sm space-end">
 
-
-      <!--HEADER-->
-      <div class="col-12">
-        <q-card class="row">
-
-          <!--IMAGEM HEADER-->
-          <q-card-media overlay-position="top" class="full-height items-center col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
-            <ap-image size="800x500" :file-name="safraCultura.cultura.image_file_name"/>
-            <q-card-title slot="overlay">
+    <!-- RESUMO -->
+    <div class="row space-end" v-if="activeTab === 'tab-resumo'">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
+        <q-card-media overlay-position="top" style="max-height: 40vh">
+          <ap-image size="800x500" :file-name="safraCultura.cultura.image_file_name"/>
+          <q-card-title slot="overlay">
               {{safraCultura.cultura.nome}} {{safraCultura.safra.ano_inicio}}/{{safraCultura.safra.ano_fim}}
-              <span slot="subtitle">
-                {{numeral(safraCultura.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
-              </span>
-            </q-card-title>
-          </q-card-media>
-
-          <!--INFO DO HEADER-->
-          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
-              <safra-quantidades v-if="loaded"
-                :tamanho="safraCultura.tamanho"
-                :estimativa_total="safraCultura.estimativa_total"
-                :peso_liquido="safraCultura.peso_liquido"
-                :peso_desconto="safraCultura.peso_desconto"
-                :estimativa_carga="safraCultura.estimativa_carga"
-                :cargas="safraCultura.cargas"
-                :finalizado="safraCultura.finalizado"
-                :view_unidade_area="safraCultura.view_unidade_area"
-                :view_unidade_medida="safraCultura.view_unidade_medida"
-              />
-          </div>
-
-        </q-card>
+            <span slot="subtitle">
+              {{numeral(safraCultura.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
+            </span>
+          </q-card-title>
+        </q-card-media>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
+        <safra-quantidades v-if="loaded"
+          :tamanho="safraCultura.tamanho"
+          :estimativa_total="safraCultura.estimativa_total"
+          :peso_liquido="safraCultura.peso_liquido"
+          :peso_desconto="safraCultura.peso_desconto"
+          :estimativa_carga="safraCultura.estimativa_carga"
+          :cargas="safraCultura.cargas"
+          :finalizado="safraCultura.finalizado"
+          :view_unidade_area="safraCultura.view_unidade_area"
+          :view_unidade_medida="safraCultura.view_unidade_medida"
+        />
       </div>
 
-      <div class="col-12">
-
-        <q-tabs class="shadow-2"  swipeable color="primary" align="justify">
-          <!-- Tabs - notice slot="title" -->
+      <!-- GRAFICOS -->
+      <div class="col-12 q-pa-md">
+        <q-tabs class="shadow-4"  swipeable inverted align="justify">
           <q-tab slot="title" name="tab-diaria" label="" icon="mdi-calendar" default/>
           <q-tab slot="title" name="tab-classificacao" label="" icon="mdi-ruler" />
           <q-tab slot="title" name="tab-caminhao" label="" icon="mdi-truck" />
           <q-tab slot="title" name="tab-armazem" label="" icon="place"/>
 
-          <!-- Targets -->
-          <q-tab-pane name="tab-armazem">
+          <q-tab-pane name="tab-armazem" keep-alive>
             Entrega Por Armazém
-            <grafico-entrega-armazem :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
+            <grafico-entrega-armazem :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="300" :width="100"/>
           </q-tab-pane>
-          <q-tab-pane name="tab-caminhao">
+          <q-tab-pane name="tab-caminhao" keep-alive>
             Entrega Por Caminhão
-            <grafico-entrega-caminhao :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
+            <grafico-entrega-caminhao :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="300" :width="100"/>
           </q-tab-pane>
-          <q-tab-pane name="tab-diaria">
+          <q-tab-pane name="tab-diaria" keep-alive>
             Colheita Diária
-            <grafico-colheita-diaria :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
+            <grafico-colheita-diaria :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="300" :width="100"/>
           </q-tab-pane>
-          <q-tab-pane name="tab-classificacao">
+          <q-tab-pane name="tab-classificacao" keep-alive>
             Classificação Diária
             <grafico-classificacao-diaria :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="300" :width="100"/>
           </q-tab-pane>
         </q-tabs>
-
       </div>
-
-      <div class="col-12" v-for="area in areasPorId">
-
-        <!--AREA-->
-        <q-card class="row">
-
-          <!--IMAGEM AREA-->
-          <q-card-media overlay-position="top" class="full-height items-center col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
-            <ap-image size="800x500" :file-name="area.image_file_name"/>
-            <q-card-title slot="overlay">
-              {{area.nome}}
-              <span slot="subtitle">
-                {{numeral(area.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
-              </span>
-            </q-card-title>
-          </q-card-media>
-
-          <!--INFO DA AREA-->
-          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
-              <safra-quantidades v-if="loaded"
-                :tamanho="area.tamanho"
-                :estimativa_total="area.estimativa_total"
-                :peso_liquido="area.peso_liquido"
-                :peso_desconto="area.peso_desconto"
-                :estimativa_carga="area.estimativa_carga"
-                :cargas="area.cargas"
-                :finalizado="area.finalizado"
-                :view_unidade_area="safraCultura.view_unidade_area"
-                :view_unidade_medida="safraCultura.view_unidade_medida"
-              >
-              </safra-quantidades>
-          </div>
-
-          <div class="col-12">
-                <q-collapsible>
-                  <template slot="header">
-                    <q-item-side icon="mdi-scale" />
-                    <q-item-main>
-                      {{area.talhoes.length}} talhoes
-                    </q-item-main>
-                  </template>
-                  <div class="row">
-                  <template v-for="talhao in area.talhoes">
-                    <!--TALHAO-->
-                    <div class="col-4">
-                    <q-card>
-
-                      <!--IMAGEM TALHAO-->
-                        <q-card-media overlay-position="top" class="full-height items-center">
-                          <ap-image size="800x500" :file-name="talhao.image_file_name"/>
-                          <q-card-title slot="overlay">
-                            {{area.nome}} {{talhao.nome}}
-                            <span slot="subtitle">
-                              {{numeral(talhao.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
-                            </span>
-                          </q-card-title>
-                        </q-card-media>
-
-                      <!--INFO DA AREA-->
-                          <safra-quantidades v-if="loaded"
-                            :tamanho="talhao.tamanho"
-                            :estimativa_total="talhao.estimativa_total"
-                            :peso_liquido="talhao.peso_liquido"
-                            :peso_desconto="talhao.peso_desconto"
-                            :estimativa_carga="talhao.estimativa_carga"
-                            :cargas="talhao.cargas"
-                            :finalizado="talhao.finalizado"
-                            :view_unidade_area="safraCultura.view_unidade_area"
-                            :view_unidade_medida="safraCultura.view_unidade_medida"
-                          />
-
-                    </q-card>
-                    </div>
-
-
-                  </template>
-                  </div>
-                </q-collapsible>
-
-          </div>
-
-        </q-card>
-
-      </div>
-
-
-      <div class="col-12" v-for="marca in safraCultura.marcas">
-
-        <!--AREA-->
-        <q-card class="row">
-
-          <!--IMAGEM AREA-->
-          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
-            <q-card-media overlay-position="top" class="full-height items-center">
-              <ap-image size="800x500" :file-name="marca.image_file_name"/>
-              <q-card-title slot="overlay">
-                {{marca.nome}}
-                <span slot="subtitle">
-                  {{numeral(marca.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
-                </span>
-              </q-card-title>
-            </q-card-media>
-          </div>
-
-          <!--INFO DA AREA-->
-          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
-              <safra-quantidades v-if="loaded"
-                :tamanho="marca.tamanho"
-                :estimativa_total="marca.estimativa_total"
-                :peso_liquido="marca.peso_liquido"
-                :peso_desconto="marca.peso_desconto"
-                :estimativa_carga="marca.estimativa_carga"
-                :cargas="marca.cargas"
-                :finalizado="marca.finalizado"
-                :view_unidade_area="safraCultura.view_unidade_area"
-                :view_unidade_medida="safraCultura.view_unidade_medida"
-              />
-          </div>
-
-        </q-card>
-
-      </div>
-
-
-
-      <!--GRAFICO ENTREGA DOS ARMAZEMS-->
-      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="safraCultura.cargas>0">
-        <q-card class="full-height">
-          <q-card-title>
-            Entrega Por Armazém
-          </q-card-title>
-          <q-card-main>
-            <grafico-entrega-armazem :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
-          </q-card-main>
-        </q-card>
-      </div> -->
-
-
-      <!--GRAFICO PORCENTAGEM CAMINHOES-->
-      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="safraCultura.cargas>0">
-        <q-card class="full-height">
-          <q-card-title>
-            Entrega Por Caminhão
-          </q-card-title>
-          <q-card-main>
-            <grafico-entrega-caminhao :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
-          </q-card-main>
-        </q-card>
-      </div> -->
-
-
-      <!--GRAFICO COLHEITA DIARIA-->
-      <!-- <div class="col-12" v-if="safraCultura.cargas>0">
-        <q-card class="full-height">
-          <q-card-title>
-            Colheita Diária
-          </q-card-title>
-          <q-card-main>
-            <grafico-colheita-diaria :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
-          </q-card-main>
-        </q-card>
-      </div> -->
-
-      <!--GRAFICO CLASSIFICACAO DIARIA-->
-      <!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" v-if="safraCultura.cargas>0">
-        <q-card class="full-height">
-          <q-card-title>
-            Classificcação Diária
-          </q-card-title>
-          <q-card-main>
-            <grafico-classificacao-diaria :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/>
-          </q-card-main>
-        </q-card>
-      </div> -->
-
-      <!--GRAFICO CLASSIFICACAO MEDIA ARMAZEM-->
-      <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-        <q-card class="full-height">
-          <q-card-main>
-            <grafico-classificacao-media-armazem/>
-          </q-card-main>
-        </q-card>
-      </div> -->
-
-      <!--GRAFICO COLHEITA POR AREA-->
-      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-        <q-card class="full-height">
-          <q-card-title>
-            Colheita por Área
-            <span slot="subtitle" class="cursor-pointer" @click="graficoPorMedia = !graficoPorMedia">
-              <template v-if="graficoPorMedia">
-                Média de {{safraCultura.view_unidade_medida.sigla}}/{{safraCultura.view_unidade_area.sigla}}
-              </template>
-              <template v-else>
-                Quantidade Total de {{safraCultura.view_unidade_medida.sigla}}
-              </template>
-            </span>
-          </q-card-title>
-          <q-card-main>
-            <!-- <grafico-colheita-por-area :media="graficoPorMedia" :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/> -->
-          </q-card-main>
-        </q-card>
-      </div>
-
-      <!--GRAFICO COLHEITA POR CULTIVAR-->
-      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-        <q-card class="full-height">
-          <q-card-title>
-            Colheita por Cultivar
-            <span slot="subtitle" class="cursor-pointer" @click="graficoPorMedia = !graficoPorMedia">
-              <template v-if="graficoPorMedia">
-                Média de {{safraCultura.view_unidade_medida.sigla}}/{{safraCultura.view_unidade_area.sigla}}
-              </template>
-              <template v-else>
-                Quantidade Total de {{safraCultura.view_unidade_medida.sigla}}
-              </template>
-            </span>
-          </q-card-title>
-          <q-card-main>
-            <!-- <grafico-colheita-por-cultivar :media="graficoPorMedia" :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/> -->
-          </q-card-main>
-        </q-card>
-      </div>
-
-      <!--GRAFICO COLHEITA POR TALHAO-->
-      <div class="col-12">
-        <q-card class="full-height">
-          <q-card-title>
-            Colheita por Talhão ({{safraCultura.view_unidade_medida.sigla}})
-            <a slot="subtitle" class="cursor-pointer" @click="graficoPorMedia = !graficoPorMedia">
-              <template v-if="graficoPorMedia">
-                Média de {{safraCultura.view_unidade_medida.sigla}}/{{safraCultura.view_unidade_area.sigla}}
-              </template>
-              <template v-else>
-                Quantidade Total de {{safraCultura.view_unidade_medida.sigla}}
-              </template>
-            </a>
-          </q-card-title>
-          <q-card-main>
-            <!-- <grafico-colheita-por-talhao :media="graficoPorMedia" :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="200" :width="100"/> -->
-          </q-card-main>
-        </q-card>
-      </div>
-
-      <!--TALHOES-->
-      <template v-if="safraCultura">
-        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="culturaTalhao in safraCultura.cultura_talhoes" :key="culturaTalhao.id">
-
-          <q-card class="full-height">
-            <q-card-media>
-              <img src="statics/images/no-image-16-10.svg" v-if="!culturaTalhao.talhao.image"/>
-              <img :src="culturaTalhao.talhao.image" v-if="culturaTalhao.talhao.image"/>
-            </q-card-media>
-            <q-card-separator/>
-
-            <q-card-title>
-              {{culturaTalhao.talhao.nome}}
-              <q-btn round flat dense icon="more_vert" slot="right">
-                <q-popover>
-                  <q-list link class="no-border">
-                    <q-item v-close-overlay @click.native="addCultivarModal(culturaTalhao)">
-                      <q-item-main label="Informar cultivar"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="editSafraCulturaTalhao(culturaTalhao)">
-                      <q-item-main label="Editar"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="deleteSafraCulturaTalhao(culturaTalhao)">
-                      <q-item-main label="Excluir"/>
-                    </q-item>
-                  </q-list>
-                </q-popover>
-              </q-btn>
-            </q-card-title>
-            <q-card-separator/>
-
-            <q-card-main class="gutter-xs">
-
-              <!--CULTURA TALHAO-->
-              <div class="">
-                <div class="col-12 text-faded q-caption">
-                  {{formatCulturaTalhaoTamanhoLabel(culturaTalhao)}}
-                </div>
-
-                <div class="cultivar-container">
-                  <div class="cultivar-item row" v-if="culturaTalhao.cultivar">
-                    <div class="col-xs-10 col-sm-10 col-md-9 col-lg-9 self-center">
-                      <span class="q-subheading">{{culturaTalhao.cultivar.nome}}</span>
-                    </div>
-
-                    <div class="col-xs-2 col-sm-2 col-md-3 col-lg-3">
-                      <img :src="culturaTalhao.cultivar.image_path" class="responsive" v-if="culturaTalhao.cultivar.image_path"/>
-                    </div>
-                  </div>
-
-                  <div class="cultivar-empty"  v-if="!culturaTalhao.cultivar">
-                    <q-icon name="warning" />
-                    <span>Nenhum cultivar adicionado ainda</span>
-                  </div>
-                </div>
-              </div>
-
-              <!--ESTIMATIVA  TALHAO-->
-              <div class="row">
-                <div class="col-12">
-                  <div class="row">
-
-                    <div class="col-12 q-caption text-faded">
-                      Estimativa
-                    </div>
-
-                    <div class="col-6">
-                      {{culturaTalhao.estimativa}} {{safraCultura.view_unidade_medida.sigla}}/{{safraCultura.view_unidade_area.plural}}
-                    </div>
-
-                    <div class="col-6 text-right">
-                      {{culturaTalhao.estimativa_total}} {{safraCultura.view_unidade_medida.nome}}
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-
-              <!--COLHIDO POR TALHAO-->
-              <div clas="row">
-                <!--<div class="col-12 gutter-y-xs">-->
-
-                <!--<div class="row">-->
-                <!--<div class="col-6 text-faded">-->
-                <!--Colhido 000%-->
-                <!--</div>-->
-                <!--<div class="col-6 self-center">-->
-                <!--<q-progress color="deep-orange" :percentage="progressBuffer"/>-->
-                <!--</div>-->
-                <!--</div>-->
-
-                <!--<div class="row">-->
-                <!--<div class="col-6">-->
-                <!--000 Sc/Ha-->
-                <!--</div>-->
-
-                <!--<div class="col-6 text-right">-->
-                <!--000 Sacas-->
-                <!--</div>-->
-                <!--</div>-->
-
-                <!--</div>-->
-              </div>
-
-            </q-card-main>
-          </q-card>
-
-        </div>
-      </template>
 
     </div>
 
-    <!--MODAL UPDATE SAFRA CULTURA-->
-    <q-modal minimized no-backdrop-dismiss v-model="modalEditSafraCulturaTalhao" v-if="selectedSafraCulturaTalhao">
-      <form @keyup.enter="updadeSafraCulturatalhao()">
-        <div class="column q-ma-md">
-          <div class="col-6 q-title q-mb-md">
-            {{selectedSafraCulturaTalhao.talhao.nome}}
-          </div>
-          <div class="col-6 text-justify">
+    <!-- AREAS -->
+    <div class="row space-end" v-if="activeTab === 'tab-areas'">
+      <div class="col-12">
+        <q-carousel arrows quick-nav v-model="activeArea">
+          <q-carousel-slide v-for="area in areasPorId" :key="area.id">
+            <q-card-media overlay-position="top" style="max-height: 40vh">
+              <ap-image size="800x500" :file-name="area.image_file_name"/>
+              <q-card-title slot="overlay">
+                  {{area.nome}}
+                <span slot="subtitle">
+                  {{numeral(area.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
+                </span>
+              </q-card-title>
+            </q-card-media>
 
-            <q-list-header>Área à ser utilizada</q-list-header>
-            <q-item dense>
-              <div class="row gutter-x-sm">
-                <div class="col-8 self-center">
-                  <q-slider
-                    label
-                    :min="0"
-                    :max="selectedSafraCulturaTalhao.talhao.tamanho"
-                    v-model="safraCulturaTalhao.tamanho.value"
-                    :label-value="safraCulturaTalhao.tamanho.value + ' ' + safraCultura.view_unidade_area.sigla"
-                  />
-                </div>
-                <div class="col-4">
-                  <custom-input-text  type="number" :suffix="safraCultura.view_unidade_area.sigla" :model="safraCulturaTalhao.tamanho"
-                                      @blur="checkInputMaxSize(safraCulturaTalhao.tamanho.value, selectedSafraCulturaTalhao)"
-                  />
-                </div>
-              </div>
-            </q-item>
+          </q-carousel-slide>
+        </q-carousel>
 
-            <q-list no-border dense class="q-py-none">
-              <q-list-header>Estimativa por {{safraCultura.view_unidade_area.nome}}</q-list-header>
-              <q-item dense>
-                <div class="row gutter-x-sm">
-                  <div class="col-3">
-                    <custom-input-text  type="number" :model="safraCulturaTalhao.estimativa" />
-                  </div>
-                  <div class="col-9 self-center">
-                    <!--label de unidade-->
-                    {{safraCultura.view_unidade_medida.nome}}
-                  </div>
-                </div>
-              </q-item>
-            </q-list>
+        <template v-if="this.area">
+          <safra-quantidades v-if="loaded"
+            :tamanho="area.tamanho"
+            :estimativa_total="area.estimativa_total"
+            :peso_liquido="area.peso_liquido"
+            :peso_desconto="area.peso_desconto"
+            :estimativa_carga="area.estimativa_carga"
+            :cargas="area.cargas"
+            :finalizado="area.finalizado"
+            :view_unidade_area="safraCultura.view_unidade_area"
+            :view_unidade_medida="safraCultura.view_unidade_medida"
+          />
 
-          </div>
-        </div>
-
-        <div class="row" position="bottom-right" :offset="[30, 30]">
-          <div class="col-12 q-pa-sm" align="end">
-            <q-btn color="primary" @click.native="modalEditSafraCulturaTalhao = false" flat label="cancelar" class="q-mr-sm"/>
-            <q-btn color="primary" @click.native="updadeSafraCulturatalhao" flat label="salvar"/>
-          </div>
-        </div>
-
-      </form>
-    </q-modal>
-
-    <!--MODAL ADD CULTIVAR INFO-->
-    <q-modal v-model="modalAddCultivarInfo" maximized>
-      <q-stepper ref="stepper" contractable color="positive" v-model="currentStep" class="no-shadow">
-
-        <!-- PASSO 1 ESCOLHER MARCA-->
-        <q-step default title="Marca" name="marca">
-
-          <div class="row q-ma-md gutter-xs justify-center" style="min-height: 80vh">
-            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="marca in marcas" :key="marca.id">
-              <q-card @click.native="chooseMarca(marca.id)">
-                <q-card-media overlay-position="full">
-                  <img src="statics/images/no-image-16-10.svg" v-if="!marca.image_path"/>
-                  <img :src="marca.image_path" v-if="marca.image_path"/>
-                  <q-card-title slot="overlay" align="end" v-if="marca.id === selectedMarcaId">
-                    <q-icon name="check_circle" size="30px" color="positive"/>
-                  </q-card-title>
-                </q-card-media>
-                <q-card-separator/>
-                <q-card-title>
-                  {{marca.nome}}
+          <q-carousel arrows quick-nav v-model="activeTalhao">
+            <q-carousel-slide v-for="talhao in area.talhoes" :key="talhao.id">
+              <q-card-media overlay-position="top" style="max-height: 40vh">
+                <ap-image size="800x500" :file-name="talhao.image_file_name"/>
+                <q-card-title slot="overlay">
+                    {{talhao.nome}}
+                  <span slot="subtitle">
+                    {{numeral(talhao.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
+                  </span>
                 </q-card-title>
-              </q-card>
-            </div>
-          </div>
+              </q-card-media>
+            </q-carousel-slide>
+          </q-carousel>
 
-        </q-step>
+          <template v-if="this.talhao">
+            <safra-quantidades v-if="loaded"
+              :tamanho="talhao.tamanho"
+              :estimativa_total="talhao.estimativa_total"
+              :peso_liquido="talhao.peso_liquido"
+              :peso_desconto="talhao.peso_desconto"
+              :estimativa_carga="talhao.estimativa_carga"
+              :cargas="talhao.cargas"
+              :finalizado="talhao.finalizado"
+              :view_unidade_area="safraCultura.view_unidade_area"
+              :view_unidade_medida="safraCultura.view_unidade_medida"
+            />
 
-        <!--PASSO 2 ESCOLHER TIPO-->
-        <q-step title="Cultivar" name="cultivar">
-          <div class="row q-ma-md gutter-xs justify-center" style="min-height: 80vh">
-            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultivar in cultivares" :key="cultivar.id">
-              <q-card @click.native="chooseCultivar(cultivar.id)">
-                <q-card-title class="text-center">
-                  {{cultivar.nome}}
-                  <div slot="right" v-if="cultivar.id === selectedCultivarId">
-                    <q-btn icon="done" round color="positive" dense/>
-                  </div>
-                </q-card-title>
-                <q-card-separator/>
-                <q-card-main>
-                  <div class="row">
-                    <div class="col-12 text-center text-faded">
-                      {{cultivar.tipo}}
-                    </div>
-                    <div class="col-12 text-center">
-                      Ciclo {{cultivar.ciclo}} {{cultivar.ciclo_dias}} dias.
-                    </div>
-                  </div>
-                </q-card-main>
-              </q-card>
-            </div>
-          </div>
-        </q-step>
+          </template>
+        </template>
 
-      </q-stepper>
-      <q-page-sticky position="bottom-right" :offset="[18, 18]">
-        <q-btn class="q-mr-xs" color="primary" @click="modalAddCultivarInfo = false" label="cancelar" />
-        <q-btn v-if="currentStep === 'cultivar' " color="primary" @click="saveCultivarToSafraCulturaTalhao()" label="salvar" />
-      </q-page-sticky>
-    </q-modal>
+      </div>
+    </div>
+
+
 
   </custom-page>
 </template>
@@ -567,7 +160,7 @@
   import graficoClassificacaoDiaria from 'components/safra/graficos/GraficoClassificacaoDiaria.vue'
 
   import safraQuantidades from 'components/safra/Quantidades.vue'
-
+  import AgroUtils from 'assets/js/AgroUtils'
 
   export default {
     name: "safra-cultura",
@@ -592,6 +185,9 @@
     },
     data () {
       return {
+        activeTab: null,
+        activeArea: null,
+        activeTalhao: null,
         graficoPorMedia: true,
         currentStep: 'marca',
         marcas: [],
@@ -617,9 +213,22 @@
       },
       areasPorId: function () {
         return _.orderBy(this.safraCultura.areas, 'id')
-      }
+      },
+      area: function() {
+        return this.areasPorId[this.activeArea]
+      },
+      talhao: function() {
+        return this.area.talhoes[this.activeTalhao]
+      },
     },
     methods: {
+      imageMakeUrl: function (fileName, size) {
+        return AgroUtils.image.makeUrl(this.fileName, this.size)
+      },
+      ativarPrimeiraArea: function () {
+        this.activeArea = 0;
+        this.activeTalhao = 0;
+      },
       // ADD CULTIVAR
       listMarcas: function(){
         safraCulturaService.listMarcas().then(response => {

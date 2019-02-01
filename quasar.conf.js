@@ -113,7 +113,11 @@ module.exports = function (ctx) {
         'QSlider',
         'QParallax',
         'QModalLayout',
-        'QBtnGroup'
+        'QBtnGroup',
+
+        'QCarousel',
+        'QCarouselSlide',
+
       ],
       directives: [
         'Ripple',
