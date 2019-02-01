@@ -11,7 +11,7 @@
           <q-item-main>
             <q-select
               v-model="filter.caminhao_id"
-              stack-label="Caminhão"
+              stack-label="Caminhão" clearable
               :options="parseOptions(options.caminhoes)"/>
           </q-item-main>
         </q-item>
@@ -19,7 +19,7 @@
           <q-item-main>
             <q-select
               v-model="filter.safra_cultura_id"
-              stack-label="Safra Cultura"
+              stack-label="Safra Cultura" clearable
               :options="parseOptions(options.safra_culturas)"/>
           </q-item-main>
         </q-item>
@@ -27,7 +27,7 @@
           <q-item-main>
             <q-select
               v-model="filter.armazem_id"
-              stack-label="Armazém"
+              stack-label="Armazém" clearable
               :options="parseOptions(options.armazens)"/>
           </q-item-main>
         </q-item>
@@ -35,7 +35,7 @@
           <q-item-main>
             <q-select
               v-model="filter.motorista_id"
-              stack-label="Motorista"
+              stack-label="Motorista" clearable
               :options="parseOptions(options.motoristas)"/>
           </q-item-main>
         </q-item>
@@ -44,11 +44,11 @@
             <q-field label="Data do Ticket" orientation="vertical">
               <div class="row gutter-sm">
                 <div class="col-6">
-                  <q-datetime v-model="filter.data_ticket_inicio" type="date"
+                  <q-datetime v-model="filter.data_ticket_inicio" type="date" clearable
                               @input="setTicketDataFinal" format="DD/MM/YYYY" stack-label="Início"/>
                 </div>
                 <div class="col-6">
-                  <q-datetime v-model="filter.data_ticket_final" type="date"
+                  <q-datetime v-model="filter.data_ticket_final" type="date" clearable
                               @input="setTicketDataInicial" format="DD/MM/YYYY" stack-label="Fim"/>
                 </div>
               </div>
@@ -60,11 +60,11 @@
             <q-field label="Data de Envio Para Armazém" orientation="vertical">
               <div class="row gutter-sm">
                 <div class="col-6">
-                  <q-datetime v-model="filter.data_envio_armazem_inicio" type="date"
+                  <q-datetime v-model="filter.data_envio_armazem_inicio" type="date" clearable
                               @input="setEnvioArmazemDataFinal" format="DD/MM/YYYY" stack-label="Início"/>
                 </div>
                 <div class="col-6">
-                  <q-datetime v-model="filter.data_envio_armazem_final" type="date"
+                  <q-datetime v-model="filter.data_envio_armazem_final" type="date" clearable
                               @input="setEnvioArmazemDataInicial" format="DD/MM/YYYY" stack-label="Fim"/>
                 </div>
               </div>
@@ -75,7 +75,7 @@
           <q-item-main>
             <q-select
               v-model="filter.negocio_cultura_id"
-              stack-label="Negócio Cultura"
+              stack-label="Negócio Cultura" clearable
               :options="parseOptions(options.negocios_culturas)"/>
           </q-item-main>
         </q-item>
@@ -83,7 +83,7 @@
           <q-item-main>
             <q-select
               v-model="filter.area_id"
-              stack-label="Área"
+              stack-label="Área"clearable
               :options="parseOptions(options.areas)"/>
           </q-item-main>
         </q-item>
@@ -91,18 +91,18 @@
           <q-item-main>
             <q-select
               v-model="filter.talhao_id"
-              stack-label="Talhão"
+              stack-label="Talhão" clearable
               :options="parseOptions(options.talhoes)"/>
           </q-item-main>
         </q-item>
         <q-item>
           <q-item-main>
-            <q-input v-model="filter.numero_ticket" stack-label="Número do Ticket" />
+            <q-input v-model="filter.numero_ticket" stack-label="Número do Ticket" clearable />
           </q-item-main>
         </q-item>
         <q-item>
           <q-item-main>
-            <q-input v-model="filter.numero_nota" stack-label="Número da Nota" />
+            <q-input v-model="filter.numero_nota" stack-label="Número da Nota" clearable />
           </q-item-main>
         </q-item>
       </q-list>
@@ -167,6 +167,11 @@
         }
       },
       setTicketDataInicial(value){
+        if(value === null){
+          this.filter.data_ticket_inicio = null;
+          return;
+        }
+
         if(this.filter.data_ticket_inicio === null){
           this.filter.data_ticket_inicio = value;
           return;
@@ -177,6 +182,11 @@
         }
       },
       setTicketDataFinal(value){
+        if(value === null){
+          this.filter.data_ticket_final = null;
+          return;
+        }
+
         if(this.filter.data_ticket_final === null){
           this.filter.data_ticket_final = value;
           return;
@@ -187,6 +197,11 @@
         }
       },
       setEnvioArmazemDataInicial(value){
+        if(value === null){
+          this.filter.data_envio_armazem_inicio = null;
+          return;
+        }
+
         if(this.filter.data_envio_armazem_inicio === null){
           this.filter.data_envio_armazem_inicio = value;
           return;
@@ -197,6 +212,11 @@
         }
       },
       setEnvioArmazemDataFinal(value){
+        if(value === null){
+          this.filter.data_envio_armazem_final = null;
+          return;
+        }
+
         if(this.filter.data_envio_armazem_final === null){
           this.filter.data_envio_armazem_final = value;
           return;
