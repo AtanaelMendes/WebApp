@@ -17,14 +17,19 @@
 <script>
   export default {
     name: "ApFilterResultBar",
-    props:{
-      filterParams: Array
-    },
-    computed:{
-      params(){
-        return this.filterParams;
+    data(){
+      return {
+        params: null,
       }
     },
+    methods:{
+      show(params){
+        this.params = params;
+      },
+      hide(){
+        this.params = null;
+      },
+    }
   }
 </script>
 

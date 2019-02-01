@@ -145,17 +145,20 @@
       }
     },
     methods: {
-      teste(value){
-        console.log(value)
-      },
       openModal(){
         this.isModalOpened = true;
         this.getFilterOptions();
+
+        if(this.$store.state.entrega.filter.value){
+          this.filter = this.$store.state.entrega.filter.value;
+          return;
+        }
       },
       closeModal(){
         this.isModalOpened = false;
       },
       search(){
+        this.$store.commit('entrega/setFilterValue', this.filter)
         this.closeModal();
         this.$emit('on-search', this.filter)
       },
@@ -165,6 +168,7 @@
             this.filter[prop] = null;
           }
         }
+        this.$store.commit('entrega/setFilterValue', null)
       },
       setTicketDataInicial(value){
         if(value === null){
@@ -230,8 +234,10 @@
         this.$q.loading.show();
         entregaService.getFilterOptions().then(response => {
           this.options = response.data;
+          this.$store.commit('entrega/setFilterOptions', this.options)
           this.$q.loading.hide();
         }).catch(error => {
+          this.$store.commit('entrega/setFilterOptions', null)
           this.$q.loading.hide();
         })
       },
@@ -249,84 +255,89 @@
           return obj;
         });
       },
-      getFilterDesciption(){
+      getFilterDesciption(filter = null, options = null){
         var filterDescription = [];
 
-        if(this.filter.caminhao_id){
+        if(filter === null && options === null){
+          filter = this.$store.state.entrega.filter.value;
+          options = this.$store.state.entrega.filter.options;
+        }
+
+        if(filter.caminhao_id){
           filterDescription.push({
-            nome: 'Caminhão', valor: this.getFilterItemById(this.options.caminhoes, this.filter.caminhao_id).nome,
+            nome: 'Caminhão', valor: this.getFilterItemById(options.caminhoes, filter.caminhao_id).nome,
           });
         }
 
-        if(this.filter.safra_cultura_id){
+        if(filter.safra_cultura_id){
           filterDescription.push({
-            nome: 'Safra Cultura', valor: this.getFilterItemById(this.options.safra_culturas, this.filter.safra_cultura_id).nome,
+            nome: 'Safra Cultura', valor: this.getFilterItemById(options.safra_culturas, filter.safra_cultura_id).nome,
           });
         }
 
-        if(this.filter.armazem_id){
+        if(filter.armazem_id){
           filterDescription.push({
-            nome: 'Armazém', valor: this.getFilterItemById(this.options.armazens, this.filter.armazem_id).nome,
+            nome: 'Armazém', valor: this.getFilterItemById(options.armazens, filter.armazem_id).nome,
           });
         }
 
-        if(this.filter.motorista_id){
+        if(filter.motorista_id){
           filterDescription.push({
-            nome: 'Motorista', valor: this.getFilterItemById(this.options.motoristas, this.filter.motorista_id).nome,
+            nome: 'Motorista', valor: this.getFilterItemById(options.motoristas, filter.motorista_id).nome,
           });
         }
 
-        if(this.filter.data_ticket_inicio){
+        if(filter.data_ticket_inicio){
           filterDescription.push({
-            nome: 'Data Início do Ticket', valor: this.moment(this.filter.data_ticket_inicio).format('DD/MM/YYYY'),
+            nome: 'Data Início do Ticket', valor: this.moment(filter.data_ticket_inicio).format('DD/MM/YYYY'),
           });
         }
 
-        if(this.filter.data_ticket_final){
+        if(filter.data_ticket_final){
           filterDescription.push({
-            nome: 'Data Final do Ticket', valor: this.moment(this.filter.data_ticket_final).format('DD/MM/YYYY'),
+            nome: 'Data Final do Ticket', valor: this.moment(filter.data_ticket_final).format('DD/MM/YYYY'),
           });
         }
 
-        if(this.filter.data_envio_armazem_inicio){
+        if(filter.data_envio_armazem_inicio){
           filterDescription.push({
-            nome: 'Data Início do Envio Para Armazém', valor: this.moment(this.filter.data_envio_armazem_inicio).format('DD/MM/YYYY'),
+            nome: 'Data Início do Envio Para Armazém', valor: this.moment(filter.data_envio_armazem_inicio).format('DD/MM/YYYY'),
           });
         }
 
-        if(this.filter.data_envio_armazem_final){
+        if(filter.data_envio_armazem_final){
           filterDescription.push({
-            nome: 'Data Final do Envio Para Armazém', valor: this.moment(this.filter.data_envio_armazem_final).format('DD/MM/YYYY'),
+            nome: 'Data Final do Envio Para Armazém', valor: this.moment(filter.data_envio_armazem_final).format('DD/MM/YYYY'),
           });
         }
 
-        if(this.filter.negocio_cultura_id){
+        if(filter.negocio_cultura_id){
           filterDescription.push({
-            nome: 'Negócio Cultura', valor: this.getFilterItemById(this.options.negocios_culturas, this.filter.negocio_cultura_id).nome,
+            nome: 'Negócio Cultura', valor: this.getFilterItemById(options.negocios_culturas, filter.negocio_cultura_id).nome,
           });
         }
 
-        if(this.filter.area_id){
+        if(filter.area_id){
           filterDescription.push({
-            nome: 'Área', valor: this.getFilterItemById(this.options.areas, this.filter.area_id).nome,
+            nome: 'Área', valor: this.getFilterItemById(options.areas, filter.area_id).nome,
           });
         }
 
-        if(this.filter.talhao_id){
+        if(filter.talhao_id){
           filterDescription.push({
-            nome: 'Talhão', valor: this.getFilterItemById(this.options.talhoes, this.filter.talhao_id).nome,
+            nome: 'Talhão', valor: this.getFilterItemById(options.talhoes, filter.talhao_id).nome,
           });
         }
 
-        if(this.filter.numero_ticket){
+        if(filter.numero_ticket){
           filterDescription.push({
-            nome: 'Número do Ticket', valor: this.filter.numero_ticket,
+            nome: 'Número do Ticket', valor: filter.numero_ticket,
           });
         }
 
-        if(this.filter.numero_nota){
+        if(filter.numero_nota){
           filterDescription.push({
-            nome: 'Número da Nota', valor: this.filter.numero_nota,
+            nome: 'Número da Nota', valor: filter.numero_nota,
           });
         }
 

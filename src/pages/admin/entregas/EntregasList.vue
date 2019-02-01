@@ -17,7 +17,7 @@
 
     </toolbar>
 
-    <ap-filter-result-bar ref="filerResultBar" :filter-params="filterParams" @clear_button_clicked="clearFilter(true)" />
+    <ap-filter-result-bar ref="filerResultBar" @clear_button_clicked="clearFilter(true)" />
 
     <!--TAB CARREGANDO-->
     <div class="row gutter-sm space-end q-pa-md" v-if="tabs === 'carregando' ">
@@ -207,8 +207,6 @@
       </div>
     </div>
 
-
-
     <!--MODAL NOVA CARGA -->
     <new-entrega-modal ref="entregaModal"/>
 
@@ -250,12 +248,22 @@
         entregasCarregando:[],
         entregasNoArmazem:[],
         entregasEntregues:[],
-        filterParams: null,
       }
+    },
+    watch: {
+      '$route' (to, from) {
+        if(from.query.status !== to.query.status){
+          this.clearFilter();
+        }
+      },
     },
     methods: {
       switchTab(value){
-        this.clearFilter();
+
+        if(this.$store.state.entrega.filter.value){
+          this.filterEntregas(this.$store.state.entrega.filter.value);
+          return;
+        }
 
         switch (value) {
           case 'carregando':
@@ -279,7 +287,8 @@
         this.$refs.filterEntregasModal.openModal();
       },
       filterEntregas(filters){
-        this.setFilterParams()
+        this.$refs.filerResultBar.show(this.$refs.filterEntregasModal.getFilterDesciption());
+
         let queryFilter = AgroUtils.serialize(filters);
         switch (this.tabs) {
           case 'carregando':
@@ -293,13 +302,9 @@
             break;
         }
       },
-      setFilterParams(){
-        this.filterParams = this.$refs.filterEntregasModal.getFilterDesciption();
-      },
       clearFilter(refreshList = false){
-        console.log('aoa')
         this.$refs.filterEntregasModal.clearForm();
-        this.filterParams = null;
+        this.$refs.filerResultBar.hide();
 
         if(refreshList){
           switch (this.tabs) {
