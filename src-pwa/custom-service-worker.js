@@ -4,6 +4,7 @@
  * quasar.conf > pwa > workboxPluginMode is set to "InjectManifest"
  */
 
+/*
 self.addEventListener('fetch', function(event) {
   if(event.request.method === "GET"){
     event.respondWith(
@@ -27,5 +28,6 @@ function saveOnCache(request) {
     });
   });
 }
+*/
 
 
