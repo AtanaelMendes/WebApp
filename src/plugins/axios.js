@@ -82,6 +82,7 @@ export default ({app, router, Vue}) => {
             resolve(axiosInstance(originalRequest));
           })
           .catch((err) => {
+            //TODO: Limpar o token aqui e redirecionar para a tela de login
             processQueue(err, null);
             reject(err);
           })
