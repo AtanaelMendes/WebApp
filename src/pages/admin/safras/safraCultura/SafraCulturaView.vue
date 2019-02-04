@@ -1,11 +1,11 @@
 <template>
-  <custom-page isParent v-if="safraCultura">
+  <custom-page isParent v-if="loaded">
 
-    <toolbar slot="toolbar" :title="safraCultura.cultura.nome + ' ' + safraCultura.safra.ano_inicio + '/' + safraCultura.safra.ano_fim" navigation_type="back" @navigation_clicked="backAction" >
+    <toolbar slot="toolbar" :title="data.cultura.nome + ' ' + data.safra.ano_inicio + '/' + data.safra.ano_fim" navigation_type="back" @navigation_clicked="backAction" >
       <div slot="tabs">
-        <q-tabs v-model="activeTab">
-          <q-tab slot="title" name="tab-resumo" label="resumo" />
-          <q-tab slot="title" name="tab-areas" label="areas" default @select="ativarPrimeiraArea()"/>
+        <q-tabs v-model="iTab">
+          <q-tab slot="title" name="tab-resumo" label="resumo" default />
+          <q-tab slot="title" name="tab-areas" label="areas" @select="enterTabAreas()"/>
           <q-tab slot="title" name="tab-cultivares" label="cultivares"/>
           <q-tab slot="title" name="tab-negocios" label="negocios"/>
         </q-tabs>
@@ -14,29 +14,23 @@
 
 
     <!-- RESUMO -->
-    <div class="row space-end" v-if="activeTab === 'tab-resumo'">
+    <div class="row space-end" v-if="iTab === 'tab-resumo'">
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
         <q-card-media overlay-position="top" style="max-height: 40vh">
-          <ap-image size="800x500" :file-name="safraCultura.cultura.image_file_name"/>
+          <ap-image size="800x500" :file-name="data.cultura.image_file_name"/>
           <q-card-title slot="overlay">
-              {{safraCultura.cultura.nome}} {{safraCultura.safra.ano_inicio}}/{{safraCultura.safra.ano_fim}}
+              {{data.cultura.nome}} {{data.safra.ano_inicio}}/{{data.safra.ano_fim}}
             <span slot="subtitle">
-              {{numeral(safraCultura.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
+              {{numeral(data.totals.tamanho).format('0,0')}} {{data.view_unidade_area.plural}}
             </span>
           </q-card-title>
         </q-card-media>
       </div>
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
-        <safra-quantidades v-if="loaded"
-          :tamanho="safraCultura.tamanho"
-          :estimativa_total="safraCultura.estimativa_total"
-          :peso_liquido="safraCultura.peso_liquido"
-          :peso_desconto="safraCultura.peso_desconto"
-          :estimativa_carga="safraCultura.estimativa_carga"
-          :cargas="safraCultura.cargas"
-          :finalizado="safraCultura.finalizado"
-          :view_unidade_area="safraCultura.view_unidade_area"
-          :view_unidade_medida="safraCultura.view_unidade_medida"
+        <safra-quantidades
+          :quantidades="data.totals"
+          :view_unidade_area="data.view_unidade_area"
+          :view_unidade_medida="data.view_unidade_medida"
         />
       </div>
 
@@ -50,19 +44,19 @@
 
           <q-tab-pane name="tab-armazem" keep-alive>
             Entrega Por Armazém
-            <grafico-entrega-armazem :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="300" :width="100"/>
+            <grafico-entrega-armazem :safra-id="safra_id" :safra-cultura-id="id" :height="300" :width="100"/>
           </q-tab-pane>
           <q-tab-pane name="tab-caminhao" keep-alive>
             Entrega Por Caminhão
-            <grafico-entrega-caminhao :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="300" :width="100"/>
+            <grafico-entrega-caminhao :safra-id="safra_id" :safra-cultura-id="id" :height="300" :width="100"/>
           </q-tab-pane>
           <q-tab-pane name="tab-diaria" keep-alive>
             Colheita Diária
-            <grafico-colheita-diaria :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="300" :width="100"/>
+            <grafico-colheita-diaria :safra-id="safra_id" :safra-cultura-id="id" :height="300" :width="100"/>
           </q-tab-pane>
           <q-tab-pane name="tab-classificacao" keep-alive>
             Classificação Diária
-            <grafico-classificacao-diaria :safra-id="safraId" :safra-cultura-id="safraCulturaId" :height="300" :width="100"/>
+            <grafico-classificacao-diaria :safra-id="safra_id" :safra-cultura-id="id" :height="300" :width="100"/>
           </q-tab-pane>
         </q-tabs>
       </div>
@@ -70,65 +64,50 @@
     </div>
 
     <!-- AREAS -->
-    <div class="row space-end" v-if="activeTab === 'tab-areas'">
-      <div class="col-12">
-        <q-carousel arrows quick-nav v-model="activeArea">
-          <q-carousel-slide v-for="area in areasPorId" :key="area.id">
+    <div class="row space-end" v-if="iTab === 'tab-areas' & areasLoaded">
+
+      <!-- CARROUSEL DE AREAS -->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
+        <q-carousel color="white" arrows quick-nav v-model="iArea" height="250px">
+          <q-carousel-slide v-for="area in areas" :key="area.id" :img-src="imageMakeUrl(area.image_file_name, '800x500')">
+            <div class="absolute-top custom-caption">
+              <div class="q-card-title">{{area.nome}}</div>
+              <div class="q-card-subtitle text-white">{{numeral(area.tamanho).format('0,0')}} {{data.view_unidade_area.plural}}</div>
+            </div>
+          </q-carousel-slide>
+        </q-carousel>
+      </div>
+
+      <!-- DETALHES DA AREA -->
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
+        <safra-quantidades
+          :quantidades="activeArea"
+          :view_unidade_area="data.view_unidade_area"
+          :view_unidade_medida="data.view_unidade_medida"
+        />
+      </div>
+
+        <!-- <q-carousel arrows quick-nav v-model="iTalhao">
+          <q-carousel-slide v-for="talhao in area.talhoes" :key="talhao.id">
             <q-card-media overlay-position="top" style="max-height: 40vh">
-              <ap-image size="800x500" :file-name="area.image_file_name"/>
+              <ap-image size="800x500" :file-name="talhao.image_file_name"/>
               <q-card-title slot="overlay">
-                  {{area.nome}}
+                  {{talhao.nome}}
                 <span slot="subtitle">
-                  {{numeral(area.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
+                  {{numeral(talhao.tamanho).format('0,0')}} {{data.view_unidade_area.plural}}
                 </span>
               </q-card-title>
             </q-card-media>
-
           </q-carousel-slide>
         </q-carousel>
 
-        <template v-if="this.area">
-          <safra-quantidades v-if="loaded"
-            :tamanho="area.tamanho"
-            :estimativa_total="area.estimativa_total"
-            :peso_liquido="area.peso_liquido"
-            :peso_desconto="area.peso_desconto"
-            :estimativa_carga="area.estimativa_carga"
-            :cargas="area.cargas"
-            :finalizado="area.finalizado"
-            :view_unidade_area="safraCultura.view_unidade_area"
-            :view_unidade_medida="safraCultura.view_unidade_medida"
+        <template v-if="this.talhao">
+          <safra-quantidades
+            :view_unidade_area="data.view_unidade_area"
+            :view_unidade_medida="data.view_unidade_medida"
           />
 
-          <q-carousel arrows quick-nav v-model="activeTalhao">
-            <q-carousel-slide v-for="talhao in area.talhoes" :key="talhao.id">
-              <q-card-media overlay-position="top" style="max-height: 40vh">
-                <ap-image size="800x500" :file-name="talhao.image_file_name"/>
-                <q-card-title slot="overlay">
-                    {{talhao.nome}}
-                  <span slot="subtitle">
-                    {{numeral(talhao.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
-                  </span>
-                </q-card-title>
-              </q-card-media>
-            </q-carousel-slide>
-          </q-carousel>
-
-          <template v-if="this.talhao">
-            <safra-quantidades v-if="loaded"
-              :tamanho="talhao.tamanho"
-              :estimativa_total="talhao.estimativa_total"
-              :peso_liquido="talhao.peso_liquido"
-              :peso_desconto="talhao.peso_desconto"
-              :estimativa_carga="talhao.estimativa_carga"
-              :cargas="talhao.cargas"
-              :finalizado="talhao.finalizado"
-              :view_unidade_area="safraCultura.view_unidade_area"
-              :view_unidade_medida="safraCultura.view_unidade_medida"
-            />
-
-          </template>
-        </template>
+        </template> -->
 
       </div>
     </div>
@@ -185,9 +164,20 @@
     },
     data () {
       return {
-        activeTab: null,
-        activeArea: null,
-        activeTalhao: null,
+
+        safra_id: null,
+        id: null,
+
+        loaded: false,
+        data: null,
+
+        areasLoaded: false,
+        areas: null,
+
+        iTab: null,
+        iArea: null,
+        iTalhao: null,
+
         graficoPorMedia: true,
         currentStep: 'marca',
         marcas: [],
@@ -195,7 +185,6 @@
         selectedMarcaId: null,
         selectedCultivarId: null,
         selecteTipoId: null,
-        loaded: false,
         safraCultura: null,
         safraCulturaTalhao: new SafraCulturaTalhaoEdit(),
         progressBuffer: 100,
@@ -205,39 +194,28 @@
       }
     },
     computed: {
-      safraId: function () {
-        return this.$route.params.safra_id
-      },
-      safraCulturaId: function () {
-        return this.$route.params.id
-      },
-      areasPorId: function () {
-        return _.orderBy(this.safraCultura.areas, 'id')
-      },
-      area: function() {
-        return this.areasPorId[this.activeArea]
-      },
-      talhao: function() {
-        return this.area.talhoes[this.activeTalhao]
+      activeArea: function () {
+        return this.areas[this.iArea];
       },
     },
     methods: {
       imageMakeUrl: function (fileName, size) {
-        return AgroUtils.image.makeUrl(this.fileName, this.size)
+        return AgroUtils.image.makeUrl(fileName, size)
       },
-      ativarPrimeiraArea: function () {
-        this.activeArea = 0;
-        this.activeTalhao = 0;
+      enterTabAreas: function () {
+        this.iArea = 0;
+        this.iTalhao = 0;
+        this.getAreas();
       },
+
       // ADD CULTIVAR
       listMarcas: function(){
         safraCulturaService.listMarcas().then(response => {
           this.marcas = response.data;
-          this.loaded = true;
         })
       },
       listCultivar: function(marcaId){
-        safraCulturaService.listCultivaresByMarca(this.safraCultura.cultura.id, marcaId).then(response => {
+        safraCulturaService.listCultivaresByMarca(this.data.cultura.id, marcaId).then(response => {
           this.cultivares = response.data;
         })
       },
@@ -267,9 +245,9 @@
         let cultivarId = this.selectedCultivarId;
         safraCulturaService.saveCultivarToSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhaoId, cultivarId).then(response => {
           if(response.status === 200){
-            let talhao = this.safraCultura.cultura_talhoes[this.safraCultura.cultura_talhoes.map(cultura_talhao => cultura_talhao.talhao.id).indexOf(safraCulturaTalhaoId)];
+            let talhao = this.data.cultura_talhoes[this.data.cultura_talhoes.map(cultura_talhao => cultura_talhao.talhao.id).indexOf(safraCulturaTalhaoId)];
             talhao.cultivar = response.data;
-            this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
+            this.getSafraCultura();
             this.selectedSafraCulturaTalhao = null;
             this.$q.notify({type: 'positive', message: 'Salvo com sucesso.'});
             this.modalAddCultivarInfo = false;
@@ -287,12 +265,26 @@
       },
 
       // CRUD SAFRA CULTURA TALHAO
-      getSafraCultura: function(safra_id, id){
-        safraCulturaService.getSafraCultura(safra_id, id).then(response => {
-          this.safraCultura = response.data;
+      getSafraCultura: function(force = false){
+        if (this.areasLoaded & !force) {
+          return;
+        }
+        safraCulturaService.getSafraCultura(this.safra_id, this.id).then(response => {
+          this.data = response.data;
           this.loaded = true;
         })
       },
+
+      getAreas: function(force = false){
+        if (this.areasLoaded & !force) {
+          return;
+        }
+        safraCulturaService.getAreas(this.safra_id, this.id).then(response => {
+          this.areas = response.data.areas;
+          this.areasLoaded = true;
+        })
+      },
+
       editSafraCulturaTalhao: function(data){
         this.selectedSafraCulturaTalhao = data;
         this.fillSafraCulturaTalhaoForm(data);
@@ -312,7 +304,7 @@
           if(response.status === 200) {
             this.modalEditSafraCulturaTalhao = false;
             this.$q.notify({type: 'positive', message: 'Atualizdo com sucesso'});
-            this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
+            this.getSafraCultura();
           }
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.request.response})
@@ -326,12 +318,12 @@
           color: 'primary'
         }).then(data => {
           safraCulturaService.deleteSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhao.talhao.id).then(response => {
-            //this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
+            this.getSafraCultura();
             if(response.status === 200){
-              let talhaoIndex = this.safraCultura.cultura_talhoes.map(talhao => talhao.id).indexOf(safraCulturaTalhao.talhao.id);
-              this.safraCultura.cultura_talhoes.splice(talhaoIndex, 1);
+              let talhaoIndex = this.data.cultura_talhoes.map(talhao => talhao.id).indexOf(safraCulturaTalhao.talhao.id);
+              this.data.cultura_talhoes.splice(talhaoIndex, 1);
 
-              if(this.safraCultura.cultura_talhoes.length === 0){
+              if(this.data.cultura_talhoes.length === 0){
                 this.$router.push({name: 'safras'});
               }
             }
@@ -345,26 +337,20 @@
       },
       formatCulturaTalhaoTamanhoLabel: function(culturaTalhao) {
         if (culturaTalhao.tamanho === culturaTalhao.talhao.tamanho) {
-          return culturaTalhao.tamanho + ' ' + this.safraCultura.view_unidade_area.plural + ' (100%)'
+          return culturaTalhao.tamanho + ' ' + this.data.view_unidade_area.plural + ' (100%)'
         } else {
           let porcentagem = Math.round(culturaTalhao.tamanho / culturaTalhao.talhao.tamanho * 100);
-          return culturaTalhao.tamanho + ' de ' + culturaTalhao.talhao.tamanho + ' ' + this.safraCultura.view_unidade_area.nome + ' (' + porcentagem + '%)';
+          return culturaTalhao.tamanho + ' de ' + culturaTalhao.talhao.tamanho + ' ' + this.data.view_unidade_area.nome + ' (' + porcentagem + '%)';
         }
       },
-      // getSafraCulturaTotalArea: function () {
-      //   return this.safraCultura.cultura_talhoes.map(function (culturaTalhao) {
-      //     return culturaTalhao.talhao.tamanho;
-      //   }).reduce((a, b) => a + b);
-      // },
       backAction: function () {
         this.$router.back()
       }
     },
     mounted () {
-      this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
-      // this.$root.$on('refreshSafraList', () => {
-      //   this.listSafras();
-      // });
+      this.id = this.$route.params.id;
+      this.safra_id = this.$route.params.safra_id;
+      this.getSafraCultura();
     },
   }
 </script>
@@ -383,5 +369,11 @@
     color: #ffb500;
     font-size: 20px;
     margin-right: 6px;
+  }
+  .custom-caption {
+    text-align: left;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
   }
 </style>
