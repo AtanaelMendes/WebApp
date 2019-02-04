@@ -8,7 +8,7 @@
         <span class="profile-name">{{currentAccount.name}}</span>
         <span class="profile-email">{{currentAccount.email}}</span>
         <div>
-          <q-btn flat round dense class="network_status_icon" @click="showOfflineStatusBar" v-if="isOffline" >
+          <q-btn flat round dense class="network_status_icon" @click="showOfflineAlertDialog" v-if="isOffline" >
             <q-icon name="mdi-alert" color="warning"/>
           </q-btn>
           <q-btn flat round dense class="settings_icon">
@@ -92,7 +92,20 @@
       <router-view />
 
     </q-page-container>
-    <!--<q-layout-footer v-model="isOffline" >-->
+
+    <!--<q-dialog v-model="isNetworkErrorDialogOpen">-->
+    <q-dialog v-model="isNetworkErrorDialogOpen">
+      <div slot="title"></div>
+      <div slot="body" align="center">
+        <q-icon name="mdi-wifi-off" size="50px"/>
+        <p class="q-my-none q-mt-md">Sem conexão com a internet!</p>
+      </div>
+      <template slot="buttons" class="q-mt-sm">
+        <q-btn flat label="OK" @click="isNetworkErrorDialogOpen = false"/>
+      </template>
+    </q-dialog>
+
+
     <q-layout-footer v-model="offlineStatusBar" >
       <div class="offline-status-bar">
         <q-item dense>
@@ -126,6 +139,7 @@
           email: null
         },
         isOfflineStatusBarVisible: true,
+        isNetworkErrorDialogOpen: false,
       }
     },
     mounted(){
@@ -150,6 +164,9 @@
       }
     },
     methods: {
+      showOfflineAlertDialog(){
+        this.isNetworkErrorDialogOpen = true;
+      },
       hideOfflineStatusBar(){
         this.isOfflineStatusBarVisible = false;
       },
@@ -167,7 +184,6 @@
         this.leftDrawerOpen = !this.leftDrawerOpen;
       },
       logout(){
-
         this.$q.dialog({
           title: 'Sair do sistema',
           message: 'Tem certeza que deseja sair?',
