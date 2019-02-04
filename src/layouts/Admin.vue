@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lHh Lpr lFr">
     <q-layout-header></q-layout-header>
 
     <q-layout-drawer v-model="leftDrawerOpen" class="layout-drawer">
@@ -8,6 +8,9 @@
         <span class="profile-name">{{currentAccount.name}}</span>
         <span class="profile-email">{{currentAccount.email}}</span>
         <div>
+          <q-btn flat round dense class="network_status_icon" @click="showOfflineStatusBar" v-if="isOffline" >
+            <q-icon name="mdi-alert" color="warning"/>
+          </q-btn>
           <q-btn flat round dense class="settings_icon">
             <q-icon name="settings" />
             <q-popover>
@@ -87,62 +90,99 @@
 
     <q-page-container>
       <router-view />
+
     </q-page-container>
+    <!--<q-layout-footer v-model="isOffline" >-->
+    <q-layout-footer v-model="offlineStatusBar" >
+      <div class="offline-status-bar">
+        <q-item dense>
+          <q-item-side>
+            <q-icon name="mdi-wifi-off" color="white" />
+          </q-item-side>
+          <q-item-main>
+            Você está desconectado
+          </q-item-main>
+          <q-item-side right>
+            <q-btn flat label="Ok" color="white" @click="hideOfflineStatusBar"/>
+          </q-item-side>
+        </q-item>
+      </div>
+    </q-layout-footer>
   </q-layout>
 </template>
 
 <script>
   import accountService from 'assets/js/service/AccountService'
+  import NetworkStateMixin from 'components/mixins/NetworkStateMixin'
   import {version} from '../../package.json';
-export default {
-  name: 'Admin',
-  data () {
-    return {
-      leftDrawerOpen: this.$q.platform.is.desktop,
-      currentAccount: {
-        name: null,
-        email: null
+  export default {
+    name: 'Admin',
+    mixins: [NetworkStateMixin],
+    data () {
+      return {
+        leftDrawerOpen: this.$q.platform.is.desktop,
+        currentAccount: {
+          name: null,
+          email: null
+        },
+        isOfflineStatusBarVisible: true,
       }
-    }
-  },
-  mounted(){
-    this.getAccountInfo();
+    },
+    mounted(){
+      this.getAccountInfo();
 
-    this.$root.$on('toogleLeftDrawer', this.toogleLeftDrawer)
-  },
-  computed:{
-    app_version: function () {
-      return version;
-    },
-  },
-  methods: {
-    getAccountInfo: function(){
-      this.$axios.get( 'account/info').then( response => {
-        this.currentAccount.name = response.data.nome;
-        this.currentAccount.email = response.data.email;
-        localStorage.setItem( 'account.produtor_id', response.data.produtor_id);
-      })
-    },
-    toogleLeftDrawer() {
-      this.leftDrawerOpen = !this.leftDrawerOpen;
-    },
-    logout(){
+      this.$root.$on('toogleLeftDrawer', this.toogleLeftDrawer);
 
-      this.$q.dialog({
-        title: 'Sair do sistema',
-        message: 'Tem certeza que deseja sair?',
-        ok: 'Sair',
-        cancel: 'Cancelar'
-      }).then(data => {
-        accountService.logout().then(()=>{
-          this.$router.push('/login');
-        })
+      this.$on('offline', () => {
+        this.showOfflineStatusBar();
       });
 
+      this.$on('online', () => {
+        //alert('You are online!')
+      });
+    },
+    computed:{
+      app_version: function () {
+        return version;
+      },
+      offlineStatusBar(){
+        return this.isOffline && this.isOfflineStatusBarVisible;
+      }
+    },
+    methods: {
+      hideOfflineStatusBar(){
+        this.isOfflineStatusBarVisible = false;
+      },
+      showOfflineStatusBar(){
+        this.isOfflineStatusBarVisible = true;
+      },
+      getAccountInfo: function(){
+        this.$axios.get( 'account/info').then( response => {
+          this.currentAccount.name = response.data.nome;
+          this.currentAccount.email = response.data.email;
+          localStorage.setItem( 'account.produtor_id', response.data.produtor_id);
+        })
+      },
+      toogleLeftDrawer() {
+        this.leftDrawerOpen = !this.leftDrawerOpen;
+      },
+      logout(){
 
+        this.$q.dialog({
+          title: 'Sair do sistema',
+          message: 'Tem certeza que deseja sair?',
+          ok: 'Sair',
+          cancel: 'Cancelar'
+        }).then(data => {
+          accountService.logout().then(()=>{
+            this.$router.push('/login');
+          })
+        });
+
+
+      }
     }
   }
-}
 </script>
 
 <style>
@@ -186,6 +226,14 @@ export default {
     color: white;
   }
 
+  .navigation-header .network_status_icon{
+    position: absolute;
+    top: 0px;
+    right: 30px;
+    margin: 20px;
+    color: white;
+  }
+
   .app-version{
     color: white;
     font-size: 10px;
@@ -202,6 +250,14 @@ export default {
   }
   .space-end{
     margin-bottom: 100px;
+  }
+  .offline-status-bar{
+    background: var(--q-color-tertiary);
+    color: white;
+  }
+  .offline-status-bar .q-item-side-left{
+    min-width: unset;
+    margin-right: 6px;
   }
 
 </style>
