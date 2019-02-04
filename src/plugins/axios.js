@@ -33,6 +33,8 @@ export default ({app, router, Vue}) => {
     const AUTH_TOKEN = localStorage.getItem('auth.token');
     if (AUTH_TOKEN) {
       config.headers.common['Authorization'] = 'Bearer ' + AUTH_TOKEN;
+    }else{
+      router.push('/login');
     }
     return config
   }, function (error) {
@@ -84,6 +86,7 @@ export default ({app, router, Vue}) => {
           .catch((err) => {
             //TODO: Limpar o token aqui e redirecionar para a tela de login
             processQueue(err, null);
+            router.push('/login');
             reject(err);
           })
           .then(() => { isRefreshing = false })
