@@ -77,7 +77,7 @@
           <q-item-side icon="schedule" color="orange"/>
           <q-item-main>
             <q-item-tile sublabel>
-              <b>{{numeral(peso_descarregando).format('0,0')}}</b>  {{view_unidade_medida.plural}} aproximadamente
+              <b>{{numeral(quantidades.peso_descarregando).format('0,0')}}</b>  {{view_unidade_medida.plural}} aproximadamente
               encima de caminhão aguardando descarga.
             </q-item-tile>
           </q-item-main>
@@ -88,7 +88,7 @@
           <q-item-side icon="mdi-truck" color="indigo"/>
           <q-item-main>
             <q-item-tile sublabel>
-              <b>{{numeral(quantidades.numero_cargas).format('0,0.')}}</b> Cargas no total
+              <b>{{numeral(quantidades.numero_cargas).format('0,0.0')}}</b> Cargas no total
               <template v-if="quantidades.numero_cargas_descarregando">
                 (<b>{{numeral(quantidades.numero_cargas_descarregando).format('0,0.')}}</b> Descarregando)
               </template>
@@ -99,9 +99,9 @@
           </q-item-main>
         </q-item>
 
-        <slot></slot>
-
       </template>
+
+      <slot></slot>
 
     </q-list>
 </template>

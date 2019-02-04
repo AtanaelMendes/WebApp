@@ -151,4 +151,14 @@ export default {
     });
   },
 
+  getTalhoes(safra_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/talhoes').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
 }
