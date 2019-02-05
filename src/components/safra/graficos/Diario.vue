@@ -1,9 +1,8 @@
 <script>
   import { Bar } from 'vue-chartjs'
-  import safraCulturaGraficoService from 'assets/js/service/safra/SafraCulturaGraficoService'
 
   export default {
-    name: "grafico-colheita-diaria",
+    name: "safra-grafico-diario",
     extends: Bar,
     props: {
       safraId: {

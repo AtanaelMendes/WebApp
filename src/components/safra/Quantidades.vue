@@ -23,7 +23,7 @@
             </q-item-tile>
             <q-item-tile sublabel lines="1">
               <b>{{numeral(quantidades.peso_liquido).format('0,0')}}</b>
-              {{view_unidade_medida.plural}} <br />
+              {{unidadeMedida.plural}} <br />
             </q-item-tile>
           </q-item-main>
           <q-item-side right>
@@ -31,7 +31,7 @@
               {{numeral(quantidades.peso_liquido / quantidades.tamanho).format('0,0.00')}}
             </q-item-tile>
             <q-item-tile stamp>
-              {{view_unidade_medida.sigla}}/{{view_unidade_area.sigla}}
+              {{unidadeMedida.sigla}}/{{unidadeArea.sigla}}
             </q-item-tile>
           </q-item-side>
         </q-item>
@@ -47,7 +47,7 @@
           </q-item-tile>
           <q-item-tile sublabel lines="1">
             <b>{{numeral(quantidades.peso_estimativa).format('0,0')}}</b>
-            {{view_unidade_medida.plural}}
+            {{unidadeMedida.plural}}
           </q-item-tile>
         </q-item-main>
         <q-item-side right>
@@ -55,7 +55,7 @@
             {{numeral(quantidades.peso_estimativa / quantidades.tamanho).format('0,0.00')}}
           </q-item-tile>
           <q-item-tile stamp>
-            {{view_unidade_medida.sigla}}/{{view_unidade_area.sigla}}
+            {{unidadeMedida.sigla}}/{{unidadeArea.sigla}}
           </q-item-tile>
         </q-item-side>
       </q-item>
@@ -67,7 +67,7 @@
           <q-item-main>
             <q-item-tile sublabel>
               <b>{{numeral(quantidades.peso_desconto).format('0,0')}}</b>
-              {{view_unidade_medida.plural}} descontado no recebimento
+              {{unidadeMedida.plural}} descontado no recebimento
             </q-item-tile>
           </q-item-main>
         </q-item>
@@ -77,7 +77,7 @@
           <q-item-side icon="schedule" color="orange"/>
           <q-item-main>
             <q-item-tile sublabel>
-              <b>{{numeral(quantidades.peso_descarregando).format('0,0')}}</b>  {{view_unidade_medida.plural}} aproximadamente
+              <b>{{numeral(quantidades.peso_descarregando).format('0,0')}}</b>  {{unidadeMedida.plural}} aproximadamente
               encima de caminhão aguardando descarga.
             </q-item-tile>
           </q-item-main>
@@ -110,8 +110,8 @@ export default {
   name: "safra-quantidades",
   props: {
     quantidades: Object,
-    view_unidade_medida: Object,
-    view_unidade_area: Object,
+    unidadeMedida: Object,
+    unidadeArea: Object,
   },
   computed: {
     maior_peso: function () {
