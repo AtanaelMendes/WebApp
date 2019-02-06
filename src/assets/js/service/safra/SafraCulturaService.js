@@ -141,9 +141,59 @@ export default {
     });
   },
 
+  getDiario(safra_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/diario').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
+  getDiarioClassificacao(safra_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/diario-classificacao').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
   getAreas(safra_id, id){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/areas').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
+  getTalhoes(safra_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/talhoes').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
+  getCaminhoes(safra_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/caminhoes').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
+  getArmazens(safra_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/armazens').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)

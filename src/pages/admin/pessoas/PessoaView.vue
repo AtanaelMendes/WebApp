@@ -28,8 +28,8 @@
 
         <!--PESSOA INFO-->
         <div v-if="pessoa" class="q-pa-md row gutter-sm">
-
           <div class="col-12">
+
             <q-item>
               <q-item-side>
                 <q-icon name="account_circle" size="40px"/>
@@ -42,6 +42,7 @@
               <q-item-side>
               </q-item-side>
             </q-item>
+
             <q-item class="bg-negative" v-if="pessoa.delete_at">
               <q-item-main class="text-white">
                 Pessoa Inativa
@@ -49,17 +50,18 @@
             </q-item>
           </div>
 
-          <div :class="coluna">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+
+            <!--GRUPO ECONOMICO-->
             <q-item>
               <q-item-main inset>
                 <q-item-tile class="q-subheading title-color">Grupo econômico</q-item-tile>
                 <q-item-tile sublabel>{{pessoa.grupo_economico.nome}}</q-item-tile>
               </q-item-main>
             </q-item>
-          </div>
 
-          <div v-if="pessoa.razao_social" :class="coluna">
-            <q-item>
+            <!--RAZAO SOCIAL-->
+            <q-item v-if="pessoa.razao_social">
               <q-item-main inset>
                 <q-item-tile class="q-subheading title-color">Razão social</q-item-tile>
                 <q-item-tile sublabel>{{pessoa.razao_social}}</q-item-tile>
@@ -67,17 +69,17 @@
             </q-item>
           </div>
 
-          <div v-if="pessoa.nome_fantasia" :class="coluna">
-            <q-item>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+
+            <!--NOME FANTASIA-->
+            <q-item v-if="pessoa.nome_fantasia">
               <q-item-main inset>
                 <q-item-tile class="q-subheading title-color">Nome fantasia</q-item-tile>
                 <q-item-tile sublabel>{{pessoa.nome_fantasia}}</q-item-tile>
               </q-item-main>
             </q-item>
-          </div>
 
-          <div :class="coluna">
-
+            <!--INSCRICAO ESTADUAL-->
             <q-item v-if="pessoa.inscricao_estadual">
               <q-item-main inset>
                 <q-item-tile class="q-subheading title-color">Inscrição estadual</q-item-tile>
@@ -87,6 +89,7 @@
               </q-item-main>
             </q-item>
 
+            <!--INSCRICAO MUNICIPAL-->
             <q-item v-if="pessoa.inscricao_municipal">
               <q-item-main inset>
                 <q-item-tile class="q-subheading title-color">Inscrição municipal</q-item-tile>
@@ -95,6 +98,7 @@
             </q-item>
 
           </div>
+
         </div>
 
         <!--CONTATO LIST-->
@@ -110,7 +114,7 @@
             </q-item>
           </div>
 
-          <div class="col-12" v-for="(contato, index) in contatos" :key="contato.nome">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" v-for="(contato, index) in contatos" :key="contato.nome">
             <q-card>
 
               <q-item v-if="contato.deleted_at" class="bg-negative text-white">
@@ -158,7 +162,9 @@
                   </q-item>
 
                   <q-item v-for="(telefone, index) in getFilteredTelefones(contato.telefones, 'celular')" :key="telefone.numero" class="q-px-none">
-                    <q-item-side color="deep-orange" icon="phone_iphone" v-if="index === 0"/>
+                    <q-item-side>
+                      <q-icon color="deep-orange" name="phone_iphone" v-if="index === 0"/>
+                    </q-item-side>
                     <q-item-main>
                       <a :href=" 'tel:'+telefone.numero" style="text-decoration: none;">
                         {{telefone.numero}}
@@ -167,7 +173,9 @@
                   </q-item>
 
                   <q-item v-for="(telefone, index) in getFilteredTelefones(contato.telefones, 'fixo')" :key="telefone.numero" class="q-px-none">
-                    <q-item-side color="deep-orange" icon="phone" v-if="index === 0"/>
+                    <q-item-side>
+                      <q-icon color="deep-orange" name="phone" size="25px" v-if="index === 0"/>
+                    </q-item-side>
                     <q-item-main>
                       <a :href=" 'tel:'+telefone.numero" style="text-decoration: none;">
                         {{telefone.numero}}
@@ -179,7 +187,9 @@
                     <q-item-side class="q-pa-none" icon="email" color="deep-orange" v-if="index === 0"/>
                     <q-item-main>
                       <a :href=" 'mailto:'+email.endereco" style="text-decoration: none;">
-                        {{email.endereco}}
+                        <span class="q-caption">
+                          {{email.endereco}}
+                        </span>
                       </a>
                     </q-item-main>
                   </q-item>
@@ -203,7 +213,7 @@
             </q-item>
           </div>
 
-          <div class="col-12" v-for="localizacao in localizacoes" :key="localizacao.id">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" v-for="localizacao in localizacoes" :key="localizacao.id">
             <q-card>
 
               <q-item class="bg-negative text-white" v-if="localizacao.deleted_at">
@@ -316,7 +326,6 @@
         pessoa: null,
         contatos: [],
         localizacoes: [],
-        coluna: 'col-xs-12 col-sm-12 col-md-6 col-lg-6',
       }
     },
     watch: {

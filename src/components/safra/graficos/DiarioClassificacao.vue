@@ -1,14 +1,10 @@
 <script>
   import { Line } from 'vue-chartjs'
-  import safraCulturaGraficoService from 'assets/js/service/safra/SafraCulturaGraficoService'
   export default {
-    name: "grafico-classificacao-diaria",
+    name: "safra-grafico-diario-classificacao",
     extends: Line,
     props: {
-      safraId: {
-        default: null
-      },
-      safraCulturaId: {
+      diarioClassificacao: {
         default: null
       },
     },
@@ -39,12 +35,16 @@
           },
           tooltips: {
             mode: 'index',
-            intersect: false
+            intersect: false,
+            callbacks: {
+                label: this.formatTooltipLabel
+            }
           },
           scales: {
             xAxes: [{
               display: true,
               type: 'time',
+              distribution: 'series',
               time: {
                 unit: 'day',
                 displayFormats: {
@@ -96,43 +96,56 @@
         }
       }
     },
+    watch: {
+      diarioClassificacao: {
+        handler: function(newValue) {
+          this.parse()
+        },
+        deep: true
+      },
+    },
     methods: {
 
-      // Busca Dados da API
-      getData () {
-        safraCulturaGraficoService.getClassificacaoDiaria(this.safraId, this.safraCulturaId).then(response => {
-          this.data = response.data
-          this.loaded = true;
-          this.parseData();
-        })
+      formatTooltipLabel (tooltipItem, data) {
+        if (isNaN(tooltipItem.yLabel)) {
+          return
+        }
+        return data.datasets[tooltipItem.datasetIndex].label +': ' + this.numeral(tooltipItem.yLabel).format('0,0.00') + '%';
       },
 
       // Passa dados vindos da API pro grafico e monta ele
-      parseData () {
-        if (!this.loaded) {
+      parse () {
+        if (!this.diarioClassificacao) {
           return;
         }
-        this.chartdata.labels = this.data.dias;
-        for (let classificacao of this.data.classificacoes) {
-          var color = this.colors.shift();
+        // console.log(this.diarioClassificacao);
+        this.chartdata.labels = this.diarioClassificacao.dias;
+        for (let classificacao of this.diarioClassificacao.classificacoes) {
+          var color = this.colors.shift()
+          var verificado = []
+          for (let dia of this.diarioClassificacao.dias) {
+            let ver = _.find(classificacao.diario, ['dia', dia])
+            if (ver == undefined) {
+              verificado.push(null)
+            }
+            verificado.push(ver.verificado)
+          }
           this.chartdata.datasets.push({
             label: classificacao.nome,
-            data: this.data.verificado[classificacao.id],
+            data: verificado,
             type: 'line',
             fill: false,
             backgroundColor: color,
             borderColor: color,
             yAxisID: 'y-axis-liquido',
           })
-
         }
-
         this.renderChart(this.chartdata, this.options)
       },
 
     },
     mounted () {
-      this.getData();
+      this.parse();
     }
 
   }
