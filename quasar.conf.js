@@ -10,7 +10,8 @@ module.exports = function (ctx) {
       'moment',
       'numeral',
       'croppa',
-      'lodash'
+      'lodash',
+      'database',
     ],
     css: [
       'app.styl'

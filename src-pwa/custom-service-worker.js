@@ -4,18 +4,27 @@
  * quasar.conf > pwa > workboxPluginMode is set to "InjectManifest"
  */
 
+// Install Service Worker
+self.addEventListener('install', function(event){
+  console.log('installed!');
+});
+
+// Service Worker Active
+self.addEventListener('activate', function(event){
+  console.log('activated!');
+});
+
+
 self.addEventListener('fetch', function(event) {
   if(event.request.method === "GET"){
     event.respondWith(
       caches.open('agro_project').then(function(cache) {
         return fetch(event.request).then(function (response) {
-          console.log('nova requisição')
           cache.put(event.request, response.clone());
           return response;
         }).catch(function () {
-          console.log('pegando do cache')
           return caches.match(event.request).catch(function () {
-            console.log('erro no cache')
+            //console.log('erro no cache')
           })
         })
       })
@@ -23,38 +32,37 @@ self.addEventListener('fetch', function(event) {
   }
 });
 
-/*self.addEventListener('fetch', function(event) {
-  if(event.request.method === "GET"){
-    console.log("event.request")
-    //console.log(event.request)
-    event.respondWith(
-      caches.match(event.request).then(function(response) {
-        if(response){
-          console.log('cache.response')
-          console.log(response)
-          console.log('etag:' + response.headers.get('etag'))
-          return response
-        }else{
-          saveOnCache(event.request);
-          return fetch(event.request).then(function (response) {
-            console.log('fetch.response')
-            console.log(response)
-            console.log('etag:' + response.headers.get('etag'))
-            return response;
-          })
-        }
-      })
-    );
+self.addEventListener('sync', function(event) {
+  if (event.tag === 'queueSync') {
+    //event.waitUntil(doSync());
+    sendMessageToAllClients('sync')
   }
 });
 
-function saveOnCache(request) {
-  caches.open('agro_project').then(function(cache) {
-    return fetch(request).then(function(response) {
-      cache.put(request, response.clone());
-      return response;
-    });
-  });
-}*/
+function sendMessageToClient(client, message) {
+  return new Promise(function (resolve, reject) {
+    let messageChannel = new MessageChannel();
+
+    messageChannel.port1.onmessage = function(event){
+      if(event.data.error){
+        reject(event.data.error)
+      }else{
+        resolve(event.data)
+      }
+    };
+
+    client.postMessage(message, [messageChannel.port2])
+  })
+}
+
+function sendMessageToAllClients(message){
+  clients.matchAll({includeUncontrolled: true, type: 'window'}).then(clients => {
+    clients.forEach(client => {
+      sendMessageToClient(client, message).then(m => {
+        console.log("SW Received Message: "+m)
+      });
+    })
+  })
+}
 
 

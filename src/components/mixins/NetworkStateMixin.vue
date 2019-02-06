@@ -12,7 +12,6 @@
       }
     },
     mounted () {
-      console.log('NetworkStateMixin.mounted')
       if (typeof window !== undefined) {
         navigator.onLine ? this.isOnline = true : this.isOffline = true;
 

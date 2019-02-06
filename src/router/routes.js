@@ -50,11 +50,7 @@ const routes = [
       { name: 'entregas', path: 'entregas', component: () => import('pages/admin/entregas/EntregasList.vue')},
       { name: 'entrega_view', path: 'entregas/:id/view', component: () => import('pages/admin/entregas/EntregaView.vue')},
 
-      { path: 'teste', component: () => import('pages/admin/TestFather.vue'),
-        children: [
-          { path: 'child', component: () => import('pages/admin/TestChild.vue') }
-        ]
-      },
+      { name: 'teste', path: 'teste', component: () => import('pages/admin/Teste.vue')},
     ]
   }
 ];

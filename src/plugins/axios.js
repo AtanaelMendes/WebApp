@@ -49,48 +49,50 @@ export default ({app, router, Vue}) => {
   function customErrorResponse(error) {
     const originalRequest = error.config;
 
-    if (error.response.status === 401 && !originalRequest._retry) {
-      if (isRefreshing) {
-        return new Promise(function(resolve, reject) {
-          failedQueue.push({resolve, reject})
-        }).then(token => {
-          originalRequest.headers['Authorization'] = 'Bearer ' + token;
-          return axiosInstance(originalRequest);
-        }).catch(err => {
-          return err
+    if(error.response){
+      if (error.response.status === 401 && !originalRequest._retry) {
+        if (isRefreshing) {
+          return new Promise(function(resolve, reject) {
+            failedQueue.push({resolve, reject})
+          }).then(token => {
+            originalRequest.headers['Authorization'] = 'Bearer ' + token;
+            return axiosInstance(originalRequest);
+          }).catch(err => {
+            return err
+          })
+        }
+
+        originalRequest._retry = true;
+        isRefreshing = true;
+
+        let data = {
+          grant_type: 'refresh_token',
+          client_id: process.env.CLIENT_ID,
+          client_secret: process.env.CLIENT_SECRET,
+          scope: null,
+          refresh_token: localStorage.getItem('auth.refresh_token')
+        };
+
+        return new Promise(function (resolve, reject) {
+          axiosInstance.post('oauth/token', data)
+            .then(response => {
+              localStorage.setItem('auth.token', response.data.access_token);
+              localStorage.setItem('auth.refresh_token', response.data.refresh_token);
+
+              axiosInstance.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.access_token;
+              originalRequest.headers['Authorization'] = 'Bearer ' + response.data.access_token;
+              processQueue(null, response.data.access_token);
+              resolve(axiosInstance(originalRequest));
+            })
+            .catch((err) => {
+              //TODO: Limpar o token aqui e redirecionar para a tela de login
+              processQueue(err, null);
+              router.push('/login');
+              reject(err);
+            })
+            .then(() => { isRefreshing = false })
         })
       }
-
-      originalRequest._retry = true;
-      isRefreshing = true;
-
-      let data = {
-        grant_type: 'refresh_token',
-        client_id: process.env.CLIENT_ID,
-        client_secret: process.env.CLIENT_SECRET,
-        scope: null,
-        refresh_token: localStorage.getItem('auth.refresh_token')
-      };
-
-      return new Promise(function (resolve, reject) {
-        axiosInstance.post('oauth/token', data)
-          .then(response => {
-            localStorage.setItem('auth.token', response.data.access_token);
-            localStorage.setItem('auth.refresh_token', response.data.refresh_token);
-
-            axiosInstance.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.access_token;
-            originalRequest.headers['Authorization'] = 'Bearer ' + response.data.access_token;
-            processQueue(null, response.data.access_token);
-            resolve(axiosInstance(originalRequest));
-          })
-          .catch((err) => {
-            //TODO: Limpar o token aqui e redirecionar para a tela de login
-            processQueue(err, null);
-            router.push('/login');
-            reject(err);
-          })
-          .then(() => { isRefreshing = false })
-      })
     }
 
     return Promise.reject(error);

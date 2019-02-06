@@ -85,6 +85,12 @@
           <q-item-main label="Entregas" />
         </q-item>
 
+        <!--TESTE-->
+        <q-item @click.native="$router.push({name:'teste'})">
+          <q-item-side icon="mdi-close-circle-outline"/>
+          <q-item-main label="Teste" />
+        </q-item>
+
       </q-list>
     </q-layout-drawer>
 
@@ -128,6 +134,7 @@
   import accountService from 'assets/js/service/AccountService'
   import NetworkStateMixin from 'components/mixins/NetworkStateMixin'
   import {version} from '../../package.json';
+  import SyncService from "../assets/js/service/SyncService";
   export default {
     name: 'Admin',
     mixins: [NetworkStateMixin],
@@ -154,6 +161,20 @@
       this.$on('online', () => {
         //alert('You are online!')
       });
+
+
+      if('serviceWorker' in navigator){
+        navigator.serviceWorker.addEventListener('message', function(event){
+          switch (event.data) {
+            case 'sync':
+              new SyncService().doSync();
+              break;
+          }
+          //console.log("Client 1 Received Message: " + event.data);
+          //event.ports[0].postMessage("Client 1 Says 'Hello back!'");
+        });
+      }
+
     },
     computed:{
       app_version: function () {
