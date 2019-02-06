@@ -205,6 +205,10 @@
   import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
   import SafraCulturaTalhaoEdit from 'assets/js/model/safra/SafraCulturaTalhaoEdit'
 
+  // import graficoEntregaArmazem from 'components/safra/graficos/GraficoEntregaArmazem.vue'
+  // import graficoEntregaCaminhao from 'components/safra/graficos/GraficoEntregaCaminhao.vue'
+  // import graficoColheitaDiaria from 'components/safra/graficos/GraficoColheitaDiaria.vue'
+
   // import graficoClassificacaoMediaArmazem from 'components/graficos/GraficoClassificacaoMediaArmazem.vue'
   // import graficoQuantidadeEntregaArmazems from 'components/graficos/GraficoQuantidadeEntregaArmazems.vue'
 

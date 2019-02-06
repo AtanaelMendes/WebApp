@@ -12,7 +12,7 @@
         opacity: 1}">
 
       <div class="row q-pa-md gutter-md">
-        <div class="col-xs-12 col-md-6 col-lg-6">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 
           <!--TOGGLE FISCAL COBRANCA-->
           <div class="row q-mb-md">

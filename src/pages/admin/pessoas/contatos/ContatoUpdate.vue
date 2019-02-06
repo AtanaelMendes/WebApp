@@ -14,14 +14,12 @@
       <div class="row q-pa-md gutter-sm">
 
         <!--TOGGLE FISCAL COBRANCA-->
-        <div class="col-4">
-          <q-toggle color="deep-orange" label="Fiscal" v-model="contato.isFiscal" />
-        </div>
-        <div class="col-4">
+        <div class="col-12">
+          <q-toggle color="deep-orange" label="Fiscal" v-model="contato.isFiscal" class="q-mr-lg"/>
           <q-toggle color="deep-orange" label="Cobrança" v-model="contato.isCobranca" />
         </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
           <form>
 
             <!--IMPUT NOME-->
@@ -58,7 +56,7 @@
 
               <q-item v-for="(email, index) in contato.emails" :key="index" @click.native="openEditEmailDialog(email, index)">
                 <q-item-side icon="email" inverted color="light-green-4" />
-                <q-item-main>
+                <q-item-main style="overflow: hidden">
                   <q-item-tile label>{{email.endereco.value}}</q-item-tile>
                 </q-item-main>
                 <q-item-side>
