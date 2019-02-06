@@ -4,13 +4,12 @@
     <q-stepper key="sendCargo" ref="stepper" contractable color="positive" v-model="currentStep" class="no-shadow">
 
       <!--PASSO 1 ESCOLHER NEGOCIO-->
-      <!--TODO ordenar por data vencimento-->
       <q-step default title="Negócico" v-if="stepNegocio" name="negocio">
-        <div class="row justify-center items-center gutter-sm space-end" style="min-height: 80vh">
+        <div class="row justify-center gutter-sm space-end" style="min-height: 80vh">
 
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="negocioCultura in negocioCulturas" :key="negocioCultura.id">
 
-            <q-card @click.native="selectNegocioCultura(negocioCultura)" class="cursor-pointer	">
+            <q-card @click.native="selectNegocioCultura(negocioCultura)" class="cursor-pointer	full-height">
 
               <q-card-title>
                 {{negocioCultura.negocio.pessoa}}
@@ -23,7 +22,7 @@
               <q-list dense>
 
                 <!-- Prazo -->
-                <q-item>
+                <q-item v-if="negocioCultura.prazo_entrega_final">
                   <q-item-side icon="mdi-calendar" />
                   <q-item-main>
                     <q-item-tile label>
@@ -65,19 +64,52 @@
 
                 </q-item>
 
-                <!-- Quantidade -->
-                <q-item>
+                <!-- QUANTIDADE -->
+                <!--SE NAO FINALIZADO-->
+                <q-item v-if="negocioCultura.quantidade_entregue < negocioCultura.quantidade">
                   <q-item-side icon="mdi-arrow-bottom-left" color="red" />
                   <q-item-main>
+
                     <q-item-tile label>
                       {{numeral(negocioCultura.quantidade_restante).format('0,0')}} {{negocioCultura.unidade_medida_sigla}}
                     </q-item-tile>
+
                     <q-item-tile sublabel>
                       Faltando
-                      <span class="text-negative" v-if="negocioCultura.entregas_pendentes">
-                        <br />{{negocioCultura.entregas_pendentes}} Cargas aguardando no armazém
-                      </span>
                     </q-item-tile>
+
+                    <q-item-tile class="text-negative" v-if="negocioCultura.entregas_pendentes">
+                      {{negocioCultura.entregas_pendentes}} Cargas aguardando no armazém
+                    </q-item-tile>
+
+                  </q-item-main>
+                </q-item>
+
+                <!--SE QUANTIDADE ENTREGUE MAIOR QUE O COMBINADO-->
+                <q-item v-if=" Math.floor(negocioCultura.quantidade_entregue) > negocioCultura.quantidade">
+                  <q-item-side icon="arrow_upward" color="warning" />
+                  <q-item-main>
+
+                    <q-item-tile label>
+                      {{numeral(negocioCultura.quantidade_restante).format('0,0')}} {{negocioCultura.unidade_medida_sigla}}
+                    </q-item-tile>
+
+                    <q-item-tile sublabel>
+                      Passando
+                    </q-item-tile>
+
+                    <q-item-tile class="text-negative" v-if="negocioCultura.entregas_pendentes">
+                      {{negocioCultura.entregas_pendentes}} Cargas aguardando no armazém
+                    </q-item-tile>
+
+                  </q-item-main>
+                </q-item>
+
+                <!--SE JA FINALIZADO-->
+                <q-item v-if="negocioCultura.quantidade == Math.floor(negocioCultura.quantidade_entregue)">
+                  <q-item-side icon="thumb_up_alt" color="positive"/>
+                  <q-item-main>
+                    Finalizado
                   </q-item-main>
                 </q-item>
 

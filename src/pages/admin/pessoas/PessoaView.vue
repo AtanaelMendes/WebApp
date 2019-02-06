@@ -158,7 +158,9 @@
                   </q-item>
 
                   <q-item v-for="(telefone, index) in getFilteredTelefones(contato.telefones, 'celular')" :key="telefone.numero" class="q-px-none">
-                    <q-item-side color="deep-orange" icon="phone_iphone" v-if="index === 0"/>
+                    <q-item-side>
+                      <q-icon color="deep-orange" name="phone_iphone" v-if="index === 0"/>
+                    </q-item-side>
                     <q-item-main>
                       <a :href=" 'tel:'+telefone.numero" style="text-decoration: none;">
                         {{telefone.numero}}
@@ -167,7 +169,9 @@
                   </q-item>
 
                   <q-item v-for="(telefone, index) in getFilteredTelefones(contato.telefones, 'fixo')" :key="telefone.numero" class="q-px-none">
-                    <q-item-side color="deep-orange" icon="phone" v-if="index === 0"/>
+                    <q-item-side>
+                      <q-icon color="deep-orange" name="phone" size="25px" v-if="index === 0"/>
+                    </q-item-side>
                     <q-item-main>
                       <a :href=" 'tel:'+telefone.numero" style="text-decoration: none;">
                         {{telefone.numero}}
@@ -179,7 +183,9 @@
                     <q-item-side class="q-pa-none" icon="email" color="deep-orange" v-if="index === 0"/>
                     <q-item-main>
                       <a :href=" 'mailto:'+email.endereco" style="text-decoration: none;">
-                        {{email.endereco}}
+                        <span class="q-caption">
+                          {{email.endereco}}
+                        </span>
                       </a>
                     </q-item-main>
                   </q-item>
