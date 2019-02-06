@@ -4,8 +4,8 @@
     <toolbar slot="toolbar" :title="data.cultura.nome + ' ' + data.safra.ano_inicio + '/' + data.safra.ano_fim" navigation_type="back" @navigation_clicked="backAction" >
       <div slot="tabs">
         <q-tabs v-model="iTab">
-          <q-tab slot="title" name="tab-resumo" label="resumo" />
-          <q-tab slot="title" name="tab-areas" label="areas" @select="enterTabAreas()" default/>
+          <q-tab slot="title" name="tab-resumo" label="resumo" default/>
+          <q-tab slot="title" name="tab-areas" label="areas" @select="selectTabAreas()"/>
           <q-tab slot="title" name="tab-cultivares" label="cultivares"/>
           <q-tab slot="title" name="tab-negocios" label="negocios"/>
         </q-tabs>
@@ -35,28 +35,37 @@
       </div>
 
       <!-- GRAFICOS -->
-      <div class="col-12 q-pa-md">
-        <q-tabs class="shadow-4"  swipeable inverted align="justify">
-          <q-tab slot="title" name="tab-diaria" label="" icon="mdi-calendar" default/>
-          <q-tab slot="title" name="tab-classificacao" label="" icon="mdi-ruler" />
-          <q-tab slot="title" name="tab-caminhao" label="" icon="mdi-truck" />
-          <q-tab slot="title" name="tab-armazem" label="" icon="place"/>
+      <div class="col-12 space-end q-mt-md">
+        <q-tabs swipeable inverted arrows align="justify" style="min-height: 410px">
+          <q-tab slot="title" name="tab-diario" label="" icon="mdi-calendar" default @select="selectTabDiario()"/>
+          <q-tab slot="title" name="tab-diario-classificacao" label="" icon="mdi-ruler" @select="selectTabDiarioClassificacao()"/>
+          <q-tab slot="title" name="tab-caminhoes" label="" icon="mdi-truck" @select="selectTabCaminhoes()"/>
+          <q-tab slot="title" name="tab-armazem" label="" icon="place" @select="selectTabArmazens()"/>
 
+          <q-tab-pane name="tab-diario" keep-alive>
+            <div class="q-mb-md">
+              Diário de Colheita
+            </div>
+            <safra-grafico-diario :diario="diario" :unidade-medida="data.view_unidade_medida" :height="300" :width="100"/>
+          </q-tab-pane>
+          <q-tab-pane name="tab-diario-classificacao" keep-alive>
+            <div class="q-mb-md">
+              Diário de Classificação
+            </div>
+            <safra-grafico-diario-classificacao :diario-classificacao="diarioClassificacao" :height="300" :width="100"/>
+          </q-tab-pane>
+          <q-tab-pane name="tab-caminhoes" keep-alive>
+            <div class="q-mb-md">
+              Entregas Por Caminhão
+            </div>
+            <safra-grafico-quantidades-por-caminhao :unidade-medida="data.view_unidade_medida" :caminhoes="caminhoes" :height="300" :width="100"/>
+          </q-tab-pane>
           <q-tab-pane name="tab-armazem" keep-alive>
-            Entrega Por Armazém
-            <!-- <grafico-entrega-armazem :safra-id="safra_id" :safra-cultura-id="id" :height="300" :width="100"/> -->
-          </q-tab-pane>
-          <q-tab-pane name="tab-caminhao" keep-alive>
-            Entrega Por Caminhão
-            <!-- <grafico-entrega-caminhao :safra-id="safra_id" :safra-cultura-id="id" :height="300" :width="100"/> -->
-          </q-tab-pane>
-          <q-tab-pane name="tab-diaria" keep-alive>
-            Colheita Diária
-            <!-- <grafico-colheita-diaria :safra-id="safra_id" :safra-cultura-id="id" :height="300" :width="100"/> -->
-          </q-tab-pane>
-          <q-tab-pane name="tab-classificacao" keep-alive>
-            Classificação Diária
-            <!-- <grafico-classificacao-diaria :safra-id="safra_id" :safra-cultura-id="id" :height="300" :width="100"/> -->
+            <div class="q-mb-md">
+              Entrega Por Armazém
+            </div>
+            <safra-grafico-quantidades-por-armazem :unidade-medida="data.view_unidade_medida" :armazens="armazens" :height="300" :width="100"/>
+            <!-- <grafico-entrega-armazem :diario="diario" :unidade-medida="data.view_unidade_medida" :height="300" :width="100"/> -->
           </q-tab-pane>
         </q-tabs>
       </div>
@@ -69,7 +78,7 @@
         <div class="row">
 
           <!-- GRAFICO DAS AREAS -->
-          <div class="col-12">
+          <div class="col-12" style="min-height: 254px">
             <div @click="media = !media" class="cursor-pointer q-ma-md">
               <q-toggle v-model="media" color="secondary" />
               <template v-if="media">
@@ -126,7 +135,7 @@
         <div class="row">
 
           <!-- GRAFICO DOS TALHOES -->
-          <div class="col-12 q-mt-md">
+          <div class="col-12 q-mt-md" style="min-height: 200px">
             <safra-grafico-quantidades-por-talhao
               :talhoes="this.talhoes"
               :areaId="this.activeArea.id"
@@ -202,16 +211,21 @@
   // import graficoColheitaPorTalhao from 'components/safra/graficos/GraficoColheitaPorTalhao.vue'
   // import graficoColheitaPorCultivar from 'components/safra/graficos/GraficoColheitaPorCultivar.vue'
 
-  import graficoEntregaArmazem from 'components/safra/graficos/GraficoEntregaArmazem.vue'
-  import graficoEntregaCaminhao from 'components/safra/graficos/GraficoEntregaCaminhao.vue'
-  import graficoColheitaDiaria from 'components/safra/graficos/GraficoColheitaDiaria.vue'
+  // import graficoEntregaArmazem from 'components/safra/graficos/GraficoEntregaArmazem.vue'
+  // import graficoEntregaCaminhao from 'components/safra/graficos/GraficoEntregaCaminhao.vue'
+  // import graficoColheitaDiaria from 'components/safra/graficos/GraficoColheitaDiaria.vue'
   // import graficoClassificacaoDiaria from 'components/safra/graficos/GraficoClassificacaoDiaria.vue'
 
   import safraGraficoDiario from 'components/safra/graficos/Diario.vue'
+  import safraGraficoDiarioClassificacao from 'components/safra/graficos/DiarioClassificacao.vue'
+  import safraGraficoQuantidadesPorCaminhao from 'components/safra/graficos/QuantidadesPorCaminhao.vue'
+  import safraGraficoQuantidadesPorArmazem from 'components/safra/graficos/QuantidadesPorArmazem.vue'
+
   import safraGraficoQuantidadesPorArea from 'components/safra/graficos/QuantidadesPorArea.vue'
   import safraGraficoQuantidadesPorTalhao from 'components/safra/graficos/QuantidadesPorTalhao.vue'
+
   import safraQuantidades from 'components/safra/Quantidades.vue'
-  import AgroUtils from 'assets/js/AgroUtils'
+  import agroUtils from 'assets/js/AgroUtils'
 
   export default {
     name: "safra-cultura",
@@ -231,8 +245,12 @@
       // graficoEntregaArmazem,
       // graficoEntregaCaminhao,
 
-
       safraGraficoDiario,
+      safraGraficoDiarioClassificacao,
+
+      safraGraficoQuantidadesPorCaminhao,
+      safraGraficoQuantidadesPorArmazem,
+
       safraGraficoQuantidadesPorArea,
       safraGraficoQuantidadesPorTalhao,
       safraQuantidades,
@@ -245,6 +263,18 @@
 
         loaded: false,
         data: null,
+
+        diarioLoaded: false,
+        diario: null,
+
+        diarioClassificacaoLoaded: false,
+        diarioClassificacao: null,
+
+        caminhoesLoaded: false,
+        caminhoes: null,
+
+        armazensLoaded: false,
+        armazens: null,
 
         areasLoaded: false,
         areas: null,
@@ -286,13 +316,25 @@
     },
     methods: {
       imageMakeUrl: function (fileName, size) {
-        return AgroUtils.image.makeUrl(fileName, size)
+        return agroUtils.image.makeUrl(fileName, size)
       },
-      enterTabAreas: function () {
+      selectTabAreas: function () {
         this.iArea = 0;
         this.iTalhao = 0;
         this.getAreas();
         this.getTalhoes();
+      },
+      selectTabDiario: function () {
+        this.getDiario();
+      },
+      selectTabDiarioClassificacao: function () {
+        this.getDiarioClassificacao();
+      },
+      selectTabCaminhoes: function () {
+        this.getCaminhoes();
+      },
+      selectTabArmazens: function () {
+        this.getArmazens();
       },
 
       // ADD CULTIVAR
@@ -362,6 +404,42 @@
         })
       },
 
+      getDiario: function(force = false){
+        if (this.diarioLoaded & !force) {
+          return;
+        }
+        safraCulturaService.getDiario(this.safra_id, this.id).then(response => {
+          this.diario = response.data.diario;
+          this.diarioLoaded = true;
+        })
+      },
+      getDiarioClassificacao: function(force = false){
+        if (this.diarioClassificacaoLoaded & !force) {
+          return;
+        }
+        safraCulturaService.getDiarioClassificacao(this.safra_id, this.id).then(response => {
+          this.diarioClassificacao = response.data;
+          this.diarioClassificacaoLoaded = true;
+        })
+      },
+      getCaminhoes: function(force = false){
+        if (this.caminhoesLoaded & !force) {
+          return;
+        }
+        safraCulturaService.getCaminhoes(this.safra_id, this.id).then(response => {
+          this.caminhoes = response.data.caminhoes
+          this.caminhoesLoaded = true
+        })
+      },
+      getArmazens: function(force = false){
+        if (this.armazensLoaded & !force) {
+          return;
+        }
+        safraCulturaService.getArmazens(this.safra_id, this.id).then(response => {
+          this.armazens = response.data.armazens
+          this.armazensLoaded = true
+        })
+      },
       getAreas: function(force = false){
         if (this.areasLoaded & !force) {
           return;

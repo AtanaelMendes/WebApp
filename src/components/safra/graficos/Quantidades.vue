@@ -1,4 +1,3 @@
-<!--GraficoColheitaPorArea-->
 <script>
   import { Bar } from 'vue-chartjs'
   export default {
@@ -19,47 +18,6 @@
         chartdata: {
           labels: [],
           datasets: [
-            {
-              type: 'line',
-              label: 'Cargas',
-              fill: false,
-              showLine: false,
-              pointRadius: 7,
-              pointHoverRadius: 10,
-              pointStyle: 'rectRot',
-              yAxisID: 'y-axis-quantidade',
-              data: [],
-              backgroundColor: 'blue',
-              pointBorderColor: 'blue',
-            },
-            {
-              label: 'Descarregando',
-              stack: 'stack-peso',
-              yAxisID: 'y-axis-peso',
-              data: [],
-              backgroundColor: 'orange',
-            },
-            {
-              label: 'Líquido',
-              stack: 'stack-peso',
-              yAxisID: 'y-axis-peso',
-              data: [],
-              backgroundColor: '#00605f',
-            },
-            {
-              label: 'Desconto',
-              stack: 'stack-peso',
-              yAxisID: 'y-axis-peso',
-              data: [],
-              backgroundColor: 'red',
-            },
-            {
-              label: 'Estimativa',
-              stack: 'stack-estimativa',
-              yAxisID: 'y-axis-peso',
-              data: [],
-              backgroundColor: 'grey',
-            },
           ]
         },
         options: {
@@ -139,7 +97,7 @@
           descr = this.unidadeMedida.sigla + '/' + this.unidadeArea.sigla
         }
         if (tooltipItem.datasetIndex == 0) {
-          return this.numeral(tooltipItem.yLabel).format('0,0') + ' ' + data.datasets[tooltipItem.datasetIndex].label
+          return this.numeral(tooltipItem.yLabel).format('0,0.0') + ' ' + data.datasets[tooltipItem.datasetIndex].label
         }
         return data.datasets[tooltipItem.datasetIndex].label + ': ' + this.numeral(tooltipItem.yLabel).format(mask) + ' ' + descr
       },
@@ -149,11 +107,58 @@
           return
         }
         this.chartdata.labels = this.series.labels
-        this.chartdata.datasets[0].data = this.series.numeroCargas
-        this.chartdata.datasets[1].data = this.series.pesoDescarregando
-        this.chartdata.datasets[2].data = this.series.pesoLiquido
-        this.chartdata.datasets[3].data = this.series.pesoDesconto
-        this.chartdata.datasets[4].data = this.series.pesoEstimativa
+        this.chartdata.datasets = []
+        if (this.series.numeroCargas.length > 0) {
+          this.chartdata.datasets.push({
+            type: 'line',
+            label: 'Cargas',
+            fill: false,
+            showLine: false,
+            pointRadius: 7,
+            pointHoverRadius: 10,
+            pointStyle: 'rectRot',
+            yAxisID: 'y-axis-quantidade',
+            data: this.series.numeroCargas,
+            backgroundColor: 'blue',
+            pointBorderColor: 'blue',
+          })
+        }
+        if (this.series.pesoDescarregando.length > 0) {
+          this.chartdata.datasets.push({
+            label: 'Descarregando',
+            stack: 'stack-peso',
+            yAxisID: 'y-axis-peso',
+            data: this.series.pesoDescarregando,
+            backgroundColor: 'orange',
+          })
+        }
+        if (this.series.pesoLiquido.length > 0) {
+          this.chartdata.datasets.push({
+            label: 'Líquido',
+            stack: 'stack-peso',
+            yAxisID: 'y-axis-peso',
+            data: this.series.pesoLiquido,
+            backgroundColor: '#00605f',
+          })
+        }
+        if (this.series.pesoDesconto.length > 0) {
+          this.chartdata.datasets.push({
+            label: 'Desconto',
+            stack: 'stack-peso',
+            yAxisID: 'y-axis-peso',
+            data: this.series.pesoDesconto,
+            backgroundColor: 'red',
+          })
+        }
+        if (this.series.pesoEstimativa.length > 0) {
+          this.chartdata.datasets.push({
+            label: 'Estimativa',
+            stack: 'stack-estimativa',
+            yAxisID: 'y-axis-peso',
+            data: this.series.pesoEstimativa,
+            backgroundColor: 'grey',
+          });
+        }
         this.renderChart(this.chartdata, this.options)
       },
 

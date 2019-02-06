@@ -1,16 +1,11 @@
 <script>
   import { Bar } from 'vue-chartjs'
-
   export default {
     name: "safra-grafico-diario",
     extends: Bar,
     props: {
-      safraId: {
-        default: null
-      },
-      safraCulturaId: {
-        default: null
-      },
+      diario: Array,
+      unidadeMedida: Object,
     },
     data (){
       return {
@@ -21,6 +16,7 @@
           datasets: [
             {
               type: 'line',
+              spanGaps: true,
               label: 'Cargas',
               fill: false,
               showLine: false,
@@ -34,6 +30,7 @@
             },
             {
               type: 'line',
+              spanGaps: true,
               label: 'Descarregando',
               fill: false,
               showLine: false,
@@ -50,6 +47,7 @@
               label: 'Líquido',
               data: [],
               type: 'line',
+              spanGaps: true,
               fill: false,
               backgroundColor: '#00605f',
               borderColor: '#00605f',
@@ -59,6 +57,7 @@
               label: 'Desconto',
               data: [],
               type: 'line',
+              spanGaps: true,
               fill: false,
               backgroundColor: 'red',
               borderColor: 'red',
@@ -94,6 +93,7 @@
             xAxes: [{
               display: true,
               type: 'time',
+              distribution: 'series',
               time: {
                 unit: 'day',
                 displayFormats: {
@@ -135,6 +135,14 @@
         }
       }
     },
+    watch: {
+      diario: {
+        handler: function(newValue) {
+          this.parse()
+        },
+        deep: true
+      },
+    },
     methods: {
 
       formatTooltipLabel (tooltipItem, data) {
@@ -144,34 +152,30 @@
         if (tooltipItem.datasetIndex == 0) {
           return this.numeral(tooltipItem.yLabel).format('0,0') + ' ' + data.datasets[tooltipItem.datasetIndex].label
         }
-        return data.datasets[tooltipItem.datasetIndex].label +': ' + this.numeral(tooltipItem.yLabel).format('0,0') + ' ' + this.data.unidade_medida.sigla;
-      },
-
-      // Busca Dados da API
-      getData () {
-        safraCulturaGraficoService.getColheitaDiaria(this.safraId, this.safraCulturaId).then(response => {
-          this.data = response.data
-          this.loaded = true;
-          this.parseData();
-        })
+        return data.datasets[tooltipItem.datasetIndex].label +': ' + this.numeral(tooltipItem.yLabel).format('0,0') + ' ' + this.unidadeMedida.sigla;
       },
 
       // Passa dados vindos da API pro grafico e monta ele
-      parseData () {
-        if (!this.loaded) {
+      parse () {
+        if (!this.diario) {
           return;
         }
-        this.chartdata.labels = this.data.dias
-        this.chartdata.datasets[0].data = this.data.cargas
-        this.chartdata.datasets[1].data = this.data.estimativa_carga
-        this.chartdata.datasets[2].data = this.data.peso_liquido
-        this.chartdata.datasets[3].data = this.data.peso_desconto
+        this.chartdata.labels = _.map(this.diario, 'id')
+        this.chartdata.datasets[0].data = _.map(this.diario, 'numero_cargas')
+        this.chartdata.datasets[1].data = _.map(this.diario, function (item) {
+            if (item.peso_descarregando <= 0) {
+              return null
+            }
+            return item.peso_descarregando
+        })
+        this.chartdata.datasets[2].data = _.map(this.diario, 'peso_liquido')
+        this.chartdata.datasets[3].data = _.map(this.diario, 'peso_desconto')
         this.renderChart(this.chartdata, this.options)
       },
 
     },
     mounted () {
-      this.getData();
+      this.parse();
     }
   }
 </script>

@@ -82,7 +82,9 @@ export default {
         })
       } else {
         this.series.pesoDescarregando = _.map(this.talhoesDaArea, 'peso_descarregando');
-        this.series.pesoLiquido = _.map(this.talhoesDaArea, 'peso_liquido');
+        this.series.pesoLiquido = _.map(this.talhoesDaArea, function (item) {
+          return (item.peso_liquido - item.peso_descarregando);
+        })
         this.series.pesoDesconto = _.map(this.talhoesDaArea, 'peso_desconto');
         this.series.pesoEstimativa = _.map(this.talhoesDaArea, function (item) {
           return (item.peso_estimativa);

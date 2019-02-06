@@ -72,7 +72,9 @@ export default {
         })
       } else {
         this.series.pesoDescarregando = _.map(this.areas, 'peso_descarregando');
-        this.series.pesoLiquido = _.map(this.areas, 'peso_liquido');
+        this.series.pesoLiquido = _.map(this.areas, function (item) {
+          return (item.peso_liquido - item.peso_descarregando);
+        })
         this.series.pesoDesconto = _.map(this.areas, 'peso_desconto');
         this.series.pesoEstimativa = _.map(this.areas, function (item) {
           return (item.peso_estimativa);
