@@ -1,0 +1,87 @@
+<template>
+  <safra-grafico-quantidades
+    :media="media"
+    :series="series"
+    :unidade-medida="unidadeMedida"
+    :unidade-area="unidadeArea"
+    :height="height"
+    :width="width"
+    v-model="index"
+  />
+</template>
+<script>
+import safraGraficoQuantidades from 'components/safra/graficos/Quantidades.vue'
+
+export default {
+  name: "safra-grafico-quantidades-por-area",
+  components: {
+    safraGraficoQuantidades
+  },
+  props: {
+    media: Boolean,
+    areas: Array,
+    unidadeMedida: Object,
+    unidadeArea: Object,
+    height: Number,
+    width: Number,
+  },
+  data() {
+    return {
+      index: null,
+      series: {
+        labels: [],
+        numeroCargas: [],
+        pesoDescarregando: [],
+        pesoLiquido: [],
+        pesoDesconto: [],
+        pesoEstimativa: [],
+      }
+    }
+  },
+  watch: {
+    media: function (val) {
+      this.parse()
+    },
+    areas: function (val) {
+      this.parse()
+    },
+    index: function (val) {
+      this.$emit("input", this.index)
+    },
+  },
+  methods: {
+    // cria séries de dados para o grático
+    parse () {
+      this.series.labels = _.map(this.areas, 'nome')
+      this.series.numeroCargas = _.map(this.areas, 'numero_cargas')
+      if (this.media) {
+        this.series.pesoDescarregando = _.map(this.areas, function (item) {
+          if (!item.peso_descarregando || !item.tamanho) {
+            return null
+          }
+          return item.peso_descarregando / item.tamanho;
+        })
+        this.series.pesoLiquido = _.map(this.areas, function (item) {
+          return (item.peso_liquido - item.peso_descarregando) / item.tamanho;
+        })
+        this.series.pesoDesconto = _.map(this.areas, function (item) {
+          return item.peso_desconto / item.tamanho;
+        })
+        this.series.pesoEstimativa = _.map(this.areas, function (item) {
+          return (item.peso_estimativa) / item.tamanho;
+        })
+      } else {
+        this.series.pesoDescarregando = _.map(this.areas, 'peso_descarregando');
+        this.series.pesoLiquido = _.map(this.areas, 'peso_liquido');
+        this.series.pesoDesconto = _.map(this.areas, 'peso_desconto');
+        this.series.pesoEstimativa = _.map(this.areas, function (item) {
+          return (item.peso_estimativa);
+        })
+      }
+    },
+  },
+  mounted() {
+    this.parse()
+  }
+}
+</script>

@@ -4,8 +4,8 @@
     <toolbar slot="toolbar" :title="data.cultura.nome + ' ' + data.safra.ano_inicio + '/' + data.safra.ano_fim" navigation_type="back" @navigation_clicked="backAction" >
       <div slot="tabs">
         <q-tabs v-model="iTab">
-          <q-tab slot="title" name="tab-resumo" label="resumo" default />
-          <q-tab slot="title" name="tab-areas" label="areas" @select="enterTabAreas()"/>
+          <q-tab slot="title" name="tab-resumo" label="resumo" />
+          <q-tab slot="title" name="tab-areas" label="areas" @select="enterTabAreas()" default/>
           <q-tab slot="title" name="tab-cultivares" label="cultivares"/>
           <q-tab slot="title" name="tab-negocios" label="negocios"/>
         </q-tabs>
@@ -29,8 +29,8 @@
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
         <safra-quantidades
           :quantidades="data.totals"
-          :view_unidade_area="data.view_unidade_area"
-          :view_unidade_medida="data.view_unidade_medida"
+          :unidade-area="data.view_unidade_area"
+          :unidade-medida="data.view_unidade_medida"
         />
       </div>
 
@@ -44,19 +44,19 @@
 
           <q-tab-pane name="tab-armazem" keep-alive>
             Entrega Por Armazém
-            <grafico-entrega-armazem :safra-id="safra_id" :safra-cultura-id="id" :height="300" :width="100"/>
+            <!-- <grafico-entrega-armazem :safra-id="safra_id" :safra-cultura-id="id" :height="300" :width="100"/> -->
           </q-tab-pane>
           <q-tab-pane name="tab-caminhao" keep-alive>
             Entrega Por Caminhão
-            <grafico-entrega-caminhao :safra-id="safra_id" :safra-cultura-id="id" :height="300" :width="100"/>
+            <!-- <grafico-entrega-caminhao :safra-id="safra_id" :safra-cultura-id="id" :height="300" :width="100"/> -->
           </q-tab-pane>
           <q-tab-pane name="tab-diaria" keep-alive>
             Colheita Diária
-            <grafico-colheita-diaria :safra-id="safra_id" :safra-cultura-id="id" :height="300" :width="100"/>
+            <!-- <grafico-colheita-diaria :safra-id="safra_id" :safra-cultura-id="id" :height="300" :width="100"/> -->
           </q-tab-pane>
           <q-tab-pane name="tab-classificacao" keep-alive>
             Classificação Diária
-            <grafico-classificacao-diaria :safra-id="safra_id" :safra-cultura-id="id" :height="300" :width="100"/>
+            <!-- <grafico-classificacao-diaria :safra-id="safra_id" :safra-cultura-id="id" :height="300" :width="100"/> -->
           </q-tab-pane>
         </q-tabs>
       </div>
@@ -65,55 +65,125 @@
 
     <!-- AREAS -->
     <div class="row space-end" v-if="iTab === 'tab-areas' & areasLoaded">
+      <div class="col-12 ">
+        <div class="row">
 
-      <!-- CARROUSEL DE AREAS -->
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
-        <q-carousel color="white" arrows quick-nav v-model="iArea" height="250px">
-          <q-carousel-slide v-for="area in areas" :key="area.id" :img-src="imageMakeUrl(area.image_file_name, '800x500')">
-            <div class="absolute-top custom-caption">
-              <div class="q-card-title">{{area.nome}}</div>
-              <div class="q-card-subtitle text-white">{{numeral(area.tamanho).format('0,0')}} {{data.view_unidade_area.plural}}</div>
+          <!-- GRAFICO DAS AREAS -->
+          <div class="col-12">
+            <div @click="media = !media" class="cursor-pointer q-ma-md">
+              <q-toggle v-model="media" color="secondary" />
+              <template v-if="media">
+                Média
+                {{data.view_unidade_medida.sigla}}
+                por {{data.view_unidade_area.sigla}}
+              </template>
+              <template v-else>
+                Total de
+                {{data.view_unidade_medida.sigla}}
+              </template>
             </div>
-          </q-carousel-slide>
-        </q-carousel>
+            <safra-grafico-quantidades-por-area
+              :areas="areas"
+              :media="media"
+              :unidade-medida="data.view_unidade_medida"
+              :unidade-area="data.view_unidade_area"
+              :height="200"
+              :width="100"
+              v-model="iArea"
+            />
+          </div>
+
+
+          <!-- DETALHE DAS AREAS -->
+          <div class="col-12 q-mt-md">
+            <div class="row">
+              <!-- CARROUSEL DE AREAS -->
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
+                <q-carousel color="white" arrows quick-nav v-model="iArea" height="250px">
+                  <q-carousel-slide v-for="area in areas" :key="area.id" :img-src="imageMakeUrl(area.image_file_name, '800x500')">
+                    <div class="absolute-top carousel-caption">
+                      <div class="q-card-title">{{area.nome}}</div>
+                      <div class="q-card-subtitle text-white">{{numeral(area.tamanho).format('0,0')}} {{data.view_unidade_area.plural}}</div>
+                    </div>
+                  </q-carousel-slide>
+                </q-carousel>
+              </div>
+              <!-- DETALHES DA AREA -->
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
+                <safra-quantidades
+                  :quantidades="areas[iArea]"
+                  :unidade-area="data.view_unidade_area"
+                  :unidade-medida="data.view_unidade_medida"
+                />
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
 
-      <!-- DETALHES DA AREA -->
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
-        <safra-quantidades
-          :quantidades="activeArea"
-          :view_unidade_area="data.view_unidade_area"
-          :view_unidade_medida="data.view_unidade_medida"
-        />
-      </div>
+      <div class="col-12 q-mt-md space-end" v-if="talhoesLoaded">
+        <div class="row">
 
-        <!-- <q-carousel arrows quick-nav v-model="iTalhao">
-          <q-carousel-slide v-for="talhao in area.talhoes" :key="talhao.id">
-            <q-card-media overlay-position="top" style="max-height: 40vh">
-              <ap-image size="800x500" :file-name="talhao.image_file_name"/>
-              <q-card-title slot="overlay">
-                  {{talhao.nome}}
-                <span slot="subtitle">
-                  {{numeral(talhao.tamanho).format('0,0')}} {{data.view_unidade_area.plural}}
-                </span>
-              </q-card-title>
-            </q-card-media>
-          </q-carousel-slide>
-        </q-carousel>
+          <!-- GRAFICO DOS TALHOES -->
+          <div class="col-12 q-mt-md">
+            <safra-grafico-quantidades-por-talhao
+              :talhoes="this.talhoes"
+              :areaId="this.activeArea.id"
+              :media="media"
+              :unidade-medida="data.view_unidade_medida"
+              :unidade-area="data.view_unidade_area"
+              :height="200"
+              :width="100"
+              v-model="iTalhao"
+            />
+          </div>
 
-        <template v-if="this.talhao">
-          <safra-quantidades
-            :view_unidade_area="data.view_unidade_area"
-            :view_unidade_medida="data.view_unidade_medida"
-          />
+          <!-- DETALHE DOS TALHOES -->
+          <div class="col-12 q-mt-md" >
+            <div class="row">
+              <!-- CARROUSEL DE TALHOES -->
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
+                <q-carousel color="white" arrows quick-nav v-model="iTalhao" height="250px">
+                  <q-carousel-slide v-for="talhao in talhoesDaArea" :key="talhao.id" :img-src="imageMakeUrl(talhao.image_file_name, '800x500')">
+                    <div class="absolute-top carousel-caption">
+                      <div class="q-card-title">{{activeArea.nome}} {{talhao.nome}}</div>
+                      <div class="q-card-subtitle text-white">{{numeral(talhao.tamanho).format('0,0')}} {{data.view_unidade_area.plural}}</div>
+                    </div>
+                  </q-carousel-slide>
+                </q-carousel>
+              </div>
+              <!-- DETALHES DO TALHAO -->
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8" v-if="activeTalhao">
+                <safra-quantidades
+                  :quantidades="activeTalhao"
+                  :unidade-area="data.view_unidade_area"
+                  :unidade-medida="data.view_unidade_medida"
+                >
+                  <q-item v-for="cultivar in activeTalhao.cultivares" :key="cultivar.key">
+                    <q-item-side icon="spa" color="primary"/>
+                    <q-item-side v-if="cultivar.image_file_name">
+                      <ap-image size="200x125" :file-name="cultivar.image_file_name" style="max-height: 50px"/>
+                    </q-item-side>
+                    <q-item-main>
+                      <q-item-tile>
+                        {{cultivar.marca}}
+                        {{cultivar.nome}}
+                      </q-item-tile>
+                      <q-item-tile sublabel>
+                        {{numeral(cultivar.tamanho * 100 / activeTalhao.tamanho).format('0,0.0')}}%
+                        ({{numeral(cultivar.tamanho).format('0,0')}} {{data.view_unidade_area.sigla}})
+                      </q-item-tile>
+                    </q-item-main>
+                  </q-item>
+                </safra-quantidades>
+              </div>
+            </div>
+          </div>
 
-        </template> -->
-
+        </div>
       </div>
     </div>
-
-
-
   </custom-page>
 </template>
 
@@ -129,15 +199,17 @@
   // import graficoClassificacaoMediaArmazem from 'components/graficos/GraficoClassificacaoMediaArmazem.vue'
   // import graficoQuantidadeEntregaArmazems from 'components/graficos/GraficoQuantidadeEntregaArmazems.vue'
 
-  // import graficoColheitaPorArea from 'components/safra/graficos/GraficoColheitaPorArea.vue'
   // import graficoColheitaPorTalhao from 'components/safra/graficos/GraficoColheitaPorTalhao.vue'
   // import graficoColheitaPorCultivar from 'components/safra/graficos/GraficoColheitaPorCultivar.vue'
 
   import graficoEntregaArmazem from 'components/safra/graficos/GraficoEntregaArmazem.vue'
   import graficoEntregaCaminhao from 'components/safra/graficos/GraficoEntregaCaminhao.vue'
   import graficoColheitaDiaria from 'components/safra/graficos/GraficoColheitaDiaria.vue'
-  import graficoClassificacaoDiaria from 'components/safra/graficos/GraficoClassificacaoDiaria.vue'
+  // import graficoClassificacaoDiaria from 'components/safra/graficos/GraficoClassificacaoDiaria.vue'
 
+  import safraGraficoDiario from 'components/safra/graficos/Diario.vue'
+  import safraGraficoQuantidadesPorArea from 'components/safra/graficos/QuantidadesPorArea.vue'
+  import safraGraficoQuantidadesPorTalhao from 'components/safra/graficos/QuantidadesPorTalhao.vue'
   import safraQuantidades from 'components/safra/Quantidades.vue'
   import AgroUtils from 'assets/js/AgroUtils'
 
@@ -151,15 +223,18 @@
       // graficoClassificacaoMediaArmazem,
       // graficoQuantidadeEntregaArmazems,
 
-      // graficoColheitaPorArea,
       // graficoColheitaPorTalhao,
       // graficoColheitaPorCultivar,
 
-      graficoClassificacaoDiaria,
-      graficoColheitaDiaria,
-      graficoEntregaArmazem,
-      graficoEntregaCaminhao,
+      //graficoClassificacaoDiaria,
+      // graficoColheitaDiaria,
+      // graficoEntregaArmazem,
+      // graficoEntregaCaminhao,
 
+
+      safraGraficoDiario,
+      safraGraficoQuantidadesPorArea,
+      safraGraficoQuantidadesPorTalhao,
       safraQuantidades,
     },
     data () {
@@ -174,9 +249,14 @@
         areasLoaded: false,
         areas: null,
 
+        talhoesLoaded: false,
+        talhoes: null,
+
         iTab: null,
         iArea: null,
         iTalhao: null,
+
+        media: true,
 
         graficoPorMedia: true,
         currentStep: 'marca',
@@ -197,6 +277,12 @@
       activeArea: function () {
         return this.areas[this.iArea];
       },
+      activeTalhao: function () {
+        return this.talhoesDaArea[this.iTalhao];
+      },
+      talhoesDaArea: function () {
+        return _.filter(this.talhoes, {area_id: this.activeArea.id});
+      }
     },
     methods: {
       imageMakeUrl: function (fileName, size) {
@@ -206,6 +292,7 @@
         this.iArea = 0;
         this.iTalhao = 0;
         this.getAreas();
+        this.getTalhoes();
       },
 
       // ADD CULTIVAR
@@ -285,6 +372,16 @@
         })
       },
 
+      getTalhoes: function(force = false){
+        if (this.areasLoaded & !force) {
+          return;
+        }
+        safraCulturaService.getTalhoes(this.safra_id, this.id).then(response => {
+          this.talhoes = response.data.talhoes;
+          this.talhoesLoaded = true;
+        })
+      },
+
       editSafraCulturaTalhao: function(data){
         this.selectedSafraCulturaTalhao = data;
         this.fillSafraCulturaTalhaoForm(data);
@@ -355,22 +452,7 @@
   }
 </script>
 <style>
-  .cultivar-empty{
-    height: 55px;
-    text-align: center;
-    padding-top: 15px;
-  }
-  .cultivar-empty span{
-    color: #8c8c8c;
-    font-weight: 300;
-    font-size: 15px;
-  }
-  .cultivar-empty i{
-    color: #ffb500;
-    font-size: 20px;
-    margin-right: 6px;
-  }
-  .custom-caption {
+  .carousel-caption {
     text-align: left;
     padding: 12px;
     background: rgba(0, 0, 0, 0.5);
