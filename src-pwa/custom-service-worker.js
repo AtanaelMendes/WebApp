@@ -7,15 +7,6 @@
 // Install Service Worker
 self.addEventListener('install', function(event){
   console.log('installed!');
-  event.waitUntil(
-    caches.open('agro_project').then(function(cache) {
-      return cache.addAll([
-        //'/',
-        '/statics/images/farmer.svg',
-        '/statics/images/login-background.jpg',
-      ]);
-    })
-  );
 });
 
 // Service Worker Active
