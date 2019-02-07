@@ -1,10 +1,8 @@
-import requestQueueRepository from 'assets/js/repository/RequestQueueRepository'
-import QueueItem from "../model/QueueItem";
-class EntregasQueue{
-  add(request){
-    let queueItem = new QueueItem(request.url, 'entregas', request);
+import BaseQueue from "./BaseQueue";
 
-    return requestQueueRepository.save(queueItem)
+export default class EntregasQueue extends BaseQueue{
+  add(request){
+    return super.add(request, 'entregas')
   };
   remove(){
 
