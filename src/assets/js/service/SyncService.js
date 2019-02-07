@@ -17,20 +17,6 @@ export default class SyncService{
       processRequests(queueItens);
     });
   }
-
-  getInitialContent(produtorId){
-    console.log('getInitialContent: ' + produtorId)
-    let urls = [
-      'produtor/'+produtorId+'/entrega/filter_option',
-      'produtor/'+produtorId+'/safra/safra_cultura',
-      'produtor/'+produtorId+'/caminhao/free',
-      'safra_cultura/1/safra_cultura_talhao?type=full',
-    ];
-
-    urls.forEach(url => {
-      Vue.prototype.$axios.get(url)
-    })
-  }
 }
 
 

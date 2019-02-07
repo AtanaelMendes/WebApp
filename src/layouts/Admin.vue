@@ -140,7 +140,6 @@
     mixins: [NetworkStateMixin],
     data () {
       return {
-        syncService: new SyncService(),
         leftDrawerOpen: this.$q.platform.is.desktop,
         currentAccount: {
           name: null,
@@ -151,8 +150,7 @@
       }
     },
     mounted(){
-      //TODO: Registrar o service worker manualmente
-      this.getAccountInfo(); //TODO: Esse método só pode ser chamado depois que o serviceWorker for iniciado
+      this.getAccountInfo();
 
       this.$root.$on('toogleLeftDrawer', this.toogleLeftDrawer);
 
@@ -164,18 +162,17 @@
         //alert('You are online!')
       });
 
-      if('serviceWorker' in navigator){
 
-        let self = this;
-        navigator.serviceWorker.addEventListener('message', function(event){ //TODO Verificar se não esta instanciando esse evento toda vez que carrega a pagina
+      if('serviceWorker' in navigator){
+        navigator.serviceWorker.addEventListener('message', function(event){
           switch (event.data) {
             case 'sync':
-              self.syncService.doSync();
+              new SyncService().doSync();
               break;
           }
           //console.log("Client 1 Received Message: " + event.data);
           //event.ports[0].postMessage("Client 1 Says 'Hello back!'");
-        }.bind(self));
+        });
       }
 
     },
@@ -198,14 +195,10 @@
         this.isOfflineStatusBarVisible = true;
       },
       getAccountInfo: function(){
-        console.log('getAccountInfo')
         this.$axios.get( 'account/info').then( response => {
-          console.log('getAccountInfo.response')
           this.currentAccount.name = response.data.nome;
           this.currentAccount.email = response.data.email;
           localStorage.setItem( 'account.produtor_id', response.data.produtor_id);
-
-          this.syncService.getInitialContent(response.data.produtor_id);
         })
       },
       toogleLeftDrawer() {
