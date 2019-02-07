@@ -304,11 +304,12 @@
 
         this.novaEntrega.safraCulturaTalhaoId = filteredSafraCulturaTalhoes[0].id;
         this.$q.loading.show();
-        entregaService.saveEntrega(this.novaEntrega.getValues()).then(() => {
-          this.$q.notify({type: 'positive', message: 'Entrega criada com sucesso'});
-          this.closeModal();
-          this.$root.$emit('refreshEntregasList', 'carregando')
-
+        entregaService.saveEntrega(this.novaEntrega.getValues()).then(response => {
+          if(response.status === 201) {
+            this.$q.notify({type: 'positive', message: 'Entrega criada com sucesso'});
+            this.closeModal();
+            this.$root.$emit('refreshEntregasList', 'carregando')
+          }
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})

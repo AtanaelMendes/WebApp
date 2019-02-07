@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
-import EntregasQueue from "../../queue/EntregasQueue";
 const produtorId = localStorage.getItem('account.produtor_id');
 export default {
   listEntregasCarregando(filter = null){
@@ -42,16 +41,9 @@ export default {
   saveEntrega(params){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.post('produtor/'+ produtorId + '/entrega', params).then(response => {
-        if(response.status === 201) {
-          resolve(response)
-        }
+        resolve(response)
       }).catch(error => {
-        if(!navigator.onLine){
-          new EntregasQueue().add(error.config);
-          resolve();
-        }else{
-          reject(error.response)
-        }
+        reject(error.response)
       })
     });
   },
