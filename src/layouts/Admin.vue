@@ -135,14 +135,12 @@
   import NetworkStateMixin from 'components/mixins/NetworkStateMixin'
   import {version} from '../../package.json';
   import SyncService from "../assets/js/service/SyncService";
-  import ResourceService from "../assets/js/service/ResourceService";
   export default {
     name: 'Admin',
     mixins: [NetworkStateMixin],
     data () {
       return {
         syncService: new SyncService(),
-        resourceService: new ResourceService(),
         leftDrawerOpen: this.$q.platform.is.desktop,
         currentAccount: {
           name: null,
@@ -208,7 +206,6 @@
           localStorage.setItem( 'account.produtor_id', response.data.produtor_id);
 
           this.syncService.getInitialContent(response.data.produtor_id);
-          this.resourceService.download();
         })
       },
       toogleLeftDrawer() {

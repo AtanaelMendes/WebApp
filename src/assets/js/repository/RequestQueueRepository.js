@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import QueueItem from "../dbModel/QueueItem";
+import QueueItem from "../model/QueueItem";
 
 let table = Vue.prototype.db.request_queue;
 export default class RequestQueueRepository {

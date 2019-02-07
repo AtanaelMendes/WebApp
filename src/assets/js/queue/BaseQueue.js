@@ -1,4 +1,4 @@
-import QueueItem from "../dbModel/QueueItem";
+import QueueItem from "../model/QueueItem";
 import RequestQueueRepository from 'assets/js/repository/RequestQueueRepository'
 
 export default class BaseQueue{

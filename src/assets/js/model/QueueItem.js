@@ -1,7 +1,4 @@
 export default class{
-  grouper = null;
-  request = null;
-  date = null;
 
   constructor(grouper, url, method, body, headers) {
     this.grouper = grouper;
@@ -12,4 +9,8 @@ export default class{
       headers: headers,
     }
   }
+
+  grouper = null;
+  request = null;
+  date = null;
 }
