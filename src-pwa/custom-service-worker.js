@@ -20,6 +20,9 @@ self.addEventListener('fetch', function(event) {
     event.respondWith(
       caches.open('agro_project').then(function(cache) {
         return fetch(event.request).then(function (response) {
+          if(response.headers.get('content-type') !== 'application/json'){
+            return response;
+          }
           cache.put(event.request, response.clone());
           return response;
         }).catch(function () {
