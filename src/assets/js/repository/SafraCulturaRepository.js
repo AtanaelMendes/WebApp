@@ -6,7 +6,7 @@ export default class SafraCulturaRepository {
 
   update(safraCultura){
     if(!(safraCultura instanceof SafraCultura)){
-      throw new Error('Objeto não é do tipo Caminhao!');
+      throw new Error('Objeto não é do tipo SafraCultura!');
     }
     return table.put(safraCultura)
   };

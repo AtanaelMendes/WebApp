@@ -124,11 +124,11 @@
 <script>
   import caminhaoService from 'assets/js/service/CaminhaoService'
   import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
-  import entregaService from 'assets/js/service/entrega/EntregaService'
   import NovaEntrega from 'assets/js/model/entrega/NewEntrega'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import apImage from 'components/ApImage'
+  import EntregaService from "../../assets/js/service/entrega/EntregaService";
 
   export default {
     name: "stepper-nova-carga",
@@ -139,6 +139,7 @@
     },
     data () {
       return {
+        entregaService: new EntregaService(),
         currentStep: 'escolherCaminhao',
         novaEntrega: new NovaEntrega(),
         isModalOpened: false,
@@ -304,7 +305,7 @@
 
         this.novaEntrega.safraCulturaTalhaoId = filteredSafraCulturaTalhoes[0].id;
         this.$q.loading.show();
-        entregaService.saveEntrega(this.novaEntrega.getValues()).then(() => {
+        this.entregaService.saveEntrega(this.novaEntrega.getValues()).then(() => {
           this.$q.notify({type: 'positive', message: 'Entrega criada com sucesso'});
           this.closeModal();
           this.$root.$emit('refreshEntregasList', 'carregando')
@@ -324,7 +325,7 @@
 
         this.novaEntrega.safraCulturaTalhaoId = filteredSafraCulturaTalhoes[0].id;
         this.$q.loading.show();
-        entregaService.addTalhaoToEntrega(this.novaEntrega.id, this.novaEntrega.getValues()).then(response => {
+        this.entregaService.addTalhaoToEntrega(this.novaEntrega.id, this.novaEntrega.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Talhao adicionado com sucesso'});
             this.closeModal();

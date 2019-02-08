@@ -1,15 +1,30 @@
 import QueueItem from "../dbModel/QueueItem";
-import RequestQueueRepository from 'assets/js/repository/RequestQueueRepository'
+import RequestQueueRepository from "../repository/RequestQueueRepository";
+
+
+
 
 export default class BaseQueue{
-  add(request, grouper){
-    let queueItem = new QueueItem(grouper, request.url, request.method, request.data, request.headers);
+  #grouper = null;
+  #requestQueueRepository = null;
 
-    new RequestQueueRepository().save(queueItem).then(response => {
+  constructor(grouper) {
+    this.grouper = grouper;
+    this.requestQueueRepository = new RequestQueueRepository();
+  }
+
+  add(request){
+    let queueItem = new QueueItem(this.grouper, request.url, request.method, request.data, request.headers);
+
+    this.requestQueueRepository.save(queueItem).then(response => {
       registerEvent();
       return response;
     })
   };
+
+  getByUrlAndMethod(url, method){
+    return this.requestQueueRepository.getByGrouperAndUrlAndMethod(this.grouper, url, method);
+  }
 }
 
 function registerEvent(){

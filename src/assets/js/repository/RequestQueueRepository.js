@@ -4,10 +4,29 @@ import QueueItem from "../dbModel/QueueItem";
 let table = Vue.prototype.db.request_queue;
 export default class RequestQueueRepository {
 
-  getBy(){
-
+  getByGrouper(grouper){
+    return table.where('grouper').equals(grouper);
   };
 
+  getByUrl(url){
+    return table.where('request.url').equals(url);
+  }
+
+  getByGrouperAndUrl(grouper, url){
+    return table.where(['grouper', 'request.url']).equals([grouper, url]);
+  }
+
+  getByGrouperAndUrlAndMethod(grouper, url, method){
+    console.log('getByGrouperAndUrlAndMethod');
+    //let results = table.where(['grouper', 'request.url']).equals([grouper, url]).filter(item => item.request.method === method);
+    let results = table.where({grouper: grouper, 'request.url': url}).filter(item => item.request.method === method);
+    //let results = table.where({grouper: grouper});
+
+    console.log('results');
+    console.log(results);
+
+    return results;
+  }
   getAllBy(){
 
   };

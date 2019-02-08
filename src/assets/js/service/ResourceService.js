@@ -15,16 +15,22 @@ import UnidadeRepository from "../repository/UnidadeRepository";
 import Unidade from "../dbModel/Unidade";
 import ClassificacaoRepository from "../repository/ClassificacaoRepository";
 import Classificacao from "../dbModel/Classificacao";
+import SafraCulturaTalhao from "../dbModel/SafraCulturaTalhao";
+import SafraCulturaTalhaoRepository from "../repository/SafraCulturaTalhaoRepository";
+import ImageRepository from "../repository/ImageRepository";
+import Image from "../dbModel/Image";
 
 let path;
 let caminhaoRepository;
 let safraCulturaRepository;
+let safraCulturaTalhaoRepository;
 let safraRepository;
 let culturaRepository;
 let areaRepository;
 let talhaoRepository;
 let unidadeRepository;
 let classificacaoRepository;
+let imageRepository;
 
 export default class ResourceService{
 
@@ -32,23 +38,27 @@ export default class ResourceService{
     path = '/produtor/' + localStorage.getItem('account.produtor_id') + '/resource';
     caminhaoRepository = new CaminhaoRepository();
     safraCulturaRepository = new SafraCulturaRepository();
+    safraCulturaTalhaoRepository = new SafraCulturaTalhaoRepository();
     safraRepository = new SafraRepository();
     culturaRepository = new CulturaRepository();
     areaRepository = new AreaRepository();
     talhaoRepository = new TalhaoRepository();
     unidadeRepository = new UnidadeRepository();
     classificacaoRepository = new ClassificacaoRepository();
+    imageRepository = new ImageRepository();
   }
 
   download(){
     getCaminhoes();
     getSafraCulturas();
+    getSafraCulturasTalhoes();
     getSafras();
     getCulturas();
     getAreas();
     getTalhoes();
     getUnidades();
     getClassificacoes();
+    getImages();
   }
 }
 
@@ -71,6 +81,20 @@ function getSafraCulturas(){
     Vue.prototype.$axios.get(path + '/safra_cultura').then(response => {
       response.data.forEach((safraCultura, index, array) => {
         safraCulturaRepository.update(new SafraCultura(safraCultura));
+
+        if(index === (array.length - 1)){
+          resolve();
+        }
+      })
+    })
+  });
+}
+
+function getSafraCulturasTalhoes(){
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get(path + '/safra_cultura_talhao').then(response => {
+      response.data.forEach((safraCulturaTalhao, index, array) => {
+        safraCulturaTalhaoRepository.update(new SafraCulturaTalhao(safraCulturaTalhao));
 
         if(index === (array.length - 1)){
           resolve();
@@ -155,6 +179,20 @@ function getClassificacoes(){
     Vue.prototype.$axios.get(path + '/classificacao').then(response => {
       response.data.forEach((classificacao, index, array) => {
         classificacaoRepository.update(new Classificacao(classificacao));
+
+        if(index === (array.length - 1)){
+          resolve();
+        }
+      })
+    })
+  });
+}
+
+function getImages(){
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get(path + '/image').then(response => {
+      response.data.forEach((image, index, array) => {
+        imageRepository.update(new Image(image));
 
         if(index === (array.length - 1)){
           resolve();
