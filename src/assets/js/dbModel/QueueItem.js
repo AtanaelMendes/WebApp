@@ -1,4 +1,4 @@
-export default class QueueItem{
+export default class{
   grouper = null;
   request = null;
   date = null;

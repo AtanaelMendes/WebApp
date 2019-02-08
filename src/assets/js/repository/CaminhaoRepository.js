@@ -5,8 +5,8 @@ import Caminhao from "../dbModel/Caminhao";
 let table = Vue.prototype.db.caminhoes;
 export default class CaminhaoRepository {
 
-  getById(id){
-    return table.get({id: id});
+  getBy(){
+
   };
 
   getAllBy(){

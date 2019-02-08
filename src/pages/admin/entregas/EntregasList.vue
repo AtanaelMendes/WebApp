@@ -220,13 +220,13 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
+  import entregaService from 'assets/js/service/entrega/EntregaService'
   import NewEntregaModal from 'components/entrega/NewEntregaModal'
   import FilterEntregasModal from 'components/entrega/FilterEntregasModal'
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
   import apFilterResultBar from 'components/ApFilterResultBar'
   import AgroUtils from 'assets/js/AgroUtils'
-  import EntregaService from "../../../assets/js/service/entrega/EntregaService";
 
   export default {
     name: "entregas",
@@ -243,7 +243,6 @@
     },
     data () {
       return {
-        entregaService: new EntregaService(),
         tabs: 'carregando',
         entregas: [],
         entregasCarregando:[],
@@ -282,7 +281,6 @@
         return AgroUtils.image.makeUrl(image_file_name, size)
       },
       novaEntrega: function(){
-        console.log(this.$axios.defaults.baseURL);
         this.$refs.entregaModal.openModal()
       },
       openFilterModal(){
@@ -324,8 +322,8 @@
       },
       listEntregasCarregando(filter = null) {
         this.$q.loading.show();
-        this.entregaService.listEntregasCarregando(filter).then(entregas => {
-          this.entregasCarregando = entregas;
+        entregaService.listEntregasCarregando(filter).then(response => {
+          this.entregasCarregando = response.data;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
@@ -333,7 +331,7 @@
       },
       listEntregasNoArmazem: function (filter = null) {
         this.$q.loading.show();
-        this.entregaService.listEntregasNoArmazem(filter).then(response => {
+        entregaService.listEntregasNoArmazem(filter).then(response => {
           this.entregasNoArmazem = response.data;
           this.$q.loading.hide();
         }).catch(error => {
@@ -342,7 +340,7 @@
       },
       listEntregasEntregues: function (filter = null) {
         this.$q.loading.show();
-        this.entregaService.listCargasEntregues(filter).then(response => {
+        entregaService.listCargasEntregues(filter).then(response => {
           this.entregasEntregues = response.data;
           this.$q.loading.hide();
         }).catch(error => {
@@ -360,7 +358,7 @@
           color: 'primary'
         }).then(data => {
           this.$q.loading.show();
-          this.entregaService.deleteEntrega(id).then(response => {
+          entregaService.deleteEntrega(id).then(response => {
             switch (this.tabs) {
               case 'carregando':
                 this.listEntregasCarregando();

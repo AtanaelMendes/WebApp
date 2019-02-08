@@ -2,9 +2,9 @@
   <custom-page widthInner="60%" isParent>
     <toolbar slot="toolbar" title="Teste" navigation_type="menu"></toolbar>
 
-    <!--<q-input type="text" v-model="motorista" />
+    <q-input type="text" v-model="motorista" />
     <q-btn label="Salvar motorista" @click="adicionarMotorista" />
-    <q-btn label="Registrar evento em sync" @click="registerEvent" />-->
+    <q-btn label="Registrar evento em sync" @click="registerEvent" />
     <q-btn label="Listar registros" @click="list" />
   </custom-page>
     
@@ -16,10 +16,6 @@
   import MotoristaQueue from 'assets/js/queue/MotoristaQueue'
   import motoristaService from 'assets/js/service/motorista/MotoristaService'
   import RequestQueueRepository from "../../assets/js/repository/RequestQueueRepository";
-  import EntregasQueue from "../../assets/js/queue/EntregasQueue";
-  import EntregaCarregandoListItem from "../../assets/js/model/entrega/EntregaCarregandoListItem";
-  import CaminhaoRepository from "../../assets/js/repository/CaminhaoRepository";
-  import SafraCulturaTalhaoRepository from "../../assets/js/repository/SafraCulturaTalhaoRepository";
 
   export default {
     name: "Teste",
@@ -29,8 +25,6 @@
     },
     data(){
       return {
-        caminhaoRepository: new CaminhaoRepository(),
-        safraCulturaTalhaoRepository: new SafraCulturaTalhaoRepository(),
         count:1,
         motorista: null,
         motoristaQueue: new MotoristaQueue()
@@ -57,32 +51,10 @@
           this.motoristaQueue.add(error.config)
         });
       },
-      async list(){
-        let url = this.$axios.defaults.baseURL + 'produtor/1/entrega';
-        console.log('url: ' + url)
-        let queueItens = await new EntregasQueue().getByUrlAndMethod(url, 'post').toArray();
-
-        let entregaItens = queueItens.map(async queueItem => {
-          console.log(queueItem);
-
-          let result = {};
-
-          [result.caminhao, result.safraCulturaTalhao] = await Promise.all([
-            this.caminhaoRepository.getById(queueItem.request.body.caminhao_id),
-            this.safraCulturaTalhaoRepository.getById(queueItem.request.body.safra_cultura_talhao_id)
-          ]);
-
-
-          let entregaitem = new EntregaCarregandoListItem();
-          entregaitem.caminhao.nome = result.caminhao.nome;
-          entregaitem.caminhao.placa = result.caminhao.placa;
-          entregaitem.inicio_carregamento = queueItem.date;
-          entregaitem.safra_culturas_talhoes = result.safraCulturaTalhao;
-
-          console.log(entregaitem);
-          return entregaitem;
+      list(){
+        new RequestQueueRepository().getAll().toArray().then(itens => {
+          console.log(itens)
         });
-
 
       },
       registerEvent(){
