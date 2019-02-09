@@ -45,6 +45,10 @@
               </div>
             </q-card-title>
             <ap-image size="400x250" :file-name="entrega.caminhao.image_file_name" />
+            <div class="q-ma-sm q-pa-xs" style="position: absolute;bottom: 0;right: 0;background:#f4f4f4;border-radius:50%;" v-if="entrega.isInQueueState">
+              <q-icon name="mdi-sync-alert" size="20px" style="" color="deep-orange"/>
+              <q-tooltip anchor="center right" self="center left" :offset="[10, 10]" :delay="200">Item não sincronizado</q-tooltip>
+            </div>
           </q-card-media>
 
           <q-list>
