@@ -5,11 +5,6 @@ import EntregaCarregandoListItem from "../../model/entrega/EntregaCarregandoList
 import CaminhaoRepository from "../../repository/CaminhaoRepository";
 import SafraCulturaTalhaoRepository from "../../repository/SafraCulturaTalhaoRepository";
 import ImageRepository from "../../repository/ImageRepository";
-import AreaRepository from "../../repository/AreaRepository";
-import SafraRepository from "../../repository/SafraRepository";
-import CulturaRepository from "../../repository/CulturaRepository";
-import TalhaoRepository from "../../repository/TalhaoRepository";
-import SafraCulturaRepository from "../../repository/SafraCulturaRepository";
 
 export default class EntregaService{
   #entregasQueue;
@@ -17,11 +12,6 @@ export default class EntregaService{
   #caminhaoRepository;
   #safraCulturaTalhaoRepository;
   #imageRepository;
-  #areaRepository;
-  #safraRepository;
-  #safraCulturaRepository;
-  #culturaRepository;
-  #talhaoRepository;
 
   constructor() {
     this.entregasQueue = new EntregasQueue();
@@ -29,11 +19,6 @@ export default class EntregaService{
     this.caminhaoRepository = new CaminhaoRepository();
     this.safraCulturaTalhaoRepository = new SafraCulturaTalhaoRepository();
     this.imageRepository = new ImageRepository();
-    this.areaRepository = new AreaRepository();
-    this.safraRepository = new SafraRepository();
-    this.safraCulturaRepository = new SafraCulturaRepository();
-    this.culturaRepository = new CulturaRepository();
-    this.talhaoRepository = new TalhaoRepository();
   }
 
   listEntregasCarregando(filter = null){
@@ -56,32 +41,27 @@ export default class EntregaService{
       let queueItens = await new EntregasQueue().getByUrlAndMethod(url, 'post').toArray();
 
       let queueEntregas = await Promise.all(queueItens.map(async queueItem => {
-        let caminhao = await this.caminhaoRepository.getById(queueItem.request.body.caminhao_id);
-        let caminhaoImage = await this.imageRepository.getById(caminhao.image_id);
-        let safraCulturaTalhao = await this.safraCulturaTalhaoRepository.getById(queueItem.request.body.safra_cultura_talhao_id);
-        let talhao = await this.talhaoRepository.getById(safraCulturaTalhao.talhao_id);
-        let safraCultura = await this.safraCulturaRepository.getById(safraCulturaTalhao.safra_cultura_id);
-        let safra = await this.safraRepository.getById(safraCultura.safra_id);
-        let cultura = await this.culturaRepository.getById(safraCultura.cultura_id);
-        let area = await this.areaRepository.getById(talhao.area_id);
+        let result = {};
+
+        [result.caminhao, result.safraCulturaTalhao] = await Promise.all([
+          this.caminhaoRepository.getById(queueItem.request.body.caminhao_id),
+          this.safraCulturaTalhaoRepository.getById(queueItem.request.body.safra_cultura_talhao_id)
+        ]);
+
+        let image = await this.imageRepository.getById(result.caminhao.image_id);
 
         let entregaItem = new EntregaCarregandoListItem();
         entregaItem.id = -1;
-        entregaItem.isInQueueState = true;
-        entregaItem.caminhao.nome = caminhao.nome;
-        entregaItem.caminhao.placa = caminhao.placa;
-        entregaItem.caminhao.image_file_name = caminhaoImage.file_name;
+        entregaItem.caminhao.nome = result.caminhao.nome;
+        entregaItem.caminhao.placa = result.caminhao.placa;
+        entregaItem.caminhao.image_file_name = image.file_name;
         entregaItem.inicio_carregamento = queueItem.date;
-        entregaItem.safra_culturas_talhoes.push({
-          area: area.nome,
-          safra: cultura.nome + " " + safra.ano_inicio + "/" + safra.ano_fim,
-          talhao: talhao.nome,
-        });
+        entregaItem.safra_culturas_talhoes.push(result.safraCulturaTalhao);
 
         return entregaItem;
 
       }));
-      resolve(entregas.concat(queueEntregas));
+      resolve(queueEntregas.concat(entregas));
 
     });
   };

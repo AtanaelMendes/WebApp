@@ -1,10 +1,14 @@
 import Vue from 'vue'
 import SafraCultura from "../dbModel/SafraCultura";
-import BaseRepository from "./BaseRepository";
 
-export default class SafraCulturaRepository extends BaseRepository{
+let table = Vue.prototype.db.safra_culturas;
+export default class SafraCulturaRepository {
 
-  constructor() {
-    super(Vue.prototype.db.safra_culturas, SafraCultura);
-  }
+  update(safraCultura){
+    if(!(safraCultura instanceof SafraCultura)){
+      throw new Error('Objeto não é do tipo SafraCultura!');
+    }
+    return table.put(safraCultura)
+  };
+
 }

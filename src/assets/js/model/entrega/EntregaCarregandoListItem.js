@@ -1,6 +1,4 @@
-import BaseItem from "../BaseItem";
-
-export default class EntregaCarregandoListItem extends BaseItem{
+export default class EntregaCarregandoListItem{
   id = null;
   caminhao = {
     image_file_name: null,
@@ -12,7 +10,6 @@ export default class EntregaCarregandoListItem extends BaseItem{
 
 
   constructor(entrega) {
-    super();
     if(entrega){
       this.id = entrega.id;
       this.caminhao.image_file_name = entrega.caminhao.image_file_name;

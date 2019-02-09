@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import Cultura from "../dbModel/Cultura";
-import BaseRepository from "./BaseRepository";
 
-export default class CulturaRepository extends BaseRepository{
+let table = Vue.prototype.db.culturas;
 
-  constructor() {
-    super(Vue.prototype.db.culturas, Cultura);
+export default class CulturaRepository {
+  update(cultura){
+    if(!(cultura instanceof Cultura)){
+      throw new Error('Objeto não é do tipo Cultura!');
+    }
+    return table.put(cultura)
   }
 }

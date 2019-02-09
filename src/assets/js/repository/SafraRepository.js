@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import Safra from "../dbModel/Safra";
-import BaseRepository from "./BaseRepository";
 
-export default class SafraRepository extends BaseRepository{
+let table = Vue.prototype.db.safras;
 
-  constructor() {
-    super(Vue.prototype.db.safras, Safra);
+export default class SafraRepository {
+  update(safra){
+    if(!(safra instanceof Safra)){
+      throw new Error('Objeto não é do tipo Safra!');
+    }
+    return table.put(safra)
   }
 }

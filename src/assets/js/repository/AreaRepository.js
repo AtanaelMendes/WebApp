@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import Area from "../dbModel/Area";
-import BaseRepository from "./BaseRepository";
 
-export default class AreaRepository extends BaseRepository{
+let table = Vue.prototype.db.areas;
 
-  constructor() {
-    super(Vue.prototype.db.areas, Area);
+export default class AreaRepository {
+  update(area){
+    if(!(area instanceof Area)){
+      throw new Error('Objeto não é do tipo Area!');
+    }
+    return table.put(area)
   }
-
 }

@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import Classificacao from "../dbModel/Classificacao";
-import BaseRepository from "./BaseRepository";
 
-export default class ClassificacaoRepository extends BaseRepository{
+let table = Vue.prototype.db.classificacoes;
 
-  constructor() {
-    super(Vue.prototype.db.classificacoes, Classificacao);
+export default class ClassificacaoRepository {
+  update(classificacao){
+    if(!(classificacao instanceof Classificacao)){
+      throw new Error('Objeto não é do tipo Classificacao!');
+    }
+    return table.put(classificacao)
   }
 }
