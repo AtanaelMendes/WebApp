@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import RequestQueueRepository from "../repository/RequestQueueRepository";
+import RequestQueueRepository from "../../repository/RequestQueueRepository";
 
 let requestQueueRepository = null;
 let queueItens = [];

@@ -2,14 +2,14 @@ import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
 import EntregasQueue from "../../queue/EntregasQueue";
 import EntregaCarregandoListItem from "../../model/entrega/EntregaCarregandoListItem";
-import CaminhaoRepository from "../../repository/CaminhaoRepository";
-import SafraCulturaTalhaoRepository from "../../repository/SafraCulturaTalhaoRepository";
-import ImageRepository from "../../repository/ImageRepository";
-import AreaRepository from "../../repository/AreaRepository";
-import SafraRepository from "../../repository/SafraRepository";
-import CulturaRepository from "../../repository/CulturaRepository";
-import TalhaoRepository from "../../repository/TalhaoRepository";
-import SafraCulturaRepository from "../../repository/SafraCulturaRepository";
+import CaminhaoRepository from "../../repository/reource/CaminhaoRepository";
+import SafraCulturaTalhaoRepository from "../../repository/reource/SafraCulturaTalhaoRepository";
+import ImageRepository from "../../repository/reource/ImageRepository";
+import AreaRepository from "../../repository/reource/AreaRepository";
+import SafraRepository from "../../repository/reource/SafraRepository";
+import CulturaRepository from "../../repository/reource/CulturaRepository";
+import TalhaoRepository from "../../repository/reource/TalhaoRepository";
+import SafraCulturaRepository from "../../repository/reource/SafraCulturaRepository";
 
 export default class EntregaService{
   #entregasQueue;
@@ -50,7 +50,7 @@ export default class EntregaService{
 
       entregas = entregas.map(entrega => {
         return new EntregaCarregandoListItem(entrega)
-      });
+      });.
 
       let url = Vue.prototype.$axios.defaults.baseURL + 'produtor/' + this.produtorId + '/entrega';
       let queueItens = await new EntregasQueue().getByUrlAndMethod(url, 'post').toArray();
