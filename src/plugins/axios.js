@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {Notify} from 'quasar'
+import RefreshTokenCredential from "../assets/js/model/auth/RefreshTokenCredential";
 
 
 const axiosInstance = axios.create({
@@ -49,7 +50,7 @@ export default ({app, router, Vue}) => {
   function customErrorResponse(error) {
     const originalRequest = error.config;
 
-    if(error.response){
+    if(error.response && error.config.url !== error.config.baseURL + 'oauth/token'){
       if (error.response.status === 401 && !originalRequest._retry) {
         if (isRefreshing) {
           return new Promise(function(resolve, reject) {
@@ -65,16 +66,8 @@ export default ({app, router, Vue}) => {
         originalRequest._retry = true;
         isRefreshing = true;
 
-        let data = {
-          grant_type: 'refresh_token',
-          client_id: process.env.CLIENT_ID,
-          client_secret: process.env.CLIENT_SECRET,
-          scope: null,
-          refresh_token: localStorage.getItem('auth.refresh_token')
-        };
-
         return new Promise(function (resolve, reject) {
-          axiosInstance.post('oauth/token', data)
+          axiosInstance.post('oauth/token', new RefreshTokenCredential(localStorage.getItem('auth.refresh_token')).toString())
             .then(response => {
               localStorage.setItem('auth.token', response.data.access_token);
               localStorage.setItem('auth.refresh_token', response.data.refresh_token);

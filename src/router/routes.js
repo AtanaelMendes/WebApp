@@ -1,3 +1,5 @@
+import EntregasList from 'pages/admin/entregas/EntregasList'
+
 const routes = [
   { path: '/', component: () => import('pages/Index.vue') },
   { path: '/login', component: () => import('pages/Login.vue') },
@@ -44,7 +46,8 @@ const routes = [
       { name: 'negocios', path: 'negocios', component: () => import('pages/admin/negocios/NegociosList.vue')},
       { name: 'negocio_view', path: 'negocios/:id/view', component: () => import('pages/admin/negocios/NegocioView.vue')},
 
-      { name: 'entregas', path: 'entregas', component: () => import('pages/admin/entregas/EntregasList.vue')},
+      //{ name: 'entregas', path: 'entregas', component: () => import('pages/admin/entregas/EntregasList.vue')},
+      { name: 'entregas', path: 'entregas', component: EntregasList},
       { name: 'entrega_view', path: 'entregas/:id/view', component: () => import('pages/admin/entregas/EntregaView.vue')},
 
       { name: 'teste', path: 'teste', component: () => import('pages/admin/Teste.vue')},

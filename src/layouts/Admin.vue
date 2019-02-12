@@ -131,18 +131,19 @@
 </template>
 
 <script>
-  import accountService from 'assets/js/service/AccountService'
   import NetworkStateMixin from 'components/mixins/NetworkStateMixin'
   import {version} from '../../package.json';
   import SyncService from "../assets/js/service/sync/SyncService";
   import ResourceService from "../assets/js/service/sync/ResourceService";
+  import ListService from "../assets/js/service/sync/ListService";
+  import AccountService from "../assets/js/service/AccountService";
   export default {
     name: 'Admin',
     mixins: [NetworkStateMixin],
     data () {
       return {
+        accountService: new AccountService(),
         syncService: new SyncService(),
-        resourceService: new ResourceService(),
         leftDrawerOpen: this.$q.platform.is.desktop,
         currentAccount: {
           name: null,
@@ -153,8 +154,9 @@
       }
     },
     mounted(){
+      this.getAccountInfo();
       //TODO: Registrar o service worker manualmente
-      this.getAccountInfo(); //TODO: Esse método só pode ser chamado depois que o serviceWorker for iniciado
+      //TODO: Esse método só pode ser chamado depois que o serviceWorker for iniciado
 
       this.$root.$on('toogleLeftDrawer', this.toogleLeftDrawer);
 
@@ -199,17 +201,18 @@
       showOfflineStatusBar(){
         this.isOfflineStatusBarVisible = true;
       },
-      getAccountInfo: function(){
-        console.log('getAccountInfo')
-        this.$axios.get( 'account/info').then( response => {
-          console.log('getAccountInfo.response')
-          this.currentAccount.name = response.data.nome;
-          this.currentAccount.email = response.data.email;
-          localStorage.setItem( 'account.produtor_id', response.data.produtor_id);
+      getAccountInfo(){
+        this.accountService.getInfo().then(info => {
+          this.currentAccount.name = info.nome;
+          this.currentAccount.email = info.email;
 
-          this.syncService.getInitialContent(response.data.produtor_id);
-          this.resourceService.download();
+          this.getInitialContent(info.produtor_id)
         })
+      },
+      getInitialContent(produtorId){
+        this.syncService.getInitialContent(produtorId);
+        new ResourceService(produtorId).download();
+        new ListService(produtorId).download();
       },
       toogleLeftDrawer() {
         this.leftDrawerOpen = !this.leftDrawerOpen;
@@ -225,7 +228,6 @@
             this.$router.push('/login');
           })
         });
-
 
       }
     }

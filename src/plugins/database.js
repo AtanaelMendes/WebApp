@@ -1,8 +1,13 @@
 import Dexie from 'dexie';
 
+let db_primary = new Dexie('ap_primary');
 let db_resources = new Dexie('ap_resources');
 let db_lists = new Dexie('ap_lists');
-let db_queues = new Dexie('ap_queue');
+
+db_primary.version(1).stores({
+  account_info: '',
+  request_queue: '++id, grouper, request.url, date',
+});
 
 db_resources.version(1).stores({
   caminhoes: 'id',
@@ -19,14 +24,12 @@ db_resources.version(1).stores({
 
 db_lists.version(1).stores({
   entregas_carregando: 'id',
-});
-
-db_queues.version(1).stores({
-  request_queue: '++id, grouper, request.url, date',
+  entregas_no_armazem: 'id',
+  entregas_entregue: 'id',
 });
 
 export default ({ Vue }) => {
   Vue.prototype.db_resources = db_resources;
   Vue.prototype.db_lists = db_lists;
-  Vue.prototype.db_queue = db_queues;
+  Vue.prototype.db_primary = db_primary;
 }

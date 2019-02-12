@@ -1,8 +1,14 @@
 import Vue from 'vue'
 import QueueItem from "../dbModel/QueueItem";
 
-let table = Vue.prototype.db_queue.request_queue;
+let table;
+
 export default class RequestQueueRepository {
+
+
+  constructor() {
+    table = Vue.prototype.db_primary.request_queue;
+  };
 
   getByGrouper(grouper){
     return table.where('grouper').equals(grouper);
@@ -27,6 +33,7 @@ export default class RequestQueueRepository {
 
     return results;
   }
+
   getAllBy(){
 
   };

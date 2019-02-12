@@ -10,6 +10,9 @@ import SafraRepository from "../../repository/reource/SafraRepository";
 import CulturaRepository from "../../repository/reource/CulturaRepository";
 import TalhaoRepository from "../../repository/reource/TalhaoRepository";
 import SafraCulturaRepository from "../../repository/reource/SafraCulturaRepository";
+import EntregaCarregandoListRepository from "../../repository/list/EntregaCarregandoListRepository";
+import EntregaNoArmazemListRepository from "../../repository/list/EntregaNoArmazemListRepository";
+import EntregaEntregueListRepository from "../../repository/list/EntregaEntregueListRepository";
 
 export default class EntregaService{
   #entregasQueue;
@@ -22,6 +25,9 @@ export default class EntregaService{
   #safraCulturaRepository;
   #culturaRepository;
   #talhaoRepository;
+  #entregaCarreandoListRepository;
+  #entregaNoArmazemListRepository;
+  #entregaEntregueListRepository;
 
   constructor() {
     this.entregasQueue = new EntregasQueue();
@@ -34,23 +40,26 @@ export default class EntregaService{
     this.safraCulturaRepository = new SafraCulturaRepository();
     this.culturaRepository = new CulturaRepository();
     this.talhaoRepository = new TalhaoRepository();
+    this.entregaCarreandoListRepository = new EntregaCarregandoListRepository();
+    this.entregaNoArmazemListRepository = new EntregaNoArmazemListRepository();
+    this.entregaEntregueListRepository = new EntregaEntregueListRepository();
   }
 
   listEntregasCarregando(filter = null){
-    console.log('listEntregasCarregando')
     return new Promise(async (resolve, reject) => {
+      let entregas = null;
 
-      let entregas = await Vue.prototype.$axios.get( 'produtor/'+ this.produtorId + '/entrega?status=carregando' + (filter ? ("&" + filter) : "")).then(response => {
-        console.log('success');
-        return response.data;
-      }).catch(error => {
-        console.log('error');
-        return null;
-      });
+      if(navigator.onLine){
+        entregas = await Vue.prototype.$axios.get( 'produtor/'+ this.produtorId + '/entrega?status=carregando' + (filter ? ("&" + filter) : "")).then(response => {
+          return response.data;
+        })
+      }else{
+        entregas = await this.entregaCarreandoListRepository.getAll();
+      }
 
       entregas = entregas.map(entrega => {
         return new EntregaCarregandoListItem(entrega)
-      });.
+      });
 
       let url = Vue.prototype.$axios.defaults.baseURL + 'produtor/' + this.produtorId + '/entrega';
       let queueItens = await new EntregasQueue().getByUrlAndMethod(url, 'post').toArray();
@@ -87,22 +96,35 @@ export default class EntregaService{
   };
 
   listEntregasNoArmazem(filter = null){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ this.produtorId + '/entrega?status=no_armazem' + (filter ? ("&" + filter) : "")).then( response => {
-        resolve(response);
-      }).catch(error => {
-        reject(error)
-      })
+    return new Promise(async (resolve, reject) => {
+      let entregas = null;
+
+      if(navigator.onLine){
+        entregas = await Vue.prototype.$axios.get( 'produtor/'+ this.produtorId + '/entrega?status=no_armazem' + (filter ? ("&" + filter) : "")).then(response => {
+          return response.data;
+        })
+      }else{
+        entregas = await this.entregaNoArmazemListRepository.getAll();
+      }
+
+      resolve(entregas)
     });
+
   };
 
   listCargasEntregues(filter = null){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ this.produtorId + '/entrega?status=entregue' + (filter ? ("&" + filter) : "")).then( response => {
-        resolve(response);
-      }).catch(error => {
-        reject(error)
-      })
+    return new Promise(async (resolve, reject) => {
+      let entregas = null;
+
+      if(navigator.onLine){
+        entregas = await Vue.prototype.$axios.get( 'produtor/'+ this.produtorId + '/entrega?status=entregue' + (filter ? ("&" + filter) : "")).then(response => {
+          return response.data;
+        })
+      }else{
+        entregas = await this.entregaEntregueListRepository.getAll();
+      }
+
+      resolve(entregas)
     });
   };
 
