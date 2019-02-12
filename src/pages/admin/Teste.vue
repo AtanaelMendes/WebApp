@@ -18,8 +18,8 @@
   import RequestQueueRepository from "../../assets/js/repository/RequestQueueRepository";
   import EntregasQueue from "../../assets/js/queue/EntregasQueue";
   import EntregaCarregandoListItem from "../../assets/js/model/entrega/EntregaCarregandoListItem";
-  import CaminhaoRepository from "../../assets/js/repository/reource/CaminhaoRepository";
-  import SafraCulturaTalhaoRepository from "../../assets/js/repository/reource/SafraCulturaTalhaoRepository";
+  import CaminhaoRepository from "../../assets/js/repository/CaminhaoRepository";
+  import SafraCulturaTalhaoRepository from "../../assets/js/repository/SafraCulturaTalhaoRepository";
 
   export default {
     name: "Teste",

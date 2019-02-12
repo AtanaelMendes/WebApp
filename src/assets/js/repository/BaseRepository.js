@@ -1,3 +1,5 @@
+import Area from "../dbModel/Area";
+
 export default class BaseRepository {
   #table;
   #modelType;

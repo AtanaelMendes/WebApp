@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import QueueItem from "../dbModel/QueueItem";
 
-let table = Vue.prototype.db_queue.request_queue;
+let table = Vue.prototype.db.request_queue;
 export default class RequestQueueRepository {
 
   getByGrouper(grouper){

@@ -134,8 +134,8 @@
   import accountService from 'assets/js/service/AccountService'
   import NetworkStateMixin from 'components/mixins/NetworkStateMixin'
   import {version} from '../../package.json';
-  import SyncService from "../assets/js/service/sync/SyncService";
-  import ResourceService from "../assets/js/service/sync/ResourceService";
+  import SyncService from "../assets/js/service/SyncService";
+  import ResourceService from "../assets/js/service/ResourceService";
   export default {
     name: 'Admin',
     mixins: [NetworkStateMixin],
