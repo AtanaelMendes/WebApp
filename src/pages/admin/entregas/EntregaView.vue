@@ -521,6 +521,7 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import pesagemService from 'assets/js/service/entrega/PesagemService'
+  import entregaService from 'assets/js/service/entrega/EntregaService'
   import sendEntregaModal from 'components/entrega/SendEntregaModal'
   import newPesagemModal from 'components/entrega/NewPesagemModal'
   import addTalhaoPercentageModal from 'components/entrega/AddTalhaoPercentageModal'
@@ -529,7 +530,6 @@
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
   import agroUtils from 'assets/js/AgroUtils'
-  import EntregaService from "../../../assets/js/service/entrega/EntregaService";
 
   export default {
     name: "carga-view",
@@ -546,7 +546,6 @@
     },
     data () {
       return {
-        entregaService: new EntregaService(),
         carga: true,
         entregaView: null,
         entrega: null,
@@ -630,7 +629,7 @@
           color: 'primary'
         }).then(data => {
           this.$q.loading.show();
-          this.entregaService.delteTalhaoOfEntrega(this.entrega.id, id).then(response => {
+          entregaService.delteTalhaoOfEntrega(this.entrega.id, id).then(response => {
             if(response.status === 200) {
               this.$q.notify({type: 'positive', message: 'Talhão removido com sucesso'});
               this.$q.loading.hide();
@@ -650,7 +649,7 @@
           color: 'primary'
         }).then(data => {
           this.$q.loading.show();
-          this.entregaService.delteNegocioOfEntrega(this.entrega.id, id).then(response => {
+          entregaService.delteNegocioOfEntrega(this.entrega.id, id).then(response => {
             if(response.status === 200) {
               this.$q.notify({type: 'positive', message: 'Negócio removido com sucesso'});
               this.getEntrega()
@@ -680,7 +679,7 @@
       },
       getEntrega: function(){
         this.$q.loading.show();
-        this.entregaService.getEntregaById(this.$route.params.id).then(response => {
+        entregaService.getEntregaById(this.$route.params.id).then(response => {
           this.$q.loading.hide();
           this.entrega = response.data;
         }).catch(error => {
