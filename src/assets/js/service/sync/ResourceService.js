@@ -34,8 +34,8 @@ let imageRepository;
 
 export default class ResourceService{
 
-  constructor(produtorId) {
-    path = '/produtor/' + produtorId + '/resource';
+  constructor() {
+    path = '/produtor/' + localStorage.getItem('account.produtor_id') + '/resource';
     caminhaoRepository = new CaminhaoRepository();
     safraCulturaRepository = new SafraCulturaRepository();
     safraCulturaTalhaoRepository = new SafraCulturaTalhaoRepository();

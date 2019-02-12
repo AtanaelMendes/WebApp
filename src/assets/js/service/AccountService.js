@@ -1,18 +1,7 @@
 import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
-import AccountRepository from "../repository/AccountRepository";
 
-export default class AccountService{
-  #accountRepository;
-
-  constructor() {
-    this.accountRepository = new AccountRepository();
-  }
-
-  getInfo(){
-    return this.accountRepository.getFirst();
-  }
-
+export default {
   logout () {
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.post('account/logout').then(() => {

@@ -337,8 +337,8 @@
       },
       listEntregasNoArmazem: function (filter = null) {
         this.$q.loading.show();
-        this.entregaService.listEntregasNoArmazem(filter).then(entregas => {
-          this.entregasNoArmazem = entregas;
+        this.entregaService.listEntregasNoArmazem(filter).then(response => {
+          this.entregasNoArmazem = response.data;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
@@ -346,8 +346,8 @@
       },
       listEntregasEntregues: function (filter = null) {
         this.$q.loading.show();
-        this.entregaService.listCargasEntregues(filter).then(entregas => {
-          this.entregasEntregues = entregas;
+        this.entregaService.listCargasEntregues(filter).then(response => {
+          this.entregasEntregues = response.data;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();

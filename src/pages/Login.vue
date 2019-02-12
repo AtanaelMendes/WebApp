@@ -56,8 +56,6 @@
   import { required, email, minLength } from 'vuelidate/lib/validators'
   import { Loading } from 'quasar'
   import customInputText from 'components/CustomInputText.vue'
-  import AuthService from "../assets/js/service/AuthService";
-  import PasswordCredential from "../assets/js/model/auth/PasswordCredential";
 
   export default {
     name: 'login',
@@ -66,7 +64,6 @@
     },
     data () {
       return {
-        authService: new AuthService(),
         form: {
           email: {
             value: null,
@@ -150,14 +147,30 @@
 
         Loading.show();
 
-        this.authService.login(new PasswordCredential(this.form.email.value, this.form.password.value)).then(()=> {
-          this.$router.push( '/admin' );
-          Loading.hide();
-        }).catch(error => {
-          this.showErrorDialog(error.message);
-          Loading.hide();
-        });
+        let params = {
+          grant_type: 'password',
+          client_id: process.env.CLIENT_ID,
+          client_secret: process.env.CLIENT_SECRET,
+          scope: null,
+          username: this.form.email.value,
+          password: this.form.password.value
+        };
 
+        this.$axios.post( 'oauth/token', params ).then( response => {
+          localStorage.setItem( 'auth.token', response.data.access_token );
+          localStorage.setItem( 'auth.refresh_token', response.data.refresh_token );
+
+          Loading.hide();
+          this.$router.push( '/admin' );
+        }).catch( error => {
+          Loading.hide();
+          switch(error.response.status){
+            case 401:
+              this.showErrorDialog("Email e/ou senha incorretos!")
+              break;
+          }
+
+        })
       },
       showErrorDialog: function (message) {
         this.$q.dialog({
