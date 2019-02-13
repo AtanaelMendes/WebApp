@@ -19,12 +19,6 @@ import SafraCulturaTalhao from "../../dbModel/SafraCulturaTalhao";
 import SafraCulturaTalhaoRepository from "../../repository/reource/SafraCulturaTalhaoRepository";
 import ImageRepository from "../../repository/reource/ImageRepository";
 import Image from "../../dbModel/Image";
-import EntregaRepository from "../../repository/reource/EntregaRepository";
-import Entrega from "../../dbModel/Entrega";
-import CultivarRepository from "../../repository/reource/CultivarRepository";
-import Cultivar from "../../dbModel/Cultivar";
-import MarcaRepository from "../../repository/reource/MarcaRepository";
-import Marca from "../../dbModel/Marca";
 
 let path;
 let caminhaoRepository;
@@ -37,9 +31,6 @@ let talhaoRepository;
 let unidadeRepository;
 let classificacaoRepository;
 let imageRepository;
-let entregaRepository;
-let cultivarRepository;
-let marcaRepository;
 
 export default class ResourceService{
 
@@ -55,9 +46,6 @@ export default class ResourceService{
     unidadeRepository = new UnidadeRepository();
     classificacaoRepository = new ClassificacaoRepository();
     imageRepository = new ImageRepository();
-    entregaRepository = new EntregaRepository();
-    cultivarRepository = new CultivarRepository();
-    marcaRepository = new MarcaRepository();
   }
 
   download(){
@@ -71,9 +59,6 @@ export default class ResourceService{
     getUnidades();
     getClassificacoes();
     getImages();
-    getEntregas();
-    getCultivares();
-    getMarcas();
   }
 }
 
@@ -208,48 +193,6 @@ function getImages(){
     Vue.prototype.$axios.get(path + '/image').then(response => {
       response.data.forEach((image, index, array) => {
         imageRepository.update(new Image(image));
-
-        if(index === (array.length - 1)){
-          resolve();
-        }
-      })
-    })
-  });
-}
-
-function getEntregas(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/entrega').then(response => {
-      response.data.forEach((entrega, index, array) => {
-        entregaRepository.update(new Entrega(entrega));
-
-        if(index === (array.length - 1)){
-          resolve();
-        }
-      })
-    })
-  });
-}
-
-function getCultivares(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/cultivar').then(response => {
-      response.data.forEach((cultivar, index, array) => {
-        cultivarRepository.update(new Cultivar(cultivar));
-
-        if(index === (array.length - 1)){
-          resolve();
-        }
-      })
-    })
-  });
-}
-
-function getMarcas(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/marca').then(response => {
-      response.data.forEach((marca, index, array) => {
-        marcaRepository.update(new Marca(marca));
 
         if(index === (array.length - 1)){
           resolve();

@@ -153,11 +153,7 @@
         isNetworkErrorDialogOpen: false,
       }
     },
-    created(){
-      console.log('created')
-    },
     mounted(){
-      console.log('mounted')
       this.getAccountInfo();
       //TODO: Registrar o service worker manualmente
       //TODO: Esse método só pode ser chamado depois que o serviceWorker for iniciado
@@ -206,7 +202,6 @@
         this.isOfflineStatusBarVisible = true;
       },
       getAccountInfo(){
-        console.log('getAccountInfo')
         this.accountService.getInfo().then(info => {
           this.currentAccount.name = info.nome;
           this.currentAccount.email = info.email;
@@ -215,7 +210,6 @@
         })
       },
       getInitialContent(produtorId){
-        console.log('getInitialContent')
         this.syncService.getInitialContent(produtorId);
         new ResourceService(produtorId).download();
         new ListService(produtorId).download();

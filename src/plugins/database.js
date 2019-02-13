@@ -12,7 +12,7 @@ db_primary.version(1).stores({
 db_resources.version(1).stores({
   caminhoes: 'id',
   safra_culturas: 'id',
-  safra_culturas_talhoes: 'id, safra_cultura_id',
+  safra_culturas_talhoes: 'id',
   safras: 'id',
   culturas: 'id',
   areas: 'id',
@@ -20,16 +20,12 @@ db_resources.version(1).stores({
   unidades: 'id',
   classificacoes: 'id',
   images: 'id',
-  entregas: 'id, caminhao_id, status',
-  cultivares: 'id',
-  marcas: 'id',
 });
 
 db_lists.version(1).stores({
   entregas_carregando: 'id',
   entregas_no_armazem: 'id',
   entregas_entregue: 'id',
-  entrega_view: 'id',
 });
 
 export default ({ Vue }) => {
