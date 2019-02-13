@@ -181,6 +181,26 @@ export default {
     });
   },
 
+  getMarcas(safra_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/marcas').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
+  getCultivares(safra_id, id){
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/cultivares').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
   getCaminhoes(safra_id, id){
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/caminhoes').then(response => {

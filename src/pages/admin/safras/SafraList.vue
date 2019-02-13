@@ -5,14 +5,13 @@
 
     <div class="row q-pa-md gutter-sm space-end" v-if="safras.length > 0">
       <template v-for="safra in safras">
-
         <!--HEADER-->
         <div class="col-12" :key="safra.id">
           <div class="row q-title q-pa-md bg-blue-grey-1">
             <div class="col-8 self-center">
-              {{safra.inicio}}/{{safra.fim}} -
               <span v-if="!safra.is_safrinha">Safra</span>
               <span v-if="safra.is_safrinha">Safrinha</span>
+              {{safra.inicio}}/{{safra.fim}}
             </div>
             <div class="col-4" align="end">
               <q-checkbox class="q-mx-xs"
@@ -49,112 +48,35 @@
 
         <!--LISTA DE SAFRA CULTURAS-->
         <template v-if="safra.safra_culturas.length > 0">
-          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" v-for="safraCultura in safra.safra_culturas" :key="safraCultura.id">
-
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-for="safraCultura in safra.safra_culturas" :key="safra.id + '_' +safraCultura.id">
             <q-card class="cursor-pointer" @click.native="viewSafraCultura(safra.id, safraCultura.id)">
-              <q-card-title>
-                {{safraCultura.nome}}
-                <q-btn @click.stop round flat dense icon="more_vert" slot="right">
-                  <q-popover>
-                    <q-list link class="no-border">
-                      <q-item v-close-overlay v-if="!safraCultura.deleted_at" @click.native="editSafraCultura(safra.id, safraCultura)">
-                        <q-item-main label="Editar"/>
-                      </q-item>
-                      <q-item v-close-overlay v-if="!safraCultura.deleted_at" @click.native="archiveSafraCultura(safra.id, safraCultura.id)">
-                        <q-item-main label="Arquivar"/>
-                      </q-item>
-                      <q-item v-close-overlay v-if="safraCultura.deleted_at" @click.native="restoreSafraCultura(safra.id, safraCultura.id)">
-                        <q-item-main label="Ativar"/>
-                      </q-item>
-                      <q-item v-close-overlay @click.native="deleteSafraCultura(safra.id, safraCultura.id)">
-                        <q-item-main label="Excluir"/>
-                      </q-item>
-                    </q-list>
-                  </q-popover>
-                </q-btn>
-              </q-card-title>
-              <q-card-separator/>
-
-              <q-card-main>
-                <div class="row gutter-y-xs">
-
-                  <div class="col-12 text-faded">
-                    Total {{safraCultura.area.plantado + " " + safraCultura.view_unidade_area.plural}}
-                  </div>
-
-                  <div class="col-12 q-caption text-faded">
-                    Estimativa
-                  </div>
-
-                  <div class="col-6">
-                    <!--55 Sc/Ha-->
-                    {{safraCultura.estimativa.valor  + " " + safraCultura.view_unidade_medida.sigla + "/" + safraCultura.view_unidade_area.sigla}}
-                  </div>
-
-                  <div class="col-6">
-                    <!--27.500 Sacas-->
-                    {{safraCultura.estimativa.total + " " + safraCultura.view_unidade_medida.plural}}
-                  </div>
-
-                  <div class="col-12" style="display: none">
-                    <div class="row">
-
-                      <div class="col-6 q-caption text-faded">
-                        Negociado 100%
-                      </div>
-
-                      <div class="col-6 self-center">
-                        <q-progress color="deep-orange" :percentage="progressBuffer"/>
-                      </div>
-
-                      <div class="col-6">
-                        55 Sc/Ha
-                      </div>
-
-                      <div class="col-6">
-                        27.500 Sacas
-                      </div>
-
-                    </div>
-                  </div>
-
-                  <div class="col-12" style="display: none">
-                    <div class="row">
-
-                      <div class="col-12 q-mb-xs">
-                        <div class="row" v-if="safra > 1 ">
-                          <div class="col-6 text-faded">
-                            Colhido 100%
-                          </div>
-                          <div class="col-6 self-center">
-                            <q-progress color="deep-orange" :percentage="progressBuffer"/>
-                          </div>
-                        </div>
-
-                        <div class="row" v-if="safra == 1">
-                          <div class="col-6 text-faded">
-                            Colhido 55%
-                          </div>
-                          <div class="col-6 self-center">
-                            <q-progress color="deep-orange" :percentage="progressBuffer"/>
-                          </div>
-                        </div>
-
-                      </div>
-
-                      <div class="col-6">
-                        32 Sc/Ha
-                      </div>
-
-                      <div class="col-6">
-                        16.000 Sacas
-                      </div>
-
-                    </div>
-                  </div>
-
-                </div>
-              </q-card-main>
+              <q-card-media overlay-position="top" style="max-height: 40vh">
+                <ap-image size="800x500" :file-name="safraCultura.image_file_name"/>
+                <q-card-title slot="overlay">
+                  {{safraCultura.nome}} {{safra.inicio}}/{{safra.fim}}
+                  <span slot="subtitle">
+                    {{safraCultura.tamanho}} {{safraCultura.view_unidade_area.plural}}
+                  </span>
+                  <q-btn @click.stop round flat dense icon="more_vert" slot="right" color="white">
+                    <q-popover>
+                      <q-list link class="no-border">
+                        <q-item v-close-overlay v-if="!safraCultura.deleted_at" @click.native="editSafraCultura(safra.id, safraCultura)">
+                          <q-item-main label="Editar"/>
+                        </q-item>
+                        <q-item v-close-overlay v-if="!safraCultura.deleted_at" @click.native="archiveSafraCultura(safra.id, safraCultura.id)">
+                          <q-item-main label="Arquivar"/>
+                        </q-item>
+                        <q-item v-close-overlay v-if="safraCultura.deleted_at" @click.native="restoreSafraCultura(safra.id, safraCultura.id)">
+                          <q-item-main label="Ativar"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="deleteSafraCultura(safra.id, safraCultura.id)">
+                          <q-item-main label="Excluir"/>
+                        </q-item>
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
+                </q-card-title>
+              </q-card-media>
             </q-card>
 
           </div>
@@ -162,12 +84,8 @@
 
         <!--LISTA VAZIA-->
         <div class="col-12 q-title text-center text-faded" v-else>
-          <p>
-            <!--<q-icon name="warning" color="warning" size="30px"/>-->
-            Não há informaçôes sobre essa safra
-          </p>
-          <p>
-            <q-btn color="deep-orange" round icon="add" @click.native="addSafraCultura(safra.id)"/>
+          <p class="cursor-pointer" @click="addSafraCultura(safra.id)">
+            Clique aqui para adicionar uma cultura neste período de safra!
           </p>
         </div>
 
@@ -494,6 +412,7 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
+  import apImage from 'components/ApImage'
 
   // SAFRA
   import safraService from 'assets/js/service/safra/SafraService'
@@ -507,12 +426,14 @@
   import areaService from 'assets/js/service/area/AreaService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
 
+
     export default {
       name: "safra-list",
       components: {
         apNoResults,
         toolbar,
         customPage,
+        apImage,
       },
       data () {
         return {
