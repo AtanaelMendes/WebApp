@@ -6,7 +6,7 @@
         <q-tabs v-model="iTab">
           <q-tab slot="title" name="tab-resumo" label="resumo" default/>
           <q-tab slot="title" name="tab-areas" label="areas" @select="selectTabAreas()"/>
-          <q-tab slot="title" name="tab-cultivares" label="cultivares"/>
+          <q-tab slot="title" name="tab-cultivares" label="cultivares" @select="selectTabCultivares()"/>
           <q-tab slot="title" name="tab-negocios" label="negocios"/>
         </q-tabs>
       </div>
@@ -192,6 +192,130 @@
 
         </div>
       </div>
+
+    </div>
+
+    <!-- CULTIVARES -->
+    <div class="row space-end" v-if="iTab === 'tab-cultivares' && marcasLoaded">
+      <div class="col-12 ">
+        <div class="row">
+
+          <!-- GRAFICO DAS MARCAS -->
+          <div class="col-12" style="min-height: 254px">
+            <div @click="media = !media" class="cursor-pointer q-ma-md">
+              <q-toggle v-model="media" color="secondary" />
+              <template v-if="media">
+                Média
+                {{data.view_unidade_medida.sigla}}
+                por {{data.view_unidade_area.sigla}}
+              </template>
+              <template v-else>
+                Total de
+                {{data.view_unidade_medida.sigla}}
+              </template>
+            </div>
+            <safra-grafico-quantidades-por-marca
+              :marcas="marcas"
+              :media="media"
+              :unidade-medida="data.view_unidade_medida"
+              :unidade-area="data.view_unidade_area"
+              :height="200"
+              :width="100"
+              v-model="iMarca"
+            />
+          </div>
+
+
+          <!-- DETALHE DAS MARCAS -->
+          <div class="col-12 q-mt-md">
+            <div class="row">
+              <!-- CARROUSEL DE MARCAS -->
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
+                <q-carousel color="white" arrows quick-nav v-model="iMarca" height="250px">
+                  <q-carousel-slide v-for="marca in marcas" :key="marca.id" :img-src="imageMakeUrl(marca.image_file_name, '800x500')">
+                    <div class="absolute-top carousel-caption">
+                      <div class="q-card-title">{{marca.nome}}</div>
+                      <div class="q-card-subtitle text-white">{{numeral(marca.tamanho).format('0,0')}} {{data.view_unidade_area.plural}}</div>
+                    </div>
+                  </q-carousel-slide>
+                </q-carousel>
+              </div>
+              <!-- DETALHES DA AREA -->
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
+                <safra-quantidades
+                  :quantidades="marcas[iMarca]"
+                  :unidade-area="data.view_unidade_area"
+                  :unidade-medida="data.view_unidade_medida"
+                />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-12 q-mt-md space-end" v-if="cultivaresLoaded">
+        <div class="row">
+
+          <!-- GRAFICO DOS TALHOES -->
+          <div class="col-12 q-mt-md" style="min-height: 200px">
+            <!-- <safra-grafico-quantidades-por-talhao
+              :talhoes="this.talhoes"
+              :areaId="this.activeArea.id"
+              :media="media"
+              :unidade-medida="data.view_unidade_medida"
+              :unidade-area="data.view_unidade_area"
+              :height="200"
+              :width="100"
+              v-model="iTalhao"
+            /> -->
+          </div>
+
+          <!-- DETALHE DOS CULTIVARES -->
+          <div class="col-12 q-mt-md" >
+            <div class="row">
+              <!-- CARROUSEL DE CULTIVARES -->
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
+                <q-carousel color="white" arrows quick-nav v-model="iCultivar" height="250px">
+                  <q-carousel-slide v-for="cultivar in cultivaresDaMarca" :key="cultivar.id" :img-src="imageMakeUrl(data.cultura.image_file_name, '800x500')">
+                    <div class="absolute-top carousel-caption">
+                      <div class="q-card-title">{{activeMarca.nome}} {{cultivar.nome}}</div>
+                      <div class="q-card-subtitle text-white">{{numeral(cultivar.tamanho).format('0,0')}} {{data.view_unidade_area.plural}}</div>
+                    </div>
+                  </q-carousel-slide>
+                </q-carousel>
+              </div>
+              <!-- DETALHES DO CULTIVARES -->
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8" v-if="activeCultivar">
+                <safra-quantidades
+                  :quantidades="activeCultivar"
+                  :unidade-area="data.view_unidade_area"
+                  :unidade-medida="data.view_unidade_medida"
+                >
+                  <q-item v-for="talhao in activeCultivar.talhoes" :key="talhao.id">
+                    <q-item-side icon="place" color="primary"/>
+                    <q-item-side v-if="talhao.image_file_name">
+                      <ap-image size="200x125" :file-name="talhao.image_file_name" style="max-height: 50px"/>
+                    </q-item-side>
+                    <q-item-main>
+                      <q-item-tile>
+                        {{talhao.area}}
+                        {{talhao.nome}}
+                      </q-item-tile>
+                      <q-item-tile sublabel>
+                        {{numeral(talhao.tamanho * 100 / activeCultivar.tamanho).format('0,0.0')}}%
+                        ({{numeral(talhao.tamanho).format('0,0')}} {{data.view_unidade_area.sigla}})
+                      </q-item-tile>
+                    </q-item-main>
+                  </q-item>
+                </safra-quantidades>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </div>
   </custom-page>
 </template>
@@ -202,23 +326,9 @@
   import customInputText from 'components/CustomInputText.vue'
   import apImage from 'components/ApImage'
 
-  import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
   import SafraCulturaTalhaoEdit from 'assets/js/model/safra/SafraCulturaTalhaoEdit'
 
-  // import graficoEntregaArmazem from 'components/safra/graficos/GraficoEntregaArmazem.vue'
-  // import graficoEntregaCaminhao from 'components/safra/graficos/GraficoEntregaCaminhao.vue'
-  // import graficoColheitaDiaria from 'components/safra/graficos/GraficoColheitaDiaria.vue'
-
-  // import graficoClassificacaoMediaArmazem from 'components/graficos/GraficoClassificacaoMediaArmazem.vue'
-  // import graficoQuantidadeEntregaArmazems from 'components/graficos/GraficoQuantidadeEntregaArmazems.vue'
-
-  // import graficoColheitaPorTalhao from 'components/safra/graficos/GraficoColheitaPorTalhao.vue'
-  // import graficoColheitaPorCultivar from 'components/safra/graficos/GraficoColheitaPorCultivar.vue'
-
-  // import graficoEntregaArmazem from 'components/safra/graficos/GraficoEntregaArmazem.vue'
-  // import graficoEntregaCaminhao from 'components/safra/graficos/GraficoEntregaCaminhao.vue'
-  // import graficoColheitaDiaria from 'components/safra/graficos/GraficoColheitaDiaria.vue'
-  // import graficoClassificacaoDiaria from 'components/safra/graficos/GraficoClassificacaoDiaria.vue'
+  import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
 
   import safraGraficoDiario from 'components/safra/graficos/Diario.vue'
   import safraGraficoDiarioClassificacao from 'components/safra/graficos/DiarioClassificacao.vue'
@@ -227,6 +337,8 @@
 
   import safraGraficoQuantidadesPorArea from 'components/safra/graficos/QuantidadesPorArea.vue'
   import safraGraficoQuantidadesPorTalhao from 'components/safra/graficos/QuantidadesPorTalhao.vue'
+
+  import safraGraficoQuantidadesPorMarca from 'components/safra/graficos/QuantidadesPorMarca.vue'
 
   import safraQuantidades from 'components/safra/Quantidades.vue'
   import agroUtils from 'assets/js/AgroUtils'
@@ -238,25 +350,17 @@
       customPage,
       customInputText,
       apImage,
-      // graficoClassificacaoMediaArmazem,
-      // graficoQuantidadeEntregaArmazems,
-
-      // graficoColheitaPorTalhao,
-      // graficoColheitaPorCultivar,
-
-      //graficoClassificacaoDiaria,
-      // graficoColheitaDiaria,
-      // graficoEntregaArmazem,
-      // graficoEntregaCaminhao,
 
       safraGraficoDiario,
       safraGraficoDiarioClassificacao,
-
       safraGraficoQuantidadesPorCaminhao,
       safraGraficoQuantidadesPorArmazem,
 
       safraGraficoQuantidadesPorArea,
       safraGraficoQuantidadesPorTalhao,
+
+      safraGraficoQuantidadesPorMarca,
+
       safraQuantidades,
     },
     data () {
@@ -286,9 +390,17 @@
         talhoesLoaded: false,
         talhoes: null,
 
+        marcasLoaded: false,
+        marcas: null,
+
+        cultivaresLoaded: false,
+        cultivares: null,
+
         iTab: null,
-        iArea: null,
-        iTalhao: null,
+        iArea: 0,
+        iTalhao: 0,
+        iMarca: 0,
+        iCultivar: 0,
 
         media: true,
 
@@ -314,9 +426,18 @@
       activeTalhao: function () {
         return this.talhoesDaArea[this.iTalhao];
       },
+      activeMarca: function () {
+        return this.marcas[this.iMarca];
+      },
+      activeCultivar: function () {
+        return this.cultivaresDaMarca[this.iCultivar];
+      },
       talhoesDaArea: function () {
         return _.filter(this.talhoes, {area_id: this.activeArea.id});
-      }
+      },
+      cultivaresDaMarca: function () {
+        return _.filter(this.cultivares, {marca_id: this.activeMarca.id});
+      },
     },
     methods: {
       imageMakeUrl: function (fileName, size) {
@@ -327,6 +448,12 @@
         this.iTalhao = 0;
         this.getAreas();
         this.getTalhoes();
+      },
+      selectTabCultivares: function () {
+        this.iMarca = 0;
+        this.iCultivar = 0;
+        this.getMarcas();
+        this.getCultivares();
       },
       selectTabDiario: function () {
         this.getDiario();
@@ -453,7 +580,6 @@
           this.areasLoaded = true;
         })
       },
-
       getTalhoes: function(force = false){
         if (this.areasLoaded & !force) {
           return;
@@ -461,6 +587,24 @@
         safraCulturaService.getTalhoes(this.safra_id, this.id).then(response => {
           this.talhoes = response.data.talhoes;
           this.talhoesLoaded = true;
+        })
+      },
+      getMarcas: function(force = false){
+        if (this.marcasLoaded & !force) {
+          return;
+        }
+        safraCulturaService.getMarcas(this.safra_id, this.id).then(response => {
+          this.marcas = response.data.marcas;
+          this.marcasLoaded = true;
+        })
+      },
+      getCultivares: function(force = false){
+        if (this.cultivaresLoaded & !force) {
+          return;
+        }
+        safraCulturaService.getCultivares(this.safra_id, this.id).then(response => {
+          this.cultivares = response.data.cultivares;
+          this.cultivaresLoaded = true;
         })
       },
 
