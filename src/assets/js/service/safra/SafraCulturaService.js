@@ -302,7 +302,7 @@ export default class SafraCulturaService {
         reject(error)
       })
     });
-  },
+  }
 
   getCultivares(safra_id, id){
     return new Promise((resolve, reject) => {
@@ -312,7 +312,7 @@ export default class SafraCulturaService {
         reject(error)
       })
     });
-  },
+  }
 
   getCaminhoes(safra_id, id){
     return new Promise((resolve, reject) => {
