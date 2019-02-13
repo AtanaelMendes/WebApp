@@ -37,28 +37,39 @@
         </q-item>
       </template>
 
+      <!-- ESTIMATIVA -->
+      <q-item>
+        <q-item-side icon="schedule" />
+        <q-item-main multiline>
+          <q-item-tile label lines="2">
+            Estimativa
+            <q-progress :percentage="estimativa_percentual" color="grey" height="10px"/>
+          </q-item-tile>
+          <q-item-tile sublabel lines="1">
+            <b>{{numeral(quantidades.peso_estimativa).format('0,0')}}</b>
+            {{unidadeMedida.plural}}
+          </q-item-tile>
+        </q-item-main>
+        <q-item-side right>
+          <q-item-tile stamp>
+            {{numeral(quantidades.peso_estimativa / quantidades.tamanho).format('0,0.00')}}
+          </q-item-tile>
+          <q-item-tile stamp>
+            {{unidadeMedida.sigla}}/{{unidadeArea.sigla}}
+          </q-item-tile>
+        </q-item-side>
+      </q-item>
+
       <template v-if="quantidades.numero_cargas > 0">
         <!-- DESCONTO -->
         <q-item v-if="quantidades.peso_desconto>0">
           <q-item-side icon="mdi-delete" color="red" />
           <q-item-main>
             <q-item-tile sublabel>
-              <b v-if="peso_bruto > 0">
-                {{ numeral(percentual_desconto).format('0,0.0') }}%
-              </b>
-              descontado no recebimento
-              (<b>{{numeral(quantidades.peso_desconto).format('0,0')}}</b>
-              {{unidadeMedida.plural}})
+              <b>{{numeral(quantidades.peso_desconto).format('0,0')}}</b>
+              {{unidadeMedida.plural}} descontado no recebimento
             </q-item-tile>
           </q-item-main>
-          <q-item-side right>
-            <q-item-tile stamp>
-              {{numeral(quantidades.peso_desconto / quantidades.tamanho).format('0,0.00')}}
-            </q-item-tile>
-            <q-item-tile stamp>
-              {{unidadeMedida.sigla}}/{{unidadeArea.sigla}}
-            </q-item-tile>
-          </q-item-side>
         </q-item>
 
         <!-- ESTIMATIVA_CARGA -->
@@ -90,31 +101,6 @@
 
       </template>
 
-      <!-- ESTIMATIVA -->
-      <q-item>
-        <q-item-side icon="schedule" />
-        <q-item-main multiline>
-          <q-item-tile label lines="2">
-            Estimativa
-            <q-progress :percentage="estimativa_percentual" color="grey" height="10px"/>
-          </q-item-tile>
-          <q-item-tile sublabel lines="1">
-            <b>{{numeral(quantidades.peso_estimativa).format('0,0')}}</b>
-            {{unidadeMedida.plural}}
-          </q-item-tile>
-        </q-item-main>
-        <q-item-side right>
-          <q-item-tile stamp>
-            {{numeral(quantidades.peso_estimativa / quantidades.tamanho).format('0,0.00')}}
-          </q-item-tile>
-          <q-item-tile stamp>
-            {{unidadeMedida.sigla}}/{{unidadeArea.sigla}}
-          </q-item-tile>
-        </q-item-side>
-      </q-item>
-
-
-
       <slot></slot>
 
     </q-list>
@@ -137,15 +123,6 @@ export default {
     estimativa_percentual: function () {
       return (this.quantidades.peso_estimativa / this.maior_peso) * 100;
     },
-    peso_bruto: function () {
-      return this.quantidades.peso_liquido + this.quantidades.peso_desconto
-    },
-    percentual_desconto: function () {
-      if (this.peso_bruto > 0) {
-        return (this.quantidades.peso_desconto / this.peso_bruto) * 100
-      }
-      return null
-    }
   }
 }
 </script>
