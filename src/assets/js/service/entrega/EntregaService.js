@@ -13,6 +13,8 @@ import SafraCulturaRepository from "../../repository/reource/SafraCulturaReposit
 import EntregaCarregandoListRepository from "../../repository/list/EntregaCarregandoListRepository";
 import EntregaNoArmazemListRepository from "../../repository/list/EntregaNoArmazemListRepository";
 import EntregaEntregueListRepository from "../../repository/list/EntregaEntregueListRepository";
+import EntregaAPI from "../../api/EntregaAPI";
+import EntregaViewRepository from "../../repository/list/EntregaViewRepository";
 
 export default class EntregaService{
   #entregasQueue;
@@ -28,10 +30,12 @@ export default class EntregaService{
   #entregaCarreandoListRepository;
   #entregaNoArmazemListRepository;
   #entregaEntregueListRepository;
+  #entreaViewRepository;
 
   constructor() {
     this.entregasQueue = new EntregasQueue();
-    this.produtorId = localStorage.getItem('account.produtor_id');
+    //this.produtorId = localStorage.getItem('account.produtor_id');
+    this.produtorId = 1; //TODO Buscar o id aqui
     this.caminhaoRepository = new CaminhaoRepository();
     this.safraCulturaTalhaoRepository = new SafraCulturaTalhaoRepository();
     this.imageRepository = new ImageRepository();
@@ -43,6 +47,7 @@ export default class EntregaService{
     this.entregaCarreandoListRepository = new EntregaCarregandoListRepository();
     this.entregaNoArmazemListRepository = new EntregaNoArmazemListRepository();
     this.entregaEntregueListRepository = new EntregaEntregueListRepository();
+    this.entreaViewRepository = new EntregaViewRepository();
   }
 
   listEntregasCarregando(filter = null){
@@ -130,11 +135,15 @@ export default class EntregaService{
 
   getEntregaById(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ this.produtorId + '/entrega/'+ id).then( response => {
-        resolve(response);
-      }).catch(error => {
-        reject(error)
-      })
+      if(navigator.onLine){
+        EntregaAPI.getEntrega(id, this.produtorId).then(response => {
+          resolve(response.data);
+        });
+      }else{
+        this.entreaViewRepository.get(id).then(entrega => {
+          resolve(entrega)
+        })
+      }
     });
   };
 

@@ -680,9 +680,9 @@
       },
       getEntrega: function(){
         this.$q.loading.show();
-        this.entregaService.getEntregaById(this.$route.params.id).then(response => {
+        this.entregaService.getEntregaById(this.$route.params.id).then(entrega => {
           this.$q.loading.hide();
-          this.entrega = response.data;
+          this.entrega = entrega;
         }).catch(error => {
           this.$q.loading.hide();
         })

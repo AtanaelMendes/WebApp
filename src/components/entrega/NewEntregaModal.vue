@@ -122,13 +122,13 @@
   </q-modal>
 </template>
 <script>
-  import caminhaoService from 'assets/js/service/CaminhaoService'
-  import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
   import NovaEntrega from 'assets/js/model/entrega/NewEntrega'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import apImage from 'components/ApImage'
   import EntregaService from "../../assets/js/service/entrega/EntregaService";
+  import CaminhaoService from "../../assets/js/service/CaminhaoService";
+  import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
 
   export default {
     name: "stepper-nova-carga",
@@ -140,6 +140,8 @@
     data () {
       return {
         entregaService: new EntregaService(),
+        caminhaoService: new CaminhaoService(),
+        safraCulturaService: new SafraCulturaService(),
         currentStep: 'escolherCaminhao',
         novaEntrega: new NovaEntrega(),
         isModalOpened: false,
@@ -197,8 +199,8 @@
       },
       listCaminhoes: function(){
         this.$q.loading.show();
-        caminhaoService.listFreeCaminhoes().then(response => {
-          this.caminhoes = response.data;
+        this.caminhaoService.listFreeCaminhoes().then(caminhoes => {
+          this.caminhoes = caminhoes;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
@@ -211,8 +213,8 @@
       },
       listSafraCulturas: function(){
         this.$q.loading.show();
-        safraCulturaService.listSafraCulturas().then(response => {
-          this.safraCulturas = response.data;
+        this.safraCulturaService.listSafraCulturas().then(safraCulturas => {
+          this.safraCulturas = safraCulturas;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
@@ -264,8 +266,8 @@
       },
       listSafraCulturaTalhaoBySafraCultura(safra_cultura_id){
         this.$q.loading.show();
-        safraCulturaService.listFullSafraCulturaTalhao(safra_cultura_id).then(response => {
-          this.safraCulturaTalhoes = response.data;
+        this.safraCulturaService.listFullSafraCulturaTalhao(safra_cultura_id).then(safraCulturaTalhoes => {
+          this.safraCulturaTalhoes = safraCulturaTalhoes;
 
           //Removendo os safra_cultura_talhoes já cadastrados
           if(this.selectedEntrega) {
