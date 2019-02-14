@@ -53,14 +53,10 @@
       <ap-no-results />
     </div>
 
-    <q-btn
-      slot="fab-container"
-      round
-      color="primary"
-      @click="addUser"
-      icon="add"
-      size="20px"
-    />
+
+    <q-page-sticky position="bottom-right" :offset="[35, 35]">
+      <q-btn round color="deep-orange" @click="addUser" icon="add" size="20px"/>
+    </q-page-sticky>
 
   </custom-page>
 </template>

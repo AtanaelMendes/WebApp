@@ -51,9 +51,9 @@
       </div>
     </div>
 
-    <div slot="fab-container">
+    <q-page-sticky position="bottom-right" :offset="[35, 35]">
       <q-btn round color="deep-orange" @click="addPessoa" icon="add" size="20px" />
-    </div>
+    </q-page-sticky>
 
   </custom-page>
 </template>

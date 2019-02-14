@@ -4,13 +4,10 @@ const routes = [
   { path: '/admin', component: () => import('layouts/Admin.vue'),
     children: [
       { path: '', component: () => import('pages/admin/Dashboard.vue')},
-      { name: 'users', path: 'usuarios', component: () => import('pages/admin/users/UserList.vue'),
-        children: [
-          { name: 'view_user', path: 'view/:id', component: () => import('pages/admin/users/UserView.vue') },
-          { name: 'add_user', path: 'add', component: () => import('pages/admin/users/UserAdd.vue') },
-          { name: 'edit_user', path: 'edit/:id', component: () => import('pages/admin/users/UserEdit.vue') },
-        ]
-      },
+      { name: 'users', path: 'usuarios', component: () => import('pages/admin/users/UserList.vue') },
+      { name: 'view_user', path: 'view/:id', component: () => import('pages/admin/users/UserView.vue') },
+      { name: 'add_user', path: 'add', component: () => import('pages/admin/users/UserAdd.vue') },
+      { name: 'edit_user', path: 'edit/:id', component: () => import('pages/admin/users/UserEdit.vue') },
 
       { name: 'pessoas', path: 'pessoas', component: () => import('pages/admin/pessoas/PessoaList.vue')},
       { name: 'view_pessoa', path: 'view/:id', component: () => import('pages/admin/pessoas/PessoaView.vue') },
@@ -21,13 +18,11 @@ const routes = [
       { name: 'update_localizacao', path: ':id/localizacao/:localizacaoId/update', component: () => import('pages/admin/pessoas/localizacoes/LocalizacaoUpdate.vue') },
       { name: 'add_localizacao', path: ':id/localizacao/add', component: () => import('pages/admin/pessoas/localizacoes/LocalizacaoAdd.vue') },
 
-      { name: 'notas-fiscais', path: 'notas-fiscais', component: () => import('pages/admin/notasFiscais/NotaList.vue'),
-        children: [
-          { name: 'view_nota', path: 'view/:id', component: () => import('pages/admin/notasFiscais/NotaView.vue') },
-          { name: 'new_nota', path: 'new', component: () => import('pages/admin/notasFiscais/NotaGenerate.vue') }
-          // { name: 'edit_area', path: 'edit/:id', component: () => import('pages/admin/notasFiscais/AreaEdit.vue') }
-        ]
-      },
+      { name: 'notas-fiscais', path: 'notas-fiscais', component: () => import('pages/admin/notasFiscais/NotaList.vue') },
+      { name: 'view_nota', path: 'view/:id', component: () => import('pages/admin/notasFiscais/NotaView.vue') },
+      { name: 'new_nota', path: 'new', component: () => import('pages/admin/notasFiscais/NotaGenerate.vue') },
+      // { name: 'edit_area', path: 'edit/:id', component: () => import('pages/admin/notasFiscais/AreaEdit.vue') }
+
       { name: 'areas', path: 'areas', component: () => import('pages/admin/areas/AreaList.vue')},
       { name: 'add_area', path: 'add', component: () => import('pages/admin/areas/AreaAdd.vue') },
       { name: 'view_area', path: 'view/:id', component: () => import('pages/admin/areas/AreaView.vue') },

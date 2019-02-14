@@ -97,7 +97,7 @@
       <ap-no-results />
     </div>
 
-    <q-page-sticky position="bottom-right" :offset="[30, 30]">
+    <q-page-sticky position="bottom-right" :offset="[35, 35]">
       <q-btn round color="deep-orange" size="20px" @click="addSafra" icon="add" />
     </q-page-sticky>
 

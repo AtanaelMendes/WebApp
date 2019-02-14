@@ -5,7 +5,7 @@
 
       <!--PASSO 1 ESCOLHER CAMINHAO -->
       <q-step default title="Caminhão" name="escolherCaminhao" v-if="!addNewTalhaoMode">
-        <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
+        <div class="row justify-center items-center gutter-sm" style="min-height: 80vh" v-if="caminhoes">
 
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="caminhao in caminhoes" :key="caminhao.id">
             <q-card @click.native="selectCaminhao(caminhao.id)">

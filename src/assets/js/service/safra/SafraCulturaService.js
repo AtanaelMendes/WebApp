@@ -189,7 +189,7 @@ export default {
         reject(error)
       })
     });
-  }
+  },
 
   getCultivares(safra_id, id){
     return new Promise((resolve, reject) => {
@@ -199,7 +199,7 @@ export default {
         reject(error)
       })
     });
-  }
+  },
 
   getCaminhoes(safra_id, id){
     return new Promise((resolve, reject) => {
