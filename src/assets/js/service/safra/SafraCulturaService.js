@@ -188,10 +188,11 @@ export default class SafraCulturaService {
 
         for(let safraCulturaTalhao of safraCulturaTalhoes){
           let talhao = await this.talhaoRepository.getById(safraCulturaTalhao.talhao_id);
+          let talhaoImage = await this.imageRepository.getById(talhao.image_id);
           let area = await this.areaRepository.getById(talhao.area_id);
           let areaImage = await this.imageRepository.getById(area.image_id);
-          if(safraCulturaTalhao.cultivar  !== null){
-            let cultivar = await this.cultivarRepository.getAll();
+          if(safraCulturaTalhao.cultivar !== null && safraCulturaTalhao.cultivar !== undefined){
+            let cultivar = await this.cultivarRepository.getById(safraCulturaTalhao.cultivar.id);
             let marca = await this.marcaRepository.getById(cultivar.marca_id);
             let marcaImage = await this.imageRepository.getById(marca.image_id);
 
@@ -209,6 +210,7 @@ export default class SafraCulturaService {
           safraCulturaTalhao.talhao = {
             id: talhao.id,
             nome: talhao.nome,
+            image_file_name: talhaoImage.file_name,
             area: {
               id: area.id,
               nome: area.nome,

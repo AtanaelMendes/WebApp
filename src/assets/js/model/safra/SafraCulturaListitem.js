@@ -14,7 +14,6 @@ export default class SafraCulturaListitem {
   };
 
   constructor(safraCultura) {
-    console.log(safraCultura.cultura)
     this.id = safraCultura.id;
     this.cultura = {
       id: safraCultura.cultura.id,
