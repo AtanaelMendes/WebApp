@@ -15,6 +15,7 @@ import EntregaNoArmazemListRepository from "../../repository/list/EntregaNoArmaz
 import EntregaEntregueListRepository from "../../repository/list/EntregaEntregueListRepository";
 import EntregaAPI from "../../api/EntregaAPI";
 import EntregaViewRepository from "../../repository/list/EntregaViewRepository";
+import UnidadeRepository from "../../repository/reource/UnidadeRepository";
 
 export default class EntregaService{
   #entregasQueue;
@@ -31,6 +32,7 @@ export default class EntregaService{
   #entregaNoArmazemListRepository;
   #entregaEntregueListRepository;
   #entreaViewRepository;
+  #unidadeRepository;
 
   constructor() {
     this.entregasQueue = new EntregasQueue();
@@ -48,6 +50,7 @@ export default class EntregaService{
     this.entregaNoArmazemListRepository = new EntregaNoArmazemListRepository();
     this.entregaEntregueListRepository = new EntregaEntregueListRepository();
     this.entreaViewRepository = new EntregaViewRepository();
+    this.unidadeRepository = new UnidadeRepository();
   }
 
   listEntregasCarregando(filter = null){
@@ -80,7 +83,7 @@ export default class EntregaService{
         let area = await this.areaRepository.getById(talhao.area_id);
 
         let entregaItem = new EntregaCarregandoListItem();
-        entregaItem.id = -1;
+        entregaItem.id = queueItem.id;
         entregaItem.isInQueueState = true;
         entregaItem.caminhao.nome = caminhao.nome;
         entregaItem.caminhao.placa = caminhao.placa;
@@ -134,15 +137,88 @@ export default class EntregaService{
   };
 
   getEntregaById(id){
-    return new Promise((resolve, reject) => {
-      if(navigator.onLine){
-        EntregaAPI.getEntrega(id, this.produtorId).then(response => {
-          resolve(response.data);
-        });
+    return new Promise(async(resolve, reject) => {
+      if(id.charAt(0) === 'q'){
+        let entregaQueue = await this.entregasQueue.getById(parseInt(id.substr(1)));
+        let caminhao = await this.caminhaoRepository.getById(entregaQueue.request.body.caminhao_id);
+        let caminhaoImagem = await this.imageRepository.getById(caminhao.image_id);
+        let safraCulturaTalhao = await this.safraCulturaTalhaoRepository.getById(entregaQueue.request.body.safra_cultura_talhao_id);
+        let talhao = await this.talhaoRepository.getById(safraCulturaTalhao.talhao_id);
+        let talhaoImagem = await this.imageRepository.getById(talhao.image_id);
+        let area = await this.areaRepository.getById(talhao.area_id);
+        let safraCultura = await this.safraCulturaRepository.getById(safraCulturaTalhao.safra_cultura_id);
+        let cultura = await this.culturaRepository.getById(safraCultura.cultura_id);
+        let culturaImagem = await this.imageRepository.getById(cultura.image_id);
+        let safra = await this.safraRepository.getById(safraCultura.safra_id);
+        let unidade = await this.unidadeRepository.getById(caminhao.unidade_medida_id);
+        let safraCulturaUnidade = await this.unidadeRepository.getById(safraCultura.view_unidade_medida_id);
+
+        let talhoes = [
+          {
+            id: 1,
+            percentual: 100,
+            quantidade: 10,
+            talhao: {
+              nome: talhao.nome,
+              area: area.nome,
+              image_file_name: talhaoImagem.file_name,
+            },
+            safra_cultura_talhao: {
+              id: safraCulturaTalhao.id
+            }
+          }
+        ];
+
+
+
+        let entrega = {
+          id: entregaQueue.id,
+          inicio_carregamento: entregaQueue.date,
+          envio_armazem: null,
+          status: 'Carregando',
+          caminhao: {
+            id: caminhao.id,
+            nome: caminhao.nome,
+            placa: caminhao.placa,
+            estimativa_carga: caminhao.pbt - caminhao.tara,
+            unidade_medida_sigla: unidade.sigla,
+            image_file_name: caminhaoImagem.file_name,
+          },
+          safra_cultura: {
+            id: safraCultura.id,
+            view_unidade_medida: {
+              id: safraCulturaUnidade.id,
+              sigla: safraCulturaUnidade.sigla,
+            },
+            cultura: {
+              nome: cultura.nome,
+              image_file_name: culturaImagem.file_name,
+            },
+            safra: {
+              ano_inicio: safra.ano_inicio,
+              ano_fim: safra.ano_fim,
+            },
+            talhoes: talhoes,
+          },
+          negocios: [],
+        };
+
+        resolve(entrega);
+
       }else{
-        this.entreaViewRepository.get(id).then(entrega => {
-          resolve(entrega)
-        })
+        if(navigator.onLine){
+          EntregaAPI.getEntrega(id, this.produtorId).then(response => {
+            resolve(response.data);
+          }).catch(error => {
+            reject(new Error("Erro na API"))
+          })
+        }else{
+          this.entreaViewRepository.get(id).then(entrega => {
+            resolve(entrega)
+          }).catch(() => {
+            reject(new Error("Erro no BD"))
+          })
+        }
       }
     });
   };

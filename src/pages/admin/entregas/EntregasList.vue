@@ -24,7 +24,7 @@
 
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" v-for="entrega in entregasCarregando" :key="entrega.id">
 
-        <q-card @click.native="viewCarga(entrega.id)" class="cursor-pointer">
+        <q-card @click.native="viewCarga(entrega)" class="cursor-pointer">
           <q-card-media overlay-position="top">
             <q-card-title slot="overlay">
               {{entrega.caminhao.placa}}
@@ -88,7 +88,7 @@
     <div class="row gutter-sm space-end q-pa-md" v-if="tabs === 'no-armazem' ">
 
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" v-for="entrega in entregasNoArmazem" :key="entrega.id">
-        <q-card @click.native="viewCarga(entrega.id)" class="cursor-pointer">
+        <q-card @click.native="viewCarga(entrega)" class="cursor-pointer">
           <q-card-media overlay-position="top">
             <q-card-title slot="overlay">
               {{entrega.caminhao.placa}}
@@ -151,7 +151,7 @@
       <div class="row gutter-sm space-end" >
         <div class="col-12">
           <q-list no-border link separator>
-            <q-item multiline v-for="entrega in entregasEntregues" :key="entrega.id" @click.native="viewCarga(entrega.id)">
+            <q-item multiline v-for="entrega in entregasEntregues" :key="entrega.id" @click.native="viewCarga(entrega)">
               <q-item-side :image="makeUrl(entrega.caminhao.image_file_name, '200x125')" />
               <q-item-main>
                 <q-item-tile class="content-center">
@@ -353,7 +353,8 @@
           this.$q.loading.hide();
         })
       },
-      viewCarga: function (id) {
+      viewCarga: function (entrega) {
+        let id = (entrega.isInQueueState ? "q" : "") + entrega.id;
         this.$router.push({name: 'entrega_view', params: {id:id}});
       },
       deleteEntrega(id){

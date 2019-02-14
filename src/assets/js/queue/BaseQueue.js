@@ -1,9 +1,6 @@
 import QueueItem from "../dbModel/QueueItem";
 import RequestQueueRepository from "../repository/RequestQueueRepository";
 
-
-
-
 export default class BaseQueue{
   #grouper = null;
   #requestQueueRepository = null;
@@ -21,6 +18,10 @@ export default class BaseQueue{
       return response;
     })
   };
+
+  get(id){
+    return this.requestQueueRepository.getById(id)
+  }
 
   getByUrlAndMethod(url, method){
     return this.requestQueueRepository.getByGrouperAndUrlAndMethod(this.grouper, url, method);

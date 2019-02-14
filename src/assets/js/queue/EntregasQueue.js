@@ -6,6 +6,10 @@ export default class EntregasQueue extends BaseQueue{
     super('entregas');
   }
 
+  getById(id){
+    return super.get(id);
+  }
+
   getByUrlAndMethod(url, method) {
     return super.getByUrlAndMethod(url, method);
   }

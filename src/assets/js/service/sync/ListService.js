@@ -37,7 +37,6 @@ async function getEntregasView(){
   let entregas = entregasCarregando.concat(entregasNoArmazem).concat(entregasEntregue);
 
   entregas.forEach(entrega => {
-    console.log(entrega.id)
     EntregaAPI.getEntrega(entrega.id, produtorId).then(response => {
       entregaViewRepository.update(response.data);
     })

@@ -10,6 +10,10 @@ export default class RequestQueueRepository {
     table = Vue.prototype.db_primary.request_queue;
   };
 
+  getById(id){
+    return table.get({id: id});
+  }
+
   getByGrouper(grouper){
     return table.where('grouper').equals(grouper);
   };
