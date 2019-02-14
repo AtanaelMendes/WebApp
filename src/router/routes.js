@@ -42,6 +42,11 @@ const routes = [
       { name: 'entregas', path: 'entregas', component: () => import('pages/admin/entregas/EntregasList.vue')},
       { name: 'entrega_view', path: 'entregas/:id/view', component: () => import('pages/admin/entregas/EntregaView.vue')},
 
+      { name: 'caminhoes', path: 'caminhoes', component: () => import('pages/admin/caminhoes/CaminhoesList.vue')},
+      { name: 'view_caminhao', path: 'caminhao/:id/view', component: () => import('pages/admin/caminhoes/CaminhaoView.vue')},
+      { name: 'edit_caminhao', path: 'caminhao/:id/edit', component: () => import('pages/admin/caminhoes/CaminhaoEdit.vue')},
+      { name: 'add_caminhao', path: 'caminhao/add', component: () => import('pages/admin/caminhoes/CaminhaoAdd.vue')},
+
       { name: 'teste', path: 'teste', component: () => import('pages/admin/Teste.vue')},
     ]
   }
