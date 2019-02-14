@@ -91,6 +91,12 @@
           <q-item-main label="Teste" />
         </q-item>
 
+        <!--ENTREGAS-->
+        <q-item @click.native="$router.push({name:'caminhoes'})">
+          <q-item-side icon="local_shipping"/>
+          <q-item-main label="Caminhões" />
+        </q-item>
+
       </q-list>
     </q-layout-drawer>
 
