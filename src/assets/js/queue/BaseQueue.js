@@ -10,8 +10,8 @@ export default class BaseQueue{
     this.requestQueueRepository = new RequestQueueRepository();
   }
 
-  add(request){
-    let queueItem = new QueueItem(this.grouper, request.url, request.method, request.data, request.headers);
+  add(request, type){
+    let queueItem = new QueueItem(this.grouper, type, request.url, request.method, request.data, request.headers);
 
     this.requestQueueRepository.save(queueItem).then(response => {
       registerEvent();

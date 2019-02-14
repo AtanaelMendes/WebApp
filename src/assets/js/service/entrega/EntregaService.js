@@ -231,7 +231,7 @@ export default class EntregaService{
         }
       }).catch(error => {
         if(!navigator.onLine){
-          this.entregasQueue.add(error.config);
+          this.entregasQueue.add(error.config, EntregasQueue.NOVA_ENTREGA);
           resolve();
         }else{
           reject(error.response)

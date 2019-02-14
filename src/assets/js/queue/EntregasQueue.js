@@ -2,6 +2,9 @@ import BaseQueue from "./BaseQueue";
 
 export default class EntregasQueue extends BaseQueue{
 
+  static NOVA_ENTREGA = 'nova_entrega';
+  static NOVO_TALHAO = 'novo_talhao';
+
   constructor() {
     super('entregas');
   }
@@ -14,8 +17,8 @@ export default class EntregasQueue extends BaseQueue{
     return super.getByUrlAndMethod(url, method);
   }
 
-  add(request){
-    return super.add(request)
+  add(request, type){
+    return super.add(request, type)
   };
 
   remove(){
