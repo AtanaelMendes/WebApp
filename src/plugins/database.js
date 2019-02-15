@@ -23,6 +23,8 @@ db_resources.version(1).stores({
   entregas: 'id, caminhao_id, status',
   cultivares: 'id',
   marcas: 'id',
+  negocios: 'id',
+  negocios_culturas: 'id',
 });
 
 db_lists.version(1).stores({

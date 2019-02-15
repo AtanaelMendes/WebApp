@@ -25,6 +25,10 @@ import CultivarRepository from "../../repository/reource/CultivarRepository";
 import Cultivar from "../../dbModel/Cultivar";
 import MarcaRepository from "../../repository/reource/MarcaRepository";
 import Marca from "../../dbModel/Marca";
+import NegocioRepository from "../../repository/reource/NegocioRepository";
+import NegocioCulturaRepository from "../../repository/reource/NegocioCulturaRepository";
+import Negocio from "../../dbModel/Negocio";
+import NegocioCultura from "../../dbModel/NegocioCultura";
 
 let path;
 let caminhaoRepository;
@@ -40,6 +44,8 @@ let imageRepository;
 let entregaRepository;
 let cultivarRepository;
 let marcaRepository;
+let negocioRepository;
+let negocioCulturaRepository;
 
 export default class ResourceService{
 
@@ -58,6 +64,8 @@ export default class ResourceService{
     entregaRepository = new EntregaRepository();
     cultivarRepository = new CultivarRepository();
     marcaRepository = new MarcaRepository();
+    negocioRepository = new NegocioRepository();
+    negocioCulturaRepository = new NegocioCulturaRepository();
   }
 
   download(){
@@ -74,6 +82,8 @@ export default class ResourceService{
     getEntregas();
     getCultivares();
     getMarcas();
+    getNegocios();
+    getNegociosCulturas();
   }
 }
 
@@ -250,6 +260,34 @@ function getMarcas(){
     Vue.prototype.$axios.get(path + '/marca').then(response => {
       response.data.forEach((marca, index, array) => {
         marcaRepository.update(new Marca(marca));
+
+        if(index === (array.length - 1)){
+          resolve();
+        }
+      })
+    })
+  });
+}
+
+function getNegocios(){
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get(path + '/negocio').then(response => {
+      response.data.forEach((negocio, index, array) => {
+        negocioRepository.update(new Negocio(negocio));
+
+        if(index === (array.length - 1)){
+          resolve();
+        }
+      })
+    })
+  });
+}
+
+function getNegociosCulturas(){
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get(path + '/negocio_cultura').then(response => {
+      response.data.forEach((negocioCultura, index, array) => {
+        negocioCulturaRepository.update(new NegocioCultura(negocioCultura));
 
         if(index === (array.length - 1)){
           resolve();
