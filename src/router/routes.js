@@ -49,8 +49,6 @@ const routes = [
 
       { name: 'entregas', path: 'entregas', component: EntregasList},
       { name: 'entrega_view', path: 'entregas/:id/view', component: EntregaView},
-
-      { name: 'teste', path: 'teste', component: () => import('pages/admin/Teste.vue')},
     ]
   }
 ];

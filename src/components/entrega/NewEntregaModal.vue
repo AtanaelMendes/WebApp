@@ -129,6 +129,7 @@
   import EntregaService from "../../assets/js/service/entrega/EntregaService";
   import CaminhaoService from "../../assets/js/service/CaminhaoService";
   import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
+  import AccountRepository from "../../assets/js/repository/AccountRepository";
 
   export default {
     name: "stepper-nova-carga",
@@ -139,9 +140,9 @@
     },
     data () {
       return {
-        entregaService: new EntregaService(this.$store.state.account.produtor_id),
-        caminhaoService: new CaminhaoService(this.$store.state.account.produtor_id),
-        safraCulturaService: new SafraCulturaService(this.$store.state.account.produtor_id),
+        entregaService: null,
+        caminhaoService: null,
+        safraCulturaService: null,
         currentStep: 'escolherCaminhao',
         novaEntrega: new NovaEntrega(),
         isModalOpened: false,
@@ -158,8 +159,12 @@
       }
     },
     methods: {
-      openModal: function(entrega = null){
+      openModal: async function(entrega = null){
         this.isModalOpened = true;
+        let account = await new AccountRepository().getFirst();
+        this.entregaService = new EntregaService(account.produtor_id);
+        this.caminhaoService = new CaminhaoService(account.produtor_id);
+        this.safraCulturaService = new SafraCulturaService(account.produtor_id);
         this.novaEntrega = new NovaEntrega();
         this.selectedSafraCulturaId = null;
         this.selectedAreaId = null;

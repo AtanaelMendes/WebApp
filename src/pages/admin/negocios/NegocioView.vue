@@ -419,13 +419,13 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import negocioService from 'assets/js/service/negocio/NegocioService'
   import newCulturaModal from 'components/negocio/NewCulturaModal';
   import newTituloModal from 'components/negocio/NewTituloModal';
   import newProdutoModal from 'components/negocio/NewProdutoModal';
   import newFixacaoModal from 'components/negocio/NewFixacaoModal';
   import apNoResults from 'components/ApNoResults'
   import { Screen } from 'quasar'
+  import NegocioService from "../../../assets/js/service/negocio/NegocioService";
 
   export default {
     name: "negocio-view",
@@ -440,6 +440,7 @@
     },
     data () {
       return {
+        negocioService: new NegocioService(this.$account.produtor_id),
         direita: 'col-xs-12 col-sm-12 col-md-7 col-lg-7',
         esquerda: 'col-xs-12 col-sm-12 col-md-5 col-lg-5',
         negocio: null,
@@ -468,7 +469,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          negocioService.archiveNegocio(id).then(response => {
+          this.negocioService.archiveNegocio(id).then(response => {
             this.getNegocioById()
           })
         }).catch(()=>{});
@@ -480,7 +481,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          negocioService.deleteNegocio(id).then(response => {
+          this.negocioService.deleteNegocio(id).then(response => {
             this.getNegocioById()
           })
         }).catch(()=>{});
@@ -493,7 +494,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          negocioService.deleteCultura(this.negocio.id, id).then(response => {
+          this.negocioService.deleteCultura(this.negocio.id, id).then(response => {
             if(response.status === 200){
               this.getNegocioById()
             }
@@ -512,7 +513,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          negocioService.deleteTitulo(this.negocio.id, id).then(response => {
+          this.negocioService.deleteTitulo(this.negocio.id, id).then(response => {
             if(response.status === 200){
               this.getNegocioById()
             }
@@ -526,7 +527,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          negocioService.deleteProduto(this.negocio.id, id).then(response => {
+          this.negocioService.deleteProduto(this.negocio.id, id).then(response => {
             if(response.status === 200){
               this.getNegocioById()
             }
@@ -535,7 +536,7 @@
       },
 
       getNegocioById: function(){
-        negocioService.getNegocioById(this.$route.params.id, true).then(response => {
+        this.negocioService.getNegocioById(this.$route.params.id, true).then(response => {
           this.negocio = response.data;
         });
       },

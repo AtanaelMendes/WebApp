@@ -93,11 +93,11 @@
       }
     },
     methods: {
-      getNotaById: function(){
+      /*getNotaById: function(){
         NotaFiscalService.getNotaById(this.$route.params.id).then(produtos => {
           this.produtos = produtos;
         })
-      },
+      },*/
       backAction: function () {
         this.$router.back()
       }

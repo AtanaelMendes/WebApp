@@ -343,11 +343,11 @@
 <script>
   import Fixacao from 'assets/js/model/negocio/Fixacao'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
-  import negocioService from 'assets/js/service/negocio/NegocioService'
   import moedaService from 'assets/js/service/MoedaService'
   import contaBancariaService from 'assets/js/service/ContaBancariaService'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
+  import NegocioService from "../../assets/js/service/negocio/NegocioService";
 
   export default {
     name: "NewFixacaoModal",
@@ -357,6 +357,7 @@
     },
     data(){
       return{
+        negocioService: new NegocioService(this.$account.produtor_id),
         isModalOpened: false,
         currentStep: 'negocioCultura',
         fixacao: new Fixacao(),
@@ -560,7 +561,7 @@
       saveAttachFixacao: function(){
         this.fixacao.parcelas = this.fixacaoParcelas;
         this.fixacao.dataFixacao.value = new Date();
-        negocioService.saveAttachFixacao(this.selectedNegocioCultura.id, this.fixacao.getValues()).then(response => {
+        this.negocioService.saveAttachFixacao(this.selectedNegocioCultura.id, this.fixacao.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Fixação vinculada com sucesso'});
             this.closeModal();
@@ -598,7 +599,7 @@
         return this.unidadesMedida.filter(unidade => unidade.id === id)[0];
       },
       listNegociosCulturas: function(negocioId){
-        negocioService.listNegociosCulturas(negocioId).then(response => {
+        this.negocioService.listNegociosCulturas(negocioId).then(response => {
           this.negociosCulturas = response.data;
         })
       },

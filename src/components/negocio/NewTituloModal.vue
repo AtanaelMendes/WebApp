@@ -148,8 +148,8 @@
   import Titulo from 'assets/js/model/negocio/Titulo'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
-  import negocioService from 'assets/js/service/negocio/NegocioService'
   import indexadorService from 'assets/js/service/IndexadorService'
+  import NegocioService from "../../assets/js/service/negocio/NegocioService";
 
   export default {
     name: "NewTituloModal",
@@ -175,6 +175,7 @@
     },
     data(){
       return {
+        negocioService: new NegocioService(this.$account.produtor_id),
         isModalOpened: false,
         currentStep: 'pagarReceber',
         negocio: null,
@@ -281,7 +282,7 @@
       },
       saveAttachTitulo: function(){
         this.titulo.parcelas = this.verifyParcelas;
-        negocioService.saveAttachTitulo(this.negocio.id, this.titulo.getValues()).then(response => {
+        this.negocioService.saveAttachTitulo(this.negocio.id, this.titulo.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Título vinculado com sucesso'});
             this.closeModal();

@@ -104,12 +104,12 @@
       }
     },
     methods: {
-      list: function(filter) {
+      /*list: function(filter) {
         NotaFiscalService.listNotas(filter).then(response => {
           this.notasFiscais = response.data;
           this.isEmptyList = this.notasFiscais.length === 0;
         });
-      },
+      },*/
       selectNotaFiscal: function(id) {
         this.$router.push({name: 'view_nota', params: {id:id}});
         // this.$router.push({name: 'add_pessoa'});
@@ -119,7 +119,7 @@
       },
     },
     mounted () {
-      this.list(this.filter);
+      //this.list(this.filter);
       // this.$root.$on('refreshPessoaList', () => {
       //
       // });

@@ -1,24 +1,30 @@
-import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
-import AgroUtils from 'assets/js/AgroUtils'
+import ArmazemAPI from "../../api/ArmazemAPI";
 const produtorId = localStorage.getItem('account.produtor_id');
-export default {
+export default class ArmazemService{
+  #produtorId;
+
+  constructor(produtor_id) {
+    this.produtorId = produtor_id;
+  }
+
   listArmazens() {
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtorId + '/armazem').then(response => {
-        resolve(response);
+      ArmazemAPI.listArmazens(this.produtorId).then(response => {
+        resolve(response.data);
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  }
+
   listArmazensByEntrega(entregaId) {
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtorId + '/armazem/by_entrega/' + entregaId).then(response => {
-        resolve(response);
+      ArmazemAPI.listArmazensByEntrega(entregaId, this.produtorId).then(response => {
+        resolve(response.data);
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  }
 }

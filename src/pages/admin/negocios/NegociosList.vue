@@ -74,9 +74,9 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import negocioService from 'assets/js/service/negocio/NegocioService'
   import negocioModal from 'components/negocio/NegocioModal';
   import apNoResults from 'components/ApNoResults'
+  import NegocioService from "../../../assets/js/service/negocio/NegocioService";
 
   export default {
     name: "negocios",
@@ -88,13 +88,14 @@
     },
     data () {
       return {
+        negocioService: new NegocioService(this.$account.produtor_id),
         negocios: [],
         tipoNegocios: [],
       }
     },
     methods: {
       listNegocios: function(){
-        negocioService.listNegocios().then(response => {
+        this.negocioService.listNegocios().then(response => {
           this.negocios = response.data;
         });
       },
@@ -105,12 +106,12 @@
         this.$refs.negocioModal.openModalEditMode(negocioId);
       },
       archiveNegocio: function(id){
-        negocioService.archiveNegocio(id).then(response => {
+        this.negocioService.archiveNegocio(id).then(response => {
           this.listNegocios()
         })
       },
       restoreNegocio: function(id){
-        negocioService.restoreNegocio(id).then(response => {
+        this.negocioService.restoreNegocio(id).then(response => {
           this.listNegocios()
         })
       },
@@ -121,7 +122,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          negocioService.deleteNegocio(id).then(response => {
+          this.negocioService.deleteNegocio(id).then(response => {
             this.listNegocios()
           })
         }).catch(()=>{});
@@ -130,7 +131,7 @@
         this.$router.push({name: 'negocio_view', params: {id:id}});
       },
       listTipoNegocios: function(){
-        negocioService.listTipoNegocios().then(response => {
+        this.negocioService.listTipoNegocios().then(response => {
           this.tipoNegocios = response.data;
         });
       },

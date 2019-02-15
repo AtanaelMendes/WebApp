@@ -100,9 +100,9 @@
 <script>
   import Produto from 'assets/js/model/negocio/Produto'
   import customInputText from 'components/CustomInputText.vue'
-  import negocioService from 'assets/js/service/negocio/NegocioService'
   import produtoService from 'assets/js/service/produto/ProdutoService'
   import indexadorService from 'assets/js/service/IndexadorService'
+  import NegocioService from "../../assets/js/service/negocio/NegocioService";
 
   export default {
     name: "NewProdutoModal",
@@ -125,6 +125,7 @@
     },
     data(){
       return {
+        negocioService: new NegocioService(this.$account.produtor_id),
         isModalOpened: false,
         produto: new Produto(),
         negocio: null,
@@ -193,7 +194,7 @@
 
         this.produto.isPagar.value = false;
 
-        negocioService.saveAttachProduto(this.negocio.id, this.produto.getValues()).then(response => {
+        this.negocioService.saveAttachProduto(this.negocio.id, this.produto.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Produto vinculado com sucesso'});
             this.closeModal();

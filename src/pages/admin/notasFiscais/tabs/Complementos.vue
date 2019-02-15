@@ -107,11 +107,11 @@
       toggle () {
         this.seeMore = !this.seeMore
       },
-      getNotaById: function(){
+      /*getNotaById: function(){
         NotaFiscalService.getNotaById(this.$route.params.id).then(produtos => {
           this.produtos = produtos.data;
         })
-      },
+      },*/
       addContato: function(){
         this.$router.push({name:'add_contact'});
       },
@@ -120,7 +120,7 @@
       }
     },
     mounted(){
-      this.getNotaById();
+      //this.getNotaById();
     }
   }
 </script>

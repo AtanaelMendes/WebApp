@@ -25,6 +25,10 @@ db_resources.version(1).stores({
   marcas: 'id',
   negocios: 'id',
   negocios_culturas: 'id',
+  pessoas: 'id',
+  negocios_culturas_armazens: 'id, negocio_cultura_id',
+  localizacoes: 'id',
+  armazens: 'id',
 });
 
 db_lists.version(1).stores({

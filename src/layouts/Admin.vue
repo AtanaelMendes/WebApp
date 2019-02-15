@@ -207,7 +207,6 @@
       },
       getAccountInfo(){
         this.accountService.getInfo().then(info => {
-          this.$store.commit('account/setAccountValue', info);
           this.currentAccount.name = info.nome;
           this.currentAccount.email = info.email;
 

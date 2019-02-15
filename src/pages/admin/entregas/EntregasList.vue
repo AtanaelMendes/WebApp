@@ -231,6 +231,7 @@
   import apFilterResultBar from 'components/ApFilterResultBar'
   import AgroUtils from 'assets/js/AgroUtils'
   import EntregaService from "../../../assets/js/service/entrega/EntregaService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
 
   export default {
     name: "entregas",
@@ -247,7 +248,7 @@
     },
     data () {
       return {
-        entregaService: new EntregaService(this.$store.state.account.produtor_id),
+        entregaService: null,
         tabs: 'carregando',
         entregas: [],
         entregasCarregando:[],
@@ -385,7 +386,10 @@
       }
     },
     mounted () {
-      this.listEntregasCarregando();
+      new AccountRepository().getFirst().then(account => {
+        this.entregaService = new EntregaService(account.produtor_id);
+        this.listEntregasCarregando();
+      });
 
       this.$root.$on('refreshEntregasList', (status) => {
         switch (status) {

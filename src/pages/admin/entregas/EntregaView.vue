@@ -530,6 +530,7 @@
   import apImage from 'components/ApImage'
   import agroUtils from 'assets/js/AgroUtils'
   import EntregaService from "../../../assets/js/service/entrega/EntregaService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
 
   export default {
     name: "carga-view",
@@ -546,7 +547,7 @@
     },
     data () {
       return {
-        entregaService: new EntregaService(this.$store.state.account.produtor_id),
+        entregaService: null,
         carga: true,
         entregaView: null,
         entrega: null,
@@ -690,7 +691,10 @@
       },
     },
     mounted () {
-      this.getEntrega()
+      new AccountRepository().getFirst().then(account => {
+        this.entregaService = new EntregaService(account.produtor_id);
+        this.getEntrega();
+      });
       this.$root.$on('refreshEntregaView', () => {
         this.getEntrega()
       });

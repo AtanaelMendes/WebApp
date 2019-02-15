@@ -256,17 +256,18 @@
 </template>
 <script>
   import entregaService from 'assets/js/service/entrega/EntregaService'
-  import armazemService from 'assets/js/service/armazem/ArmazemService'
-  import motoristaService from 'assets/js/service/motorista/MotoristaService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import SendEntrega from 'assets/js/model/entrega/SendEntrega'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
-  import negocioService from 'assets/js/service/negocio/NegocioService'
-  import notaFiscalService from 'assets/js/service/NotaFiscalService'
   import cfopService from 'assets/js/service/CfopService'
   import apImage from 'components/ApImage'
   import AgroUtils from "../../assets/js/AgroUtils";
+  import AccountRepository from "../../assets/js/repository/AccountRepository";
+  import NegocioService from "../../assets/js/service/negocio/NegocioService";
+  import MotoristaService from "../../assets/js/service/motorista/MotoristaService";
+  import ArmazemService from "../../assets/js/service/armazem/ArmazemService";
+  import NotaFiscalService from "../../assets/js/service/NotaFiscalService";
 
   export default {
     name: "stepper-send-carga",
@@ -277,6 +278,10 @@
     },
     data () {
       return {
+        armazemService: null,
+        negocioService: null,
+        motoristaService: null,
+        notaFiscalService: null,
         currentStep: 'negocio',
         sendEntrega: new SendEntrega(),
         isModalOpened: false,
@@ -326,7 +331,13 @@
           this.sendEntrega.valor = this.sendEntrega.total
         }
       },
-      openModal: function(funcao, object = null){
+      openModal: async function(funcao, object = null){
+        let account = await new AccountRepository().getFirst();
+        this.armazemService = new ArmazemService(account.produtor_id);
+        this.negocioService = new NegocioService(account.produtor_id);
+        this.motoristaService = new MotoristaService(account.produtor_id);
+        this.notaFiscalService = new NotaFiscalService(account.produtor_id);
+
         this.funcao = funcao;
         this.sendEntrega = new SendEntrega()
         switch (funcao) {
@@ -442,7 +453,7 @@
         let entregaId = this.$route.params.id;
         this.$q.loading.show();
 
-        negocioService.listAvaliablesNegociosCulturasForEntrega(entregaId).then(response => {
+        this.negocioService.listAvaliablesNegociosCulturasForEntrega(entregaId).then(response => {
           this.negocioCulturas = response.data;
 
           if(this.funcao === 'novoNegocio'){
@@ -459,8 +470,8 @@
       },
       listNegociosCulturasByProdutor(){
         this.$q.loading.show();
-        negocioService.listNegociosCulturasByProdutor().then(response => {
-          this.negocioCulturas = response.data;
+        this.negocioService.listNegociosCulturasByProdutor().then(negocios => {
+          this.negocioCulturas = negocios;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
@@ -474,8 +485,8 @@
       },
       listArmazensByNegocioCultura: function(negocioCulturaId){
         this.$q.loading.show();
-        negocioService.listArmazensByNegocioCultura(negocioCulturaId).then(response => {
-          this.armazens = response.data;
+        this.negocioService.listArmazensByNegocioCultura(negocioCulturaId).then(armazens => {
+          this.armazens = armazens;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
@@ -488,7 +499,7 @@
         }
 
         this.$q.loading.show();
-        armazemService.listArmazensByEntrega(entrega.id).then(response => {
+        this.armazemService.listArmazensByEntrega(entrega.id).then(response => {
           //TODO: Remover o armazem já selecionadooo
           this.armazens = response.data;
           this.$q.loading.hide();
@@ -498,7 +509,7 @@
       },
       listArmazensByProdutor(){
         this.$q.loading.show();
-        armazemService.listArmazens().then(response => {
+        this.armazemService.listArmazens().then(response => {
           this.armazens = response.data;
           this.$q.loading.hide();
         }).catch(error => {
@@ -511,8 +522,8 @@
       },
       listMotoristas: function(){
         this.$q.loading.show();
-        motoristaService.listMotoristas().then(response => {
-          this.motoristas = response.data;
+        this.motoristaService.listMotoristas().then(motoristas => {
+          this.motoristas = motoristas;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
@@ -534,7 +545,7 @@
           color: 'secondary'
         }).then(data => {
           this.$q.loading.show();
-          motoristaService.saveMotorista({nome: data}).then(response => {
+          this.motoristaService.saveMotorista({nome: data}).then(response => {
             if(response.status === 201){
               this.sendEntrega.motoristaId = response.data.id;
               this.listMotoristas();
@@ -682,8 +693,8 @@
         })
       },
       listNotasFiscaisSeries(pessoa_id){
-        notaFiscalService.listSeries(pessoa_id).then(response => {
-          this.notasFiscaisSeries = response.data;
+        this.notaFiscalService.listSeries(pessoa_id).then(series => {
+          this.notasFiscaisSeries = series;
         })
       },
       changeNumeroSerie(){
@@ -718,7 +729,7 @@
       },
       getNotaFiscalItem(id){
         this.$q.loading.show();
-        notaFiscalService.getNotaFiscalItemById(id).then(response => {
+        this.notaFiscalService.getNotaFiscalItemById(id).then(response => {
           this.sendEntrega.serieId = response.data.nota_fiscal.serie.id;
           this.sendEntrega.notaNumero = response.data.nota_fiscal.numero;
           this.sendEntrega.emissao.value = response.data.nota_fiscal.emissao;

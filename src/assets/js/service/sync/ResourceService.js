@@ -29,6 +29,14 @@ import NegocioRepository from "../../repository/reource/NegocioRepository";
 import NegocioCulturaRepository from "../../repository/reource/NegocioCulturaRepository";
 import Negocio from "../../dbModel/Negocio";
 import NegocioCultura from "../../dbModel/NegocioCultura";
+import PessoaRepository from "../../repository/reource/PessoaRepository";
+import Pessoa from "../../dbModel/Pessoa";
+import NegocioCulturaArmazemRepository from "../../repository/reource/NegocioCulturaArmazemRepository";
+import NegocioCulturaArmazem from "../../dbModel/NegocioCulturaArmazem";
+import LocalizacaoRepository from "../../repository/reource/LocalizacaoRepository";
+import Localizacao from "../../dbModel/Localizacao";
+import ArmazemRepository from "../../repository/reource/ArmazemRepository";
+import Armazem from "../../dbModel/Armazem";
 
 let path;
 let caminhaoRepository;
@@ -46,6 +54,10 @@ let cultivarRepository;
 let marcaRepository;
 let negocioRepository;
 let negocioCulturaRepository;
+let pessoaRepository;
+let negocioCulturaArmazemRepository;
+let localizacaoRepository;
+let armazemRepository;
 
 export default class ResourceService{
 
@@ -66,6 +78,10 @@ export default class ResourceService{
     marcaRepository = new MarcaRepository();
     negocioRepository = new NegocioRepository();
     negocioCulturaRepository = new NegocioCulturaRepository();
+    pessoaRepository = new PessoaRepository();
+    negocioCulturaArmazemRepository = new NegocioCulturaArmazemRepository();
+    localizacaoRepository = new LocalizacaoRepository();
+    armazemRepository = new ArmazemRepository();
   }
 
   download(){
@@ -84,6 +100,10 @@ export default class ResourceService{
     getMarcas();
     getNegocios();
     getNegociosCulturas();
+    getPessoas();
+    getNegociosCulturasArmazens();
+    getLocalizacoes();
+    getArmazens();
   }
 }
 
@@ -288,6 +308,62 @@ function getNegociosCulturas(){
     Vue.prototype.$axios.get(path + '/negocio_cultura').then(response => {
       response.data.forEach((negocioCultura, index, array) => {
         negocioCulturaRepository.update(new NegocioCultura(negocioCultura));
+
+        if(index === (array.length - 1)){
+          resolve();
+        }
+      })
+    })
+  });
+}
+
+function getPessoas(){
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get(path + '/pessoa').then(response => {
+      response.data.forEach((pessoa, index, array) => {
+        pessoaRepository.update(new Pessoa(pessoa));
+
+        if(index === (array.length - 1)){
+          resolve();
+        }
+      })
+    })
+  });
+}
+
+function getNegociosCulturasArmazens(){
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get(path + '/negocio_cultura_armazem').then(response => {
+      response.data.forEach((negocioCulturaArmazem, index, array) => {
+        negocioCulturaArmazemRepository.update(new NegocioCulturaArmazem(negocioCulturaArmazem));
+
+        if(index === (array.length - 1)){
+          resolve();
+        }
+      })
+    })
+  });
+}
+
+function getLocalizacoes(){
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get(path + '/localizacao').then(response => {
+      response.data.forEach((localizacao, index, array) => {
+        localizacaoRepository.update(new Localizacao(localizacao));
+
+        if(index === (array.length - 1)){
+          resolve();
+        }
+      })
+    })
+  });
+}
+
+function getArmazens(){
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get(path + '/armazem').then(response => {
+      response.data.forEach((armazem, index, array) => {
+        armazemRepository.update(new Armazem(armazem));
 
         if(index === (array.length - 1)){
           resolve();

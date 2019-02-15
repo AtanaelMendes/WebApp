@@ -91,9 +91,9 @@
 <script>
   import pessoaService from 'assets/js/service/PessoaService'
   import Negocio from 'assets/js/model/negocio/Negocio'
-  import negocioService from 'assets/js/service/negocio/NegocioService'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import customInputText from 'components/CustomInputText.vue'
+  import NegocioService from "../../assets/js/service/negocio/NegocioService";
 
   export default {
     name: "NegocioModal",
@@ -109,6 +109,7 @@
     },
     data(){
       return {
+        negocioService: new NegocioService(this.$account.produtor_id),
         isModalOpened: false,
         isEditMode: false,
         currentStep: 'negociante',
@@ -136,7 +137,7 @@
         this.$emit('modal-closed')
       },
       getNegocioById: function(negocioId){
-        negocioService.getNegocioById(negocioId).then(response => {
+        this.negocioService.getNegocioById(negocioId).then(response => {
           this.fillFormNegocio(response.data)
         });
       },
@@ -144,7 +145,7 @@
         if(!this.negocio.isValid()){
           return;
         }
-        negocioService.saveNegocio(this.negocio.getValues()).then(response => {
+        this.negocioService.saveNegocio(this.negocio.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Negócio criado com sucesso'});
             this.closeModal();
@@ -158,7 +159,7 @@
         if (!this.negocio.isValid()) {
           return;
         }
-        negocioService.updateNegocio(this.negocio.id, this.negocio.getValues()).then(response => {
+        this.negocioService.updateNegocio(this.negocio.id, this.negocio.getValues()).then(response => {
           if (response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Negócio atualizado com sucesso!'});
             this.closeModal();
