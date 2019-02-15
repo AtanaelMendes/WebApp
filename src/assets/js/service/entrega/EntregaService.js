@@ -34,10 +34,9 @@ export default class EntregaService{
   #entreaViewRepository;
   #unidadeRepository;
 
-  constructor() {
+  constructor(produtorId) {
+    this.produtorId = produtorId;
     this.entregasQueue = new EntregasQueue();
-    //this.produtorId = localStorage.getItem('account.produtor_id');
-    this.produtorId = 1; //TODO Buscar o id aqui
     this.caminhaoRepository = new CaminhaoRepository();
     this.safraCulturaTalhaoRepository = new SafraCulturaTalhaoRepository();
     this.imageRepository = new ImageRepository();

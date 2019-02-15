@@ -206,8 +206,8 @@
         this.isOfflineStatusBarVisible = true;
       },
       getAccountInfo(){
-        console.log('getAccountInfo')
         this.accountService.getInfo().then(info => {
+          this.$store.commit('account/setAccountValue', info);
           this.currentAccount.name = info.nome;
           this.currentAccount.email = info.email;
 
@@ -215,7 +215,6 @@
         })
       },
       getInitialContent(produtorId){
-        console.log('getInitialContent')
         this.syncService.getInitialContent(produtorId);
         new ResourceService(produtorId).download();
         new ListService(produtorId).download();

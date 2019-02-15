@@ -23,8 +23,8 @@ export default class SafraCulturaService {
   #cultivarRepository;
   #marcaRepository;
 
-  constructor() {
-    this.produtorId = 1; //TODO Buscar o id aqui
+  constructor(produtorId) {
+    this.produtorId = produtorId;
     this.safraCulturaRepository = new SafraCulturaRepository();
     this.culturaRepository = new CulturaRepository();
     this.imageRepository = new ImageRepository();

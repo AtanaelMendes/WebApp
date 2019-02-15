@@ -247,7 +247,7 @@
     },
     data () {
       return {
-        entregaService: new EntregaService(),
+        entregaService: new EntregaService(this.$store.state.account.produtor_id),
         tabs: 'carregando',
         entregas: [],
         entregasCarregando:[],

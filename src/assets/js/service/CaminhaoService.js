@@ -10,8 +10,8 @@ export default class CaminhaoService {
   #caminahoRepository;
   #imageRepository;
 
-  constructor() {
-    this.produtorId = 1; //TODO Buscar o id aqui
+  constructor(produtorId) {
+    this.produtorId = produtorId;
     this.caminahoRepository = new CaminhaoRepository();
     this.imageRepository = new ImageRepository();
   }

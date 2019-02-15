@@ -139,9 +139,9 @@
     },
     data () {
       return {
-        entregaService: new EntregaService(),
-        caminhaoService: new CaminhaoService(),
-        safraCulturaService: new SafraCulturaService(),
+        entregaService: new EntregaService(this.$store.state.account.produtor_id),
+        caminhaoService: new CaminhaoService(this.$store.state.account.produtor_id),
+        safraCulturaService: new SafraCulturaService(this.$store.state.account.produtor_id),
         currentStep: 'escolherCaminhao',
         novaEntrega: new NovaEntrega(),
         isModalOpened: false,

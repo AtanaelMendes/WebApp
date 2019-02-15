@@ -546,13 +546,11 @@
     },
     data () {
       return {
-        entregaService: new EntregaService(),
+        entregaService: new EntregaService(this.$store.state.account.produtor_id),
         carga: true,
         entregaView: null,
         entrega: null,
       }
-    },
-    watch: {
     },
     computed: {
       statusIconColor: function() {
