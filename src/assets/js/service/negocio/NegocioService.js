@@ -158,7 +158,7 @@ export default class NegocioService{
           reject()
         })
       }else{
-        let negociosCulturas = await this.negocioCulturaRepository.getAll();
+        let negociosCulturas = await this.negocioCulturaRepository.getAllOrdered();
 
         negociosCulturas = await Promise.all(negociosCulturas.map(async negocioCultura => {
           let negocio = await this.negocioRepository.getById(negocioCultura.negocio_id);

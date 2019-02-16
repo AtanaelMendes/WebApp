@@ -14,4 +14,8 @@ export default class EntregaCarregandoListRepository{
   getAll(){
     return this.table.toArray();
   }
+
+  clearTable(){
+    return this.table.clear();
+  }
 }

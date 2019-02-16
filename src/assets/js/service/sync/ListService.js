@@ -36,25 +36,31 @@ async function getEntregasView(){
 
   let entregas = entregasCarregando.concat(entregasNoArmazem).concat(entregasEntregue);
 
-  entregas.forEach(entrega => {
-    EntregaAPI.getEntrega(entrega.id, produtorId).then(response => {
-      entregaViewRepository.update(response.data);
+  entregaViewRepository.clearTable().then(()=>{
+    entregas.forEach(entrega => {
+      EntregaAPI.getEntrega(entrega.id, produtorId).then(response => {
+        entregaViewRepository.update(response.data);
+      })
     })
   })
 }
 
 function getEntregasCarregandoList(){
   Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=carregando').then(response => {
-    response.data.forEach(entrega => {
-      entregaCarregandoListRepository.update(entrega);
+    entregaCarregandoListRepository.clearTable().then(()=>{
+      response.data.forEach(entrega => {
+        entregaCarregandoListRepository.update(entrega);
+      })
     })
   })
 }
 
 function getEntregasNoArmazemList(){
   Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=no_armazem').then(response => {
-    response.data.forEach(entrega => {
-      entregaNoArmazemListRepository.update(entrega);
+    entregaNoArmazemListRepository.clearTable().then(()=> {
+      response.data.forEach(entrega => {
+        entregaNoArmazemListRepository.update(entrega);
+      })
     })
   })
 }
@@ -62,8 +68,10 @@ function getEntregasNoArmazemList(){
 
 function getEntregasEntregueList(){
   Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=entregue').then(response => {
-    response.data.forEach(entrega => {
-      entregaEntregueListRepository.update(entrega);
+    entregaEntregueListRepository.clearTable().then(()=> {
+      response.data.forEach(entrega => {
+        entregaEntregueListRepository.update(entrega);
+      })
     })
   })
 }

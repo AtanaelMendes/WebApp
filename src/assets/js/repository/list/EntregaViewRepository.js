@@ -18,4 +18,8 @@ export default class EntregaViewRepository{
   getAll(){
     return this.table.toArray();
   }
+
+  clearTable(){
+    return this.table.clear();
+  }
 }

@@ -14,4 +14,8 @@ export default class EntregaNoArmazemListRepository{
   getAll(){
     return this.table.toArray();
   }
+
+  clearTable(){
+    return this.table.clear();
+  }
 }
