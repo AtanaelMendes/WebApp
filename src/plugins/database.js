@@ -29,6 +29,7 @@ db_resources.version(1).stores({
   negocios_culturas_armazens: 'id, negocio_cultura_id',
   localizacoes: 'id',
   armazens: 'id',
+  entregas_negocios: 'id, negocio_cultura_id, entrega_id',
 });
 
 db_lists.version(1).stores({
