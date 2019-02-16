@@ -10,6 +10,7 @@ import PessoaRepository from "../../repository/reource/PessoaRepository";
 import NegocioCulturaArmazemRepository from "../../repository/reource/NegocioCulturaArmazemRepository";
 import ArmazemRepository from "../../repository/reource/ArmazemRepository";
 import LocalizacaoRepository from "../../repository/reource/LocalizacaoRepository";
+import EntregaNegocioRepository from "../../repository/reource/EntregaNegocioRepository";
 const produtorId = localStorage.getItem('account.produtor_id');
 export default class NegocioService{
   #produtorId;
@@ -22,6 +23,7 @@ export default class NegocioService{
   #negocioCulturaArmazemRepository;
   #armazemRepository;
   #localizacaoRepository;
+  #entregaNegocioRepository;
 
   constructor(produtorId) {
     this.produtorId = produtorId;
@@ -34,6 +36,7 @@ export default class NegocioService{
     this.negocioCulturaArmazemRepository = new NegocioCulturaArmazemRepository();
     this.armazemRepository = new ArmazemRepository();
     this.localizacaoRepository = new LocalizacaoRepository();
+    this.entregaNegocioRepository = new EntregaNegocioRepository();
   }
 
   listTipoNegocios(){
@@ -163,14 +166,24 @@ export default class NegocioService{
           let cultura = await this.culturaRepository.getById(safraCultura.cultura_id);
           let negocioCulturaUnidade = await this.unidadeRepository.getById(negocioCultura.unidade_medida_id);
           let pessoa = await this.pessoaRepository.getById(negocio.pessoa_id);
+          let entregasNegocios = await this.entregaNegocioRepository.getAllByNegocioCulturaId(negocioCultura.id);
+          let quantidadeEntregue = 0;
+          let entregasPendentes = 0;
+
+          for(let entregaNegocio of entregasNegocios){
+            if(entregaNegocio.quantidade === null || entregaNegocio.quantidade === undefined){
+              entregasPendentes++;
+            }
+            quantidadeEntregue += entregaNegocio.quantidade;
+          }
 
           return {
             id: negocioCultura.id,
             prazo_entrega_final: negocioCultura.prazo_entrega_final,
             quantidade: negocioCultura.quantidade,
-            quantidade_entregue: -1,
-            quantidade_restante: -1,
-            entregas_pendentes: -1,
+            quantidade_entregue: quantidadeEntregue,
+            quantidade_restante: negocioCultura.quantidade - quantidadeEntregue,
+            entregas_pendentes: entregasPendentes,
             unidade_medida_sigla: negocioCulturaUnidade.sigla,
             safra_cultura: {
               id: safraCultura.id,

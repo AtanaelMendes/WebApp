@@ -17,8 +17,12 @@ export default class BaseRepository {
 
   update(model){
     if(!(model instanceof this.modelType)){
-      throw new Error('Objeto não é do tipo ${this.modelType}!');
+      throw new Error(`Objeto não é do tipo ${this.modelType.name}!`);
     }
     return this.table.put(model)
+  }
+
+  clearTable(){
+    return this.table.clear();
   }
 }
