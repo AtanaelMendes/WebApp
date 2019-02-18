@@ -174,15 +174,15 @@ export default class NegocioService{
             if(entregaNegocio.quantidade === null || entregaNegocio.quantidade === undefined){
               entregasPendentes++;
             }
-            quantidadeEntregue += entregaNegocio.quantidade;
+            quantidadeEntregue += parseFloat(entregaNegocio.quantidade);
           }
 
           return {
             id: negocioCultura.id,
             prazo_entrega_final: negocioCultura.prazo_entrega_final,
-            quantidade: negocioCultura.quantidade,
+            quantidade: parseFloat(negocioCultura.quantidade),
             quantidade_entregue: quantidadeEntregue,
-            quantidade_restante: negocioCultura.quantidade - quantidadeEntregue,
+            quantidade_restante: parseFloat(negocioCultura.quantidade - quantidadeEntregue),
             entregas_pendentes: entregasPendentes,
             unidade_medida_sigla: negocioCulturaUnidade.sigla,
             safra_cultura: {
