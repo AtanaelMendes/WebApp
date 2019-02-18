@@ -89,26 +89,29 @@ export default class ResourceService{
   }
 
   download(){
-    getCaminhoes();
-    getSafraCulturas();
-    getSafraCulturasTalhoes();
-    getSafras();
-    getCulturas();
-    getAreas();
-    getTalhoes();
-    getUnidades();
-    getClassificacoes();
-    getImages();
-    getEntregas();
-    getCultivares();
-    getMarcas();
-    getNegocios();
-    getNegociosCulturas();
-    getPessoas();
-    getNegociosCulturasArmazens();
-    getLocalizacoes();
-    getArmazens();
-    getEntregasNegocios();
+    return Promise.all([
+      getCaminhoes(),
+      getSafraCulturas(),
+      getSafraCulturasTalhoes(),
+      getSafras(),
+      getCulturas(),
+      getAreas(),
+      getTalhoes(),
+      getUnidades(),
+      getClassificacoes(),
+      getImages(),
+      getEntregas(),
+      getCultivares(),
+      getMarcas(),
+      getNegocios(),
+      getNegociosCulturas(),
+      getPessoas(),
+      getNegociosCulturasArmazens(),
+      getLocalizacoes(),
+      getArmazens(),
+      getEntregasNegocios()
+    ])
+
   }
 }
 
@@ -120,7 +123,7 @@ function getCaminhoes(){
           caminhaoRepository.update(new Caminhao(caminhao));
 
           if(index === (array.length - 1)){
-            resolve();
+            return resolve();
           }
         })
       });
@@ -136,7 +139,7 @@ function getSafraCulturas(){
           safraCulturaRepository.update(new SafraCultura(safraCultura));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -152,7 +155,7 @@ function getSafraCulturasTalhoes(){
           safraCulturaTalhaoRepository.update(new SafraCulturaTalhao(safraCulturaTalhao));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -168,7 +171,7 @@ function getSafras(){
           safraRepository.update(new Safra(safra));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -184,7 +187,7 @@ function getCulturas(){
           culturaRepository.update(new Cultura(cultura));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -200,7 +203,7 @@ function getAreas(){
           areaRepository.update(new Area(area));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -216,7 +219,7 @@ function getTalhoes(){
           talhaoRepository.update(new Talhao(talhao));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -232,7 +235,7 @@ function getUnidades(){
           unidadeRepository.update(new Unidade(unidade));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -248,7 +251,7 @@ function getClassificacoes(){
           classificacaoRepository.update(new Classificacao(classificacao));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -264,7 +267,7 @@ function getImages(){
           imageRepository.update(new Image(image));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -280,7 +283,7 @@ function getEntregas(){
           entregaRepository.update(new Entrega(entrega));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -296,7 +299,7 @@ function getCultivares(){
           cultivarRepository.update(new Cultivar(cultivar));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -312,7 +315,7 @@ function getMarcas(){
           marcaRepository.update(new Marca(marca));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -328,7 +331,7 @@ function getNegocios(){
           negocioRepository.update(new Negocio(negocio));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -344,7 +347,7 @@ function getNegociosCulturas(){
           negocioCulturaRepository.update(new NegocioCultura(negocioCultura));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -360,7 +363,7 @@ function getPessoas(){
           pessoaRepository.update(new Pessoa(pessoa));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -376,7 +379,7 @@ function getNegociosCulturasArmazens(){
           negocioCulturaArmazemRepository.update(new NegocioCulturaArmazem(negocioCulturaArmazem));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -392,7 +395,7 @@ function getLocalizacoes(){
           localizacaoRepository.update(new Localizacao(localizacao));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -408,7 +411,7 @@ function getArmazens(){
           armazemRepository.update(new Armazem(armazem));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })
@@ -424,7 +427,7 @@ function getEntregasNegocios(){
           entregaNegocioRepository.update(new EntregaNegocio(entregaNegocio));
 
           if (index === (array.length - 1)) {
-            resolve();
+            return resolve();
           }
         })
       })

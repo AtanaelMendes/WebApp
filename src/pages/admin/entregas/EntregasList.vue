@@ -386,6 +386,17 @@
       }
     },
     mounted () {
+      if('serviceWorker' in navigator){
+        let self = this;
+        navigator.serviceWorker.addEventListener('message', function(event){ //TODO Verificar se não esta instanciando esse evento toda vez que carrega a pagina
+          switch (event.data) {
+            case 'queueSyncFinished':
+              self.$root.$emit('refreshEntregasList', 'all');
+              break;
+          }
+        }.bind(self));
+      }
+
       new AccountRepository().getFirst().then(account => {
         this.entregaService = new EntregaService(account.produtor_id);
         this.listEntregasCarregando();
@@ -410,6 +421,11 @@
         }
       });
     },
+    destroyed() {
+      if('serviceWorker' in navigator){
+        navigator.serviceWorker.removeEventListener('message');
+      }
+    }
   }
   // this.$q.notify({type: 'negative', message: 'aqui'})
 </script>

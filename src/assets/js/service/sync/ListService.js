@@ -22,44 +22,64 @@ export default class ListService{
   }
 
   download(){
-    getEntregasCarregandoList();
-    getEntregasNoArmazemList();
-    getEntregasEntregueList();
-    getEntregasView();
+    return Promise.all([
+      getEntregasCarregandoList(),
+      getEntregasNoArmazemList(),
+      getEntregasEntregueList(),
+      getEntregasView()
+    ]);
   }
 }
 
-async function getEntregasView(){
-  let entregasCarregando = await entregaCarregandoListRepository.getAll();
-  let entregasNoArmazem = await entregaNoArmazemListRepository.getAll();
-  let entregasEntregue = await entregaEntregueListRepository.getAll();
+function getEntregasView(){
+  return new Promise(async(resolve, reject) => {
+    let entregasCarregando = await entregaCarregandoListRepository.getAll();
+    let entregasNoArmazem = await entregaNoArmazemListRepository.getAll();
+    let entregasEntregue = await entregaEntregueListRepository.getAll();
 
-  let entregas = entregasCarregando.concat(entregasNoArmazem).concat(entregasEntregue);
+    let entregas = entregasCarregando.concat(entregasNoArmazem).concat(entregasEntregue);
 
-  entregaViewRepository.clearTable().then(()=>{
-    entregas.forEach(entrega => {
-      EntregaAPI.getEntrega(entrega.id, produtorId).then(response => {
-        entregaViewRepository.update(response.data);
+    entregaViewRepository.clearTable().then(() => {
+      entregas.forEach((entrega, index, array) => {
+        EntregaAPI.getEntrega(entrega.id, produtorId).then(response => {
+          entregaViewRepository.update(response.data);
+
+          if (index === (array.length - 1)) {
+            return resolve();
+          }
+        })
       })
     })
-  })
+  });
 }
 
 function getEntregasCarregandoList(){
-  Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=carregando').then(response => {
-    entregaCarregandoListRepository.clearTable().then(()=>{
-      response.data.forEach(entrega => {
-        entregaCarregandoListRepository.update(entrega);
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get('produtor/' + produtorId + '/entrega?status=carregando').then(response => {
+      entregaCarregandoListRepository.clearTable().then(() => {
+        response.data.forEach((entrega, index, array) => {
+          entregaCarregandoListRepository.update(entrega);
+
+          if (index === (array.length - 1)) {
+            return resolve();
+          }
+        })
       })
     })
   })
 }
 
 function getEntregasNoArmazemList(){
-  Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=no_armazem').then(response => {
-    entregaNoArmazemListRepository.clearTable().then(()=> {
-      response.data.forEach(entrega => {
-        entregaNoArmazemListRepository.update(entrega);
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get('produtor/' + produtorId + '/entrega?status=no_armazem').then(response => {
+      entregaNoArmazemListRepository.clearTable().then(() => {
+        response.data.forEach((entrega, index, array) => {
+          entregaNoArmazemListRepository.update(entrega);
+
+          if (index === (array.length - 1)) {
+            return resolve();
+          }
+        })
       })
     })
   })
@@ -67,10 +87,16 @@ function getEntregasNoArmazemList(){
 
 
 function getEntregasEntregueList(){
-  Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=entregue').then(response => {
-    entregaEntregueListRepository.clearTable().then(()=> {
-      response.data.forEach(entrega => {
-        entregaEntregueListRepository.update(entrega);
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get('produtor/' + produtorId + '/entrega?status=entregue').then(response => {
+      entregaEntregueListRepository.clearTable().then(() => {
+        response.data.forEach((entrega, index, array) => {
+          entregaEntregueListRepository.update(entrega);
+
+          if (index === (array.length - 1)) {
+            return resolve();
+          }
+        })
       })
     })
   })

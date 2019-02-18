@@ -70,8 +70,12 @@ function sendMessageToClient(client, message) {
 function sendMessageToAllClients(message){
   clients.matchAll({includeUncontrolled: true, type: 'window'}).then(clients => {
     clients.forEach(client => {
-      sendMessageToClient(client, message).then(m => {
-        console.log("SW Received Message: "+m)
+      sendMessageToClient(client, message).then(message => {
+        switch (message) {
+          case 'queueSyncFinished':
+            sendMessageToAllClients(message);
+            break;
+        }
       });
     })
   })

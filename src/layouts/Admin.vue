@@ -170,19 +170,19 @@
 
       this.$on('online', () => {
         //alert('You are online!')
+        this.getAccountInfo();
       });
 
       if('serviceWorker' in navigator){
-
         let self = this;
         navigator.serviceWorker.addEventListener('message', function(event){ //TODO Verificar se não esta instanciando esse evento toda vez que carrega a pagina
           switch (event.data) {
             case 'sync':
-              self.syncService.doSync();
+              self.syncService.doSync().then(()=>{
+                event.ports[0].postMessage("queueSyncFinished");
+              });
               break;
           }
-          //console.log("Client 1 Received Message: " + event.data);
-          //event.ports[0].postMessage("Client 1 Says 'Hello back!'");
         }.bind(self));
       }
 
@@ -214,9 +214,14 @@
         })
       },
       getInitialContent(produtorId){
+        const dismiss = this.$q.notify({message: 'Sincronizando...', timeout:0, color: 'positive', icon: 'mdi-sync'});
         this.syncService.getInitialContent(produtorId);
-        new ResourceService(produtorId).download();
-        new ListService(produtorId).download();
+        new ResourceService(produtorId).download().then(() => {
+          new ListService(produtorId).download().then(() => {
+            console.log('Terminou de baixar tudo')
+            dismiss();
+          })
+        });
       },
       toogleLeftDrawer() {
         this.leftDrawerOpen = !this.leftDrawerOpen;
@@ -233,6 +238,11 @@
           })
         });
 
+      }
+    },
+    destroyed() {
+      if('serviceWorker' in navigator){
+        navigator.serviceWorker.removeEventListener('message');
       }
     }
   }
