@@ -39,6 +39,8 @@ import ArmazemRepository from "../../repository/reource/ArmazemRepository";
 import Armazem from "../../dbModel/Armazem";
 import EntregaNegocioRepository from "../../repository/reource/EntregaNegocioRepository";
 import EntregaNegocio from "../../dbModel/EntregaNegocio";
+import MotoristaRepository from "../../repository/reource/MotoristaRepository";
+import Motorista from "../../dbModel/Motorista";
 
 let path;
 let caminhaoRepository;
@@ -61,6 +63,7 @@ let negocioCulturaArmazemRepository;
 let localizacaoRepository;
 let armazemRepository;
 let entregaNegocioRepository;
+let motoristaRepository;
 
 export default class ResourceService{
 
@@ -86,6 +89,7 @@ export default class ResourceService{
     localizacaoRepository = new LocalizacaoRepository();
     armazemRepository = new ArmazemRepository();
     entregaNegocioRepository = new EntregaNegocioRepository();
+    motoristaRepository = new MotoristaRepository();
   }
 
   download(){
@@ -109,7 +113,8 @@ export default class ResourceService{
       getNegociosCulturasArmazens(),
       getLocalizacoes(),
       getArmazens(),
-      getEntregasNegocios()
+      getEntregasNegocios(),
+      getMotoristas()
     ])
 
   }
@@ -425,6 +430,22 @@ function getEntregasNegocios(){
       entregaNegocioRepository.clearTable().then(() => {
         response.data.forEach((entregaNegocio, index, array) => {
           entregaNegocioRepository.update(new EntregaNegocio(entregaNegocio));
+
+          if (index === (array.length - 1)) {
+            return resolve();
+          }
+        })
+      })
+    })
+  });
+}
+
+function getMotoristas(){
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get(path + '/motorista').then(response => {
+      motoristaRepository.clearTable().then(() => {
+        response.data.forEach((motorista, index, array) => {
+          motoristaRepository.update(new Motorista(motorista));
 
           if (index === (array.length - 1)) {
             return resolve();
