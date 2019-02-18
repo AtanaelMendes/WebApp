@@ -7,6 +7,7 @@ let db_lists = new Dexie('ap_lists');
 db_primary.version(1).stores({
   account_info: '',
   request_queue: '++id, grouper, type, request.url, date',
+  queue_api_id_relations: 'local_id, api_id',
 });
 
 db_resources.version(1).stores({
