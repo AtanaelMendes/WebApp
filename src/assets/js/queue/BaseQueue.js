@@ -30,6 +30,11 @@ export default class BaseQueue{
   getByUrlAndMethod(url, method){
     return this.requestQueueRepository.getByGrouperAndUrlAndMethod(this.grouper, url, method);
   }
+
+  listByType(type){
+    return this.requestQueueRepository.listByType(type);
+  }
+
 }
 
 function registerEvent(){

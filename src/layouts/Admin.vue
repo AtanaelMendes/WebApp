@@ -214,11 +214,10 @@
         })
       },
       getInitialContent(produtorId){
-        const dismiss = this.$q.notify({message: 'Sincronizando...', timeout:0, color: 'positive', icon: 'mdi-sync'});
+        const dismiss = this.$q.notify({message: 'Sincronizando...', timeout:0, color: 'info', icon: 'mdi-sync'});
         this.syncService.getInitialContent(produtorId);
         new ResourceService(produtorId).download().then(() => {
           new ListService(produtorId).download().then(() => {
-            console.log('Terminou de baixar tudo')
             dismiss();
           })
         });

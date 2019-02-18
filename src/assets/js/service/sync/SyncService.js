@@ -47,7 +47,6 @@ function processRequests(itens){
   return new Promise((resolve, reject) => {
     sendRequest(itens[0]).then(response => {
       if(response.status === 200 || response.status === 201) {
-        //TODO Salvar aqui o id da api e apagar depois
         queueApiIdRelationsRepository.save(itens[0].id, response.data.id).then(() => {
 
           requestQueueRepository.deleteById(itens[0].id).then(() => {

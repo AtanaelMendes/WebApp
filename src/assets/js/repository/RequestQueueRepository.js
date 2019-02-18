@@ -26,6 +26,10 @@ export default class RequestQueueRepository {
     return table.where(['grouper', 'request.url']).equals([grouper, url]);
   }
 
+  listByType(type){
+    return table.where({'type':type}).toArray();
+  }
+
   getByGrouperAndUrlAndMethod(grouper, url, method){
     console.log('getByGrouperAndUrlAndMethod');
     //let results = table.where(['grouper', 'request.url']).equals([grouper, url]).filter(item => item.request.method === method);
