@@ -23,4 +23,59 @@ export default {
       })
     });
   },
+
+  addCaminhao(caminhao) {
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.post('/produtor/'+ produtor_id +'/caminhao', caminhao).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
+  updateCaminhao(caminhao) {
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('/produtor/'+ produtor_id +'/caminhao', caminhao).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
+  archiveCaminhao(id) {
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('/produtor/'+ produtor_id +'/caminhao/' + id + '/archive').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
+  restoreCaminhao(id) {
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('/produtor/'+ produtor_id +'/caminhao/'+id+'/restore').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
+  deleteCaminhao(id) {
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.delete('/produtor/'+ produtor_id +'/caminhao/'+id+'/delete').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
 }

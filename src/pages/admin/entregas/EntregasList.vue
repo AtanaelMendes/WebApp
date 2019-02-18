@@ -69,13 +69,7 @@
 
       <!--PAGE STICKY BUTTOMS-->
       <q-page-sticky position="bottom-right" :offset="[35, 35]">
-        <q-btn
-          color="deep-orange"
-          icon="add"
-          @click="novaEntrega()"
-          round
-          size="19px"
-        />
+        <q-btn color="deep-orange" icon="add" @click="novaEntrega()" round size="20px"/>
       </q-page-sticky>
 
     </div>

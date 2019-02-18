@@ -71,14 +71,14 @@
           </q-list>
         </q-card>
       </div>
-
-      <div v-if="caminhoes.length === 0" class="list-empty">
-        <q-icon name="warning" />
-        <span>Nenhum caminhão encontrado</span>
-      </div>
-
     </div>
 
+    <div class="row items-center" style="min-height: 80vh" v-if="caminhoes.length === 0">
+      <div class=" col-12 list-empty">
+        <q-icon name="warning" size="30px"/>
+        <span>Nenhum caminhão encontrado</span>
+      </div>
+    </div>
 
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
       <q-btn round color="deep-orange" @click="addCaminhao" icon="add" size="20px" />
@@ -153,17 +153,23 @@
       archiveCaminhao: function(id){
         caminhaoService.archiveCaminhao(id).then(response =>{
           this.$q.notify({type: 'positive', message: 'Caminhão arquivado com sucesso.'});
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse caminhão.'});
         })
       },
       restoreCaminhao: function(id){
         caminhaoService.restoreCaminhao(id).then(response =>{
           this.$q.notify({type: 'positive', message: 'Caminhão ativado com sucesso.'});
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possível restaurar esse caminhão.'});
         })
       },
       deleteCaminhao: function(id){
         CaminhaoService.deleteCaminhao(id).then(response => {
           this.$q.notify({type: 'positive', message: 'Caminhão excluido com sucesso.'});
           this.listCaminhoes(this.filter);
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possível excluir esse caminhão'});
         })
       },
     },
@@ -178,21 +184,17 @@
 </script>
 
 <style scoped>
-  .no-result{
+  .list-empty{
+    height: 55px;
     text-align: center;
-    padding-top: 150px;
+    padding-top: 15px;
+    color: #8c8c8c;
+    font-weight: bold;
+    font-size: 20px;
   }
-
-  .no-result img{
-    width: 120px;
-    height: auto;
-  }
-
-  .no-result span{
-    display: block;
-    margin-top: 30px;
-    font-size: 25px;
-    font-weight: 300;
-    color: #ababab;
+  .list-empty i{
+    color: #ffb500;
+    font-size: 20px;
+    margin-right: 6px;
   }
 </style>
