@@ -278,7 +278,7 @@
     },
     data () {
       return {
-        entregaService: new EntregaService(),
+        entregaService: null,
         unidadeMedidaService: new UnidadeMedidaService(),
         armazemService: null,
         negocioService: null,
@@ -335,6 +335,7 @@
       },
       openModal: async function(funcao, object = null){
         let account = await new AccountRepository().getFirst();
+        this.entregaService = new EntregaService(account.produtor_id);
         this.armazemService = new ArmazemService(account.produtor_id);
         this.negocioService = new NegocioService(account.produtor_id);
         this.motoristaService = new MotoristaService(account.produtor_id);
@@ -582,12 +583,10 @@
         let entregaId = this.$route.params.id;
         this.$q.loading.show();
         this.entregaService.sendEntregaToArmazen(entregaId, this.sendEntrega.getValues(this.hasNotaFiscal)).then(response => {
-          if(response.status === 200) {
-            this.$q.notify({type: 'positive', message: 'Carga enviada com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshEntregasList', 'all');
-            this.$root.$emit('refreshEntregaView')
-          }
+          this.$q.notify({type: 'positive', message: 'Carga enviada com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshEntregasList', 'all');
+          this.$root.$emit('refreshEntregaView');
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})

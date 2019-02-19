@@ -222,11 +222,13 @@ export default class EntregaService{
     });
   };
 
-  saveEntrega(params){
+  saveEntrega(entrega){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/'+ this.produtorId + '/entrega', params).then(response => {
+      EntregaAPI.saveEntrega(entrega, this.produtorId).then(response => {
         if(response.status === 201) {
-          resolve(response)
+          resolve(response.data)
+        }else{
+          reject();
         }
       }).catch(error => {
         if(!navigator.onLine){
@@ -241,11 +243,21 @@ export default class EntregaService{
 
   sendEntregaToArmazen(entrega_id, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ this.produtorId + '/entrega/'+ entrega_id + '/enviar_entrega', params).then(response => {
-        resolve(response)
+      EntregaAPI.sendToArmazem(params, entrega_id, this.produtorId).then(response => {
+        if (response.status === 200) {
+          resolve(response.data);
+        } else {
+          reject(response);
+        }
       }).catch(error => {
-        reject(error.response)
+        if(!navigator.onLine){
+          this.entregasQueue.add(error.config, EntregasQueue.ENVIAR_PARA_ARMAZEM);
+          resolve();
+        }else{
+          reject(error.response)
+        }
       })
+
     });
   };
 
