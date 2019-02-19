@@ -256,7 +256,6 @@
 </template>
 <script>
   import entregaService from 'assets/js/service/entrega/EntregaService'
-  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import SendEntrega from 'assets/js/model/entrega/SendEntrega'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
@@ -268,6 +267,7 @@
   import MotoristaService from "../../assets/js/service/motorista/MotoristaService";
   import ArmazemService from "../../assets/js/service/armazem/ArmazemService";
   import NotaFiscalService from "../../assets/js/service/NotaFiscalService";
+  import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
 
   export default {
     name: "stepper-send-carga",
@@ -278,6 +278,7 @@
     },
     data () {
       return {
+        unidadeMedidaService: new UnidadeMedidaService(),
         armazemService: null,
         negocioService: null,
         motoristaService: null,
@@ -680,8 +681,8 @@
         this.$refs.stepper.next();
       },
       getUnidadesMedida:function(){
-        unidadeMedidaService.listUnidadesMedida().then(response => {
-          this.unidadesMedida = response.data;
+        this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
+          this.unidadesMedida = unidades;
         })
       },
       parseUnidadesMedida(unidadesMedida){

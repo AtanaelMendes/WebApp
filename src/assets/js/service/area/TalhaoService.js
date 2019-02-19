@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
+import UnidadeMedidaService from "../UnidadeMedidaService";
 
 export default {
   listTalhoes(area_id){
@@ -40,8 +41,8 @@ export default {
   },
   listUnidadesArea: function(){
     return new Promise((resolve, reject) => {
-      unidadeMedidaService.listUnidadesArea().then(response => {
-        let unidadeAreaOptions = response.data.map(unidade => {
+      new UnidadeMedidaService().listUnidadesArea().then(unidades => {
+        let unidadeAreaOptions = unidades.map(unidade => {
           return {
             value: unidade.id,
             label: unidade.nome +(unidade.sigla ? (', '+ unidade.sigla) : ""),

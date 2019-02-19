@@ -503,9 +503,8 @@
   import SafraCulturaTalhao from 'assets/js/model/safra/SafraCulturaTalhao'
   import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
   // outros
-  import talhaoService from 'assets/js/service/area/TalhaoService'
   import areaService from 'assets/js/service/area/AreaService'
-  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
+  import UnidadeMedidaService from "../../../assets/js/service/UnidadeMedidaService";
 
     export default {
       name: "safra-list",
@@ -516,6 +515,7 @@
       },
       data () {
         return {
+          unidadeMedidaService: new UnidadeMedidaService(),
           // SAFRA
           isFavorite: false,
           safras: [],
@@ -741,13 +741,13 @@
 
         // PASSO 2 UNIDADE MEDIDA
         getUnidadesMedida:function(){
-          unidadeMedidaService.listUnidadesMedida().then(response => {
-            this.unidadesMedida = response.data;
+          this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
+            this.unidadesMedida = unidades;
           })
         },
         getUnidadesArea:function(){
-          unidadeMedidaService.listUnidadesArea().then(response => {
-            this.unidadesArea = response.data;
+          this.unidadeMedidaService.listUnidadesArea().then(unidades => {
+            this.unidadesArea = unidades;
           })
         },
         getUnidadeMedidaById: function(id){

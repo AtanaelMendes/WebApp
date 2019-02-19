@@ -101,8 +101,8 @@
   import culturaClassificacaoService from 'assets/js/service/cultura/CulturaClassificacaoService'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
-  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import { debounce } from 'quasar'
+  import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
   export default {
     name: "stepper-new-pesagem",
     components:{
@@ -111,6 +111,7 @@
     },
     data () {
       return {
+        unidadeMedidaService: new UnidadeMedidaService(),
         currentStep: 'dadosDaEntrega',
         pesagem: new Pesagem(),
         isModalOpened: false,
@@ -213,8 +214,8 @@
       },
       getUnidadesMedida:function(){
         this.$q.loading.show();
-        unidadeMedidaService.listUnidadesMedida().then(response => {
-          this.unidadesMedida = response.data;
+        this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
+          this.unidadesMedida = unidades;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();

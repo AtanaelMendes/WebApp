@@ -342,12 +342,12 @@
 
 <script>
   import Fixacao from 'assets/js/model/negocio/Fixacao'
-  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import moedaService from 'assets/js/service/MoedaService'
   import contaBancariaService from 'assets/js/service/ContaBancariaService'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
+  import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
 
   export default {
     name: "NewFixacaoModal",
@@ -357,6 +357,7 @@
     },
     data(){
       return{
+        unidadeMedidaService: new UnidadeMedidaService(),
         negocioService: new NegocioService(this.$account.produtor_id),
         isModalOpened: false,
         currentStep: 'negocioCultura',
@@ -591,8 +592,8 @@
         })
       },
       getUnidadesMedida:function(){
-        unidadeMedidaService.listUnidadesMedida().then(response => {
-          this.unidadesMedida = response.data;
+        this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
+          this.unidadesMedida = unidades;
         })
       },
       getUnidadeMedidaById: function(id){

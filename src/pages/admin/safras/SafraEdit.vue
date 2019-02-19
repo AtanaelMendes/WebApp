@@ -180,9 +180,8 @@
   import Cultura from 'assets/js/model/Cultura'
   import areaService from 'assets/js/service/area/AreaService'
   import talhaoService from 'assets/js/service/area/TalhaoService'
-  import culturaService from 'assets/js/service/safra/CulturaService'
-  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import safraService from 'assets/js/service/safra/SafraService'
+  import UnidadeMedidaService from "../../../assets/js/service/UnidadeMedidaService";
   export default {
     name: "SafraEdit",
     components: {
@@ -192,6 +191,7 @@
     },
     data(){
       return {
+        unidadeMedidaService: new UnidadeMedidaService(),
         currentStep: 'info',
         safra: null,
         areas: [],
@@ -324,8 +324,8 @@
         })
       },
       getUnidadesMedida:function(){
-        unidadeMedidaService.listUnidadesMedida().then(response => {
-          this.unidadesMedida = response.data.map(unidade => {
+        this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
+          this.unidadesMedida = unidades.map(unidade => {
             return {
               label: unidade.nome,
               value: unidade

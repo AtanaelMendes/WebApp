@@ -172,13 +172,13 @@
 <script>
   import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
   import culturaClassificacaoService from 'assets/js/service/cultura/CulturaClassificacaoService'
-  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import Cultura from 'assets/js/model/negocio/Cultura'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
   import AccountRepository from "../../assets/js/repository/AccountRepository";
   import ArmazemService from "../../assets/js/service/armazem/ArmazemService";
+  import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
 
   export default {
     name: "NewCulturaModal",
@@ -202,6 +202,7 @@
     },
     data(){
       return{
+        unidadeMedidaService: new UnidadeMedidaService(),
         armazemService: null,
         negocioService: null,
         isModalOpened: false,
@@ -262,8 +263,8 @@
         }
       },
       getUnidadesMedida:function(){
-        unidadeMedidaService.listUnidadesMedida().then(response => {
-          this.unidadesMedida = response.data;
+        this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
+          this.unidadesMedida = unidades;
         })
       },
       toggleArmazem: function(armazem){
