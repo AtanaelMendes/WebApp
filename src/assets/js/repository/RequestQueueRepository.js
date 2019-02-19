@@ -31,15 +31,7 @@ export default class RequestQueueRepository {
   }
 
   getByGrouperAndUrlAndMethod(grouper, url, method){
-    console.log('getByGrouperAndUrlAndMethod');
-    //let results = table.where(['grouper', 'request.url']).equals([grouper, url]).filter(item => item.request.method === method);
-    let results = table.where({grouper: grouper, 'request.url': url}).filter(item => item.request.method === method);
-    //let results = table.where({grouper: grouper});
-
-    console.log('results');
-    console.log(results);
-
-    return results;
+    return table.where({grouper: grouper, 'request.url': url}).filter(item => item.request.method === method);
   }
 
   getAllBy(){

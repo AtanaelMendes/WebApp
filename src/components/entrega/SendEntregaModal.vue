@@ -342,7 +342,7 @@
         this.notaFiscalService = new NotaFiscalService(account.produtor_id);
 
         this.funcao = funcao;
-        this.sendEntrega = new SendEntrega()
+        this.sendEntrega = new SendEntrega();
         switch (funcao) {
           case 'sendEntrega':
             this.currentStep = 'negocio';

@@ -69,7 +69,11 @@ export default class EntregaService{
       });
 
       let url = Vue.prototype.$axios.defaults.baseURL + 'produtor/' + this.produtorId + '/entrega';
-      let queueItens = await new EntregasQueue().getByUrlAndMethod(url, 'post').toArray();
+      let queueItens = await this.entregasQueue.getByUrlAndMethod(url, 'post').toArray();
+
+      queueItens = await queueItens.filter( item => {
+        return this.entregasQueue.getByUrlAndMethod(url + '/queue::' + item.id + '/enviar_entrega', 'put').toArray().length === 0;
+      });
 
       let queueEntregas = await Promise.all(queueItens.map(async queueItem => {
         let caminhao = await this.caminhaoRepository.getById(queueItem.request.body.caminhao_id);
@@ -97,8 +101,8 @@ export default class EntregaService{
         return entregaItem;
 
       }));
-      resolve(entregas.concat(queueEntregas));
 
+      resolve(entregas.concat(queueEntregas));
     });
   };
 
