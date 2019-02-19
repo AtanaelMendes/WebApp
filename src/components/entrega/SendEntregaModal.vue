@@ -399,7 +399,7 @@
         this.listNegocioCulturas();
         this.listMotoristas();
         this.getUnidadesMedida();
-        this.listNotasFiscaisSeries(1)
+        this.listNotasFiscaisSeries()
       },
       closeModal: function(){
         this.isModalOpened = false;
@@ -694,8 +694,8 @@
           }
         })
       },
-      listNotasFiscaisSeries(pessoa_id){
-        this.notaFiscalService.listSeries(pessoa_id).then(series => {
+      listNotasFiscaisSeries(){
+        this.notaFiscalService.listSeries().then(series => {
           this.notasFiscaisSeries = series;
         })
       },
