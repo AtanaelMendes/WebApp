@@ -32,6 +32,7 @@ db_resources.version(1).stores({
   armazens: 'id',
   entregas_negocios: 'id, negocio_cultura_id, entrega_id',
   motoristas: 'id',
+  notas_fiscais_series: 'id',
 });
 
 db_lists.version(1).stores({

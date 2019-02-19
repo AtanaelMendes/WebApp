@@ -1,10 +1,13 @@
 import NotaFiscalAPI from "../api/NotaFiscalAPI";
+import NotaFiscalSerieRepository from "../repository/resource/NotaFiscalSerieRepository";
 
 export default class NotaFiscalService {
   #produtorId;
+  #notaFiscalSerieRepository;
 
   constructor(produtor_id) {
     this.produtorId = produtor_id;
+    this.notaFiscalSerieRepository = new NotaFiscalSerieRepository();
   }
 
   getNotaFiscalItemById(id){
@@ -19,11 +22,19 @@ export default class NotaFiscalService {
 
   listSeries(){
     return new Promise((resolve, reject) => {
-      NotaFiscalAPI.listSeries(this.produtorId).then(response => {
-        resolve(response.data)
-      }).catch(error => {
-        reject(error)
-      })
+      if(navigator.onLine) {
+        NotaFiscalAPI.listSeries(this.produtorId).then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error);
+        })
+      }else{
+        this.notaFiscalSerieRepository.getAll().then(notasFiscaisSeries => {
+          resolve(notasFiscaisSeries);
+        }).catch(error => {
+          reject(error);
+        })
+      }
     });
   }
 }

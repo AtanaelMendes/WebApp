@@ -41,6 +41,8 @@ import EntregaNegocioRepository from "../../repository/resource/EntregaNegocioRe
 import EntregaNegocio from "../../dbModel/EntregaNegocio";
 import MotoristaRepository from "../../repository/resource/MotoristaRepository";
 import Motorista from "../../dbModel/Motorista";
+import NotaFiscalSerieRepository from "../../repository/resource/NotaFiscalSerieRepository";
+import NotaFiscalSerie from "../../dbModel/NotaFiscalSerie";
 
 let path;
 let caminhaoRepository;
@@ -64,6 +66,7 @@ let localizacaoRepository;
 let armazemRepository;
 let entregaNegocioRepository;
 let motoristaRepository;
+let notaFiscalSerieRepository;
 
 export default class ResourceService{
 
@@ -90,6 +93,7 @@ export default class ResourceService{
     armazemRepository = new ArmazemRepository();
     entregaNegocioRepository = new EntregaNegocioRepository();
     motoristaRepository = new MotoristaRepository();
+    notaFiscalSerieRepository = new NotaFiscalSerieRepository();
   }
 
   download(){
@@ -114,7 +118,8 @@ export default class ResourceService{
       getLocalizacoes(),
       getArmazens(),
       getEntregasNegocios(),
-      getMotoristas()
+      getMotoristas(),
+      getNotasFiscaisSeries()
     ])
 
   }
@@ -446,6 +451,22 @@ function getMotoristas(){
       motoristaRepository.clearTable().then(() => {
         response.data.forEach((motorista, index, array) => {
           motoristaRepository.update(new Motorista(motorista));
+
+          if (index === (array.length - 1)) {
+            return resolve();
+          }
+        })
+      })
+    })
+  });
+}
+
+function getNotasFiscaisSeries(){
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get(path + '/nota_fiscal_serie').then(response => {
+      notaFiscalSerieRepository.clearTable().then(() => {
+        response.data.forEach((notaFiscalSerie, index, array) => {
+          notaFiscalSerieRepository.update(new NotaFiscalSerie(notaFiscalSerie));
 
           if (index === (array.length - 1)) {
             return resolve();
