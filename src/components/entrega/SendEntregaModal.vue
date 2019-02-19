@@ -255,7 +255,6 @@
   </q-modal>
 </template>
 <script>
-  import entregaService from 'assets/js/service/entrega/EntregaService'
   import SendEntrega from 'assets/js/model/entrega/SendEntrega'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
@@ -268,6 +267,7 @@
   import ArmazemService from "../../assets/js/service/armazem/ArmazemService";
   import NotaFiscalService from "../../assets/js/service/NotaFiscalService";
   import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
+  import EntregaService from "../../assets/js/service/entrega/EntregaService";
 
   export default {
     name: "stepper-send-carga",
@@ -278,6 +278,7 @@
     },
     data () {
       return {
+        entregaService: new EntregaService(),
         unidadeMedidaService: new UnidadeMedidaService(),
         armazemService: null,
         negocioService: null,
@@ -580,7 +581,7 @@
       saveSendEntrega: function(){
         let entregaId = this.$route.params.id;
         this.$q.loading.show();
-        entregaService.sendEntregaToArmazen(entregaId, this.sendEntrega.getValues(this.hasNotaFiscal)).then(response => {
+        this.entregaService.sendEntregaToArmazen(entregaId, this.sendEntrega.getValues(this.hasNotaFiscal)).then(response => {
           if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Carga enviada com sucesso'});
             this.closeModal();
@@ -596,7 +597,7 @@
       addNegocioToEntrega: function(){
         let entregaId = this.$route.params.id;
         this.$q.loading.show();
-        entregaService.addNegocioToEntrega(entregaId, this.sendEntrega.getValues(this.hasNotaFiscal)).then(response => {
+        this.entregaService.addNegocioToEntrega(entregaId, this.sendEntrega.getValues(this.hasNotaFiscal)).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Negócio adicionado com sucesso'});
             this.closeModal();
@@ -615,7 +616,7 @@
           motorista_nome: null
         };
         this.$q.loading.show();
-        entregaService.updateMotorista(entregaId, param).then(response => {
+        this.entregaService.updateMotorista(entregaId, param).then(response => {
           if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Motorista atualizado com sucesso'});
             this.closeModal();
@@ -633,7 +634,7 @@
           armazem_id: this.sendEntrega.armazemId,
         };
         this.$q.loading.show();
-        entregaService.updateArmazem(entregaId, param).then(response => {
+        this.entregaService.updateArmazem(entregaId, param).then(response => {
           if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Armazem atualizado com sucesso'});
             this.closeModal();
@@ -649,7 +650,7 @@
         let entregaId = this.$route.params.id;
 
         this.$q.loading.show();
-        entregaService.addNotaFiscalToNegocio(entregaId, this.selectedNegocio.id, this.sendEntrega.getValues()).then(response => {
+        this.entregaService.addNotaFiscalToNegocio(entregaId, this.selectedNegocio.id, this.sendEntrega.getValues()).then(response => {
           if(response.status === 201) {
             this.$q.notify({type: 'positive', message: 'Nota criada com sucesso'});
             this.closeModal();
@@ -665,7 +666,7 @@
         let entregaId = this.$route.params.id;
 
         this.$q.loading.show();
-        entregaService.updateNotaFiscalItemOfNegocio(entregaId, this.selectedNota.id, this.sendEntrega.getValues()).then(response => {
+        this.entregaService.updateNotaFiscalItemOfNegocio(entregaId, this.selectedNota.id, this.sendEntrega.getValues()).then(response => {
           if(response.status === 200) {
             this.$q.notify({type: 'positive', message: 'Nota atualizada com sucesso'});
             this.closeModal();
