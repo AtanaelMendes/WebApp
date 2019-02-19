@@ -1,16 +1,16 @@
 import Vue from 'vue'
 import SafraCulturaAPI from "../../api/SafraCulturaAPI";
-import SafraCulturaRepository from "../../repository/reource/SafraCulturaRepository";
+import SafraCulturaRepository from "../../repository/resource/SafraCulturaRepository";
 import SafraCulturaListitem from "../../model/safra/SafraCulturaListitem";
-import CulturaRepository from "../../repository/reource/CulturaRepository";
-import ImageRepository from "../../repository/reource/ImageRepository";
-import SafraRepository from "../../repository/reource/SafraRepository";
-import SafraCulturaTalhaoRepository from "../../repository/reource/SafraCulturaTalhaoRepository";
+import CulturaRepository from "../../repository/resource/CulturaRepository";
+import ImageRepository from "../../repository/resource/ImageRepository";
+import SafraRepository from "../../repository/resource/SafraRepository";
+import SafraCulturaTalhaoRepository from "../../repository/resource/SafraCulturaTalhaoRepository";
 import SafraCulturaTalhaoItem from "../../model/safra/SafraCulturaTalhaoItem";
-import TalhaoRepository from "../../repository/reource/TalhaoRepository";
-import AreaRepository from "../../repository/reource/AreaRepository";
-import CultivarRepository from "../../repository/reource/CultivarRepository";
-import MarcaRepository from "../../repository/reource/MarcaRepository";
+import TalhaoRepository from "../../repository/resource/TalhaoRepository";
+import AreaRepository from "../../repository/resource/AreaRepository";
+import CultivarRepository from "../../repository/resource/CultivarRepository";
+import MarcaRepository from "../../repository/resource/MarcaRepository";
 export default class SafraCulturaService {
   #produtorId;
   #safraCulturaRepository;

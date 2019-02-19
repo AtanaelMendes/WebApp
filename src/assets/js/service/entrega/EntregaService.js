@@ -2,20 +2,20 @@ import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
 import EntregasQueue from "../../queue/EntregasQueue";
 import EntregaCarregandoListItem from "../../model/entrega/EntregaCarregandoListItem";
-import CaminhaoRepository from "../../repository/reource/CaminhaoRepository";
-import SafraCulturaTalhaoRepository from "../../repository/reource/SafraCulturaTalhaoRepository";
-import ImageRepository from "../../repository/reource/ImageRepository";
-import AreaRepository from "../../repository/reource/AreaRepository";
-import SafraRepository from "../../repository/reource/SafraRepository";
-import CulturaRepository from "../../repository/reource/CulturaRepository";
-import TalhaoRepository from "../../repository/reource/TalhaoRepository";
-import SafraCulturaRepository from "../../repository/reource/SafraCulturaRepository";
+import CaminhaoRepository from "../../repository/resource/CaminhaoRepository";
+import SafraCulturaTalhaoRepository from "../../repository/resource/SafraCulturaTalhaoRepository";
+import ImageRepository from "../../repository/resource/ImageRepository";
+import AreaRepository from "../../repository/resource/AreaRepository";
+import SafraRepository from "../../repository/resource/SafraRepository";
+import CulturaRepository from "../../repository/resource/CulturaRepository";
+import TalhaoRepository from "../../repository/resource/TalhaoRepository";
+import SafraCulturaRepository from "../../repository/resource/SafraCulturaRepository";
 import EntregaCarregandoListRepository from "../../repository/list/EntregaCarregandoListRepository";
 import EntregaNoArmazemListRepository from "../../repository/list/EntregaNoArmazemListRepository";
 import EntregaEntregueListRepository from "../../repository/list/EntregaEntregueListRepository";
 import EntregaAPI from "../../api/EntregaAPI";
 import EntregaViewRepository from "../../repository/list/EntregaViewRepository";
-import UnidadeRepository from "../../repository/reource/UnidadeRepository";
+import UnidadeRepository from "../../repository/resource/UnidadeRepository";
 
 export default class EntregaService{
   #entregasQueue;

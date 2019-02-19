@@ -1,16 +1,16 @@
 import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
 import NegocioCulturaAPI from "../../api/NegocioCulturaAPI";
-import NegocioRepository from "../../repository/reource/NegocioRepository";
-import NegocioCulturaRepository from "../../repository/reource/NegocioCulturaRepository";
-import UnidadeRepository from "../../repository/reource/UnidadeRepository";
-import SafraCulturaRepository from "../../repository/reource/SafraCulturaRepository";
-import CulturaRepository from "../../repository/reource/CulturaRepository";
-import PessoaRepository from "../../repository/reource/PessoaRepository";
-import NegocioCulturaArmazemRepository from "../../repository/reource/NegocioCulturaArmazemRepository";
-import ArmazemRepository from "../../repository/reource/ArmazemRepository";
-import LocalizacaoRepository from "../../repository/reource/LocalizacaoRepository";
-import EntregaNegocioRepository from "../../repository/reource/EntregaNegocioRepository";
+import NegocioRepository from "../../repository/resource/NegocioRepository";
+import NegocioCulturaRepository from "../../repository/resource/NegocioCulturaRepository";
+import UnidadeRepository from "../../repository/resource/UnidadeRepository";
+import SafraCulturaRepository from "../../repository/resource/SafraCulturaRepository";
+import CulturaRepository from "../../repository/resource/CulturaRepository";
+import PessoaRepository from "../../repository/resource/PessoaRepository";
+import NegocioCulturaArmazemRepository from "../../repository/resource/NegocioCulturaArmazemRepository";
+import ArmazemRepository from "../../repository/resource/ArmazemRepository";
+import LocalizacaoRepository from "../../repository/resource/LocalizacaoRepository";
+import EntregaNegocioRepository from "../../repository/resource/EntregaNegocioRepository";
 const produtorId = localStorage.getItem('account.produtor_id');
 export default class NegocioService{
   #produtorId;

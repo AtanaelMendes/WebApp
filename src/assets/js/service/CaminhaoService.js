@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
 import CaminhaoAPI from "../api/CaminhaoAPI";
-import CaminhaoRepository from "../repository/reource/CaminhaoRepository";
+import CaminhaoRepository from "../repository/resource/CaminhaoRepository";
 import CaminhaoListItem from "../model/CaminhaoListItem";
-import ImageRepository from "../repository/reource/ImageRepository";
+import ImageRepository from "../repository/resource/ImageRepository";
 
 export default class CaminhaoService {
   #produtorId;

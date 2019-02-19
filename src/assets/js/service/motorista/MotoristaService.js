@@ -1,6 +1,6 @@
 import { Loading, Dialog } from 'quasar'
 import MotoristaAPI from "../../api/MotoristaAPI";
-import MotoristaRepository from "../../repository/reource/MotoristaRepository";
+import MotoristaRepository from "../../repository/resource/MotoristaRepository";
 
 export default class MotoristaService{
   #produtorId;

@@ -1,5 +1,5 @@
 import UnidadeAPI from "../api/UnidadeAPI";
-import UnidadeRepository from "../repository/reource/UnidadeRepository";
+import UnidadeRepository from "../repository/resource/UnidadeRepository";
 
 export default class UnidadeMedidaService{
   #unidadeRepository;
