@@ -137,8 +137,10 @@ export default class EntregaService{
 
   getEntregaById(id){
     return new Promise(async(resolve, reject) => {
-      if(id.charAt(0) === 'q'){
-        let entregaQueue = await this.entregasQueue.getById(parseInt(id.substr(1)));
+      if(id.match("(queue::([0-9]*))")){
+        let queueId = parseInt(id.match("(queue::([0-9]*))")[2]);
+
+        let entregaQueue = await this.entregasQueue.getById(queueId);
         let caminhao = await this.caminhaoRepository.getById(entregaQueue.request.body.caminhao_id);
         let caminhaoImagem = await this.imageRepository.getById(caminhao.image_id);
         let safraCulturaTalhao = await this.safraCulturaTalhaoRepository.getById(entregaQueue.request.body.safra_cultura_talhao_id);
@@ -167,8 +169,6 @@ export default class EntregaService{
             }
           }
         ];
-
-
 
         let entrega = {
           id: entregaQueue.id,

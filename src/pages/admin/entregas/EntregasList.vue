@@ -355,7 +355,7 @@
         })
       },
       viewCarga: function (entrega) {
-        let id = (entrega.isInQueueState ? "q" : "") + entrega.id;
+        let id = entrega.isInQueueState ? `queue::${entrega.id}` : entrega.id;
         this.$router.push({name: 'entrega_view', params: {id:id}});
       },
       deleteEntrega(id){
