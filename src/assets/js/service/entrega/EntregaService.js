@@ -16,6 +16,10 @@ import EntregaEntregueListRepository from "../../repository/list/EntregaEntregue
 import EntregaAPI from "../../api/EntregaAPI";
 import EntregaViewRepository from "../../repository/list/EntregaViewRepository";
 import UnidadeRepository from "../../repository/resource/UnidadeRepository";
+import EntregaNoArmazemListItem from "../../model/entrega/EntregaNoArmazemListItem";
+import ArmazemRepository from "../../repository/resource/ArmazemRepository";
+import MotoristaRepository from "../../repository/resource/MotoristaRepository";
+import LocalizacaoRepository from "../../repository/resource/LocalizacaoRepository";
 
 export default class EntregaService{
   #entregasQueue;
@@ -33,6 +37,9 @@ export default class EntregaService{
   #entregaEntregueListRepository;
   #entreaViewRepository;
   #unidadeRepository;
+  #armazemRepository;
+  #motoristaRepository;
+  #localizacaoRepository;
 
   constructor(produtorId) {
     this.produtorId = produtorId;
@@ -50,6 +57,9 @@ export default class EntregaService{
     this.entregaEntregueListRepository = new EntregaEntregueListRepository();
     this.entreaViewRepository = new EntregaViewRepository();
     this.unidadeRepository = new UnidadeRepository();
+    this.armazemRepository = new ArmazemRepository();
+    this.motoristaRepository = new MotoristaRepository();
+    this.localizacaoRepository = new LocalizacaoRepository();
   }
 
   listEntregasCarregando(filter = null){
@@ -68,14 +78,13 @@ export default class EntregaService{
         return new EntregaCarregandoListItem(entrega)
       });
 
-      let url = Vue.prototype.$axios.defaults.baseURL + 'produtor/' + this.produtorId + '/entrega';
-      let queueItens = await this.entregasQueue.getByUrlAndMethod(url, 'post').toArray();
+      let queueItens = await this.entregasQueue.listByType(EntregasQueue.NOVA_ENTREGA);
 
       console.log('queueItens');
       console.log(queueItens.length);
 
-
       for(let i = 0; i < queueItens.length; i++){
+        let url = Vue.prototype.$axios.defaults.baseURL + 'produtor/' + this.produtorId + '/entrega';
         let results = await this.entregasQueue.getByUrlAndMethod(url + '/queue::' + queueItens[i].id + '/enviar_entrega', 'put').toArray();
         console.log('results');
         console.log(results);
@@ -131,7 +140,47 @@ export default class EntregaService{
         entregas = await this.entregaNoArmazemListRepository.getAll();
       }
 
-      resolve(entregas)
+      entregas = entregas.map(entrega => {
+        return new EntregaNoArmazemListItem(entrega)
+      });
+
+      let queueItens = await this.entregasQueue.listByType(EntregasQueue.ENVIAR_PARA_ARMAZEM);
+
+      console.log('listEntregasNoArmazem.queueItens');
+      console.log(queueItens.length);
+
+      let queueEntregas = await Promise.all(queueItens.map(async queueItem => {
+        let url = queueItem.request.url;
+        let entregaId = parseInt(url.match("(queue::([0-9]*))")[2]);
+        let entregaQueue = await this.entregasQueue.getById(entregaId);
+        let caminhaoId = entregaQueue.request.body.caminhao_id;
+        let caminhao = await this.caminhaoRepository.getById(caminhaoId);
+        let caminhaoImage = await this.imageRepository.getById(caminhao.image_id);
+        let armazem = await this.armazemRepository.getById(queueItem.request.body.armazem_id);
+        let motorista = await this.motoristaRepository.getById(queueItem.request.body.motorista_id);
+        let motoristaImage = await this.imageRepository.getById(motorista.image_id);
+
+        let localizacao = await this.localizacaoRepository.getById(armazem.localizacao_id);
+        let endereco = localizacao.endereco + ', ' + localizacao.numero + '  ' + localizacao.bairro + ' - ' + localizacao.cidade.nome + '/' + localizacao.cidade.estado.nome;
+
+        let entregaItem = new EntregaNoArmazemListItem();
+        entregaItem.id = queueItem.id;
+        entregaItem.isInQueueState = true;
+        entregaItem.caminhao.nome = caminhao.nome;
+        entregaItem.caminhao.placa = caminhao.placa;
+        entregaItem.caminhao.image_file_name = caminhaoImage.file_name;
+        entregaItem.armazem.nome = armazem.nome;
+        entregaItem.armazem.localizacao = endereco;
+        entregaItem.motorista.nome = motorista.nome;
+        entregaItem.motorista.image_file_name = motoristaImage.file_name;
+        entregaItem.envio_armazem = queueItem.date;
+
+
+        return entregaItem;
+
+      }));
+
+      resolve(entregas.concat(queueEntregas));
     });
 
   };
@@ -154,7 +203,7 @@ export default class EntregaService{
 
   getEntregaById(id){
     return new Promise(async(resolve, reject) => {
-      if(id.match("(queue::([0-9]*))")){
+      if(typeof id === 'string' && id.match("(queue::([0-9]*))")){
         let queueId = parseInt(id.match("(queue::([0-9]*))")[2]);
 
         let entregaQueue = await this.entregasQueue.getById(queueId);
