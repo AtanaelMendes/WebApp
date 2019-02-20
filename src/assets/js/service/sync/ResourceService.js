@@ -43,6 +43,8 @@ import MotoristaRepository from "../../repository/resource/MotoristaRepository";
 import Motorista from "../../dbModel/Motorista";
 import NotaFiscalSerieRepository from "../../repository/resource/NotaFiscalSerieRepository";
 import NotaFiscalSerie from "../../dbModel/NotaFiscalSerie";
+import CfopRepository from "../../repository/resource/CfopRepository";
+import Cfop from "../../dbModel/Cfop";
 
 let path;
 let caminhaoRepository;
@@ -67,6 +69,7 @@ let armazemRepository;
 let entregaNegocioRepository;
 let motoristaRepository;
 let notaFiscalSerieRepository;
+let cfopRepository;
 
 export default class ResourceService{
 
@@ -94,6 +97,7 @@ export default class ResourceService{
     entregaNegocioRepository = new EntregaNegocioRepository();
     motoristaRepository = new MotoristaRepository();
     notaFiscalSerieRepository = new NotaFiscalSerieRepository();
+    cfopRepository = new CfopRepository();
   }
 
   download(){
@@ -119,7 +123,8 @@ export default class ResourceService{
       getArmazens(),
       getEntregasNegocios(),
       getMotoristas(),
-      getNotasFiscaisSeries()
+      getNotasFiscaisSeries(),
+      getCfops()
     ])
 
   }
@@ -467,6 +472,22 @@ function getNotasFiscaisSeries(){
       notaFiscalSerieRepository.clearTable().then(() => {
         response.data.forEach((notaFiscalSerie, index, array) => {
           notaFiscalSerieRepository.update(new NotaFiscalSerie(notaFiscalSerie));
+
+          if (index === (array.length - 1)) {
+            return resolve();
+          }
+        })
+      })
+    })
+  });
+}
+
+function getCfops(){
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get(path + '/cfop').then(response => {
+      cfopRepository.clearTable().then(() => {
+        response.data.forEach((cfop, index, array) => {
+          cfopRepository.update(new Cfop(cfop));
 
           if (index === (array.length - 1)) {
             return resolve();
