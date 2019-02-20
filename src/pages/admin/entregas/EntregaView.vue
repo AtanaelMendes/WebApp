@@ -679,6 +679,8 @@
       },
       getEntrega: function(){
         this.$q.loading.show();
+        console.log('id')
+        console.log(this.$route.params.id)
         this.entregaService.getEntregaById(this.$route.params.id).then(entrega => {
           this.$q.loading.hide();
           this.entrega = entrega;

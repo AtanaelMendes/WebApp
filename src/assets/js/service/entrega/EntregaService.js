@@ -20,6 +20,13 @@ import EntregaNoArmazemListItem from "../../model/entrega/EntregaNoArmazemListIt
 import ArmazemRepository from "../../repository/resource/ArmazemRepository";
 import MotoristaRepository from "../../repository/resource/MotoristaRepository";
 import LocalizacaoRepository from "../../repository/resource/LocalizacaoRepository";
+import CfopRepository from "../../repository/resource/CfopRepository";
+import NotaFiscalSerieRepository from "../../repository/resource/NotaFiscalSerieRepository";
+import NegocioCulturaRepository from "../../repository/resource/NegocioCulturaRepository";
+import NegocioRepository from "../../repository/resource/NegocioRepository";
+import PessoaRepository from "../../repository/resource/PessoaRepository";
+import TipoNegocioRepository from "../../repository/resource/TipoNegocioRepository";
+import NegocioCulturaArmazemRepository from "../../repository/resource/NegocioCulturaArmazemRepository";
 
 export default class EntregaService{
   #entregasQueue;
@@ -40,6 +47,13 @@ export default class EntregaService{
   #armazemRepository;
   #motoristaRepository;
   #localizacaoRepository;
+  #cfopRepository;
+  #notaFiscalSerieRepository;
+  #negocioCulturaRepository;
+  #negocioRepository;
+  #tipoNegocioRepository;
+  #pessoaRepository;
+  #negocioCulturaArmazemRepository;
 
   constructor(produtorId) {
     this.produtorId = produtorId;
@@ -60,6 +74,13 @@ export default class EntregaService{
     this.armazemRepository = new ArmazemRepository();
     this.motoristaRepository = new MotoristaRepository();
     this.localizacaoRepository = new LocalizacaoRepository();
+    this.cfopRepository = new CfopRepository();
+    this.notaFiscalSerieRepository = new NotaFiscalSerieRepository();
+    this.negocioCulturaRepository = new NegocioCulturaRepository();
+    this.negocioRepository = new NegocioRepository();
+    this.tipoNegocioRepository = new TipoNegocioRepository();
+    this.pessoaRepository = new PessoaRepository();
+    this.negocioCulturaArmazemRepository = new NegocioCulturaArmazemRepository();
   }
 
   listEntregasCarregando(filter = null){
@@ -80,9 +101,6 @@ export default class EntregaService{
 
       let queueItens = await this.entregasQueue.listByType(EntregasQueue.NOVA_ENTREGA);
 
-      console.log('queueItens');
-      console.log(queueItens.length);
-
       for(let i = 0; i < queueItens.length; i++){
         let url = Vue.prototype.$axios.defaults.baseURL + 'produtor/' + this.produtorId + '/entrega';
         let results = await this.entregasQueue.getByUrlAndMethod(url + '/queue::' + queueItens[i].id + '/enviar_entrega', 'put').toArray();
@@ -93,9 +111,6 @@ export default class EntregaService{
           queueItens.splice(i, 1);
         }
       }
-
-      console.log('newQueueItens');
-      console.log(queueItens.length);
 
       let queueEntregas = await Promise.all(queueItens.map(async queueItem => {
         let caminhao = await this.caminhaoRepository.getById(queueItem.request.body.caminhao_id);
@@ -207,9 +222,53 @@ export default class EntregaService{
         let queueId = parseInt(id.match("(queue::([0-9]*))")[2]);
 
         let entregaQueue = await this.entregasQueue.getById(queueId);
-        let caminhao = await this.caminhaoRepository.getById(entregaQueue.request.body.caminhao_id);
+        let entregaCarregandoQueue = null;
+        let status = null;
+        let caminhao = null;
+        let safraCulturaTalhao = null;
+        let motorista = null;
+        let motoristaImage = null;
+        let armazem = null;
+        let cfop = null;
+        let notaFiscalSerie = null;
+        let negocioCultura = null;
+        let negocioCulturaUnidadeMedida = null;
+        let negocio = null;
+        let tipoNegocio = null;
+        let pessoaNegocio = null;
+        let negocioCulturaSafraCultura = null;
+        let negocioCulturaSafraCulturaCultura = null;
+        let negocioCulturaArmazens = null;
+
+        switch (entregaQueue.type) {
+          case EntregasQueue.NOVA_ENTREGA:
+            status = 'Carregando';
+            caminhao = await this.caminhaoRepository.getById(entregaQueue.request.body.caminhao_id);
+            safraCulturaTalhao = await this.safraCulturaTalhaoRepository.getById(entregaQueue.request.body.safra_cultura_talhao_id);
+            break;
+          case EntregasQueue.ENVIAR_PARA_ARMAZEM:
+            status = 'No Armazem';
+            let entregaCarregandoQueueId = parseInt(entregaQueue.request.url.match("(queue::([0-9]*))")[2]);
+            entregaCarregandoQueue = await this.entregasQueue.getById(entregaCarregandoQueueId);
+            caminhao = await this.caminhaoRepository.getById(entregaCarregandoQueue.request.body.caminhao_id);
+            safraCulturaTalhao = await this.safraCulturaTalhaoRepository.getById(entregaCarregandoQueue.request.body.safra_cultura_talhao_id);
+            motorista = await this.motoristaRepository.getById(entregaQueue.request.body.motorista_id);
+            motoristaImage = await this.imageRepository.getById(motorista.image_id);
+            armazem = await this.armazemRepository.getById(entregaQueue.request.body.armazem_id);
+            cfop = await this.cfopRepository.getById(entregaQueue.request.body.nota_fiscal.cfop_id);
+            notaFiscalSerie = await this.notaFiscalSerieRepository.getById(entregaQueue.request.body.nota_fiscal.nota_fiscal_serie_id);
+            negocioCultura = await this.negocioCulturaRepository.getById(entregaQueue.request.body.negocio_cultura_id);
+            negocioCulturaUnidadeMedida = await this.unidadeRepository.getById(negocioCultura.unidade_medida_id);
+            negocio = await this.negocioRepository.getById(negocioCultura.negocio_id);
+            tipoNegocio = await this.tipoNegocioRepository.getById(negocio.tipo_negocio_id);
+            pessoaNegocio = await this.pessoaRepository.getById(negocio.pessoa_id);
+            negocioCulturaSafraCultura = await this.safraCulturaRepository.getById(negocioCultura.safra_cultura_id);
+            negocioCulturaSafraCulturaCultura = await this.culturaRepository.getById(negocioCulturaSafraCultura.cultura_id);
+            negocioCulturaArmazens = await this.negocioCulturaArmazemRepository.getAllByNegocioCultura(negocioCultura.id);
+            break;
+        }
+
         let caminhaoImagem = await this.imageRepository.getById(caminhao.image_id);
-        let safraCulturaTalhao = await this.safraCulturaTalhaoRepository.getById(entregaQueue.request.body.safra_cultura_talhao_id);
         let talhao = await this.talhaoRepository.getById(safraCulturaTalhao.talhao_id);
         let talhaoImagem = await this.imageRepository.getById(talhao.image_id);
         let area = await this.areaRepository.getById(talhao.area_id);
@@ -222,9 +281,9 @@ export default class EntregaService{
 
         let talhoes = [
           {
-            id: 1,
-            percentual: 100,
-            quantidade: 10,
+            id: -1,
+            percentual: -1,
+            quantidade: -1,
             talhao: {
               nome: talhao.nome,
               area: area.nome,
@@ -239,8 +298,7 @@ export default class EntregaService{
         let entrega = {
           id: entregaQueue.id,
           inicio_carregamento: entregaQueue.date,
-          envio_armazem: null,
-          status: 'Carregando',
+          status: status,
           caminhao: {
             id: caminhao.id,
             nome: caminhao.nome,
@@ -265,8 +323,74 @@ export default class EntregaService{
             },
             talhoes: talhoes,
           },
-          negocios: [],
         };
+
+        if(motorista){
+          entrega.motorista = {
+            id: motorista.id,
+            nome: motorista.nome,
+            image_file_name: motoristaImage.file_name,
+          };
+        }
+
+        if(armazem){
+          entrega.armazem = {
+            nome: armazem.nome,
+          }
+        }
+
+        if(entregaCarregandoQueue){
+          entrega.envio_armazem = entregaCarregandoQueue.date;
+          entrega.negocios = [{
+              id: -1,
+              quantidade: -1,
+              notas_fiscais_itens: [{
+                id: -1,
+                quantidade: -1,
+                valor_unitario: -1,
+                valor_total: -1,
+                nota_fiscal_emissao: entregaQueue.request.body.nota_fiscal.emissao,
+                cfop: {
+                  id: cfop.id,
+                  numero: cfop.numero,
+                  descricao: cfop.descricao,
+                },
+                nota_fiscal:{
+                  numero: entregaQueue.request.body.nota_fiscal.numero,
+                  emissao: entregaQueue.request.body.nota_fiscal.emissao,
+                  nota_fiscal_serie:{
+                    id: notaFiscalSerie.id,
+                    nome: notaFiscalSerie.nome,
+                    serie: notaFiscalSerie.serie,
+                  }
+                }
+              }],
+            negocio_cultura: {
+                id: negocioCultura.id,
+                quantidade: negocioCultura.quantidade,
+                unidade_medida_sigla: negocioCulturaUnidadeMedida.sigla,
+                prazo_entrega_final: negocioCultura.prazo_entrega_final,
+                negocio: {
+                  id: negocio.id,
+                  pessoa: pessoaNegocio.nome,
+                  tipo: tipoNegocio.nome,
+                  emissao: negocio.emissao,
+                  numero_pedido: negocio.numero_pedido,
+                  numero_contrato: negocio.numero_contrato,
+                },
+              armazens: [{
+                  id: negocioCulturaArmazens.map(armazem => {return armazem.id}),
+              }],
+              safra_cultura: {
+                id: negocioCulturaSafraCultura.id,
+                cultura:{
+                  id: negocioCulturaSafraCulturaCultura.id,
+                  default_unidade_pesagem_id: negocioCulturaSafraCulturaCultura.default_unidade_pesagem_id
+                }
+              }
+            }
+            }]
+        }
 
         resolve(entrega);
 

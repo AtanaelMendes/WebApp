@@ -34,6 +34,7 @@ db_resources.version(1).stores({
   motoristas: 'id',
   notas_fiscais_series: 'id',
   cfops: 'id, numero',
+  tipos_negocios: 'id',
 });
 
 db_lists.version(1).stores({

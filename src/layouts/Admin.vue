@@ -153,11 +153,7 @@
         isNetworkErrorDialogOpen: false,
       }
     },
-    created(){
-      console.log('created')
-    },
     mounted(){
-      console.log('mounted')
       this.getAccountInfo();
       //TODO: Registrar o service worker manualmente
       //TODO: Esse método só pode ser chamado depois que o serviceWorker for iniciado
@@ -178,9 +174,9 @@
         navigator.serviceWorker.addEventListener('message', function(event){ //TODO Verificar se não esta instanciando esse evento toda vez que carrega a pagina
           switch (event.data) {
             case 'sync':
-              self.syncService.doSync().then(()=>{
+              /*self.syncService.doSync().then(()=>{
                 event.ports[0].postMessage("queueSyncFinished");
-              });
+              });*/
               break;
           }
         }.bind(self));
@@ -219,7 +215,11 @@
         new ResourceService(produtorId).download().then(() => {
           new ListService(produtorId).download().then(() => {
             dismiss();
+          }).catch(error => {
+            console.log("Erro no download de ListService")
           })
+        }).catch(error => {
+          console.log("Erro no download de ResourseService")
         });
       },
       toogleLeftDrawer() {

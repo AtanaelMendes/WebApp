@@ -258,7 +258,6 @@
   import SendEntrega from 'assets/js/model/entrega/SendEntrega'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
-  import cfopService from 'assets/js/service/CfopService'
   import apImage from 'components/ApImage'
   import AgroUtils from "../../assets/js/AgroUtils";
   import AccountRepository from "../../assets/js/repository/AccountRepository";
@@ -268,6 +267,7 @@
   import NotaFiscalService from "../../assets/js/service/NotaFiscalService";
   import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
   import EntregaService from "../../assets/js/service/entrega/EntregaService";
+  import CfopService from "../../assets/js/service/CfopService";
 
   export default {
     name: "stepper-send-carga",
@@ -280,6 +280,7 @@
       return {
         entregaService: null,
         unidadeMedidaService: new UnidadeMedidaService(),
+        cfopService: new CfopService(),
         armazemService: null,
         negocioService: null,
         motoristaService: null,
@@ -714,13 +715,11 @@
       },
       getCfopByNumero(){
         let numero = this.cfopSearchText;
-        cfopService.getCfopByNumero(numero).then(response => {
-          if(response.status === 200){
-            this.cfopDescricao = response.data.descricao;
-            this.sendEntrega.cfopId = response.data.id;
-            this.sendEntrega.is_saida = response.data.is_saida;
-            this.cfopError = false;
-          }
+        this.cfopService.getCfopByNumero(numero).then(cfop => {
+          this.cfopDescricao = cfop.descricao;
+          this.sendEntrega.cfopId = cfop.id;
+          this.sendEntrega.is_saida = cfop.is_saida;
+          this.cfopError = false;
         }).catch(error => {
           this.cfopDescricao = null;
           this.cfopError = true;
