@@ -156,7 +156,13 @@
         <div class="col-12">
           <q-list no-border link separator>
             <q-item multiline v-for="entrega in entregasEntregues" :key="entrega.id" @click.native="viewCarga(entrega)">
-              <q-item-side :image="makeUrl(entrega.caminhao.image_file_name, '200x125')" />
+              <q-item-side class="q-item-image" style="position: relative" >
+                <ap-image  size="200x125" :file-name="entrega.caminhao.image_file_name" />
+                <div class="q-ma-sm q-pa-xs" style="position: absolute;bottom: 0;right: 0;background:#f4f4f4;border-radius:50%;" v-if="entrega.isInQueueState">
+                  <q-icon name="mdi-sync-alert" size="20px" style="" color="deep-orange"/>
+                  <q-tooltip anchor="center right" self="center left" :offset="[10, 10]" :delay="200">Item não sincronizado</q-tooltip>
+                </div>
+              </q-item-side>
               <q-item-main>
                 <q-item-tile class="content-center">
                   <div class="row">

@@ -27,6 +27,7 @@ import NegocioRepository from "../../repository/resource/NegocioRepository";
 import PessoaRepository from "../../repository/resource/PessoaRepository";
 import TipoNegocioRepository from "../../repository/resource/TipoNegocioRepository";
 import NegocioCulturaArmazemRepository from "../../repository/resource/NegocioCulturaArmazemRepository";
+import EntregaEntregueListItem from "../../model/entrega/EntregaEntregueListItem";
 
 export default class EntregaService{
   #entregasQueue;
@@ -104,8 +105,6 @@ export default class EntregaService{
       for(let i = 0; i < queueItens.length; i++){
         let url = Vue.prototype.$axios.defaults.baseURL + 'produtor/' + this.produtorId + '/entrega';
         let results = await this.entregasQueue.getByUrlAndMethod(url + '/queue::' + queueItens[i].id + '/enviar_entrega', 'put').toArray();
-        console.log('results');
-        console.log(results);
 
         if(results.length !== 0){
           queueItens.splice(i, 1);
@@ -161,8 +160,14 @@ export default class EntregaService{
 
       let queueItens = await this.entregasQueue.listByType(EntregasQueue.ENVIAR_PARA_ARMAZEM);
 
-      console.log('listEntregasNoArmazem.queueItens');
-      console.log(queueItens.length);
+      for(let i = 0; i < queueItens.length; i++){
+        let url = Vue.prototype.$axios.defaults.baseURL + 'entrega';
+        let results = await this.entregasQueue.getByUrlAndMethod(url + '/queue::' + queueItens[i].id + '/pesagem', 'post').toArray();
+
+        if(results.length !== 0){
+          queueItens.splice(i, 1);
+        }
+      }
 
       let queueEntregas = await Promise.all(queueItens.map(async queueItem => {
         let url = queueItem.request.url;
@@ -190,7 +195,6 @@ export default class EntregaService{
         entregaItem.motorista.image_file_name = motoristaImage.file_name;
         entregaItem.envio_armazem = queueItem.date;
 
-
         return entregaItem;
 
       }));
@@ -212,7 +216,40 @@ export default class EntregaService{
         entregas = await this.entregaEntregueListRepository.getAll();
       }
 
-      resolve(entregas)
+      entregas = entregas.map(entrega => {
+        return new EntregaEntregueListItem(entrega);
+      });
+
+      let queueItens = await this.entregasQueue.listByType(EntregasQueue.INFORMAR_PESAGEM);
+
+      let queueEntregas = await Promise.all(queueItens.map(async queueItem => {
+        let url = queueItem.request.url;
+        let entregaNoArmazemId = parseInt(url.match("(queue::([0-9]*))")[2]);
+        let entregaNoArmazemQueue = await this.entregasQueue.getById(entregaNoArmazemId);
+        let entregaCarregandoId = parseInt(entregaNoArmazemQueue.request.url.match("(queue::([0-9]*))")[2]);
+        let entregaCarregandoQueue = await this.entregasQueue.getById(entregaCarregandoId);
+        let caminhaoId = entregaCarregandoQueue.request.body.caminhao_id;
+        let caminhao = await this.caminhaoRepository.getById(caminhaoId);
+        let caminhaoImage = await this.imageRepository.getById(caminhao.image_id);
+        let armazem = await this.armazemRepository.getById(entregaNoArmazemQueue.request.body.armazem_id);
+        let motorista = await this.motoristaRepository.getById(entregaNoArmazemQueue.request.body.motorista_id);
+
+        let entregaItem = new EntregaEntregueListItem();
+        entregaItem.id = queueItem.id;
+        entregaItem.isInQueueState = true;
+        entregaItem.caminhao.image_file_name = caminhaoImage.file_name;
+        entregaItem.caminhao.placa = caminhao.placa;
+        entregaItem.armazem = armazem.nome;
+        entregaItem.motorista = motorista.nome;
+        entregaItem.entregue = queueItem.date;
+        entregaItem.peso = -1;
+        entregaItem.safra = 'Colcar safra aqui';
+
+        return entregaItem;
+
+      }));
+
+      resolve(queueEntregas.concat(entregas));
     });
   };
 
