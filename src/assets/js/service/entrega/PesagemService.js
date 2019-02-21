@@ -1,32 +1,40 @@
-import Vue from 'vue'
-import { Loading, Dialog } from 'quasar'
-const produtorId = localStorage.getItem('account.produtor_id');
-export default {
-  listPesagens(){
+import PesagemAPI from "../../api/PesagemAPI";
+import EntregasQueue from "../../queue/EntregasQueue";
+
+export default class PesagemService {
+  #entregasQueue;
+
+  constructor() {
+    this.entregasQueue = new EntregasQueue();
+  }
+
+  savePesagem(entregaId, pesagem){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/tickets').then( response => {
-        resolve(response);
+      PesagemAPI.save(pesagem, entregaId).then(response => {
+        if(response.status === 201) {
+          resolve(response.data)
+        }else{
+          reject();
+        }
       }).catch(error => {
-        reject(error)
+        if(!navigator.onLine){
+          this.entregasQueue.add(error.config, EntregasQueue.INFORMAR_PESAGEM);
+          resolve();
+        }else{
+          reject(error.response)
+        }
       })
     });
-  },
-  savePesagem(entregaId, params){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('entrega/'+ entregaId + '/pesagem', params).then(response => {
-        resolve(response)
-      }).catch(error => {
-        reject(error.response)
-      })
-    });
-  },
+  }
+
   deletePesagem(entregaId, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('entrega/'+ entregaId + '/pesagem/' + id).then(response => {
-        resolve(response)
+      PesagemAPI.delete(id, entregaId).then(response => {
+        resolve(response.data)
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  }
+
 }

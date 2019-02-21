@@ -47,6 +47,8 @@ import CfopRepository from "../../repository/resource/CfopRepository";
 import Cfop from "../../dbModel/Cfop";
 import TipoNegocioRepository from "../../repository/resource/TipoNegocioRepository";
 import TipoNegocio from "../../dbModel/TipoNegocio";
+import CulturaClassificacaoRepository from "../../repository/resource/CulturaClassificacaoRepository";
+import CulturaClassificacao from "../../dbModel/CulturaClassificacao";
 
 let path;
 let caminhaoRepository;
@@ -73,6 +75,7 @@ let motoristaRepository;
 let notaFiscalSerieRepository;
 let cfopRepository;
 let tipoNegocioRepository;
+let culturaClassificacaoRepository;
 
 export default class ResourceService{
 
@@ -102,6 +105,7 @@ export default class ResourceService{
     notaFiscalSerieRepository = new NotaFiscalSerieRepository();
     cfopRepository = new CfopRepository();
     tipoNegocioRepository = new TipoNegocioRepository();
+    culturaClassificacaoRepository = new CulturaClassificacaoRepository();
   }
 
   download(){
@@ -129,7 +133,8 @@ export default class ResourceService{
       getMotoristas(),
       getNotasFiscaisSeries(),
       getCfops(),
-      getTiposNegocios()
+      getTiposNegocios(),
+      getCulturasClassificacoes()
     ])
 
   }
@@ -509,6 +514,22 @@ function getTiposNegocios(){
       tipoNegocioRepository.clearTable().then(() => {
         response.data.forEach((tipo_negocio, index, array) => {
           tipoNegocioRepository.update(new TipoNegocio(tipo_negocio));
+
+          if (index === (array.length - 1)) {
+            return resolve();
+          }
+        })
+      })
+    })
+  });
+}
+
+function getCulturasClassificacoes(){
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get(path + '/cultura_classificacao').then(response => {
+      culturaClassificacaoRepository.clearTable().then(() => {
+        response.data.forEach((cultura_classificacao, index, array) => {
+          culturaClassificacaoRepository.update(new CulturaClassificacao(cultura_classificacao));
 
           if (index === (array.length - 1)) {
             return resolve();

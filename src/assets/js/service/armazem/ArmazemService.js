@@ -1,30 +1,51 @@
 import { Loading, Dialog } from 'quasar'
 import ArmazemAPI from "../../api/ArmazemAPI";
-const produtorId = localStorage.getItem('account.produtor_id');
+import ArmazemRepository from "../../repository/resource/ArmazemRepository";
+
 export default class ArmazemService{
   #produtorId;
+  #armazemRepository;
 
   constructor(produtor_id) {
     this.produtorId = produtor_id;
+    this.armazemRepository = new ArmazemRepository();
   }
 
   listArmazens() {
+    console.log('listArmazens')
     return new Promise((resolve, reject) => {
-      ArmazemAPI.listArmazens(this.produtorId).then(response => {
-        resolve(response.data);
-      }).catch(error => {
-        reject(error)
-      })
+      if(navigator.onLine) {
+        ArmazemAPI.listArmazens(this.produtorId).then(response => {
+          resolve(response.data);
+        }).catch(error => {
+          reject(error)
+        })
+      }else{
+        this.armazemRepository.getAll().then(armazens => {
+          resolve(armazens);
+        }).catch(error => {
+          reject(error)
+        })
+      }
     });
   }
 
   listArmazensByEntrega(entregaId) {
+    console.log('listArmazensByEntrega')
     return new Promise((resolve, reject) => {
-      ArmazemAPI.listArmazensByEntrega(entregaId, this.produtorId).then(response => {
-        resolve(response.data);
-      }).catch(error => {
-        reject(error)
-      })
+      if(navigator.onLine) {
+        ArmazemAPI.listArmazensByEntrega(entregaId, this.produtorId).then(response => {
+          resolve(response.data);
+        }).catch(error => {
+          reject(error);
+        })
+      }else{
+        this.armazemRepository.getAllByEntrega(entregaId).then(armazens => {
+          resolve(armazens);
+        }).catch(error => {
+          reject(error);
+        })
+      }
     });
   }
 }

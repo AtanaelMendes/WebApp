@@ -216,6 +216,7 @@ export default class NegocioService{
   }
 
   listArmazensByNegocioCultura(negocioCulturaId){
+    console.log('listArmazensByNegocioCultura');
     return new Promise(async (resolve, reject) => {
       if(navigator.onLine) {
         NegocioCulturaAPI.listArmazensByNegocioCultura(negocioCulturaId).then(response => {
@@ -224,7 +225,10 @@ export default class NegocioService{
           reject(error.response)
         })
       }else{
+        console.log('listArmazensByNegocioCultura.offline');
         let negociosCulturasArmazens = await this.negocioCulturaArmazemRepository.getAllByNegocioCultura(negocioCulturaId);
+        console.log('negociosCulturasArmazens');
+        console.log(negociosCulturasArmazens);
 
         negociosCulturasArmazens = await Promise.all(negociosCulturasArmazens.map(async negocioCulturaArmazem => {
           let armazem = await this.armazemRepository.getById(negocioCulturaArmazem.armazem_id);

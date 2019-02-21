@@ -11,4 +11,8 @@ export default class EntregaNegocioRepository extends BaseRepository{
   getAllByNegocioCulturaId(negocioCulturaId){
     return this.table.where({negocio_cultura_id:negocioCulturaId}).toArray();
   }
+
+  getAllByEntregaId(entregaId){
+    return this.table.where({entrega_id:entregaId}).toArray();
+  }
 }

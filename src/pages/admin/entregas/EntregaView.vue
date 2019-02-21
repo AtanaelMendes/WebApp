@@ -669,7 +669,7 @@
           color: 'primary'
         }).then(data => {
           this.$q.loading.show();
-          pesagemService.deletePesagem(this.entrega.id, id).then(response => {
+          pesagemService.deletePesagem(this.entrega.id, id).then(() => {
             this.$q.loading.hide();
             this.getEntrega()
           }).catch(error => {

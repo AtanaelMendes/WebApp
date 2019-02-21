@@ -27,7 +27,7 @@ db_resources.version(1).stores({
   negocios: 'id',
   negocios_culturas: 'id',
   pessoas: 'id',
-  negocios_culturas_armazens: 'id, negocio_cultura_id',
+  negocios_culturas_armazens: 'id, negocio_cultura_id, armazem_id',
   localizacoes: 'id',
   armazens: 'id',
   entregas_negocios: 'id, negocio_cultura_id, entrega_id',
@@ -35,6 +35,7 @@ db_resources.version(1).stores({
   notas_fiscais_series: 'id',
   cfops: 'id, numero',
   tipos_negocios: 'id',
+  culturas_classificacoes: 'id, cultura_id, classificacao_id',
 });
 
 db_lists.version(1).stores({

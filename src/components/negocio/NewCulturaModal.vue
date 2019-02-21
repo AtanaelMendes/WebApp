@@ -171,7 +171,6 @@
 
 <script>
   import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
-  import culturaClassificacaoService from 'assets/js/service/cultura/CulturaClassificacaoService'
   import Cultura from 'assets/js/model/negocio/Cultura'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
@@ -179,6 +178,7 @@
   import AccountRepository from "../../assets/js/repository/AccountRepository";
   import ArmazemService from "../../assets/js/service/armazem/ArmazemService";
   import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
+  import CulturaClassificacaoService from "../../assets/js/service/cultura/CulturaClassificacaoService";
 
   export default {
     name: "NewCulturaModal",
@@ -202,6 +202,7 @@
     },
     data(){
       return{
+        culturaClassificacaoService: new CulturaClassificacaoService(),
         unidadeMedidaService: new UnidadeMedidaService(),
         armazemService: null,
         negocioService: null,
@@ -319,7 +320,7 @@
         })
       },
       listClassificacoesByCultura(cultura_id){
-        culturaClassificacaoService.listClassificacoesByCultura(cultura_id).then(response => {
+        this.culturaClassificacaoService.listClassificacoesByCultura(cultura_id).then(response => {
           this.cultura.classificacoes = response.data;
         })
       },
