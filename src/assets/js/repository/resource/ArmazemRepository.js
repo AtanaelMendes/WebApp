@@ -46,26 +46,4 @@ export default class ArmazemRepository extends BaseRepository{
 
     return armazens;
   }
-
-  /*async getAllFree(){
-    let caminhoes = await this.table.toArray();
-    let entregasEmProcesso = await this.entregaRepository.getCarregandoAndNoArmazem();
-    let entregasQueue = await this.entregasQueue.listByType(EntregasQueue.NOVA_ENTREGA);
-
-    entregasEmProcesso.forEach(entrega => {
-      let index = caminhoes.findIndex(item => item.id === entrega.caminhao_id);
-      if(index > -1){
-        caminhoes.splice(index, 1)
-      }
-    });
-
-    entregasQueue.forEach(entregaQueue => {
-      let index = caminhoes.findIndex(item => item.id === entregaQueue.request.body.caminhao_id);
-      if(index > -1){
-        caminhoes.splice(index, 1)
-      }
-    });
-
-    return caminhoes;
-  }*/
 }

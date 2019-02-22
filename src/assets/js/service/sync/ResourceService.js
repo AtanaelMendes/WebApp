@@ -49,6 +49,8 @@ import TipoNegocioRepository from "../../repository/resource/TipoNegocioReposito
 import TipoNegocio from "../../dbModel/TipoNegocio";
 import CulturaClassificacaoRepository from "../../repository/resource/CulturaClassificacaoRepository";
 import CulturaClassificacao from "../../dbModel/CulturaClassificacao";
+import UnidadeConversaoRepository from "../../repository/resource/UnidadeConversaoRepository";
+import UnidadeConversao from "../../dbModel/UnidadeConversao";
 
 let path;
 let caminhaoRepository;
@@ -76,6 +78,7 @@ let notaFiscalSerieRepository;
 let cfopRepository;
 let tipoNegocioRepository;
 let culturaClassificacaoRepository;
+let unidadeConversaoRepository;
 
 export default class ResourceService{
 
@@ -106,6 +109,7 @@ export default class ResourceService{
     cfopRepository = new CfopRepository();
     tipoNegocioRepository = new TipoNegocioRepository();
     culturaClassificacaoRepository = new CulturaClassificacaoRepository();
+    unidadeConversaoRepository = new UnidadeConversaoRepository();
   }
 
   download(){
@@ -134,7 +138,8 @@ export default class ResourceService{
       getNotasFiscaisSeries(),
       getCfops(),
       getTiposNegocios(),
-      getCulturasClassificacoes()
+      getCulturasClassificacoes(),
+      getUnidadesConversoes()
     ])
 
   }
@@ -530,6 +535,22 @@ function getCulturasClassificacoes(){
       culturaClassificacaoRepository.clearTable().then(() => {
         response.data.forEach((cultura_classificacao, index, array) => {
           culturaClassificacaoRepository.update(new CulturaClassificacao(cultura_classificacao));
+
+          if (index === (array.length - 1)) {
+            return resolve();
+          }
+        })
+      })
+    })
+  });
+}
+
+function getUnidadesConversoes(){
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get(path + '/unidade_conversao ').then(response => {
+      unidadeConversaoRepository.clearTable().then(() => {
+        response.data.forEach((unidade_conversao, index, array) => {
+          unidadeConversaoRepository.update(new UnidadeConversao(unidade_conversao));
 
           if (index === (array.length - 1)) {
             return resolve();

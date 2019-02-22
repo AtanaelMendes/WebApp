@@ -28,6 +28,7 @@ import PessoaRepository from "../../repository/resource/PessoaRepository";
 import TipoNegocioRepository from "../../repository/resource/TipoNegocioRepository";
 import NegocioCulturaArmazemRepository from "../../repository/resource/NegocioCulturaArmazemRepository";
 import EntregaEntregueListItem from "../../model/entrega/EntregaEntregueListItem";
+import UnidadeConversaoUtil from "../../UnidadeConversaoUtil";
 
 export default class EntregaService{
   #entregasQueue;
@@ -305,6 +306,8 @@ export default class EntregaService{
           safraCulturaTalhao = await this.safraCulturaTalhaoRepository.getById(entregaCarregandoQueue.request.body.safra_cultura_talhao_id);
         }
 
+        let caminhaoUnidadeMedida = await this.unidadeRepository.getById(caminhao.unidade_medida_id);
+
         if(entregaNoArmazemQueue){
           motorista = await this.motoristaRepository.getById(entregaNoArmazemQueue.request.body.motorista_id);
           motoristaImage = await this.imageRepository.getById(motorista.image_id);
@@ -332,11 +335,13 @@ export default class EntregaService{
         let unidade = await this.unidadeRepository.getById(caminhao.unidade_medida_id);
         let safraCulturaUnidade = await this.unidadeRepository.getById(safraCultura.view_unidade_medida_id);
 
+        let quantidade = await new UnidadeConversaoUtil().convert(caminhaoUnidadeMedida.id, safraCultura.view_unidade_medida_id, caminhao.estimativa_carga)
+
         let talhoes = [
           {
             id: -1,
-            percentual: -1,
-            quantidade: -1,
+            percentual: 100,
+            quantidade: quantidade,
             talhao: {
               nome: talhao.nome,
               area: area.nome,
@@ -396,12 +401,12 @@ export default class EntregaService{
           entrega.envio_armazem = entregaCarregandoQueue.date;
           entrega.negocios = [{
               id: -1,
-              quantidade: -1,
+              quantidade: quantidade,
               notas_fiscais_itens: [{
                 id: -1,
-                quantidade: -1,
-                valor_unitario: -1,
-                valor_total: -1,
+                quantidade: entregaNoArmazemQueue.request.body.nota_fiscal.peso,
+                valor_unitario: entregaNoArmazemQueue.request.body.nota_fiscal.valor_unitario,
+                valor_total: entregaNoArmazemQueue.request.body.nota_fiscal.valor_total,
                 nota_fiscal_emissao: entregaNoArmazemQueue.request.body.nota_fiscal.emissao,
                 cfop: {
                   id: cfop.id,
