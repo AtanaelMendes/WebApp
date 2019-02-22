@@ -234,6 +234,16 @@ export default class EntregaService{
         let caminhaoImage = await this.imageRepository.getById(caminhao.image_id);
         let armazem = await this.armazemRepository.getById(entregaNoArmazemQueue.request.body.armazem_id);
         let motorista = await this.motoristaRepository.getById(entregaNoArmazemQueue.request.body.motorista_id);
+        let safraCulturaTalhao = await this.safraCulturaTalhaoRepository.getById(entregaCarregandoQueue.request.body.safra_cultura_talhao_id);
+        let safraCultura = await this.safraCulturaRepository.getById(safraCulturaTalhao.safra_cultura_id);
+        let cultura = await this.culturaRepository.getById(safraCultura.cultura_id);
+        let safra = await this.safraRepository.getById(safraCultura.safra_id);
+
+        let unidadeParaConversao = await this.unidadeRepository.getById(queueItem.request.body.unidade_medida_id);
+
+        let total_peso_liquido = queueItem.request.body.peso_liquido;
+        let total_peso_bruto_produto = queueItem.request.body.peso_bruto_produto;
+        let total_peso_desconto = queueItem.request.body.peso_desconto;
 
         let entregaItem = new EntregaEntregueListItem();
         entregaItem.id = queueItem.id;
@@ -243,8 +253,14 @@ export default class EntregaService{
         entregaItem.armazem = armazem.nome;
         entregaItem.motorista = motorista.nome;
         entregaItem.entregue = queueItem.date;
-        entregaItem.peso = -1;
-        entregaItem.safra = 'Colcar safra aqui';
+        entregaItem.peso = total_peso_liquido.toLocaleString('en-US', { style: 'decimal', minimumFractionDigits:2 });
+        if(total_peso_desconto > 0){
+          entregaItem.peso += " ("
+            + total_peso_bruto_produto.toLocaleString('en-US', { style: 'decimal', minimumFractionDigits:2 })
+            + " - " + total_peso_desconto.toLocaleString('en-US', { style: 'decimal', minimumFractionDigits:2 }) + ")";
+        }
+        entregaItem.peso += " " + unidadeParaConversao.sigla;
+          entregaItem.safra = cultura.nome + " " + safra.ano_inicio + "/" + safra.ano_fim;
 
         return entregaItem;
 
