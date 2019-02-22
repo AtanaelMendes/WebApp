@@ -260,6 +260,8 @@ export default class EntregaService{
 
         let entregaQueue = await this.entregasQueue.getById(queueId);
         let entregaCarregandoQueue = null;
+        let entregaNoArmazemQueue = null;
+        let entregaEntregueQueue = null;
         let status = null;
         let caminhao = null;
         let safraCulturaTalhao = null;
@@ -280,29 +282,43 @@ export default class EntregaService{
         switch (entregaQueue.type) {
           case EntregasQueue.NOVA_ENTREGA:
             status = 'Carregando';
-            caminhao = await this.caminhaoRepository.getById(entregaQueue.request.body.caminhao_id);
-            safraCulturaTalhao = await this.safraCulturaTalhaoRepository.getById(entregaQueue.request.body.safra_cultura_talhao_id);
+            entregaCarregandoQueue = entregaQueue;
             break;
           case EntregasQueue.ENVIAR_PARA_ARMAZEM:
             status = 'No Armazem';
-            let entregaCarregandoQueueId = parseInt(entregaQueue.request.url.match("(queue::([0-9]*))")[2]);
+            entregaNoArmazemQueue = entregaQueue;
+            var entregaCarregandoQueueId = parseInt(entregaNoArmazemQueue.request.url.match("(queue::([0-9]*))")[2]);
             entregaCarregandoQueue = await this.entregasQueue.getById(entregaCarregandoQueueId);
-            caminhao = await this.caminhaoRepository.getById(entregaCarregandoQueue.request.body.caminhao_id);
-            safraCulturaTalhao = await this.safraCulturaTalhaoRepository.getById(entregaCarregandoQueue.request.body.safra_cultura_talhao_id);
-            motorista = await this.motoristaRepository.getById(entregaQueue.request.body.motorista_id);
-            motoristaImage = await this.imageRepository.getById(motorista.image_id);
-            armazem = await this.armazemRepository.getById(entregaQueue.request.body.armazem_id);
-            cfop = await this.cfopRepository.getById(entregaQueue.request.body.nota_fiscal.cfop_id);
-            notaFiscalSerie = await this.notaFiscalSerieRepository.getById(entregaQueue.request.body.nota_fiscal.nota_fiscal_serie_id);
-            negocioCultura = await this.negocioCulturaRepository.getById(entregaQueue.request.body.negocio_cultura_id);
-            negocioCulturaUnidadeMedida = await this.unidadeRepository.getById(negocioCultura.unidade_medida_id);
-            negocio = await this.negocioRepository.getById(negocioCultura.negocio_id);
-            tipoNegocio = await this.tipoNegocioRepository.getById(negocio.tipo_negocio_id);
-            pessoaNegocio = await this.pessoaRepository.getById(negocio.pessoa_id);
-            negocioCulturaSafraCultura = await this.safraCulturaRepository.getById(negocioCultura.safra_cultura_id);
-            negocioCulturaSafraCulturaCultura = await this.culturaRepository.getById(negocioCulturaSafraCultura.cultura_id);
-            negocioCulturaArmazens = await this.negocioCulturaArmazemRepository.getAllByNegocioCultura(negocioCultura.id);
             break;
+          case EntregasQueue.INFORMAR_PESAGEM:
+            status = 'Entregue';
+            entregaEntregueQueue = entregaQueue;
+            let entregaNoArmazemQueueId = parseInt(entregaEntregueQueue.request.url.match("(queue::([0-9]*))")[2]);
+            entregaNoArmazemQueue = await this.entregasQueue.getById(entregaNoArmazemQueueId);
+            var entregaCarregandoQueueId = parseInt(entregaNoArmazemQueue.request.url.match("(queue::([0-9]*))")[2]);
+            entregaCarregandoQueue = await this.entregasQueue.getById(entregaCarregandoQueueId);
+            break;
+        }
+
+        if(entregaCarregandoQueue){
+          caminhao = await this.caminhaoRepository.getById(entregaCarregandoQueue.request.body.caminhao_id);
+          safraCulturaTalhao = await this.safraCulturaTalhaoRepository.getById(entregaCarregandoQueue.request.body.safra_cultura_talhao_id);
+        }
+
+        if(entregaNoArmazemQueue){
+          motorista = await this.motoristaRepository.getById(entregaNoArmazemQueue.request.body.motorista_id);
+          motoristaImage = await this.imageRepository.getById(motorista.image_id);
+          armazem = await this.armazemRepository.getById(entregaNoArmazemQueue.request.body.armazem_id);
+          cfop = await this.cfopRepository.getById(entregaNoArmazemQueue.request.body.nota_fiscal.cfop_id);
+          notaFiscalSerie = await this.notaFiscalSerieRepository.getById(entregaNoArmazemQueue.request.body.nota_fiscal.nota_fiscal_serie_id);
+          negocioCultura = await this.negocioCulturaRepository.getById(entregaNoArmazemQueue.request.body.negocio_cultura_id);
+          negocioCulturaUnidadeMedida = await this.unidadeRepository.getById(negocioCultura.unidade_medida_id);
+          negocio = await this.negocioRepository.getById(negocioCultura.negocio_id);
+          tipoNegocio = await this.tipoNegocioRepository.getById(negocio.tipo_negocio_id);
+          pessoaNegocio = await this.pessoaRepository.getById(negocio.pessoa_id);
+          negocioCulturaSafraCultura = await this.safraCulturaRepository.getById(negocioCultura.safra_cultura_id);
+          negocioCulturaSafraCulturaCultura = await this.culturaRepository.getById(negocioCulturaSafraCultura.cultura_id);
+          negocioCulturaArmazens = await this.negocioCulturaArmazemRepository.getAllByNegocioCultura(negocioCultura.id);
         }
 
         let caminhaoImagem = await this.imageRepository.getById(caminhao.image_id);
@@ -334,7 +350,7 @@ export default class EntregaService{
 
         let entrega = {
           id: entregaQueue.id,
-          inicio_carregamento: entregaQueue.date,
+          inicio_carregamento: entregaCarregandoQueue.date,
           status: status,
           caminhao: {
             id: caminhao.id,
@@ -376,7 +392,7 @@ export default class EntregaService{
           }
         }
 
-        if(entregaCarregandoQueue){
+        if(entregaNoArmazemQueue){
           entrega.envio_armazem = entregaCarregandoQueue.date;
           entrega.negocios = [{
               id: -1,
@@ -386,15 +402,15 @@ export default class EntregaService{
                 quantidade: -1,
                 valor_unitario: -1,
                 valor_total: -1,
-                nota_fiscal_emissao: entregaQueue.request.body.nota_fiscal.emissao,
+                nota_fiscal_emissao: entregaNoArmazemQueue.request.body.nota_fiscal.emissao,
                 cfop: {
                   id: cfop.id,
                   numero: cfop.numero,
                   descricao: cfop.descricao,
                 },
                 nota_fiscal:{
-                  numero: entregaQueue.request.body.nota_fiscal.numero,
-                  emissao: entregaQueue.request.body.nota_fiscal.emissao,
+                  numero: entregaNoArmazemQueue.request.body.nota_fiscal.numero,
+                  emissao: entregaNoArmazemQueue.request.body.nota_fiscal.emissao,
                   nota_fiscal_serie:{
                     id: notaFiscalSerie.id,
                     nome: notaFiscalSerie.nome,
@@ -429,6 +445,9 @@ export default class EntregaService{
             }]
         }
 
+        if(entregaEntregueQueue){
+
+        }
         resolve(entrega);
 
       }else{
