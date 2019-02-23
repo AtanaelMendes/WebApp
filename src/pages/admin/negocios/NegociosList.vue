@@ -7,46 +7,118 @@
     <div class="row gutter-sm space-end q-pa-md" v-if="negocios.length > 0">
       <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4" v-for="negocio in negocios" :key="negocio.id">
 
-        <q-card @click.native="viewNegocio(negocio.id)" class="cursor-pointer">
-          <q-card-title >
-            {{negocio.numero_contrato}}
-            <div slot="right">
-              <q-btn @click.stop round flat dense icon="more_vert" @click.stop>
-                <q-popover>
-                  <q-list link no-boder>
-                    <q-item v-close-overlay @click.native="editNegocio(negocio.id)">
-                      <q-item-main label="Editar"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="archiveNegocio(negocio.id)" v-if="!negocio.deleted_at">
-                      <q-item-main label="Arquivar"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="restoreNegocio(negocio.id)" v-if="negocio.deleted_at">
-                      <q-item-main label="Ativar"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="deleteNegocio(negocio.id)">
-                      <q-item-main label="Excluir"/>
-                    </q-item>
-                  </q-list>
-                </q-popover>
-              </q-btn>
-            </div>
-          </q-card-title>
-          <q-card-separator/>
-          <q-card-main>
+        <q-card @click.native="viewNegocio(negocio.id)" class="cursor-pointer" style="height: 100%">
+          <q-list inset-separator>
             <q-item>
+              <q-item-side v-if="negocio.image_file_name">
+                <q-item-tile image>
+                  <ap-image size="200x125" :file-name="negocio.image_file_name"/>
+                </q-item-tile>
+              </q-item-side>
               <q-item-main>
-                <q-item-tile>
-                  {{negocio.nome}}
+                <q-item-tile label>
+                  {{ negocio.nome }}
+                </q-item-tile>
+                <q-item-tile sublabel>
+                  {{ negocio.safra }} <br />
+                  {{ negocio.tipoNegocio.nome }} de
+                  {{ moment(negocio.emissao).format('DD/MMM/YYYY') }}
+                  <br />
+                  {{negocio.numero_contrato}}
+                  {{negocio.numero_pedido}}
                 </q-item-tile>
               </q-item-main>
               <q-item-side>
-                <q-item-tile>
-                  {{negocio.tipo}}
-                </q-item-tile>
-
+                <q-btn @click.stop round flat icon="more_vert" @click.stop>
+                  <q-popover>
+                    <q-list link no-boder>
+                      <q-item v-close-overlay @click.native="editNegocio(negocio.id)">
+                        <q-item-main label="Editar"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="archiveNegocio(negocio.id)" v-if="!negocio.deleted_at">
+                        <q-item-main label="Arquivar"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="restoreNegocio(negocio.id)" v-if="negocio.deleted_at">
+                        <q-item-main label="Ativar"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="deleteNegocio(negocio.id)">
+                        <q-item-main label="Excluir"/>
+                      </q-item>
+                    </q-list>
+                  </q-popover>
+                </q-btn>
               </q-item-side>
             </q-item>
-          </q-card-main>
+
+            <q-item>
+              <q-item-side icon="mdi-scale" :color="negocio.quantidade_entregar >= 1?'negative':'primary'" />
+              <q-item-main>
+                <q-item-tile label>
+                  <template v-if="negocio.tipoNegocio.is_quantidade">
+                    {{ numeral(negocio.quantidade).format('0,0') }}
+                  </template>
+                  <template v-else>
+                    {{ numeral(negocio.quantidade_entregue).format('0,0') }}
+                  </template>
+                  {{ negocio.unidadeMedida.plural }}
+                </q-item-tile>
+                <q-item-tile sublabel v-if="negocio.quantidade_entregar >= 1">
+                  Faltando
+                  {{ numeral(negocio.quantidade_entregar).format('0,0') }}
+                  {{negocio.unidadeMedida.sigla}}
+                  ({{ numeral(negocio.quantidade_entregar / negocio.quantidade * 100).format('0,0.0') }}%)
+                </q-item-tile>
+                <q-item-tile sublabel v-else-if="negocio.quantidade_entregar <= -1">
+                  Sobrando
+                  {{ numeral(negocio.quantidade_entregar*-1).format('0,0') }}
+                  {{negocio.unidadeMedida.sigla}}
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+
+            <q-item v-if="negocio.tipoNegocio.is_fixacao">
+              <q-item-side icon="attach_money" :color="negocio.quantidade_fixar >= 1?'negative':'primary'" />
+              <q-item-main>
+                <q-item-tile label v-for="fixacao in negocio.fixacoes">
+                  <template v-if="negocio.quantidade != fixacao.quantidade">
+                    {{ numeral(fixacao.quantidade).format('0,0') }}
+                    {{ fixacao.unidade_medida_quantidade }}
+                    à
+                  </template>
+                  {{ fixacao.moeda }}
+                  {{ numeral(fixacao.preco).format('0,0.00') }}/{{ fixacao.unidade_medida_preco }}
+                  <template v-if="fixacao.is_preco_liquido">
+                    Líquido
+                  </template>
+                  <template v-else>
+                    Bruto
+                  </template>
+                </q-item-tile>
+                <q-item-tile v-if="negocio.quantidade_fixar >= 1">
+                  {{ numeral(negocio.quantidade_fixar).format('0,0') }}
+                  {{negocio.unidadeMedida.sigla}}
+                  à fixar
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+
+            <q-item v-if="negocio.prazo_entrega_final">
+              <q-item-side icon="date_range" :color="(negocio.quantidade_entregar >= 1 && moment(negocio.prazo_entrega_final).isBefore())?'negative':'primary'" />
+              <q-item-main>
+                <q-item-tile label>
+                  <template v-if="negocio.prazo_entrega_inicial">
+                    {{ moment(negocio.prazo_entrega_inicial).format('DD/MMM') }}
+                    a
+                  </template>
+                  {{ moment(negocio.prazo_entrega_final).format('DD/MMM/YYYY') }}
+                </q-item-tile>
+                <q-item-tile sublabel v-if="negocio.quantidade_entregar >= 1">
+                  {{ moment(negocio.prazo_entrega_final).fromNow() }}
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+
+          </q-list>
         </q-card>
 
       </div>
@@ -77,11 +149,13 @@
   import negocioService from 'assets/js/service/negocio/NegocioService'
   import negocioModal from 'components/negocio/NegocioModal';
   import apNoResults from 'components/ApNoResults'
+  import apImage from 'components/ApImage'
 
   export default {
     name: "negocios",
     components: {
       apNoResults,
+      apImage,
       toolbar,
       customPage,
       negocioModal,
