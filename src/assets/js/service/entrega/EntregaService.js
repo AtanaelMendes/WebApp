@@ -175,11 +175,29 @@ export default class EntregaService{
 
       let queueEntregas = await Promise.all(queueItens.map(async queueItem => {
         let url = queueItem.request.url;
-        let entregaId = parseInt(url.match("(queue::([0-9]*))")[2]);
-        let entregaQueue = await this.entregasQueue.getById(entregaId);
-        let caminhaoId = entregaQueue.request.body.caminhao_id;
-        let caminhao = await this.caminhaoRepository.getById(caminhaoId);
-        let caminhaoImage = await this.imageRepository.getById(caminhao.image_id);
+        let entregaItem = new EntregaNoArmazemListItem();
+        entregaItem.id = queueItem.id;
+        entregaItem.isInQueueState = true;
+
+        if(url.match("(queue::([0-9]*))")) {
+          let entregaId = parseInt(url.match("(queue::([0-9]*))")[2]);
+          let entregaQueue = await this.entregasQueue.getById(entregaId);
+          let caminhaoId = entregaQueue.request.body.caminhao_id;
+          let caminhao = await this.caminhaoRepository.getById(caminhaoId);
+          let caminhaoImage = await this.imageRepository.getById(caminhao.image_id);
+
+          entregaItem.caminhao.nome = caminhao.nome;
+          entregaItem.caminhao.placa = caminhao.placa;
+          entregaItem.caminhao.image_file_name = caminhaoImage.file_name;
+        }else {
+          let entregaCarregandoId = parseInt(url.match("(\/entrega\/([0-9]*))")[2]);
+          let entregaCarregando = await this.entregaCarreandoListRepository.getById(entregaCarregandoId);
+
+          entregaItem.caminhao.nome = entregaCarregando.caminhao.nome;
+          entregaItem.caminhao.placa = entregaCarregando.caminhao.placa;
+          entregaItem.caminhao.image_file_name = entregaCarregando.caminhao.image_file_name;
+        }
+
         let armazem = await this.armazemRepository.getById(queueItem.request.body.armazem_id);
         let motorista = await this.motoristaRepository.getById(queueItem.request.body.motorista_id);
         let motoristaImage = await this.imageRepository.getById(motorista.image_id);
@@ -187,12 +205,6 @@ export default class EntregaService{
         let localizacao = await this.localizacaoRepository.getById(armazem.localizacao_id);
         let endereco = localizacao.endereco + ', ' + localizacao.numero + '  ' + localizacao.bairro + ' - ' + localizacao.cidade.nome + '/' + localizacao.cidade.estado.nome;
 
-        let entregaItem = new EntregaNoArmazemListItem();
-        entregaItem.id = queueItem.id;
-        entregaItem.isInQueueState = true;
-        entregaItem.caminhao.nome = caminhao.nome;
-        entregaItem.caminhao.placa = caminhao.placa;
-        entregaItem.caminhao.image_file_name = caminhaoImage.file_name;
         entregaItem.armazem.nome = armazem.nome;
         entregaItem.armazem.localizacao = endereco;
         entregaItem.motorista.nome = motorista.nome;
