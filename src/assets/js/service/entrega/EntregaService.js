@@ -294,7 +294,6 @@ export default class EntregaService{
         let entregaCarregandoQueue = null;
         let entregaNoArmazemQueue = null;
         let entregaEntregueQueue = null;
-        let status = null;
         let caminhao = null;
         let safraCulturaTalhao = null;
         let motorista = null;
@@ -311,19 +310,49 @@ export default class EntregaService{
         let negocioCulturaSafraCulturaCultura = null;
         let negocioCulturaArmazens = null;
 
+
+        let entrega = {
+          id: entregaQueue.id,
+        };
+
         switch (entregaQueue.type) {
           case EntregasQueue.NOVA_ENTREGA:
-            status = 'Carregando';
+            entrega.status = 'Carregando';
             entregaCarregandoQueue = entregaQueue;
             break;
           case EntregasQueue.ENVIAR_PARA_ARMAZEM:
-            status = 'No Armazem';
+            entrega.status = 'No Armazem';
             entregaNoArmazemQueue = entregaQueue;
-            var entregaCarregandoQueueId = parseInt(entregaNoArmazemQueue.request.url.match("(queue::([0-9]*))")[2]);
-            entregaCarregandoQueue = await this.entregasQueue.getById(entregaCarregandoQueueId);
+            if(entregaNoArmazemQueue.request.url.match("(queue::([0-9]*))")){
+              var entregaCarregandoQueueId = parseInt(entregaNoArmazemQueue.request.url.match("(queue::([0-9]*))")[2]);
+              entregaCarregandoQueue = await this.entregasQueue.getById(entregaCarregandoQueueId);
+              caminhao = await this.caminhaoRepository.getById(entregaCarregandoQueue.request.body.caminhao_id);
+              let caminhaoImagem = await this.imageRepository.getById(caminhao.image_id);
+              let unidade = await this.unidadeRepository.getById(caminhao.unidade_medida_id);
+
+              entrega.inicio_carregamento = entregaCarregandoQueue.date;
+              entrega.caminhao = {
+                id: caminhao.id,
+                  nome: caminhao.nome,
+                  placa: caminhao.placa,
+                  estimativa_carga: caminhao.pbt - caminhao.tara,
+                  unidade_medida_sigla: unidade.sigla,
+                  image_file_name: caminhaoImagem.file_name,
+              };
+            }else{
+              let entregaCarregandoId = parseInt(entregaNoArmazemQueue.request.url.match("(\/entrega\/([0-9]*))")[2]);
+              let entregaCarregando = await this.entregaCarreandoListRepository.getById(entregaCarregandoId);
+
+              entrega.inicio_carregamento = entregaCarregando.inicio_carregamento;
+              entrega.caminhao = entregaCarregando.caminhao;
+              //entrega.caminhaoestimativa_carga = caminhao.pbt - caminhao.tara;
+              //entrega.caminhaounidade_medida_sigla = unidade.sigla;
+            }
+
+
             break;
           case EntregasQueue.INFORMAR_PESAGEM:
-            status = 'Entregue';
+            entrega.status = 'Entregue';
             entregaEntregueQueue = entregaQueue;
             let entregaNoArmazemQueueId = parseInt(entregaEntregueQueue.request.url.match("(queue::([0-9]*))")[2]);
             entregaNoArmazemQueue = await this.entregasQueue.getById(entregaNoArmazemQueueId);
@@ -333,7 +362,6 @@ export default class EntregaService{
         }
 
         if(entregaCarregandoQueue){
-          caminhao = await this.caminhaoRepository.getById(entregaCarregandoQueue.request.body.caminhao_id);
           safraCulturaTalhao = await this.safraCulturaTalhaoRepository.getById(entregaCarregandoQueue.request.body.safra_cultura_talhao_id);
         }
 
@@ -355,7 +383,6 @@ export default class EntregaService{
           negocioCulturaArmazens = await this.negocioCulturaArmazemRepository.getAllByNegocioCultura(negocioCultura.id);
         }
 
-        let caminhaoImagem = await this.imageRepository.getById(caminhao.image_id);
         let talhao = await this.talhaoRepository.getById(safraCulturaTalhao.talhao_id);
         let talhaoImagem = await this.imageRepository.getById(talhao.image_id);
         let area = await this.areaRepository.getById(talhao.area_id);
@@ -363,7 +390,6 @@ export default class EntregaService{
         let cultura = await this.culturaRepository.getById(safraCultura.cultura_id);
         let culturaImagem = await this.imageRepository.getById(cultura.image_id);
         let safra = await this.safraRepository.getById(safraCultura.safra_id);
-        let unidade = await this.unidadeRepository.getById(caminhao.unidade_medida_id);
         let safraCulturaUnidade = await this.unidadeRepository.getById(safraCultura.view_unidade_medida_id);
 
         let quantidade = await new UnidadeConversaoUtil().convert(caminhaoUnidadeMedida.id, safraCultura.view_unidade_medida_id, caminhao.estimativa_carga);
@@ -384,18 +410,7 @@ export default class EntregaService{
           }
         ];
 
-        let entrega = {
-          id: entregaQueue.id,
-          inicio_carregamento: entregaCarregandoQueue.date,
-          status: status,
-          caminhao: {
-            id: caminhao.id,
-            nome: caminhao.nome,
-            placa: caminhao.placa,
-            estimativa_carga: caminhao.pbt - caminhao.tara,
-            unidade_medida_sigla: unidade.sigla,
-            image_file_name: caminhaoImagem.file_name,
-          },
+        /*let entrega = {
           safra_cultura: {
             id: safraCultura.id,
             view_unidade_medida: {
@@ -412,7 +427,7 @@ export default class EntregaService{
             },
             talhoes: talhoes,
           },
-        };
+        };*/
 
         if(motorista){
           entrega.motorista = {
