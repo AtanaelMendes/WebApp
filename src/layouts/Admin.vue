@@ -85,12 +85,6 @@
           <q-item-main label="Entregas" />
         </q-item>
 
-        <!--TESTE-->
-        <q-item @click.native="$router.push({name:'teste'})">
-          <q-item-side icon="mdi-close-circle-outline"/>
-          <q-item-main label="Teste" />
-        </q-item>
-
       </q-list>
     </q-layout-drawer>
 
