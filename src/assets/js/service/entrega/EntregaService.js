@@ -76,7 +76,7 @@ export default {
   },
   updateNegociosQuantidade(entrega_id, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('entrega/'+ entrega_id + '/negocio', params).then(response => {
+      Vue.prototype.$axios.put('entrega/'+ entrega_id + '/negocio/update_quantidade', params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
