@@ -10,7 +10,7 @@ import PessoaRepository from "../../repository/resource/PessoaRepository";
 import NegocioCulturaArmazemRepository from "../../repository/resource/NegocioCulturaArmazemRepository";
 import ArmazemRepository from "../../repository/resource/ArmazemRepository";
 import LocalizacaoRepository from "../../repository/resource/LocalizacaoRepository";
-import EntregaNegocioRepository from "../../repository/resource/EntregaNegocioRepository";
+import NegocioCulturaMovimentoRepository from "../../repository/resource/NegocioCulturaMovimentoRepository";
 const produtorId = localStorage.getItem('account.produtor_id');
 export default class NegocioService{
   #produtorId;
@@ -23,7 +23,7 @@ export default class NegocioService{
   #negocioCulturaArmazemRepository;
   #armazemRepository;
   #localizacaoRepository;
-  #entregaNegocioRepository;
+  #negocioCulturaMovimentoRepository;
 
   constructor(produtorId) {
     this.produtorId = produtorId;
@@ -36,7 +36,7 @@ export default class NegocioService{
     this.negocioCulturaArmazemRepository = new NegocioCulturaArmazemRepository();
     this.armazemRepository = new ArmazemRepository();
     this.localizacaoRepository = new LocalizacaoRepository();
-    this.entregaNegocioRepository = new EntregaNegocioRepository();
+    this.negocioCulturaMovimentoRepository = new NegocioCulturaMovimentoRepository();
   }
 
   listTipoNegocios(){
@@ -166,15 +166,15 @@ export default class NegocioService{
           let cultura = await this.culturaRepository.getById(safraCultura.cultura_id);
           let negocioCulturaUnidade = await this.unidadeRepository.getById(negocioCultura.unidade_medida_id);
           let pessoa = await this.pessoaRepository.getById(negocio.pessoa_id);
-          let entregasNegocios = await this.entregaNegocioRepository.getAllByNegocioCulturaId(negocioCultura.id);
+          let negociosCulturasMovimentos = await this.negocioCulturaMovimentoRepository.ggetAllByNegocioCulturaId(negocioCultura.id);
           let quantidadeEntregue = 0;
           let entregasPendentes = 0;
 
-          for(let entregaNegocio of entregasNegocios){
-            if(entregaNegocio.quantidade === null || entregaNegocio.quantidade === undefined){
+          for(let negocioCulturaMovimento of negociosCulturasMovimentos){
+            if(negocioCulturaMovimento.quantidade === null || negocioCulturaMovimento.quantidade === undefined){
               entregasPendentes++;
             }
-            quantidadeEntregue += parseFloat(entregaNegocio.quantidade);
+            quantidadeEntregue += parseFloat(negocioCulturaMovimento.quantidade);
           }
 
           return {

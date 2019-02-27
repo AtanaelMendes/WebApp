@@ -30,14 +30,14 @@ db_resources.version(1).stores({
   negocios_culturas_armazens: 'id, negocio_cultura_id, armazem_id',
   localizacoes: 'id',
   armazens: 'id',
-  entregas_negocios: 'id, negocio_cultura_id, entrega_id',
   motoristas: 'id',
   notas_fiscais_series: 'id',
   cfops: 'id, numero',
   tipos_negocios: 'id',
   culturas_classificacoes: 'id, cultura_id, classificacao_id',
   unidades_conversoes: 'id, origem_id, destino_id',
-  negocios_culturas_movimentos: 'id',
+  negocios_culturas_movimentos: 'id, negocio_cultura_id, entrega_id',
+  entrega_talhoes: 'id',
 });
 
 db_lists.version(1).stores({

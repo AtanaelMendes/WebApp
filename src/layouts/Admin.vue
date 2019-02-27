@@ -158,10 +158,10 @@
         this.showOfflineStatusBar();
       });
 
-      this.$on('online', () => {
+      /*this.$on('online', () => {
         //alert('You are online!')
         this.getAccountInfo();
-      });
+      });*/
 
       if('serviceWorker' in navigator){
         let self = this;
@@ -200,14 +200,16 @@
           this.currentAccount.name = info.nome;
           this.currentAccount.email = info.email;
 
-          this.getInitialContent(info.produtor_id)
+          //this.getInitialContent(info.produtor_id)
         })
       },
       getInitialContent(produtorId){
         const dismiss = this.$q.notify({message: 'Sincronizando...', timeout:0, color: 'info', icon: 'mdi-sync'});
         this.syncService.getInitialContent(produtorId);
         new ResourceService(produtorId).download().then(() => {
+          console.log("Terminou de baixar os resources")
           new ListService(produtorId).download().then(() => {
+            console.log("Terminou sync")
             dismiss();
           }).catch(error => {
             console.log("Erro no download de ListService")

@@ -37,8 +37,6 @@ import LocalizacaoRepository from "../../repository/resource/LocalizacaoReposito
 import Localizacao from "../../dbModel/Localizacao";
 import ArmazemRepository from "../../repository/resource/ArmazemRepository";
 import Armazem from "../../dbModel/Armazem";
-import EntregaNegocioRepository from "../../repository/resource/EntregaNegocioRepository";
-import EntregaNegocio from "../../dbModel/EntregaNegocio";
 import MotoristaRepository from "../../repository/resource/MotoristaRepository";
 import Motorista from "../../dbModel/Motorista";
 import NotaFiscalSerieRepository from "../../repository/resource/NotaFiscalSerieRepository";
@@ -53,6 +51,8 @@ import UnidadeConversaoRepository from "../../repository/resource/UnidadeConvers
 import UnidadeConversao from "../../dbModel/UnidadeConversao";
 import NegocioCulturaMovimentoRepository from "../../repository/resource/NegocioCulturaMovimentoRepository";
 import NegocioCulturaMovimento from "../../dbModel/NegocioCulturaMovimento";
+import EntregaTalhaoRepository from "../../repository/resource/EntregaTalhaoRepository";
+import EntregaTalhao from "../../dbModel/EntregaTalhao";
 
 let path;
 let caminhaoRepository;
@@ -81,6 +81,7 @@ let tipoNegocioRepository;
 let culturaClassificacaoRepository;
 let unidadeConversaoRepository;
 let negocioCulturaMovimentoRepository;
+let entregaTalhaoRepository;
 
 export default class ResourceService{
 
@@ -112,6 +113,7 @@ export default class ResourceService{
     culturaClassificacaoRepository = new CulturaClassificacaoRepository();
     unidadeConversaoRepository = new UnidadeConversaoRepository();
     negocioCulturaMovimentoRepository = new NegocioCulturaMovimentoRepository();
+    entregaTalhaoRepository = new EntregaTalhaoRepository();
   }
 
   download(){
@@ -141,7 +143,8 @@ export default class ResourceService{
       getTiposNegocios(),
       getCulturasClassificacoes(),
       getUnidadesConversoes(),
-      getNegocioCulturaMovimento()
+      getNegocioCulturaMovimento(),
+      getEntregasTalhoes()
     ])
 
   }
@@ -379,5 +382,14 @@ async function getNegocioCulturaMovimento(){
 
   for(let item of response.data){
     await negocioCulturaMovimentoRepository.update(new NegocioCulturaMovimento(item));
+  }
+}
+
+async function getEntregasTalhoes(){
+  let response = await Vue.prototype.$axios.get(path + '/entrega_talhao');
+  await entregaTalhaoRepository.clearTable();
+
+  for(let item of response.data){
+    await entregaTalhaoRepository.update(new EntregaTalhao(item));
   }
 }
