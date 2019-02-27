@@ -79,7 +79,7 @@
             <q-item v-if="negocio.tipoNegocio.is_fixacao">
               <q-item-side icon="attach_money" :color="negocio.quantidade_fixar >= 1?'negative':'primary'" />
               <q-item-main>
-                <q-item-tile label v-for="fixacao in negocio.fixacoes">
+                <q-item-tile label v-for="fixacao in negocio.fixacoes" :key="negocio.id + '_' + fixacao.id">
                   <template v-if="negocio.quantidade != fixacao.quantidade">
                     {{ numeral(fixacao.quantidade).format('0,0') }}
                     {{ fixacao.unidade_medida_quantidade }}
