@@ -22,82 +22,63 @@ export default class ListService{
   }
 
   download(){
-    return Promise.all([
-      getEntregasCarregandoList(),
-      getEntregasNoArmazemList(),
-      getEntregasEntregueList(),
-      getEntregasView()
-    ]);
+    return new Promise(async (resolve, reject) => {
+      await getEntregasCarregandoList();
+      await getEntregasNoArmazemList();
+      await getEntregasEntregueList();
+      await getEntregasView();
+      resolve();
+    });
   }
 }
 
-function getEntregasView(){
-  return new Promise(async(resolve, reject) => {
-    let entregasCarregando = await entregaCarregandoListRepository.getAll();
-    let entregasNoArmazem = await entregaNoArmazemListRepository.getAll();
-    let entregasEntregue = await entregaEntregueListRepository.getAll();
+async function getEntregasView(){
+  let entregasCarregando = await entregaCarregandoListRepository.getAll();
+  let entregasNoArmazem = await entregaNoArmazemListRepository.getAll();
+  let entregasEntregue = await entregaEntregueListRepository.getAll();
 
-    let entregas = entregasCarregando.concat(entregasNoArmazem).concat(entregasEntregue);
+  let entregas = entregasCarregando.concat(entregasNoArmazem).concat(entregasEntregue);
 
-    entregaViewRepository.clearTable().then(() => {
-      entregas.forEach((entrega, index, array) => {
-        EntregaAPI.getEntrega(entrega.id, produtorId).then(response => {
-          entregaViewRepository.update(response.data);
+  await entregaViewRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
+  let promises = [];
+
+  for(let entrega of entregas){
+    promises.push(
+      EntregaAPI.getEntrega(entrega.id, produtorId).then(response => {
+        entregaViewRepository.update(response.data);
       })
-    })
+    )
+  }
+
+  Promise.all(promises).then(()=>{
+    resolve();
   });
 }
 
-function getEntregasCarregandoList(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get('produtor/' + produtorId + '/entrega?status=carregando').then(response => {
-      entregaCarregandoListRepository.clearTable().then(() => {
-        response.data.forEach((entrega, index, array) => {
-          entregaCarregandoListRepository.update(entrega);
+async function getEntregasCarregandoList(){
+  let response = await Vue.prototype.$axios.get('produtor/' + produtorId + '/entrega?status=carregando');
+  await entregaCarregandoListRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  })
+  for(let entrega of response.data){
+    await entregaCarregandoListRepository.update(entrega);
+  }
 }
 
-function getEntregasNoArmazemList(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get('produtor/' + produtorId + '/entrega?status=no_armazem').then(response => {
-      entregaNoArmazemListRepository.clearTable().then(() => {
-        response.data.forEach((entrega, index, array) => {
-          entregaNoArmazemListRepository.update(entrega);
+async function getEntregasNoArmazemList(){
+  let response = await Vue.prototype.$axios.get('produtor/' + produtorId + '/entrega?status=no_armazem');
+  await entregaNoArmazemListRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  })
+  for(let entrega of response.data){
+    await entregaNoArmazemListRepository.update(entrega);
+  }
 }
 
+async function getEntregasEntregueList(){
+  let response = await Vue.prototype.$axios.get('produtor/' + produtorId + '/entrega?status=entregue');
+  await entregaEntregueListRepository.clearTable();
 
-function getEntregasEntregueList(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get('produtor/' + produtorId + '/entrega?status=entregue').then(response => {
-      entregaEntregueListRepository.clearTable().then(() => {
-        response.data.forEach((entrega, index, array) => {
-          entregaEntregueListRepository.update(entrega);
-
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  })
+  for(let entrega of response.data){
+    await entregaEntregueListRepository.update(entrega);
+  }
 }

@@ -51,6 +51,8 @@ import CulturaClassificacaoRepository from "../../repository/resource/CulturaCla
 import CulturaClassificacao from "../../dbModel/CulturaClassificacao";
 import UnidadeConversaoRepository from "../../repository/resource/UnidadeConversaoRepository";
 import UnidadeConversao from "../../dbModel/UnidadeConversao";
+import NegocioCulturaMovimentoRepository from "../../repository/resource/NegocioCulturaMovimentoRepository";
+import NegocioCulturaMovimento from "../../dbModel/NegocioCulturaMovimento";
 
 let path;
 let caminhaoRepository;
@@ -72,13 +74,13 @@ let pessoaRepository;
 let negocioCulturaArmazemRepository;
 let localizacaoRepository;
 let armazemRepository;
-let entregaNegocioRepository;
 let motoristaRepository;
 let notaFiscalSerieRepository;
 let cfopRepository;
 let tipoNegocioRepository;
 let culturaClassificacaoRepository;
 let unidadeConversaoRepository;
+let negocioCulturaMovimentoRepository;
 
 export default class ResourceService{
 
@@ -103,13 +105,13 @@ export default class ResourceService{
     negocioCulturaArmazemRepository = new NegocioCulturaArmazemRepository();
     localizacaoRepository = new LocalizacaoRepository();
     armazemRepository = new ArmazemRepository();
-    entregaNegocioRepository = new EntregaNegocioRepository();
     motoristaRepository = new MotoristaRepository();
     notaFiscalSerieRepository = new NotaFiscalSerieRepository();
     cfopRepository = new CfopRepository();
     tipoNegocioRepository = new TipoNegocioRepository();
     culturaClassificacaoRepository = new CulturaClassificacaoRepository();
     unidadeConversaoRepository = new UnidadeConversaoRepository();
+    negocioCulturaMovimentoRepository = new NegocioCulturaMovimentoRepository();
   }
 
   download(){
@@ -133,430 +135,249 @@ export default class ResourceService{
       getNegociosCulturasArmazens(),
       getLocalizacoes(),
       getArmazens(),
-      getEntregasNegocios(),
       getMotoristas(),
       getNotasFiscaisSeries(),
       getCfops(),
       getTiposNegocios(),
       getCulturasClassificacoes(),
-      getUnidadesConversoes()
+      getUnidadesConversoes(),
+      getNegocioCulturaMovimento()
     ])
 
   }
 }
 
-function getCaminhoes(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/caminhao').then(response => {
-      caminhaoRepository.clearTable().then(() => {
-        response.data.forEach((caminhao, index, array) => {
-          caminhaoRepository.update(new Caminhao(caminhao));
 
-          if(index === (array.length - 1)){
-            return resolve();
-          }
-        })
-      });
-    })
-  });
+async function getCaminhoes(){
+  let response = await Vue.prototype.$axios.get(path + '/caminhao');
+  await safraCulturaRepository.clearTable();
+
+  for(let item of response.data){
+    await caminhaoRepository.update(new Caminhao(item));
+  }
 }
 
-function getSafraCulturas(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/safra_cultura').then(response => {
-      safraCulturaRepository.clearTable().then(() => {
-        response.data.forEach((safraCultura, index, array) => {
-          safraCulturaRepository.update(new SafraCultura(safraCultura));
+async function getSafraCulturas(){
+  let response = await Vue.prototype.$axios.get(path + '/safra_cultura');
+  await safraCulturaRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await safraCulturaRepository.update(new SafraCultura(item));
+  }
 }
 
-function getSafraCulturasTalhoes(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/safra_cultura_talhao').then(response => {
-      safraCulturaTalhaoRepository.clearTable().then(() => {
-        response.data.forEach((safraCulturaTalhao, index, array) => {
-          safraCulturaTalhaoRepository.update(new SafraCulturaTalhao(safraCulturaTalhao));
+async function getSafraCulturasTalhoes(){
+  let response = await Vue.prototype.$axios.get(path + '/safra_cultura_talhao');
+  await safraCulturaTalhaoRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await safraCulturaTalhaoRepository.update(new SafraCulturaTalhao(item));
+  }
 }
 
-function getSafras(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/safra').then(response => {
-      safraRepository.clearTable().then(() => {
-        response.data.forEach((safra, index, array) => {
-          safraRepository.update(new Safra(safra));
+async function getSafras(){
+  let response = await Vue.prototype.$axios.get(path + '/safra');
+  await safraRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await safraRepository.update(new Safra(item));
+  }
 }
 
-function getCulturas(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/cultura').then(response => {
-      culturaRepository.clearTable().then(() => {
-        response.data.forEach((cultura, index, array) => {
-          culturaRepository.update(new Cultura(cultura));
+async function getCulturas(){
+  let response = await Vue.prototype.$axios.get(path + '/cultura');
+  await culturaRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await culturaRepository.update(new Cultura(item));
+  }
 }
 
-function getAreas(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/area').then(response => {
-      areaRepository.clearTable().then(() => {
-        response.data.forEach((area, index, array) => {
-          areaRepository.update(new Area(area));
+async function getAreas(){
+  let response = await Vue.prototype.$axios.get(path + '/area');
+  await areaRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await areaRepository.update(new Area(item));
+  }
 }
 
-function getTalhoes(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/talhao').then(response => {
-      talhaoRepository.clearTable().then(() => {
-        response.data.forEach((talhao, index, array) => {
-          talhaoRepository.update(new Talhao(talhao));
+async function getTalhoes(){
+  let response = await Vue.prototype.$axios.get(path + '/talhao');
+  await talhaoRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await talhaoRepository.update(new Talhao(item));
+  }
 }
 
-function getUnidades(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/unidade').then(response => {
-      unidadeRepository.clearTable().then(() => {
-        response.data.forEach((unidade, index, array) => {
-          unidadeRepository.update(new Unidade(unidade));
+async function getUnidades(){
+  let response = await Vue.prototype.$axios.get(path + '/unidade');
+  await unidadeRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await unidadeRepository.update(new Unidade(item));
+  }
 }
 
-function getClassificacoes(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/classificacao').then(response => {
-      classificacaoRepository.clearTable().then(() => {
-        response.data.forEach((classificacao, index, array) => {
-          classificacaoRepository.update(new Classificacao(classificacao));
+async function getClassificacoes(){
+  let response = await Vue.prototype.$axios.get(path + '/classificacao');
+  await classificacaoRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await classificacaoRepository.update(new Classificacao(item));
+  }
 }
 
-function getImages(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/image').then(response => {
-      imageRepository.clearTable().then(() => {
-        response.data.forEach((image, index, array) => {
-          imageRepository.update(new Image(image));
+async function getImages(){
+  let response = await Vue.prototype.$axios.get(path + '/image');
+  await imageRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await imageRepository.update(new Image(item));
+  }
 }
 
-function getEntregas(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/entrega').then(response => {
-      entregaRepository.clearTable().then(() => {
-        response.data.forEach((entrega, index, array) => {
-          entregaRepository.update(new Entrega(entrega));
+async function getEntregas(){
+  let response = await Vue.prototype.$axios.get(path + '/entrega');
+  await entregaRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await entregaRepository.update(new Entrega(item));
+  }
 }
 
-function getCultivares(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/cultivar').then(response => {
-      cultivarRepository.clearTable().then(() => {
-        response.data.forEach((cultivar, index, array) => {
-          cultivarRepository.update(new Cultivar(cultivar));
+async function getCultivares(){
+  let response = await Vue.prototype.$axios.get(path + '/cultivar');
+  await cultivarRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await cultivarRepository.update(new Cultivar(item));
+  }
 }
 
-function getMarcas(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/marca').then(response => {
-      marcaRepository.clearTable().then(() => {
-        response.data.forEach((marca, index, array) => {
-          marcaRepository.update(new Marca(marca));
+async function getMarcas(){
+  let response = await Vue.prototype.$axios.get(path + '/marca');
+  await marcaRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await marcaRepository.update(new Marca(item));
+  }
 }
 
-function getNegocios(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/negocio').then(response => {
-      negocioRepository.clearTable().then(() => {
-        response.data.forEach((negocio, index, array) => {
-          negocioRepository.update(new Negocio(negocio));
+async function getNegocios(){
+  let response = await Vue.prototype.$axios.get(path + '/negocio');
+  await negocioRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await negocioRepository.update(new Negocio(item));
+  }
 }
 
-function getNegociosCulturas(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/negocio_cultura').then(response => {
-      negocioCulturaRepository.clearTable().then(() => {
-        response.data.forEach((negocioCultura, index, array) => {
-          negocioCulturaRepository.update(new NegocioCultura(negocioCultura));
+async function getNegociosCulturas(){
+  let response = await Vue.prototype.$axios.get(path + '/negocio_cultura');
+  await negocioCulturaRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await negocioCulturaRepository.update(new NegocioCultura(item));
+  }
 }
 
-function getPessoas(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/pessoa').then(response => {
-      pessoaRepository.clearTable().then(() => {
-        response.data.forEach((pessoa, index, array) => {
-          pessoaRepository.update(new Pessoa(pessoa));
+async function getPessoas(){
+  let response = await Vue.prototype.$axios.get(path + '/pessoa');
+  await pessoaRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await pessoaRepository.update(new Pessoa(item));
+  }
 }
 
-function getNegociosCulturasArmazens(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/negocio_cultura_armazem').then(response => {
-      negocioCulturaArmazemRepository.clearTable().then(() => {
-        response.data.forEach((negocioCulturaArmazem, index, array) => {
-          negocioCulturaArmazemRepository.update(new NegocioCulturaArmazem(negocioCulturaArmazem));
+async function getNegociosCulturasArmazens(){
+  let response = await Vue.prototype.$axios.get(path + '/negocio_cultura_armazem');
+  await negocioCulturaArmazemRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await negocioCulturaArmazemRepository.update(new NegocioCulturaArmazem(item));
+  }
 }
 
-function getLocalizacoes(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/localizacao').then(response => {
-      localizacaoRepository.clearTable().then(() => {
-        response.data.forEach((localizacao, index, array) => {
-          localizacaoRepository.update(new Localizacao(localizacao));
+async function getLocalizacoes(){
+  let response = await Vue.prototype.$axios.get(path + '/localizacao');
+  await localizacaoRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await localizacaoRepository.update(new Localizacao(item));
+  }
 }
 
-function getArmazens(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/armazem').then(response => {
-      armazemRepository.clearTable().then(() => {
-        response.data.forEach((armazem, index, array) => {
-          armazemRepository.update(new Armazem(armazem));
+async function getArmazens(){
+  let response = await Vue.prototype.$axios.get(path + '/armazem');
+  await armazemRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await armazemRepository.update(new Armazem(item));
+  }
 }
 
-function getEntregasNegocios(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/entrega_negocio').then(response => {
-      entregaNegocioRepository.clearTable().then(() => {
-        response.data.forEach((entregaNegocio, index, array) => {
-          entregaNegocioRepository.update(new EntregaNegocio(entregaNegocio));
+async function getMotoristas(){
+  let response = await Vue.prototype.$axios.get(path + '/motorista');
+  await motoristaRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await motoristaRepository.update(new Motorista(item));
+  }
 }
 
-function getMotoristas(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/motorista').then(response => {
-      motoristaRepository.clearTable().then(() => {
-        response.data.forEach((motorista, index, array) => {
-          motoristaRepository.update(new Motorista(motorista));
+async function getNotasFiscaisSeries(){
+  let response = await Vue.prototype.$axios.get(path + '/nota_fiscal_serie');
+  await notaFiscalSerieRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await notaFiscalSerieRepository.update(new NotaFiscalSerie(item));
+  }
 }
 
-function getNotasFiscaisSeries(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/nota_fiscal_serie').then(response => {
-      notaFiscalSerieRepository.clearTable().then(() => {
-        response.data.forEach((notaFiscalSerie, index, array) => {
-          notaFiscalSerieRepository.update(new NotaFiscalSerie(notaFiscalSerie));
+async function getCfops(){
+  let response = await Vue.prototype.$axios.get(path + '/cfop');
+  await cfopRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await cfopRepository.update(new Cfop(item));
+  }
 }
 
-function getCfops(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/cfop').then(response => {
-      cfopRepository.clearTable().then(() => {
-        response.data.forEach((cfop, index, array) => {
-          cfopRepository.update(new Cfop(cfop));
+async function getTiposNegocios(){
+  let response = await Vue.prototype.$axios.get(path + '/tipo_negocio');
+  await tipoNegocioRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await tipoNegocioRepository.update(new TipoNegocio(item));
+  }
 }
 
-function getTiposNegocios(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/tipo_negocio').then(response => {
-      tipoNegocioRepository.clearTable().then(() => {
-        response.data.forEach((tipo_negocio, index, array) => {
-          tipoNegocioRepository.update(new TipoNegocio(tipo_negocio));
+async function getCulturasClassificacoes(){
+  let response = await Vue.prototype.$axios.get(path + '/cultura_classificacao');
+  await culturaClassificacaoRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await culturaClassificacaoRepository.update(new CulturaClassificacao(item));
+  }
 }
 
-function getCulturasClassificacoes(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/cultura_classificacao').then(response => {
-      culturaClassificacaoRepository.clearTable().then(() => {
-        response.data.forEach((cultura_classificacao, index, array) => {
-          culturaClassificacaoRepository.update(new CulturaClassificacao(cultura_classificacao));
+async function getUnidadesConversoes(){
+  let response = await Vue.prototype.$axios.get(path + '/unidade_conversao');
+  unidadeConversaoRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await unidadeConversaoRepository.update(new UnidadeConversao(item));
+  }
 }
 
-function getUnidadesConversoes(){
-  return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(path + '/unidade_conversao ').then(response => {
-      unidadeConversaoRepository.clearTable().then(() => {
-        response.data.forEach((unidade_conversao, index, array) => {
-          unidadeConversaoRepository.update(new UnidadeConversao(unidade_conversao));
+async function getNegocioCulturaMovimento(){
+  let response = await Vue.prototype.$axios.get(path + '/negocio_cultura_movimento');
+  await negocioCulturaMovimentoRepository.clearTable();
 
-          if (index === (array.length - 1)) {
-            return resolve();
-          }
-        })
-      })
-    })
-  });
+  for(let item of response.data){
+    await negocioCulturaMovimentoRepository.update(new NegocioCulturaMovimento(item));
+  }
 }

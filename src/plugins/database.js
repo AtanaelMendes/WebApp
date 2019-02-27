@@ -37,6 +37,7 @@ db_resources.version(1).stores({
   tipos_negocios: 'id',
   culturas_classificacoes: 'id, cultura_id, classificacao_id',
   unidades_conversoes: 'id, origem_id, destino_id',
+  negocios_culturas_movimentos: 'id',
 });
 
 db_lists.version(1).stores({
