@@ -189,7 +189,8 @@
             this.$root.$emit('refreshEntregasList', 'entregue');
             this.$root.$emit('refreshEntregaView');
             this.$q.loading.hide();
-            if(this.entrega.pesagens === null){
+
+            if(this.entrega.pesagens === null || this.entrega.pesagens === undefined){
               this.$router.back();
             }
           }).catch(error => {

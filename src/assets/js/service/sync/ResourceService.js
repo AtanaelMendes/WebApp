@@ -153,7 +153,7 @@ export default class ResourceService{
 
 async function getCaminhoes(){
   let response = await Vue.prototype.$axios.get(path + '/caminhao');
-  await safraCulturaRepository.clearTable();
+  await caminhaoRepository.clearTable();
 
   for(let item of response.data){
     await caminhaoRepository.update(new Caminhao(item));
