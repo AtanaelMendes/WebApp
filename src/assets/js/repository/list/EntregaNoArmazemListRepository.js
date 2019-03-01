@@ -11,6 +11,10 @@ export default class EntregaNoArmazemListRepository{
     this.table.put(entrega)
   }
 
+  getById(id){
+    return this.table.get({id: id});
+  }
+
   getAll(){
     return this.table.toArray();
   }

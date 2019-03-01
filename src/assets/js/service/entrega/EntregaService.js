@@ -31,6 +31,7 @@ import EntregaEntregueListItem from "../../model/entrega/EntregaEntregueListItem
 import UnidadeConversaoUtil from "../../UnidadeConversaoUtil";
 import ClassificacaoRepository from "../../repository/resource/ClassificacaoRepository";
 import EntregaTalhaoRepository from "../../repository/resource/EntregaTalhaoRepository";
+import EntregaRepository from "../../repository/resource/EntregaRepository";
 
 export default class EntregaService{
   #entregasQueue;
@@ -60,6 +61,7 @@ export default class EntregaService{
   #negocioCulturaArmazemRepository;
   #classificacaoRepository;
   #entregaTalhaoRepository;
+  #entregaViewRepository;
 
   constructor(produtorId) {
     this.produtorId = produtorId;
@@ -89,6 +91,7 @@ export default class EntregaService{
     this.negocioCulturaArmazemRepository = new NegocioCulturaArmazemRepository();
     this.classificacaoRepository = new ClassificacaoRepository();
     this.entregaTalhaoRepository = new EntregaTalhaoRepository();
+    this.entregaViewRepository = new EntregaViewRepository();
   }
 
   listEntregasCarregando(filter = null){
@@ -196,6 +199,8 @@ export default class EntregaService{
           let entregaCarregandoId = parseInt(url.match("(\/entrega\/([0-9]*))")[2]);
           let entregaCarregando = await this.entregaCarreandoListRepository.getById(entregaCarregandoId);
 
+          //console.log(entregaCarregandoId)
+
           entregaItem.caminhao.nome = entregaCarregando.caminhao.nome;
           entregaItem.caminhao.placa = entregaCarregando.caminhao.placa;
           entregaItem.caminhao.image_file_name = entregaCarregando.caminhao.image_file_name;
@@ -243,17 +248,38 @@ export default class EntregaService{
 
       let queueEntregas = await Promise.all(queueItens.map(async queueItem => {
         let url = queueItem.request.url;
-        let entregaNoArmazemId = parseInt(url.match("(queue::([0-9]*))")[2]);
-        let entregaNoArmazemQueue = await this.entregasQueue.getById(entregaNoArmazemId);
-        let entregaCarregandoId = parseInt(entregaNoArmazemQueue.request.url.match("(queue::([0-9]*))")[2]);
-        let entregaCarregandoQueue = await this.entregasQueue.getById(entregaCarregandoId);
-        let caminhaoId = entregaCarregandoQueue.request.body.caminhao_id;
-        let caminhao = await this.caminhaoRepository.getById(caminhaoId);
+        let entregaItem = new EntregaEntregueListItem();
+
+        let caminhao = null;
+        let armazem = null;
+        let motorista = null;
+        let safraCultura = null;
+
+        if(url.match("(queue::([0-9]*))")){
+          let entregaNoArmazemId = parseInt(url.match("(queue::([0-9]*))")[2]);
+          let entregaNoArmazemQueue = await this.entregasQueue.getById(entregaNoArmazemId);
+          let entregaCarregandoId = parseInt(entregaNoArmazemQueue.request.url.match("(queue::([0-9]*))")[2]);
+          let entregaCarregandoQueue = await this.entregasQueue.getById(entregaCarregandoId);
+          let caminhaoId = entregaCarregandoQueue.request.body.caminhao_id;
+
+          caminhao = await this.caminhaoRepository.getById(caminhaoId);
+          armazem = await this.armazemRepository.getById(entregaNoArmazemQueue.request.body.armazem_id);
+          motorista = await this.motoristaRepository.getById(entregaNoArmazemQueue.request.body.motorista_id);
+
+          let safraCulturaTalhao = await this.safraCulturaTalhaoRepository.getById(entregaCarregandoQueue.request.body.safra_cultura_talhao_id);
+          safraCultura = await this.safraCulturaRepository.getById(safraCulturaTalhao.safra_cultura_id);
+
+        }else{
+          let entregaId = parseInt(url.match("(\/entrega\/([0-9]*))")[2]);
+          let entregaView = await this.entregaViewRepository.get(entregaId);
+
+          caminhao = await this.caminhaoRepository.getById(entregaView.caminhao.id);
+          armazem = await this.armazemRepository.getById(entregaView.armazem.id);
+          motorista = await this.motoristaRepository.getById(entregaView.motorista.id);
+          safraCultura = await this.safraCulturaRepository.getById(entregaView.safra_cultura.id);
+        }
+
         let caminhaoImage = await this.imageRepository.getById(caminhao.image_id);
-        let armazem = await this.armazemRepository.getById(entregaNoArmazemQueue.request.body.armazem_id);
-        let motorista = await this.motoristaRepository.getById(entregaNoArmazemQueue.request.body.motorista_id);
-        let safraCulturaTalhao = await this.safraCulturaTalhaoRepository.getById(entregaCarregandoQueue.request.body.safra_cultura_talhao_id);
-        let safraCultura = await this.safraCulturaRepository.getById(safraCulturaTalhao.safra_cultura_id);
         let cultura = await this.culturaRepository.getById(safraCultura.cultura_id);
         let safra = await this.safraRepository.getById(safraCultura.safra_id);
 
@@ -263,14 +289,13 @@ export default class EntregaService{
         let total_peso_bruto_produto = queueItem.request.body.peso_bruto_produto;
         let total_peso_desconto = queueItem.request.body.peso_desconto;
 
-        let entregaItem = new EntregaEntregueListItem();
         entregaItem.id = queueItem.id;
+        entregaItem.entregue = queueItem.date;
         entregaItem.isInQueueState = true;
         entregaItem.caminhao.image_file_name = caminhaoImage.file_name;
         entregaItem.caminhao.placa = caminhao.placa;
         entregaItem.armazem = armazem.nome;
         entregaItem.motorista = motorista.nome;
-        entregaItem.entregue = queueItem.date;
         entregaItem.peso = total_peso_liquido.toLocaleString('en-US', { style: 'decimal', minimumFractionDigits:2 });
         if(total_peso_desconto > 0){
           entregaItem.peso += " ("
@@ -278,7 +303,7 @@ export default class EntregaService{
             + " - " + total_peso_desconto.toLocaleString('en-US', { style: 'decimal', minimumFractionDigits:2 }) + ")";
         }
         entregaItem.peso += " " + unidadeParaConversao.sigla;
-          entregaItem.safra = cultura.nome + " " + safra.ano_inicio + "/" + safra.ano_fim;
+        entregaItem.safra = cultura.nome + " " + safra.ano_inicio + "/" + safra.ano_fim;
 
         return entregaItem;
 
@@ -480,13 +505,13 @@ export default class EntregaService{
             entrega.status = 'Carregando';
             var entregaCarregandoQueue = entregaQueue;
 
-            entrega = await this.montaCarregandoByQueue(entregaCarregandoQueue);
+            entrega = Object.assign(entrega, await this.montaCarregandoByQueue(entregaCarregandoQueue));
             break;
           case EntregasQueue.ENVIAR_PARA_ARMAZEM:
             entrega.status = 'No Armazem';
             var entregaNoArmazemQueue = entregaQueue;
 
-            entrega = await this.montaNoArmazemByQueue(entregaNoArmazemQueue, entrega);
+            entrega = Object.assign(entrega, await this.montaNoArmazemByQueue(entregaNoArmazemQueue, entrega));
             break;
           case EntregasQueue.INFORMAR_PESAGEM:
             entrega.status = 'Entregue';
@@ -497,7 +522,7 @@ export default class EntregaService{
               let entregaNoArmazemQueueId = parseInt(entregaEntregueQueue.request.url.match("(queue::([0-9]*))")[2]);
               var entregaNoArmazemQueue = await this.entregasQueue.getById(entregaNoArmazemQueueId);
 
-              entrega = await this.montaNoArmazemByQueue(entregaNoArmazemQueue, entrega);
+              entrega = Object.assign(entrega, await this.montaNoArmazemByQueue(entregaNoArmazemQueue, entrega));
 
               let pesagemUnidadeMedida = await this.unidadeRepository.getById(entregaEntregueQueue.request.body.unidade_medida_id);
               let negocioCultura = await this.negocioCulturaRepository.getById(entregaNoArmazemQueue.request.body.negocio_cultura_id);
@@ -529,6 +554,8 @@ export default class EntregaService{
                   }
                 }))
               }];
+            }else{
+              console.log('vem aqui agora')
             }
 
             break;
