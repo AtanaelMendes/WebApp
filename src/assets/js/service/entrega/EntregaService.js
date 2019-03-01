@@ -432,7 +432,10 @@ export default class EntregaService{
       negocio_cultura: {
         id: negocioCultura.id,
         quantidade: negocioCultura.quantidade,
-        unidade_medida_sigla: negocioCulturaUnidadeMedida.sigla,
+        unidade_medida: {
+          id: negocioCulturaUnidadeMedida.id,
+          sigla: negocioCulturaUnidadeMedida.sigla
+        },
         prazo_entrega_final: negocioCultura.prazo_entrega_final,
         negocio: {
           id: negocio.id,
@@ -470,20 +473,16 @@ export default class EntregaService{
       let entregaCarregandoQueue = await this.entregasQueue.getById(entregaCarregandoQueueId);
       entrega.inicio_carregamento = entregaCarregandoQueue.date;
       entrega = Object.assign(entrega, await this.montaCarregandoByQueue(entregaCarregandoQueue));
+      entrega.motorista = await this.getMotoristaById(entregaNoArmazemQueue.request.body.motorista_id);
     }else{
-      let entregaCarregandoId = parseInt(entregaNoArmazemQueue.request.url.match("(\/entrega\/([0-9]*))")[2]);
-      let entregaCarregando = await this.entregaCarreandoListRepository.getById(entregaCarregandoId);
-      entrega.inicio_carregamento = entregaCarregando.inicio_carregamento;
+      let entregaViewId = parseInt(entregaNoArmazemQueue.request.url.match("(\/entrega\/([0-9]*))")[2]);
+      var entregaView = await this.entregaViewRepository.get(entregaViewId);
 
-      var caminhao = await this.caminhaoRepository.getById(entregaCarregando.caminhao.id);
-      let entregaTalhao = await this.entregaTalhaoRepository.getById(entregaCarregando.safra_culturas_talhoes[0].id);
-      entrega.caminhao = await this.getCaminhaoById(caminhao.id);
-      entrega.safra_cultura = await this.getSafraCulturaBySafraCulturaTalhao(entregaTalhao.safra_cultura_talhao_id, caminhao);
+      entrega = Object.assign(entregaView, entrega)
     }
 
     entrega.envio_armazem = entregaNoArmazemQueue.date;
 
-    entrega.motorista = await this.getMotoristaById(entregaNoArmazemQueue.request.body.motorista_id);
     entrega.armazem = await this.getArmazemById(entregaNoArmazemQueue.request.body.armazem_id);
     entrega.negocios = await this.getNegociosByEntregaNoArmazemQueue(entregaNoArmazemQueue);
     entrega.negocios[0].quantidade = entrega.safra_cultura.talhoes[0].quantidade;
@@ -526,7 +525,7 @@ export default class EntregaService{
               var entregaNoArmazemQueue = await this.entregasQueue.getById(entregaNoArmazemQueueId);
 
               entrega = Object.assign(entrega, await this.montaNoArmazemByQueue(entregaNoArmazemQueue, entrega));
-              
+
               let negocioCultura = await this.negocioCulturaRepository.getById(entregaNoArmazemQueue.request.body.negocio_cultura_id);
               negocioCulturaUnidadeMedida = await this.unidadeRepository.getById(negocioCultura.unidade_medida_id);
             }else{
