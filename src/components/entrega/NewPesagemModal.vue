@@ -189,6 +189,9 @@
             this.$root.$emit('refreshEntregasList', 'entregue');
             this.$root.$emit('refreshEntregaView');
             this.$q.loading.hide();
+            if(this.entrega.pesagens === null){
+              this.$router.back();
+            }
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
             this.$q.loading.hide();
