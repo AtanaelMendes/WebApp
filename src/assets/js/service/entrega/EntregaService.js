@@ -62,6 +62,7 @@ export default class EntregaService{
   #classificacaoRepository;
   #entregaTalhaoRepository;
   #entregaViewRepository;
+  #entregaRepository;
 
   constructor(produtorId) {
     this.produtorId = produtorId;
@@ -92,6 +93,7 @@ export default class EntregaService{
     this.classificacaoRepository = new ClassificacaoRepository();
     this.entregaTalhaoRepository = new EntregaTalhaoRepository();
     this.entregaViewRepository = new EntregaViewRepository();
+    this.entregaRepository = new EntregaRepository();
   }
 
   listEntregasCarregando(filter = null){
@@ -516,6 +518,7 @@ export default class EntregaService{
           case EntregasQueue.INFORMAR_PESAGEM:
             entrega.status = 'Entregue';
             var entregaEntregueQueue = entregaQueue;
+            let negocioCulturaUnidadeMedida = null;
 
             if(entregaEntregueQueue.request.url.match("(queue::([0-9]*))")){
               //Entrega no armazem é uma queue
@@ -523,40 +526,45 @@ export default class EntregaService{
               var entregaNoArmazemQueue = await this.entregasQueue.getById(entregaNoArmazemQueueId);
 
               entrega = Object.assign(entrega, await this.montaNoArmazemByQueue(entregaNoArmazemQueue, entrega));
-
-              let pesagemUnidadeMedida = await this.unidadeRepository.getById(entregaEntregueQueue.request.body.unidade_medida_id);
+              
               let negocioCultura = await this.negocioCulturaRepository.getById(entregaNoArmazemQueue.request.body.negocio_cultura_id);
-              let negocioCulturaUnidadeMedida = await this.unidadeRepository.getById(negocioCultura.unidade_medida_id);
-
-              entrega.entregue = entregaEntregueQueue.request.body.emissao;
-              entrega.pesagens = [{
-                id: -1,
-                peso_bruto_total: entregaEntregueQueue.request.body.peso_bruto_total,
-                peso_tara: entregaEntregueQueue.request.body.peso_tara,
-                peso_bruto_produto: entregaEntregueQueue.request.body.peso_bruto_produto,
-                peso_desconto: entregaEntregueQueue.request.body.peso_desconto,
-                peso_liquido: entregaEntregueQueue.request.body.peso_liquido,
-                peso_bruto_produto_convertido: await new UnidadeConversaoUtil().convert(pesagemUnidadeMedida.id, negocioCulturaUnidadeMedida.id, entregaEntregueQueue.request.body.peso_bruto_produto),
-                peso_desconto_convertido: await new UnidadeConversaoUtil().convert(pesagemUnidadeMedida.id, negocioCulturaUnidadeMedida.id, entregaEntregueQueue.request.body.peso_desconto),
-                peso_liquido_convertido: await new UnidadeConversaoUtil().convert(pesagemUnidadeMedida.id, negocioCulturaUnidadeMedida.id, entregaEntregueQueue.request.body.peso_liquido),
-
-                emissao: entregaEntregueQueue.request.body.emissao,
-                numero_ticket: entregaEntregueQueue.request.body.numero_ticket,
-                unidade_medida_sigla: null,
-                classificacoes: await Promise.all(entregaEntregueQueue.request.body.classificacoes.map(async classificacao => {
-                  let classificacaoDb = await this.classificacaoRepository.getById(classificacao.classificacao_id);
-                  return {
-                    id: classificacaoDb.id,
-                    nome: classificacaoDb.nome,
-                    verificado: classificacao.verificado,
-                    desconto: classificacao.peso_desconto,
-                    desconto_convertido: await new UnidadeConversaoUtil().convert(pesagemUnidadeMedida.id, negocioCulturaUnidadeMedida.id, classificacao.peso_desconto),
-                  }
-                }))
-              }];
+              negocioCulturaUnidadeMedida = await this.unidadeRepository.getById(negocioCultura.unidade_medida_id);
             }else{
-              console.log('vem aqui agora')
+              let entregaNoArmazemQueueId = parseInt(entregaEntregueQueue.request.url.match("(\/entrega\/([0-9]*))")[2]);
+              var entregaView = await this.entregaViewRepository.get(entregaNoArmazemQueueId);
+
+              entrega = Object.assign(entregaView, entrega);
+              negocioCulturaUnidadeMedida = await this.unidadeRepository.getById(entrega.negocios[0].negocio_cultura.unidade_medida.id);
             }
+
+            let pesagemUnidadeMedida = await this.unidadeRepository.getById(entregaEntregueQueue.request.body.unidade_medida_id);
+
+            entrega.entregue = entregaEntregueQueue.request.body.emissao;
+            entrega.pesagens = [{
+              id: -1,
+              peso_bruto_total: entregaEntregueQueue.request.body.peso_bruto_total,
+              peso_tara: entregaEntregueQueue.request.body.peso_tara,
+              peso_bruto_produto: entregaEntregueQueue.request.body.peso_bruto_produto,
+              peso_desconto: entregaEntregueQueue.request.body.peso_desconto,
+              peso_liquido: entregaEntregueQueue.request.body.peso_liquido,
+              peso_bruto_produto_convertido: await new UnidadeConversaoUtil().convert(pesagemUnidadeMedida.id, negocioCulturaUnidadeMedida.id, entregaEntregueQueue.request.body.peso_bruto_produto),
+              peso_desconto_convertido: await new UnidadeConversaoUtil().convert(pesagemUnidadeMedida.id, negocioCulturaUnidadeMedida.id, entregaEntregueQueue.request.body.peso_desconto),
+              peso_liquido_convertido: await new UnidadeConversaoUtil().convert(pesagemUnidadeMedida.id, negocioCulturaUnidadeMedida.id, entregaEntregueQueue.request.body.peso_liquido),
+
+              emissao: entregaEntregueQueue.request.body.emissao,
+              numero_ticket: entregaEntregueQueue.request.body.numero_ticket,
+              unidade_medida_sigla: null,
+              classificacoes: await Promise.all(entregaEntregueQueue.request.body.classificacoes.map(async classificacao => {
+                let classificacaoDb = await this.classificacaoRepository.getById(classificacao.classificacao_id);
+                return {
+                  id: classificacaoDb.id,
+                  nome: classificacaoDb.nome,
+                  verificado: classificacao.verificado,
+                  desconto: classificacao.peso_desconto,
+                  desconto_convertido: await new UnidadeConversaoUtil().convert(pesagemUnidadeMedida.id, negocioCulturaUnidadeMedida.id, classificacao.peso_desconto),
+                }
+              }))
+            }];
 
             break;
         }

@@ -173,7 +173,7 @@
                           </template>
                           <br />
                           {{numeral(negocio.negocio_cultura.quantidade).format('0,0')}}
-                          {{negocio.negocio_cultura.unidade_medida_sigla}} até
+                          {{negocio.negocio_cultura.unidade_medida.sigla}} até
                           {{moment(negocio.negocio_cultura.prazo_entrega_final).format('DD/MMM/YY')}}
                         </span>
 
@@ -183,7 +183,7 @@
                       <q-item-main>
                         <q-item-tile label>
                           {{numeral(negocio.quantidade).format('0,0')}}
-                          {{negocio.negocio_cultura.unidade_medida_sigla}}
+                          {{negocio.negocio_cultura.unidade_medida.sigla}}
                         </q-item-tile>
                         <q-item-tile sublabel>
                           Considerado no negócio
