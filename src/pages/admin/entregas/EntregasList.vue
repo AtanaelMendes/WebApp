@@ -365,8 +365,7 @@
         })
       },
       viewCarga: function (entrega) {
-        let id = entrega.isInQueueState ? `queue::${entrega.id}` : entrega.id;
-        this.$router.push({name: 'entrega_view', params: {id:id}});
+        this.$router.push({name: 'entrega_view', params: {id:entrega.id}});
       },
       deleteEntrega(id){
         this.$q.dialog({
@@ -383,11 +382,11 @@
                 break;
               case 'no-armazem':
                 this.listEntregasNoArmazem();
-                break
+                break;
               case 'entregue':
                 this.listEntregasEntregues();
                 break
-            };
+            }
             this.$q.loading.hide();
           }).catch(error => {
             this.$q.loading.hide();

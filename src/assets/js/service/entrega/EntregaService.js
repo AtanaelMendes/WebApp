@@ -134,7 +134,7 @@ export default class EntregaService{
         let area = await this.areaRepository.getById(talhao.area_id);
 
         let entregaItem = new EntregaCarregandoListItem();
-        entregaItem.id = queueItem.id;
+        entregaItem.id = 'queue::' + queueItem.id;
         entregaItem.isInQueueState = true;
         entregaItem.caminhao.nome = caminhao.nome;
         entregaItem.caminhao.placa = caminhao.placa;
@@ -184,7 +184,7 @@ export default class EntregaService{
       let queueEntregas = await Promise.all(queueItens.map(async queueItem => {
         let url = queueItem.request.url;
         let entregaItem = new EntregaNoArmazemListItem();
-        entregaItem.id = queueItem.id;
+        entregaItem.id = 'queue::' + queueItem.id;
         entregaItem.isInQueueState = true;
 
         if(url.match("(queue::([0-9]*))")) {
@@ -291,7 +291,7 @@ export default class EntregaService{
         let total_peso_bruto_produto = queueItem.request.body.peso_bruto_produto;
         let total_peso_desconto = queueItem.request.body.peso_desconto;
 
-        entregaItem.id = queueItem.id;
+        entregaItem.id = 'queue::' + queueItem.id;
         entregaItem.entregue = queueItem.date;
         entregaItem.isInQueueState = true;
         entregaItem.caminhao.image_file_name = caminhaoImage.file_name;
