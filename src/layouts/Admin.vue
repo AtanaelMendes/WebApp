@@ -164,16 +164,7 @@
       });*/
 
       if('serviceWorker' in navigator){
-        let self = this;
-        navigator.serviceWorker.addEventListener('message', function(event){ //TODO Verificar se não esta instanciando esse evento toda vez que carrega a pagina
-          switch (event.data) {
-            case 'sync':
-              self.syncService.doSync().then(()=>{
-                event.ports[0].postMessage("queueSyncFinished");
-              });
-              break;
-          }
-        }.bind(self));
+        navigator.serviceWorker.addEventListener('message', this.serviceWorkerMessageEvent);
       }
 
     },
@@ -186,6 +177,15 @@
       }
     },
     methods: {
+      serviceWorkerMessageEvent(event){
+        switch (event.data) {
+          case 'sync':
+            this.syncService.doSync().then(()=>{
+              event.ports[0].postMessage("queueSyncFinished");
+            });
+            break;
+        }
+      },
       showOfflineAlertDialog(){
         this.isNetworkErrorDialogOpen = true;
       },
@@ -237,7 +237,7 @@
     },
     destroyed() {
       if('serviceWorker' in navigator){
-        navigator.serviceWorker.removeEventListener('message');
+        navigator.serviceWorker.removeEventListener('message', this.serviceWorkerMessageEvent);
       }
     }
   }

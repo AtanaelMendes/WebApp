@@ -338,6 +338,7 @@
         }
       },
       listEntregasCarregando(filter = null) {
+        console.log('listEntregasCarregando')
         this.$q.loading.show();
         this.entregaService.listEntregasCarregando(filter).then(entregas => {
           this.entregasCarregando = entregas;
@@ -347,6 +348,7 @@
         })
       },
       listEntregasNoArmazem: function (filter = null) {
+        console.log('listEntregasNoArmazem')
         this.$q.loading.show();
         this.entregaService.listEntregasNoArmazem(filter).then(entregas => {
           this.entregasNoArmazem = entregas;
@@ -356,6 +358,7 @@
         })
       },
       listEntregasEntregues: function (filter = null) {
+        console.log('listEntregasEntregues')
         this.$q.loading.show();
         this.entregaService.listCargasEntregues(filter).then(entregas => {
           this.entregasEntregues = entregas;
@@ -392,26 +395,17 @@
             this.$q.loading.hide();
           })
         }).catch(()=>{});
-      }
-    },
-    mounted () {
-      if('serviceWorker' in navigator){
-        let self = this;
-        navigator.serviceWorker.addEventListener('message', function(event){ //TODO Verificar se não esta instanciando esse evento toda vez que carrega a pagina
-          switch (event.data) {
-            case 'queueSyncFinished':
-              self.$root.$emit('refreshEntregasList', 'all');
-              break;
-          }
-        }.bind(self));
-      }
-
-      new AccountRepository().getFirst().then(account => {
-        this.entregaService = new EntregaService(account.produtor_id);
-        this.listEntregasCarregando();
-      });
-
-      this.$root.$on('refreshEntregasList', (status) => {
+      },
+      queueSyncFinishedEvent(event){
+        switch (event.data) {
+          case 'queueSyncFinished':
+            console.log('EntregasList.queueSyncFinished')
+            this.$root.$emit('refreshEntregasList', 'all');
+            break;
+        }
+      },
+      refreshEntregasListEvent(status){
+        console.log('refreshEntregasList.status: ' + status);
         switch (status) {
           case 'carregando':
             this.listEntregasCarregando();
@@ -428,12 +422,27 @@
             this.listEntregasEntregues();
             break;
         }
+      }
+    },
+    mounted () {
+      console.log('mounted')
+      if('serviceWorker' in navigator){
+        navigator.serviceWorker.addEventListener('message', this.queueSyncFinishedEvent);
+      }
+
+      new AccountRepository().getFirst().then(account => {
+        this.entregaService = new EntregaService(account.produtor_id);
+        this.listEntregasCarregando();
       });
+
+      this.$root.$on('refreshEntregasList', this.refreshEntregasListEvent);
     },
     destroyed() {
       if('serviceWorker' in navigator){
-        navigator.serviceWorker.removeEventListener('message');
+        navigator.serviceWorker.removeEventListener('message', this.queueSyncFinishedEvent);
       }
+
+      this.$root.$off('refreshEntregasList', this.refreshEntregasListEvent);
     }
   }
   // this.$q.notify({type: 'negative', message: 'aqui'})
