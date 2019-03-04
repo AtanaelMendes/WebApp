@@ -168,9 +168,9 @@
         navigator.serviceWorker.addEventListener('message', function(event){ //TODO Verificar se não esta instanciando esse evento toda vez que carrega a pagina
           switch (event.data) {
             case 'sync':
-              /*self.syncService.doSync().then(()=>{
+              self.syncService.doSync().then(()=>{
                 event.ports[0].postMessage("queueSyncFinished");
-              });*/
+              });
               break;
           }
         }.bind(self));
@@ -200,7 +200,7 @@
           this.currentAccount.name = info.nome;
           this.currentAccount.email = info.email;
 
-          //this.getInitialContent(info.produtor_id)
+          this.getInitialContent(info.produtor_id)
         })
       },
       getInitialContent(produtorId){

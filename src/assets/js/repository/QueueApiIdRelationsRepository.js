@@ -27,4 +27,8 @@ export default class QueueApiIdRelationsRepository {
       return table.delete(item.id);
     })
   }
+
+  deleteAll(){
+    return table.clear();
+  }
 }
