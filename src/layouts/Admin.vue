@@ -107,6 +107,7 @@
 
 
     <forbidden-access-dialog></forbidden-access-dialog>
+    <sync-progress-dialog ref="syncProgressDialog"></sync-progress-dialog>
 
     <q-layout-footer v-model="offlineStatusBar" >
       <div class="offline-status-bar">
@@ -134,10 +135,12 @@
   import ListService from "../assets/js/service/sync/ListService";
   import AccountService from "../assets/js/service/AccountService";
   import ForbiddenAccessDialog from "../components/offline/ForbiddenAccessDialog";
+  import SyncProgressDialog from "../components/offline/SyncProgressDialog";
   export default {
     name: 'Admin',
     mixins: [NetworkStateMixin],
     components:{
+      SyncProgressDialog,
       ForbiddenAccessDialog
     },
     data () {
@@ -210,13 +213,13 @@
         })
       },
       getInitialContent(produtorId){
-        const dismiss = this.$q.notify({message: 'Sincronizando...', timeout:0, color: 'info', icon: 'mdi-sync'});
+        this.$refs.syncProgressDialog.openModal();
         this.syncService.getInitialContent(produtorId);
         new ResourceService(produtorId).download().then(() => {
           console.log("Terminou de baixar os resources")
           new ListService(produtorId).download().then(() => {
             console.log("Terminou sync")
-            dismiss();
+            this.$refs.syncProgressDialog.closeModal();
           }).catch(error => {
             console.log("Erro no download de ListService")
           })
