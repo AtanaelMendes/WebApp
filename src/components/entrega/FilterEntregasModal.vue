@@ -119,12 +119,16 @@
 </template>
 
 <script>
-  import entregaService from 'assets/js/service/entrega/EntregaService'
+
+
+  import EntregaService from "../../assets/js/service/entrega/EntregaService";
+  import AccountRepository from "../../assets/js/repository/AccountRepository";
 
   export default {
     name: "FilterEntregasModal",
     data(){
       return {
+        entregaService: null,
         isModalOpened: false,
         filter: {
           caminhao_id: null,
@@ -232,7 +236,7 @@
       },
       getFilterOptions(){
         this.$q.loading.show();
-        entregaService.getFilterOptions().then(response => {
+        this.entregaService.getFilterOptions().then(response => {
           this.options = response.data;
           this.$store.commit('entrega/setFilterOptions', this.options)
           this.$q.loading.hide();
@@ -346,6 +350,11 @@
       getFilterItemById(array, id){
         return array.find(item => item.id === id);
       },
+    },
+    mounted(){
+      new AccountRepository().getFirst().then(account => {
+        this.entregaService = new EntregaService(account.produtor_id);
+      });
     }
   }
 </script>

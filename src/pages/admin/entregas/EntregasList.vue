@@ -297,11 +297,14 @@
         return AgroUtils.image.makeUrl(image_file_name, size)
       },
       novaEntrega: function(){
-        console.log(this.$axios.defaults.baseURL);
         this.$refs.entregaModal.openModal()
       },
       openFilterModal(){
-        this.$refs.filterEntregasModal.openModal();
+        if(navigator.onLine){
+          this.$refs.filterEntregasModal.openModal();
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       filterEntregas(filters){
         this.$refs.filerResultBar.show(this.$refs.filterEntregasModal.getFilterDesciption());
@@ -371,30 +374,35 @@
         this.$router.push({name: 'entrega_view', params: {id:entrega.id}});
       },
       deleteEntrega(id){
-        this.$q.dialog({
-          title: 'Atenção',
-          message: 'Realmente deseja apagar esta entrega?',
-          ok: 'Sim', cancel: 'Não',
-          color: 'primary'
-        }).then(data => {
-          this.$q.loading.show();
-          this.entregaService.deleteEntrega(id).then(response => {
-            switch (this.tabs) {
-              case 'carregando':
-                this.listEntregasCarregando();
-                break;
-              case 'no-armazem':
-                this.listEntregasNoArmazem();
-                break;
-              case 'entregue':
-                this.listEntregasEntregues();
-                break
-            }
-            this.$q.loading.hide();
-          }).catch(error => {
-            this.$q.loading.hide();
-          })
-        }).catch(()=>{});
+        if(navigator.onLine){
+          this.$q.dialog({
+            title: 'Atenção',
+            message: 'Realmente deseja apagar esta entrega?',
+            ok: 'Sim', cancel: 'Não',
+            color: 'primary'
+          }).then(data => {
+            this.$q.loading.show();
+            this.entregaService.deleteEntrega(id).then(response => {
+              switch (this.tabs) {
+                case 'carregando':
+                  this.listEntregasCarregando();
+                  break;
+                case 'no-armazem':
+                  this.listEntregasNoArmazem();
+                  break;
+                case 'entregue':
+                  this.listEntregasEntregues();
+                  break
+              }
+              this.$q.loading.hide();
+            }).catch(error => {
+              this.$q.loading.hide();
+            })
+          }).catch(()=>{});
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
+
       },
       queueSyncFinishedEvent(event){
         switch (event.data) {
@@ -425,7 +433,6 @@
       }
     },
     mounted () {
-      console.log('mounted')
       if('serviceWorker' in navigator){
         navigator.serviceWorker.addEventListener('message', this.queueSyncFinishedEvent);
       }

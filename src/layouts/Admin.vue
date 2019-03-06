@@ -94,7 +94,7 @@
     </q-page-container>
 
     <!--<q-dialog v-model="isNetworkErrorDialogOpen">-->
-    <q-dialog v-model="isNetworkErrorDialogOpen">
+    <q-dialog v-model="isNetworkErrorDialogOpen" ref="isNetworkErrorDialogOpen">
       <div slot="title"></div>
       <div slot="body" align="center">
         <q-icon name="mdi-wifi-off" size="50px"/>
@@ -105,6 +105,8 @@
       </template>
     </q-dialog>
 
+
+    <forbidden-access-dialog></forbidden-access-dialog>
 
     <q-layout-footer v-model="offlineStatusBar" >
       <div class="offline-status-bar">
@@ -131,9 +133,13 @@
   import ResourceService from "../assets/js/service/sync/ResourceService";
   import ListService from "../assets/js/service/sync/ListService";
   import AccountService from "../assets/js/service/AccountService";
+  import ForbiddenAccessDialog from "../components/offline/ForbiddenAccessDialog";
   export default {
     name: 'Admin',
     mixins: [NetworkStateMixin],
+    components:{
+      ForbiddenAccessDialog
+    },
     data () {
       return {
         accountService: new AccountService(),

@@ -582,19 +582,39 @@
         this.$refs.sendEntregaModal.openModal('sendEntrega', entrega)
       },
       addNotaFiscal: function(negocio){
-        this.$refs.sendEntregaModal.openModal('addNota', negocio)
+        if(navigator.onLine){
+          this.$refs.sendEntregaModal.openModal('addNota', negocio)
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       updateNota: function(notaFiscalItem){
-        this.$refs.sendEntregaModal.openModal('updateNota', notaFiscalItem)
+        if(navigator.onLine){
+          this.$refs.sendEntregaModal.openModal('updateNota', notaFiscalItem)
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       novoNegocio: function(entrega){
-        this.$refs.sendEntregaModal.openModal('novoNegocio', entrega)
+        if(navigator.onLine){
+          this.$refs.sendEntregaModal.openModal('novoNegocio', entrega)
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       updateMotorista: function(entrega){
-        this.$refs.sendEntregaModal.openModal('updateMotorista', entrega)
+        if(navigator.onLine){
+          this.$refs.sendEntregaModal.openModal('updateMotorista', entrega)
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       updateArmazem: function(entrega){
-        this.$refs.sendEntregaModal.openModal('updateArmazem', entrega)
+        if(navigator.onLine){
+          this.$refs.sendEntregaModal.openModal('updateArmazem', entrega)
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       newPesagem: function(){
         if(this.entrega.negocios.length === 0){
@@ -610,72 +630,102 @@
 
       // TODO passar o id do caminhao no addTalhao
       addTalhao: function(entrega){
-        this.$refs.entregaModal.openModal(entrega)
+        if(navigator.onLine){
+          this.$refs.entregaModal.openModal(entrega)
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       addTalhaoPercentage: function(){
-        this.$refs.addTalhaoPercentageModal.openModal(this.entrega)
+        if(navigator.onLine){
+          this.$refs.addTalhaoPercentageModal.openModal(this.entrega)
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       openSetNegociosQuantidadeModal(entrega){
-        this.$refs.setNegociosQuantidadeModal.openModal(entrega);
+        if(navigator.onLine){
+          this.$refs.setNegociosQuantidadeModal.openModal(entrega);
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       viewNegocio(id){
-        this.$router.push({name: 'negocio_view', params: {id:id}});
+        if(navigator.onLine){
+          this.$router.push({name: 'negocio_view', params: {id:id}});
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       deleteTalhao: function(id){
-        this.$q.dialog({
-          title: 'Atenção',
-          message: 'Realmente deseja apagar este talhão?',
-          ok: 'Sim', cancel: 'Não',
-          color: 'primary'
-        }).then(data => {
-          this.$q.loading.show();
-          this.entregaService.delteTalhaoOfEntrega(this.entrega.id, id).then(response => {
-            if(response.status === 200) {
-              this.$q.notify({type: 'positive', message: 'Talhão removido com sucesso'});
+        if(navigator.onLine){
+          this.$q.dialog({
+            title: 'Atenção',
+            message: 'Realmente deseja apagar este talhão?',
+            ok: 'Sim', cancel: 'Não',
+            color: 'primary'
+          }).then(data => {
+            this.$q.loading.show();
+            this.entregaService.delteTalhaoOfEntrega(this.entrega.id, id).then(response => {
+              if(response.status === 200) {
+                this.$q.notify({type: 'positive', message: 'Talhão removido com sucesso'});
+                this.$q.loading.hide();
+                this.getEntrega()
+              }
+            }).catch(error => {
+              this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
               this.$q.loading.hide();
-              this.getEntrega()
-            }
-          }).catch(error => {
-            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-            this.$q.loading.hide();
-          });
-        }).catch(()=>{});
+            });
+          }).catch(()=>{});
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       deleteNegocio: function(id){
-        this.$q.dialog({
-          title: 'Atenção',
-          message: 'Realmente deseja apagar esta Negocio?',
-          ok: 'Sim', cancel: 'Não',
-          color: 'primary'
-        }).then(data => {
-          this.$q.loading.show();
-          this.entregaService.delteNegocioOfEntrega(this.entrega.id, id).then(response => {
-            if(response.status === 200) {
-              this.$q.notify({type: 'positive', message: 'Negócio removido com sucesso'});
-              this.getEntrega()
-            }
-            this.$q.loading.hide();
-          }).catch(error => {
-            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-            this.$q.loading.hide();
-          });
-        }).catch(()=>{});
+        if(navigator.onLine){
+          this.$q.dialog({
+            title: 'Atenção',
+            message: 'Realmente deseja apagar esta Negocio?',
+            ok: 'Sim', cancel: 'Não',
+            color: 'primary'
+          }).then(data => {
+            this.$q.loading.show();
+            this.entregaService.delteNegocioOfEntrega(this.entrega.id, id).then(response => {
+              if(response.status === 200) {
+                this.$q.notify({type: 'positive', message: 'Negócio removido com sucesso'});
+                this.getEntrega()
+              }
+              this.$q.loading.hide();
+            }).catch(error => {
+              this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+              this.$q.loading.hide();
+            });
+          }).catch(()=>{});
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
+
       },
       deletePesagem: function(id){
-        this.$q.dialog({
-          title: 'Atenção',
-          message: 'Realmente deseja apagar esta pesagem?',
-          ok: 'Sim', cancel: 'Não',
-          color: 'primary'
-        }).then(data => {
-          this.$q.loading.show();
-          pesagemService.deletePesagem(this.entrega.id, id).then(() => {
-            this.$q.loading.hide();
-            this.getEntrega()
-          }).catch(error => {
-            this.$q.loading.hide();
-          })
-        }).catch(()=>{});
+        if(navigator.onLine){
+          this.$q.dialog({
+            title: 'Atenção',
+            message: 'Realmente deseja apagar esta pesagem?',
+            ok: 'Sim', cancel: 'Não',
+            color: 'primary'
+          }).then(data => {
+            this.$q.loading.show();
+            pesagemService.deletePesagem(this.entrega.id, id).then(() => {
+              this.$q.loading.hide();
+              this.getEntrega()
+            }).catch(error => {
+              this.$q.loading.hide();
+            })
+          }).catch(()=>{});
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
+
       },
       getEntrega: function(){
         this.$q.loading.show();
