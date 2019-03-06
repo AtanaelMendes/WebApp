@@ -538,25 +538,29 @@
         this.goToNextStep()
       },
       newMotoristaDialog: function(){
-        this.$q.dialog({
-          title: 'Novo motorista',
-          //message: 'Modern front-end framework on steroids.',
-          prompt: {
-            model: '',
-            type: 'text' // optional
-          },
-          cancel: true,
-          color: 'secondary'
-        }).then(data => {
-          this.$q.loading.show();
-          this.motoristaService.saveMotorista({nome: data}).then(response => {
-            if(response.status === 201){
-              this.sendEntrega.motoristaId = response.data.id;
-              this.listMotoristas();
-              this.$q.loading.hide();
-            }
-          })
-        }).catch(() => {})
+        if(navigator.onLine){
+          this.$q.dialog({
+            title: 'Novo motorista',
+            //message: 'Modern front-end framework on steroids.',
+            prompt: {
+              model: '',
+              type: 'text' // optional
+            },
+            cancel: true,
+            color: 'secondary'
+          }).then(data => {
+            this.$q.loading.show();
+            this.motoristaService.saveMotorista({nome: data}).then(response => {
+              if(response.status === 201){
+                this.sendEntrega.motoristaId = response.data.id;
+                this.listMotoristas();
+                this.$q.loading.hide();
+              }
+            })
+          }).catch(() => {})
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       save:function(){
         switch (this.funcao) {
