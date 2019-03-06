@@ -17,7 +17,7 @@
           </div>
 
           <div class="col-xs-6 col-lg-3 self-center">
-            {{entregaTalhao.cultivar}}
+            <span v-for="cultivar in entregaTalhao.cultivares" class="q-caption">{{cultivar.nome}} ({{cultivar.marca}}) </span>
           </div>
 
           <div class="col-xs-6 col-lg-3">
