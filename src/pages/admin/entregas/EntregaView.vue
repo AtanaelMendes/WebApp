@@ -49,7 +49,10 @@
 
                   <!-- MOTORISTA -->
                   <q-item v-if="entrega.motorista">
-                    <q-item-side :avatar="makeUrl(entrega.motorista.image_file_name, '125x125')" />
+                    <q-item-side class="q-item-avatar">
+                      <ap-image size="125x125" :file-name="entrega.motorista.image_file_name" />
+                    </q-item-side>
+
                     <q-item-main>
                       <q-item-tile label>{{entrega.motorista.nome}}</q-item-tile>
                     </q-item-main>
@@ -316,7 +319,9 @@
                       <q-item v-for="sct in entrega.safra_cultura.talhoes" :key="sct.safra_cultura_talhao.id">
 
                         <!-- IMAGEM TALHAO -->
-                        <q-item-side :image="makeUrl(sct.talhao.image_file_name, '200x125')" />
+                        <q-item-side class="q-item-image">
+                          <ap-image size="200x125" :file-name="sct.talhao.image_file_name" />
+                        </q-item-side>
 
                         <!-- TEXTO TALHAO -->
                         <q-item-main>
