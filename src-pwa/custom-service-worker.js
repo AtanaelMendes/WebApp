@@ -11,8 +11,10 @@ self.addEventListener('install', function(event){
     caches.open('agro_project').then(function(cache) {
       return cache.addAll([
         //'/',
-        '/statics/images/farmer.svg',
-        '/statics/images/login-background.jpg',
+        'statics/images/farmer.svg',
+        'statics/images/login-background.jpg',
+        'statics/images/no-image-16-10.svg',
+        'statics/images/ajax-loading-gif.gif'
       ]);
     })
   );
