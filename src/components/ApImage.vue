@@ -1,5 +1,5 @@
 <template>
-  <img :src="url" class="responsive"/>
+  <img v-lazy="imgObj" class="responsive"/>
 </template>
 <script>
 import AgroUtils from 'assets/js/AgroUtils'
@@ -18,6 +18,11 @@ export default {
   },
   data () {
     return {
+      imgObj: {
+        src: this.getUrl(),
+        error: 'statics/images/no-image-16-10.svg',
+        loading: 'statics/images/ajax-loading-gif.gif'
+      },
       availableSizes: [
         '800x500',
         '500x500',
@@ -29,12 +34,6 @@ export default {
     }
   },
   computed: {
-    url: function () {
-      if (!this.validSize || !this.fileName) {
-        return 'statics/images/no-image-16-10.svg'
-      }
-      return AgroUtils.image.makeUrl(this.fileName, this.size)
-    },
     validSize: function () {
       if (this.availableSizes.indexOf(this.size) == -1) {
         console.error(this.size + ' não é um tamanho válido, corrija para um destes:', this.availableSizes)
@@ -42,6 +41,26 @@ export default {
       }
       return true
     }
+  },
+  methods:{
+    getUrl(){
+      let url;
+      if (!this.validSize || !this.fileName) {
+        url = 'statics/images/no-image-16-10.svg'
+      }
+      url = AgroUtils.image.makeUrl(this.fileName, this.size)
+
+      return url;
+    },
+    imageLoadError({ el, src }){
+      console.log(el, src)
+    }
+  },
+  mounted() {
+    this.$Lazyload.$on('error', this.imageLoadError);
+  },
+  destroyed() {
+    this.$Lazyload.$off('error', this.imageLoadError);
   }
 }
 </script>
