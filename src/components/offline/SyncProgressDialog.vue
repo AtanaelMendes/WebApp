@@ -5,7 +5,7 @@
     <span slot="title">Aguarde!</span>
 
     <div slot="body" align="center">
-      <q-icon name="mdi-sync" size="50px" class="animate-spin"/>
+      <q-icon name="mdi-sync" size="50px" class="animate-spin-reverse"/>
       <p class="q-my-none q-mt-md">Sincronizando...</p>
     </div>
 
