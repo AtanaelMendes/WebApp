@@ -1,60 +1,88 @@
 import Vue from 'vue'
-import { Loading, Dialog } from 'quasar'
-export default {
+import CulturaAPI from "../../api/CulturaAPI";
+import MarcaAPI from "../../api/MarcaAPI";
+import CultivarAPI from "../../api/CultivarAPI";
+import UnidadeAPI from "../../api/UnidadeAPI";
+
+export default class CulturaService{
+  #produtorId;
+
+  constructor(produtorId) {
+    this.produtorId = produtorId;
+  }
 
   // CULTURAS
   listCulturas(){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtor_id + '/cultura').then( response => {
-        resolve(response);
+      CulturaAPI.listCulturas(this.produtorId).then( response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   saveCultura(params){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/' + produtor_id + '/cultura', params).then(response => {
-        resolve(response)
+      CulturaAPI.saveCultura(params, this.produtorId).then(response => {
+        if(response.status === 201) {
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   deleteCultura(id){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('produtor/' + produtor_id + '/cultura/' + id).then(response => {
-        resolve(response)
+      CulturaAPI.deleteCultura(id, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   restoreCultura(id){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/' + produtor_id + '/cultura/' + id + '/restore').then(response => {
-        resolve(response)
+      CulturaAPI.restoreCultura(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   archiveCultura(id){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/' + produtor_id + '/cultura/' + id + '/archive').then(response => {
-        resolve(response)
+      CulturaAPI.archiveCultura(id, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   updateCultura(id, params){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
       Vue.prototype.$axios.put('produtor/' + produtor_id + '/cultura/' + id, params).then(response => {
         resolve(response)
@@ -62,144 +90,180 @@ export default {
         reject(error.response)
       })
     });
-  },
+  };
 
   // MARCAS
   listMarcas(){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtor_id + '/marca').then( response => {
-        resolve(response);
+      MarcaAPI.listMarcas(null, this.produtorId).then( response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   listMarcasSemCultivares(){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtor_id + '/marca?filter=has-no-cultivares').then( response => {
-        resolve(response);
+      MarcaAPI.listMarcas('has-no-cultivares', this.produtorId).then( response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   saveMarca(params){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/' + produtor_id + '/marca', params).then(response => {
-        resolve(response)
+      MarcaAPI.saveMarca(params, this.produtorId).then(response => {
+        if(response.status === 201) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   deleteMarca(id){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('produtor/' + produtor_id + '/marca/' + id).then(response => {
-        resolve(response)
+      MarcaAPI.deleteMarca(id, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   restoreMarca(id){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/' + produtor_id + '/marca/' + id + '/restore').then(response => {
-        resolve(response)
+      MarcaAPI.restoreMarca(id, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   archiveMarca(id){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/' + produtor_id + '/marca/' + id + '/archive').then(response => {
-        resolve(response)
+      MarcaAPI.archiveMarca(id, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   updateMarca(id, params){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/' + produtor_id + '/marca/' + id, params).then(response => {
-        resolve(response)
+      MarcaAPI.updateMarca(params, id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
 
   // CULTIVARES
-  listCultivar(){
-    let produtor_id = localStorage.getItem('account.produtor_id');
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('cultura/' + produtor_id).then( response => {
-        resolve(response);
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  },
   saveCultivar(cultura_id, params){
-    //let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('cultura/' + cultura_id + '/cultivar', params).then(response => {
-        resolve(response)
+      CultivarAPI.saveCultivar(params, cultura_id).then(response => {
+        if(response.status === 201) {
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   deleteCultivar(cultura_id, id){
-    //let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('cultura/' + cultura_id + '/cultivar/' + id).then(response => {
-        resolve(response)
+      CultivarAPI.deleteCultivar(id, cultura_id).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   restoreCultivar(cultura_id, id){
-    //let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('cultura/' + cultura_id + '/cultivar/' + id + '/restore').then(response => {
-        resolve(response)
+      CultivarAPI.restoreCultivar(id, cultura_id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   archiveCultivar(cultura_id, id){
-    //let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('cultura/' + cultura_id + '/cultivar/' + id + '/archive').then(response => {
-        resolve(response)
+      CultivarAPI.archiveCultivar(id, cultura_id).then(response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   updateCultivar(cultura_id, id, params){
-    //let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('cultura/' + cultura_id + '/cultivar/' + id, params).then(response => {
-        resolve(response)
+      CultivarAPI.updateCultivar(params, id, cultura_id).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
 
   // OUTROS
-  selectUnidadeArea: function(){
+  selectUnidadeArea(){
     return new Promise((resolve, reject) => {
       this.getUnidadeArea().then(response => {
         let unidadeAreaOptions = response.data.map(unit => {
@@ -214,17 +278,19 @@ export default {
         reject(error)
       })
     })
-  },
+  };
+
   getUnidadeArea(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'unidade?type=area' ).then( response => {
+      UnidadeAPI.getUnidadesArea().then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
       })
     });
-  },
-  selectUnidadeMedida: function(){
+  };
+
+  selectUnidadeMedida(){
     return new Promise((resolve, reject) => {
       this.getUnidadeMedida().then(response => {
         let unidadeMediaOptions = response.data.map(unit => {
@@ -239,16 +305,15 @@ export default {
         reject(error)
       })
     })
-  },
+  };
+
   getUnidadeMedida(){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'unidade?type=medida' ).then( response => {
+      UnidadeAPI.getUnidadesMedida().then( response => {
         resolve(response);
       }).catch(error => {
         reject(error)
       })
     });
-  },
-
-
+  };
 }

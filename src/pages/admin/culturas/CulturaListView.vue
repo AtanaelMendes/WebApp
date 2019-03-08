@@ -819,9 +819,10 @@
     import Cultura from 'assets/js/model/cultura/Cultura'
     import Marca from 'assets/js/model/cultura/Marca'
     import Cultivar from 'assets/js/model/cultura/Cultivar'
-    import culturaService from 'assets/js/service/cultura/CulturaService'
     import imapeUpload from 'components/ImageUpload'
     import apNoResults from 'components/ApNoResults'
+    import AccountRepository from "../../../assets/js/repository/AccountRepository";
+    import CulturaService from "../../../assets/js/service/cultura/CulturaService";
 
     export default {
       name: "cultura-list-view",
@@ -834,6 +835,7 @@
       },
       data () {
         return {
+          culturaService: null,
           currentStep: 'cultura',
           modalNewCultura: false,
           modalEditCultura: false,
@@ -897,8 +899,8 @@
       methods: {
         // CRUD CULTURA
         listCulturas: function() {
-          culturaService.listCulturas().then(response => {
-            this.culturas = response.data;
+          this.culturaService.listCulturas().then(culturas => {
+            this.culturas = culturas;
           })
         },
         newCultura: function(){
@@ -912,13 +914,11 @@
           if(!this.cultura.isValid()){
             return;
           }
-          culturaService.saveCultura(this.cultura.getValues()).then(response => {
-            if(response.status === 201) {
-              this.$q.notify({type: 'positive', message: 'Cultura criada com sucesso'});
-              this.cultura = new Cultura();
-              this.listCulturas();
-              this.closeModalNewCultura();
-            }
+          this.culturaService.saveCultura(this.cultura.getValues()).then(() => {
+            this.$q.notify({type: 'positive', message: 'Cultura criada com sucesso'});
+            this.cultura = new Cultura();
+            this.listCulturas();
+            this.closeModalNewCultura();
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           });
@@ -947,7 +947,7 @@
           if (!this.cultura.isValid()) {
             return;
           }
-          culturaService.updateCultura(this.selectedCulturaId, this.cultura.getValues()).then(response => {
+          this.culturaService.updateCultura(this.selectedCulturaId, this.cultura.getValues()).then(response => {
             if (response.status === 200) {
               this.$q.notify({type: 'positive', message: 'Cultura atualizada com sucesso!'});
               this.listCulturas();
@@ -961,12 +961,12 @@
           this.cultura = new Cultura();
         },
         archiveCultura: function(id){
-          culturaService.archiveCultura(id).then(response => {
+          this.culturaService.archiveCultura(id).then(() => {
             this.listCulturas()
           })
         },
         restoreCultura: function(id){
-          culturaService.restoreCultura(id).then(response => {
+          this.culturaService.restoreCultura(id).then(() => {
             this.listCulturas()
           })
         },
@@ -977,7 +977,7 @@
             ok: 'Sim', cancel: 'Não',
             color: 'primary'
           }).then(data => {
-            culturaService.deleteCultura(id).then(response => {
+            this.culturaService.deleteCultura(id).then(() => {
               this.listCulturas()
             })
           }).catch(()=>{});
@@ -986,8 +986,8 @@
 
         // CRUD MARCA
         listMarcas: function(){
-          culturaService.listMarcas().then(response => {
-            this.marcas = response.data;
+          this.culturaService.listMarcas().then(marcas => {
+            this.marcas = marcas;
           })
 
         },
@@ -1001,15 +1001,13 @@
           if(!this.marca.isValid()){
             return;
           }
-          culturaService.saveMarca(this.marca.getValues()).then(response => {
-            if(response.status === 201) {
-              this.$q.notify({type: 'positive', message: 'Marca criada com sucesso'});
-              this.marca = new Marca();
-              this.listCulturas();
-              this.listMarcas();
-              this.listMarcasSemCultivares();
-              this.closeModalNewMarca();
-            }
+          this.culturaService.saveMarca(this.marca.getValues()).then(() => {
+            this.$q.notify({type: 'positive', message: 'Marca criada com sucesso'});
+            this.marca = new Marca();
+            this.listCulturas();
+            this.listMarcas();
+            this.listMarcasSemCultivares();
+            this.closeModalNewMarca();
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           });
@@ -1038,27 +1036,25 @@
           if(!this.marca.isValid()){
             return;
           }
-          culturaService.updateMarca(this.selectedMarcaId, this.marca.getValues()).then(response => {
-            if(response.status === 200) {
-              this.$q.notify({type: 'positive', message: 'Marca atualizada com sucesso!'});
-              this.listCulturas();
-              this.listMarcasSemCultivares();
-              this.listMarcas();
-              this.closeModalEditMarca();
-            }
+          this.culturaService.updateMarca(this.selectedMarcaId, this.marca.getValues()).then(() => {
+            this.$q.notify({type: 'positive', message: 'Marca atualizada com sucesso!'});
+            this.listCulturas();
+            this.listMarcasSemCultivares();
+            this.listMarcas();
+            this.closeModalEditMarca();
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           });
         },
         archiveMarca: function(id){
-          culturaService.archiveMarca(id).then(response => {
-            this.listCulturas()
+          this.culturaService.archiveMarca(id).then(() => {
+            this.listCulturas();
             this.listMarcas();
           })
         },
         restoreMarca: function(id){
-          culturaService.restoreMarca(id).then(response => {
-            this.listCulturas()
+          this.culturaService.restoreMarca(id).then(() => {
+            this.listCulturas();
             this.listMarcas();
           })
         },
@@ -1069,7 +1065,7 @@
             ok: 'Sim', cancel: 'Não',
             color: 'primary'
           }).then(data => {
-            culturaService.deleteMarca(id).then(response => {
+            this.culturaService.deleteMarca(id).then(() => {
               this.listCulturas();
               this.listMarcasSemCultivares();
               this.listMarcas();
@@ -1099,8 +1095,8 @@
 
         // MARCA SEM CULTIVAR
         listMarcasSemCultivares: function(){
-          culturaService.listMarcasSemCultivares().then(response => {
-            this.marcasSemCultivares = response.data;
+          this.culturaService.listMarcasSemCultivares().then(marcas => {
+            this.marcasSemCultivares = marcas;
           })
         },
 
@@ -1126,14 +1122,12 @@
           if(!this.cultivar.isValid()){
             return;
           }
-          culturaService.saveCultivar(this.cultivar.culturaId, this.cultivar.getValues()).then(response => {
-            if(response.status === 201) {
-              this.$q.notify({type: 'positive', message: 'Cultivar criado com sucesso'});
-              this.cultivar = new Cultivar();
-              this.listCulturas();
-              this.listMarcasSemCultivares();
-              this.closeModalAddCultivar();
-            }
+          this.culturaService.saveCultivar(this.cultivar.culturaId, this.cultivar.getValues()).then(response => {
+            this.$q.notify({type: 'positive', message: 'Cultivar criado com sucesso'});
+            this.cultivar = new Cultivar();
+            this.listCulturas();
+            this.listMarcasSemCultivares();
+            this.closeModalAddCultivar();
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           });
@@ -1156,12 +1150,10 @@
           if(!this.cultivar.isValid()){
             return;
           }
-          culturaService.updateCultivar(this.selectedCulturaId, this.selectedCultivar, this.cultivar.getValues()).then(response => {
-            if(response.status === 200) {
-              this.$q.notify({type: 'positive', message: 'Cultivar atualizado com sucesso!'});
-              this.listCulturas();
-              this.closeModalEditCultivar();
-            }
+          this.culturaService.updateCultivar(this.selectedCulturaId, this.selectedCultivar, this.cultivar.getValues()).then(() => {
+            this.$q.notify({type: 'positive', message: 'Cultivar atualizado com sucesso!'});
+            this.listCulturas();
+            this.closeModalEditCultivar();
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           });
@@ -1205,12 +1197,10 @@
           delete cultivar.ciclo_dias;
           delete cultivar.observacoes;
 
-          culturaService.updateCultivar(this.selectedCulturaId, this.selectedCultivarId, cultivar).then(response => {
-            if(response.status === 200) {
-              this.$q.notify({type: 'positive', message: 'Cultivar atualizado com sucesso!'});
-              this.listCulturas();
-              this.closeModalchangeTypeCultivar();
-            }
+          this.culturaService.updateCultivar(this.selectedCulturaId, this.selectedCultivarId, cultivar).then(() => {
+            this.$q.notify({type: 'positive', message: 'Cultivar atualizado com sucesso!'});
+            this.listCulturas();
+            this.closeModalchangeTypeCultivar();
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           });
@@ -1222,12 +1212,12 @@
           this.modalChangeTypeCultivar = false;
         },
         archiveCultivar: function(cultura_id, id){
-          culturaService.archiveCultivar(cultura_id, id).then(response => {
+          this.culturaService.archiveCultivar(cultura_id, id).then(() => {
             this.listCulturas()
           })
         },
         restoreCultivar: function(cultura_id, id){
-          culturaService.restoreCultivar(cultura_id, id).then(response => {
+          this.culturaService.restoreCultivar(cultura_id, id).then(() => {
             this.listCulturas()
           })
         },
@@ -1238,8 +1228,8 @@
             ok: 'Sim', cancel: 'Não',
             color: 'primary'
           }).then(data => {
-            culturaService.deleteCultivar(cultura_id, id).then(response => {
-              this.listCulturas()
+            this.culturaService.deleteCultivar(cultura_id, id).then(() => {
+              this.listCulturas();
               this.listMarcasSemCultivares();
             })
           }).catch(()=>{});
@@ -1248,12 +1238,12 @@
 
         // OUTROS
         selectUnidadeMedida: function(){
-          culturaService.selectUnidadeMedida().then(response => {
+          this.culturaService.selectUnidadeMedida().then(response => {
             this.unidadeMedidaOptions = response;
           })
         },
         selectUnidadeArea: function(){
-          culturaService.selectUnidadeArea().then(response => {
+          this.culturaService.selectUnidadeArea().then(response => {
             this.unidadeAreaOptions = response;
           })
         },
@@ -1294,13 +1284,13 @@
         },
       },
       mounted () {
-        this.listCulturas();
-        this.selectUnidadeArea();
-        this.selectUnidadeMedida();
-        this.listMarcasSemCultivares();
-        // this.$root.$on('refreshSafraList', () => {
-        //   this.listSafras();
-        // });
+        new AccountRepository().getFirst().then(account => {
+          this.culturaService = new CulturaService(account.produtor_id);
+          this.listCulturas();
+          this.listMarcasSemCultivares();
+          this.selectUnidadeArea();
+          this.selectUnidadeMedida();
+        });
       },
     }
   </script>
