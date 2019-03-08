@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-export default class AuthAPI{
+export default class EntregaAPI{
 
   static listEntregasByStatus(status, filter, produtorId){
     return Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=' + status + (filter ? ("&" + filter) : ""));

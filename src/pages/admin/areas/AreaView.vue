@@ -172,8 +172,9 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import talhaoService from 'assets/js/service/area/TalhaoService'
-  import areaService from 'assets/js/service/area/AreaService'
   import imapeUpload from 'components/ImageUpload'
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
+  import AreaService from "../../../assets/js/service/area/AreaService";
 
   export default {
     name: "area-view",
@@ -210,6 +211,7 @@
     },
     data(){
       return{
+        areaService: null,
         area: null,
         talhoes: [],
         areaId: this.$route.params.id,
@@ -222,7 +224,7 @@
     },
     methods: {
       getAreaById: function(areaId){
-        areaService.getAreaById(areaId).then(area => {
+        this.areaService.getAreaById(areaId).then(area => {
           this.area = area
         })
       },
@@ -260,7 +262,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          areaService.archiveArea(this.areaId).then(response => {
+          this.areaService.archiveArea(this.areaId).then(() => {
             this.$q.notify({type: 'positive', message: 'Área arquivada'});
             this.$router.push({name:'areas'})
           })
@@ -273,7 +275,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          areaService.restoreArea(this.areaId).then(response => {
+          this.areaService.restoreArea(this.areaId).then(response => {
             this.$q.notify({type: 'positive', message: 'Área ativada'});
             this.getAreaById(this.$route.params.id);
           })
@@ -286,7 +288,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          areaService.deleteArea(this.areaId).then(response => {
+          this.areaService.deleteArea(this.areaId).then(() => {
             this.$q.notify({type: 'positive', message: 'Área excluida'});
             this.$router.push({name:'areas'})
 
@@ -357,15 +359,18 @@
         });
       },
       backAction: function () {
-        // this.$router.go(-1);
         this.$router.back()
       }
     },
     mounted(){
+      new AccountRepository().getFirst().then(account => {
+        this.areaService = new AreaService(account.produtor_id);
+        this.getAreaById(this.$route.params.id)
+      });
+
       this.$root.$on('refreshTalhaoList', () => {
         this.listTalhoes(this.$route.params.id);
       });
-      this.getAreaById(this.$route.params.id);
       this.listTalhoes(this.$route.params.id);
     }
   }

@@ -59,8 +59,9 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import areaService from 'assets/js/service/area/AreaService'
   import apNoResults from 'components/ApNoResults'
+  import AreaService from "../../../assets/js/service/area/AreaService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
 
   export default {
     name: "area-list",
@@ -71,6 +72,7 @@
     },
     data () {
       return {
+        areaService: null,
         areas: [],
         isEmptyList: null,
         areaLoaded: false,
@@ -89,8 +91,8 @@
     },
     methods: {
       list: function(filter) {
-        areaService.listAreas(filter).then(response => {
-          this.areas = response;
+        this.areaService.listAreas(filter).then(areas => {
+          this.areas = areas;
           this.isEmptyList = this.areas.length === 0;
         });
       },
@@ -104,7 +106,11 @@
       },
     },
     mounted () {
-      this.list(this.filter);
+      new AccountRepository().getFirst().then(account => {
+        this.areaService = new AreaService(account.produtor_id);
+        this.list(this.filter);
+      });
+
       this.$root.$on('refreshAreaList', () => {
         this.list(this.filter);
       });

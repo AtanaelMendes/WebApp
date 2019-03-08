@@ -178,10 +178,11 @@
   import customInputText from 'components/CustomInputText.vue'
   import Safra from 'assets/js/model//safra/Safra'
   import Cultura from 'assets/js/model/Cultura'
-  import areaService from 'assets/js/service/area/AreaService'
   import talhaoService from 'assets/js/service/area/TalhaoService'
   import safraService from 'assets/js/service/safra/SafraService'
   import UnidadeMedidaService from "../../../assets/js/service/UnidadeMedidaService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
+  import AreaService from "../../../assets/js/service/area/AreaService";
   export default {
     name: "SafraEdit",
     components: {
@@ -191,6 +192,7 @@
     },
     data(){
       return {
+        areaService: null,
         unidadeMedidaService: new UnidadeMedidaService(),
         currentStep: 'info',
         safra: null,
@@ -293,8 +295,8 @@
         this.safra.fim.value = value.toString();
       },
       getAreas: function(){
-        areaService.listAreas().then(response => {
-          this.areas = response.data.map(area => {
+        this.areaService.listAreas().then(areas => {
+          this.areas = areas.map(area => {
             return {
               label: area.nome,
               value: area.id
@@ -416,11 +418,13 @@
       }
     },
     mounted(){
+      new AccountRepository().getFirst().then(account => {
+        this.areaService = new AreaService(account.produtor_id);
+        this.getAreas();
+      });
 
       //this.safra.inicio.value = this.getCurrentYear();
       //this.safra.fim.value = this.getCurrentYear();
-
-      this.getAreas();
       this.getUnidadesMedida();
       this.getSafraById(this.$route.params.id).then(()=>{
         this.makeYearsList(this.safra.inicio.value.toString());

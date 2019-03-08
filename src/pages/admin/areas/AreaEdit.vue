@@ -22,8 +22,9 @@
   import customInputText from 'components/CustomInputText.vue'
   import localizacaoSelect from 'components/LocalizacaoSelect.vue'
   import area from 'assets/js/model/area/Area'
-  import areaService from 'assets/js/service/area/AreaService'
   import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
+  import AreaService from "../../../assets/js/service/area/AreaService";
   export default {
     name: "area-edit",
     components: {
@@ -34,6 +35,7 @@
     },
     data(){
       return {
+        areaService: null,
         localizacaoOptions: [],
         area: new area(),
       }
@@ -54,7 +56,7 @@
         })
       },
       getAreaById: function(areaId){
-        areaService.getAreaById(areaId).then(area => {
+        this.areaService.getAreaById(areaId).then(area => {
           this.fillForm(area)
         })
       },
@@ -62,21 +64,23 @@
         if(!this.area.isValid()){
           return;
         }
-        areaService.updateArea(this.$route.params.id, this.area.getValues()).then(response => {
-          if(response.status === 200) {
-            this.$q.notify({type: 'positive', message: 'Area atualizada com sucesso'});
-            this.$root.$emit('refreshAreaList');
-            this.$router.go(-1);
-          }
+        this.areaService.updateArea(this.$route.params.id, this.area.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Area atualizada com sucesso'});
+          this.$root.$emit('refreshAreaList');
+          this.$router.back();
         });
       },
       backAction: function () {
-        this.$router.back()
+        this.$router.back();
       }
     },
     mounted() {
+      new AccountRepository().getFirst().then(account => {
+        this.areaService = new AreaService(account.produtor_id);
+        this.getAreaById(this.$route.params.id)
+      });
+
       this.listLocalizacao();
-      this.getAreaById(this.$route.params.id)
     }
   }
 </script>

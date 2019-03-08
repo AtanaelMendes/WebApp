@@ -503,8 +503,9 @@
   import SafraCulturaTalhao from 'assets/js/model/safra/SafraCulturaTalhao'
   import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
   // outros
-  import areaService from 'assets/js/service/area/AreaService'
   import UnidadeMedidaService from "../../../assets/js/service/UnidadeMedidaService";
+  import AreaService from "../../../assets/js/service/area/AreaService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
 
     export default {
       name: "safra-list",
@@ -515,6 +516,7 @@
       },
       data () {
         return {
+          areaService: null,
           unidadeMedidaService: new UnidadeMedidaService(),
           // SAFRA
           isFavorite: false,
@@ -767,8 +769,8 @@
 
         // PASSO 3 AREA
         getAreas: function(){
-          areaService.listAreas().then(response => {
-            this.areas = response;
+          this.areaService.listAreas().then(areas => {
+            this.areas = areas;
           })
         },
         setArea: function(area){
@@ -850,6 +852,10 @@
         },
       },
       mounted () {
+        new AccountRepository().getFirst().then(account => {
+          this.areaService = new AreaService(account.produtor_id);
+        });
+
         this.listSafras();
         this.makeYearsList(this.getCurrentYear());
         this.safra.inicio.value = this.getCurrentYear();

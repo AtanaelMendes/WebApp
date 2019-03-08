@@ -43,8 +43,9 @@
 </template>
 
 <script>
-  import areaService from 'assets/js/service/area/AreaService'
   import apNoResults from 'components/ApNoResults'
+  import AccountRepository from "../../../../assets/js/repository/AccountRepository";
+  import AreaService from "../../../../assets/js/service/area/AreaService";
 
   export default {
     name: "area-info",
@@ -53,6 +54,7 @@
     },
     data(){
       return{
+        areaService: null,
         area: null,
         coluna: 'col-xs-12 col-sm-12 col-md-6 col-lg-6',
       }
@@ -64,7 +66,7 @@
     },
     methods: {
       getAreaById: function(areaId){
-        areaService.getAreaById(areaId).then(area => {
+        this.areaService.getAreaById(areaId).then(area => {
           this.area = area
         })
       },
@@ -73,7 +75,10 @@
       },
     },
     mounted() {
-      this.getAreaById(this.$route.params.id)
+      new AccountRepository().getFirst().then(account => {
+        this.areaService = new AreaService(account.produtor_id);
+        this.getAreaById(this.$route.params.id)
+      });
     }
   }
 </script>
