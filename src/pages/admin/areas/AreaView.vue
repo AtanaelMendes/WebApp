@@ -171,10 +171,10 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import talhaoService from 'assets/js/service/area/TalhaoService'
   import imapeUpload from 'components/ImageUpload'
   import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import AreaService from "../../../assets/js/service/area/AreaService";
+  import TalhaoService from "../../../assets/js/service/area/TalhaoService";
 
   export default {
     name: "area-view",
@@ -212,6 +212,7 @@
     data(){
       return{
         areaService: null,
+        talhaoService: new TalhaoService(),
         area: null,
         talhoes: [],
         areaId: this.$route.params.id,
@@ -297,8 +298,8 @@
         });
       },
       listTalhoes: function(id){
-        talhaoService.listTalhoes(id).then(talhoes => {
-          this.talhoes = talhoes.data;
+        this.talhaoService.listTalhoes(id).then(talhoes => {
+          this.talhoes = talhoes;
         })
       },
 
@@ -326,7 +327,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          talhaoService.archiveTalhao(this.areaId, talhaoId).then(response => {
+          this.talhaoService.archiveTalhao(this.areaId, talhaoId).then(() => {
             this.$q.notify({type: 'positive', message: 'Talhão arquivado com sucesso'});
             this.listTalhoes(this.$route.params.id);
           })
@@ -339,7 +340,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          talhaoService.restoreTalhao(this.areaId, talhaoId).then(response => {
+          this.talhaoService.restoreTalhao(this.areaId, talhaoId).then(() => {
             this.$q.notify({type: 'positive', message: 'Talhão ativado com suceso'});
             this.listTalhoes(this.$route.params.id);
           })
@@ -352,7 +353,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          talhaoService.deleteTalhao(this.areaId, talhaoId).then(response => {
+          this.talhaoService.deleteTalhao(this.areaId, talhaoId).then(response => {
             this.$q.notify({type: 'positive', message: 'Talhão excluido com sucesso'});
             this.listTalhoes(this.$route.params.id);
           })

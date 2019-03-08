@@ -23,8 +23,7 @@
   import customInputText from 'components/CustomInputText.vue'
   import unidadeAreaSelect from 'components/UnidadeAreaSelect.vue'
   import talhao from 'assets/js/model/area/Talhao'
-  import talhaoService from 'assets/js/service/area/TalhaoService'
-  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
+  import TalhaoService from "../../../../assets/js/service/area/TalhaoService";
 
   export default {
     name: "talhao-add",
@@ -36,6 +35,7 @@
     },
     data(){
       return {
+        talhaoService: new TalhaoService(),
         unidadeAreaOptions: [],
         talhao: new talhao(),
       }
@@ -45,17 +45,14 @@
         if(!this.talhao.isValid()){
           return;
         }
-        talhaoService.saveTalhao(this.$route.params.id, this.talhao.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Talhão criado com sucesso'});
-            // this.$router.push({name: 'areas'});
-            this.$router.go(-1);
-            this.$root.$emit('refreshAreaList');
-          }
+        this.talhaoService.saveTalhao(this.$route.params.id, this.talhao.getValues()).then(()=> {
+          this.$q.notify({type: 'positive', message: 'Talhão criado com sucesso'});
+          this.$router.back();
+          this.$root.$emit('refreshAreaList');
         });
       },
       listUnidadesArea: function(){
-        talhaoService.listUnidadesArea().then(response => {
+        this.talhaoService.listUnidadesArea().then(response => {
           this.unidadeAreaOptions = response;
         })
       },
