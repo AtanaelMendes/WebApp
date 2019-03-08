@@ -603,12 +603,10 @@
         let entregaId = this.$route.params.id;
         this.$q.loading.show();
         this.entregaService.addNegocioToEntrega(entregaId, this.sendEntrega.getValues(this.hasNotaFiscal)).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Negócio adicionado com sucesso'});
-            this.closeModal();
-            this.$q.loading.hide();
-            this.$root.$emit('refreshEntregaView')
-          }
+          this.$q.notify({type: 'positive', message: 'Negócio adicionado com sucesso'});
+          this.closeModal();
+          this.$q.loading.hide();
+          this.$root.$emit('refreshEntregaView');
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           this.$q.loading.hide();
@@ -621,12 +619,10 @@
           motorista_nome: null
         };
         this.$q.loading.show();
-        this.entregaService.updateMotorista(entregaId, param).then(response => {
-          if(response.status === 200) {
-            this.$q.notify({type: 'positive', message: 'Motorista atualizado com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshEntregaView')
-          }
+        this.entregaService.updateMotorista(entregaId, param).then(() => {
+          this.$q.notify({type: 'positive', message: 'Motorista atualizado com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshEntregaView');
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -639,12 +635,10 @@
           armazem_id: this.sendEntrega.armazemId,
         };
         this.$q.loading.show();
-        this.entregaService.updateArmazem(entregaId, param).then(response => {
-          if(response.status === 200) {
-            this.$q.notify({type: 'positive', message: 'Armazem atualizado com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshEntregaView')
-          }
+        this.entregaService.updateArmazem(entregaId, param).then(() => {
+          this.$q.notify({type: 'positive', message: 'Armazem atualizado com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshEntregaView')
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -655,12 +649,10 @@
         let entregaId = this.$route.params.id;
 
         this.$q.loading.show();
-        this.entregaService.addNotaFiscalToNegocio(entregaId, this.selectedNegocio.id, this.sendEntrega.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Nota criada com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshEntregaView')
-          }
+        this.entregaService.addNotaFiscalToNegocio(entregaId, this.selectedNegocio.id, this.sendEntrega.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Nota criada com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshEntregaView')
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -671,12 +663,10 @@
         let entregaId = this.$route.params.id;
 
         this.$q.loading.show();
-        this.entregaService.updateNotaFiscalItemOfNegocio(entregaId, this.selectedNota.id, this.sendEntrega.getValues()).then(response => {
-          if(response.status === 200) {
-            this.$q.notify({type: 'positive', message: 'Nota atualizada com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshEntregaView')
-          }
+        this.entregaService.updateNotaFiscalItemOfNegocio(entregaId, this.selectedNota.id, this.sendEntrega.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Nota atualizada com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshEntregaView');
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})

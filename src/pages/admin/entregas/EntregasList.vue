@@ -382,7 +382,7 @@
             color: 'primary'
           }).then(data => {
             this.$q.loading.show();
-            this.entregaService.deleteEntrega(id).then(response => {
+            this.entregaService.deleteEntrega(id).then(() => {
               switch (this.tabs) {
                 case 'carregando':
                   this.listEntregasCarregando();

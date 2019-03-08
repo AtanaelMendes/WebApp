@@ -85,11 +85,9 @@
 
         this.$q.loading.show();
         entregaService.updateNegociosQuantidade(this.entrega.id, {negocios: body}).then(response => {
-          if(response.status === 200){
-            this.$q.notify({type: 'positive', message: 'Quantidades atualizadas com sucesso!'});
-            this.closeModal();
-            this.$root.$emit('refreshEntregaView')
-          }
+          this.$q.notify({type: 'positive', message: 'Quantidades atualizadas com sucesso!'});
+          this.closeModal();
+          this.$root.$emit('refreshEntregaView');
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})

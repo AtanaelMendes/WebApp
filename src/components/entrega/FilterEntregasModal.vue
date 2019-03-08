@@ -236,8 +236,8 @@
       },
       getFilterOptions(){
         this.$q.loading.show();
-        this.entregaService.getFilterOptions().then(response => {
-          this.options = response.data;
+        this.entregaService.getFilterOptions().then(options => {
+          this.options = options;
           this.$store.commit('entrega/setFilterOptions', this.options)
           this.$q.loading.hide();
         }).catch(error => {
