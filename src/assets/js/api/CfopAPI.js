@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-export default class CaminhaoAPI{
+export default class CfopAPI{
 
   static getCfops(){
     return Vue.prototype.$axios.get('/cfop');
