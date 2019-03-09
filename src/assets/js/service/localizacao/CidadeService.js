@@ -1,8 +1,10 @@
 import Vue from 'vue'
+import CidadeAPI from "../../api/CidadeAPI";
 export default {
+
   searchCidade(terms){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('/cidade?nome=' + terms).then(response => {
+      CidadeAPI.searchCidade(terms).then(response => {
         resolve(this.parseCidade(response.data))
       }).catch(error => {
         reject(error)
