@@ -10,8 +10,8 @@
   </q-field>
 </template>
 <script>
-  import CidadeService from 'assets/js/service/localizacao/CidadeService'
   import { filter } from 'quasar'
+  import CidadeService from "../assets/js/service/localizacao/CidadeService";
   export default {
     name: "cidade-autocomplete",
     props: {
@@ -21,7 +21,7 @@
     },
     data: function () {
       return {
-        //cidadeTerms: this.terms,
+        cidadeService: new CidadeService(),
         tempCidadeList: [],
         clearErrorMessage: function () {
           this.model.errorMessage = null
@@ -40,7 +40,7 @@
         }
       },
       search (terms, done) {
-        CidadeService.searchCidade(terms).then(response => {
+        this.cidadeService.searchCidade(terms).then(response => {
           this.tempCidadeList = response;
           done(response)
         });

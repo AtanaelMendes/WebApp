@@ -1,6 +1,8 @@
-import Vue from 'vue'
 import CidadeAPI from "../../api/CidadeAPI";
-export default {
+export default class CidadeService{
+
+  constructor() {
+  }
 
   searchCidade(terms){
     return new Promise((resolve, reject) => {
@@ -10,7 +12,8 @@ export default {
         reject(error)
       })
     });
-  },
+  };
+
   parseCidade(cidades) {
     return (cidades).map(cidade => {
       return {
@@ -19,5 +22,5 @@ export default {
         id: cidade.id
       }
     })
-  },
+  };
 }
