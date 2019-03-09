@@ -183,6 +183,7 @@
   import UnidadeMedidaService from "../../../assets/js/service/UnidadeMedidaService";
   import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import AreaService from "../../../assets/js/service/area/AreaService";
+  import ProdutoService from "../../../assets/js/service/produto/ProdutoService";
   export default {
     name: "SafraEdit",
     components: {
@@ -192,6 +193,7 @@
     },
     data(){
       return {
+        produtoService: null,
         areaService: null,
         unidadeMedidaService: new UnidadeMedidaService(),
         currentStep: 'info',
@@ -336,9 +338,9 @@
         })
       },
       searchProdutos (terms, done) {
-        produtoService.searchProdutos(terms).then(response => {
-          this.tempProdutoList = response;
-          done(response)
+        this.produtoService.searchProdutos(terms).then(produtos => {
+          this.tempProdutoList = produtos;
+          done(produtos)
         });
       },
       setProduto (item) {
@@ -420,6 +422,7 @@
     mounted(){
       new AccountRepository().getFirst().then(account => {
         this.areaService = new AreaService(account.produtor_id);
+        this.produtoService = new ProdutoService(account.produtor_id);
         this.getAreas();
       });
 
