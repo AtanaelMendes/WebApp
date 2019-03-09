@@ -6,6 +6,10 @@ export default class CulturaAPI{
     return Vue.prototype.$axios.get('produtor/' + produtorId + '/cultura')
   }
 
+  static listCulturasSimpleList(produtorId){
+    return Vue.prototype.$axios.get('produtor/' + produtorId + '/cultura/simple_list');
+  }
+
   static saveCultura(cultura, produtorId){
     return Vue.prototype.$axios.post('produtor/' + produtorId + '/cultura', cultura);
   }

@@ -328,8 +328,6 @@
 
   import SafraCulturaTalhaoEdit from 'assets/js/model/safra/SafraCulturaTalhaoEdit'
 
-  import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
-
   import safraGraficoDiario from 'components/safra/graficos/Diario.vue'
   import safraGraficoDiarioClassificacao from 'components/safra/graficos/DiarioClassificacao.vue'
   import safraGraficoQuantidadesPorCaminhao from 'components/safra/graficos/QuantidadesPorCaminhao.vue'
@@ -342,6 +340,8 @@
 
   import safraQuantidades from 'components/safra/Quantidades.vue'
   import agroUtils from 'assets/js/AgroUtils'
+  import SafraCulturaService from "../../../../assets/js/service/safra/SafraCulturaService";
+  import AccountRepository from "../../../../assets/js/repository/AccountRepository";
 
   export default {
     name: "safra-cultura",
@@ -365,7 +365,7 @@
     },
     data () {
       return {
-
+        safraCulturaService: null,
         safra_id: null,
         id: null,
 
@@ -470,13 +470,13 @@
 
       // ADD CULTIVAR
       listMarcas: function(){
-        safraCulturaService.listMarcas().then(response => {
-          this.marcas = response.data;
+        this.safraCulturaService.listMarcas().then(marcas => {
+          this.marcas = marcas;
         })
       },
       listCultivar: function(marcaId){
-        safraCulturaService.listCultivaresByMarca(this.data.cultura.id, marcaId).then(response => {
-          this.cultivares = response.data;
+        this.safraCulturaService.listCultivaresByMarca(this.data.cultura.id, marcaId).then(cultivares => {
+          this.cultivares = cultivares;
         })
       },
       addCultivarModal: function(safraCulturaTalhao){
@@ -503,21 +503,19 @@
         }
         let safraCulturaTalhaoId = this.selectedSafraCulturaTalhao.talhao.id;
         let cultivarId = this.selectedCultivarId;
-        safraCulturaService.saveCultivarToSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhaoId, cultivarId).then(response => {
-          if(response.status === 200){
-            let talhao = this.data.cultura_talhoes[this.data.cultura_talhoes.map(cultura_talhao => cultura_talhao.talhao.id).indexOf(safraCulturaTalhaoId)];
-            talhao.cultivar = response.data;
-            this.getSafraCultura();
-            this.selectedSafraCulturaTalhao = null;
-            this.$q.notify({type: 'positive', message: 'Salvo com sucesso.'});
-            this.modalAddCultivarInfo = false;
-            this.currentStep = 'marca';
-            this.marcas = [];
-            this.cultivares = [];
-            this.selectedMarcaId = null;
-            this.selectedCultivarId = null;
-            this.selecteTipoId = null;
-          }
+        this.safraCulturaService.saveCultivarToSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhaoId, cultivarId).then(cultivar => {
+          let talhao = this.data.cultura_talhoes[this.data.cultura_talhoes.map(cultura_talhao => cultura_talhao.talhao.id).indexOf(safraCulturaTalhaoId)];
+          talhao.cultivar = cultivar;
+          this.getSafraCultura();
+          this.selectedSafraCulturaTalhao = null;
+          this.$q.notify({type: 'positive', message: 'Salvo com sucesso.'});
+          this.modalAddCultivarInfo = false;
+          this.currentStep = 'marca';
+          this.marcas = [];
+          this.cultivares = [];
+          this.selectedMarcaId = null;
+          this.selectedCultivarId = null;
+          this.selecteTipoId = null;
         })
       },
       goToNextStep(){
@@ -529,8 +527,8 @@
         if (this.areasLoaded & !force) {
           return;
         }
-        safraCulturaService.getSafraCultura(this.safra_id, this.id).then(response => {
-          this.data = response.data;
+        this.safraCulturaService.getSafraCultura(this.safra_id, this.id).then(safraCultura => {
+          this.data = safraCultura;
           this.loaded = true;
         })
       },
@@ -539,8 +537,8 @@
         if (this.diarioLoaded & !force) {
           return;
         }
-        safraCulturaService.getDiario(this.safra_id, this.id).then(response => {
-          this.diario = response.data.diario;
+        this.safraCulturaService.getDiario(this.safra_id, this.id).then(response => {
+          this.diario = response.diario;
           this.diarioLoaded = true;
         })
       },
@@ -548,8 +546,8 @@
         if (this.diarioClassificacaoLoaded & !force) {
           return;
         }
-        safraCulturaService.getDiarioClassificacao(this.safra_id, this.id).then(response => {
-          this.diarioClassificacao = response.data;
+        this.safraCulturaService.getDiarioClassificacao(this.safra_id, this.id).then(diarioClassificacao => {
+          this.diarioClassificacao = diarioClassificacao;
           this.diarioClassificacaoLoaded = true;
         })
       },
@@ -557,8 +555,8 @@
         if (this.caminhoesLoaded & !force) {
           return;
         }
-        safraCulturaService.getCaminhoes(this.safra_id, this.id).then(response => {
-          this.caminhoes = response.data.caminhoes
+        this.safraCulturaService.getCaminhoes(this.safra_id, this.id).then(response => {
+          this.caminhoes = response.caminhoes
           this.caminhoesLoaded = true
         })
       },
@@ -566,8 +564,8 @@
         if (this.armazensLoaded & !force) {
           return;
         }
-        safraCulturaService.getArmazens(this.safra_id, this.id).then(response => {
-          this.armazens = response.data.armazens
+        this.safraCulturaService.getArmazens(this.safra_id, this.id).then(response => {
+          this.armazens = response.armazens;
           this.armazensLoaded = true
         })
       },
@@ -575,8 +573,8 @@
         if (this.areasLoaded & !force) {
           return;
         }
-        safraCulturaService.getAreas(this.safra_id, this.id).then(response => {
-          this.areas = response.data.areas;
+        this.safraCulturaService.getAreas(this.safra_id, this.id).then(response => {
+          this.areas = response.areas;
           this.areasLoaded = true;
         })
       },
@@ -584,7 +582,7 @@
         if (this.areasLoaded & !force) {
           return;
         }
-        safraCulturaService.getTalhoes(this.safra_id, this.id).then(response => {
+        this.safraCulturaService.getTalhoes(this.safra_id, this.id).then(response => {
           this.talhoes = response.data.talhoes;
           this.talhoesLoaded = true;
         })
@@ -593,8 +591,8 @@
         if (this.marcasLoaded & !force) {
           return;
         }
-        safraCulturaService.getMarcas(this.safra_id, this.id).then(response => {
-          this.marcas = response.data.marcas;
+        this.safraCulturaService.getMarcas(this.safra_id, this.id).then(response => {
+          this.marcas = response.marcas;
           this.marcasLoaded = true;
         })
       },
@@ -602,8 +600,8 @@
         if (this.cultivaresLoaded & !force) {
           return;
         }
-        safraCulturaService.getCultivares(this.safra_id, this.id).then(response => {
-          this.cultivares = response.data.cultivares;
+        this.safraCulturaService.getCultivares(this.safra_id, this.id).then(response => {
+          this.cultivares = response.cultivares;
           this.cultivaresLoaded = true;
         })
       },
@@ -621,14 +619,12 @@
         if(!this.safraCulturaTalhao.isValid()){
           return;
         }
-        safraCulturaService.updateSafraCulturaTalhao(
+        this.safraCulturaService.updateSafraCulturaTalhao(
           this.$route.params.id,
-          this.selectedSafraCulturaTalhao.talhao.id, this.safraCulturaTalhao.getValues()).then(response => {
-          if(response.status === 200) {
+          this.selectedSafraCulturaTalhao.talhao.id, this.safraCulturaTalhao.getValues()).then(() => {
             this.modalEditSafraCulturaTalhao = false;
             this.$q.notify({type: 'positive', message: 'Atualizdo com sucesso'});
             this.getSafraCultura();
-          }
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.request.response})
         });
@@ -640,15 +636,13 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          safraCulturaService.deleteSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhao.talhao.id).then(response => {
+          this.safraCulturaService.deleteSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhao.talhao.id).then(() => {
             this.getSafraCultura();
-            if(response.status === 200){
-              let talhaoIndex = this.data.cultura_talhoes.map(talhao => talhao.id).indexOf(safraCulturaTalhao.talhao.id);
-              this.data.cultura_talhoes.splice(talhaoIndex, 1);
+            let talhaoIndex = this.data.cultura_talhoes.map(talhao => talhao.id).indexOf(safraCulturaTalhao.talhao.id);
+            this.data.cultura_talhoes.splice(talhaoIndex, 1);
 
-              if(this.data.cultura_talhoes.length === 0){
-                this.$router.push({name: 'safras'});
-              }
+            if(this.data.cultura_talhoes.length === 0){
+              this.$router.push({name: 'safras'});
             }
           });
         }).catch(()=>{});
@@ -671,9 +665,12 @@
       }
     },
     mounted () {
+      new AccountRepository().getFirst().then(account => {
+        this.safraCulturaService = new SafraCulturaService(account.produtor_id);
+        this.getSafraCultura();
+      });
       this.id = this.$route.params.id;
       this.safra_id = this.$route.params.safra_id;
-      this.getSafraCultura();
     },
   }
 </script>

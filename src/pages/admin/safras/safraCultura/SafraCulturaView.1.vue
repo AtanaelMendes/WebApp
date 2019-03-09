@@ -497,8 +497,6 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import apImage from 'components/ApImage'
-
-  import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
   import SafraCulturaTalhaoEdit from 'assets/js/model/safra/SafraCulturaTalhaoEdit'
 
   // import graficoClassificacaoMediaArmazem from 'components/graficos/GraficoClassificacaoMediaArmazem.vue'
@@ -539,6 +537,7 @@
     },
     data () {
       return {
+        safraCulturaService: null,
         graficoPorMedia: true,
         currentStep: 'marca',
         marcas: [],
@@ -569,14 +568,14 @@
     methods: {
       // ADD CULTIVAR
       listMarcas: function(){
-        safraCulturaService.listMarcas().then(response => {
-          this.marcas = response.data;
+        this.safraCulturaService.listMarcas().then(marcas => {
+          this.marcas = marcas;
           this.loaded = true;
         })
       },
       listCultivar: function(marcaId){
-        safraCulturaService.listCultivaresByMarca(this.safraCultura.cultura.id, marcaId).then(response => {
-          this.cultivares = response.data;
+        this.safraCulturaService.listCultivaresByMarca(this.safraCultura.cultura.id, marcaId).then(cultivares => {
+          this.cultivares = cultivares;
         })
       },
       addCultivarModal: function(safraCulturaTalhao){
@@ -603,21 +602,19 @@
         }
         let safraCulturaTalhaoId = this.selectedSafraCulturaTalhao.talhao.id;
         let cultivarId = this.selectedCultivarId;
-        safraCulturaService.saveCultivarToSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhaoId, cultivarId).then(response => {
-          if(response.status === 200){
-            let talhao = this.safraCultura.cultura_talhoes[this.safraCultura.cultura_talhoes.map(cultura_talhao => cultura_talhao.talhao.id).indexOf(safraCulturaTalhaoId)];
-            talhao.cultivar = response.data;
-            this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
-            this.selectedSafraCulturaTalhao = null;
-            this.$q.notify({type: 'positive', message: 'Salvo com sucesso.'});
-            this.modalAddCultivarInfo = false;
-            this.currentStep = 'marca';
-            this.marcas = [];
-            this.cultivares = [];
-            this.selectedMarcaId = null;
-            this.selectedCultivarId = null;
-            this.selecteTipoId = null;
-          }
+        this.safraCulturaService.saveCultivarToSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhaoId, cultivarId).then(cultivar => {
+          let talhao = this.safraCultura.cultura_talhoes[this.safraCultura.cultura_talhoes.map(cultura_talhao => cultura_talhao.talhao.id).indexOf(safraCulturaTalhaoId)];
+          talhao.cultivar = cultivar;
+          this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
+          this.selectedSafraCulturaTalhao = null;
+          this.$q.notify({type: 'positive', message: 'Salvo com sucesso.'});
+          this.modalAddCultivarInfo = false;
+          this.currentStep = 'marca';
+          this.marcas = [];
+          this.cultivares = [];
+          this.selectedMarcaId = null;
+          this.selectedCultivarId = null;
+          this.selecteTipoId = null;
         })
       },
       goToNextStep(){
@@ -626,8 +623,8 @@
 
       // CRUD SAFRA CULTURA TALHAO
       getSafraCultura: function(safra_id, id){
-        safraCulturaService.getSafraCultura(safra_id, id).then(response => {
-          this.safraCultura = response.data;
+        this.safraCulturaService.getSafraCultura(safra_id, id).then(safraCultura => {
+          this.safraCultura = safraCultura;
           this.loaded = true;
         })
       },
@@ -644,14 +641,12 @@
         if(!this.safraCulturaTalhao.isValid()){
           return;
         }
-        safraCulturaService.updateSafraCulturaTalhao(
+        this.safraCulturaService.updateSafraCulturaTalhao(
           this.$route.params.id,
-          this.selectedSafraCulturaTalhao.talhao.id, this.safraCulturaTalhao.getValues()).then(response => {
-          if(response.status === 200) {
+          this.selectedSafraCulturaTalhao.talhao.id, this.safraCulturaTalhao.getValues()).then(() => {
             this.modalEditSafraCulturaTalhao = false;
             this.$q.notify({type: 'positive', message: 'Atualizdo com sucesso'});
             this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
-          }
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.request.response})
         });
@@ -663,15 +658,13 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          safraCulturaService.deleteSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhao.talhao.id).then(response => {
+          this.safraCulturaService.deleteSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhao.talhao.id).then(() => {
             //this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
-            if(response.status === 200){
-              let talhaoIndex = this.safraCultura.cultura_talhoes.map(talhao => talhao.id).indexOf(safraCulturaTalhao.talhao.id);
-              this.safraCultura.cultura_talhoes.splice(talhaoIndex, 1);
+            let talhaoIndex = this.safraCultura.cultura_talhoes.map(talhao => talhao.id).indexOf(safraCulturaTalhao.talhao.id);
+            this.safraCultura.cultura_talhoes.splice(talhaoIndex, 1);
 
-              if(this.safraCultura.cultura_talhoes.length === 0){
-                this.$router.push({name: 'safras'});
-              }
+            if(this.safraCultura.cultura_talhoes.length === 0){
+              this.$router.push({name: 'safras'});
             }
           });
         }).catch(()=>{});
@@ -699,7 +692,10 @@
       }
     },
     mounted () {
-      this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
+      new AccountRepository().getFirst().then(account => {
+        this.safraCulturaService = new SafraCulturaService(account.produtor_id);
+        this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
+      });
       // this.$root.$on('refreshSafraList', () => {
       //   this.listSafras();
       // });

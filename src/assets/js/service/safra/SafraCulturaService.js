@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import SafraCulturaAPI from "../../api/SafraCulturaAPI";
 import SafraCulturaRepository from "../../repository/resource/SafraCulturaRepository";
 import SafraCulturaListitem from "../../model/safra/SafraCulturaListitem";
@@ -11,6 +10,10 @@ import TalhaoRepository from "../../repository/resource/TalhaoRepository";
 import AreaRepository from "../../repository/resource/AreaRepository";
 import CultivarRepository from "../../repository/resource/CultivarRepository";
 import MarcaRepository from "../../repository/resource/MarcaRepository";
+import CulturaAPI from "../../api/CulturaAPI";
+import MarcaAPI from "../../api/MarcaAPI";
+import CultivarAPI from "../../api/CultivarAPI";
+import SafraCulturaTalhaoAPI from "../../api/SafraCulturaTalhaoAPI";
 export default class SafraCulturaService {
   #produtorId;
   #safraCulturaRepository;
@@ -38,8 +41,12 @@ export default class SafraCulturaService {
 
   getSafraCultura(safra_id, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id).then(response => {
-        resolve(response)
+      SafraCulturaAPI.getSafraCulturaById(id, safra_id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
@@ -48,8 +55,12 @@ export default class SafraCulturaService {
 
   saveSafraCultura(safra_id, safraCultura){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('safra/' + safra_id + '/safra_cultura', safraCultura).then(response => {
-        resolve(response)
+      SafraCulturaAPI.saveSafraCultura(safraCultura, safra_id).then(response => {
+        if(response.status === 201){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
@@ -58,8 +69,12 @@ export default class SafraCulturaService {
 
   updateSafraCultura(safra_id, safra_cultura_id, safraCultura){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('safra/' + safra_id + '/safra_cultura/' + safra_cultura_id, safraCultura).then(response => {
-        resolve(response)
+      SafraCulturaAPI.updateSafraCultura(safraCultura, safra_cultura_id. safra_id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
@@ -68,8 +83,12 @@ export default class SafraCulturaService {
 
   archiveSafraCultura(safra_id, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/safra/' + safra_id + '/safra_cultura/' + id + '/archive').then(response => {
-        resolve(response)
+      SafraCulturaAPI.archiveSafraCultura(id, safra_id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
@@ -78,8 +97,12 @@ export default class SafraCulturaService {
 
   restoreSafraCultura(safra_id, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/safra/' + safra_id + '/safra_cultura/' + id + '/restore').then(response => {
-        resolve(response)
+      SafraCulturaAPI.restoreSafraCultura(id, safra_id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
@@ -88,8 +111,12 @@ export default class SafraCulturaService {
 
   deleteSafraCultura(safra_id, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('/safra/' + safra_id + '/safra_cultura/' + id).then(response => {
-        resolve(response)
+      SafraCulturaAPI.deleteSafraCultura(id, safra_id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
@@ -134,10 +161,13 @@ export default class SafraCulturaService {
   }
 
   listCulturas(){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtor_id + '/cultura/simple_list').then(response => {
-        resolve(response.data);
+      CulturaAPI.listCulturasSimpleList(this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
@@ -145,10 +175,13 @@ export default class SafraCulturaService {
   }
 
   listMarcas(){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtor_id + '/marca').then( response => {
-        resolve(response);
+      MarcaAPI.listMarcas(null, this.produtorId).then( response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
@@ -157,8 +190,12 @@ export default class SafraCulturaService {
 
   listCultivaresByMarca(culturaId, marcaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('cultura/'+culturaId+'/cultivar?marca_id='+ marcaId).then( response => {
-        resolve(response);
+      CultivarAPI.listCultivares('marca_id='+ marcaId, culturaId).then( response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
@@ -167,8 +204,12 @@ export default class SafraCulturaService {
 
   listCultivares(culturaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('cultura/'+culturaId+'/cultivar').then( response => {
-        resolve(response);
+      CultivarAPI.listCultivares(null, culturaId).then( response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
@@ -226,10 +267,15 @@ export default class SafraCulturaService {
     });
   }
 
+  /*Safra Cultura Talhao*/
   updateSafraCulturaTalhao(safra_cultura_id, id, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('safra_cultura/' + safra_cultura_id + '/safra_cultura_talhao/'+ id, params).then(response => {
-        resolve(response)
+      SafraCulturaTalhaoAPI.updateSafraCulturaTalhao(params, id, safra_cultura_id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
@@ -238,8 +284,12 @@ export default class SafraCulturaService {
 
   deleteSafraCulturaTalhao(safra_cultura_id, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('/safra_cultura/' + safra_cultura_id + '/safra_cultura_talhao/' + id).then(response => {
-        resolve(response)
+      SafraCulturaTalhaoAPI.deleteSafraCulturaTalhao(id, safra_cultura_id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
@@ -248,8 +298,12 @@ export default class SafraCulturaService {
 
   saveCultivarToSafraCulturaTalhao(safra_cultura_id, safra_cultura_talhao_id, cultivar_id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('/safra_cultura/' + safra_cultura_id + '/safra_cultura_talhao/' + safra_cultura_talhao_id + '/add_cultivar/' + cultivar_id).then(response => {
-        resolve(response)
+      SafraCulturaTalhaoAPI.addCultivar(cultivar_id, safra_cultura_talhao_id, safra_cultura_id).then(response => {
+        if(response.status === 201){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
@@ -258,8 +312,12 @@ export default class SafraCulturaService {
 
   getDiario(safra_id, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/diario').then(response => {
-        resolve(response)
+      SafraCulturaAPI.getDiario(id, safra_id).then(response => {
+        if(response.status ===  200){
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
@@ -268,8 +326,12 @@ export default class SafraCulturaService {
 
   getDiarioClassificacao(safra_id, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/diario-classificacao').then(response => {
-        resolve(response)
+      SafraCulturaAPI.getDiarioClassificacao(id, safra_id).then(response => {
+        if(response.status ===  200){
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
@@ -278,8 +340,12 @@ export default class SafraCulturaService {
 
   getAreas(safra_id, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/areas').then(response => {
-        resolve(response)
+      SafraCulturaAPI.getAreas(id, safra_id).then(response => {
+        if(response.status ===  200){
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
@@ -288,8 +354,12 @@ export default class SafraCulturaService {
 
   getTalhoes(safra_id, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/talhoes').then(response => {
-        resolve(response)
+      SafraCulturaAPI.getTalhoes(id, safra_id).then(response => {
+        if(response.status ===  200){
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
@@ -298,8 +368,12 @@ export default class SafraCulturaService {
 
   getMarcas(safra_id, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/marcas').then(response => {
-        resolve(response)
+      SafraCulturaAPI.getMarcas(id, safra_id).then(response => {
+        if(response.status ===  200){
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
@@ -308,8 +382,12 @@ export default class SafraCulturaService {
 
   getCultivares(safra_id, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/cultivares').then(response => {
-        resolve(response)
+      SafraCulturaAPI.getCultivares(id, safra_id).then(response => {
+        if(response.status ===  200){
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
@@ -318,8 +396,12 @@ export default class SafraCulturaService {
 
   getCaminhoes(safra_id, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/caminhoes').then(response => {
-        resolve(response)
+      SafraCulturaAPI.getCaminhoes(id, safra_id).then(response => {
+        if(response.status ===  200){
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
@@ -328,8 +410,12 @@ export default class SafraCulturaService {
 
   getArmazens(safra_id, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('safra/' + safra_id + '/safra_cultura/' + id + '/armazens').then(response => {
-        resolve(response)
+      SafraCulturaAPI.getArmazens(id, safra_id).then(response => {
+        if(response.status ===  200){
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
