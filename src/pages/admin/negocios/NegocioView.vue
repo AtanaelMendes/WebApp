@@ -426,6 +426,7 @@
   import apNoResults from 'components/ApNoResults'
   import { Screen } from 'quasar'
   import NegocioService from "../../../assets/js/service/negocio/NegocioService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
 
   export default {
     name: "negocio-view",
@@ -440,7 +441,7 @@
     },
     data () {
       return {
-        negocioService: new NegocioService(this.$account.produtor_id),
+        negocioService: null,
         direita: 'col-xs-12 col-sm-12 col-md-7 col-lg-7',
         esquerda: 'col-xs-12 col-sm-12 col-md-5 col-lg-5',
         negocio: null,
@@ -469,7 +470,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          this.negocioService.archiveNegocio(id).then(response => {
+          this.negocioService.archiveNegocio(id).then(() => {
             this.getNegocioById()
           })
         }).catch(()=>{});
@@ -481,7 +482,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          this.negocioService.deleteNegocio(id).then(response => {
+          this.negocioService.deleteNegocio(id).then(() => {
             this.getNegocioById()
           })
         }).catch(()=>{});
@@ -494,10 +495,8 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          this.negocioService.deleteCultura(this.negocio.id, id).then(response => {
-            if(response.status === 200){
-              this.getNegocioById()
-            }
+          this.negocioService.deleteCultura(this.negocio.id, id).then(() => {
+            this.getNegocioById()
           }).catch(error => {
             if(error.status === 422){
               this.$q.dialog({
@@ -513,10 +512,8 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          this.negocioService.deleteTitulo(this.negocio.id, id).then(response => {
-            if(response.status === 200){
-              this.getNegocioById()
-            }
+          this.negocioService.deleteTitulo(this.negocio.id, id).then(() => {
+            this.getNegocioById()
           })
         }).catch(()=>{});
       },
@@ -527,17 +524,15 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          this.negocioService.deleteProduto(this.negocio.id, id).then(response => {
-            if(response.status === 200){
-              this.getNegocioById()
-            }
+          this.negocioService.deleteProduto(this.negocio.id, id).then(() => {
+            this.getNegocioById()
           })
         }).catch(()=>{});
       },
 
       getNegocioById: function(){
-        this.negocioService.getNegocioById(this.$route.params.id, true).then(response => {
-          this.negocio = response.data;
+        this.negocioService.getNegocioById(this.$route.params.id, true).then(negocio => {
+          this.negocio = negocio;
         });
       },
       backAction: function () {
@@ -545,7 +540,10 @@
       },
     },
     mounted () {
-      this.getNegocioById();
+      new AccountRepository().getFirst().then(account => {
+        this.negocioService = new NegocioService(account.produtor_id);
+        this.getNegocioById();
+      });
 
       this.$root.$on('refreshNegocio', () => {
         this.getNegocioById();

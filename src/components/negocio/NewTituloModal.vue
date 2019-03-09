@@ -150,6 +150,7 @@
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import indexadorService from 'assets/js/service/IndexadorService'
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
+  import AccountRepository from "../../assets/js/repository/AccountRepository";
 
   export default {
     name: "NewTituloModal",
@@ -175,7 +176,7 @@
     },
     data(){
       return {
-        negocioService: new NegocioService(this.$account.produtor_id),
+        negocioService: null,
         isModalOpened: false,
         currentStep: 'pagarReceber',
         negocio: null,
@@ -189,7 +190,9 @@
       }
     },
     methods: {
-      openModal: function(negocio){
+      openModal: async function(negocio){
+        let account = await new AccountRepository().getFirst();
+        this.negocioService = new NegocioService(account.produtor_id);
         this.isModalOpened = true;
         this.titulo = new Titulo();
         this.negocio = negocio;
@@ -283,11 +286,9 @@
       saveAttachTitulo: function(){
         this.titulo.parcelas = this.verifyParcelas;
         this.negocioService.saveAttachTitulo(this.negocio.id, this.titulo.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Título vinculado com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshNegocio')
-          }
+          this.$q.notify({type: 'positive', message: 'Título vinculado com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshNegocio')
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });

@@ -77,6 +77,7 @@
   import negocioModal from 'components/negocio/NegocioModal';
   import apNoResults from 'components/ApNoResults'
   import NegocioService from "../../../assets/js/service/negocio/NegocioService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
 
   export default {
     name: "negocios",
@@ -88,15 +89,15 @@
     },
     data () {
       return {
-        negocioService: new NegocioService(this.$account.produtor_id),
+        negocioService: null,
         negocios: [],
         tipoNegocios: [],
       }
     },
     methods: {
       listNegocios: function(){
-        this.negocioService.listNegocios().then(response => {
-          this.negocios = response.data;
+        this.negocioService.listNegocios().then(negocios => {
+          this.negocios = negocios;
         });
       },
       addNegocio: function(tipo_negocio_id){
@@ -106,12 +107,12 @@
         this.$refs.negocioModal.openModalEditMode(negocioId);
       },
       archiveNegocio: function(id){
-        this.negocioService.archiveNegocio(id).then(response => {
+        this.negocioService.archiveNegocio(id).then(() => {
           this.listNegocios()
         })
       },
       restoreNegocio: function(id){
-        this.negocioService.restoreNegocio(id).then(response => {
+        this.negocioService.restoreNegocio(id).then(() => {
           this.listNegocios()
         })
       },
@@ -122,7 +123,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          this.negocioService.deleteNegocio(id).then(response => {
+          this.negocioService.deleteNegocio(id).then(() => {
             this.listNegocios()
           })
         }).catch(()=>{});
@@ -131,15 +132,19 @@
         this.$router.push({name: 'negocio_view', params: {id:id}});
       },
       listTipoNegocios: function(){
-        this.negocioService.listTipoNegocios().then(response => {
-          this.tipoNegocios = response.data;
+        this.negocioService.listTipoNegocios().then(tiposNegocios => {
+          this.tipoNegocios = tiposNegocios;
         });
       },
 
     },
     mounted () {
-      this.listTipoNegocios();
-      this.listNegocios();
+      new AccountRepository().getFirst().then(account => {
+        this.negocioService = new NegocioService(account.produtor_id);
+        this.listTipoNegocios();
+        this.listNegocios();
+      });
+
       this.$root.$on('refreshNegocioList', () => {
         this.listNegocios();
       });

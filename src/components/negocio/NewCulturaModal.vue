@@ -235,12 +235,10 @@
         this.$emit('modal-closed')
       },
       saveAttachCultura: function(){
-        this.negocioService.saveAttachCultura(this.negocio.id, this.cultura.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Safra cultura vinculada com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshNegocio')
-          }
+        this.negocioService.saveAttachCultura(this.negocio.id, this.cultura.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Safra cultura vinculada com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshNegocio')
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });

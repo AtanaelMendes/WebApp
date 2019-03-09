@@ -11,7 +11,11 @@ import NegocioCulturaArmazemRepository from "../../repository/resource/NegocioCu
 import ArmazemRepository from "../../repository/resource/ArmazemRepository";
 import LocalizacaoRepository from "../../repository/resource/LocalizacaoRepository";
 import NegocioCulturaMovimentoRepository from "../../repository/resource/NegocioCulturaMovimentoRepository";
-const produtorId = localStorage.getItem('account.produtor_id');
+import NegocioAPI from "../../api/NegocioAPI";
+import NegocioTituloAPI from "../../api/NegocioTituloAPI";
+import NegocioProdutoAPI from "../../api/NegocioProdutoAPI";
+import NegocioFixacaoAPI from "../../api/NegocioFixacaoAPI";
+
 export default class NegocioService{
   #produtorId;
   #negocioRepository;
@@ -41,8 +45,12 @@ export default class NegocioService{
 
   listTipoNegocios(){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/tipo_negocio').then( response => {
-        resolve(response);
+      NegocioAPI.listTiposNegocios(this.produtorId).then( response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
@@ -51,8 +59,12 @@ export default class NegocioService{
 
   listNegocios(){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/negocio').then( response => {
-        resolve(response);
+      NegocioAPI.listNegocios(this.produtorId).then( response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
@@ -61,28 +73,40 @@ export default class NegocioService{
 
   getNegocioById(id, fullType = false){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/negocio/'+ id + (fullType ? '?type=full' : '')).then( response => {
-        resolve(response);
+      NegocioAPI.getById(id, fullType, this.produtorId).then( response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
   }
 
-  saveNegocio(params){
+  saveNegocio(negocio){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/'+ produtorId + '/negocio', params).then(response => {
-        resolve(response)
+      NegocioAPI.saveNegocio(negocio).then(response => {
+        if(response.status === 201) {
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
   }
 
-  updateNegocio(id, params){
+  updateNegocio(id, negocio){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/negocio/'+ id, params).then(response => {
-        resolve(response)
+      NegocioAPI.updateNegocio(negocio, id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
@@ -91,8 +115,12 @@ export default class NegocioService{
 
   archiveNegocio(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/negocio/' + id + '/archive').then(response => {
-        resolve(response)
+      NegocioAPI.archiveNegocio(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
@@ -101,8 +129,12 @@ export default class NegocioService{
 
   restoreNegocio(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/negocio/' + id +'/restore').then(response => {
-        resolve(response)
+      NegocioAPI.restoreNegocio(id, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
@@ -111,18 +143,27 @@ export default class NegocioService{
 
   deleteNegocio(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('produtor/'+ produtorId + '/negocio/' + id).then(response => {
-        resolve(response)
+      NegocioAPI.deleteNegocio(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
   }
 
+  /*Negocio Cultura*/
   saveAttachCultura(negocioId, negocioCultura){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('negocio/'+ negocioId + '/cultura', negocioCultura).then(response => {
-        resolve(response)
+      NegocioCulturaAPI.addNegocioCultura(negocioCultura, negocioId).then(response => {
+        if(response.status === 201){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
@@ -131,8 +172,12 @@ export default class NegocioService{
 
   deleteCultura(negocioId, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('negocio/'+ negocioId + '/cultura/' + id).then(response => {
-        resolve(response)
+      NegocioCulturaAPI.deleteNegocioCultura(id, negocioId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
@@ -141,8 +186,12 @@ export default class NegocioService{
 
   listNegociosCulturas(negocioId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('negocio/'+ negocioId + '/cultura?filter=without_empty').then(response => {
-        resolve(response)
+      NegocioCulturaAPI.listNegociosCulturas(negocioId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
@@ -205,10 +254,14 @@ export default class NegocioService{
     });
   }
 
-  listAvaliablesNegociosCulturasForEntrega($entregaId){
+  listAvaliablesNegociosCulturasForEntrega(entregaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('negocio/cultura/by_entrega/' + $entregaId).then(response => {
-        resolve(response)
+      NegocioCulturaAPI.listNegociosCulturasByEntrega(entregaId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
@@ -242,10 +295,15 @@ export default class NegocioService{
     });
   }
 
+  /*Negócio Titulo*/
   saveAttachTitulo(negocioId, negocioTitulo){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('negocio/'+ negocioId + '/titulo', negocioTitulo).then(response => {
-        resolve(response)
+      NegocioTituloAPI.saveNegocioTitulo(negocioTitulo, negocioId).then(response => {
+        if(response.status === 201){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
@@ -254,18 +312,27 @@ export default class NegocioService{
 
   deleteTitulo(negocioId, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('negocio/'+ negocioId + '/titulo/' + id).then(response => {
-        resolve(response)
+      NegocioTituloAPI.deleteNegocioTitulo(id, negocioId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
   }
 
+  /*Negócio Produto*/
   saveAttachProduto(negocioId, negocioProduto){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('negocio/'+ negocioId + '/produto', negocioProduto).then(response => {
-        resolve(response)
+      NegocioProdutoAPI.saveNegocioProduto(negocioProduto, negocioId).then(response => {
+        if(response.status === 201){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
@@ -274,18 +341,27 @@ export default class NegocioService{
 
   deleteProduto(negocioId, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('negocio/'+ negocioId + '/produto/' + id).then(response => {
-        resolve(response)
+      NegocioProdutoAPI.deleteNegocioProduto(id, negocioId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
   }
 
+  /*Negócio Fixacao*/
   saveAttachFixacao(negocioCulturaId, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('negocio_cultura/'+ negocioCulturaId + '/fixacao', params).then(response => {
-        resolve(response)
+      NegocioFixacaoAPI.saveNegocioFixacao(params, negocioCulturaId).then(response => {
+        if(response.status === 201){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })

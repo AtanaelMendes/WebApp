@@ -103,6 +103,7 @@
   import produtoService from 'assets/js/service/produto/ProdutoService'
   import indexadorService from 'assets/js/service/IndexadorService'
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
+  import AccountRepository from "../../assets/js/repository/AccountRepository";
 
   export default {
     name: "NewProdutoModal",
@@ -125,7 +126,7 @@
     },
     data(){
       return {
-        negocioService: new NegocioService(this.$account.produtor_id),
+        negocioService: null,
         isModalOpened: false,
         produto: new Produto(),
         negocio: null,
@@ -140,7 +141,9 @@
       }
     },
     methods: {
-      openModal: function(negocio){
+      openModal: async function(negocio){
+        let account = await new AccountRepository().getFirst();
+        this.negocioService = new NegocioService(account.produtor_id);
         this.isModalOpened = true;
         this.produto = new Produto();
         this.negocio = negocio;
@@ -194,12 +197,10 @@
 
         this.produto.isPagar.value = false;
 
-        this.negocioService.saveAttachProduto(this.negocio.id, this.produto.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Produto vinculado com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshNegocio')
-          }
+        this.negocioService.saveAttachProduto(this.negocio.id, this.produto.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Produto vinculado com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshNegocio')
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });

@@ -457,8 +457,8 @@
         let entregaId = this.$route.params.id;
         this.$q.loading.show();
 
-        this.negocioService.listAvaliablesNegociosCulturasForEntrega(entregaId).then(response => {
-          this.negocioCulturas = response.data;
+        this.negocioService.listAvaliablesNegociosCulturasForEntrega(entregaId).then(negociosCulturas => {
+          this.negocioCulturas = negociosCulturas;
 
           if(this.funcao === 'novoNegocio'){
             this.negocioCulturas = this.negocioCulturas.filter(negocioCultura => {

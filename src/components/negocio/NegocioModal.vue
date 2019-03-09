@@ -94,6 +94,7 @@
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import customInputText from 'components/CustomInputText.vue'
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
+  import AccountRepository from "../../assets/js/repository/AccountRepository";
 
   export default {
     name: "NegocioModal",
@@ -109,7 +110,7 @@
     },
     data(){
       return {
-        negocioService: new NegocioService(this.$account.produtor_id),
+        negocioService: null,
         isModalOpened: false,
         isEditMode: false,
         currentStep: 'negociante',
@@ -137,20 +138,18 @@
         this.$emit('modal-closed')
       },
       getNegocioById: function(negocioId){
-        this.negocioService.getNegocioById(negocioId).then(response => {
-          this.fillFormNegocio(response.data)
+        this.negocioService.getNegocioById(negocioId).then(negocio => {
+          this.fillFormNegocio(negocio)
         });
       },
       saveNegocio: function(){
         if(!this.negocio.isValid()){
           return;
         }
-        this.negocioService.saveNegocio(this.negocio.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Negócio criado com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshNegocioList')
-          }
+        this.negocioService.saveNegocio(this.negocio.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Negócio criado com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshNegocioList')
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
@@ -159,12 +158,10 @@
         if (!this.negocio.isValid()) {
           return;
         }
-        this.negocioService.updateNegocio(this.negocio.id, this.negocio.getValues()).then(response => {
-          if (response.status === 200) {
-            this.$q.notify({type: 'positive', message: 'Negócio atualizado com sucesso!'});
-            this.closeModal();
-            this.$root.$emit('refreshNegocioList')
-          }
+        this.negocioService.updateNegocio(this.negocio.id, this.negocio.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Negócio atualizado com sucesso!'});
+          this.closeModal();
+          this.$root.$emit('refreshNegocioList')
         })
       },
       fillFormNegocio: function(negocio){
@@ -199,6 +196,11 @@
         this.$refs.stepper.next();
       },
     },
+    mounted() {
+      new AccountRepository().getFirst().then(account => {
+        this.negocioService = new NegocioService(account.produtor_id);
+      });
+    }
   }
 </script>
 

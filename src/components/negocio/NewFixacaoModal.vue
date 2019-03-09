@@ -348,6 +348,7 @@
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
   import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
+  import AccountRepository from "../../assets/js/repository/AccountRepository";
 
   export default {
     name: "NewFixacaoModal",
@@ -358,7 +359,7 @@
     data(){
       return{
         unidadeMedidaService: new UnidadeMedidaService(),
-        negocioService: new NegocioService(this.$account.produtor_id),
+        negocioService: null,
         isModalOpened: false,
         currentStep: 'negocioCultura',
         fixacao: new Fixacao(),
@@ -428,7 +429,9 @@
       }
     },
     methods:{
-      openModal: function(negocio){
+      openModal: async function(negocio){
+        let account = await new AccountRepository().getFirst();
+        this.negocioService = new NegocioService(account.produtor_id);
         this.isModalOpened = true;
         this.negocio = negocio;
         this.getUnidadesMedida();
@@ -562,12 +565,10 @@
       saveAttachFixacao: function(){
         this.fixacao.parcelas = this.fixacaoParcelas;
         this.fixacao.dataFixacao.value = new Date();
-        this.negocioService.saveAttachFixacao(this.selectedNegocioCultura.id, this.fixacao.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Fixação vinculada com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshNegocio')
-          }
+        this.negocioService.saveAttachFixacao(this.selectedNegocioCultura.id, this.fixacao.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Fixação vinculada com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshNegocio')
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
@@ -600,8 +601,8 @@
         return this.unidadesMedida.filter(unidade => unidade.id === id)[0];
       },
       listNegociosCulturas: function(negocioId){
-        this.negocioService.listNegociosCulturas(negocioId).then(response => {
-          this.negociosCulturas = response.data;
+        this.negocioService.listNegociosCulturas(negocioId).then(negociosCulturas => {
+          this.negociosCulturas = negociosCulturas;
         })
       },
       listMoedas:function(){
