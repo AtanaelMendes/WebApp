@@ -313,7 +313,8 @@
   import pessoaService from 'assets/js/service/PessoaService'
   import contatoService from 'assets/js/service/ContatoService'
   import customInputText from 'components/CustomInputText.vue'
-  import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
+  import LocalizacaoService from "../../../assets/js/service/localizacao/LocalizacaoService";
+
   export default {
     name: "pessoa-view",
     components: {
@@ -323,6 +324,7 @@
     },
     data(){
       return{
+        localizacaoService: new LocalizacaoService(),
         pessoa: null,
         contatos: [],
         localizacoes: [],
@@ -461,8 +463,8 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          localizacaoService.deleteLocalizacao(this.$route.params.id, localizacaoId).then(response => {
-            this.$q.notify({type: 'positive', message: 'Endereço excluido com sucesso'})
+          this.localizacaoService.deleteLocalizacao(this.$route.params.id, localizacaoId).then(() => {
+            this.$q.notify({type: 'positive', message: 'Endereço excluido com sucesso'});
             this.listLocalizacoes(this.$route.params.id)
           });
         });
@@ -474,7 +476,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          localizacaoService.archiveLocalizacao(this.$route.params.id, localizacaoId).then(response => {
+          this.localizacaoService.archiveLocalizacao(this.$route.params.id, localizacaoId).then(() => {
             this.$q.notify({type: 'positive', message: 'Endereço Arquivado com sucesso'})
             this.listLocalizacoes(this.$route.params.id)
           });
@@ -487,15 +489,15 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          localizacaoService.restoreLocalizacao(this.$route.params.id, localizacaoId).then(response => {
+          this.localizacaoService.restoreLocalizacao(this.$route.params.id, localizacaoId).then(() => {
             this.$q.notify({type: 'positive', message: 'Endereço Ativado com sucesso'});
             this.listLocalizacoes(this.$route.params.id)
           });
         });
       },
       listLocalizacoes: function(pessoaId) {
-        localizacaoService.listLocalizacoes(pessoaId).then(response => {
-          this.localizacoes = response.data
+        this.localizacaoService.listLocalizacoes(pessoaId).then(localizacoes => {
+          this.localizacoes = localizacoes;
         });
       },
       backAction: function () {

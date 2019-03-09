@@ -64,7 +64,8 @@
   import customInputText from 'components/CustomInputText.vue'
   import cidadeAutocomplete from 'components/CidadeAutocomplete.vue'
   import Localizacao from 'assets/js/model/localizacao/Localizacao'
-  import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
+  import LocalizacaoService from "../../../../assets/js/service/localizacao/LocalizacaoService";
+
   export default {
     name: "localizacao-update",
     components: {
@@ -75,6 +76,7 @@
     },
     data(){
       return {
+        localizacaoService: new LocalizacaoService(),
         cidadeTerms: null,
         isLoadingAddress: false,
         typeError: null,
@@ -108,8 +110,8 @@
       getLocalizacao: function(){
         let pessoaId = this.$route.params.id
         let localizacaoId = this.$route.params.localizacaoId
-        localizacaoService.getLocalizacao(pessoaId, localizacaoId).then(response => {
-          this.fillForm(response.data)
+        this.localizacaoService.getLocalizacao(pessoaId, localizacaoId).then(localizacao => {
+          this.fillForm(localizacao)
         });
       },
       updateLocalizacao: function(){
@@ -124,7 +126,7 @@
         if(!this.localizacao.isValid()){
           return
         }
-        localizacaoService.updateLocalizacao(pessoaId, localizacaoId, this.localizacao.getValues()).then( response => {
+        this.localizacaoService.updateLocalizacao(pessoaId, localizacaoId, this.localizacao.getValues()).then(() => {
           this.$q.notify({type: 'positive', message: 'Localizacão atualizada com sucesso'})
           this.$router.go(-1);
         }).catch(error => {
@@ -133,7 +135,7 @@
       },
       getLocationByCEP: function(cep){
         this.isLoadingAddress = true;
-        localizacaoService.getAddressByCEP(cep).then(address => {
+        this.localizacaoService.getAddressByCEP(cep).then(address => {
           this.localizacao.endereco.value = address.endereco;
           this.localizacao.bairro.value = address.bairro;
           this.localizacao.cidadeId.value = address.cidade.id;

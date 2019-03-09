@@ -22,7 +22,6 @@
   import customInputText from 'components/CustomInputText.vue'
   import localizacaoSelect from 'components/LocalizacaoSelect.vue'
   import area from 'assets/js/model/area/Area'
-  import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
   import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import AreaService from "../../../assets/js/service/area/AreaService";
   export default {
@@ -35,6 +34,7 @@
     },
     data(){
       return {
+        localizacaoService: null,
         areaService: null,
         localizacaoOptions: [],
         area: new area(),
@@ -50,9 +50,15 @@
         this.area.nome.value = area.nome
         this.area.localizacao.value = area.localizacao.id
       },
-      listLocalizacao: function(){
-        localizacaoService.listLocalizacao().then(response => {
-          this.localizacaoOptions = response;
+      listLocalizacoesByProdutor(produtorId){
+        this.localizacaoService.listLocalizacoesByProdutor(produtorId).then(localizacoes => {
+          this.localizacaoOptions = localizacoes.map(local => {
+            return {
+              value: local.id,
+              label: local.endereco +', '+ local.numero,
+              sublabel: local.bairro +', '+ local.cidade.nome +'-'+ local.cidade.estado.sigla
+            }
+          });
         })
       },
       getAreaById: function(areaId){
@@ -78,9 +84,8 @@
       new AccountRepository().getFirst().then(account => {
         this.areaService = new AreaService(account.produtor_id);
         this.getAreaById(this.$route.params.id)
+        this.listLocalizacoesByProdutor(account.produtor_id);
       });
-
-      this.listLocalizacao();
     }
   }
 </script>

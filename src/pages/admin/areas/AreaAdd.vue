@@ -22,9 +22,9 @@
   import customInputText from 'components/CustomInputText.vue'
   import localizacaoSelect from 'components/LocalizacaoSelect.vue'
   import area from 'assets/js/model/area/Area'
-  import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
   import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import AreaService from "../../../assets/js/service/area/AreaService";
+  import LocalizacaoService from "../../../assets/js/service/localizacao/LocalizacaoService";
   export default {
     name: "area-add",
     components: {
@@ -35,6 +35,7 @@
     },
     data(){
       return {
+        localizacaoService: new LocalizacaoService(),
         areaService: null,
         localizacaoOptions: [],
         area: new area(),
@@ -42,8 +43,14 @@
     },
     methods:{
       listLocalizacao: function(){
-        localizacaoService.listLocalizacao().then(response => {
-          this.localizacaoOptions = response;
+        this.localizacaoService.listLocalizacoesByProdutor(produtorId).then(localizacoes => {
+          this.localizacaoOptions = localizacoes.map(local => {
+            return {
+              value: local.id,
+              label: local.endereco +', '+ local.numero,
+              sublabel: local.bairro +', '+ local.cidade.nome +'-'+ local.cidade.estado.sigla
+            }
+          });
         })
       },
       saveArea: function(){
