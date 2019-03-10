@@ -17,9 +17,8 @@ export default class CaminhaoService {
   }
 
   listCaminhoes() {
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('/produtor/'+ produtor_id +'/caminhao').then(response => {
+      CaminhaoAPI.listCaminhoes(this.produtorId).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
