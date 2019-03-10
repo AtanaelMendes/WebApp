@@ -343,12 +343,12 @@
 <script>
   import Fixacao from 'assets/js/model/negocio/Fixacao'
   import moedaService from 'assets/js/service/MoedaService'
-  import contaBancariaService from 'assets/js/service/ContaBancariaService'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
   import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
   import AccountRepository from "../../assets/js/repository/AccountRepository";
+  import ContaBancariaService from "../../assets/js/service/ContaBancariaService";
 
   export default {
     name: "NewFixacaoModal",
@@ -358,6 +358,7 @@
     },
     data(){
       return{
+        contaBancariaService: null,
         unidadeMedidaService: new UnidadeMedidaService(),
         negocioService: null,
         isModalOpened: false,
@@ -432,6 +433,7 @@
       openModal: async function(negocio){
         let account = await new AccountRepository().getFirst();
         this.negocioService = new NegocioService(account.produtor_id);
+        this.contaBancariaService= new ContaBancariaService(account.produtor_id);
         this.isModalOpened = true;
         this.negocio = negocio;
         this.getUnidadesMedida();
@@ -611,8 +613,8 @@
         })
       },
       listContasBancarias: function(pessoaId){
-        contaBancariaService.listContasPorPessoa(pessoaId).then(response => {
-          this.contasBancarias = response.data;
+        this.contaBancariaService.listContasBancarias().then(contasBancarias => {
+          this.contasBancarias = contasBancarias;
         });
       },
       negocioCulturaRestanteLabel: function(negocioCultura){
@@ -624,7 +626,7 @@
         }
 
       },
-    }
+    },
   }
 </script>
 

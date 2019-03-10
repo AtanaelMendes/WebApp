@@ -1,15 +1,24 @@
-import Vue from 'vue'
-import { Loading, Dialog } from 'quasar'
-export default {
+import ContaBancariaAPI from "../api/ContaBancariaAPI";
 
-  listContasPorPessoa(pessoa_id) {
-    let produtor_id = localStorage.getItem('account.produtor_id');
+export default class ContaBancariaService{
+  #produtorId;
+
+  constructor(produtorId) {
+    this.produtorId = produtorId;
+  }
+
+  listContasBancarias() {
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('/produtor/'+ produtor_id +'/conta_bancaria').then(response => {
-        resolve(response)
+      ContaBancariaAPI.listContasBancarias(this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
 }
