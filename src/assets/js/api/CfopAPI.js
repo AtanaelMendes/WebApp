@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 export default class CfopAPI{
 
-  static getCfops(){
+  static listCfops(){
     return Vue.prototype.$axios.get('/cfop');
   }
 

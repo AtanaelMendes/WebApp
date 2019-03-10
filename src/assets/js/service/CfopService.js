@@ -12,7 +12,7 @@ export default class CfopService{
 
   listCfops() {
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('/cfop').then(response => {
+      CfopAPI.listCfops().then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
