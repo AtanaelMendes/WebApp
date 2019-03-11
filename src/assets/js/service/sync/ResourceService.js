@@ -109,16 +109,18 @@ export default class ResourceService{
   }
 
   async download(){
-    let tablesToSync = await this.getSyncState();
+    let resources = [];
 
-    let filteredResources = this.resources.filter(resource => {
-      return tablesToSync.includes(resource[0])
-    });
+    if(await this.resourcesSyncTimeRepository.isEmpty()){
+      resources = this.resources;
+    }else{
+      let tablesToSync = await this.getSyncState();
+      resources = this.resources.filter(resource => tablesToSync.includes(resource[0]));
+    }
 
-    let requests = filteredResources.map(resource => this.getResource(resource[0], resource[1], resource[2]));
+    let requests = resources.map(resource => this.getResource(resource[0], resource[1], resource[2]));
 
     return Promise.all(requests)
-
   }
 
   async getResource(name, model, repository){

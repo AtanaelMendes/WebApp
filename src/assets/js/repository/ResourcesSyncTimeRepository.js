@@ -7,6 +7,10 @@ export default class ResourcesSyncTimeRepository {
     this.table = Vue.prototype.db_primary.resources_sync_time;
   }
 
+  async isEmpty(){
+    return await this.table.count() === 0;
+  }
+
   getAll(){
     return this.table.toArray()
   }
