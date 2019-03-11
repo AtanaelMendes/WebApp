@@ -216,9 +216,7 @@
         this.$refs.syncProgressDialog.openModal();
         this.syncService.getInitialContent(produtorId);
         new ResourceService(produtorId).download().then(() => {
-          console.log("Terminou de baixar os resources")
           new ListService(produtorId).download().then(() => {
-            console.log("Terminou sync")
             this.$refs.syncProgressDialog.closeModal();
           }).catch(error => {
             console.log("Erro no download de ListService")

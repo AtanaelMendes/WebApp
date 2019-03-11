@@ -21,14 +21,13 @@ export default class ListService{
     entregaViewRepository = new EntregaViewRepository();
   }
 
-  download(){
-    return new Promise(async (resolve, reject) => {
-      await getEntregasCarregandoList();
-      await getEntregasNoArmazemList();
-      await getEntregasEntregueList();
-      await getEntregasView();
-      resolve();
-    });
+  async download(){
+    await getEntregasCarregandoList();
+    await getEntregasNoArmazemList();
+    await getEntregasEntregueList();
+    await getEntregasView();
+
+    return Promise.resolve();
   }
 }
 
@@ -41,19 +40,16 @@ async function getEntregasView(){
 
   await entregaViewRepository.clearTable();
 
-  let promises = [];
+  let promises = entregas.map(entrega => getEntrega(entrega.id, produtorId));
 
-  for(let entrega of entregas){
-    promises.push(
-      EntregaAPI.getEntrega(entrega.id, produtorId).then(response => {
-        entregaViewRepository.update(response.data);
-      })
-    )
-  }
-
-  Promise.all(promises).then(()=>{
-    resolve();
+  return Promise.all(promises).then(()=>{
+    Promise.resolve();
   });
+}
+
+async function getEntrega(entregaId, produtorId){
+  let response = await EntregaAPI.getEntrega(entregaId, produtorId);
+  await entregaViewRepository.update(response.data);
 }
 
 async function getEntregasCarregandoList(){
