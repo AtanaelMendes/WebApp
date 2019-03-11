@@ -19,6 +19,10 @@ export default class EntregaCarregandoListRepository{
     return this.table.toArray();
   }
 
+  delete(id){
+    return this.table.delete(id);
+  }
+
   clearTable(){
     return this.table.clear();
   }

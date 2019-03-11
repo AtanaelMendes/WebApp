@@ -4,6 +4,7 @@ import EntregaNoArmazemListRepository from "../../repository/list/EntregaNoArmaz
 import EntregaEntregueListRepository from "../../repository/list/EntregaEntregueListRepository";
 import EntregaAPI from "../../api/EntregaAPI";
 import EntregaViewRepository from "../../repository/list/EntregaViewRepository";
+import ResourceService from "./ResourceService";
 
 let produtorId;
 let entregaCarregandoListRepository;
@@ -32,15 +33,13 @@ export default class ListService{
 }
 
 async function getEntregasView(){
-  let entregasCarregando = await entregaCarregandoListRepository.getAll();
-  let entregasNoArmazem = await entregaNoArmazemListRepository.getAll();
-  let entregasEntregue = await entregaEntregueListRepository.getAll();
+  let entregasToUpdateIds = ResourceService.entregasToUpdate;
 
-  let entregas = entregasCarregando.concat(entregasNoArmazem).concat(entregasEntregue);
+  for(let id of ResourceService.entregasToDelete){
+    await entregaViewRepository.delete(id);
+  }
 
-  await entregaViewRepository.clearTable();
-
-  let promises = entregas.map(entrega => getEntrega(entrega.id, produtorId));
+  let promises = entregasToUpdateIds.map(id => getEntrega(id, produtorId));
 
   return Promise.all(promises).then(()=>{
     Promise.resolve();
@@ -54,7 +53,10 @@ async function getEntrega(entregaId, produtorId){
 
 async function getEntregasCarregandoList(){
   let response = await Vue.prototype.$axios.get('produtor/' + produtorId + '/entrega?status=carregando');
-  await entregaCarregandoListRepository.clearTable();
+
+  for(let id of ResourceService.entregasToDelete){
+    await entregaCarregandoListRepository.delete(id);
+  }
 
   for(let entrega of response.data){
     await entregaCarregandoListRepository.update(entrega);
@@ -63,7 +65,10 @@ async function getEntregasCarregandoList(){
 
 async function getEntregasNoArmazemList(){
   let response = await Vue.prototype.$axios.get('produtor/' + produtorId + '/entrega?status=no_armazem');
-  await entregaNoArmazemListRepository.clearTable();
+
+  for(let id of ResourceService.entregasToDelete){
+    await entregaNoArmazemListRepository.delete(id);
+  }
 
   for(let entrega of response.data){
     await entregaNoArmazemListRepository.update(entrega);
@@ -72,7 +77,10 @@ async function getEntregasNoArmazemList(){
 
 async function getEntregasEntregueList(){
   let response = await Vue.prototype.$axios.get('produtor/' + produtorId + '/entrega?status=entregue');
-  await entregaEntregueListRepository.clearTable();
+
+  for(let id of ResourceService.entregasToDelete){
+    await entregaEntregueListRepository.delete(id);
+  }
 
   for(let entrega of response.data){
     await entregaEntregueListRepository.update(entrega);

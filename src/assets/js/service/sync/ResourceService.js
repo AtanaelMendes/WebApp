@@ -60,6 +60,9 @@ let basePath;
 export default class ResourceService{
   #resourcesSyncTimeRepository;
   #resources;
+  //TODO: Remover essas variaveis estaticas daqui e passar para outra classe
+  static entregasToUpdate = [];
+  static entregasToDelete = [];
 
   constructor(produtorId) {
     basePath = '/produtor/' + produtorId + '/resource';
@@ -136,11 +139,22 @@ export default class ResourceService{
 
     await this.resourcesSyncTimeRepository.put(name, response.data.last_update_registry);
 
+    if(name === 'entrega'){
+      ResourceService.entregasToUpdate = [];
+      ResourceService.entregasToDelete = [];
+    }
+
     for(let resource of response.data.resources){
+      if(name === 'entrega'){
+        ResourceService.entregasToUpdate.push(resource.id);
+      }
       await repositoryInstance.update(new model(resource));
     }
 
     for(let purgedId of response.data.purged_ids){
+      if(name === 'entrega'){
+        ResourceService.entregasToUpdate.push(purgedId);
+      }
       await repositoryInstance.delete(purgedId);
     }
   }
