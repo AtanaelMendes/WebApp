@@ -53,17 +53,18 @@ import NegocioCulturaMovimentoRepository from "../../repository/resource/Negocio
 import NegocioCulturaMovimento from "../../dbModel/NegocioCulturaMovimento";
 import EntregaTalhaoRepository from "../../repository/resource/EntregaTalhaoRepository";
 import EntregaTalhao from "../../dbModel/EntregaTalhao";
+import ResourcesSyncTimeRepository from "../../repository/ResourcesSyncTimeRepository";
 
 let basePath;
 
 export default class ResourceService{
+  #resourcesSyncTimeRepository;
+  #resources;
 
   constructor(produtorId) {
     basePath = '/produtor/' + produtorId + '/resource';
-  }
-
-  download(){
-    let resources = [
+    this.resourcesSyncTimeRepository = new ResourcesSyncTimeRepository();
+    this.resources = [
       ['caminhao', Caminhao, CaminhaoRepository],
       ['safra_cultura', SafraCultura, SafraCulturaRepository],
       ['safra_cultura_talhao', SafraCulturaTalhao, SafraCulturaTalhaoRepository],
@@ -92,21 +93,37 @@ export default class ResourceService{
       ['negocio_cultura_movimento', NegocioCulturaMovimento, NegocioCulturaMovimentoRepository],
       ['entrega_talhao', EntregaTalhao, EntregaTalhaoRepository],
     ];
+  }
 
-    let requests = resources.map(resource => getResource(resource[0], resource[1], resource[2]))
+  download(){
+    //TODO: Criar um endpoint para eu enviar o nome da tabela com o timestamp atual para retornar os nomes das tabelas que precisam ser atualizadas, junto com o timestamp que é pra buscar junto
+
+    let requests = this.resources.map(resource => this.getResource(resource[0], resource[1], resource[2]));
 
     return Promise.all(requests)
 
   }
-}
 
-async function getResource(path, model, repository){
-  let repositoryInstance = new repository();
-  let response = await Vue.prototype.$axios.get(basePath + '/' + path);
-  repositoryInstance.clearTable();
+  async getResource(name, model, repository){
+    let resourceSyncTime = await this.resourcesSyncTimeRepository.getByTableName(name);
+    let repositoryInstance = new repository();
+    let afterTime = 0;
 
-  for(let item of response.data){
-    await repositoryInstance.update(new model(item));
+    if(resourceSyncTime !== null && resourceSyncTime !== undefined){
+      afterTime = resourceSyncTime.last_update_registry;
+    }
+
+    let response = await Vue.prototype.$axios.get(basePath + '?name=' + name + "&after=" + afterTime);
+
+    await this.resourcesSyncTimeRepository.put(name, response.data.last_update_registry);
+
+    for(let resource of response.data.resources){
+      await repositoryInstance.update(new model(resource));
+    }
+
+    for(let purgedId of response.data.purged_ids){
+      await repositoryInstance.delete(purgedId);
+    }
   }
 }
 

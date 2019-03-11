@@ -22,6 +22,10 @@ export default class BaseRepository {
     return this.table.put(model)
   }
 
+  delete(id){
+    return this.table.delete(id);
+  }
+
   clearTable(){
     return this.table.clear();
   }

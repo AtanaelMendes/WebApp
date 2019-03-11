@@ -8,6 +8,7 @@ db_primary.version(1).stores({
   account_info: '',
   request_queue: '++id, grouper, type, request.url, date',
   queue_api_id_relations: 'local_id, api_id',
+  resources_sync_time: 'table_name',
 });
 
 db_resources.version(1).stores({
