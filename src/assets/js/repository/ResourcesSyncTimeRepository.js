@@ -7,6 +7,10 @@ export default class ResourcesSyncTimeRepository {
     this.table = Vue.prototype.db_primary.resources_sync_time;
   }
 
+  getAll(){
+    return this.table.toArray()
+  }
+
   getByTableName(tableName){
     return this.table.get({table_name: tableName});
   }

@@ -95,10 +95,27 @@ export default class ResourceService{
     ];
   }
 
-  download(){
-    //TODO: Criar um endpoint para eu enviar o nome da tabela com o timestamp atual para retornar os nomes das tabelas que precisam ser atualizadas, junto com o timestamp que é pra buscar junto
+  async getSyncState(){
+    let resourcesSyncTime = await this.resourcesSyncTimeRepository.getAll();
+    let body = {resources: resourcesSyncTime};
 
-    let requests = this.resources.map(resource => this.getResource(resource[0], resource[1], resource[2]));
+    let response = await Vue.prototype.$axios.post(basePath, body);
+
+    if(response.status === 200){
+      return Promise.resolve(response.data)
+    } else {
+      return Promise.resolve(response)
+    }
+  }
+
+  async download(){
+    let tablesToSync = await this.getSyncState();
+
+    let filteredResources = this.resources.filter(resource => {
+      return tablesToSync.includes(resource[0])
+    });
+
+    let requests = filteredResources.map(resource => this.getResource(resource[0], resource[1], resource[2]));
 
     return Promise.all(requests)
 
