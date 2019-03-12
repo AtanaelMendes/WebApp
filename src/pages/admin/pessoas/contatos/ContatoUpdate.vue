@@ -149,7 +149,7 @@
   import Contato from 'assets/js/model/contato/Contato'
   import Telefone from 'assets/js/model/contato/Telefone'
   import Email from 'assets/js/model/contato/Email'
-  import contatoService from 'assets/js/service/ContatoService'
+  import ContatoService from "../../../../assets/js/service/ContatoService";
   export default {
     name: "ContatoAdd",
     components: {
@@ -164,6 +164,7 @@
     },
     data(){
       return {
+        contatoService: new ContatoService(),
         contatoId: null,
         contato: new Contato(),
         telefone: new Telefone(),
@@ -199,7 +200,7 @@
       getContato: function(){
         let pessoaId = this.$route.params.id
         let contatoId = this.$route.params.contatoId
-        contatoService.getContato(pessoaId, contatoId).then(contato => {
+        this.contatoService.getContato(pessoaId, contatoId).then(contato => {
           this.fillForm(contato)
         });
       },
@@ -225,7 +226,7 @@
             })
           }
         }
-        contatoService.updateContato(this.$route.params.id, this.contatoId, this.contato.getValues()).then( () => {
+        this.contatoService.updateContato(this.$route.params.id, this.contatoId, this.contato.getValues()).then( () => {
           this.$q.notify({type: 'positive', message: 'Contato criado com sucesso'})
           this.$router.go(-1);
         }).catch(error => {
