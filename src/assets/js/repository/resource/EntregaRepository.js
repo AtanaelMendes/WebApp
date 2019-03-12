@@ -19,4 +19,8 @@ export default class EntregaRepository extends BaseRepository{
   getCarregandoAndNoArmazem(){
     return this.table.where('status').anyOf('Carregando', 'No Armazem').toArray();
   }
+
+  getByStatus(status){
+    return this.table.where('status').equals(status).reverse().sortBy('envio_armazem');
+  }
 }

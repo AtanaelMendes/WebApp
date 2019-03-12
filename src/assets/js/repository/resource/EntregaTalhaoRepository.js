@@ -5,6 +5,10 @@ import EntregaTalhao from "../../dbModel/EntregaTalhao";
 export default class EntregaTalhaoRepository extends BaseRepository{
 
   constructor() {
-    super(Vue.prototype.db_resources.entrega_talhoes, EntregaTalhao);
+    super(Vue.prototype.db_resources.entregas_talhoes, EntregaTalhao);
+  }
+
+  getByEntregaId(id){
+    return this.table.where({entrega_id: id}).toArray();
   }
 }

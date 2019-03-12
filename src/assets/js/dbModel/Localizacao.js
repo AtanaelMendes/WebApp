@@ -44,5 +44,10 @@ export default class Localizacao {
     this.updated_at = localizacao.updated_at;
     this.deleted_at = localizacao.deleted_at;
   }
+
+  getFullAddress(){
+    return this.endereco + (this.numero ? ', ' + this.numero : '') + (this.bairro ? ' - ' + this.bairro : '') +
+    ', ' + this.cidade.nome + '-' + this.cidade.estado.nome;
+  }
 }
 

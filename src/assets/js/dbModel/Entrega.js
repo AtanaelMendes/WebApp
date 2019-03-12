@@ -1,4 +1,8 @@
 export default class Entrega {
+  static CARREANDO = 'Carregando';
+  static NO_ARMAZEM = 'No Armazem';
+  static ENTREGUE = 'Entregue';
+
   id = null;
   is_saida = null;
   caminhao_id = null;

@@ -38,7 +38,8 @@ db_resources.version(1).stores({
   culturas_classificacoes: 'id, cultura_id, classificacao_id',
   unidades_conversoes: 'id, origem_id, destino_id',
   negocios_culturas_movimentos: 'id, negocio_cultura_id, entrega_id',
-  entrega_talhoes: 'id',
+  entregas_talhoes: 'id, entrega_id',
+  entregas_pesagens: 'id, entrega_id',
 });
 
 db_lists.version(1).stores({

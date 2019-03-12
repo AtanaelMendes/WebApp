@@ -219,10 +219,10 @@
           new ListService(produtorId).download().then(() => {
             this.$refs.syncProgressDialog.closeModal();
           }).catch(error => {
-            console.log("Erro no download de ListService")
+            console.log("Erro no download de ListService", error)
           })
         }).catch(error => {
-          console.log("Erro no download de ResourseService")
+          console.log("Erro no download de ResourseService", error)
         });
       },
       toogleLeftDrawer() {

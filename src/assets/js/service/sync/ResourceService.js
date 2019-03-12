@@ -54,6 +54,8 @@ import NegocioCulturaMovimento from "../../dbModel/NegocioCulturaMovimento";
 import EntregaTalhaoRepository from "../../repository/resource/EntregaTalhaoRepository";
 import EntregaTalhao from "../../dbModel/EntregaTalhao";
 import ResourcesSyncTimeRepository from "../../repository/ResourcesSyncTimeRepository";
+import EntregaPesagem from "../../dbModel/EntregaPesagem";
+import EntregaPesagemRepository from "../../repository/resource/EntregaPesagemRepository";
 
 let basePath;
 
@@ -95,6 +97,7 @@ export default class ResourceService{
       ['unidade_conversao', UnidadeConversao, UnidadeConversaoRepository],
       ['negocio_cultura_movimento', NegocioCulturaMovimento, NegocioCulturaMovimentoRepository],
       ['entrega_talhao', EntregaTalhao, EntregaTalhaoRepository],
+      ['entrega_pesagem', EntregaPesagem, EntregaPesagemRepository],
     ];
   }
 
