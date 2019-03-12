@@ -90,11 +90,12 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import PessoaService from 'assets/js/service/PessoaService'
-  import GrupoEconomicoService from 'assets/js/service/GrupoEconomicoService'
   import Pessoa from 'assets/js/model/Pessoa'
   import estadoSiglaSelect from 'components/EstadoSiglaSelect.vue'
   import GrupoEconomico from 'assets/js/model/GrupoEconomico'
   import { filter } from 'quasar'
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
+  import GrupoEconomicoService from "../../../assets/js/service/GrupoEconomicoService";
   export default {
     name: "pessoa-edit",
     components: {
@@ -105,6 +106,7 @@
     },
     data(){
       return {
+        grupoEconomicoService: null,
         grupoEconomicoSearchTerms: '',
         tempGrupoEconomicoList: [],
         newGrupoEconomicoDialog: false,
@@ -157,9 +159,9 @@
         });
       },
       search (terms, done) {
-        GrupoEconomicoService.searchGrupoEconomico(terms).then(response => {
-          this.tempGrupoEconomicoList = response;
-          done(response)
+        this.grupoEconomicoService.searchGrupoEconomico(terms).then(result => {
+          this.tempGrupoEconomicoList = result;
+          done(result)
         });
       },
       pessoaTypeChanged: function(){
@@ -174,11 +176,11 @@
         if(!this.grupoEconomico.isValid(this)){
           return;
         }
-        GrupoEconomicoService.saveGrupoEconomico(this.grupoEconomico.getValues()).then(response => {
+        this.grupoEconomicoService.saveGrupoEconomico(this.grupoEconomico.getValues()).then(grupoEconomico => {
           this.$q.notify({type: 'positive', message: 'Grupo Econômico criado com sucesso'});
           this.closeNovoGrupoEconomicoDialog();
-          this.grupoEconomicoSearchTerms = response.data.nome;
-          this.pessoa.grupoEconomico.value = response.data.id;
+          this.grupoEconomicoSearchTerms = grupoEconomico.nome;
+          this.pessoa.grupoEconomico.value = grupoEconomico.id;
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.request.response})
         })
@@ -210,7 +212,10 @@
       }
     },
     mounted(){
-      this.getPessoa(this.$route.params.id)
+      new AccountRepository().getFirst().then(account => {
+        this.grupoEconomicoService = new GrupoEconomicoService(account.produtor_id);
+        this.getPessoa(this.$route.params.id)
+      });
     },
 
   }
