@@ -1,5 +1,3 @@
-import Vue from 'vue'
-import { Loading, Dialog } from 'quasar'
 import CfopAPI from "../api/CfopAPI";
 import CfopRepository from "../repository/resource/CfopRepository";
 
@@ -13,7 +11,11 @@ export default class CfopService{
   listCfops() {
     return new Promise((resolve, reject) => {
       CfopAPI.listCfops().then(response => {
-        resolve(response)
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
@@ -24,7 +26,11 @@ export default class CfopService{
     return new Promise((resolve, reject) => {
       if(navigator.onLine) {
         CfopAPI.getByNumero(numero).then(response => {
-          resolve(response.data)
+          if(response.status === 200){
+            resolve(response.data);
+          }else{
+            reject(response);
+          }
         }).catch(error => {
           reject(error)
         })

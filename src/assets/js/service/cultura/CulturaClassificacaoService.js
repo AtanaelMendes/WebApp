@@ -15,7 +15,11 @@ export default class CulturaClassificacaoService {
     return new Promise((resolve, reject) => {
       if(navigator.onLine) {
         CulturaClassificacaoAPI.listByCultura(cultura_id).then(response => {
-          resolve(response.data);
+          if(response.status === 200){
+            resolve(response.data);
+          }else{
+            reject(response);
+          }
         }).catch(error => {
           reject(error)
         })

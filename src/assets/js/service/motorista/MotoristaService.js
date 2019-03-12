@@ -15,7 +15,11 @@ export default class MotoristaService{
     return new Promise((resolve, reject) => {
       if(navigator.onLine) {
         MotoristaAPI.listMotoristas(this.produtorId).then(response => {
-          resolve(response.data);
+          if(response.status === 200){
+            resolve(response.data);
+          }else{
+            reject(response);
+          }
         }).catch(error => {
           reject(error)
         })
@@ -32,7 +36,11 @@ export default class MotoristaService{
   saveMotorista(motorista){
     return new Promise((resolve, reject) => {
       MotoristaAPI.saveMotorista(motorista, this.produtorId).then(response => {
-        resolve(response)
+        if(response.status === 201){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })

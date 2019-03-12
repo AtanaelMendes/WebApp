@@ -37,7 +37,11 @@ export default class EntregaService{
 
       if(navigator.onLine){
         entregas = await EntregaAPI.listEntregasByStatus('carregando', filter, this.produtorId).then(response => {
-          return response.data;
+          if(response.status === 200){
+            return resolve(response.data);
+          }else{
+            return reject(response);
+          }
         })
       }else{
         entregas = await this.entregaCarreandoListRepository.getAll();
@@ -73,7 +77,11 @@ export default class EntregaService{
 
       if(navigator.onLine){
         entregas = await EntregaAPI.listEntregasByStatus('no_armazem', filter, this.produtorId).then(response => {
-          return response.data;
+          if(response.status === 200){
+            return resolve(response.data);
+          }else{
+            return reject(response);
+          }
         })
       }else{
         entregas = await this.entregaNoArmazemListRepository.getAll();
@@ -110,7 +118,11 @@ export default class EntregaService{
 
       if(navigator.onLine){
         entregas = await EntregaAPI.listEntregasByStatus('entregue', filter, this.produtorId).then(response => {
-          return response.data;
+          if(response.status === 200){
+            return resolve(response.data);
+          }else{
+            return reject(response);
+          }
         })
       }else{
         entregas = await this.entregaEntregueListRepository.getAll();

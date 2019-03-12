@@ -19,7 +19,11 @@ export default class CaminhaoService {
   listCaminhoes() {
     return new Promise((resolve, reject) => {
       CaminhaoAPI.listCaminhoes(this.produtorId).then(response => {
-        resolve(response)
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
@@ -32,7 +36,11 @@ export default class CaminhaoService {
 
       if(navigator.onLine) {
         caminhoes = await  CaminhaoAPI.getFreeCaminhoes(this.produtorId).then(response => {
-          return response.data;
+          if(response.status === 200){
+            resolve(response.data);
+          }else{
+            reject(response);
+          }
         });
       }else{
         caminhoes = await this.caminahoRepository.getAllFree();

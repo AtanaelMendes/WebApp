@@ -14,7 +14,7 @@ export default class PesagemService {
         if(response.status === 201) {
           resolve(response.data)
         }else{
-          reject();
+          reject(response);
         }
       }).catch(error => {
         if(!navigator.onLine){
@@ -30,7 +30,11 @@ export default class PesagemService {
   deletePesagem(entregaId, id){
     return new Promise((resolve, reject) => {
       PesagemAPI.delete(id, entregaId).then(response => {
-        resolve(response.data)
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error.response)
       })

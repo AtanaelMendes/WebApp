@@ -1,6 +1,5 @@
 import ContatoAPI from "../api/ContatoAPI";
 
-
 export default class ContatoService{
 
   constructor() {

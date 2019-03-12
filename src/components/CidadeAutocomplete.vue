@@ -40,9 +40,9 @@
         }
       },
       search (terms, done) {
-        this.cidadeService.searchCidade(terms).then(response => {
-          this.tempCidadeList = response;
-          done(response)
+        this.cidadeService.searchCidade(terms).then(cidades => {
+          this.tempCidadeList = cidades;
+          done(cidades)
         });
       },
       selected (item) {

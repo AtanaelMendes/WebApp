@@ -7,7 +7,11 @@ export default class CidadeService{
   searchCidade(terms){
     return new Promise((resolve, reject) => {
       CidadeAPI.searchCidade(terms).then(response => {
-        resolve(this.parseCidade(response.data))
+        if(response.status === 200) {
+          resolve(this.parseCidade(response.data))
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })

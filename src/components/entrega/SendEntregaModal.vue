@@ -550,12 +550,10 @@
             color: 'secondary'
           }).then(data => {
             this.$q.loading.show();
-            this.motoristaService.saveMotorista({nome: data}).then(response => {
-              if(response.status === 201){
-                this.sendEntrega.motoristaId = response.data.id;
-                this.listMotoristas();
-                this.$q.loading.hide();
-              }
+            this.motoristaService.saveMotorista({nome: data}).then(motorista => {
+              this.sendEntrega.motoristaId = motorista.id;
+              this.listMotoristas();
+              this.$q.loading.hide();
             })
           }).catch(() => {})
         }else{
@@ -724,17 +722,17 @@
       },
       getNotaFiscalItem(id){
         this.$q.loading.show();
-        this.notaFiscalService.getNotaFiscalItemById(id).then(response => {
-          this.sendEntrega.serieId = response.data.nota_fiscal.serie.id;
-          this.sendEntrega.notaNumero = response.data.nota_fiscal.numero;
-          this.sendEntrega.emissao.value = response.data.nota_fiscal.emissao;
-          this.sendEntrega.unidadeMedidaId = response.data.unidade_medida_id;
-          this.sendEntrega.peso = response.data.quantidade;
-          this.sendEntrega.valor = response.data.valor_unitario;
-          this.sendEntrega.total = response.data.valor_total;
-          this.cfopSearchText = response.data.cfop.numero;
-          this.sendEntrega.cfopId = response.data.cfop.id;
-          this.sendEntrega.is_saida = response.data.cfop.is_saida;
+        this.notaFiscalService.getNotaFiscalItemById(id).then(notaFiscalItem => {
+          this.sendEntrega.serieId = notaFiscalItem.nota_fiscal.serie.id;
+          this.sendEntrega.notaNumero = notaFiscalItem.nota_fiscal.numero;
+          this.sendEntrega.emissao.value = notaFiscalItem.nota_fiscal.emissao;
+          this.sendEntrega.unidadeMedidaId = notaFiscalItem.unidade_medida_id;
+          this.sendEntrega.peso = notaFiscalItem.quantidade;
+          this.sendEntrega.valor = notaFiscalItem.valor_unitario;
+          this.sendEntrega.total = notaFiscalItem.valor_total;
+          this.cfopSearchText = notaFiscalItem.cfop.numero;
+          this.sendEntrega.cfopId = notaFiscalItem.cfop.id;
+          this.sendEntrega.is_saida = notaFiscalItem.cfop.is_saida;
 
           this.getCfopByNumero();
           this.$q.loading.hide();

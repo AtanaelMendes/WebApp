@@ -16,7 +16,11 @@ export default class ArmazemService{
     return new Promise((resolve, reject) => {
       if(navigator.onLine) {
         ArmazemAPI.listArmazens(this.produtorId).then(response => {
-          resolve(response.data);
+          if(response.status === 200){
+            resolve(response.data);
+          }else{
+            reject(response);
+          }
         }).catch(error => {
           reject(error)
         })
@@ -35,7 +39,11 @@ export default class ArmazemService{
     return new Promise((resolve, reject) => {
       if(navigator.onLine) {
         ArmazemAPI.listArmazensByEntrega(entregaId, this.produtorId).then(response => {
-          resolve(response.data);
+          if(response.status === 200){
+            resolve(response.data);
+          }else{
+            reject(response);
+          }
         }).catch(error => {
           reject(error);
         })
