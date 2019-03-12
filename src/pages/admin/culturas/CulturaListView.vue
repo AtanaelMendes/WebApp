@@ -835,6 +835,7 @@
       },
       data () {
         return {
+          produtorId: null,
           culturaService: null,
           currentStep: 'cultura',
           modalNewCultura: false,
@@ -888,12 +889,10 @@
       },
       computed: {
         marcaImageUrl: function(){
-          let produtor_id = localStorage.getItem('account.produtor_id');
-          return '/produtor/' + produtor_id + '/marca/' + this.selectedMarcaId + '/image';
+          return '/produtor/' + this.produtorId + '/marca/' + this.selectedMarcaId + '/image';
         },
         culturaImageUrl: function(){
-          let produtor_id = localStorage.getItem('account.produtor_id');
-          return '/produtor/' + produtor_id + '/cultura/' + this.selectedCulturaId + '/image';
+          return '/produtor/' + this.produtorId + '/cultura/' + this.selectedCulturaId + '/image';
         }
       },
       methods: {
@@ -1285,6 +1284,7 @@
       },
       mounted () {
         new AccountRepository().getFirst().then(account => {
+          this.produtorId = account.produtor_id;
           this.culturaService = new CulturaService(account.produtor_id);
           this.listCulturas();
           this.listMarcasSemCultivares();

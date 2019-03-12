@@ -20,14 +20,11 @@ export default class AccountService{
       }).catch(error => {
         reject(error)
       })
-
     });
   }
 }
 
-
 function clearAccountInfo(){
   localStorage.removeItem('auth.token');
   localStorage.removeItem('auth.refresh_token');
-  localStorage.removeItem('account.produtor_id');
 }
