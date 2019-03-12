@@ -43,9 +43,6 @@ db_resources.version(1).stores({
 });
 
 db_lists.version(1).stores({
-  entregas_carregando: 'id',
-  entregas_no_armazem: 'id',
-  entregas_entregue: 'id',
   entrega_view: 'id',
 });
 

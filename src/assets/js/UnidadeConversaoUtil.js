@@ -3,6 +3,7 @@ import UnidadeConversaoRepository from "./repository/resource/UnidadeConversaoRe
 export default class UnidadeConversaoUtil{
 
   async convert(id_origem, id_destino, value){
+    //console.log(id_origem, id_destino, value)
     if(id_origem === id_destino){
       return value;
     }
