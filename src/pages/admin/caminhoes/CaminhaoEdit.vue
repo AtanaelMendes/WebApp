@@ -46,7 +46,7 @@
   import caminhaoService from 'assets/js/service/CaminhaoService'
   import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   export default {
-    name: "caminhoes-add",
+    name: "caminhao-edit",
     components: {
       toolbar,
       customPage
@@ -98,7 +98,7 @@
         if( this.caminhao.nome.value != null){
           if(this.caminhao.nome.value.length < 3){
             this.caminhao.nome.error = true;
-            this.caminhao.nome.errorMessage = 'nome muito curto';
+            this.caminhao.nome.errorMessage = 'nome muito curto min 3 caracteres';
             return false
           }
         }
@@ -142,10 +142,10 @@
           return
         }
         caminhaoService.updateCaminhao(this.caminhao).then(response => {
-          this.$q.notify({type: 'positive', message: 'Caminhão adicionado com sucesso.'});
+          this.$q.notify({type: 'positive', message: 'Caminhão alterado com sucesso.'});
           this.backAction();
         }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível adicionar o caminhão'})
+          this.$q.notify({type: 'negative', message: 'Não foi possível salvar as alterações'})
         })
       },
       backAction: function () {

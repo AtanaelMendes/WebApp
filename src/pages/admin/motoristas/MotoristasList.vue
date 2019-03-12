@@ -163,9 +163,14 @@
         this.filter.name = val;
       },
       listMotoristas: function(filter) {
+        this.$q.loading.show();
         motoristaService.listMotoristas(filter).then(response => {
           this.motoristas = response.data;
           this.isEmptyList = this.motoristas.length === 0;
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.loading.hide();
+          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações'});
         });
       },
       viewMotorista: function(id) {
@@ -174,8 +179,8 @@
       addMotorista: function(){
         this.$router.push({name: 'add_motorista'});
       },
-      updateMotorista: function(){
-        this.$router.push({name: 'edit_Motorista'});
+      updateMotorista: function(id){
+        this.$router.push({name: 'edit_motorista', params: {id:id}} );
       },
       archiveMotorista: function(id){
         motoristaService.archiveMotorista(id).then(response =>{

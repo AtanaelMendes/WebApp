@@ -1,30 +1,14 @@
 <template>
   <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Editar caminhão" navigation_type="back" @navigation_clicked="backAction">
+    <toolbar slot="toolbar" title="Editar motorista" navigation_type="back" @navigation_clicked="backAction">
     </toolbar>
 
     <div class="row q-pa-md">
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-        <form @keyup.enter="updateCaminhao()">
+        <form @keyup.enter="updateMotorista()">
 
-          <q-field class="q-mb-sm" :error="caminhao.nome.error" :error-label="caminhao.nome.errorMessage">
-            <q-input v-model="caminhao.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
-          </q-field>
-
-          <q-field class="q-mb-sm" :error="caminhao.placa.error" :error-label="caminhao.placa.errorMessage">
-            <q-input upper-case	 v-model="caminhao.placa.value" float-label="Placa" @input="clearErrorMessage()"/>
-          </q-field>
-
-          <q-field class="q-mb-sm">
-            <q-input v-model="caminhao.tara" float-label="Tara" type="number"/>
-          </q-field>
-
-          <q-field class="q-mb-sm">
-            <q-input v-model="caminhao.lotacao" float-label="Lotação" type="number"/>
-          </q-field>
-
-          <q-field class="q-mb-sm" :error="caminhao.unidadeMedidaSigla.error" :error-label="caminhao.unidadeMedidaSigla.errorMessage">
-            <q-select v-model="caminhao.unidadeMedidaSigla.value" float-label="Unidade medida" :options="unidadeMedidaOptions" @input="clearErrorMessage()"/>
+          <q-field class="q-mb-sm" :error="motorista.nome.error" :error-label="motorista.nome.errorMessage">
+            <q-input v-model="motorista.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
           </q-field>
 
         </form>
@@ -33,7 +17,7 @@
 
     <div class="row q-pa-md">
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" align="end">
-        <q-btn label="Salvar" color="primary" @click.native="updateCaminhao()"/>
+        <q-btn label="Salvar" color="primary" @click.native="updateMotorista()"/>
       </div>
     </div>
 
@@ -43,109 +27,71 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import caminhaoService from 'assets/js/service/CaminhaoService'
-  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
+  import motoristaService from 'assets/js/service/motorista/MotoristaService'
   export default {
-    name: "caminhoes-add",
+    name: "motorista-update",
     components: {
       toolbar,
       customPage
     },
     data () {
       return {
-        unidadeMedidaOptions: [],
-        caminhao: {
+        motoristaId: null,
+        motorista: {
           nome: {
             value: null,
             error: false,
             errorMessage: null
           },
-          placa: {
-            value: null,
-            error: false,
-            errorMessage: null
-          },
-          tara: null,
-          lotacao: null,
-          unidadeMedidaSigla: {
-            value: null,
-            error: false,
-            errorMessage: null,
-          },
         },
       }
     },
     methods: {
-      selectUnidadeMedida: function(){
-        unidadeMedidaService.listUnidadesMedida().then(response => {
-          this.unidadeMedidaOptions = this.parsedUnidades(response.data)
-        })
-      },
-      parsedUnidades: function(unidades){
-        return unidades.map(unidade => {
-          return {
-            label: unidade.nome + ', ' + unidade.sigla,
-            value: unidade.id
-          }
-        })
-      },
       nomeIsValid: function(){
-        if(this.caminhao.nome.value === null || this.caminhao.nome.value === ''){
-          this.caminhao.nome.error = true;
-          this.caminhao.nome.errorMessage = 'informe o nome do caminhão';
+        if(this.motorista.nome.value === null || this.motorista.nome.value === ''){
+          this.motorista.nome.error = true;
+          this.motorista.nome.errorMessage = 'informe o nome do motorista';
           return false
         }
-        if( this.caminhao.nome.value != null){
-          if(this.caminhao.nome.value.length < 3){
-            this.caminhao.nome.error = true;
-            this.caminhao.nome.errorMessage = 'nome muito curto';
-            return false
-          }
-        }
-        return true
-      },
-      placaIsValid: function(){
-        if(this.caminhao.placa.value === null || this.caminhao.placa.value === ''){
-          this.caminhao.placa.error = true;
-          this.caminhao.placa.errorMessage = 'informe a placa do caminhão';
-          return false
-        }
-        if(this.caminhao.placa.value != null){
-          if(this.caminhao.placa.value.length < 7){
-            this.caminhao.placa.error = true;
-            this.caminhao.placa.errorMessage = 'a placa é invalida';
-            return false
-          }
-        }
-        return true
-      },
-      isUnidadeMedidaRequired: function(){
-        if(this.caminhao.tara != null || this.caminhao.lotacao != null){
-          if(this.caminhao.unidadeMedidaSigla.value === null || this.caminhao.unidadeMedidaSigla.value === undefined){
-            this.caminhao.unidadeMedidaSigla.error = true;
-            this.caminhao.unidadeMedidaSigla.errorMessage = 'informe a unidade de medida';
+        if( this.motorista.nome.value != null){
+          if(this.motorista.nome.value.length < 3){
+            this.motorista.nome.error = true;
+            this.motorista.nome.errorMessage = 'nome muito curto';
             return false
           }
         }
         return true
       },
       clearErrorMessage: function(){
-        this.caminhao.nome.errorMessage = null;
-        this.caminhao.nome.error = false;
-        this.caminhao.placa.errorMessage = null;
-        this.caminhao.placa.error = false;
-        this.caminhao.unidadeMedidaSigla.error = false;
-        this.caminhao.unidadeMedidaSigla.errorMessage = null;
+        this.motorista.nome.errorMessage = null;
+        this.motorista.nome.error = false;
       },
-      updateCaminhao: function(){
-        if(!this.nomeIsValid() || !this.placaIsValid() || !this.isUnidadeMedidaRequired()){
+      getMotoristaById: function(id){
+        this.$q.loading.show();
+        motoristaService.getMotoristaById(id).then(response => {
+          this.fillMotoristaForm(response.data);
+          this.$q.loading.hide();
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possível recuperar as informações'});
+          this.$q.loading.hide();
+          this.backAction()
+        })
+      },
+      fillMotoristaForm: function(driver){
+        this.motorista.nome.value = driver.nome;
+      },
+      updateMotorista: function(){
+        if( !this.nomeIsValid() ){
           return
         }
-        caminhaoService.updateCaminhao(this.caminhao).then(response => {
-          this.$q.notify({type: 'positive', message: 'Caminhão adicionado com sucesso.'});
+        this.$q.loading.show();
+        motoristaService.updateMotorista(this.motorista).then(response => {
+          this.$q.notify({type: 'positive', message: 'Motorista alterado com sucesso.'});
+          this.$q.loading.hide();
           this.backAction();
         }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível adicionar o caminhão'})
+          this.$q.loading.hide();
+          this.$q.notify({type: 'negative', message: 'Não foi possível fazer as alterações'})
         })
       },
       backAction: function () {
@@ -153,7 +99,7 @@
       },
     },
     mounted () {
-      this.selectUnidadeMedida();
+      this.getMotoristaById(this.$route.params.id)
     },
   }
 </script>

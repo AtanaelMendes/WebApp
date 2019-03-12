@@ -48,9 +48,9 @@ const routes = [
       { name: 'add_caminhao', path: 'caminhao/add', component: () => import('pages/admin/caminhoes/CaminhaoAdd.vue')},
 
       { name: 'motoristas', path: 'motoristas', component: () => import('pages/admin/motoristas/MotoristasList.vue')},
-      { name: 'view_motorista', path: 'view/:id', component: () => import('pages/admin/motoristas/MotoristaView.vue') },
-      { name: 'add_motorista', path: 'add', component: () => import('pages/admin/motoristas/MotoristaAdd.vue') },
-      { name: 'edit_motorista', path: 'edit/:id', component: () => import('pages/admin/motoristas/MotoristaEdit.vue') },
+      { name: 'view_motorista', path: 'motorista/view/:id', component: () => import('pages/admin/motoristas/MotoristaView.vue') },
+      { name: 'add_motorista', path: 'motorista/add', component: () => import('pages/admin/motoristas/MotoristaAdd.vue') },
+      { name: 'edit_motorista', path: 'motorista/edit/:id', component: () => import('pages/admin/motoristas/MotoristaEdit.vue') },
 
       { name: 'teste', path: 'teste', component: () => import('pages/admin/Teste.vue')},
     ]
