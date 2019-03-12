@@ -311,9 +311,9 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import pessoaService from 'assets/js/service/PessoaService'
-  import contatoService from 'assets/js/service/ContatoService'
   import customInputText from 'components/CustomInputText.vue'
   import LocalizacaoService from "../../../assets/js/service/localizacao/LocalizacaoService";
+  import ContatoService from "../../../assets/js/service/ContatoService";
 
   export default {
     name: "pessoa-view",
@@ -324,6 +324,7 @@
     },
     data(){
       return{
+        contatoService: new ContatoService(),
         localizacaoService: new LocalizacaoService(),
         pessoa: null,
         contatos: [],
@@ -397,8 +398,8 @@
         this.$router.push({name: 'update_contact', params: {id:this.$route.params.id, contatoId: contatoId}});
       },
       listContatos: function(pessoaId) {
-        contatoService.listContatos(pessoaId).then(response => {
-          this.contatos = response.data
+        this.contatoService.listContatos(pessoaId).then(contatos => {
+          this.contatos = contatos;
         });
       },
       deleteContato: function(contatoId) {
@@ -408,7 +409,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          contatoService.deleteContato(contatoId, this.$route.params.id).then(response => {
+          this.contatoService.deleteContato(contatoId, this.$route.params.id).then(() => {
             this.$q.notify({type: 'positive', message: 'Contato excluido'})
             this.listContatos(this.$route.params.id);
           })
@@ -421,7 +422,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          contatoService.archiveContato(contatoId, this.$route.params.id).then(response => {
+          this.contatoService.archiveContato(contatoId, this.$route.params.id).then(() => {
             this.$q.notify({type: 'positive', message: 'Contato arquivado'})
             this.listContatos(this.$route.params.id);
           })
@@ -434,7 +435,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          contatoService.restoreContato(contatoId, this.$route.params.id).then(response => {
+          this.contatoService.restoreContato(contatoId, this.$route.params.id).then(() => {
             this.$q.notify({type: 'positive', message: 'Contato ativado'})
             this.listContatos(this.$route.params.id);
           })

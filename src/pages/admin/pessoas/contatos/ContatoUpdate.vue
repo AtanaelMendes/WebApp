@@ -199,8 +199,8 @@
       getContato: function(){
         let pessoaId = this.$route.params.id
         let contatoId = this.$route.params.contatoId
-        contatoService.getContato(pessoaId, contatoId).then(response => {
-          this.fillForm(response.data)
+        contatoService.getContato(pessoaId, contatoId).then(contato => {
+          this.fillForm(contato)
         });
       },
       setTelefoneTipo: function(tipo){
@@ -225,7 +225,7 @@
             })
           }
         }
-        contatoService.updateContato(this.$route.params.id, this.contatoId, this.contato.getValues()).then( response => {
+        contatoService.updateContato(this.$route.params.id, this.contatoId, this.contato.getValues()).then( () => {
           this.$q.notify({type: 'positive', message: 'Contato criado com sucesso'})
           this.$router.go(-1);
         }).catch(error => {
