@@ -192,8 +192,7 @@
     },
     computed: {
       areaImageUrl: function(){
-        let produtor_id = localStorage.getItem('account.produtor_id');
-        return '/produtor/' + produtor_id + '/area/' + this.selectedAreaId + '/image';
+        return '/produtor/' + this.produtorId + '/area/' + this.selectedAreaId + '/image';
       },
       talhaoImageUrl: function(){
         let area_id = this.$route.params.id;
@@ -211,6 +210,7 @@
     },
     data(){
       return{
+        produtorId: null, //TODO: Retirar daqui quando não tiver mais produtorId nos endpoints
         areaService: null,
         talhaoService: new TalhaoService(),
         area: null,
@@ -366,6 +366,7 @@
     mounted(){
       new AccountRepository().getFirst().then(account => {
         this.areaService = new AreaService(account.produtor_id);
+        this.produtorId = account.produtor_id/
         this.getAreaById(this.$route.params.id)
       });
 

@@ -29,5 +29,4 @@ export default class AccountService{
 function clearAccountInfo(){
   localStorage.removeItem('auth.token');
   localStorage.removeItem('auth.refresh_token');
-  localStorage.removeItem('account.produtor_id');
 }
