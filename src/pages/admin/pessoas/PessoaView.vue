@@ -310,10 +310,10 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import pessoaService from 'assets/js/service/PessoaService'
   import customInputText from 'components/CustomInputText.vue'
   import LocalizacaoService from "../../../assets/js/service/localizacao/LocalizacaoService";
   import ContatoService from "../../../assets/js/service/ContatoService";
+  import PessoaService from "../../../assets/js/service/PessoaService";
 
   export default {
     name: "pessoa-view",
@@ -324,6 +324,7 @@
     },
     data(){
       return{
+        pessoaService: new PessoaService(),
         contatoService: new ContatoService(),
         localizacaoService: new LocalizacaoService(),
         pessoa: null,
@@ -341,7 +342,7 @@
     },
     methods: {
       getPessoa: function(id){
-        pessoaService.getPessoa(id).then(pessoa => {
+        this.pessoaService.getPessoa(id).then(pessoa => {
           this.pessoa = pessoa;
         })
       },
@@ -355,7 +356,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          pessoaService.deletePessoa(this.$route.params.id).then(response => {
+          this.pessoaService.deletePessoa(this.$route.params.id).then(() => {
             this.$q.notify({type: 'positive', message: 'Pessoa Excluir com sucesso'})
             this.$router.push({name:'pessoas'});
             this.$root.$emit('refreshPessoaList');
@@ -369,7 +370,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          pessoaService.archivePessoa(this.$route.params.id).then(response => {
+          this.pessoaService.archivePessoa(this.$route.params.id).then(() => {
             this.$q.notify({type: 'positive', message: 'Pessoa Arquivada com sucesso'})
             this.getPessoa(this.$route.params.id);
             this.$root.$emit('refreshPessoaList');
@@ -384,7 +385,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          pessoaService.restorePessoa(this.$route.params.id).then(response => {
+          this.pessoaService.restorePessoa(this.$route.params.id).then(() => {
             this.$q.notify({type: 'positive', message: 'Pessoa Ativada'})
             this.getPessoa(this.$route.params.id);
             this.$root.$emit('refreshPessoaList');

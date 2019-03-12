@@ -96,7 +96,6 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
-  import PessoaService from 'assets/js/service/PessoaService'
   import Pessoa from 'assets/js/model/Pessoa'
   import GrupoEconomico from 'assets/js/model/GrupoEconomico'
   import estadoSiglaSelect from 'components/EstadoSiglaSelect.vue'
@@ -104,6 +103,7 @@
   import inscricaoEstadualValidator from 'assets/js/InscricaoEstadualValidator';
   import GrupoEconomicoService from "../../../assets/js/service/GrupoEconomicoService";
   import AccountRepository from "../../../assets/js/repository/AccountRepository";
+  import PessoaService from "../../../assets/js/service/PessoaService";
   export default {
     name: "pessoa-add",
     components: {
@@ -114,6 +114,7 @@
     },
     data(){
       return {
+        pessoaService: new PessoaService(),
         grupoEconomicoService: null,
         grupoEconomicoSearchTerms: '',
         tempGrupoEconomicoList: [],
@@ -141,12 +142,10 @@
         if(!this.pessoa.isValid()){
           return;
         }
-        PessoaService.savePessoa(this.pessoa.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Pessoa criada com sucesso'});
-            this.$router.push({name: 'pessoas'});
-            this.$root.$emit('refreshPessoaList')
-          }
+        this.pessoaService.savePessoa(this.pessoa.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Pessoa criada com sucesso'});
+          this.$router.push({name: 'pessoas'});
+          this.$root.$emit('refreshPessoaList')
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.request.response})
         });

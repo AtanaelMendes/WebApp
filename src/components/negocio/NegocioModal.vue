@@ -89,12 +89,12 @@
 </template>
 
 <script>
-  import pessoaService from 'assets/js/service/PessoaService'
   import Negocio from 'assets/js/model/negocio/Negocio'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import customInputText from 'components/CustomInputText.vue'
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
   import AccountRepository from "../../assets/js/repository/AccountRepository";
+  import PessoaService from "../../assets/js/service/PessoaService";
 
   export default {
     name: "NegocioModal",
@@ -110,6 +110,7 @@
     },
     data(){
       return {
+        pessoaServce: new PessoaService(),
         negocioService: null,
         isModalOpened: false,
         isEditMode: false,
@@ -182,8 +183,8 @@
         }
       },
       searchPessoas: function (params) {
-        pessoaService.searchPessoaGroupedByGrupoEconomico(params).then(response => {
-          this.pessoas = response.data;
+        this.pessoaService.searchPessoaGroupedByGrupoEconomico(params).then(result => {
+          this.pessoas = result;
         });
       },
       isNextButtomEnabled: function(){

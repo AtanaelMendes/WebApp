@@ -89,7 +89,6 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
-  import PessoaService from 'assets/js/service/PessoaService'
   import Pessoa from 'assets/js/model/Pessoa'
   import estadoSiglaSelect from 'components/EstadoSiglaSelect.vue'
   import GrupoEconomico from 'assets/js/model/GrupoEconomico'
@@ -106,6 +105,7 @@
     },
     data(){
       return {
+        pessoaService: null,
         grupoEconomicoService: null,
         grupoEconomicoSearchTerms: '',
         tempGrupoEconomicoList: [],
@@ -139,7 +139,7 @@
 
       },
       getPessoa: function(id){
-        PessoaService.getPessoa(id).then(pessoa => {
+        this.pessoaService.getPessoa(id).then(pessoa => {
           this.fillForm(pessoa)
         })
       },
@@ -148,12 +148,10 @@
           return;
         }
         // this.$q.notify({type: 'positive', message: 'Funcao update'})
-        PessoaService.updatePessoa(this.$route.params.id, this.pessoa.getValues()).then(response => {
-          if(response.status === 200) {
-            this.$q.notify({type: 'positive', message: 'Pessoa atualizada com sucesso'});
-            this.$router.push({name: 'pessoas'});
-            this.$root.$emit('refreshPessoaList')
-          }
+        this.pessoaService.updatePessoa(this.$route.params.id, this.pessoa.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Pessoa atualizada com sucesso'});
+          this.$router.push({name: 'pessoas'});
+          this.$root.$emit('refreshPessoaList')
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.request.response})
         });

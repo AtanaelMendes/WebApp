@@ -1,48 +1,71 @@
-import Vue from 'vue'
-import { Loading, Dialog } from 'quasar'
 import AgroUtils from 'assets/js/AgroUtils'
+import PessoaAPI from "../api/PessoaAPI";
 
-export default {
+export default class PessoaService{
+
+  constructor() {
+  }
+
   getPessoa(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('/pessoa/' + id).then(response => {
-        resolve(response.data)
+      PessoaAPI.getPessoa(id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   listPessoas(filter){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'pessoa?' + AgroUtils.serialize(filter) ).then( response => {
-        resolve(response);
+      PessoaAPI.listPessoas(AgroUtils.serialize(filter)).then( response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   listPessoasByProdutorId(filter){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'pessoa?' + AgroUtils.serialize(filter) ).then( response => {
-        resolve(response);
+      PessoaAPI.listPessoas(AgroUtils.serialize(filter)).then( response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
-  searchPessoaGroupedByGrupoEconomico: function(value){
+  };
+
+  searchPessoaGroupedByGrupoEconomico(value){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'pessoa?search='+value ).then( response => {
-        resolve(response);
+      PessoaAPI.searchPessoa(value).then( response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
-  searchPessoa: function(){
+  };
+
+  searchPessoa(){
     return new Promise((resolve, reject) => {
-      this.listPessoasByProdutorId().then(response => {
-        let pessoaOptions = response.data.map(pessoa => {
+      this.listPessoasByProdutorId().then(pessoas => {
+        let pessoaOptions = pessoas.map(pessoa => {
           return {
             value: pessoa.id,
             label: pessoa.nome,
@@ -54,51 +77,76 @@ export default {
         reject(error)
       })
     })
-  },
+  };
+
   savePessoa(params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('/pessoa', params).then(response => {
-        resolve(response)
+      PessoaAPI.savePessoa(params).then(response => {
+        if(response.status === 201){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
+
   updatePessoa(id, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/pessoa/' + id, params).then(response => {
-        resolve(response)
+      PessoaAPI.updatePessoa(params, id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
+
   deletePessoa(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('/pessoa/' + id).then(response => {
-        resolve(response)
+      PessoaAPI.deletePessoa(id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
+
   archivePessoa(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/pessoa/' + id + '/archive').then(response => {
-        resolve(response)
+      PessoaAPI.archivePessoa(id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
+
   restorePessoa(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/pessoa/' + id + '/restore').then(response => {
-        resolve(response)
+      PessoaAPI.restorePessoa(id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
 
 }
