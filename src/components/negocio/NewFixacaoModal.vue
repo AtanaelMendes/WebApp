@@ -342,13 +342,13 @@
 
 <script>
   import Fixacao from 'assets/js/model/negocio/Fixacao'
-  import moedaService from 'assets/js/service/MoedaService'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
   import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
   import AccountRepository from "../../assets/js/repository/AccountRepository";
   import ContaBancariaService from "../../assets/js/service/ContaBancariaService";
+  import MoedaService from "../../assets/js/service/MoedaService";
 
   export default {
     name: "NewFixacaoModal",
@@ -358,6 +358,7 @@
     },
     data(){
       return{
+        moedaService: new MoedaService(),
         contaBancariaService: null,
         unidadeMedidaService: new UnidadeMedidaService(),
         negocioService: null,
@@ -608,8 +609,8 @@
         })
       },
       listMoedas:function(){
-        moedaService.listMoedas().then(response => {
-          this.moedas = response.data;
+        this.moedaService.listMoedas().then(moedas => {
+          this.moedas = moedas;
         })
       },
       listContasBancarias: function(pessoaId){
