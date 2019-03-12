@@ -20,11 +20,9 @@ export default class AccountService{
       }).catch(error => {
         reject(error)
       })
-
     });
   }
 }
-
 
 function clearAccountInfo(){
   localStorage.removeItem('auth.token');
