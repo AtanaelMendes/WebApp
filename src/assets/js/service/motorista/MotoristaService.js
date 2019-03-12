@@ -22,4 +22,44 @@ export default {
       })
     });
   },
+  updateMotorista(id, params){
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('produtor/' + produtor_id + '/motorista/'+ id, params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  archiveMotorista(id){
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('produtor/' + produtor_id + '/motorista/'+ id +'/archive' ).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  restoreMotorista(id){
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('produtor/' + produtor_id + '/motorista/'+ id +'/restore').then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  deleteMotorista(id){
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.delete('produtor/' + produtor_id + '/motorista/'+ id).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
 }
