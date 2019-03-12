@@ -100,10 +100,10 @@
 <script>
   import Produto from 'assets/js/model/negocio/Produto'
   import customInputText from 'components/CustomInputText.vue'
-  import indexadorService from 'assets/js/service/IndexadorService'
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
   import AccountRepository from "../../assets/js/repository/AccountRepository";
   import ProdutoService from "../../assets/js/service/produto/ProdutoService";
+  import IndexadorService from "../../assets/js/service/IndexadorService";
 
   export default {
     name: "NewProdutoModal",
@@ -126,6 +126,7 @@
     },
     data(){
       return {
+        indexadorService: null,
         produtoService: null,
         negocioService: null,
         isModalOpened: false,
@@ -146,6 +147,7 @@
         let account = await new AccountRepository().getFirst();
         this.negocioService = new NegocioService(account.produtor_id);
         this.produtoService = new ProdutoService(account.produtor_id);
+        this.indexadorService = new IndexadorService(account.produtor_id);
         this.isModalOpened = true;
         this.produto = new Produto();
         this.negocio = negocio;
@@ -214,8 +216,8 @@
         })
       },
       listIndexadores: function(){
-        indexadorService.listIndexadores().then(response => {
-          this.indexadores = response.data;
+        this.indexadorService.listIndexadores().then(indexadores => {
+          this.indexadores = indexadores;
         })
       }
     }

@@ -148,9 +148,9 @@
   import Titulo from 'assets/js/model/negocio/Titulo'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
-  import indexadorService from 'assets/js/service/IndexadorService'
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
   import AccountRepository from "../../assets/js/repository/AccountRepository";
+  import IndexadorService from "../../assets/js/service/IndexadorService";
 
   export default {
     name: "NewTituloModal",
@@ -176,6 +176,7 @@
     },
     data(){
       return {
+        indexadorService: null,
         negocioService: null,
         isModalOpened: false,
         currentStep: 'pagarReceber',
@@ -193,6 +194,7 @@
       openModal: async function(negocio){
         let account = await new AccountRepository().getFirst();
         this.negocioService = new NegocioService(account.produtor_id);
+        this.indexadorService = new IndexadorService(account.produtor_id);
         this.isModalOpened = true;
         this.titulo = new Titulo();
         this.negocio = negocio;
@@ -294,8 +296,8 @@
         });
       },
       listIndexadores: function(){
-        indexadorService.listIndexadores().then(response => {
-          this.indexadores = response.data;
+        this.indexadorService.listIndexadores().then(indexadores => {
+          this.indexadores = indexadores;
         })
       }
     }
