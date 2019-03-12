@@ -68,8 +68,8 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import userService from 'assets/js/service/UserService'
   import apNoResults from 'components/ApNoResults'
+  import UserService from "../../../assets/js/service/UserService";
 
     export default {
       name: "UserList",
@@ -80,6 +80,7 @@
       },
       data () {
         return {
+          userService: new UserService(),
           users: [],
           isEmptyList: false,
           filter: {
@@ -102,8 +103,8 @@
           this.filter.email = val;
         },
         list: function(filter) {
-          userService.listAccounts(filter).then(response => {
-            this.users = response.data;
+          this.userService.listAccounts(filter).then(accounts => {
+            this.users = accounts;
             this.isEmptyList = this.users.length === 0;
           });
         },
