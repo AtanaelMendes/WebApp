@@ -183,25 +183,36 @@
         this.$router.push({name: 'edit_motorista', params: {id:id}} );
       },
       archiveMotorista: function(id){
+        this.$q.loading.show();
         motoristaService.archiveMotorista(id).then(response =>{
           this.$q.notify({type: 'positive', message: 'Motorista arquivado com sucesso.'});
+          this.listMotoristas(this.filter);
+          this.$q.loading.hide();
         }).catch(error =>{
           this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse Motorista.'});
+          this.$q.loading.hide();
         })
       },
       restoreMotorista: function(id){
+        this.$q.loading.show();
         motoristaService.restoreMotorista(id).then(response =>{
           this.$q.notify({type: 'positive', message: 'Motorista ativado com sucesso.'});
+          this.listMotoristas(this.filter);
+          this.$q.loading.hide();
         }).catch(error =>{
           this.$q.notify({type: 'negative', message: 'Não foi possível restaurar esse Motorista.'});
+          this.$q.loading.hide();
         })
       },
       deleteMotorista: function(id){
+        this.$q.loading.show();
         motoristaService.deleteMotorista(id).then(response => {
           this.$q.notify({type: 'positive', message: 'Motorista excluido com sucesso.'});
           this.listMotoristas(this.filter);
+          this.$q.loading.hide();
         }).catch(error =>{
           this.$q.notify({type: 'negative', message: 'Não foi possível excluir esse Motorista'});
+          this.$q.loading.hide();
         })
       },
     },
