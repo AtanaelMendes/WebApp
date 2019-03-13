@@ -1,0 +1,200 @@
+<template>
+  <custom-page widthInner="60%" isParent>
+    <toolbar slot="toolbar" title="Caminhões" searchable navigation_type="menu" @search_changed="listBySearch">
+      <template slot="action_itens">
+        <q-btn flat round dense icon="tune" >
+          <q-popover anchor="bottom left">
+            <q-list>
+              <q-list-header>Filtrar por:</q-list-header>
+              <q-item dense>
+                <q-item-main>
+                  <q-option-group type="radio" color="primary" v-model="filter.type"
+                                  :options="[
+                            { label: 'Ativos', value: 'non-trashed'},
+                            { label: 'Inativos', value: 'trashed' },
+                            { label: 'Todos', value: '' }
+                            ]"
+                  />
+                </q-item-main>
+              </q-item>
+            </q-list>
+          </q-popover>
+        </q-btn>
+      </template>
+    </toolbar>
+
+    <div class="row q-pa-md gutter-sm" v-if="caminhoes">
+
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 cursor-pointer" v-for="caminhao in caminhoes" :key="caminhao.id">
+        <q-card @click.native="viewCaminhao(caminhao.id)" class="full-height">
+          <q-card-media overlay-position="top">
+            <ap-image size="400x250" :file-name="caminhao.image_file_name" />
+            <q-card-title slot="overlay">
+              {{caminhao.placa}}
+              {{caminhao.nome}}
+              <q-btn @click.prevent.stop slot="right" round flat dense icon="more_vert" color="white">
+                <q-popover>
+                  <q-list link>
+                    <q-item v-close-overlay @click.native="addFotoCaminhao(caminhao.id)">
+                      <q-item-main label="Atualizar Foto"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="updateCaminhao(caminhao.id)">
+                      <q-item-main label="Editar"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="archiveCaminhao(caminhao.id)" v-if="!caminhao.deleted_at">
+                      <q-item-main label="Arquivar"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="restoreCaminhao(caminhao.id)" v-if="caminhao.deleted_at">
+                      <q-item-main label="Ativar"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="deleteCaminhao(caminhao.id)">
+                      <q-item-main label="Excluir"/>
+                    </q-item>
+                  </q-list>
+                </q-popover>
+              </q-btn>
+            </q-card-title>
+          </q-card-media>
+          <q-list>
+            <q-item>
+              <q-item-side icon="mdi-scale" :color="pesoIconColor(caminhao.lotacao)"/>
+              <q-item-main>
+                <q-item-tile v-if="caminhao.lotacao">
+                  {{numeral(caminhao.lotacao).format('0,0')}}
+                  {{caminhao.unidade_medida_sigla}}
+                </q-item-tile>
+                <q-item-tile sublabel v-else>
+                  Não informado
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+          </q-list>
+        </q-card>
+      </div>
+    </div>
+
+    <div class="row items-center" style="min-height: 80vh" v-if="caminhoes.length === 0">
+      <div class=" col-12 list-empty">
+        <q-icon name="warning" size="30px"/>
+        <span>Nenhum caminhão encontrado</span>
+      </div>
+    </div>
+
+    <q-page-sticky position="bottom-right" :offset="[35, 35]">
+      <q-btn round color="deep-orange" @click="addCaminhao" icon="add" size="20px" />
+    </q-page-sticky>
+
+  </custom-page>
+</template>
+
+<script>
+  import toolbar from 'components/Toolbar.vue'
+  import customPage from 'components/CustomPage.vue'
+  import caminhaoService from 'assets/js/service/CaminhaoService'
+  import apNoResults from 'components/ApNoResults'
+  import apImage from 'components/ApImage'
+  import CaminhaoService from "../../../assets/js/service/CaminhaoService";
+
+  export default {
+    name: "caminhoes-list",
+    components: {
+      apNoResults,
+      toolbar,
+      apImage,
+      customPage
+    },
+    data () {
+      return {
+        caminhoes: [],
+        isEmptyList: false,
+        filter: {
+          type: 'non-trashed',
+          nameOrPlaque: '',
+        },
+      }
+    },
+    watch: {
+      filter: {
+        handler: function(val, oldval) {
+          var filter = {type: val.type, nameOrPlaque:(val.nameOrPlaque.length > 2 ? val.nameOrPlaque : '')};
+          this.listCaminhoes(filter)
+        },
+        deep: true,
+      }
+    },
+    methods: {
+      pesoIconColor: function (loatacao) {
+        if (loatacao) {
+          return 'primary'
+        }
+        return 'grey'
+      },
+      listBySearch: function(val){
+        this.filter.nameOrPlaque = val;
+      },
+      listCaminhoes: function(filter) {
+        caminhaoService.listCaminhoes(filter).then(response => {
+          this.caminhoes = response.data;
+          this.isEmptyList = this.caminhoes.length === 0;
+        });
+      },
+      viewCaminhao: function(id) {
+        this.$router.push({name: 'view_caminhao', params: {id:id}});
+      },
+      addCaminhao: function(){
+        this.$router.push({name: 'add_caminhao'});
+      },
+      addFotoCaminhao: function(){
+
+      },
+      updateCaminhao: function(){
+        this.$router.push({name: 'edit_caminhao'});
+      },
+      archiveCaminhao: function(id){
+        caminhaoService.archiveCaminhao(id).then(response =>{
+          this.$q.notify({type: 'positive', message: 'Caminhão arquivado com sucesso.'});
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse caminhão.'});
+        })
+      },
+      restoreCaminhao: function(id){
+        caminhaoService.restoreCaminhao(id).then(response =>{
+          this.$q.notify({type: 'positive', message: 'Caminhão ativado com sucesso.'});
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possível restaurar esse caminhão.'});
+        })
+      },
+      deleteCaminhao: function(id){
+        CaminhaoService.deleteCaminhao(id).then(response => {
+          this.$q.notify({type: 'positive', message: 'Caminhão excluido com sucesso.'});
+          this.listCaminhoes(this.filter);
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possível excluir esse caminhão'});
+        })
+      },
+    },
+    mounted () {
+      this.listCaminhoes(this.filter);
+
+      this.$root.$on('refreshCaminhoesList', () => {
+        this.listCaminhoes(this.filter);
+      });
+    },
+  }
+</script>
+
+<style scoped>
+  .list-empty{
+    height: 55px;
+    text-align: center;
+    padding-top: 15px;
+    color: #8c8c8c;
+    font-weight: bold;
+    font-size: 20px;
+  }
+  .list-empty i{
+    color: #ffb500;
+    font-size: 20px;
+    margin-right: 6px;
+  }
+</style>

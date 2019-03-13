@@ -48,6 +48,12 @@
           <q-item-main label="Pessoas" />
         </q-item>
 
+        <!--MOTORISTAS-->
+        <q-item @click.native="$router.push({name:'motoristas'})">
+          <q-item-side icon="group" />
+          <q-item-main label="Motoristas" />
+        </q-item>
+
         <!--AREAS-->
         <q-item @click.native="$router.push({name:'areas'})">
           <q-item-side icon="place" />
@@ -84,6 +90,18 @@
           <q-item-side icon="local_shipping"/>
           <q-item-main label="Entregas" />
         </q-item>
+
+        <!--ENTREGAS-->
+        <q-item @click.native="$router.push({name:'caminhoes'})">
+          <q-item-side icon="local_shipping"/>
+          <q-item-main label="Caminhões" />
+        </q-item>
+
+        <!--&lt;!&ndash;TESTE&ndash;&gt;-->
+        <!--<q-item @click.native="$router.push({name:'teste'})">-->
+          <!--<q-item-side icon="mdi-close-circle-outline"/>-->
+          <!--<q-item-main label="Teste" />-->
+        <!--</q-item>-->
 
       </q-list>
     </q-layout-drawer>
