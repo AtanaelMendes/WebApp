@@ -4,14 +4,12 @@
     </toolbar>
 
     <div class="row q-pa-md">
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-        <form @keyup.enter="updateMotorista()">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" @keyup.enter.prevent.default="updateMotorista()">
 
           <q-field class="q-mb-sm" :error="motorista.nome.error" :error-label="motorista.nome.errorMessage">
             <q-input v-model="motorista.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
           </q-field>
 
-        </form>
       </div>
     </div>
 

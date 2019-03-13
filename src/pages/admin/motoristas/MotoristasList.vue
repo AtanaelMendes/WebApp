@@ -25,8 +25,10 @@
 
     <div class="row q-pa-md gutter-sm" v-if="motoristas">
 
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="motorista in motoristas" :key="motorista.id">
-        <q-card @click.native="viewMotorista(motorista.id)" class="full-height">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 " v-for="motorista in motoristas" :key="motorista.id">
+      <!--<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="motorista in motoristas" :key="motorista.id">-->
+        <!--<q-card @click.native="viewMotorista(motorista.id)" class="full-height">-->
+        <q-card class="full-height">
           <q-card-media overlay-position="top">
             <ap-image size="400x250" :file-name="motorista.image_file_name" />
             <q-card-title slot="overlay">
