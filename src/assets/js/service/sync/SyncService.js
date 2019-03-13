@@ -28,9 +28,15 @@ export default class SyncService{
     SyncService.isSynching = true;
     let queueItens = await this.requestQueueRepository.getAll().toArray();
 
+    //console.log('start processRequests');
     await this.processRequests(queueItens);
+    //console.log('end processRequests');
+    //console.log('start resourceService')
     await this.resourceService.download();
+    //console.log('end resourceService')
+    //console.log('start listService')
     await this.listService.download();
+    //console.log('end listService')
 
     SyncService.isSynching = false;
     return Promise.resolve();

@@ -37,5 +37,5 @@ async function getEntregasView(){
 
 async function getEntrega(entregaId, produtorId){
   let response = await EntregaAPI.getEntrega(entregaId, produtorId);
-  await entregaViewRepository.update(response.data);
+  entregaViewRepository.update(response.data);
 }
