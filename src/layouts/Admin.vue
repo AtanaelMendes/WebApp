@@ -131,8 +131,6 @@
   import NetworkStateMixin from 'components/mixins/NetworkStateMixin'
   import {version} from '../../package.json';
   import SyncService from "../assets/js/service/sync/SyncService";
-  import ResourceService from "../assets/js/service/sync/ResourceService";
-  import ListService from "../assets/js/service/sync/ListService";
   import AccountService from "../assets/js/service/AccountService";
   import ForbiddenAccessDialog from "../components/offline/ForbiddenAccessDialog";
   import SyncProgressDialog from "../components/offline/SyncProgressDialog";
@@ -146,7 +144,7 @@
     data () {
       return {
         accountService: new AccountService(),
-        syncService: new SyncService(),
+        syncService: null,
         leftDrawerOpen: this.$q.platform.is.desktop,
         currentAccount: {
           name: null,
@@ -167,10 +165,10 @@
         this.showOfflineStatusBar();
       });
 
-      /*this.$on('online', () => {
+      this.$on('online', () => {
         //alert('You are online!')
         this.getAccountInfo();
-      });*/
+      });
 
       if('serviceWorker' in navigator){
         navigator.serviceWorker.addEventListener('message', this.serviceWorkerMessageEvent);
@@ -189,7 +187,9 @@
       serviceWorkerMessageEvent(event){
         switch (event.data) {
           case 'sync':
+            this.$refs.syncProgressDialog.openModal();
             this.syncService.doSync().then(()=>{
+              this.$refs.syncProgressDialog.closeModal();
               event.ports[0].postMessage("queueSyncFinished");
             });
             break;
@@ -209,21 +209,12 @@
           this.currentAccount.name = info.nome;
           this.currentAccount.email = info.email;
 
-          this.getInitialContent(info.produtor_id)
-        })
-      },
-      getInitialContent(produtorId){
-        this.$refs.syncProgressDialog.openModal();
-        this.syncService.getInitialContent(produtorId);
-        new ResourceService(produtorId).download().then(() => {
-          new ListService(produtorId).download().then(() => {
+          this.syncService = new SyncService(info.produtor_id);
+          this.$refs.syncProgressDialog.openModal();
+          this.syncService.doSync().then(()=>{
             this.$refs.syncProgressDialog.closeModal();
-          }).catch(error => {
-            console.log("Erro no download de ListService", error)
           })
-        }).catch(error => {
-          console.log("Erro no download de ResourseService", error)
-        });
+        })
       },
       toogleLeftDrawer() {
         this.leftDrawerOpen = !this.leftDrawerOpen;
@@ -235,7 +226,7 @@
           ok: 'Sair',
           cancel: 'Cancelar'
         }).then(data => {
-          accountService.logout().then(()=>{
+          this.accountService.logout().then(()=>{
             this.$router.push('/login');
           })
         });

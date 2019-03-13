@@ -29,6 +29,8 @@ async function getEntregasView(){
   let promises = entregasToUpdateIds.map(id => getEntrega(id, produtorId));
 
   return Promise.all(promises).then(()=>{
+    ResourceService.entregasToUpdate = [];
+    ResourceService.entregasToDelete = [];
     Promise.resolve();
   });
 }

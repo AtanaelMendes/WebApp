@@ -53,7 +53,7 @@ export default {
       return url;
     },
     imageLoadError({ el, src }){
-      console.log(el, src)
+      //console.log(el, src)
     }
   },
   mounted() {
