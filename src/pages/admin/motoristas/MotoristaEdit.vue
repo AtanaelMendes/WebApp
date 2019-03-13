@@ -36,7 +36,7 @@
     },
     data () {
       return {
-        motoristaId: null,
+        motoristaId: this.$route.params.id,
         motorista: {
           nome: {
             value: null,
@@ -57,6 +57,11 @@
           if(this.motorista.nome.value.length < 3){
             this.motorista.nome.error = true;
             this.motorista.nome.errorMessage = 'nome muito curto';
+            return false
+          }
+          if(this.motorista.nome.value.length > 50){
+            this.motorista.nome.error = true;
+            this.motorista.nome.errorMessage = 'nome muito longo max 50 caracteres';
             return false
           }
         }
@@ -84,8 +89,11 @@
         if( !this.nomeIsValid() ){
           return
         }
+        let params = {
+          nome : this.motorista.nome.value
+        };
         this.$q.loading.show();
-        motoristaService.updateMotorista(this.motorista).then(response => {
+        motoristaService.updateMotorista(this.motoristaId, params).then(response => {
           this.$q.notify({type: 'positive', message: 'Motorista alterado com sucesso.'});
           this.$q.loading.hide();
           this.backAction();
