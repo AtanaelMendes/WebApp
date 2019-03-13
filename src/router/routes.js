@@ -52,7 +52,6 @@ const routes = [
       { name: 'add_motorista', path: 'motorista/add', component: () => import('pages/admin/motoristas/MotoristaAdd.vue') },
       { name: 'edit_motorista', path: 'motorista/edit/:id', component: () => import('pages/admin/motoristas/MotoristaEdit.vue') },
 
-      { name: 'teste', path: 'teste', component: () => import('pages/admin/Teste.vue')},
     ]
   }
 ];
