@@ -24,6 +24,17 @@ export default {
     });
   },
 
+  getCaminhaoById(id) {
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('produtor/'+ produtor_id +'/caminhao/'+ id).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
   addCaminhao(params) {
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {

@@ -133,9 +133,14 @@
         this.filter.nameOrPlaque = val;
       },
       listCaminhoes: function(filter) {
+        this.$q.loading.show();
         caminhaoService.listCaminhoes(filter).then(response => {
           this.caminhoes = response.data;
           this.isEmptyList = this.caminhoes.length === 0;
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações.'});
+          this.$q.loading.hide();
         });
       },
       viewCaminhao: function(id) {
@@ -147,8 +152,8 @@
       addFotoCaminhao: function(){
 
       },
-      updateCaminhao: function(){
-        this.$router.push({name: 'edit_caminhao'});
+      updateCaminhao: function(id){
+        this.$router.push({name: 'edit_caminhao', params: {id:id}});
       },
       archiveCaminhao: function(id){
         caminhaoService.archiveCaminhao(id).then(response =>{
