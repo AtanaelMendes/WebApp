@@ -15,10 +15,23 @@
             <q-icon name="settings" />
             <q-popover>
               <q-list link class="scroll" style="min-width: 200px">
-                <!--<q-item @click.native="">
+                <q-item @click.native="">
+                  <q-item-side left>
+                    <q-item-tile icon="mdi-account" />
+                  </q-item-side>
                   <q-item-main label="Minha conta" />
-                </q-item>-->
+                </q-item>
+                <q-item @click.native="getAccountInfo()">
+                  <q-item-side left>
+                    <q-item-tile icon="mdi-sync" />
+                  </q-item-side>
+                  <q-item-main label="Sincronizar" />
+                </q-item>
+                <q-item-separator />
                 <q-item @click.native="logout()">
+                  <q-item-side left>
+                    <q-item-tile icon="mdi-power" color="red" />
+                  </q-item-side>
                   <q-item-main label="Sair" />
                 </q-item>
               </q-list>
