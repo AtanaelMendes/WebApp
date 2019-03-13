@@ -23,7 +23,7 @@
       </template>
     </toolbar>
 
-    <div class="row q-pa-md gutter-sm" v-if="caminhoes">
+    <div class="row q-pa-md gutter-sm space-end" v-if="caminhoes">
 
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 cursor-pointer" v-for="caminhao in caminhoes" :key="caminhao.id">
         <q-card @click.native="viewCaminhao(caminhao.id)" class="full-height">
@@ -184,6 +184,9 @@
 </script>
 
 <style scoped>
+  .space-end{
+    margin-bottom: 300px;
+  }
   .list-empty{
     height: 55px;
     text-align: center;
