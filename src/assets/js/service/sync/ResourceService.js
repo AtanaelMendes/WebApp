@@ -156,7 +156,7 @@ export default class ResourceService{
 
     for(let purgedId of response.data.purged_ids){
       if(name === 'entrega'){
-        ResourceService.entregasToUpdate.push(purgedId);
+        ResourceService.entregasToDelete.push(purgedId);
       }
       await repositoryInstance.delete(purgedId);
     }
