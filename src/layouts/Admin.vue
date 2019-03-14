@@ -98,7 +98,7 @@
         </q-item>
 
         <!--ARMAZEMS-->
-        <q-item @click.native="$router.push({name:'caminhoes'})">
+        <q-item @click.native="$router.push({name:'armazens'})">
           <q-item-side icon="location_city"/>
           <q-item-main label="Armazéns" />
         </q-item>
