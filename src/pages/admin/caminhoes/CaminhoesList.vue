@@ -80,6 +80,26 @@
       </div>
     </div>
 
+    <!--MODAL ADD FOTO CAMINHAO-->
+    <q-modal v-model="modalAddFotoCaminhao" maximized no-backdrop-dismiss>
+      <div class="row justify-center q-pt-lg">
+        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center"></div>
+      </div>
+
+      <div class="row justify-center content-center" style="min-height: 80vh">
+        <imape-upload ref="caminhaoImageUpload"
+                      :url="caminhaoImageUrl"
+                      v-on:on_error="uploadFotoError"
+                      v-on:on_upload_success="uploadFotoSuccess"
+                      v-on:on_upload_error="uploadFotoError" />
+      </div>
+
+      <q-page-sticky position="bottom-right" :offset="[18, 18]">
+        <q-btn @click.native="closeModalAddFotoCaminhao" color="primary" label="Cancelar" class="q-mr-xs"/>
+        <q-btn @click.native="uploadFotoCaminhao" color="deep-orange" label="Salvar"/>
+      </q-page-sticky>
+    </q-modal>
+
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
       <q-btn round color="deep-orange" @click="addCaminhao" icon="add" size="20px" />
     </q-page-sticky>
@@ -93,19 +113,23 @@
   import caminhaoService from 'assets/js/service/CaminhaoService'
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
+  import imapeUpload from 'components/ImageUpload'
   import CaminhaoService from "../../../assets/js/service/CaminhaoService";
-
   export default {
     name: "caminhoes-list",
     components: {
       apNoResults,
       toolbar,
       apImage,
+      imapeUpload,
       customPage
     },
     data () {
       return {
         caminhoes: [],
+        modalAddFotoCaminhao: false,
+        selectedCaminhaoId: null,
+        produtorId: localStorage.getItem('account.produtor_id'),
         isEmptyList: false,
         filter: {
           type: 'non-trashed',
@@ -122,7 +146,34 @@
         deep: true,
       }
     },
+    computed: {
+      caminhaoImageUrl: function(){
+        return 'produtor/'+ this.produtorId +'/caminhao/' + this.selectedCaminhaoId + '/image';
+      },
+    },
     methods: {
+      addFotoCaminhao: function(id){
+        this.selectedCaminhaoId = id;
+        this.modalAddFotoCaminhao = true;
+      },
+      closeModalAddFotoCaminhao: function(){
+        this.modalAddFotoCaminhao = false;
+        this.$refs.caminhaoImageUpload.clear();
+      },
+      uploadFotoSuccess: function(response){
+        this.closeModalAddFotoCaminhao();
+        this.listCaminhoes();
+      },
+      uploadFotoError: function(error){
+        if(error.data){
+          this.$q.notify({type: 'negative', message: error.data})
+        }else{
+          this.$q.dialog({noBackdropDismiss: true, title: 'Oops!', message: error, ok: 'OK'});
+        }
+      },
+      uploadFotoCaminhao: function(){
+        this.$refs.caminhaoImageUpload.uploadImage();
+      },
       pesoIconColor: function (loatacao) {
         if (loatacao) {
           return 'primary'
@@ -148,9 +199,6 @@
       },
       addCaminhao: function(){
         this.$router.push({name: 'add_caminhao'});
-      },
-      addFotoCaminhao: function(){
-
       },
       updateCaminhao: function(id){
         this.$router.push({name: 'edit_caminhao', params: {id:id}});
