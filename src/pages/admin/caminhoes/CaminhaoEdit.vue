@@ -20,7 +20,11 @@
           </q-field>
 
           <q-field class="q-mb-sm">
-            <q-input v-model="caminhao.lotacao" float-label="Lotação" type="number"/>
+            <q-input v-model="caminhao.pesoBruto" float-label="Peso bruto total" type="number"/>
+          </q-field>
+
+          <q-field class="q-mb-sm">
+            <q-input v-model="caminhao.estimativaCarga" float-label="Estimativa da carga" type="number"/>
           </q-field>
 
           <q-field class="q-mb-sm" :error="caminhao.unidadeMedidaSigla.error" :error-label="caminhao.unidadeMedidaSigla.errorMessage">
@@ -66,7 +70,8 @@
             errorMessage: null
           },
           tara: null,
-          lotacao: null,
+          pesoBruto: null,
+          estimativaCarga: null,
           unidadeMedidaSigla: {
             value: null,
             error: false,
@@ -76,6 +81,25 @@
       }
     },
     methods: {
+      getCaminhaoById: function(id){
+        this.$q.loading.show();
+        caminhaoService.getCaminhaoById(id).then(response => {
+          this.fillFormCaminhao(response.data);
+          console.log(response.data.unidade_medida_id);
+          this.$q.loading.hide();
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possivel carregar as informações'})
+          this.$q.loading.hide();
+        })
+      },
+      fillFormCaminhao(caminhaoData){
+        this.caminhao.nome.value = caminhaoData.nome;
+        this.caminhao.placa.value = caminhaoData.placa;
+        this.caminhao.tara = caminhaoData.tara;
+        this.caminhao.pesoBruto = caminhaoData.pbt;
+        this.caminhao.estimativaCarga = caminhaoData.estimativa_carga;
+        this.caminhao.unidadeMedidaSigla.value = caminhaoData.unidade_medida_id;
+      },
       selectUnidadeMedida: function(){
         unidadeMedidaService.listUnidadesMedida().then(response => {
           this.unidadeMedidaOptions = this.parsedUnidades(response.data)
@@ -120,7 +144,7 @@
         return true
       },
       isUnidadeMedidaRequired: function(){
-        if(this.caminhao.tara != null || this.caminhao.lotacao != null){
+        if(this.caminhao.tara != null || this.caminhao.pesoBruto != null){
           if(this.caminhao.unidadeMedidaSigla.value === null || this.caminhao.unidadeMedidaSigla.value === undefined){
             this.caminhao.unidadeMedidaSigla.error = true;
             this.caminhao.unidadeMedidaSigla.errorMessage = 'informe a unidade de medida';
@@ -141,8 +165,16 @@
         if(!this.nomeIsValid() || !this.placaIsValid() || !this.isUnidadeMedidaRequired()){
           return
         }
-        caminhaoService.updateCaminhao(this.caminhao).then(response => {
-          this.$q.notify({type: 'positive', message: 'Caminhão alterado com sucesso.'});
+        let params = {
+          nome: this.caminhao.nome.value,
+          placa: this.caminhao.placa.value,
+          tara: this.caminhao.tara,
+          pbt: this.caminhao.pesoBruto,
+          estimativa_carga: this.estimativaCarga,
+          unidade_medida_id: this.caminhao.unidadeMedidaSigla.value
+        };
+        caminhaoService.updateCaminhao(this.$route.params.id, params).then(response => {
+          this.$q.notify({type: 'positive', message: 'Caminhão adicionado com sucesso.'});
           this.backAction();
         }).catch(error =>{
           this.$q.notify({type: 'negative', message: 'Não foi possível salvar as alterações'})
@@ -154,6 +186,7 @@
     },
     mounted () {
       this.selectUnidadeMedida();
+      this.getCaminhaoById(this.$route.params.id);
     },
   }
 </script>

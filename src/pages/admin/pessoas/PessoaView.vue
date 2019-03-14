@@ -338,8 +338,13 @@
     },
     methods: {
       getPessoa: function(id){
+        this.$q.loading.show();
         pessoaService.getPessoa(id).then(pessoa => {
           this.pessoa = pessoa;
+          this.$q.loading.hide();
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações.'});
+          this.$q.loading.hide();
         })
       },
       editPessoa: function(){

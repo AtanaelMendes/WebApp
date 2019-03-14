@@ -20,7 +20,11 @@
           </q-field>
 
           <q-field class="q-mb-sm">
-            <q-input v-model="caminhao.lotacao" float-label="Lotação" type="number"/>
+            <q-input v-model="caminhao.pesoBruto" float-label="Peso bruto total" type="number"/>
+          </q-field>
+
+          <q-field class="q-mb-sm">
+            <q-input v-model="caminhao.estimativaCarga" float-label="Estimativa da carga" type="number"/>
           </q-field>
 
           <q-field class="q-mb-sm" :error="caminhao.unidadeMedidaSigla.error" :error-label="caminhao.unidadeMedidaSigla.errorMessage">
@@ -66,7 +70,8 @@
             errorMessage: null
           },
           tara: null,
-          lotacao: null,
+          pesoBruto: null,
+          estimativaCarga: null,
           unidadeMedidaSigla: {
             value: null,
             error: false,
@@ -120,7 +125,7 @@
         return true
       },
       isUnidadeMedidaRequired: function(){
-        if(this.caminhao.tara != null || this.caminhao.lotacao != null){
+        if(this.caminhao.tara != null || this.caminhao.pesoBruto != null || this.caminhao.estimativaCarga != null){
           if(this.caminhao.unidadeMedidaSigla.value === null || this.caminhao.unidadeMedidaSigla.value === undefined){
             this.caminhao.unidadeMedidaSigla.error = true;
             this.caminhao.unidadeMedidaSigla.errorMessage = 'informe a unidade de medida';
@@ -141,7 +146,16 @@
         if(!this.nomeIsValid() || !this.placaIsValid() || !this.isUnidadeMedidaRequired()){
           return
         }
-        caminhaoService.addCaminhao(this.caminhao).then(response => {
+        let params = {
+          nome: this.caminhao.nome.value,
+          placa: this.caminhao.placa.value,
+          tara: this.caminhao.tara,
+          pbt: this.caminhao.pesoBruto,
+          estimativa_carga: this.caminhao.estimativaCarga,
+          unidade_medida_id: this.caminhao.unidadeMedidaSigla.value
+
+        };
+        caminhaoService.addCaminhao(params).then(response => {
           this.$q.notify({type: 'positive', message: 'Caminhão adicionado com sucesso.'});
           this.backAction();
         }).catch(error =>{

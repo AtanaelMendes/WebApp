@@ -24,10 +24,10 @@ export default {
     });
   },
 
-  addCaminhao(caminhao) {
+  getCaminhaoById(id) {
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('/produtor/'+ produtor_id +'/caminhao', caminhao).then(response => {
+      Vue.prototype.$axios.get('produtor/'+ produtor_id +'/caminhao/'+ id).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
@@ -35,10 +35,21 @@ export default {
     });
   },
 
-  updateCaminhao(caminhao) {
+  addCaminhao(params) {
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/produtor/'+ produtor_id +'/caminhao', caminhao).then(response => {
+      Vue.prototype.$axios.post('/produtor/'+ produtor_id +'/caminhao', params).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+
+  updateCaminhao(id, params) {
+    let produtor_id = localStorage.getItem('account.produtor_id');
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('/produtor/'+ produtor_id +'/caminhao/'+ id, params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
@@ -49,7 +60,7 @@ export default {
   archiveCaminhao(id) {
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('/produtor/'+ produtor_id +'/caminhao/' + id + '/archive').then(response => {
+      Vue.prototype.$axios.put('/produtor/'+ produtor_id +'/caminhao/' + id + '/archive').then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
@@ -71,7 +82,7 @@ export default {
   deleteCaminhao(id) {
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('/produtor/'+ produtor_id +'/caminhao/'+id+'/delete').then(response => {
+      Vue.prototype.$axios.delete('/produtor/'+ produtor_id +'/caminhao/'+ id).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
