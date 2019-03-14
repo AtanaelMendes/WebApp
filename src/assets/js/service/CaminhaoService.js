@@ -46,10 +46,10 @@ export default {
     });
   },
 
-  updateCaminhao(params) {
+  updateCaminhao(id, params) {
     let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/produtor/'+ produtor_id +'/caminhao', params).then(response => {
+      Vue.prototype.$axios.put('/produtor/'+ produtor_id +'/caminhao/'+ id, params).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error)
