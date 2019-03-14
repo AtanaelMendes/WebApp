@@ -25,8 +25,10 @@
 
     <div class="row q-pa-md gutter-sm space-end" v-if="caminhoes">
 
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 cursor-pointer" v-for="caminhao in caminhoes" :key="caminhao.id">
-        <q-card @click.native="viewCaminhao(caminhao.id)" class="full-height">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 " v-for="caminhao in caminhoes" :key="caminhao.id">
+        <q-card class="full-height">
+      <!--<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 cursor-pointer" v-for="caminhao in caminhoes" :key="caminhao.id">-->
+        <!--<q-card @click.native="viewCaminhao(caminhao.id)" class="full-height">-->
           <q-card-media overlay-position="top">
             <ap-image size="400x250" :file-name="caminhao.image_file_name" />
             <q-card-title slot="overlay">
@@ -204,25 +206,36 @@
         this.$router.push({name: 'edit_caminhao', params: {id:id}});
       },
       archiveCaminhao: function(id){
+        this.$q.loading.show();
         caminhaoService.archiveCaminhao(id).then(response =>{
           this.$q.notify({type: 'positive', message: 'Caminhão arquivado com sucesso.'});
+          this.listCaminhoes(this.filter);
+          this.$q.loading.hide();
         }).catch(error =>{
           this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse caminhão.'});
+          this.$q.loading.hide();
         })
       },
       restoreCaminhao: function(id){
+        this.$q.loading.show();
         caminhaoService.restoreCaminhao(id).then(response =>{
           this.$q.notify({type: 'positive', message: 'Caminhão ativado com sucesso.'});
+          this.listCaminhoes(this.filter);
+          this.$q.loading.hide();
         }).catch(error =>{
+          this.$q.loading.hide();
           this.$q.notify({type: 'negative', message: 'Não foi possível restaurar esse caminhão.'});
         })
       },
       deleteCaminhao: function(id){
+        this.$q.loading.show();
         CaminhaoService.deleteCaminhao(id).then(response => {
           this.$q.notify({type: 'positive', message: 'Caminhão excluido com sucesso.'});
           this.listCaminhoes(this.filter);
+          this.$q.loading.hide();
         }).catch(error =>{
           this.$q.notify({type: 'negative', message: 'Não foi possível excluir esse caminhão'});
+          this.$q.loading.hide();
         })
       },
     },
