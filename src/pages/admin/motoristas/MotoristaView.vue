@@ -11,8 +11,6 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import talhaoService from 'assets/js/service/area/TalhaoService'
-  import areaService from 'assets/js/service/area/AreaService'
   import imapeUpload from 'components/ImageUpload'
 
   export default {

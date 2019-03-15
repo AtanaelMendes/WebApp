@@ -25,7 +25,8 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import motoristaService from 'assets/js/service/motorista/MotoristaService'
+  import MotoristaService from "../../../assets/js/service/motorista/MotoristaService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
     name: "motorista-update",
     components: {
@@ -34,6 +35,7 @@
     },
     data () {
       return {
+        motoristaService: null,
         motoristaId: this.$route.params.id,
         motorista: {
           nome: {
@@ -71,8 +73,8 @@
       },
       getMotoristaById: function(id){
         this.$q.loading.show();
-        motoristaService.getMotoristaById(id).then(response => {
-          this.fillMotoristaForm(response.data);
+        this.motoristaService.getMotoristaById(id).then(motorista => {
+          this.fillMotoristaForm(motorista);
           this.$q.loading.hide();
         }).catch(error =>{
           this.$q.notify({type: 'negative', message: 'Não foi possível recuperar as informações'});
@@ -91,7 +93,7 @@
           nome : this.motorista.nome.value
         };
         this.$q.loading.show();
-        motoristaService.updateMotorista(this.motoristaId, params).then(response => {
+        this.motoristaService.updateMotorista(this.motoristaId, params).then(() => {
           this.$q.notify({type: 'positive', message: 'Motorista alterado com sucesso.'});
           this.$q.loading.hide();
           this.backAction();
@@ -105,7 +107,10 @@
       },
     },
     mounted () {
-      this.getMotoristaById(this.$route.params.id)
+      new AccountRepository().getFirst().then(account => {
+        this.motoristaService = new MotoristaService(account.produtor_id);
+        this.getMotoristaById(this.$route.params.id)
+      });
     },
   }
 </script>

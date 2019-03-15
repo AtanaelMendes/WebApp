@@ -26,6 +26,8 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import motoristaService from 'assets/js/service/motorista/MotoristaService'
+  import MotoristaService from "../../../assets/js/service/motorista/MotoristaService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
     name: "motorista-update",
     components: {
@@ -34,6 +36,7 @@
     },
     data () {
       return {
+        motoristaService: null,
         motoristaId: this.$route.params.id,
         motorista: {
           nome: {
@@ -77,7 +80,7 @@
           nome : this.motorista.nome.value
         };
         this.$q.loading.show();
-        motoristaService.saveMotorista(params).then(response => {
+        this.motoristaService.saveMotorista(params).then(() => {
           this.$q.notify({type: 'positive', message: 'Motorista criado com sucesso.'});
           this.$q.loading.hide();
           this.backAction();
@@ -91,7 +94,11 @@
         this.$router.back();
       },
     },
-    mounted () {},
+    mounted () {
+      new AccountRepository().getFirst().then(account => {
+        this.motoristaService = new MotoristaService(account.produtor_id);
+      });
+    },
   }
 </script>
 

@@ -101,6 +101,8 @@
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
   import imapeUpload from 'components/ImageUpload'
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
+  import MotoristaService from "../../../assets/js/service/motorista/MotoristaService";
   export default {
     name: "motoristas-list",
     components: {
@@ -112,6 +114,7 @@
     },
     data () {
       return {
+        motoristaService: null,
         motoristas: [],
         modalAddFotoMotorista: false,
         selectedMotoristaId: null,
@@ -166,8 +169,8 @@
       },
       listMotoristas: function(filter) {
         this.$q.loading.show();
-        motoristaService.listMotoristas(filter).then(response => {
-          this.motoristas = response.data;
+        this.motoristaService.listMotoristas(filter).then(motoristas => {
+          this.motoristas = motoristas;
           this.isEmptyList = this.motoristas.length === 0;
           this.$q.loading.hide();
         }).catch(error => {
@@ -186,7 +189,7 @@
       },
       archiveMotorista: function(id){
         this.$q.loading.show();
-        motoristaService.archiveMotorista(id).then(response =>{
+        this.motoristaService.archiveMotorista(id).then(() =>{
           this.$q.notify({type: 'positive', message: 'Motorista arquivado com sucesso.'});
           this.listMotoristas(this.filter);
           this.$q.loading.hide();
@@ -197,7 +200,7 @@
       },
       restoreMotorista: function(id){
         this.$q.loading.show();
-        motoristaService.restoreMotorista(id).then(response =>{
+        this.motoristaService.restoreMotorista(id).then(() =>{
           this.$q.notify({type: 'positive', message: 'Motorista ativado com sucesso.'});
           this.listMotoristas(this.filter);
           this.$q.loading.hide();
@@ -208,7 +211,7 @@
       },
       deleteMotorista: function(id){
         this.$q.loading.show();
-        motoristaService.deleteMotorista(id).then(response => {
+        this.motoristaService.deleteMotorista(id).then(() => {
           this.$q.notify({type: 'positive', message: 'Motorista excluido com sucesso.'});
           this.listMotoristas(this.filter);
           this.$q.loading.hide();
@@ -219,7 +222,10 @@
       },
     },
     mounted () {
-      this.listMotoristas(this.filter);
+      new AccountRepository().getFirst().then(account => {
+        this.motoristaService = new MotoristaService(account.produtor_id);
+        this.listMotoristas(this.filter);
+      });
 
       this.$root.$on('refreshMotoristasList', () => {
         this.listMotoristas(this.filter);

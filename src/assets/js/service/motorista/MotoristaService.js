@@ -35,8 +35,12 @@ export default class MotoristaService{
 
   getMotoristaById(id) {
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtorId + '/motorista/'+ id).then(response => {
-        resolve(response);
+      MotoristaAPI.getMotorista(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
@@ -57,11 +61,14 @@ export default class MotoristaService{
     });
   }
 
-  updateMotorista(id, params){
-    let produtor_id = localStorage.getItem('account.produtor_id');
+  updateMotorista(id, motorista){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/' + produtor_id + '/motorista/'+ id, params).then(response => {
-        resolve(response)
+      MotoristaAPI.updateMotorista(motorista, id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
@@ -69,10 +76,13 @@ export default class MotoristaService{
   };
 
   archiveMotorista(id){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/' + produtor_id + '/motorista/'+ id +'/archive' ).then(response => {
-        resolve(response)
+      MotoristaAPI.archiveMotorista(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
@@ -80,10 +90,13 @@ export default class MotoristaService{
   };
 
   restoreMotorista(id){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/' + produtor_id + '/motorista/'+ id +'/restore').then(response => {
-        resolve(response)
+      MotoristaAPI.restoreMotorista(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
@@ -91,10 +104,13 @@ export default class MotoristaService{
   };
 
   deleteMotorista(id){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('produtor/' + produtor_id + '/motorista/'+ id).then(response => {
-        resolve(response)
+      MotoristaAPI.deleteMotorista(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
