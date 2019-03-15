@@ -4,7 +4,7 @@
     </toolbar>
 
     <div class="row q-pa-md gutter-sm space-end">
-      {{caminhao}}
+      {{armazem}}
     </div>
 
   </custom-page>
@@ -13,28 +13,25 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import caminhaoService from 'assets/js/service/CaminhaoService'
-  import imapeUpload from 'components/ImageUpload'
-
+  import armazemService from 'assets/js/service/armazem/ArmazemService'
   export default {
-    name: "caminhao-view",
+    name: "armazem-view",
     components: {
       toolbar,
       customPage,
-      imapeUpload,
     },
     watch: {},
     computed: {},
     data(){
       return{
-        caminhao: null,
+        armazem: null,
       }
     },
     methods: {
-      getCaminhaoById: function(id){
+      getArmazemById: function(id){
         this.$q.loading.show();
-        caminhaoService.getCaminhaoById(id).then(response => {
-          this.caminhao = response.data;
+        armazemService.getArmazemById(id).then(response => {
+          this.armazem = response.data;
           this.$q.loading.hide();
         }).catch(error =>{
           this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações.'});
@@ -47,7 +44,7 @@
       }
     },
     mounted(){
-      this.getCaminhaoById(this.$route.params.id);
+      this.getArmazemById(this.$route.params.id);
     }
   }
 </script>

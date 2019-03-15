@@ -134,39 +134,36 @@
       addArmazem: function(){
         this.$router.push({name: 'add_armazem'});
       },
-      updateArmazem: function(id){
-        this.$router.push({name: 'edit_armazem', params: {id:id}});
-      },
       archiveArmazem: function(id){
         this.$q.loading.show();
-        armazemService.archiveCaminhao(id).then(response =>{
-          this.$q.notify({type: 'positive', message: 'Caminhão arquivado com sucesso.'});
+        armazemService.archiveArmazem(id).then(response =>{
+          this.$q.notify({type: 'positive', message: 'Armazém arquivado com sucesso.'});
           this.listArmazens(this.filter);
           this.$q.loading.hide();
         }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse caminhão.'});
+          this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse armazém.'});
           this.$q.loading.hide();
         })
       },
       restoreArmazem: function(id){
         this.$q.loading.show();
-        armazemService.restoreCaminhao(id).then(response =>{
-          this.$q.notify({type: 'positive', message: 'Caminhão ativado com sucesso.'});
+        armazemService.restoreArmazem(id).then(response =>{
+          this.$q.notify({type: 'positive', message: 'Armazém ativado com sucesso.'});
           this.listArmazens(this.filter);
           this.$q.loading.hide();
         }).catch(error =>{
           this.$q.loading.hide();
-          this.$q.notify({type: 'negative', message: 'Não foi possível restaurar esse caminhão.'});
+          this.$q.notify({type: 'negative', message: 'Não foi possível restaurar esse armazém.'});
         })
       },
       deleteArmazem: function(id){
         this.$q.loading.show();
-        CaminhaoService.deleteCaminhao(id).then(response => {
-          this.$q.notify({type: 'positive', message: 'Caminhão excluido com sucesso.'});
+        armazemService.deleteArmazem(id).then(response => {
+          this.$q.notify({type: 'positive', message: 'Armazém excluido com sucesso.'});
           this.listArmazens(this.filter);
           this.$q.loading.hide();
         }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível excluir esse caminhão'});
+          this.$q.notify({type: 'negative', message: 'Não foi possível excluir esse armazém'});
           this.$q.loading.hide();
         })
       },
