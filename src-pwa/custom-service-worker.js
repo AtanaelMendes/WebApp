@@ -5,6 +5,8 @@
  */
 
 // Install Service Worker
+//import ServiceMessage from "../src/assets/js/serviceWorker/ServiceMessage";
+
 self.addEventListener('install', function(event){
   console.log('installed!');
   event.waitUntil(
@@ -47,7 +49,12 @@ self.addEventListener('fetch', function(event) {
 });
 
 self.addEventListener('message', function(event){
-  if (event.data.messageType === 'online') {
+  /*if(!event.data instanceof ServiceMessage){
+    return;
+  }*/
+
+  //if (event.data.type === ServiceMessage.SERVER_STATUS) {
+  if (event.data.type === 'server_status') {
     sendMessageToAllClients(event.data)
   }
 });
@@ -56,7 +63,8 @@ self.addEventListener('sync', function(event) {
   if (event.tag === 'queueSync') {
     //event.waitUntil(doSync());
     //sendMessageToAllClients('sync')
-    sendMessageToAllClients({messageType: 'sync', payload: null})
+    //sendMessageToAllClients(new ServiceMessage(ServiceMessage.SYNC, null));
+    sendMessageToAllClients({type:'sync', payload:null});
   }
 });
 

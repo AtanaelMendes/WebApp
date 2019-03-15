@@ -1,3 +1,6 @@
+import ServiceMessage from "../assets/js/serviceWorker/ServiceMessage";
+import ServiceWorker from "../assets/js/serviceWorker/ServiceWorker";
+
 export default ({ app, Vue}) => {
   let isUp_temp = true;
 
@@ -25,7 +28,7 @@ export default ({ app, Vue}) => {
   }
 
   function registerEvent(status){
-    navigator.serviceWorker.controller.postMessage({messageType: 'online', payload: status});
+    ServiceWorker.sendMessage(new ServiceMessage(ServiceMessage.SERVER_STATUS, status));
   }
 
   setInterval(checkServerStatus, 2000);

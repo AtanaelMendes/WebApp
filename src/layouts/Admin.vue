@@ -146,6 +146,7 @@
   import AccountService from "../assets/js/service/AccountService";
   import ForbiddenAccessDialog from "../components/offline/ForbiddenAccessDialog";
   import SyncProgressDialog from "../components/offline/SyncProgressDialog";
+  import ServiceMessage from '../assets/js/serviceWorker/ServiceMessage';
   export default {
     name: 'Admin',
     components:{
@@ -187,15 +188,15 @@
     },
     methods: {
       serviceWorkerMessageEvent(event){
-        switch (event.data.messageType) {
-          case 'sync':
+        switch (event.data.type) {
+          case ServiceMessage.SYNC:
             this.$refs.syncProgressDialog.openModal();
             this.syncService.doSync().then(()=>{
               this.$refs.syncProgressDialog.closeModal();
               event.ports[0].postMessage("queueSyncFinished");
             });
             break;
-          case 'online':
+          case ServiceMessage.SERVER_STATUS:
             if(event.data.payload){
               this.hideOfflineStatusBar();
               this.getAccountInfo();
