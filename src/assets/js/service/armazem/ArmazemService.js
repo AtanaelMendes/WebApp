@@ -30,4 +30,22 @@ export default {
       })
     });
   },
+  getArmazemById(id) {
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.get('produtor/' + produtorId + '/armazem/'+ id).then(response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
+  updateArmazem(id, params) {
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.put('produtor/' + produtorId + '/armazem/'+ id , params).then(response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
 }

@@ -129,13 +129,13 @@
         });
       },
       viewArmazem: function(id) {
-        this.$router.push({name: 'view_caminhao', params: {id:id}});
+        this.$router.push({name: 'view_armazem', params: {id:id}});
       },
       addArmazem: function(){
         this.$router.push({name: 'add_armazem'});
       },
       updateArmazem: function(id){
-        this.$router.push({name: 'edit_caminhao', params: {id:id}});
+        this.$router.push({name: 'edit_armazem', params: {id:id}});
       },
       archiveArmazem: function(id){
         this.$q.loading.show();
