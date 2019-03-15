@@ -13,8 +13,9 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import caminhaoService from 'assets/js/service/CaminhaoService'
   import imapeUpload from 'components/ImageUpload'
+  import CaminhaoService from "../../../assets/js/service/CaminhaoService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
 
   export default {
     name: "caminhao-view",
@@ -27,14 +28,15 @@
     computed: {},
     data(){
       return{
+        caminhaoService: null,
         caminhao: null,
       }
     },
     methods: {
       getCaminhaoById: function(id){
         this.$q.loading.show();
-        caminhaoService.getCaminhaoById(id).then(response => {
-          this.caminhao = response.data;
+        this.caminhaoService.getCaminhaoById(id).then(caminhao => {
+          this.caminhao = caminhao;
           this.$q.loading.hide();
         }).catch(error =>{
           this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações.'});
@@ -47,7 +49,10 @@
       }
     },
     mounted(){
-      this.getCaminhaoById(this.$route.params.id);
+      new AccountRepository().getFirst().then(account => {
+        this.caminhaoService = new CaminhaoService(account.produtor_id)
+        this.getCaminhaoById(this.$route.params.id);
+      });
     }
   }
 </script>

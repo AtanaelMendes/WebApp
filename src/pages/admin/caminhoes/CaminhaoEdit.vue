@@ -47,8 +47,9 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import caminhaoService from 'assets/js/service/CaminhaoService'
-  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
+  import CaminhaoService from "../../../assets/js/service/CaminhaoService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
+  import UnidadeMedidaService from "../../../assets/js/service/UnidadeMedidaService";
   export default {
     name: "caminhao-edit",
     components: {
@@ -57,6 +58,8 @@
     },
     data () {
       return {
+        caminhaoService: null,
+        unidadeMedidaService: new UnidadeMedidaService(),
         unidadeMedidaOptions: [],
         caminhao: {
           nome: {
@@ -83,9 +86,8 @@
     methods: {
       getCaminhaoById: function(id){
         this.$q.loading.show();
-        caminhaoService.getCaminhaoById(id).then(response => {
-          this.fillFormCaminhao(response.data);
-          console.log(response.data.unidade_medida_id);
+        this.caminhaoService.getCaminhaoById(id).then(caminhao => {
+          this.fillFormCaminhao(caminhao);
           this.$q.loading.hide();
         }).catch(error =>{
           this.$q.notify({type: 'negative', message: 'Não foi possivel carregar as informações'})
@@ -101,8 +103,8 @@
         this.caminhao.unidadeMedidaSigla.value = caminhaoData.unidade_medida_id;
       },
       selectUnidadeMedida: function(){
-        unidadeMedidaService.listUnidadesMedida().then(response => {
-          this.unidadeMedidaOptions = this.parsedUnidades(response.data)
+        this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
+          this.unidadeMedidaOptions = this.parsedUnidades(unidades)
         })
       },
       parsedUnidades: function(unidades){
@@ -173,7 +175,7 @@
           estimativa_carga: this.estimativaCarga,
           unidade_medida_id: this.caminhao.unidadeMedidaSigla.value
         };
-        caminhaoService.updateCaminhao(this.$route.params.id, params).then(response => {
+        this.caminhaoService.updateCaminhao(this.$route.params.id, params).then(() => {
           this.$q.notify({type: 'positive', message: 'Caminhão adicionado com sucesso.'});
           this.backAction();
         }).catch(error =>{
@@ -185,8 +187,11 @@
       },
     },
     mounted () {
+      new AccountRepository().getFirst().then(account => {
+        this.caminhaoService = new CaminhaoService(account.produtor_id)
+        this.getCaminhaoById(this.$route.params.id);
+      });
       this.selectUnidadeMedida();
-      this.getCaminhaoById(this.$route.params.id);
     },
   }
 </script>

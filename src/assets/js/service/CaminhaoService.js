@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import { Loading, Dialog } from 'quasar'
 import CaminhaoAPI from "../api/CaminhaoAPI";
 import CaminhaoRepository from "../repository/resource/CaminhaoRepository";
 import CaminhaoListItem from "../model/CaminhaoListItem";
@@ -58,32 +57,41 @@ export default class CaminhaoService {
   }
 
   getCaminhaoById(id) {
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/'+ produtor_id +'/caminhao/'+ id).then(response => {
-        resolve(response)
+      CaminhaoAPI.getCaminhaoById(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
   };
 
-  addCaminhao(params) {
-    let produtor_id = localStorage.getItem('account.produtor_id');
+  addCaminhao(caminhao) {
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('/produtor/'+ produtor_id +'/caminhao', params).then(response => {
-        resolve(response)
+      CaminhaoAPI.saveCaminhao(caminhao, this.produtorId).then(response => {
+        if(response.status === 201){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
   };
 
-  updateCaminhao(id, params) {
-    let produtor_id = localStorage.getItem('account.produtor_id');
+  updateCaminhao(id, caminhao) {
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/produtor/'+ produtor_id +'/caminhao/'+ id, params).then(response => {
-        resolve(response)
+      CaminhaoAPI.updateCaminao(caminhao, id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
@@ -91,10 +99,13 @@ export default class CaminhaoService {
   };
 
   archiveCaminhao(id) {
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/produtor/'+ produtor_id +'/caminhao/' + id + '/archive').then(response => {
-        resolve(response)
+      CaminhaoAPI.archiveCaminhao(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
@@ -102,10 +113,13 @@ export default class CaminhaoService {
   };
 
   restoreCaminhao(id) {
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/produtor/'+ produtor_id +'/caminhao/'+id+'/restore').then(response => {
-        resolve(response)
+      CaminhaoAPI.restoreCaminhao(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
@@ -113,10 +127,13 @@ export default class CaminhaoService {
   };
 
   deleteCaminhao(id) {
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('/produtor/'+ produtor_id +'/caminhao/'+ id).then(response => {
-        resolve(response)
+      CaminhaoAPI.deleteCaminhao(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })

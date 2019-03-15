@@ -112,11 +112,11 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import caminhaoService from 'assets/js/service/CaminhaoService'
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
   import imapeUpload from 'components/ImageUpload'
   import CaminhaoService from "../../../assets/js/service/CaminhaoService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
     name: "caminhoes-list",
     components: {
@@ -128,6 +128,7 @@
     },
     data () {
       return {
+        caminhaoService: null,
         caminhoes: [],
         modalAddFotoCaminhao: false,
         selectedCaminhaoId: null,
@@ -187,8 +188,8 @@
       },
       listCaminhoes: function(filter) {
         this.$q.loading.show();
-        caminhaoService.listCaminhoes(filter).then(response => {
-          this.caminhoes = response.data;
+        this.caminhaoService.listCaminhoes(filter).then(caminhoes => {
+          this.caminhoes = caminhoes;
           this.isEmptyList = this.caminhoes.length === 0;
           this.$q.loading.hide();
         }).catch(error => {
@@ -207,7 +208,7 @@
       },
       archiveCaminhao: function(id){
         this.$q.loading.show();
-        caminhaoService.archiveCaminhao(id).then(response =>{
+        this.caminhaoService.archiveCaminhao(id).then(() =>{
           this.$q.notify({type: 'positive', message: 'Caminhão arquivado com sucesso.'});
           this.listCaminhoes(this.filter);
           this.$q.loading.hide();
@@ -218,7 +219,7 @@
       },
       restoreCaminhao: function(id){
         this.$q.loading.show();
-        caminhaoService.restoreCaminhao(id).then(response =>{
+        this.caminhaoService.restoreCaminhao(id).then(() =>{
           this.$q.notify({type: 'positive', message: 'Caminhão ativado com sucesso.'});
           this.listCaminhoes(this.filter);
           this.$q.loading.hide();
@@ -229,7 +230,7 @@
       },
       deleteCaminhao: function(id){
         this.$q.loading.show();
-        CaminhaoService.deleteCaminhao(id).then(response => {
+        this.caminhaoService.deleteCaminhao(id).then(() => {
           this.$q.notify({type: 'positive', message: 'Caminhão excluido com sucesso.'});
           this.listCaminhoes(this.filter);
           this.$q.loading.hide();
@@ -240,7 +241,10 @@
       },
     },
     mounted () {
-      this.listCaminhoes(this.filter);
+      new AccountRepository().getFirst().then(account => {
+        this.caminhaoService = new CaminhaoService(account.produtor_id)
+        this.listCaminhoes(this.filter);
+      });
 
       this.$root.$on('refreshCaminhoesList', () => {
         this.listCaminhoes(this.filter);
