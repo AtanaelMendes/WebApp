@@ -52,6 +52,11 @@ const routes = [
       { name: 'add_motorista', path: 'motorista/add', component: () => import('pages/admin/motoristas/MotoristaAdd.vue') },
       { name: 'edit_motorista', path: 'motorista/edit/:id', component: () => import('pages/admin/motoristas/MotoristaEdit.vue') },
 
+      { name: 'armazens', path: 'armazens', component: () => import('pages/admin/armazens/ArmazensList.vue')},
+      { name: 'view_armazem', path: 'armazem/view/:id', component: () => import('pages/admin/armazens/ArmazemView.vue') },
+      { name: 'add_armazem', path: 'armazem/add', component: () => import('pages/admin/armazens/ArmazemAdd.vue') },
+      { name: 'edit_armazem', path: 'armazem/edit/:id', component: () => import('pages/admin/armazens/ArmazemEdit.vue') },
+
     ]
   }
 ];
