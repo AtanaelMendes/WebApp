@@ -300,7 +300,7 @@
         this.$refs.entregaModal.openModal()
       },
       openFilterModal(){
-        if(navigator.onLine){
+        if(this.serverStatus.isUp){
           this.$refs.filterEntregasModal.openModal();
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
@@ -374,7 +374,7 @@
         this.$router.push({name: 'entrega_view', params: {id:entrega.id}});
       },
       deleteEntrega(id){
-        if(navigator.onLine){
+        if(this.serverStatus.isUp){
           this.$q.dialog({
             title: 'Atenção',
             message: 'Realmente deseja apagar esta entrega?',

@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import CulturaClassificacaoAPI from "../../api/CulturaClassificacaoAPI";
 import CulturaClassificacaoRepository from "../../repository/resource/CulturaClassificacaoRepository";
 import ClassificacaoRepository from "../../repository/resource/ClassificacaoRepository";
@@ -13,7 +14,7 @@ export default class CulturaClassificacaoService {
 
   listClassificacoesByCultura(cultura_id){
     return new Promise((resolve, reject) => {
-      if(navigator.onLine) {
+      if(Vue.prototype.serverStatus.isUp) {
         CulturaClassificacaoAPI.listByCultura(cultura_id).then(response => {
           if(response.status === 200){
             resolve(response.data);

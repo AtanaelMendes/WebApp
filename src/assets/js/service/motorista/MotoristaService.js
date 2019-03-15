@@ -1,4 +1,4 @@
-import { Loading, Dialog } from 'quasar'
+import Vue from 'vue';
 import MotoristaAPI from "../../api/MotoristaAPI";
 import MotoristaRepository from "../../repository/resource/MotoristaRepository";
 
@@ -13,7 +13,7 @@ export default class MotoristaService{
 
   listMotoristas() {
     return new Promise((resolve, reject) => {
-      if(navigator.onLine) {
+      if(Vue.prototype.serverStatus.isUp) {
         MotoristaAPI.listMotoristas(this.produtorId).then(response => {
           if(response.status === 200){
             resolve(response.data);

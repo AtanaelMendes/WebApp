@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import PesagemAPI from "../../api/PesagemAPI";
 import EntregasQueue from "../../queue/EntregasQueue";
 
@@ -17,7 +18,7 @@ export default class PesagemService {
           reject(response);
         }
       }).catch(error => {
-        if(!navigator.onLine){
+        if(!Vue.prototype.serverStatus.isUp){
           this.entregasQueue.add(error.config, EntregasQueue.INFORMAR_PESAGEM);
           resolve();
         }else{

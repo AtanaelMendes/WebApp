@@ -46,10 +46,17 @@ self.addEventListener('fetch', function(event) {
   }
 });
 
+self.addEventListener('message', function(event){
+  if (event.data.messageType === 'online') {
+    sendMessageToAllClients(event.data)
+  }
+});
+
 self.addEventListener('sync', function(event) {
   if (event.tag === 'queueSync') {
     //event.waitUntil(doSync());
-    sendMessageToAllClients('sync')
+    //sendMessageToAllClients('sync')
+    sendMessageToAllClients({messageType: 'sync', payload: null})
   }
 });
 

@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import NotaFiscalAPI from "../api/NotaFiscalAPI";
 import NotaFiscalSerieRepository from "../repository/resource/NotaFiscalSerieRepository";
 
@@ -26,7 +27,7 @@ export default class NotaFiscalService {
 
   listSeries(){
     return new Promise((resolve, reject) => {
-      if(navigator.onLine) {
+      if(Vue.prototype.serverStatus.isUp) {
         NotaFiscalAPI.listSeries(this.produtorId).then(response => {
           if(response.status === 200){
             resolve(response.data);

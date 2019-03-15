@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import SafraCulturaAPI from "../../api/SafraCulturaAPI";
 import SafraCulturaRepository from "../../repository/resource/SafraCulturaRepository";
 import SafraCulturaListitem from "../../model/safra/SafraCulturaListitem";
@@ -127,7 +128,7 @@ export default class SafraCulturaService {
     return new Promise(async (resolve, reject) => {
       let safraCulturas = null;
 
-      if(navigator.onLine) {
+      if(Vue.prototype.serverStatus.isUp) {
         safraCulturas = await SafraCulturaAPI.getSafraCulturas(this.produtorId).then(response => {
           return response.data;
         });
@@ -220,7 +221,7 @@ export default class SafraCulturaService {
     return new Promise(async (resolve, reject) => {
       let safraCulturaTalhoes = null;
 
-      if(navigator.onLine) {
+      if(Vue.prototype.serverStatus.isUp) {
         safraCulturaTalhoes = await SafraCulturaAPI.getFullSafraCulturaTalhoes(safra_cultura_id).then(response => {
           return response.data;
         })

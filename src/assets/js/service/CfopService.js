@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import CfopAPI from "../api/CfopAPI";
 import CfopRepository from "../repository/resource/CfopRepository";
 
@@ -24,7 +25,7 @@ export default class CfopService{
 
   getCfopByNumero(numero) {
     return new Promise((resolve, reject) => {
-      if(navigator.onLine) {
+      if(Vue.prototype.serverStatus.isUp) {
         CfopAPI.getByNumero(numero).then(response => {
           if(response.status === 200){
             resolve(response.data);

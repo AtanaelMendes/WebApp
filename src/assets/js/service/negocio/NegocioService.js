@@ -200,7 +200,7 @@ export default class NegocioService{
 
   listNegociosCulturasByProdutor(){
     return new Promise(async (resolve, reject) => {
-      if(navigator.onLine) {
+      if(Vue.prototype.serverStatus.isUp) {
         NegocioCulturaAPI.getByProdutor(this.produtorId).then(response => {
           resolve(response.data)
         }).catch(error => {
@@ -270,7 +270,7 @@ export default class NegocioService{
 
   listArmazensByNegocioCultura(negocioCulturaId){
     return new Promise(async (resolve, reject) => {
-      if(navigator.onLine) {
+      if(Vue.prototype.serverStatus.isUp) {
         NegocioCulturaAPI.listArmazensByNegocioCultura(negocioCulturaId).then(response => {
           resolve(response.data)
         }).catch(error => {

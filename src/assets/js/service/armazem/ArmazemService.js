@@ -1,4 +1,4 @@
-import { Loading, Dialog } from 'quasar'
+import Vue from 'vue';
 import ArmazemAPI from "../../api/ArmazemAPI";
 import ArmazemRepository from "../../repository/resource/ArmazemRepository";
 
@@ -14,7 +14,7 @@ export default class ArmazemService{
   listArmazens() {
     console.log('listArmazens')
     return new Promise((resolve, reject) => {
-      if(navigator.onLine) {
+      if(Vue.prototype.serverStatus.isUp) {
         ArmazemAPI.listArmazens(this.produtorId).then(response => {
           if(response.status === 200){
             resolve(response.data);
@@ -37,7 +37,7 @@ export default class ArmazemService{
   listArmazensByEntrega(entregaId) {
     console.log('listArmazensByEntrega')
     return new Promise((resolve, reject) => {
-      if(navigator.onLine) {
+      if(Vue.prototype.serverStatus.isUp) {
         ArmazemAPI.listArmazensByEntrega(entregaId, this.produtorId).then(response => {
           if(response.status === 200){
             resolve(response.data);

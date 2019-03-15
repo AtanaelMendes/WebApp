@@ -13,7 +13,8 @@ module.exports = function (ctx) {
       'lodash',
       'database',
       'account',
-      'vuelazyload'
+      'vuelazyload',
+      'serverstatus'
     ],
     css: [
       'app.styl'

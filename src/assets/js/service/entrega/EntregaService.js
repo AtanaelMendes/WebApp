@@ -33,7 +33,7 @@ export default class EntregaService{
       let entregas = null;
       let entregasCarregandoListItemBuilder = new EntregaCarregandoListItemBuilder();
 
-      if(navigator.onLine){
+      if(Vue.prototype.serverStatus.isUp){
         entregas = await EntregaAPI.listEntregasByStatus('carregando', filter, this.produtorId).then(response => {
           if(response.status === 200){
             return resolve(response.data);
@@ -77,7 +77,7 @@ export default class EntregaService{
       let entregas = null;
       let entregaNoArmazemListItemBuilder = new EntregaNoArmazemListItemBuilder();
 
-      if(navigator.onLine){
+      if(Vue.prototype.serverStatus.isUp){
         entregas = await EntregaAPI.listEntregasByStatus('no_armazem', filter, this.produtorId).then(response => {
           if(response.status === 200){
             return resolve(response.data);
@@ -122,7 +122,7 @@ export default class EntregaService{
       let entregas = null;
       let entregaEntregueListItemBuilder = new EntregaEntregueListItemBuilder();
 
-      if(navigator.onLine){
+      if(Vue.prototype.serverStatus.isUp){
         entregas = await EntregaAPI.listEntregasByStatus('entregue', filter, this.produtorId).then(response => {
           if(response.status === 200){
             return resolve(response.data);
@@ -164,7 +164,7 @@ export default class EntregaService{
         resolve(entrega);
 
       }else{
-        if(navigator.onLine){
+        if(Vue.prototype.serverStatus.isUp){
           EntregaAPI.getEntrega(id, this.produtorId).then(response => {
             resolve(response.data);
           }).catch(error => {
@@ -190,7 +190,7 @@ export default class EntregaService{
           reject();
         }
       }).catch(error => {
-        if(!navigator.onLine){
+        if(!Vue.prototype.serverStatus.isUp){
           this.entregasQueue.add(error.config, EntregasQueue.NOVA_ENTREGA);
           resolve();
         }else{
@@ -209,7 +209,7 @@ export default class EntregaService{
           reject(response);
         }
       }).catch(error => {
-        if(!navigator.onLine){
+        if(!Vue.prototype.serverStatus.isUp){
           this.entregasQueue.add(error.config, EntregasQueue.ENVIAR_PARA_ARMAZEM);
           resolve();
         }else{

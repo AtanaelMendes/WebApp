@@ -587,35 +587,35 @@
         this.$refs.sendEntregaModal.openModal('sendEntrega', entrega)
       },
       addNotaFiscal: function(negocio){
-        if(navigator.onLine){
+        if(this.serverStatus.isUp){
           this.$refs.sendEntregaModal.openModal('addNota', negocio)
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
         }
       },
       updateNota: function(notaFiscalItem){
-        if(navigator.onLine){
+        if(this.serverStatus.isUp){
           this.$refs.sendEntregaModal.openModal('updateNota', notaFiscalItem)
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
         }
       },
       novoNegocio: function(entrega){
-        if(navigator.onLine){
+        if(this.serverStatus.isUp){
           this.$refs.sendEntregaModal.openModal('novoNegocio', entrega)
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
         }
       },
       updateMotorista: function(entrega){
-        if(navigator.onLine){
+        if(this.serverStatus.isUp){
           this.$refs.sendEntregaModal.openModal('updateMotorista', entrega)
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
         }
       },
       updateArmazem: function(entrega){
-        if(navigator.onLine){
+        if(this.serverStatus.isUp){
           this.$refs.sendEntregaModal.openModal('updateArmazem', entrega)
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
@@ -635,35 +635,35 @@
 
       // TODO passar o id do caminhao no addTalhao
       addTalhao: function(entrega){
-        if(navigator.onLine){
+        if(this.serverStatus.isUp){
           this.$refs.entregaModal.openModal(entrega)
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
         }
       },
       addTalhaoPercentage: function(){
-        if(navigator.onLine){
+        if(this.serverStatus.isUp){
           this.$refs.addTalhaoPercentageModal.openModal(this.entrega)
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
         }
       },
       openSetNegociosQuantidadeModal(entrega){
-        if(navigator.onLine){
+        if(this.serverStatus.isUp){
           this.$refs.setNegociosQuantidadeModal.openModal(entrega);
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
         }
       },
       viewNegocio(id){
-        if(navigator.onLine){
+        if(this.serverStatus.isUp){
           this.$router.push({name: 'negocio_view', params: {id:id}});
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
         }
       },
       deleteTalhao: function(id){
-        if(navigator.onLine){
+        if(this.serverStatus.isUp){
           this.$q.dialog({
             title: 'Atenção',
             message: 'Realmente deseja apagar este talhão?',
@@ -685,7 +685,7 @@
         }
       },
       deleteNegocio: function(id){
-        if(navigator.onLine){
+        if(this.serverStatus.isUp){
           this.$q.dialog({
             title: 'Atenção',
             message: 'Realmente deseja apagar esta Negocio?',
@@ -708,7 +708,7 @@
 
       },
       deletePesagem: function(id){
-        if(navigator.onLine){
+        if(this.serverStatus.isUp){
           this.$q.dialog({
             title: 'Atenção',
             message: 'Realmente deseja apagar esta pesagem?',

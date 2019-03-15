@@ -34,7 +34,7 @@ export default class CaminhaoService {
     return new Promise(async (resolve, reject) => {
       let caminhoes = null;
 
-      if(navigator.onLine) {
+      if(Vue.prototype.serverStatus.isUp) {
         caminhoes = await  CaminhaoAPI.getFreeCaminhoes(this.produtorId).then(response => {
           if(response.status === 200){
             resolve(response.data);

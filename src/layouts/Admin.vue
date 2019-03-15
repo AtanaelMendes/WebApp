@@ -8,7 +8,7 @@
         <span class="profile-name">{{currentAccount.name}}</span>
         <span class="profile-email">{{currentAccount.email}}</span>
         <div>
-          <q-btn flat round dense class="network_status_icon" @click="showOfflineAlertDialog" v-if="isOffline" >
+          <q-btn flat round dense class="network_status_icon" @click="showOfflineAlertDialog" v-if="isOfflineStatusBarVisible" >
             <q-icon name="mdi-alert" color="warning"/>
           </q-btn>
           <q-btn flat round dense class="settings_icon">
@@ -141,7 +141,6 @@
 </template>
 
 <script>
-  import NetworkStateMixin from 'components/mixins/NetworkStateMixin'
   import {version} from '../../package.json';
   import SyncService from "../assets/js/service/sync/SyncService";
   import AccountService from "../assets/js/service/AccountService";
@@ -149,7 +148,6 @@
   import SyncProgressDialog from "../components/offline/SyncProgressDialog";
   export default {
     name: 'Admin',
-    mixins: [NetworkStateMixin],
     components:{
       SyncProgressDialog,
       ForbiddenAccessDialog
@@ -163,7 +161,7 @@
           name: null,
           email: null
         },
-        isOfflineStatusBarVisible: true,
+        isOfflineStatusBarVisible: false,
         isNetworkErrorDialogOpen: false,
       }
     },
@@ -173,15 +171,6 @@
       //TODO: Esse método só pode ser chamado depois que o serviceWorker for iniciado
 
       this.$root.$on('toogleLeftDrawer', this.toogleLeftDrawer);
-
-      this.$on('offline', () => {
-        this.showOfflineStatusBar();
-      });
-
-      this.$on('online', () => {
-        //alert('You are online!')
-        this.getAccountInfo();
-      });
 
       if('serviceWorker' in navigator){
         navigator.serviceWorker.addEventListener('message', this.serviceWorkerMessageEvent);
@@ -193,18 +182,26 @@
         return version;
       },
       offlineStatusBar(){
-        return this.isOffline && this.isOfflineStatusBarVisible;
+        return this.isOfflineStatusBarVisible;
       }
     },
     methods: {
       serviceWorkerMessageEvent(event){
-        switch (event.data) {
+        switch (event.data.messageType) {
           case 'sync':
             this.$refs.syncProgressDialog.openModal();
             this.syncService.doSync().then(()=>{
               this.$refs.syncProgressDialog.closeModal();
               event.ports[0].postMessage("queueSyncFinished");
             });
+            break;
+          case 'online':
+            if(event.data.payload){
+              this.hideOfflineStatusBar();
+              this.getAccountInfo();
+            }else{
+              this.showOfflineStatusBar();
+            }
             break;
         }
       },
@@ -226,6 +223,9 @@
           this.$refs.syncProgressDialog.openModal();
           this.syncService.doSync().then(()=>{
             this.$refs.syncProgressDialog.closeModal();
+          }).catch(error => {
+            this.$refs.syncProgressDialog.closeModal();
+            console.log("Erro ao sincronizar")
           })
         })
       },

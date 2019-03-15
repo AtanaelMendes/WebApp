@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import UnidadeAPI from "../api/UnidadeAPI";
 import UnidadeRepository from "../repository/resource/UnidadeRepository";
 
@@ -10,7 +11,7 @@ export default class UnidadeMedidaService{
 
   listUnidadesMedida(){
     return new Promise((resolve, reject) => {
-      if(navigator.onLine) {
+      if(Vue.prototype.serverStatus.isUp) {
         UnidadeAPI.getUnidadesMedida().then(response => {
           if(response.status === 200){
             resolve(response.data);
@@ -32,7 +33,7 @@ export default class UnidadeMedidaService{
 
   listUnidadesArea(){
     return new Promise((resolve, reject) => {
-      if(navigator.onLine) {
+      if(Vue.prototype.serverStatus.isUp) {
         UnidadeAPI.getUnidadesArea().then(response => {
           if(response.status === 200){
             resolve(response.data);

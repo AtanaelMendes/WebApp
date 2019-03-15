@@ -538,7 +538,7 @@
         this.goToNextStep()
       },
       newMotoristaDialog: function(){
-        if(navigator.onLine){
+        if(this.serverStatus.isUp){
           this.$q.dialog({
             title: 'Novo motorista',
             //message: 'Modern front-end framework on steroids.',
