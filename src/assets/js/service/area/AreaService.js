@@ -1,68 +1,109 @@
-import Vue from 'vue'
-const produtorId = localStorage.getItem('account.produtor_id');
-export default {
+import AreaAPI from "../../api/AreaAPI";
+
+export default class AreaService{
+  #produtorId;
+
+  constructor(produtorId) {
+    this.produtorId = produtorId;
+  }
+
   listAreas(filter){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/' + produtorId + '/area' ).then( response => {
-        resolve(response.data);
+      AreaAPI.listAreas(this.produtorId).then( response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   saveArea(params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('/produtor/'+ produtorId + '/area', params).then(response => {
-        resolve(response)
+      AreaAPI.saveArea(params, this.produtorId).then(response => {
+        if(response.status === 201) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
+
   getAreaById(areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('/produtor/' + produtorId + '/area/' + areaId).then(response => {
-        resolve(response.data)
+      AreaAPI.getById(areaId, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   updateArea(areaId, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/produtor/' + produtorId + '/area/' + areaId, params).then(response => {
-        resolve(response)
+      AreaAPI.updateArea(params, areaId, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
+
   deleteArea(areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('/produtor/' + produtorId + '/area/' + areaId).then(response => {
-        resolve(response)
+      AreaAPI.deleteArea(areaId, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
+
   archiveArea(areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/produtor/' + produtorId + '/area/' + areaId + '/archive').then(response => {
-        resolve(response)
+      AreaAPI.archiveArea(areaId, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
+
   restoreArea(areaId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('/produtor/' + this.produtorId + '/area/' + areaId + '/restore').then(response => {
-        resolve(response)
+      AreaAPI.restoreArea(areaId, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
-        reject(error.response)
+        reject(error.response);
       })
     });
-  },
+  };
+
 };
 

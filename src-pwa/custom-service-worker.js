@@ -5,8 +5,21 @@
  */
 
 // Install Service Worker
+//import ServiceMessage from "../src/assets/js/serviceWorker/ServiceMessage";
+
 self.addEventListener('install', function(event){
   console.log('installed!');
+  event.waitUntil(
+    caches.open('agro_project').then(function(cache) {
+      return cache.addAll([
+        //'/',
+        'statics/images/farmer.svg',
+        'statics/images/login-background.jpg',
+        'statics/images/no-image-16-10.svg',
+        'statics/images/ajax-loading-gif.gif'
+      ]);
+    })
+  );
 });
 
 // Service Worker Active
@@ -35,10 +48,23 @@ self.addEventListener('fetch', function(event) {
   }
 });
 
+self.addEventListener('message', function(event){
+  /*if(!event.data instanceof ServiceMessage){
+    return;
+  }*/
+
+  //if (event.data.type === ServiceMessage.SERVER_STATUS) {
+  if (event.data.type === 'server_status') {
+    sendMessageToAllClients(event.data)
+  }
+});
+
 self.addEventListener('sync', function(event) {
   if (event.tag === 'queueSync') {
     //event.waitUntil(doSync());
-    sendMessageToAllClients('sync')
+    //sendMessageToAllClients('sync')
+    //sendMessageToAllClients(new ServiceMessage(ServiceMessage.SYNC, null));
+    sendMessageToAllClients({type:'sync', payload:null});
   }
 });
 
@@ -61,8 +87,12 @@ function sendMessageToClient(client, message) {
 function sendMessageToAllClients(message){
   clients.matchAll({includeUncontrolled: true, type: 'window'}).then(clients => {
     clients.forEach(client => {
-      sendMessageToClient(client, message).then(m => {
-        console.log("SW Received Message: "+m)
+      sendMessageToClient(client, message).then(message => {
+        switch (message) {
+          case 'queueSyncFinished':
+            sendMessageToAllClients(message);
+            break;
+        }
       });
     })
   })

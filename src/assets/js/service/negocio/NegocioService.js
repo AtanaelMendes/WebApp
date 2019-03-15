@@ -1,180 +1,370 @@
 import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
-import AgroUtils from 'assets/js/AgroUtils'
-const produtorId = localStorage.getItem('account.produtor_id');
-export default {
+import NegocioCulturaAPI from "../../api/NegocioCulturaAPI";
+import NegocioRepository from "../../repository/resource/NegocioRepository";
+import NegocioCulturaRepository from "../../repository/resource/NegocioCulturaRepository";
+import UnidadeRepository from "../../repository/resource/UnidadeRepository";
+import SafraCulturaRepository from "../../repository/resource/SafraCulturaRepository";
+import CulturaRepository from "../../repository/resource/CulturaRepository";
+import PessoaRepository from "../../repository/resource/PessoaRepository";
+import NegocioCulturaArmazemRepository from "../../repository/resource/NegocioCulturaArmazemRepository";
+import ArmazemRepository from "../../repository/resource/ArmazemRepository";
+import LocalizacaoRepository from "../../repository/resource/LocalizacaoRepository";
+import NegocioCulturaMovimentoRepository from "../../repository/resource/NegocioCulturaMovimentoRepository";
+import NegocioAPI from "../../api/NegocioAPI";
+import NegocioTituloAPI from "../../api/NegocioTituloAPI";
+import NegocioProdutoAPI from "../../api/NegocioProdutoAPI";
+import NegocioFixacaoAPI from "../../api/NegocioFixacaoAPI";
+
+export default class NegocioService{
+  #produtorId;
+  #negocioRepository;
+  #negocioCulturaRepository;
+  #unidadeRepository;
+  #safraCulturaRepository;
+  #culturaRepository;
+  #pessoaRepository;
+  #negocioCulturaArmazemRepository;
+  #armazemRepository;
+  #localizacaoRepository;
+  #negocioCulturaMovimentoRepository;
+
+  constructor(produtorId) {
+    this.produtorId = produtorId;
+    this.negocioRepository = new NegocioRepository();
+    this.negocioCulturaRepository = new NegocioCulturaRepository();
+    this.unidadeRepository = new UnidadeRepository();
+    this.safraCulturaRepository = new SafraCulturaRepository();
+    this.culturaRepository = new CulturaRepository();
+    this.pessoaRepository = new PessoaRepository();
+    this.negocioCulturaArmazemRepository = new NegocioCulturaArmazemRepository();
+    this.armazemRepository = new ArmazemRepository();
+    this.localizacaoRepository = new LocalizacaoRepository();
+    this.negocioCulturaMovimentoRepository = new NegocioCulturaMovimentoRepository();
+  }
+
   listTipoNegocios(){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/tipo_negocio').then( response => {
-        resolve(response);
+      NegocioAPI.listTiposNegocios(this.produtorId).then( response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  }
+
   listNegocios(){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/negocio').then( response => {
-        resolve(response);
+      NegocioAPI.listNegocios(this.produtorId).then( response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  }
+
   getNegocioById(id, fullType = false){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/negocio/'+ id + (fullType ? '?type=full' : '')).then( response => {
-        resolve(response);
+      NegocioAPI.getById(id, fullType, this.produtorId).then( response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
-  saveNegocio(params){
+  }
+
+  saveNegocio(negocio){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/'+ produtorId + '/negocio', params).then(response => {
-        resolve(response)
+      NegocioAPI.saveNegocio(negocio).then(response => {
+        if(response.status === 201) {
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
-  updateNegocio(id, params){
+  }
+
+  updateNegocio(id, negocio){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/negocio/'+ id, params).then(response => {
-        resolve(response)
+      NegocioAPI.updateNegocio(negocio, id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  }
+
   archiveNegocio(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/negocio/' + id + '/archive').then(response => {
-        resolve(response)
+      NegocioAPI.archiveNegocio(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  }
+
   restoreNegocio(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/negocio/' + id +'/restore').then(response => {
-        resolve(response)
+      NegocioAPI.restoreNegocio(id, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  }
+
   deleteNegocio(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('produtor/'+ produtorId + '/negocio/' + id).then(response => {
-        resolve(response)
+      NegocioAPI.deleteNegocio(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  }
 
+  /*Negocio Cultura*/
   saveAttachCultura(negocioId, negocioCultura){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('negocio/'+ negocioId + '/cultura', negocioCultura).then(response => {
-        resolve(response)
+      NegocioCulturaAPI.addNegocioCultura(negocioCultura, negocioId).then(response => {
+        if(response.status === 201){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  }
+
   deleteCultura(negocioId, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('negocio/'+ negocioId + '/cultura/' + id).then(response => {
-        resolve(response)
+      NegocioCulturaAPI.deleteNegocioCultura(id, negocioId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  }
+
   listNegociosCulturas(negocioId){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('negocio/'+ negocioId + '/cultura?filter=without_empty').then(response => {
-        resolve(response)
+      NegocioCulturaAPI.listNegociosCulturas(negocioId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
-  listNegociosCulturasByProdutor(){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('negocio/cultura/by_produtor/' + produtorId).then(response => {
-        resolve(response)
-      }).catch(error => {
-        reject(error.response)
-      })
-    });
-  },
-  listAvaliablesNegociosCulturasForEntrega($entregaId){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('negocio/cultura/by_entrega/' + $entregaId).then(response => {
-        resolve(response)
-      }).catch(error => {
-        reject(error.response)
-      })
-    });
-  },
-  listArmazensByNegocioCultura(negocioCulturaId){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('negocio/cultura/' + negocioCulturaId + '/armazem').then(response => {
-        resolve(response)
-      }).catch(error => {
-        reject(error.response)
-      })
-    });
-  },
+  }
 
+  listNegociosCulturasByProdutor(){
+    return new Promise(async (resolve, reject) => {
+      if(Vue.prototype.serverStatus.isUp) {
+        NegocioCulturaAPI.getByProdutor(this.produtorId).then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject()
+        })
+      }else{
+        let negociosCulturas = await this.negocioCulturaRepository.getAllOrdered();
+
+        negociosCulturas = await Promise.all(negociosCulturas.map(async negocioCultura => {
+          let negocio = await this.negocioRepository.getById(negocioCultura.negocio_id);
+          let safraCultura = await this.safraCulturaRepository.getById(negocioCultura.safra_cultura_id);
+          let cultura = await this.culturaRepository.getById(safraCultura.cultura_id);
+          let negocioCulturaUnidade = await this.unidadeRepository.getById(negocioCultura.unidade_medida_id);
+          let pessoa = await this.pessoaRepository.getById(negocio.pessoa_id);
+          let negociosCulturasMovimentos = await this.negocioCulturaMovimentoRepository.ggetAllByNegocioCulturaId(negocioCultura.id);
+          let quantidadeEntregue = 0;
+          let entregasPendentes = 0;
+
+          for(let negocioCulturaMovimento of negociosCulturasMovimentos){
+            if(negocioCulturaMovimento.quantidade === null || negocioCulturaMovimento.quantidade === undefined){
+              entregasPendentes++;
+            }
+            quantidadeEntregue += parseFloat(negocioCulturaMovimento.quantidade);
+          }
+
+          return {
+            id: negocioCultura.id,
+            prazo_entrega_final: negocioCultura.prazo_entrega_final,
+            quantidade: parseFloat(negocioCultura.quantidade),
+            quantidade_entregue: quantidadeEntregue,
+            quantidade_restante: parseFloat(negocioCultura.quantidade - quantidadeEntregue),
+            entregas_pendentes: entregasPendentes,
+            unidade_medida_sigla: negocioCulturaUnidade.sigla,
+            safra_cultura: {
+              id: safraCultura.id,
+              cultura: {
+                id: cultura.id,
+                default_unidade_pesagem_id: negocioCulturaUnidade.id,
+              }
+            },
+            negocio: {
+              pessoa: pessoa.nome,
+              numero_contrato: negocio.numero_contrato,
+              numero_pedido: negocio.numero_pedido,
+            },
+          }
+        }));
+
+        resolve(negociosCulturas);
+      }
+    });
+  }
+
+  listAvaliablesNegociosCulturasForEntrega(entregaId){
+    return new Promise((resolve, reject) => {
+      NegocioCulturaAPI.listNegociosCulturasByEntrega(entregaId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  }
+
+  listArmazensByNegocioCultura(negocioCulturaId){
+    return new Promise(async (resolve, reject) => {
+      if(Vue.prototype.serverStatus.isUp) {
+        NegocioCulturaAPI.listArmazensByNegocioCultura(negocioCulturaId).then(response => {
+          resolve(response.data)
+        }).catch(error => {
+          reject(error.response)
+        })
+      }else{
+        let negociosCulturasArmazens = await this.negocioCulturaArmazemRepository.getAllByNegocioCultura(negocioCulturaId);
+
+        negociosCulturasArmazens = await Promise.all(negociosCulturasArmazens.map(async negocioCulturaArmazem => {
+          let armazem = await this.armazemRepository.getById(negocioCulturaArmazem.armazem_id);
+          let localizacao = await this.localizacaoRepository.getById(armazem.localizacao_id);
+          let endereco = localizacao.endereco + ', ' + localizacao.numero + '  ' + localizacao.bairro + ' - ' + localizacao.cidade.nome + '/' + localizacao.cidade.estado.nome;
+          return {
+            id: armazem.id,
+            nome: armazem.nome,
+            endereco: endereco,
+          }
+        }));
+
+        resolve(negociosCulturasArmazens);
+      }
+    });
+  }
+
+  /*Negócio Titulo*/
   saveAttachTitulo(negocioId, negocioTitulo){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('negocio/'+ negocioId + '/titulo', negocioTitulo).then(response => {
-        resolve(response)
+      NegocioTituloAPI.saveNegocioTitulo(negocioTitulo, negocioId).then(response => {
+        if(response.status === 201){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  }
+
   deleteTitulo(negocioId, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('negocio/'+ negocioId + '/titulo/' + id).then(response => {
-        resolve(response)
+      NegocioTituloAPI.deleteNegocioTitulo(id, negocioId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  }
+
+  /*Negócio Produto*/
   saveAttachProduto(negocioId, negocioProduto){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('negocio/'+ negocioId + '/produto', negocioProduto).then(response => {
-        resolve(response)
+      NegocioProdutoAPI.saveNegocioProduto(negocioProduto, negocioId).then(response => {
+        if(response.status === 201){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  }
+
   deleteProduto(negocioId, id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('negocio/'+ negocioId + '/produto/' + id).then(response => {
-        resolve(response)
+      NegocioProdutoAPI.deleteNegocioProduto(id, negocioId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  }
+
+  /*Negócio Fixacao*/
   saveAttachFixacao(negocioCulturaId, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('negocio_cultura/'+ negocioCulturaId + '/fixacao', params).then(response => {
-        resolve(response)
+      NegocioFixacaoAPI.saveNegocioFixacao(params, negocioCulturaId).then(response => {
+        if(response.status === 201){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
-
+  }
 }

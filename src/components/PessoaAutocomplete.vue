@@ -9,8 +9,8 @@
   </q-field>
 </template>
 <script>
-  import pessoaService from 'assets/js/service/PessoaService'
   import { filter } from 'quasar'
+  import PessoaService from "../assets/js/service/PessoaService";
   export default {
     name: "pessoa-autocomplete",
     props: {
@@ -20,6 +20,7 @@
     },
     data: function () {
       return {
+        pessoaService: new PessoaService(),
         //cidadeTerms: this.terms,
         tempPessoaList: [],
         clearErrorMessage: function () {
@@ -39,9 +40,9 @@
         }
       },
       search (terms, done) {
-        pessoaService.searchPessoa(terms).then(response => {
-          this.tempPessoaList = response;
-          done(response)
+        this.pessoaService.searchPessoa(terms).then(result => {
+          this.tempPessoaList = result;
+          done(result)
         });
       },
       selected (item) {

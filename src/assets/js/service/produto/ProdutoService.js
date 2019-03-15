@@ -1,15 +1,24 @@
-import Vue from 'vue'
-import { Loading, Dialog } from 'quasar'
-import AgroUtils from 'assets/js/AgroUtils'
-const produtorId = localStorage.getItem('account.produtor_id');
-export default {
+import ProdutoAPI from "../../api/ProdutoAPI";
+
+export default class ProdutoService {
+  #produtorId;
+
+  constructor(produtorId) {
+    this.produtorId = produtorId;
+  }
+
   searchProdutos(nome) {
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtorId + '/produto?nome='+nome).then(response => {
-        resolve(response);
+      ProdutoAPI.searchByName(nome, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
 }

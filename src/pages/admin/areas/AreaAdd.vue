@@ -22,8 +22,9 @@
   import customInputText from 'components/CustomInputText.vue'
   import localizacaoSelect from 'components/LocalizacaoSelect.vue'
   import area from 'assets/js/model/area/Area'
-  import areaService from 'assets/js/service/area/AreaService'
-  import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
+  import AreaService from "../../../assets/js/service/area/AreaService";
+  import LocalizacaoService from "../../../assets/js/service/localizacao/LocalizacaoService";
   export default {
     name: "area-add",
     components: {
@@ -34,26 +35,32 @@
     },
     data(){
       return {
+        localizacaoService: new LocalizacaoService(),
+        areaService: null,
         localizacaoOptions: [],
         area: new area(),
       }
     },
     methods:{
       listLocalizacao: function(){
-        localizacaoService.listLocalizacao().then(response => {
-          this.localizacaoOptions = response;
+        this.localizacaoService.listLocalizacoesByProdutor(produtorId).then(localizacoes => {
+          this.localizacaoOptions = localizacoes.map(local => {
+            return {
+              value: local.id,
+              label: local.endereco +', '+ local.numero,
+              sublabel: local.bairro +', '+ local.cidade.nome +'-'+ local.cidade.estado.sigla
+            }
+          });
         })
       },
       saveArea: function(){
         if(!this.area.isValid()){
           return;
         }
-        areaService.saveArea(this.area.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Área criada com sucesso'});
-            this.$root.$emit('refreshAreaList')
-            this.$router.push({name: 'areas'});
-          }
+        this.areaService.saveArea(this.area.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Área criada com sucesso'});
+          this.$root.$emit('refreshAreaList');
+          this.$router.push({name: 'areas'});
         });
       },
       backAction: function () {
@@ -61,6 +68,9 @@
       }
     },
     mounted(){
+      new AccountRepository().getFirst().then(account => {
+        this.areaService = new AreaService(account.produtor_id);
+      });
       this.listLocalizacao();
     }
   }

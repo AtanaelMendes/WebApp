@@ -58,8 +58,9 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import safra from 'assets/js/model/safra/Safra'
-  import safraService from 'assets/js/service/safra/SafraService'
   import { filter } from 'quasar'
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
+  import SafraService from "../../../assets/js/service/safra/SafraService";
   export default {
     name: "safra-add",
     components: {
@@ -69,6 +70,7 @@
     },
     data(){
       return {
+        safraService: null,
         safra: new safra(),
         selectedAnoFim: null,
         yearsList: [],
@@ -100,12 +102,10 @@
         if(!this.safra.isValid()){
           return;
         }
-        safraService.saveSafra(this.safra.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Safra criada com sucesso'});
-            this.$router.push({name: 'safras'});
-            this.$root.$emit('refreshSafraList')
-          }
+        this.safraService.saveSafra(this.safra.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Safra criada com sucesso'});
+          this.$router.push({name: 'safras'});
+          this.$root.$emit('refreshSafraList')
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
@@ -123,6 +123,9 @@
       }
     },
     mounted () {
+      new AccountRepository().getFirst().then(account => {
+        this.safraService = new SafraService(account.produtor_id);
+      });
       this.makeYearsList(this.getCurrentYear());
       this.safra.inicio.value = this.getCurrentYear();
       this.safra.fim.value = this.getCurrentYear();

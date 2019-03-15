@@ -96,13 +96,13 @@
   </q-modal>
 </template>
 <script>
-  import pesagemService from 'assets/js/service/entrega/PesagemService'
   import Pesagem from 'assets/js/model/entrega/Pesagem'
-  import culturaClassificacaoService from 'assets/js/service/cultura/CulturaClassificacaoService'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
-  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import { debounce } from 'quasar'
+  import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
+  import CulturaClassificacaoService from "../../assets/js/service/cultura/CulturaClassificacaoService";
+  import PesagemService from "../../assets/js/service/entrega/PesagemService";
   export default {
     name: "stepper-new-pesagem",
     components:{
@@ -111,6 +111,9 @@
     },
     data () {
       return {
+        pesagemService: new PesagemService(),
+        culturaClassificacaoService: new CulturaClassificacaoService(),
+        unidadeMedidaService: new UnidadeMedidaService(),
         currentStep: 'dadosDaEntrega',
         pesagem: new Pesagem(),
         isModalOpened: false,
@@ -178,20 +181,23 @@
           }
 
           this.$q.loading.show();
-          pesagemService.savePesagem(this.entrega.id, this.pesagem.getValues()).then(response => {
-            if(response.status === 201) {
-              this.$q.notify({type: 'positive', message: 'Pesagem criada com sucesso'});
-              this.closeModal();
-              this.$root.$emit('refreshEntregasList', 'no_armazem');
-              this.$root.$emit('refreshEntregasList', 'entregue');
-              this.$root.$emit('refreshEntregaView')
-            }
+          let entregaId = this.$route.params.id;
+          this.pesagemService.savePesagem(entregaId, this.pesagem.getValues()).then(() => {
+            this.$q.notify({type: 'positive', message: 'Pesagem criada com sucesso'});
+            this.closeModal();
+            this.$root.$emit('refreshEntregasList', 'no_armazem');
+            this.$root.$emit('refreshEntregasList', 'entregue');
+            this.$root.$emit('refreshEntregaView');
             this.$q.loading.hide();
+
+            if(this.entrega.pesagens === null || this.entrega.pesagens === undefined){
+              this.$router.back();
+            }
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
             this.$q.loading.hide();
           });
-        }, 300 /*ms to wait*/)
+        }, 300);
       },
       goToNextStep(){
         if(this.currentStep === 'classificacao'){
@@ -213,8 +219,8 @@
       },
       getUnidadesMedida:function(){
         this.$q.loading.show();
-        unidadeMedidaService.listUnidadesMedida().then(response => {
-          this.unidadesMedida = response.data;
+        this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
+          this.unidadesMedida = unidades;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
@@ -237,9 +243,9 @@
       },
       listClassificacoesByCultura(cultura_id){
         this.$q.loading.show();
-        culturaClassificacaoService.listClassificacoesByCultura(cultura_id).then(response => {
+        this.culturaClassificacaoService.listClassificacoesByCultura(cultura_id).then(classificacoes => {
          if(this.pesagem.entregaClassificacao.length <= 0){
-           response.data.forEach(function (classificacao) {
+           classificacoes.forEach(function (classificacao) {
              this.pesagem.entregaClassificacao.push(
                {
                  classificacao_id: classificacao.id,

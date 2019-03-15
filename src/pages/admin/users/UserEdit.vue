@@ -77,6 +77,8 @@
   import userService from 'assets/js/service/UserService'
   import produtorSelect from 'components/ProdutorSelect.vue'
   import Produtor from 'assets/js/model/produtor/Produtor'
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
+  import UserService from "../../../assets/js/service/UserService";
 
   export default {
     name: "UserEdit",
@@ -88,6 +90,7 @@
     },
     data(){
       return {
+        userService: new UserService(),
         roles: null,
         accountId: null,
         produtorOptions: [],
@@ -135,9 +138,7 @@
     },
     methods:{
       getUser: function(id) {
-        userService.getAccount(id).then(response => {
-          let account = response.data;
-
+        this.userService.getAccount(id).then(account => {
           this.accountId = account.id;
           this.form.nome.value = account.nome;
           this.form.email.value = account.email;
@@ -148,20 +149,20 @@
         })
       },
       openRolesDialog: function(){
-        userService.openRolesDialog(this.form.selectedRoles.value, this.roles).then(roles =>{
+        this.userService.openRolesDialog(this.form.selectedRoles.value, this.roles).then(roles =>{
           this.form.selectedRoles.error = false;
           this.form.selectedRoles.value = roles;
         })
       },
       removeRole: function(role){
-        userService.removeRole(this.form.selectedRoles.value, role);
+        this.userService.removeRole(this.form.selectedRoles.value, role);
       },
       listRoles: function(){
-        userService.listRoles().then(roles => {this.roles = roles})
+        this.userService.listRoles().then(roles => {this.roles = roles})
       },
       listProdutor: function(){
-        userService.listProdutor().then(response => {
-          this.produtorOptions = response;
+        this.userService.listProdutores().then(produtores => {
+          this.produtorOptions = produtores;
         })
       },
       openNewProdutorDialog: function(){
@@ -176,10 +177,10 @@
         if(!this.produtor.isValid(this)){
           return;
         }
-        userService.saveProdutor(this.produtor.getValues()).then(response => {
+        this.userService.saveProdutor(this.produtor.getValues()).then(produtor => {
           this.$q.notify({type: 'positive', message: 'Produtor criado com sucesso'});
           this.closeNewProdutorDialog();
-          this.form.produtor.value = response.data.id;
+          this.form.produtor.value = produtor.id;
           this.listProdutor();
         }).catch(error => {
           if (error.response.status === 422){
@@ -227,10 +228,10 @@
           produtor_id: this.form.produtor.value,
           email: this.form.email.value,
           password: this.form.password.value,
-          roles: userService.getIdsByRoles(this.form.selectedRoles.value).join()
+          roles: this.userService.getIdsByRoles(this.form.selectedRoles.value).join()
         };
 
-        userService.updateAccount(params, this.accountId).then(response => {
+        this.userService.updateAccount(params, this.accountId).then(() => {
           this.$q.notify({
             type: 'positive',
             message: 'Cadastro atualizado com sucesso'
@@ -254,10 +255,10 @@
       }
     },
     mounted(){
-      this.routeName = 'edit_user';
       this.listRoles();
       this.listProdutor();
       this.getUser(this.$route.params.id);
+      this.routeName = 'edit_user';
     },
   }
 </script>

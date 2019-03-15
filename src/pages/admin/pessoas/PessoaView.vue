@@ -310,10 +310,11 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import pessoaService from 'assets/js/service/PessoaService'
-  import contatoService from 'assets/js/service/ContatoService'
   import customInputText from 'components/CustomInputText.vue'
-  import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
+  import LocalizacaoService from "../../../assets/js/service/localizacao/LocalizacaoService";
+  import ContatoService from "../../../assets/js/service/ContatoService";
+  import PessoaService from "../../../assets/js/service/PessoaService";
+
   export default {
     name: "pessoa-view",
     components: {
@@ -323,6 +324,9 @@
     },
     data(){
       return{
+        pessoaService: new PessoaService(),
+        contatoService: new ContatoService(),
+        localizacaoService: new LocalizacaoService(),
         pessoa: null,
         contatos: [],
         localizacoes: [],
@@ -338,13 +342,8 @@
     },
     methods: {
       getPessoa: function(id){
-        this.$q.loading.show();
-        pessoaService.getPessoa(id).then(pessoa => {
+        this.pessoaService.getPessoa(id).then(pessoa => {
           this.pessoa = pessoa;
-          this.$q.loading.hide();
-        }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações.'});
-          this.$q.loading.hide();
         })
       },
       editPessoa: function(){
@@ -357,7 +356,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          pessoaService.deletePessoa(this.$route.params.id).then(response => {
+          this.pessoaService.deletePessoa(this.$route.params.id).then(() => {
             this.$q.notify({type: 'positive', message: 'Pessoa Excluir com sucesso'})
             this.$router.push({name:'pessoas'});
             this.$root.$emit('refreshPessoaList');
@@ -371,7 +370,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          pessoaService.archivePessoa(this.$route.params.id).then(response => {
+          this.pessoaService.archivePessoa(this.$route.params.id).then(() => {
             this.$q.notify({type: 'positive', message: 'Pessoa Arquivada com sucesso'})
             this.getPessoa(this.$route.params.id);
             this.$root.$emit('refreshPessoaList');
@@ -386,7 +385,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          pessoaService.restorePessoa(this.$route.params.id).then(response => {
+          this.pessoaService.restorePessoa(this.$route.params.id).then(() => {
             this.$q.notify({type: 'positive', message: 'Pessoa Ativada'})
             this.getPessoa(this.$route.params.id);
             this.$root.$emit('refreshPessoaList');
@@ -400,8 +399,8 @@
         this.$router.push({name: 'update_contact', params: {id:this.$route.params.id, contatoId: contatoId}});
       },
       listContatos: function(pessoaId) {
-        contatoService.listContatos(pessoaId).then(response => {
-          this.contatos = response.data
+        this.contatoService.listContatos(pessoaId).then(contatos => {
+          this.contatos = contatos;
         });
       },
       deleteContato: function(contatoId) {
@@ -411,7 +410,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          contatoService.deleteContato(contatoId, this.$route.params.id).then(response => {
+          this.contatoService.deleteContato(contatoId, this.$route.params.id).then(() => {
             this.$q.notify({type: 'positive', message: 'Contato excluido'})
             this.listContatos(this.$route.params.id);
           })
@@ -424,7 +423,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          contatoService.archiveContato(contatoId, this.$route.params.id).then(response => {
+          this.contatoService.archiveContato(contatoId, this.$route.params.id).then(() => {
             this.$q.notify({type: 'positive', message: 'Contato arquivado'})
             this.listContatos(this.$route.params.id);
           })
@@ -437,7 +436,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          contatoService.restoreContato(contatoId, this.$route.params.id).then(response => {
+          this.contatoService.restoreContato(contatoId, this.$route.params.id).then(() => {
             this.$q.notify({type: 'positive', message: 'Contato ativado'})
             this.listContatos(this.$route.params.id);
           })
@@ -466,8 +465,8 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          localizacaoService.deleteLocalizacao(this.$route.params.id, localizacaoId).then(response => {
-            this.$q.notify({type: 'positive', message: 'Endereço excluido com sucesso'})
+          this.localizacaoService.deleteLocalizacao(this.$route.params.id, localizacaoId).then(() => {
+            this.$q.notify({type: 'positive', message: 'Endereço excluido com sucesso'});
             this.listLocalizacoes(this.$route.params.id)
           });
         });
@@ -479,7 +478,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          localizacaoService.archiveLocalizacao(this.$route.params.id, localizacaoId).then(response => {
+          this.localizacaoService.archiveLocalizacao(this.$route.params.id, localizacaoId).then(() => {
             this.$q.notify({type: 'positive', message: 'Endereço Arquivado com sucesso'})
             this.listLocalizacoes(this.$route.params.id)
           });
@@ -492,15 +491,15 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          localizacaoService.restoreLocalizacao(this.$route.params.id, localizacaoId).then(response => {
+          this.localizacaoService.restoreLocalizacao(this.$route.params.id, localizacaoId).then(() => {
             this.$q.notify({type: 'positive', message: 'Endereço Ativado com sucesso'});
             this.listLocalizacoes(this.$route.params.id)
           });
         });
       },
       listLocalizacoes: function(pessoaId) {
-        localizacaoService.listLocalizacoes(pessoaId).then(response => {
-          this.localizacoes = response.data
+        this.localizacaoService.listLocalizacoes(pessoaId).then(localizacoes => {
+          this.localizacoes = localizacoes;
         });
       },
       backAction: function () {

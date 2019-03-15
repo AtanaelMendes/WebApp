@@ -342,12 +342,13 @@
 
 <script>
   import Fixacao from 'assets/js/model/negocio/Fixacao'
-  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
-  import negocioService from 'assets/js/service/negocio/NegocioService'
-  import moedaService from 'assets/js/service/MoedaService'
-  import contaBancariaService from 'assets/js/service/ContaBancariaService'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
+  import NegocioService from "../../assets/js/service/negocio/NegocioService";
+  import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
+  import AccountRepository from "../../assets/js/repository/AccountRepository";
+  import ContaBancariaService from "../../assets/js/service/ContaBancariaService";
+  import MoedaService from "../../assets/js/service/MoedaService";
 
   export default {
     name: "NewFixacaoModal",
@@ -357,6 +358,10 @@
     },
     data(){
       return{
+        moedaService: new MoedaService(),
+        contaBancariaService: null,
+        unidadeMedidaService: new UnidadeMedidaService(),
+        negocioService: null,
         isModalOpened: false,
         currentStep: 'negocioCultura',
         fixacao: new Fixacao(),
@@ -426,7 +431,10 @@
       }
     },
     methods:{
-      openModal: function(negocio){
+      openModal: async function(negocio){
+        let account = await new AccountRepository().getFirst();
+        this.negocioService = new NegocioService(account.produtor_id);
+        this.contaBancariaService= new ContaBancariaService(account.produtor_id);
         this.isModalOpened = true;
         this.negocio = negocio;
         this.getUnidadesMedida();
@@ -560,12 +568,10 @@
       saveAttachFixacao: function(){
         this.fixacao.parcelas = this.fixacaoParcelas;
         this.fixacao.dataFixacao.value = new Date();
-        negocioService.saveAttachFixacao(this.selectedNegocioCultura.id, this.fixacao.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Fixação vinculada com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshNegocio')
-          }
+        this.negocioService.saveAttachFixacao(this.selectedNegocioCultura.id, this.fixacao.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Fixação vinculada com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshNegocio')
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
@@ -590,26 +596,26 @@
         })
       },
       getUnidadesMedida:function(){
-        unidadeMedidaService.listUnidadesMedida().then(response => {
-          this.unidadesMedida = response.data;
+        this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
+          this.unidadesMedida = unidades;
         })
       },
       getUnidadeMedidaById: function(id){
         return this.unidadesMedida.filter(unidade => unidade.id === id)[0];
       },
       listNegociosCulturas: function(negocioId){
-        negocioService.listNegociosCulturas(negocioId).then(response => {
-          this.negociosCulturas = response.data;
+        this.negocioService.listNegociosCulturas(negocioId).then(negociosCulturas => {
+          this.negociosCulturas = negociosCulturas;
         })
       },
       listMoedas:function(){
-        moedaService.listMoedas().then(response => {
-          this.moedas = response.data;
+        this.moedaService.listMoedas().then(moedas => {
+          this.moedas = moedas;
         })
       },
       listContasBancarias: function(pessoaId){
-        contaBancariaService.listContasPorPessoa(pessoaId).then(response => {
-          this.contasBancarias = response.data;
+        this.contaBancariaService.listContasBancarias().then(contasBancarias => {
+          this.contasBancarias = contasBancarias;
         });
       },
       negocioCulturaRestanteLabel: function(negocioCultura){
@@ -621,7 +627,7 @@
         }
 
       },
-    }
+    },
   }
 </script>
 

@@ -24,7 +24,7 @@
 
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" v-for="entrega in entregasCarregando" :key="entrega.id">
 
-        <q-card @click.native="viewCarga(entrega.id)" class="cursor-pointer">
+        <q-card @click.native="viewCarga(entrega)" class="cursor-pointer">
           <q-card-media overlay-position="top">
             <q-card-title slot="overlay">
               {{entrega.caminhao.placa}}
@@ -45,6 +45,10 @@
               </div>
             </q-card-title>
             <ap-image size="400x250" :file-name="entrega.caminhao.image_file_name" />
+            <div class="q-ma-sm q-pa-xs" style="position: absolute;bottom: 0;right: 0;background:#f4f4f4;border-radius:50%;" v-if="entrega.isInQueueState">
+              <q-icon name="mdi-sync-alert" size="20px" style="" color="deep-orange"/>
+              <q-tooltip anchor="center right" self="center left" :offset="[10, 10]" :delay="200">Item não sincronizado</q-tooltip>
+            </div>
           </q-card-media>
 
           <q-list>
@@ -69,7 +73,13 @@
 
       <!--PAGE STICKY BUTTOMS-->
       <q-page-sticky position="bottom-right" :offset="[35, 35]">
-        <q-btn color="deep-orange" icon="add" @click="novaEntrega()" round size="20px"/>
+        <q-btn
+          color="deep-orange"
+          icon="add"
+          @click="novaEntrega()"
+          round
+          size="19px"
+        />
       </q-page-sticky>
 
     </div>
@@ -78,7 +88,7 @@
     <div class="row gutter-sm space-end q-pa-md" v-if="tabs === 'no-armazem' ">
 
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" v-for="entrega in entregasNoArmazem" :key="entrega.id">
-        <q-card @click.native="viewCarga(entrega.id)" class="cursor-pointer">
+        <q-card @click.native="viewCarga(entrega)" class="cursor-pointer">
           <q-card-media overlay-position="top">
             <q-card-title slot="overlay">
               {{entrega.caminhao.placa}}
@@ -99,6 +109,10 @@
               </div>
             </q-card-title>
             <ap-image size="400x250" :file-name="entrega.caminhao.image_file_name" />
+            <div class="q-ma-sm q-pa-xs" style="position: absolute;bottom: 0;right: 0;background:#f4f4f4;border-radius:50%;" v-if="entrega.isInQueueState">
+              <q-icon name="mdi-sync-alert" size="20px" style="" color="deep-orange"/>
+              <q-tooltip anchor="center right" self="center left" :offset="[10, 10]" :delay="200">Item não sincronizado</q-tooltip>
+            </div>
           </q-card-media>
           <q-list>
 
@@ -141,8 +155,14 @@
       <div class="row gutter-sm space-end" >
         <div class="col-12">
           <q-list no-border link separator>
-            <q-item multiline v-for="entrega in entregasEntregues" :key="entrega.id" @click.native="viewCarga(entrega.id)">
-              <q-item-side :image="makeUrl(entrega.caminhao.image_file_name, '200x125')" />
+            <q-item multiline v-for="entrega in entregasEntregues" :key="entrega.id" @click.native="viewCarga(entrega)">
+              <q-item-side class="q-item-image" style="position: relative" >
+                <ap-image  size="200x125" :file-name="entrega.caminhao.image_file_name" />
+                <div class="q-ma-sm q-pa-xs" style="position: absolute;bottom: 0;right: 0;background:#f4f4f4;border-radius:50%;" v-if="entrega.isInQueueState">
+                  <q-icon name="mdi-sync-alert" size="20px" style="" color="deep-orange"/>
+                  <q-tooltip anchor="center right" self="center left" :offset="[10, 10]" :delay="200">Item não sincronizado</q-tooltip>
+                </div>
+              </q-item-side>
               <q-item-main>
                 <q-item-tile class="content-center">
                   <div class="row">
@@ -214,13 +234,14 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
-  import entregaService from 'assets/js/service/entrega/EntregaService'
   import NewEntregaModal from 'components/entrega/NewEntregaModal'
   import FilterEntregasModal from 'components/entrega/FilterEntregasModal'
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
   import apFilterResultBar from 'components/ApFilterResultBar'
   import AgroUtils from 'assets/js/AgroUtils'
+  import EntregaService from "../../../assets/js/service/entrega/EntregaService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
 
   export default {
     name: "entregas",
@@ -237,6 +258,7 @@
     },
     data () {
       return {
+        entregaService: null,
         tabs: 'carregando',
         entregas: [],
         entregasCarregando:[],
@@ -278,7 +300,11 @@
         this.$refs.entregaModal.openModal()
       },
       openFilterModal(){
-        this.$refs.filterEntregasModal.openModal();
+        if(this.serverStatus.isUp){
+          this.$refs.filterEntregasModal.openModal();
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       filterEntregas(filters){
         this.$refs.filerResultBar.show(this.$refs.filterEntregasModal.getFilterDesciption());
@@ -315,66 +341,79 @@
         }
       },
       listEntregasCarregando(filter = null) {
+        console.log('listEntregasCarregando')
         this.$q.loading.show();
-        entregaService.listEntregasCarregando(filter).then(response => {
-          this.entregasCarregando = response.data;
+        this.entregaService.listEntregasCarregando(filter).then(entregas => {
+          this.entregasCarregando = entregas;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
         })
       },
       listEntregasNoArmazem: function (filter = null) {
+        console.log('listEntregasNoArmazem')
         this.$q.loading.show();
-        entregaService.listEntregasNoArmazem(filter).then(response => {
-          this.entregasNoArmazem = response.data;
+        this.entregaService.listEntregasNoArmazem(filter).then(entregas => {
+          this.entregasNoArmazem = entregas;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
         })
       },
       listEntregasEntregues: function (filter = null) {
+        console.log('listEntregasEntregues')
         this.$q.loading.show();
-        entregaService.listCargasEntregues(filter).then(response => {
-          this.entregasEntregues = response.data;
+        this.entregaService.listCargasEntregues(filter).then(entregas => {
+          this.entregasEntregues = entregas;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
         })
       },
-      viewCarga: function (id) {
-        this.$router.push({name: 'entrega_view', params: {id:id}});
+      viewCarga: function (entrega) {
+        this.$router.push({name: 'entrega_view', params: {id:entrega.id}});
       },
       deleteEntrega(id){
-        this.$q.dialog({
-          title: 'Atenção',
-          message: 'Realmente deseja apagar esta entrega?',
-          ok: 'Sim', cancel: 'Não',
-          color: 'primary'
-        }).then(data => {
-          this.$q.loading.show();
-          entregaService.deleteEntrega(id).then(response => {
-            switch (this.tabs) {
-              case 'carregando':
-                this.listEntregasCarregando();
-                break;
-              case 'no-armazem':
-                this.listEntregasNoArmazem();
-                break
-              case 'entregue':
-                this.listEntregasEntregues();
-                break
-            };
-            this.$q.loading.hide();
-          }).catch(error => {
-            this.$q.loading.hide();
-          })
-        }).catch(()=>{});
-      }
-    },
-    mounted () {
-      this.listEntregasCarregando();
+        if(this.serverStatus.isUp){
+          this.$q.dialog({
+            title: 'Atenção',
+            message: 'Realmente deseja apagar esta entrega?',
+            ok: 'Sim', cancel: 'Não',
+            color: 'primary'
+          }).then(data => {
+            this.$q.loading.show();
+            this.entregaService.deleteEntrega(id).then(() => {
+              switch (this.tabs) {
+                case 'carregando':
+                  this.listEntregasCarregando();
+                  break;
+                case 'no-armazem':
+                  this.listEntregasNoArmazem();
+                  break;
+                case 'entregue':
+                  this.listEntregasEntregues();
+                  break
+              }
+              this.$q.loading.hide();
+            }).catch(error => {
+              this.$q.loading.hide();
+            })
+          }).catch(()=>{});
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
 
-      this.$root.$on('refreshEntregasList', (status) => {
+      },
+      queueSyncFinishedEvent(event){
+        switch (event.data) {
+          case 'queueSyncFinished':
+            console.log('EntregasList.queueSyncFinished')
+            this.$root.$emit('refreshEntregasList', 'all');
+            break;
+        }
+      },
+      refreshEntregasListEvent(status){
+        console.log('refreshEntregasList.status: ' + status);
         switch (status) {
           case 'carregando':
             this.listEntregasCarregando();
@@ -391,8 +430,27 @@
             this.listEntregasEntregues();
             break;
         }
-      });
+      }
     },
+    mounted () {
+      if('serviceWorker' in navigator){
+        navigator.serviceWorker.addEventListener('message', this.queueSyncFinishedEvent);
+      }
+
+      new AccountRepository().getFirst().then(account => {
+        this.entregaService = new EntregaService(account.produtor_id);
+        this.listEntregasCarregando();
+      });
+
+      this.$root.$on('refreshEntregasList', this.refreshEntregasListEvent);
+    },
+    destroyed() {
+      if('serviceWorker' in navigator){
+        navigator.serviceWorker.removeEventListener('message', this.queueSyncFinishedEvent);
+      }
+
+      this.$root.$off('refreshEntregasList', this.refreshEntregasListEvent);
+    }
   }
   // this.$q.notify({type: 'negative', message: 'aqui'})
 </script>

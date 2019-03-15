@@ -12,6 +12,9 @@ module.exports = function (ctx) {
       'croppa',
       'lodash',
       'database',
+      'account',
+      'vuelazyload',
+      'serverstatus'
     ],
     css: [
       'app.styl'

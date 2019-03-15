@@ -1,12 +1,38 @@
 import Vue from 'vue'
-import QueueItem from "../model/QueueItem";
+import QueueItem from "../dbModel/QueueItem";
 
-let table = Vue.prototype.db.request_queue;
+let table;
+
 export default class RequestQueueRepository {
 
-  getBy(){
 
+  constructor() {
+    table = Vue.prototype.db_primary.request_queue;
   };
+
+  getById(id){
+    return table.get({id: id});
+  }
+
+  getByGrouper(grouper){
+    return table.where('grouper').equals(grouper);
+  };
+
+  getByUrl(url){
+    return table.where('request.url').equals(url);
+  }
+
+  getByGrouperAndUrl(grouper, url){
+    return table.where(['grouper', 'request.url']).equals([grouper, url]);
+  }
+
+  listByType(type){
+    return table.where({'type':type}).toArray();
+  }
+
+  getByGrouperAndUrlAndMethod(grouper, url, method){
+    return table.where({grouper: grouper, 'request.url': url}).filter(item => item.request.method === method);
+  }
 
   getAllBy(){
 

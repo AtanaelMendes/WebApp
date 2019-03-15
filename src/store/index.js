@@ -9,6 +9,6 @@ const store = new Vuex.Store({
   modules: {
     entrega,
   }
-})
+});
 
 export default store

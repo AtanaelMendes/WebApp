@@ -1,96 +1,137 @@
 import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
-export default {
+import SafraAPI from "../../api/SafraAPI";
+
+export default class SafraService {
+  #produtorId;
+
+  constructor(produtorId) {
+    this.produtorId = produtorId;
+  }
+
   favoriteSafra(id, value){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/' + produtor_id + '/safra/' + id + '/favorite?value=' + value).then(response => {
-        resolve(response)
+      SafraAPI.favoriteSafra(value, id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   getSafra(id){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtor_id + '/safra/' + id).then( response => {
-        resolve(response)
+      SafraAPI.getSafra(id, this.produtorId).then( response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   listSafras(){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtor_id + '/safra').then( response => {
-        resolve(response);
+      SafraAPI.listSafras(this.produtorId).then( response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
-  saveSafra(params){
-    let produtor_id = localStorage.getItem('account.produtor_id');
+  };
+
+  saveSafra(safra){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/' + produtor_id + '/safra', params).then(response => {
-        resolve(response)
+      SafraAPI.saveSafra(safra, this.produtorId).then(response => {
+        if(response.status === 201){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   deleteSafra(id){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('produtor/' + produtor_id + '/safra/' + id).then(response => {
-        resolve(response)
+      SafraAPI.deleteSafra(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   restoreSafra(id){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/' + produtor_id + '/safra/' + id + '/restore').then(response => {
-        resolve(response)
+      SafraAPI.restoreSafra(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   archiveSafra(id){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/' + produtor_id + '/safra/' + id + '/archive').then(response => {
-        resolve(response)
+      SafraAPI.archiveSafra(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   updateSafra(id, params){
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/' + produtor_id + '/safra/' + id, params).then(response => {
-        resolve(response)
+      SafraAPI.updateSafra(params, id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
+
   listFreeTalhoes(area_id, safra_id, unidade_area_id, unidade_medida_id, cultura_id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('safra/' + safra_id + '/talhao_free/' + area_id
-        + '?unidade_area_id=' + unidade_area_id
-        + '&unidade_medida_id=' + unidade_medida_id
-        + '&cultura_id=' + cultura_id).then( response => {
-        resolve(response);
+      SafraAPI.listFreeTalhoes(safra_id, area_id, unidade_area_id, unidade_medida_id, cultura_id).then( response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
 }

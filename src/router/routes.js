@@ -1,3 +1,6 @@
+import EntregasList from 'pages/admin/entregas/EntregasList'
+import EntregaView from 'pages/admin/entregas/EntregaView'
+
 const routes = [
   { path: '/', component: () => import('pages/Index.vue') },
   { path: '/login', component: () => import('pages/Login.vue') },
@@ -39,8 +42,8 @@ const routes = [
       { name: 'negocios', path: 'negocios', component: () => import('pages/admin/negocios/NegociosList.vue')},
       { name: 'negocio_view', path: 'negocios/:id/view', component: () => import('pages/admin/negocios/NegocioView.vue')},
 
-      { name: 'entregas', path: 'entregas', component: () => import('pages/admin/entregas/EntregasList.vue')},
-      { name: 'entrega_view', path: 'entregas/:id/view', component: () => import('pages/admin/entregas/EntregaView.vue')},
+      { name: 'entregas', path: 'entregas', component: EntregasList},
+      { name: 'entrega_view', path: 'entregas/:id/view', component: EntregaView},
 
       { name: 'caminhoes', path: 'caminhoes', component: () => import('pages/admin/caminhoes/CaminhoesList.vue')},
       { name: 'view_caminhao', path: 'caminhao/:id/view', component: () => import('pages/admin/caminhoes/CaminhaoView.vue')},

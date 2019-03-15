@@ -1,213 +1,405 @@
 import Vue from 'vue'
-import { Loading, Dialog } from 'quasar'
-const produtorId = localStorage.getItem('account.produtor_id');
-export default {
+import EntregasQueue from "../../queue/EntregasQueue";
+import EntregaCarregandoListItem from "../../model/entrega/EntregaCarregandoListItem";
+import EntregaAPI from "../../api/EntregaAPI";
+import EntregaViewRepository from "../../repository/list/EntregaViewRepository";
+import EntregaNoArmazemListItem from "../../model/entrega/EntregaNoArmazemListItem";
+import EntregaEntregueListItem from "../../model/entrega/EntregaEntregueListItem";
+import EntregaCarregandoListItemBuilder from "../../queue/builder/EntregaCarregandoListItemBuilder";
+import EntregaNoArmazemListItemBuilder from "../../queue/builder/EntregaNoArmazemListItemBuilder";
+import EntregaEntregueListItemBuilder from "../../queue/builder/EntregaEntregueListItemBuilder";
+import EntregaViewBuilder from "../../queue/builder/EntregaViewBuilder";
+import EntregaRepository from "../../repository/resource/EntregaRepository";
+import Entrega from "../../dbModel/Entrega";
+import EntregaListItemBuilder from "../../model/entrega/builder/EntregaListItemBuilder";
+
+export default class EntregaService{
+  #entregasQueue;
+  #produtorId;
+  #entregaViewRepository;
+  #entregaRepository;
+  #entregaListItemBuilder;
+
+  constructor(produtorId) {
+    this.produtorId = produtorId;
+    this.entregasQueue = new EntregasQueue();
+    this.entregaViewRepository = new EntregaViewRepository();
+    this.entregaRepository = new EntregaRepository();
+    this.entregaListItemBuilder = new EntregaListItemBuilder();
+  }
+
   listEntregasCarregando(filter = null){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=carregando' + (filter ? ("&" + filter) : "")).then( response => {
-        resolve(response);
-      }).catch(error => {
-        reject(error)
-      })
+    return new Promise(async (resolve, reject) => {
+      let entregas = null;
+      let entregasCarregandoListItemBuilder = new EntregaCarregandoListItemBuilder();
+
+      if(Vue.prototype.serverStatus.isUp){
+        entregas = await EntregaAPI.listEntregasByStatus('carregando', filter, this.produtorId).then(response => {
+          if(response.status === 200){
+            return resolve(response.data);
+          }else{
+            return reject(response);
+          }
+        })
+      }else{
+        entregas = await this.entregaRepository.getByStatus(Entrega.CARREANDO);
+
+        entregas = await Promise.all(entregas.map(async entrega => {
+          return this.entregaListItemBuilder.buildCarregandoListItem(entrega);
+        }));
+      }
+
+      entregas = entregas.map(entrega => {
+        return new EntregaCarregandoListItem(entrega)
+      });
+
+      let queueItens = await this.entregasQueue.listByType(EntregasQueue.NOVA_ENTREGA);
+
+      for(let i = 0; i < queueItens.length; i++){
+        let url = Vue.prototype.$axios.defaults.baseURL + 'produtor/' + this.produtorId + '/entrega';
+        let results = await this.entregasQueue.getByUrlAndMethod(url + '/queue::' + queueItens[i].id + '/enviar_entrega', 'put').toArray();
+
+        if(results.length !== 0){
+          queueItens.splice(i, 1);
+        }
+      }
+
+      let queueEntregas = await Promise.all(queueItens.map(async queueItem => {
+        return await entregasCarregandoListItemBuilder.build(queueItem);
+      }));
+
+      resolve(entregas.concat(queueEntregas));
     });
-  },
+  };
+
   listEntregasNoArmazem(filter = null){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=no_armazem' + (filter ? ("&" + filter) : "")).then( response => {
-        resolve(response);
-      }).catch(error => {
-        reject(error)
-      })
+    return new Promise(async (resolve, reject) => {
+      let entregas = null;
+      let entregaNoArmazemListItemBuilder = new EntregaNoArmazemListItemBuilder();
+
+      if(Vue.prototype.serverStatus.isUp){
+        entregas = await EntregaAPI.listEntregasByStatus('no_armazem', filter, this.produtorId).then(response => {
+          if(response.status === 200){
+            return resolve(response.data);
+          }else{
+            return reject(response);
+          }
+        })
+      }else{
+        entregas = await this.entregaRepository.getByStatus(Entrega.NO_ARMAZEM);
+
+        entregas = await Promise.all(entregas.map(async entrega => {
+          return this.entregaListItemBuilder.buildNoArmazemListItem(entrega);
+        }));
+      }
+
+      entregas = entregas.map(entrega => {
+        return new EntregaNoArmazemListItem(entrega)
+      });
+
+      let queueItens = await this.entregasQueue.listByType(EntregasQueue.ENVIAR_PARA_ARMAZEM);
+
+      for(let i = 0; i < queueItens.length; i++){
+        let url = Vue.prototype.$axios.defaults.baseURL + 'entrega';
+        let results = await this.entregasQueue.getByUrlAndMethod(url + '/queue::' + queueItens[i].id + '/pesagem', 'post').toArray();
+
+        if(results.length !== 0){
+          queueItens.splice(i, 1);
+        }
+      }
+
+      let queueEntregas = await Promise.all(queueItens.map(async queueItem => {
+        return await entregaNoArmazemListItemBuilder.build(queueItem);
+      }));
+
+      resolve(entregas.concat(queueEntregas));
     });
-  },
+
+  };
+
   listCargasEntregues(filter = null){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega?status=entregue' + (filter ? ("&" + filter) : "")).then( response => {
-        resolve(response);
-      }).catch(error => {
-        reject(error)
-      })
+    return new Promise(async (resolve, reject) => {
+      let entregas = null;
+      let entregaEntregueListItemBuilder = new EntregaEntregueListItemBuilder();
+
+      if(Vue.prototype.serverStatus.isUp){
+        entregas = await EntregaAPI.listEntregasByStatus('entregue', filter, this.produtorId).then(response => {
+          if(response.status === 200){
+            return resolve(response.data);
+          }else{
+            return reject(response);
+          }
+        })
+      }else{
+        entregas = await this.entregaRepository.getByStatus(Entrega.ENTREGUE);
+
+        entregas = await Promise.all(entregas.map(async entrega => {
+          return this.entregaListItemBuilder.buildEntregueListItem(entrega);
+        }));
+      }
+
+      entregas = entregas.map(entrega => {
+        return new EntregaEntregueListItem(entrega);
+      });
+
+      let queueItens = await this.entregasQueue.listByType(EntregasQueue.INFORMAR_PESAGEM);
+
+      let queueEntregas = await Promise.all(queueItens.map(async queueItem => {
+        return entregaEntregueListItemBuilder.build(queueItem)
+
+      }));
+
+      resolve(queueEntregas.concat(entregas));
     });
-  },
+  };
+
   getEntregaById(id){
+    return new Promise(async(resolve, reject) => {
+      if(typeof id === 'string' && id.match("(queue::([0-9]*))")){
+        let queueId = parseInt(id.match("(queue::([0-9]*))")[2]);
+        let entregaViewBuilder = new EntregaViewBuilder();
+
+        let entrega = await entregaViewBuilder.build(queueId);
+
+        resolve(entrega);
+
+      }else{
+        if(Vue.prototype.serverStatus.isUp){
+          EntregaAPI.getEntrega(id, this.produtorId).then(response => {
+            resolve(response.data);
+          }).catch(error => {
+            reject(new Error("Erro na API"))
+          })
+        }else{
+          this.entregaViewRepository.get(id).then(entrega => {
+            resolve(entrega)
+          }).catch(() => {
+            reject(new Error("Erro no BD"))
+          })
+        }
+      }
+    });
+  };
+
+  saveEntrega(entrega){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega/'+ id).then( response => {
-        resolve(response);
+      EntregaAPI.saveEntrega(entrega, this.produtorId).then(response => {
+        if(response.status === 201) {
+          resolve(response.data)
+        }else{
+          reject();
+        }
       }).catch(error => {
-        reject(error)
+        if(!Vue.prototype.serverStatus.isUp){
+          this.entregasQueue.add(error.config, EntregasQueue.NOVA_ENTREGA);
+          resolve();
+        }else{
+          reject(error.response)
+        }
       })
     });
-  },
-  saveEntrega(params){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/'+ produtorId + '/entrega', params).then(response => {
-        resolve(response)
-      }).catch(error => {
-        reject(error.response)
-      })
-    });
-  },
+  };
+
   sendEntregaToArmazen(entrega_id, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/enviar_entrega', params).then(response => {
-        resolve(response)
+      EntregaAPI.sendToArmazem(params, entrega_id, this.produtorId).then(response => {
+        if (response.status === 200) {
+          resolve(response.data);
+        } else {
+          reject(response);
+        }
       }).catch(error => {
-        reject(error.response)
+        if(!Vue.prototype.serverStatus.isUp){
+          this.entregasQueue.add(error.config, EntregasQueue.ENVIAR_PARA_ARMAZEM);
+          resolve();
+        }else{
+          reject(error.response)
+        }
       })
+
     });
-  },
-  addNegocioToEntrega(entrega_id, params){
+  };
+
+  addNegocioToEntrega(entrega_id, negocio){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('entrega/'+ entrega_id + '/negocio', params).then(response => {
-        resolve(response)
+      EntregaAPI.addNegocio(negocio, entrega_id).then(response => {
+        if(response.status === 201) {
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
-  delteNegocioOfEntrega(entrega_id, negocio_id){
+  };
+
+  deleteNegocioOfEntrega(entrega_id, negocio_id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('entrega/'+ entrega_id + '/negocio/' + negocio_id).then(response => {
-        resolve(response)
+      EntregaAPI.deleteNegocio(negocio_id, entrega_id).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
+
   updateNegociosQuantidade(entrega_id, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('entrega/'+ entrega_id + '/negocio/update_quantidade', params).then(response => {
-        resolve(response)
+      EntregaAPI.updateNegocioQuantidade(params, entrega_id).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
+
   addTalhaoToEntrega(entrega_id, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/talhao', params).then(response => {
-        resolve(response)
+      EntregaAPI.addTalhao(params, entrega_id, this.produtorId).then(response => {
+        if(response.status === 201) {
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
+
   delteTalhaoOfEntrega(entrega_id, talhao_id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/talhao/' + talhao_id).then(response => {
-        resolve(response)
+      EntregaAPI.deleteTalhao(talhao_id, entrega_id, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
-        reject(error.response)
+        reject(error.response);
       })
     });
-  },
+  };
+
   listTalhoesFromEntrega(entrega_id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega/' + entrega_id + '/talhoes').then( response => {
-        resolve(response);
+      EntregaAPI.listTalhoes(entrega_id, this.produtorId).then( response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   updateTalhoesPercentual(entrega_id, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/talhoes', params).then(response => {
-        resolve(response)
+      EntregaAPI.updateTalhoesPercentual(params, entrega_id, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
-  updateMotorista(entrega_id, params){
+  };
+
+  updateMotorista(entrega_id, motorista){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/motorista', params).then(response => {
-        resolve(response)
+      EntregaAPI.updateMotorista(motorista, entrega_id, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
-  updateArmazem(entrega_id, params){
+  };
+
+  updateArmazem(entrega_id, armazem){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/armazem', params).then(response => {
-        resolve(response)
+      EntregaAPI.updateArmazem(armazem, entrega_id, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
+
   addNotaFiscalToNegocio(entrega_id, negocio_id, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('entrega/'+ entrega_id + '/negocio/' + negocio_id + '/nota_fiscal', params).then(response => {
-        resolve(response)
+      EntregaAPI.addNotaFiscalToNegocio(params, entrega_id, negocio_id).then(response => {
+        if(response.status === 201) {
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
+
   updateNotaFiscalItemOfNegocio(entrega_id, id, params){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ entrega_id + '/nota_fiscal_item/' + id, params).then(response => {
-        resolve(response)
+      EntregaAPI.updateNotaFiscalItemOfNegocio(params, id, entrega_id, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
-  updateEntrega(id, params){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ id, params).then(response => {
-        resolve(response)
-      }).catch(error => {
-        reject(error.response)
-      })
-    });
-  },
-  archiveEntrega(id){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/' + id + '/archive').then(response => {
-        resolve(response)
-      }).catch(error => {
-        reject(error.response)
-      })
-    });
-  },
-  restoreEntrega(id){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/' + id +'/restore').then(response => {
-        resolve(response)
-      }).catch(error => {
-        reject(error.response)
-      })
-    });
-  },
+  };
+
   deleteEntrega(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('produtor/'+ produtorId + '/entrega/' + id).then(response => {
-        resolve(response)
+      EntregaAPI.deleteEntrega(id, this.produtorId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error.response)
       })
     });
-  },
+  };
 
-  saveTalhaoPercentage(params){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/'+ produtorId + '/entrega/'+ id, params).then(response => {
-        resolve(response)
-      }).catch(error => {
-        reject(error.response)
-      })
-    });
-  },
   getFilterOptions(){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor/'+ produtorId + '/entrega/filter_option').then( response => {
-        resolve(response);
+      EntregaAPI.getFilterOptions().then( response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
 }

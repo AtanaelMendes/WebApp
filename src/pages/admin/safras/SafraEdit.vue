@@ -178,11 +178,12 @@
   import customInputText from 'components/CustomInputText.vue'
   import Safra from 'assets/js/model//safra/Safra'
   import Cultura from 'assets/js/model/Cultura'
-  import areaService from 'assets/js/service/area/AreaService'
   import talhaoService from 'assets/js/service/area/TalhaoService'
-  import culturaService from 'assets/js/service/safra/CulturaService'
-  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
-  import safraService from 'assets/js/service/safra/SafraService'
+  import UnidadeMedidaService from "../../../assets/js/service/UnidadeMedidaService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
+  import AreaService from "../../../assets/js/service/area/AreaService";
+  import ProdutoService from "../../../assets/js/service/produto/ProdutoService";
+  import SafraService from "../../../assets/js/service/safra/SafraService";
   export default {
     name: "SafraEdit",
     components: {
@@ -192,6 +193,10 @@
     },
     data(){
       return {
+        safraService: null,
+        produtoService: null,
+        areaService: null,
+        unidadeMedidaService: new UnidadeMedidaService(),
         currentStep: 'info',
         safra: null,
         areas: [],
@@ -240,20 +245,10 @@
         }
       },
       getSafraById: function(id){
-        safraService.getSafra(id).then(response => {
-          this.safra = new Safra(response.data);
+        this.safraService.getSafra(id).then(safra => {
+          this.safra = new Safra(safra);
           this.getTalhoesBySafraAndArea(this.safra.area.value)
         })
-
-        return new Promise((resolve, reject) => {
-          safraService.getSafra(id).then(response => {
-            this.safra = new Safra(response.data);
-            this.getTalhoesBySafraAndArea(this.safra.area.value)
-            resolve();
-          }).catch(error => {
-            reject();
-          })
-        });
       },
       getCulturasTamanhoTotal: function(){
         let tamanho = 0;
@@ -274,12 +269,10 @@
           });
           return;
         }
-        safraService.updateSafra(this.$route.params.id, this.safra.getValues()).then(response => {
-          if(response.status === 200) {
+        this.safraService.updateSafra(this.$route.params.id, this.safra.getValues()).then(() => {
             this.$q.notify({type: 'positive', message: 'Safra atualizada com sucesso'});
             this.$router.push({name: 'safras'});
             this.$root.$emit('refreshSafraList')
-          }
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
@@ -293,8 +286,8 @@
         this.safra.fim.value = value.toString();
       },
       getAreas: function(){
-        areaService.listAreas().then(response => {
-          this.areas = response.data.map(area => {
+        this.areaService.listAreas().then(areas => {
+          this.areas = areas.map(area => {
             return {
               label: area.nome,
               value: area.id
@@ -324,8 +317,8 @@
         })
       },
       getUnidadesMedida:function(){
-        unidadeMedidaService.listUnidadesMedida().then(response => {
-          this.unidadesMedida = response.data.map(unidade => {
+        this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
+          this.unidadesMedida = unidades.map(unidade => {
             return {
               label: unidade.nome,
               value: unidade
@@ -334,9 +327,9 @@
         })
       },
       searchProdutos (terms, done) {
-        produtoService.searchProdutos(terms).then(response => {
-          this.tempProdutoList = response;
-          done(response)
+        this.produtoService.searchProdutos(terms).then(produtos => {
+          this.tempProdutoList = produtos;
+          done(produtos)
         });
       },
       setProduto (item) {
@@ -416,16 +409,20 @@
       }
     },
     mounted(){
+      new AccountRepository().getFirst().then(account => {
+        this.areaService = new AreaService(account.produtor_id);
+        this.produtoService = new ProdutoService(account.produtor_id);
+        this.safraService = new SafraService(account.produtor_id);
+        this.getAreas();
+        this.getSafraById(this.$route.params.id).then(()=>{
+          this.makeYearsList(this.safra.inicio.value.toString());
+          this.selectedAnoFim = this.safra.fim.value.toString();
+        })
+      });
 
       //this.safra.inicio.value = this.getCurrentYear();
       //this.safra.fim.value = this.getCurrentYear();
-
-      this.getAreas();
       this.getUnidadesMedida();
-      this.getSafraById(this.$route.params.id).then(()=>{
-        this.makeYearsList(this.safra.inicio.value.toString());
-        this.selectedAnoFim = this.safra.fim.value.toString();
-      })
     }
   }
 

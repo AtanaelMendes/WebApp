@@ -89,11 +89,12 @@
 </template>
 
 <script>
-  import pessoaService from 'assets/js/service/PessoaService'
   import Negocio from 'assets/js/model/negocio/Negocio'
-  import negocioService from 'assets/js/service/negocio/NegocioService'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import customInputText from 'components/CustomInputText.vue'
+  import NegocioService from "../../assets/js/service/negocio/NegocioService";
+  import AccountRepository from "../../assets/js/repository/AccountRepository";
+  import PessoaService from "../../assets/js/service/PessoaService";
 
   export default {
     name: "NegocioModal",
@@ -109,6 +110,8 @@
     },
     data(){
       return {
+        pessoaServce: new PessoaService(),
+        negocioService: null,
         isModalOpened: false,
         isEditMode: false,
         currentStep: 'negociante',
@@ -136,20 +139,18 @@
         this.$emit('modal-closed')
       },
       getNegocioById: function(negocioId){
-        negocioService.getNegocioById(negocioId).then(response => {
-          this.fillFormNegocio(response.data)
+        this.negocioService.getNegocioById(negocioId).then(negocio => {
+          this.fillFormNegocio(negocio)
         });
       },
       saveNegocio: function(){
         if(!this.negocio.isValid()){
           return;
         }
-        negocioService.saveNegocio(this.negocio.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Negócio criado com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshNegocioList')
-          }
+        this.negocioService.saveNegocio(this.negocio.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Negócio criado com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshNegocioList')
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
@@ -158,12 +159,10 @@
         if (!this.negocio.isValid()) {
           return;
         }
-        negocioService.updateNegocio(this.negocio.id, this.negocio.getValues()).then(response => {
-          if (response.status === 200) {
-            this.$q.notify({type: 'positive', message: 'Negócio atualizado com sucesso!'});
-            this.closeModal();
-            this.$root.$emit('refreshNegocioList')
-          }
+        this.negocioService.updateNegocio(this.negocio.id, this.negocio.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Negócio atualizado com sucesso!'});
+          this.closeModal();
+          this.$root.$emit('refreshNegocioList')
         })
       },
       fillFormNegocio: function(negocio){
@@ -184,8 +183,8 @@
         }
       },
       searchPessoas: function (params) {
-        pessoaService.searchPessoaGroupedByGrupoEconomico(params).then(response => {
-          this.pessoas = response.data;
+        this.pessoaService.searchPessoaGroupedByGrupoEconomico(params).then(result => {
+          this.pessoas = result;
         });
       },
       isNextButtomEnabled: function(){
@@ -198,6 +197,11 @@
         this.$refs.stepper.next();
       },
     },
+    mounted() {
+      new AccountRepository().getFirst().then(account => {
+        this.negocioService = new NegocioService(account.produtor_id);
+      });
+    }
   }
 </script>
 

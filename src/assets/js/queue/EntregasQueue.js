@@ -1,11 +1,28 @@
-import requestQueueRepository from 'assets/js/repository/RequestQueueRepository'
-import QueueItem from "../model/QueueItem";
-class EntregasQueue{
-  add(request){
-    let queueItem = new QueueItem(request.url, 'entregas', request);
+import BaseQueue from "./BaseQueue";
 
-    return requestQueueRepository.save(queueItem)
+export default class EntregasQueue extends BaseQueue{
+
+  static NOVA_ENTREGA = 'nova_entrega';
+  static ENVIAR_PARA_ARMAZEM = 'enviar_para_armazem';
+  static INFORMAR_PESAGEM = 'informar_pesagem';
+  static NOVO_TALHAO = 'novo_talhao';
+
+  constructor() {
+    super('entregas');
+  }
+
+  getById(id){
+    return super.get(id);
+  }
+
+  getByUrlAndMethod(url, method) {
+    return super.getByUrlAndMethod(url, method);
+  }
+
+  add(request, type){
+    return super.add(request, type)
   };
+
   remove(){
 
   }

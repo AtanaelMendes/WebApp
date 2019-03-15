@@ -1,42 +1,49 @@
-import Vue from 'vue'
-const produtorId = localStorage.getItem('account.produtor_id');
-export default {
-  listNotas(filter){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios(
-        { url: 'lista-areas', baseURL: 'http://demo3716022.mockable.io/' }).then( response =>{
-        resolve(response);
-      }).catch(error =>{
-        reject(error)
-      })
-    });
-  },
-  getNotaById(id){
-    return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtorId + '/nota_fiscal/' + id).then(response => {
-        resolve(response);
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  },
+import Vue from 'vue';
+import NotaFiscalAPI from "../api/NotaFiscalAPI";
+import NotaFiscalSerieRepository from "../repository/resource/NotaFiscalSerieRepository";
+
+export default class NotaFiscalService {
+  #produtorId;
+  #notaFiscalSerieRepository;
+
+  constructor(produtor_id) {
+    this.produtorId = produtor_id;
+    this.notaFiscalSerieRepository = new NotaFiscalSerieRepository();
+  }
+
   getNotaFiscalItemById(id){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtorId + '/nota_fiscal_item/' + id).then(response => {
-        resolve(response);
+      NotaFiscalAPI.getNotaFiscalItemById(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   listSeries(){
     return new Promise((resolve, reject) => {
-      let produtor_id = localStorage.getItem('account.produtor_id');
-      Vue.prototype.$axios.get('/produtor/' + produtor_id + '/nota_fiscal_serie').then(response => {
-        resolve(response)
-      }).catch(error => {
-        reject(error)
-      })
+      if(Vue.prototype.serverStatus.isUp) {
+        NotaFiscalAPI.listSeries(this.produtorId).then(response => {
+          if(response.status === 200){
+            resolve(response.data);
+          }else{
+            reject(response);
+          }
+        }).catch(error => {
+          reject(error);
+        })
+      }else{
+        this.notaFiscalSerieRepository.getAll().then(notasFiscaisSeries => {
+          resolve(notasFiscaisSeries);
+        }).catch(error => {
+          reject(error);
+        })
+      }
     });
   }
 }

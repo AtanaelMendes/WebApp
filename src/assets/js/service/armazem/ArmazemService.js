@@ -1,24 +1,59 @@
-import Vue from 'vue'
-import { Loading, Dialog } from 'quasar'
-import AgroUtils from 'assets/js/AgroUtils'
-const produtorId = localStorage.getItem('account.produtor_id');
-export default {
+import Vue from 'vue';
+import ArmazemAPI from "../../api/ArmazemAPI";
+import ArmazemRepository from "../../repository/resource/ArmazemRepository";
+
+export default class ArmazemService{
+  #produtorId;
+  #armazemRepository;
+
+  constructor(produtor_id) {
+    this.produtorId = produtor_id;
+    this.armazemRepository = new ArmazemRepository();
+  }
+
   listArmazens() {
+    console.log('listArmazens')
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtorId + '/armazem').then(response => {
-        resolve(response);
-      }).catch(error => {
-        reject(error)
-      })
+      if(Vue.prototype.serverStatus.isUp) {
+        ArmazemAPI.listArmazens(this.produtorId).then(response => {
+          if(response.status === 200){
+            resolve(response.data);
+          }else{
+            reject(response);
+          }
+        }).catch(error => {
+          reject(error)
+        })
+      }else{
+        this.armazemRepository.getAll().then(armazens => {
+          resolve(armazens);
+        }).catch(error => {
+          reject(error)
+        })
+      }
     });
-  },
+  }
+
   listArmazensByEntrega(entregaId) {
+    console.log('listArmazensByEntrega')
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtorId + '/armazem/by_entrega/' + entregaId).then(response => {
-        resolve(response);
-      }).catch(error => {
-        reject(error)
-      })
+      if(Vue.prototype.serverStatus.isUp) {
+        ArmazemAPI.listArmazensByEntrega(entregaId, this.produtorId).then(response => {
+          if(response.status === 200){
+            resolve(response.data);
+          }else{
+            reject(response);
+          }
+        }).catch(error => {
+          reject(error);
+        })
+      }else{
+        this.armazemRepository.getAllByEntrega(entregaId).then(armazens => {
+          resolve(armazens);
+        }).catch(error => {
+          reject(error);
+        })
+      }
     });
-  },
+  }
 }

@@ -171,9 +171,10 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import talhaoService from 'assets/js/service/area/TalhaoService'
-  import areaService from 'assets/js/service/area/AreaService'
   import imapeUpload from 'components/ImageUpload'
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
+  import AreaService from "../../../assets/js/service/area/AreaService";
+  import TalhaoService from "../../../assets/js/service/area/TalhaoService";
 
   export default {
     name: "area-view",
@@ -191,8 +192,7 @@
     },
     computed: {
       areaImageUrl: function(){
-        let produtor_id = localStorage.getItem('account.produtor_id');
-        return '/produtor/' + produtor_id + '/area/' + this.selectedAreaId + '/image';
+        return '/produtor/' + this.produtorId + '/area/' + this.selectedAreaId + '/image';
       },
       talhaoImageUrl: function(){
         let area_id = this.$route.params.id;
@@ -210,6 +210,9 @@
     },
     data(){
       return{
+        produtorId: null, //TODO: Retirar daqui quando não tiver mais produtorId nos endpoints
+        areaService: null,
+        talhaoService: new TalhaoService(),
         area: null,
         talhoes: [],
         areaId: this.$route.params.id,
@@ -222,7 +225,7 @@
     },
     methods: {
       getAreaById: function(areaId){
-        areaService.getAreaById(areaId).then(area => {
+        this.areaService.getAreaById(areaId).then(area => {
           this.area = area
         })
       },
@@ -260,7 +263,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          areaService.archiveArea(this.areaId).then(response => {
+          this.areaService.archiveArea(this.areaId).then(() => {
             this.$q.notify({type: 'positive', message: 'Área arquivada'});
             this.$router.push({name:'areas'})
           })
@@ -273,7 +276,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          areaService.restoreArea(this.areaId).then(response => {
+          this.areaService.restoreArea(this.areaId).then(response => {
             this.$q.notify({type: 'positive', message: 'Área ativada'});
             this.getAreaById(this.$route.params.id);
           })
@@ -286,7 +289,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          areaService.deleteArea(this.areaId).then(response => {
+          this.areaService.deleteArea(this.areaId).then(() => {
             this.$q.notify({type: 'positive', message: 'Área excluida'});
             this.$router.push({name:'areas'})
 
@@ -295,8 +298,8 @@
         });
       },
       listTalhoes: function(id){
-        talhaoService.listTalhoes(id).then(talhoes => {
-          this.talhoes = talhoes.data;
+        this.talhaoService.listTalhoes(id).then(talhoes => {
+          this.talhoes = talhoes;
         })
       },
 
@@ -324,7 +327,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          talhaoService.archiveTalhao(this.areaId, talhaoId).then(response => {
+          this.talhaoService.archiveTalhao(this.areaId, talhaoId).then(() => {
             this.$q.notify({type: 'positive', message: 'Talhão arquivado com sucesso'});
             this.listTalhoes(this.$route.params.id);
           })
@@ -337,7 +340,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          talhaoService.restoreTalhao(this.areaId, talhaoId).then(response => {
+          this.talhaoService.restoreTalhao(this.areaId, talhaoId).then(() => {
             this.$q.notify({type: 'positive', message: 'Talhão ativado com suceso'});
             this.listTalhoes(this.$route.params.id);
           })
@@ -350,22 +353,26 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          talhaoService.deleteTalhao(this.areaId, talhaoId).then(response => {
+          this.talhaoService.deleteTalhao(this.areaId, talhaoId).then(response => {
             this.$q.notify({type: 'positive', message: 'Talhão excluido com sucesso'});
             this.listTalhoes(this.$route.params.id);
           })
         });
       },
       backAction: function () {
-        // this.$router.go(-1);
         this.$router.back()
       }
     },
     mounted(){
+      new AccountRepository().getFirst().then(account => {
+        this.areaService = new AreaService(account.produtor_id);
+        this.produtorId = account.produtor_id/
+        this.getAreaById(this.$route.params.id)
+      });
+
       this.$root.$on('refreshTalhaoList', () => {
         this.listTalhoes(this.$route.params.id);
       });
-      this.getAreaById(this.$route.params.id);
       this.listTalhoes(this.$route.params.id);
     }
   }

@@ -49,7 +49,10 @@
 
                   <!-- MOTORISTA -->
                   <q-item v-if="entrega.motorista">
-                    <q-item-side :avatar="makeUrl(entrega.motorista.image_file_name, '125x125')" />
+                    <q-item-side class="q-item-avatar">
+                      <ap-image size="125x125" :file-name="entrega.motorista.image_file_name" />
+                    </q-item-side>
+
                     <q-item-main>
                       <q-item-tile label>{{entrega.motorista.nome}}</q-item-tile>
                     </q-item-main>
@@ -173,7 +176,7 @@
                           </template>
                           <br />
                           {{numeral(negocio.negocio_cultura.quantidade).format('0,0')}}
-                          {{negocio.negocio_cultura.unidade_medida_sigla}} até
+                          {{negocio.negocio_cultura.unidade_medida.sigla}} até
                           {{moment(negocio.negocio_cultura.prazo_entrega_final).format('DD/MMM/YY')}}
                         </span>
 
@@ -183,7 +186,7 @@
                       <q-item-main>
                         <q-item-tile label>
                           {{numeral(negocio.quantidade).format('0,0')}}
-                          {{negocio.negocio_cultura.unidade_medida_sigla}}
+                          {{negocio.negocio_cultura.unidade_medida.sigla}}
                         </q-item-tile>
                         <q-item-tile sublabel>
                           Considerado no negócio
@@ -316,7 +319,9 @@
                       <q-item v-for="sct in entrega.safra_cultura.talhoes" :key="sct.safra_cultura_talhao.id">
 
                         <!-- IMAGEM TALHAO -->
-                        <q-item-side :image="makeUrl(sct.talhao.image_file_name, '200x125')" />
+                        <q-item-side class="q-item-image">
+                          <ap-image size="200x125" :file-name="sct.talhao.image_file_name" />
+                        </q-item-side>
 
                         <!-- TEXTO TALHAO -->
                         <q-item-main>
@@ -521,7 +526,6 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import pesagemService from 'assets/js/service/entrega/PesagemService'
-  import entregaService from 'assets/js/service/entrega/EntregaService'
   import sendEntregaModal from 'components/entrega/SendEntregaModal'
   import newPesagemModal from 'components/entrega/NewPesagemModal'
   import addTalhaoPercentageModal from 'components/entrega/AddTalhaoPercentageModal'
@@ -530,6 +534,8 @@
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
   import agroUtils from 'assets/js/AgroUtils'
+  import EntregaService from "../../../assets/js/service/entrega/EntregaService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
 
   export default {
     name: "carga-view",
@@ -546,12 +552,11 @@
     },
     data () {
       return {
+        entregaService: null,
         carga: true,
         entregaView: null,
         entrega: null,
       }
-    },
-    watch: {
     },
     computed: {
       statusIconColor: function() {
@@ -582,19 +587,39 @@
         this.$refs.sendEntregaModal.openModal('sendEntrega', entrega)
       },
       addNotaFiscal: function(negocio){
-        this.$refs.sendEntregaModal.openModal('addNota', negocio)
+        if(this.serverStatus.isUp){
+          this.$refs.sendEntregaModal.openModal('addNota', negocio)
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       updateNota: function(notaFiscalItem){
-        this.$refs.sendEntregaModal.openModal('updateNota', notaFiscalItem)
+        if(this.serverStatus.isUp){
+          this.$refs.sendEntregaModal.openModal('updateNota', notaFiscalItem)
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       novoNegocio: function(entrega){
-        this.$refs.sendEntregaModal.openModal('novoNegocio', entrega)
+        if(this.serverStatus.isUp){
+          this.$refs.sendEntregaModal.openModal('novoNegocio', entrega)
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       updateMotorista: function(entrega){
-        this.$refs.sendEntregaModal.openModal('updateMotorista', entrega)
+        if(this.serverStatus.isUp){
+          this.$refs.sendEntregaModal.openModal('updateMotorista', entrega)
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       updateArmazem: function(entrega){
-        this.$refs.sendEntregaModal.openModal('updateArmazem', entrega)
+        if(this.serverStatus.isUp){
+          this.$refs.sendEntregaModal.openModal('updateArmazem', entrega)
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       newPesagem: function(){
         if(this.entrega.negocios.length === 0){
@@ -610,78 +635,104 @@
 
       // TODO passar o id do caminhao no addTalhao
       addTalhao: function(entrega){
-        this.$refs.entregaModal.openModal(entrega)
+        if(this.serverStatus.isUp){
+          this.$refs.entregaModal.openModal(entrega)
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       addTalhaoPercentage: function(){
-        this.$refs.addTalhaoPercentageModal.openModal(this.entrega)
+        if(this.serverStatus.isUp){
+          this.$refs.addTalhaoPercentageModal.openModal(this.entrega)
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       openSetNegociosQuantidadeModal(entrega){
-        this.$refs.setNegociosQuantidadeModal.openModal(entrega);
+        if(this.serverStatus.isUp){
+          this.$refs.setNegociosQuantidadeModal.openModal(entrega);
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       viewNegocio(id){
-        this.$router.push({name: 'negocio_view', params: {id:id}});
+        if(this.serverStatus.isUp){
+          this.$router.push({name: 'negocio_view', params: {id:id}});
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       deleteTalhao: function(id){
-        this.$q.dialog({
-          title: 'Atenção',
-          message: 'Realmente deseja apagar este talhão?',
-          ok: 'Sim', cancel: 'Não',
-          color: 'primary'
-        }).then(data => {
-          this.$q.loading.show();
-          entregaService.delteTalhaoOfEntrega(this.entrega.id, id).then(response => {
-            if(response.status === 200) {
+        if(this.serverStatus.isUp){
+          this.$q.dialog({
+            title: 'Atenção',
+            message: 'Realmente deseja apagar este talhão?',
+            ok: 'Sim', cancel: 'Não',
+            color: 'primary'
+          }).then(data => {
+            this.$q.loading.show();
+            this.entregaService.delteTalhaoOfEntrega(this.entrega.id, id).then(response => {
               this.$q.notify({type: 'positive', message: 'Talhão removido com sucesso'});
               this.$q.loading.hide();
               this.getEntrega()
-            }
-          }).catch(error => {
-            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-            this.$q.loading.hide();
-          });
-        }).catch(()=>{});
+            }).catch(error => {
+              this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+              this.$q.loading.hide();
+            });
+          }).catch(()=>{});
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       deleteNegocio: function(id){
-        this.$q.dialog({
-          title: 'Atenção',
-          message: 'Realmente deseja apagar esta Negocio?',
-          ok: 'Sim', cancel: 'Não',
-          color: 'primary'
-        }).then(data => {
-          this.$q.loading.show();
-          entregaService.delteNegocioOfEntrega(this.entrega.id, id).then(response => {
-            if(response.status === 200) {
+        if(this.serverStatus.isUp){
+          this.$q.dialog({
+            title: 'Atenção',
+            message: 'Realmente deseja apagar esta Negocio?',
+            ok: 'Sim', cancel: 'Não',
+            color: 'primary'
+          }).then(data => {
+            this.$q.loading.show();
+            this.entregaService.deleteNegocioOfEntrega(this.entrega.id, id).then(response => {
               this.$q.notify({type: 'positive', message: 'Negócio removido com sucesso'});
-              this.getEntrega()
-            }
-            this.$q.loading.hide();
-          }).catch(error => {
-            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-            this.$q.loading.hide();
-          });
-        }).catch(()=>{});
+              this.getEntrega();
+              this.$q.loading.hide();
+            }).catch(error => {
+              this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+              this.$q.loading.hide();
+            });
+          }).catch(()=>{});
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
+
       },
       deletePesagem: function(id){
-        this.$q.dialog({
-          title: 'Atenção',
-          message: 'Realmente deseja apagar esta pesagem?',
-          ok: 'Sim', cancel: 'Não',
-          color: 'primary'
-        }).then(data => {
-          this.$q.loading.show();
-          pesagemService.deletePesagem(this.entrega.id, id).then(response => {
-            this.$q.loading.hide();
-            this.getEntrega()
-          }).catch(error => {
-            this.$q.loading.hide();
-          })
-        }).catch(()=>{});
+        if(this.serverStatus.isUp){
+          this.$q.dialog({
+            title: 'Atenção',
+            message: 'Realmente deseja apagar esta pesagem?',
+            ok: 'Sim', cancel: 'Não',
+            color: 'primary'
+          }).then(data => {
+            this.$q.loading.show();
+            pesagemService.deletePesagem(this.entrega.id, id).then(() => {
+              this.$q.loading.hide();
+              this.getEntrega()
+            }).catch(error => {
+              this.$q.loading.hide();
+            })
+          }).catch(()=>{});
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
+
       },
       getEntrega: function(){
         this.$q.loading.show();
-        entregaService.getEntregaById(this.$route.params.id).then(response => {
+        this.entregaService.getEntregaById(this.$route.params.id).then(entrega => {
           this.$q.loading.hide();
-          this.entrega = response.data;
+          this.entrega = entrega;
         }).catch(error => {
           this.$q.loading.hide();
         })
@@ -691,7 +742,10 @@
       },
     },
     mounted () {
-      this.getEntrega()
+      new AccountRepository().getFirst().then(account => {
+        this.entregaService = new EntregaService(account.produtor_id);
+        this.getEntrega();
+      });
       this.$root.$on('refreshEntregaView', () => {
         this.getEntrega()
       });

@@ -1,12 +1,14 @@
-import Vue from 'vue'
-import { Loading, Dialog } from 'quasar'
 import AgroUtils from 'assets/js/AgroUtils'
-const produtorId = localStorage.getItem('account.produtor_id');
-export default {
-  listProdutor: function(){
+import UserAPI from "../api/UserAPI";
+
+export default class UserService{
+  constructor() {
+  }
+
+  listProdutores(){
     return new Promise((resolve, reject) => {
-      this.getListProdutor(produtorId).then(response => {
-        let produtorOptions = response.data.map(data => {
+      this.getListProdutor().then(produtores => {
+        let produtorOptions = produtores.map(data => {
           return {
             value: data.id,
             label: data.nome
@@ -17,80 +19,90 @@ export default {
         reject(error)
       })
     })
-  },
-  getListProdutor(id){
+  };
+
+  getListProdutor(){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'produtor' ).then( response => {
-        resolve(response);
+      UserAPI.listProdutores().then( response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   saveProdutor(params){
     return new Promise((resolve, reject) => {
-      Loading.show();
-      Vue.prototype.$axios.post('produtor', params).then(response => {
+      UserAPI.saveProdutor(params).then(response => {
         if (response.status === 201) {
-          Loading.hide();
           resolve(response)
         }
       }).catch(error => {
-        Loading.hide();
         reject(error)
       })
     });
-  },
+  };
+
   listAccounts(filter){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get( 'account?' + AgroUtils.serialize(filter) ).then( response => {
-        resolve(response);
+      UserAPI.listAccounts(AgroUtils.serialize(filter)).then( response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   getAccount(accountId){
     return new Promise((resolve, reject) => {
-      Loading.show();
-      Vue.prototype.$axios.get('account/' + accountId).then(response => {
-        Loading.hide();
-        resolve(response);
-
+      UserAPI.getAccount(accountId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
-        Loading.hide();
         reject(error);
       })
     });
-  },
+  };
+
   saveAccount(params){
     return new Promise((resolve, reject) => {
-      Loading.show();
-      Vue.prototype.$axios.post('account', params).then(response => {
-        if (response.status === 201) {
-          Loading.hide();
-          resolve(response)
+      UserAPI.saveAccount(params).then(response => {
+        if(response.status === 201){
+          resolve(response.data);
+        }else{
+          reject(response);
         }
       }).catch(error => {
-        Loading.hide();
         reject(error)
       })
     });
-  },
+  };
+
   updateAccount(params, accountId){
     return new Promise((resolve, reject) => {
-      Loading.show();
-      Vue.prototype.$axios.put('account/' + accountId, params).then(response => {
-        if (response.status === 200) {
-          Loading.hide();
-          resolve(response)
+      UserAPI.updateAccount(params, accountId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
         }
       }).catch(error => {
-        Loading.hide();
         reject(error)
       })
     });
-  },
+  };
+
   openRolesDialog(selectedRoles, roles){
     return new Promise((resolve, reject) => {
       Dialog.create({
@@ -110,7 +122,8 @@ export default {
         reject(error)
       })
     });
-  },
+  };
+
   removeRole(selectedRoles, role){
     return new Promise((resolve, reject) => {
       Dialog.create({
@@ -128,16 +141,18 @@ export default {
         reject(error)
       })
     });
-  },
+  };
+
   listRoles(){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('role').then(response => {
+      UserAPI.listRoles().then(response => {
         resolve(response.data);
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   getIdsByRoles(roles) {
     let rolesIds = [];
     roles.forEach(function (role) {

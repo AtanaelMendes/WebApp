@@ -111,8 +111,9 @@
   import customInputText from 'components/CustomInputText.vue'
   import Area from 'assets/js/model/area/Area'
   import Talhao from 'assets/js/model/area/Talhao'
-  import AreaService from 'assets/js/service/area/AreaService'
   import UnidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
+  import AreaService from "../../../assets/js/service/area/AreaService";
   export default {
     name: "AreaAdd",
     components: {
@@ -122,6 +123,7 @@
     },
     data(){
       return {
+        areaService: null,
         localizacaoSearchTerms: '',
         newTalhaoDialog: false,
         novoTalhao: new Talhao(),
@@ -193,17 +195,20 @@
         if(!this.area.isValid()){
           return;
         }
-        AreaService.saveArea(this.area.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Area criada com sucesso'});
-            this.$router.push({name: 'areas'});
-            this.$root.$emit('refreshAreaList')
-          }
+        this.areaService.saveArea(this.area.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Area criada com sucesso'});
+          this.$router.push({name: 'areas'});
+          this.$root.$emit('refreshAreaList')
         });
       },
       backAction: function () {
         this.$router.back()
       }
+    },
+    mounted() {
+      new AccountRepository().getFirst().then(account => {
+        this.areaService = new AreaService(account.produtor_id);
+      });
     }
   }
 </script>

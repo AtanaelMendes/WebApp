@@ -22,8 +22,8 @@
   import customInputText from 'components/CustomInputText.vue'
   import localizacaoSelect from 'components/LocalizacaoSelect.vue'
   import area from 'assets/js/model/area/Area'
-  import areaService from 'assets/js/service/area/AreaService'
-  import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
+  import AreaService from "../../../assets/js/service/area/AreaService";
   export default {
     name: "area-edit",
     components: {
@@ -34,6 +34,8 @@
     },
     data(){
       return {
+        localizacaoService: null,
+        areaService: null,
         localizacaoOptions: [],
         area: new area(),
       }
@@ -48,13 +50,19 @@
         this.area.nome.value = area.nome
         this.area.localizacao.value = area.localizacao.id
       },
-      listLocalizacao: function(){
-        localizacaoService.listLocalizacao().then(response => {
-          this.localizacaoOptions = response;
+      listLocalizacoesByProdutor(produtorId){
+        this.localizacaoService.listLocalizacoesByProdutor(produtorId).then(localizacoes => {
+          this.localizacaoOptions = localizacoes.map(local => {
+            return {
+              value: local.id,
+              label: local.endereco +', '+ local.numero,
+              sublabel: local.bairro +', '+ local.cidade.nome +'-'+ local.cidade.estado.sigla
+            }
+          });
         })
       },
       getAreaById: function(areaId){
-        areaService.getAreaById(areaId).then(area => {
+        this.areaService.getAreaById(areaId).then(area => {
           this.fillForm(area)
         })
       },
@@ -62,21 +70,22 @@
         if(!this.area.isValid()){
           return;
         }
-        areaService.updateArea(this.$route.params.id, this.area.getValues()).then(response => {
-          if(response.status === 200) {
-            this.$q.notify({type: 'positive', message: 'Area atualizada com sucesso'});
-            this.$root.$emit('refreshAreaList');
-            this.$router.go(-1);
-          }
+        this.areaService.updateArea(this.$route.params.id, this.area.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Area atualizada com sucesso'});
+          this.$root.$emit('refreshAreaList');
+          this.$router.back();
         });
       },
       backAction: function () {
-        this.$router.back()
+        this.$router.back();
       }
     },
     mounted() {
-      this.listLocalizacao();
-      this.getAreaById(this.$route.params.id)
+      new AccountRepository().getFirst().then(account => {
+        this.areaService = new AreaService(account.produtor_id);
+        this.getAreaById(this.$route.params.id)
+        this.listLocalizacoesByProdutor(account.produtor_id);
+      });
     }
   }
 </script>

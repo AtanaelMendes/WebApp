@@ -28,7 +28,7 @@
   import customInputText from 'components/CustomInputText.vue'
   import unidadeAreaSelect from 'components/UnidadeAreaSelect.vue'
   import talhao from 'assets/js/model/area/Talhao'
-  import talhaoService from 'assets/js/service/area/TalhaoService'
+  import TalhaoService from "../../../../assets/js/service/area/TalhaoService";
   export default {
     name: "talhao-add",
     components: {
@@ -39,6 +39,7 @@
     },
     data(){
       return {
+        talhaoService: new TalhaoService(),
         unidadeAreaOptions: [],
         talhao: new talhao(),
         talhaoData: null,
@@ -54,26 +55,23 @@
         this.talhao.unidadeAreaId.value = data.unidade.id
       },
       getTalhaoById: function(){
-        talhaoService.getTalhaoById(this.areaId, this.talhaoId).then(data => {
-          this.fillForm(data);
-          this.talhaoData = data
+        this.talhaoService.getTalhaoById(this.areaId, this.talhaoId).then(talhao => {
+          this.fillForm(talhao);
+          this.talhaoData = talhao
         })
       },
       updatetalhao: function(){
         if(!this.talhao.isValid()){
           return;
         }
-        talhaoService.updateTalhao(this.areaId, this.talhaoId, this.talhao.getValues()).then(response => {
-          if(response.status === 200) {
+        this.talhaoService.updateTalhao(this.areaId, this.talhaoId, this.talhao.getValues()).then(() => {
             this.$q.notify({type: 'positive', message: 'Talhão atualizado com sucesso'});
             this.$root.$emit('refreshTalhaoList');
-            this.$router.go(-1);
-            // this.$router.push({name: 'areas'});
-          }
+            this.$router.back();
         });
       },
       listUnidadesArea: function(){
-        talhaoService.listUnidadesArea().then(response => {
+        this.talhaoService.listUnidadesArea().then(response => {
           this.unidadeAreaOptions = response;
         })
       },

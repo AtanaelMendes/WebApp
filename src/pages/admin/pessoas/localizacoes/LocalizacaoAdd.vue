@@ -64,7 +64,8 @@
   import customInputText from 'components/CustomInputText.vue'
   import cidadeAutocomplete from 'components/CidadeAutocomplete.vue'
   import Localizacao from 'assets/js/model/localizacao/Localizacao'
-  import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
+  import LocalizacaoService from "../../../../assets/js/service/localizacao/LocalizacaoService";
+
   export default {
     name: "localizacao-add",
     components: {
@@ -75,6 +76,7 @@
     },
     data(){
       return {
+        localizacaoService: new LocalizacaoService(),
         typeError: null,
         localizacao: new Localizacao(),
         isLoadingAddress: false,
@@ -95,16 +97,16 @@
         if(!this.localizacao.isValid()){
           return
         }
-        localizacaoService.saveLocalizacao(this.$route.params.id, this.localizacao.getValues()).then( response => {
+        this.localizacaoService.saveLocalizacao(this.$route.params.id, this.localizacao.getValues()).then( response => {
           this.$q.notify({type: 'positive', message: 'Localização criada com sucesso'});
-          this.$router.go(-1);
+          this.$router.back();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: error.request.response})
         })
       },
       getLocationByCEP: function(cep){
         this.isLoadingAddress = true;
-        localizacaoService.getAddressByCEP(cep).then(address => {
+        this.localizacaoService.getAddressByCEP(cep).then(address => {
           this.localizacao.endereco.value = address.endereco;
           this.localizacao.bairro.value = address.bairro;
           this.localizacao.cidadeId.value = address.cidade.id;

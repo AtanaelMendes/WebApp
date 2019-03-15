@@ -61,8 +61,8 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import pessoaService from 'assets/js/service/PessoaService'
   import apNoResults from 'components/ApNoResults'
+  import PessoaService from "../../../assets/js/service/PessoaService";
 
   export default {
     name: "PessoasList",
@@ -73,6 +73,7 @@
     },
     data () {
       return {
+        pessoaService: new PessoaService(),
         pessoas: [],
         isEmptyList: false,
         filter: {
@@ -95,8 +96,8 @@
         this.filter.email = val;
       },
       list: function(filter) {
-        pessoaService.listPessoas(filter).then(response => {
-          this.pessoas = response.data;
+        this.pessoaService.listPessoas(filter).then(pessoas => {
+          this.pessoas = pessoas;
           this.isEmptyList = this.pessoas.length === 0;
         });
       },

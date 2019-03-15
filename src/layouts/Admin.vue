@@ -8,17 +8,30 @@
         <span class="profile-name">{{currentAccount.name}}</span>
         <span class="profile-email">{{currentAccount.email}}</span>
         <div>
-          <q-btn flat round dense class="network_status_icon" @click="showOfflineAlertDialog" v-if="isOffline" >
+          <q-btn flat round dense class="network_status_icon" @click="showOfflineAlertDialog" v-if="isOfflineStatusBarVisible" >
             <q-icon name="mdi-alert" color="warning"/>
           </q-btn>
           <q-btn flat round dense class="settings_icon">
             <q-icon name="settings" />
             <q-popover>
               <q-list link class="scroll" style="min-width: 200px">
-                <!--<q-item @click.native="">
+                <q-item @click.native="">
+                  <q-item-side left>
+                    <q-item-tile icon="mdi-account" />
+                  </q-item-side>
                   <q-item-main label="Minha conta" />
-                </q-item>-->
+                </q-item>
+                <q-item @click.native="getAccountInfo()">
+                  <q-item-side left>
+                    <q-item-tile icon="mdi-sync" />
+                  </q-item-side>
+                  <q-item-main label="Sincronizar" />
+                </q-item>
+                <q-item-separator />
                 <q-item @click.native="logout()">
+                  <q-item-side left>
+                    <q-item-tile icon="mdi-power" color="red" />
+                  </q-item-side>
                   <q-item-main label="Sair" />
                 </q-item>
               </q-list>
@@ -97,12 +110,6 @@
           <q-item-main label="Caminhões" />
         </q-item>
 
-        <!--&lt;!&ndash;TESTE&ndash;&gt;-->
-        <!--<q-item @click.native="$router.push({name:'teste'})">-->
-          <!--<q-item-side icon="mdi-close-circle-outline"/>-->
-          <!--<q-item-main label="Teste" />-->
-        <!--</q-item>-->
-
       </q-list>
     </q-layout-drawer>
 
@@ -112,7 +119,7 @@
     </q-page-container>
 
     <!--<q-dialog v-model="isNetworkErrorDialogOpen">-->
-    <q-dialog v-model="isNetworkErrorDialogOpen">
+    <q-dialog v-model="isNetworkErrorDialogOpen" ref="isNetworkErrorDialogOpen">
       <div slot="title"></div>
       <div slot="body" align="center">
         <q-icon name="mdi-wifi-off" size="50px"/>
@@ -123,6 +130,9 @@
       </template>
     </q-dialog>
 
+
+    <forbidden-access-dialog></forbidden-access-dialog>
+    <sync-progress-dialog ref="syncProgressDialog"></sync-progress-dialog>
 
     <q-layout-footer v-model="offlineStatusBar" >
       <div class="offline-status-bar">
@@ -143,48 +153,40 @@
 </template>
 
 <script>
-  import accountService from 'assets/js/service/AccountService'
-  import NetworkStateMixin from 'components/mixins/NetworkStateMixin'
   import {version} from '../../package.json';
-  import SyncService from "../assets/js/service/SyncService";
+  import SyncService from "../assets/js/service/sync/SyncService";
+  import AccountService from "../assets/js/service/AccountService";
+  import ForbiddenAccessDialog from "../components/offline/ForbiddenAccessDialog";
+  import SyncProgressDialog from "../components/offline/SyncProgressDialog";
+  import ServiceMessage from '../assets/js/serviceWorker/ServiceMessage';
   export default {
     name: 'Admin',
-    mixins: [NetworkStateMixin],
+    components:{
+      SyncProgressDialog,
+      ForbiddenAccessDialog
+    },
     data () {
       return {
+        accountService: new AccountService(),
+        syncService: null,
         leftDrawerOpen: this.$q.platform.is.desktop,
         currentAccount: {
           name: null,
           email: null
         },
-        isOfflineStatusBarVisible: true,
+        isOfflineStatusBarVisible: false,
         isNetworkErrorDialogOpen: false,
       }
     },
     mounted(){
       this.getAccountInfo();
+      //TODO: Registrar o service worker manualmente
+      //TODO: Esse método só pode ser chamado depois que o serviceWorker for iniciado
 
       this.$root.$on('toogleLeftDrawer', this.toogleLeftDrawer);
 
-      this.$on('offline', () => {
-        this.showOfflineStatusBar();
-      });
-
-      this.$on('online', () => {
-        //alert('You are online!')
-      });
-
-
       if('serviceWorker' in navigator){
-        navigator.serviceWorker.addEventListener('message', function(event){
-          switch (event.data) {
-            case 'sync':
-              new SyncService().doSync();
-              break;
-          }
-          //console.log("Client 1 Received Message: " + event.data);
-          //event.ports[0].postMessage("Client 1 Says 'Hello back!'");
-        });
+        navigator.serviceWorker.addEventListener('message', this.serviceWorkerMessageEvent);
       }
 
     },
@@ -193,10 +195,29 @@
         return version;
       },
       offlineStatusBar(){
-        return this.isOffline && this.isOfflineStatusBarVisible;
+        return this.isOfflineStatusBarVisible;
       }
     },
     methods: {
+      serviceWorkerMessageEvent(event){
+        switch (event.data.type) {
+          case ServiceMessage.SYNC:
+            this.$refs.syncProgressDialog.openModal();
+            this.syncService.doSync().then(()=>{
+              this.$refs.syncProgressDialog.closeModal();
+              event.ports[0].postMessage("queueSyncFinished");
+            });
+            break;
+          case ServiceMessage.SERVER_STATUS:
+            if(event.data.payload){
+              this.hideOfflineStatusBar();
+              this.getAccountInfo();
+            }else{
+              this.showOfflineStatusBar();
+            }
+            break;
+        }
+      },
       showOfflineAlertDialog(){
         this.isNetworkErrorDialogOpen = true;
       },
@@ -206,11 +227,19 @@
       showOfflineStatusBar(){
         this.isOfflineStatusBarVisible = true;
       },
-      getAccountInfo: function(){
-        this.$axios.get( 'account/info').then( response => {
-          this.currentAccount.name = response.data.nome;
-          this.currentAccount.email = response.data.email;
-          localStorage.setItem( 'account.produtor_id', response.data.produtor_id);
+      getAccountInfo(){
+        this.accountService.getInfo().then(info => {
+          this.currentAccount.name = info.nome;
+          this.currentAccount.email = info.email;
+
+          this.syncService = new SyncService(info.produtor_id);
+          this.$refs.syncProgressDialog.openModal();
+          this.syncService.doSync().then(()=>{
+            this.$refs.syncProgressDialog.closeModal();
+          }).catch(error => {
+            this.$refs.syncProgressDialog.closeModal();
+            console.log("Erro ao sincronizar")
+          })
         })
       },
       toogleLeftDrawer() {
@@ -223,12 +252,16 @@
           ok: 'Sair',
           cancel: 'Cancelar'
         }).then(data => {
-          accountService.logout().then(()=>{
+          this.accountService.logout().then(()=>{
             this.$router.push('/login');
           })
         });
 
-
+      }
+    },
+    destroyed() {
+      if('serviceWorker' in navigator){
+        navigator.serviceWorker.removeEventListener('message', this.serviceWorkerMessageEvent);
       }
     }
   }

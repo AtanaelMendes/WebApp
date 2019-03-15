@@ -255,18 +255,19 @@
   </q-modal>
 </template>
 <script>
-  import entregaService from 'assets/js/service/entrega/EntregaService'
-  import armazemService from 'assets/js/service/armazem/ArmazemService'
-  import motoristaService from 'assets/js/service/motorista/MotoristaService'
-  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
   import SendEntrega from 'assets/js/model/entrega/SendEntrega'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
-  import negocioService from 'assets/js/service/negocio/NegocioService'
-  import notaFiscalService from 'assets/js/service/NotaFiscalService'
-  import cfopService from 'assets/js/service/CfopService'
   import apImage from 'components/ApImage'
   import AgroUtils from "../../assets/js/AgroUtils";
+  import AccountRepository from "../../assets/js/repository/AccountRepository";
+  import NegocioService from "../../assets/js/service/negocio/NegocioService";
+  import MotoristaService from "../../assets/js/service/motorista/MotoristaService";
+  import ArmazemService from "../../assets/js/service/armazem/ArmazemService";
+  import NotaFiscalService from "../../assets/js/service/NotaFiscalService";
+  import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
+  import EntregaService from "../../assets/js/service/entrega/EntregaService";
+  import CfopService from "../../assets/js/service/CfopService";
 
   export default {
     name: "stepper-send-carga",
@@ -277,6 +278,13 @@
     },
     data () {
       return {
+        entregaService: null,
+        unidadeMedidaService: new UnidadeMedidaService(),
+        cfopService: new CfopService(),
+        armazemService: null,
+        negocioService: null,
+        motoristaService: null,
+        notaFiscalService: null,
         currentStep: 'negocio',
         sendEntrega: new SendEntrega(),
         isModalOpened: false,
@@ -326,9 +334,16 @@
           this.sendEntrega.valor = this.sendEntrega.total
         }
       },
-      openModal: function(funcao, object = null){
+      openModal: async function(funcao, object = null){
+        let account = await new AccountRepository().getFirst();
+        this.entregaService = new EntregaService(account.produtor_id);
+        this.armazemService = new ArmazemService(account.produtor_id);
+        this.negocioService = new NegocioService(account.produtor_id);
+        this.motoristaService = new MotoristaService(account.produtor_id);
+        this.notaFiscalService = new NotaFiscalService(account.produtor_id);
+
         this.funcao = funcao;
-        this.sendEntrega = new SendEntrega()
+        this.sendEntrega = new SendEntrega();
         switch (funcao) {
           case 'sendEntrega':
             this.currentStep = 'negocio';
@@ -386,7 +401,7 @@
         this.listNegocioCulturas();
         this.listMotoristas();
         this.getUnidadesMedida();
-        this.listNotasFiscaisSeries(1)
+        this.listNotasFiscaisSeries()
       },
       closeModal: function(){
         this.isModalOpened = false;
@@ -442,8 +457,8 @@
         let entregaId = this.$route.params.id;
         this.$q.loading.show();
 
-        negocioService.listAvaliablesNegociosCulturasForEntrega(entregaId).then(response => {
-          this.negocioCulturas = response.data;
+        this.negocioService.listAvaliablesNegociosCulturasForEntrega(entregaId).then(negociosCulturas => {
+          this.negocioCulturas = negociosCulturas;
 
           if(this.funcao === 'novoNegocio'){
             this.negocioCulturas = this.negocioCulturas.filter(negocioCultura => {
@@ -459,8 +474,8 @@
       },
       listNegociosCulturasByProdutor(){
         this.$q.loading.show();
-        negocioService.listNegociosCulturasByProdutor().then(response => {
-          this.negocioCulturas = response.data;
+        this.negocioService.listNegociosCulturasByProdutor().then(negocios => {
+          this.negocioCulturas = negocios;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
@@ -474,8 +489,8 @@
       },
       listArmazensByNegocioCultura: function(negocioCulturaId){
         this.$q.loading.show();
-        negocioService.listArmazensByNegocioCultura(negocioCulturaId).then(response => {
-          this.armazens = response.data;
+        this.negocioService.listArmazensByNegocioCultura(negocioCulturaId).then(armazens => {
+          this.armazens = armazens;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
@@ -488,7 +503,7 @@
         }
 
         this.$q.loading.show();
-        armazemService.listArmazensByEntrega(entrega.id).then(response => {
+        this.armazemService.listArmazensByEntrega(entrega.id).then(response => {
           //TODO: Remover o armazem já selecionadooo
           this.armazens = response.data;
           this.$q.loading.hide();
@@ -498,7 +513,7 @@
       },
       listArmazensByProdutor(){
         this.$q.loading.show();
-        armazemService.listArmazens().then(response => {
+        this.armazemService.listArmazens().then(response => {
           this.armazens = response.data;
           this.$q.loading.hide();
         }).catch(error => {
@@ -511,8 +526,8 @@
       },
       listMotoristas: function(){
         this.$q.loading.show();
-        motoristaService.listMotoristas().then(response => {
-          this.motoristas = response.data;
+        this.motoristaService.listMotoristas().then(motoristas => {
+          this.motoristas = motoristas;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
@@ -523,25 +538,27 @@
         this.goToNextStep()
       },
       newMotoristaDialog: function(){
-        this.$q.dialog({
-          title: 'Novo motorista',
-          //message: 'Modern front-end framework on steroids.',
-          prompt: {
-            model: '',
-            type: 'text' // optional
-          },
-          cancel: true,
-          color: 'secondary'
-        }).then(data => {
-          this.$q.loading.show();
-          motoristaService.saveMotorista({nome: data}).then(response => {
-            if(response.status === 201){
-              this.sendEntrega.motoristaId = response.data.id;
+        if(this.serverStatus.isUp){
+          this.$q.dialog({
+            title: 'Novo motorista',
+            //message: 'Modern front-end framework on steroids.',
+            prompt: {
+              model: '',
+              type: 'text' // optional
+            },
+            cancel: true,
+            color: 'secondary'
+          }).then(data => {
+            this.$q.loading.show();
+            this.motoristaService.saveMotorista({nome: data}).then(motorista => {
+              this.sendEntrega.motoristaId = motorista.id;
               this.listMotoristas();
               this.$q.loading.hide();
-            }
-          })
-        }).catch(() => {})
+            })
+          }).catch(() => {})
+        }else{
+          this.$root.$emit('openForbiddenAccessDialog');
+        }
       },
       save:function(){
         switch (this.funcao) {
@@ -568,14 +585,13 @@
       saveSendEntrega: function(){
         let entregaId = this.$route.params.id;
         this.$q.loading.show();
-        entregaService.sendEntregaToArmazen(entregaId, this.sendEntrega.getValues(this.hasNotaFiscal)).then(response => {
-          if(response.status === 200) {
-            this.$q.notify({type: 'positive', message: 'Carga enviada com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshEntregasList', 'all');
-            this.$root.$emit('refreshEntregaView')
-          }
+        this.entregaService.sendEntregaToArmazen(entregaId, this.sendEntrega.getValues(this.hasNotaFiscal)).then(response => {
+          this.$q.notify({type: 'positive', message: 'Carga enviada com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshEntregasList', 'all');
+          this.$root.$emit('refreshEntregaView');
           this.$q.loading.hide();
+          this.$router.back();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           this.$q.loading.hide();
@@ -584,13 +600,11 @@
       addNegocioToEntrega: function(){
         let entregaId = this.$route.params.id;
         this.$q.loading.show();
-        entregaService.addNegocioToEntrega(entregaId, this.sendEntrega.getValues(this.hasNotaFiscal)).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Negócio adicionado com sucesso'});
-            this.closeModal();
-            this.$q.loading.hide();
-            this.$root.$emit('refreshEntregaView')
-          }
+        this.entregaService.addNegocioToEntrega(entregaId, this.sendEntrega.getValues(this.hasNotaFiscal)).then(response => {
+          this.$q.notify({type: 'positive', message: 'Negócio adicionado com sucesso'});
+          this.closeModal();
+          this.$q.loading.hide();
+          this.$root.$emit('refreshEntregaView');
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           this.$q.loading.hide();
@@ -603,12 +617,10 @@
           motorista_nome: null
         };
         this.$q.loading.show();
-        entregaService.updateMotorista(entregaId, param).then(response => {
-          if(response.status === 200) {
-            this.$q.notify({type: 'positive', message: 'Motorista atualizado com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshEntregaView')
-          }
+        this.entregaService.updateMotorista(entregaId, param).then(() => {
+          this.$q.notify({type: 'positive', message: 'Motorista atualizado com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshEntregaView');
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -621,12 +633,10 @@
           armazem_id: this.sendEntrega.armazemId,
         };
         this.$q.loading.show();
-        entregaService.updateArmazem(entregaId, param).then(response => {
-          if(response.status === 200) {
-            this.$q.notify({type: 'positive', message: 'Armazem atualizado com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshEntregaView')
-          }
+        this.entregaService.updateArmazem(entregaId, param).then(() => {
+          this.$q.notify({type: 'positive', message: 'Armazem atualizado com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshEntregaView')
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -637,12 +647,10 @@
         let entregaId = this.$route.params.id;
 
         this.$q.loading.show();
-        entregaService.addNotaFiscalToNegocio(entregaId, this.selectedNegocio.id, this.sendEntrega.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Nota criada com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshEntregaView')
-          }
+        this.entregaService.addNotaFiscalToNegocio(entregaId, this.selectedNegocio.id, this.sendEntrega.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Nota criada com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshEntregaView')
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -653,12 +661,10 @@
         let entregaId = this.$route.params.id;
 
         this.$q.loading.show();
-        entregaService.updateNotaFiscalItemOfNegocio(entregaId, this.selectedNota.id, this.sendEntrega.getValues()).then(response => {
-          if(response.status === 200) {
-            this.$q.notify({type: 'positive', message: 'Nota atualizada com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshEntregaView')
-          }
+        this.entregaService.updateNotaFiscalItemOfNegocio(entregaId, this.selectedNota.id, this.sendEntrega.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Nota atualizada com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshEntregaView');
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -669,8 +675,8 @@
         this.$refs.stepper.next();
       },
       getUnidadesMedida:function(){
-        unidadeMedidaService.listUnidadesMedida().then(response => {
-          this.unidadesMedida = response.data;
+        this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
+          this.unidadesMedida = unidades;
         })
       },
       parseUnidadesMedida(unidadesMedida){
@@ -681,9 +687,9 @@
           }
         })
       },
-      listNotasFiscaisSeries(pessoa_id){
-        notaFiscalService.listSeries(pessoa_id).then(response => {
-          this.notasFiscaisSeries = response.data;
+      listNotasFiscaisSeries(){
+        this.notaFiscalService.listSeries().then(series => {
+          this.notasFiscaisSeries = series;
         })
       },
       changeNumeroSerie(){
@@ -702,13 +708,11 @@
       },
       getCfopByNumero(){
         let numero = this.cfopSearchText;
-        cfopService.getCfopByNumero(numero).then(response => {
-          if(response.status === 200){
-            this.cfopDescricao = response.data.descricao;
-            this.sendEntrega.cfopId = response.data.id;
-            this.sendEntrega.is_saida = response.data.is_saida;
-            this.cfopError = false;
-          }
+        this.cfopService.getCfopByNumero(numero).then(cfop => {
+          this.cfopDescricao = cfop.descricao;
+          this.sendEntrega.cfopId = cfop.id;
+          this.sendEntrega.is_saida = cfop.is_saida;
+          this.cfopError = false;
         }).catch(error => {
           this.cfopDescricao = null;
           this.cfopError = true;
@@ -718,17 +722,17 @@
       },
       getNotaFiscalItem(id){
         this.$q.loading.show();
-        notaFiscalService.getNotaFiscalItemById(id).then(response => {
-          this.sendEntrega.serieId = response.data.nota_fiscal.serie.id;
-          this.sendEntrega.notaNumero = response.data.nota_fiscal.numero;
-          this.sendEntrega.emissao.value = response.data.nota_fiscal.emissao;
-          this.sendEntrega.unidadeMedidaId = response.data.unidade_medida_id;
-          this.sendEntrega.peso = response.data.quantidade;
-          this.sendEntrega.valor = response.data.valor_unitario;
-          this.sendEntrega.total = response.data.valor_total;
-          this.cfopSearchText = response.data.cfop.numero;
-          this.sendEntrega.cfopId = response.data.cfop.id;
-          this.sendEntrega.is_saida = response.data.cfop.is_saida;
+        this.notaFiscalService.getNotaFiscalItemById(id).then(notaFiscalItem => {
+          this.sendEntrega.serieId = notaFiscalItem.nota_fiscal.serie.id;
+          this.sendEntrega.notaNumero = notaFiscalItem.nota_fiscal.numero;
+          this.sendEntrega.emissao.value = notaFiscalItem.nota_fiscal.emissao;
+          this.sendEntrega.unidadeMedidaId = notaFiscalItem.unidade_medida_id;
+          this.sendEntrega.peso = notaFiscalItem.quantidade;
+          this.sendEntrega.valor = notaFiscalItem.valor_unitario;
+          this.sendEntrega.total = notaFiscalItem.valor_total;
+          this.cfopSearchText = notaFiscalItem.cfop.numero;
+          this.sendEntrega.cfopId = notaFiscalItem.cfop.id;
+          this.sendEntrega.is_saida = notaFiscalItem.cfop.is_saida;
 
           this.getCfopByNumero();
           this.$q.loading.hide();

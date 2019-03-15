@@ -76,10 +76,11 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
-  import userService from 'assets/js/service/UserService'
   import Produtor from 'assets/js/model/produtor/Produtor'
   import User from 'assets/js/model/usuario/Usuario'
   import produtorSelect from 'components/ProdutorSelect.vue'
+  import UserService from "../../../assets/js/service/UserService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
     name: "user-add",
     components: {
@@ -90,6 +91,7 @@
     },
     data(){
       return {
+        userService: new UserService(),
         roles: null,
         produtorSearchTerms: '',
         tempProdutorList: [],
@@ -101,22 +103,22 @@
     },
     methods:{
       openRolesDialog: function(){
-        userService.openRolesDialog(this.usuario.selectedRoles.value, this.roles).then(roles =>{
+        this.userService.openRolesDialog(this.usuario.selectedRoles.value, this.roles).then(roles =>{
           this.usuario.selectedRoles.errorMessage = null;
           this.usuario.selectedRoles.value = roles;
         })
       },
       removeRole: function(role){
-        userService.removeRole(this.usuario.selectedRoles.value, role);
+        this.userService.removeRole(this.usuario.selectedRoles.value, role);
       },
       listRoles: function(){
-        userService.listRoles().then(roles => {this.roles = roles})
+        this.userService.listRoles().then(roles => {this.roles = roles})
       },
       saveAccount: function () {
         if(!this.usuario.isValid()){
           return;
         }
-        userService.saveAccount(this.usuario.getValues()).then(response => {
+        this.userService.saveAccount(this.usuario.getValues()).then(() => {
           this.$q.notify({type: 'positive', message: 'Cadastro criado com sucesso'});
           this.$router.push({name: 'users'});
           this.$root.$emit('refreshUserList')
@@ -127,8 +129,8 @@
         })
       },
       listProdutor: function(){
-        userService.listProdutor().then(response => {
-          this.produtorOptions = response;
+        this.userService.listProdutores().then(produtores => {
+          this.produtorOptions = produtores;
         })
       },
       openNewProdutorDialog: function(){
@@ -143,10 +145,10 @@
         if(!this.produtor.isValid(this)){
           return;
         }
-        userService.saveProdutor(this.produtor.getValues()).then(response => {
+        this.userService.saveProdutor(this.produtor.getValues()).then(produtor => {
           this.$q.notify({type: 'positive', message: 'Produtor criado com sucesso'});
           this.closeNewProdutorDialog();
-          this.usuario.produtor.value = response.data.id;
+          this.usuario.produtor.value = produtor.id;
           this.listProdutor();
         }).catch(error => {
           if (error.response.status === 422){

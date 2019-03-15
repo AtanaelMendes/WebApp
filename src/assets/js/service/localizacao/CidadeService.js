@@ -1,14 +1,23 @@
-import Vue from 'vue'
-export default {
+import CidadeAPI from "../../api/CidadeAPI";
+export default class CidadeService{
+
+  constructor() {
+  }
+
   searchCidade(terms){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('/cidade?nome=' + terms).then(response => {
-        resolve(this.parseCidade(response.data))
+      CidadeAPI.searchCidade(terms).then(response => {
+        if(response.status === 200) {
+          resolve(this.parseCidade(response.data))
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   parseCidade(cidades) {
     return (cidades).map(cidade => {
       return {
@@ -17,5 +26,5 @@ export default {
         id: cidade.id
       }
     })
-  },
+  };
 }

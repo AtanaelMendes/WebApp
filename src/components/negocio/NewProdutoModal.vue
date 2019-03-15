@@ -100,9 +100,10 @@
 <script>
   import Produto from 'assets/js/model/negocio/Produto'
   import customInputText from 'components/CustomInputText.vue'
-  import negocioService from 'assets/js/service/negocio/NegocioService'
-  import produtoService from 'assets/js/service/produto/ProdutoService'
-  import indexadorService from 'assets/js/service/IndexadorService'
+  import NegocioService from "../../assets/js/service/negocio/NegocioService";
+  import AccountRepository from "../../assets/js/repository/AccountRepository";
+  import ProdutoService from "../../assets/js/service/produto/ProdutoService";
+  import IndexadorService from "../../assets/js/service/IndexadorService";
 
   export default {
     name: "NewProdutoModal",
@@ -125,6 +126,9 @@
     },
     data(){
       return {
+        indexadorService: null,
+        produtoService: null,
+        negocioService: null,
         isModalOpened: false,
         produto: new Produto(),
         negocio: null,
@@ -139,7 +143,11 @@
       }
     },
     methods: {
-      openModal: function(negocio){
+      openModal: async function(negocio){
+        let account = await new AccountRepository().getFirst();
+        this.negocioService = new NegocioService(account.produtor_id);
+        this.produtoService = new ProdutoService(account.produtor_id);
+        this.indexadorService = new IndexadorService(account.produtor_id);
         this.isModalOpened = true;
         this.produto = new Produto();
         this.negocio = negocio;
@@ -193,25 +201,23 @@
 
         this.produto.isPagar.value = false;
 
-        negocioService.saveAttachProduto(this.negocio.id, this.produto.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Produto vinculado com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshNegocio')
-          }
+        this.negocioService.saveAttachProduto(this.negocio.id, this.produto.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Produto vinculado com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshNegocio')
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
       },
       searchProdutos: function(nome){
         this.produto.produto = null;
-        produtoService.searchProdutos(nome).then(response => {
-          this.produtos = response.data;
+        this.produtoService.searchProdutos(nome).then(produtos => {
+          this.produtos = produtos;
         })
       },
       listIndexadores: function(){
-        indexadorService.listIndexadores().then(response => {
-          this.indexadores = response.data;
+        this.indexadorService.listIndexadores().then(indexadores => {
+          this.indexadores = indexadores;
         })
       }
     }

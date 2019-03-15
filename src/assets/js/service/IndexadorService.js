@@ -1,14 +1,23 @@
-import Vue from 'vue'
-import { Loading, Dialog } from 'quasar'
-export default {
+import IndexadorAPI from "../api/IndexadorAPI";
+
+export default class IndexadorService{
+  #produtorId;
+
+  constructor(produtorId) {
+    this.produtorId = produtorId;
+  }
+
   listIndexadores() {
-    let produtor_id = localStorage.getItem('account.produtor_id');
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('/produtor/' + produtor_id + '/indexador').then(response => {
-        resolve(response)
+      IndexadorAPI.listIndexadores(this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
 }

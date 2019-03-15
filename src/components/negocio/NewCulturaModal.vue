@@ -171,13 +171,14 @@
 
 <script>
   import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
-  import culturaClassificacaoService from 'assets/js/service/cultura/CulturaClassificacaoService'
-  import armazemService from 'assets/js/service/armazem/ArmazemService'
-  import unidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
-  import negocioService from 'assets/js/service/negocio/NegocioService'
   import Cultura from 'assets/js/model/negocio/Cultura'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
+  import NegocioService from "../../assets/js/service/negocio/NegocioService";
+  import AccountRepository from "../../assets/js/repository/AccountRepository";
+  import ArmazemService from "../../assets/js/service/armazem/ArmazemService";
+  import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
+  import CulturaClassificacaoService from "../../assets/js/service/cultura/CulturaClassificacaoService";
 
   export default {
     name: "NewCulturaModal",
@@ -201,6 +202,10 @@
     },
     data(){
       return{
+        culturaClassificacaoService: new CulturaClassificacaoService(),
+        unidadeMedidaService: new UnidadeMedidaService(),
+        armazemService: null,
+        negocioService: null,
         isModalOpened: false,
         cultura: new Cultura(),
         negocio: null,
@@ -214,7 +219,10 @@
       }
     },
     methods: {
-      openModal: function(negocio){
+      openModal: async function(negocio){
+        let account = await new AccountRepository().getFirst();
+        this.armazemService = new ArmazemService(account.produtor_id);
+        this.negocioService = new NegocioService(account.produtor_id);
         this.isModalOpened = true;
         this.listSafraCulturas();
         this.getUnidadesMedida();
@@ -227,12 +235,10 @@
         this.$emit('modal-closed')
       },
       saveAttachCultura: function(){
-        negocioService.saveAttachCultura(this.negocio.id, this.cultura.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Safra cultura vinculada com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshNegocio')
-          }
+        this.negocioService.saveAttachCultura(this.negocio.id, this.cultura.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Safra cultura vinculada com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshNegocio')
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
@@ -256,8 +262,8 @@
         }
       },
       getUnidadesMedida:function(){
-        unidadeMedidaService.listUnidadesMedida().then(response => {
-          this.unidadesMedida = response.data;
+        this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
+          this.unidadesMedida = unidades;
         })
       },
       toggleArmazem: function(armazem){
@@ -312,7 +318,7 @@
         })
       },
       listClassificacoesByCultura(cultura_id){
-        culturaClassificacaoService.listClassificacoesByCultura(cultura_id).then(response => {
+        this.culturaClassificacaoService.listClassificacoesByCultura(cultura_id).then(response => {
           this.cultura.classificacoes = response.data;
         })
       },

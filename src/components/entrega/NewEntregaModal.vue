@@ -122,13 +122,14 @@
   </q-modal>
 </template>
 <script>
-  import caminhaoService from 'assets/js/service/CaminhaoService'
-  import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
-  import entregaService from 'assets/js/service/entrega/EntregaService'
   import NovaEntrega from 'assets/js/model/entrega/NewEntrega'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import apImage from 'components/ApImage'
+  import EntregaService from "../../assets/js/service/entrega/EntregaService";
+  import CaminhaoService from "../../assets/js/service/CaminhaoService";
+  import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
+  import AccountRepository from "../../assets/js/repository/AccountRepository";
 
   export default {
     name: "stepper-nova-carga",
@@ -139,6 +140,9 @@
     },
     data () {
       return {
+        entregaService: null,
+        caminhaoService: null,
+        safraCulturaService: null,
         currentStep: 'escolherCaminhao',
         novaEntrega: new NovaEntrega(),
         isModalOpened: false,
@@ -155,8 +159,12 @@
       }
     },
     methods: {
-      openModal: function(entrega = null){
+      openModal: async function(entrega = null){
         this.isModalOpened = true;
+        let account = await new AccountRepository().getFirst();
+        this.entregaService = new EntregaService(account.produtor_id);
+        this.caminhaoService = new CaminhaoService(account.produtor_id);
+        this.safraCulturaService = new SafraCulturaService(account.produtor_id);
         this.novaEntrega = new NovaEntrega();
         this.selectedSafraCulturaId = null;
         this.selectedAreaId = null;
@@ -196,8 +204,8 @@
       },
       listCaminhoes: function(){
         this.$q.loading.show();
-        caminhaoService.listFreeCaminhoes().then(response => {
-          this.caminhoes = response.data;
+        this.caminhaoService.listFreeCaminhoes().then(caminhoes => {
+          this.caminhoes = caminhoes;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
@@ -210,8 +218,8 @@
       },
       listSafraCulturas: function(){
         this.$q.loading.show();
-        safraCulturaService.listSafraCulturas().then(response => {
-          this.safraCulturas = response.data;
+        this.safraCulturaService.listSafraCulturas().then(safraCulturas => {
+          this.safraCulturas = safraCulturas;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
@@ -263,8 +271,8 @@
       },
       listSafraCulturaTalhaoBySafraCultura(safra_cultura_id){
         this.$q.loading.show();
-        safraCulturaService.listFullSafraCulturaTalhao(safra_cultura_id).then(response => {
-          this.safraCulturaTalhoes = response.data;
+        this.safraCulturaService.listFullSafraCulturaTalhao(safra_cultura_id).then(safraCulturaTalhoes => {
+          this.safraCulturaTalhoes = safraCulturaTalhoes;
 
           //Removendo os safra_cultura_talhoes já cadastrados
           if(this.selectedEntrega) {
@@ -304,12 +312,11 @@
 
         this.novaEntrega.safraCulturaTalhaoId = filteredSafraCulturaTalhoes[0].id;
         this.$q.loading.show();
-        entregaService.saveEntrega(this.novaEntrega.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Entrega criada com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshEntregasList', 'carregando')
-          }
+        this.entregaService.saveEntrega(this.novaEntrega.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Entrega criada com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshEntregasList', 'carregando')
+
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
@@ -325,12 +332,10 @@
 
         this.novaEntrega.safraCulturaTalhaoId = filteredSafraCulturaTalhoes[0].id;
         this.$q.loading.show();
-        entregaService.addTalhaoToEntrega(this.novaEntrega.id, this.novaEntrega.getValues()).then(response => {
-          if(response.status === 201) {
-            this.$q.notify({type: 'positive', message: 'Talhao adicionado com sucesso'});
-            this.closeModal();
-            this.$root.$emit('refreshEntregaView')
-          }
+        this.entregaService.addTalhaoToEntrega(this.novaEntrega.id, this.novaEntrega.getValues()).then(response => {
+          this.$q.notify({type: 'positive', message: 'Talhao adicionado com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshEntregaView');
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
