@@ -104,10 +104,16 @@
           <q-item-main label="Entregas" />
         </q-item>
 
-        <!--ENTREGAS-->
+        <!--CAMINHOES-->
         <q-item @click.native="$router.push({name:'caminhoes'})">
           <q-item-side icon="local_shipping"/>
           <q-item-main label="Caminhões" />
+        </q-item>
+
+        <!--ARMAZEMS-->
+        <q-item @click.native="$router.push({name:'armazens'})">
+          <q-item-side icon="location_city"/>
+          <q-item-main label="Armazéns" />
         </q-item>
 
       </q-list>
