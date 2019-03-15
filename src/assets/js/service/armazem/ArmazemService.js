@@ -21,4 +21,13 @@ export default {
       })
     });
   },
+  addArmazem(params) {
+    return new Promise((resolve, reject) => {
+      Vue.prototype.$axios.post('produtor/' + produtorId + '/armazem', params).then(response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  },
 }

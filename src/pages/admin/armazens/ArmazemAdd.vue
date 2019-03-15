@@ -11,6 +11,9 @@
             <q-input v-model="armazem.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
           </q-field>
 
+          <q-field class="q-mb-sm" :error="armazem.localizacaoId.error" :error-label="armazem.localizacaoId.errorMessage">
+            <q-select :options="localizacaoOptions" float-label="Localização" v-model="armazem.localizacaoId.value" @input="clearErrorMessage()"/>
+          </q-field>
         </form>
       </div>
     </div>
@@ -27,15 +30,19 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import armazemService from 'assets/js/service/CaminhaoService'
+  import armazemService from 'assets/js/service/armazem/ArmazemService'
+  import localizacaoSelect from 'components/LocalizacaoSelect.vue'
+  import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
   export default {
     name: "armazem-add",
     components: {
       toolbar,
+      localizacaoSelect,
       customPage
     },
     data () {
       return {
+        localizacaoOptions: [],
         armazem: {
           nome: {
             value: null,
@@ -51,7 +58,12 @@
       }
     },
     methods: {
-      nomeIsValid: function(){
+      listLocalizacao: function(){
+        localizacaoService.listLocalizacao().then(response => {
+          this.localizacaoOptions = response;
+        })
+      },
+      formIsValid: function(){
         if(this.armazem.nome.value === null || this.armazem.nome.value === ''){
           this.armazem.nome.error = true;
           this.armazem.nome.errorMessage = 'informe o nome do armazém';
@@ -64,6 +76,11 @@
             return false
           }
         }
+        if(this.armazem.localizacaoId.value === null || this.armazem.localizacaoId.value === ''){
+          this.armazem.localizacaoId.error = true;
+          this.armazem.localizacaoId.errorMessage = 'informe a localização';
+          return false
+        }
         return true
       },
       clearErrorMessage: function(){
@@ -73,13 +90,12 @@
         this.armazem.localizacaoId.error = false;
       },
       addArmazem: function(){
-        if( !this.nomeIsValid() ){
+        if( !this.formIsValid() ){
           return
         }
         let params = {
           nome: this.armazem.nome.value,
           localizacao_id: this.armazem.localizacaoId.value,
-
         };
         this.$q.loading.show();
         armazemService.addArmazem(params).then(response => {
@@ -96,6 +112,7 @@
       },
     },
     mounted () {
+      this.listLocalizacao();
     },
   }
 </script>

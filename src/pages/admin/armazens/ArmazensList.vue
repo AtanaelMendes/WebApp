@@ -26,7 +26,7 @@
     <div class="row space-end" v-if="armazens">
       <div class="col-12">
 
-        <q-list no-border separator>
+        <q-list no-border separator highlight>
           <q-item v-for="armazem in armazens" :key="armazem.nome">
             <q-item-main>
 

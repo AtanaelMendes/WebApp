@@ -21,9 +21,9 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import localizacaoSelect from 'components/LocalizacaoSelect.vue'
+  import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
   import area from 'assets/js/model/area/Area'
   import areaService from 'assets/js/service/area/AreaService'
-  import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
   export default {
     name: "area-add",
     components: {
