@@ -13,7 +13,8 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import armazemService from 'assets/js/service/armazem/ArmazemService'
+  import ArmazemService from "../../../assets/js/service/armazem/ArmazemService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
     name: "armazem-view",
     components: {
@@ -30,8 +31,8 @@
     methods: {
       getArmazemById: function(id){
         this.$q.loading.show();
-        armazemService.getArmazemById(id).then(response => {
-          this.armazem = response.data;
+        this.armazemService.getArmazemById(id).then(armazem => {
+          this.armazem = armazem;
           this.$q.loading.hide();
         }).catch(error =>{
           this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações.'});
@@ -44,7 +45,10 @@
       }
     },
     mounted(){
-      this.getArmazemById(this.$route.params.id);
+      new AccountRepository().getFirst().then(account => {
+        this.armazemService = new ArmazemService(account.produtor_id);
+        this.getArmazemById(this.$route.params.id);
+      });
     }
   }
 </script>

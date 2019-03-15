@@ -82,8 +82,9 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import armazemService from 'assets/js/service/armazem/ArmazemService'
   import apNoResults from 'components/ApNoResults'
+  import ArmazemService from "../../../assets/js/service/armazem/ArmazemService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
     name: "armazens-list",
     components: {
@@ -93,8 +94,8 @@
     },
     data () {
       return {
+        armazemService: null,
         armazens: [],
-        produtorId: localStorage.getItem('account.produtor_id'),
         isEmptyList: false,
         filter: {
           type: 'non-trashed',
@@ -119,7 +120,7 @@
       },
       listArmazens: function(filter) {
         this.$q.loading.show();
-        armazemService.listArmazens(filter).then(response => {
+        this.armazemService.listArmazens(filter).then(response => {
           this.armazens = response.data;
           this.isEmptyList = this.armazens.length === 0;
           this.$q.loading.hide();
@@ -136,7 +137,7 @@
       },
       archiveArmazem: function(id){
         this.$q.loading.show();
-        armazemService.archiveArmazem(id).then(response =>{
+        this.armazemService.archiveArmazem(id).then(() =>{
           this.$q.notify({type: 'positive', message: 'Armazém arquivado com sucesso.'});
           this.listArmazens(this.filter);
           this.$q.loading.hide();
@@ -147,7 +148,7 @@
       },
       restoreArmazem: function(id){
         this.$q.loading.show();
-        armazemService.restoreArmazem(id).then(response =>{
+        this.armazemService.restoreArmazem(id).then(response =>{
           this.$q.notify({type: 'positive', message: 'Armazém ativado com sucesso.'});
           this.listArmazens(this.filter);
           this.$q.loading.hide();
@@ -158,7 +159,7 @@
       },
       deleteArmazem: function(id){
         this.$q.loading.show();
-        armazemService.deleteArmazem(id).then(response => {
+        this.armazemService.deleteArmazem(id).then(() => {
           this.$q.notify({type: 'positive', message: 'Armazém excluido com sucesso.'});
           this.listArmazens(this.filter);
           this.$q.loading.hide();
@@ -169,7 +170,10 @@
       },
     },
     mounted () {
-      this.listArmazens(this.filter);
+      new AccountRepository().getFirst().then(account => {
+        this.armazemService = new ArmazemService(account.produtor_id);
+        this.listArmazens(this.filter);
+      });
 
       this.$root.$on('refreshCaminhoesList', () => {
         this.listArmazens(this.filter);

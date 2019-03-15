@@ -12,7 +12,6 @@ export default class ArmazemService{
   }
 
   listArmazens() {
-    console.log('listArmazens')
     return new Promise((resolve, reject) => {
       if(Vue.prototype.serverStatus.isUp) {
         ArmazemAPI.listArmazens(this.produtorId).then(response => {
@@ -35,7 +34,6 @@ export default class ArmazemService{
   }
 
   listArmazensByEntrega(entregaId) {
-    console.log('listArmazensByEntrega')
     return new Promise((resolve, reject) => {
       if(Vue.prototype.serverStatus.isUp) {
         ArmazemAPI.listArmazensByEntrega(entregaId, this.produtorId).then(response => {
@@ -55,59 +53,89 @@ export default class ArmazemService{
         })
       }
     });
-  },
-  addArmazem(params) {
+  };
+
+  addArmazem(armazem) {
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.post('produtor/' + produtorId + '/armazem', params).then(response => {
-        resolve(response);
+      ArmazemAPI.saveArmazem(armazem, this.produtorId).then(response => {
+        if(response.status === 201){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   getArmazemById(id) {
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.get('produtor/' + produtorId + '/armazem/'+ id).then(response => {
-        resolve(response);
+      ArmazemAPI.getArmazem(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
-  updateArmazem(id, params) {
+  };
+
+  updateArmazem(id, armazem) {
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/' + produtorId + '/armazem/'+ id , params).then(response => {
-        resolve(response);
+      ArmazemAPI.updateArmazem(armazem, id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   archiveArmazem(id) {
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/' + produtorId + '/armazem/'+ id + '/archive').then(response => {
-        resolve(response);
+      ArmazemAPI.archiveArmazem(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   restoreArmazem(id) {
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/' + produtorId + '/armazem/'+ id +'/restore').then(response => {
-        resolve(response);
+      ArmazemAPI.restoreArmazem(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
+
   deleteArmazem(id) {
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.delete('produtor/' + produtorId + '/armazem/'+ id).then(response => {
-        resolve(response);
+      ArmazemAPI.deleteArmazem(id, this.produtorId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
       }).catch(error => {
         reject(error)
       })
     });
-  },
+  };
 }

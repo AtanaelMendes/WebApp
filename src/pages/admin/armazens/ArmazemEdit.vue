@@ -30,9 +30,10 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import armazemService from 'assets/js/service/armazem/ArmazemService'
   import localizacaoSelect from 'components/LocalizacaoSelect.vue'
-  import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
+  import ArmazemService from "../../../assets/js/service/armazem/ArmazemService";
+  import LocalizacaoService from "../../../assets/js/service/localizacao/LocalizacaoService";
   export default {
     name: "armazem-edit",
     components: {
@@ -42,6 +43,8 @@
     },
     data () {
       return {
+        armazemService: null,
+        localizacaoService: null,
         localizacaoOptions: [],
         armazem: {
           nome: {
@@ -59,7 +62,7 @@
     },
     methods: {
       listLocalizacao: function(){
-        localizacaoService.listLocalizacao().then(response => {
+        this.localizacaoService.listLocalizacao().then(response => {
           this.localizacaoOptions = response;
         })
       },
@@ -98,7 +101,7 @@
           localizacao_id: this.armazem.localizacaoId.value,
         };
         this.$q.loading.show();
-        armazemService.updateArmazem(this.$route.params.id, params).then(response => {
+        this.armazemService.updateArmazem(this.$route.params.id, params).then(() => {
           this.$q.notify({type: 'positive', message: 'Armazém atualizado com sucesso.'});
           this.$q.loading.hide();
           this.backAction();
@@ -109,8 +112,8 @@
       },
       getArmazemById: function(id){
         this.$q.loading.show();
-        armazemService.getArmazemById(id).then(response => {
-          this.fillFormArmazem(response.data);
+        this.armazemService.getArmazemById(id).then(armazem => {
+          this.fillFormArmazem(armazem);
           this.$q.loading.hide();
         }).catch(error =>{
           this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações.'});
@@ -126,8 +129,12 @@
       },
     },
     mounted () {
-      this.getArmazemById(this.$route.params.id);
-      this.listLocalizacao();
+      new AccountRepository().getFirst().then(account => {
+        this.armazemService = new ArmazemService(account.produtor_id);
+        this.localizacaoService = new LocalizacaoService(account.produtor_id);
+        this.getArmazemById(this.$route.params.id);
+        this.listLocalizacao();
+      });
     },
   }
 </script>

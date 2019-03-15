@@ -30,9 +30,10 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import armazemService from 'assets/js/service/armazem/ArmazemService'
   import localizacaoSelect from 'components/LocalizacaoSelect.vue'
-  import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
+  import ArmazemService from "../../../assets/js/service/armazem/ArmazemService";
+  import LocalizacaoService from "../../../assets/js/service/localizacao/LocalizacaoService";
+  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
     name: "armazem-add",
     components: {
@@ -42,6 +43,8 @@
     },
     data () {
       return {
+        armazemService: null,
+        localizacaoService: null,
         localizacaoOptions: [],
         armazem: {
           nome: {
@@ -59,7 +62,7 @@
     },
     methods: {
       listLocalizacao: function(){
-        localizacaoService.listLocalizacao().then(response => {
+        this.localizacaoService.listLocalizacao().then(response => {
           this.localizacaoOptions = response;
         })
       },
@@ -98,7 +101,7 @@
           localizacao_id: this.armazem.localizacaoId.value,
         };
         this.$q.loading.show();
-        armazemService.addArmazem(params).then(response => {
+        this.armazemService.addArmazem(params).then(() => {
           this.$q.notify({type: 'positive', message: 'Armazém adicionado com sucesso.'});
           this.$q.loading.hide();
           this.backAction();
@@ -112,7 +115,11 @@
       },
     },
     mounted () {
-      this.listLocalizacao();
+      new AccountRepository().getFirst().then(account => {
+        this.armazemService = new ArmazemService(account.produtor_id);
+        this.localizacaoService = new LocalizacaoService(account.produtor_id);
+        this.listLocalizacao();
+      });
     },
   }
 </script>
