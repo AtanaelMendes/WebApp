@@ -141,19 +141,11 @@ export default class ResourceService{
 
     let response = await Vue.prototype.$axios.get(basePath + '?name=' + name + "&after=" + afterTime);
     //console.log('response', name);
-    await this.resourcesSyncTimeRepository.put(name, response.data.last_update_registry);
+    this.resourcesSyncTimeRepository.put(name, response.data.last_update_registry);
 
     if(name === 'entrega'){
       ResourceService.entregasToUpdate = [];
       ResourceService.entregasToDelete = [];
-    }
-
-    //TODO: Usar bulkPut ao invés do for aqui para ver se processa mais rapido
-    for(let resource of response.data.resources){
-      if(name === 'entrega'){
-        ResourceService.entregasToUpdate.push(resource.id);
-      }
-      repositoryInstance.update(new model(resource));
     }
 
     //TODO: Usar bulkDelete ao invés do for aqui para ver se processa mais rapido
@@ -162,6 +154,14 @@ export default class ResourceService{
         ResourceService.entregasToDelete.push(purgedId);
       }
       repositoryInstance.delete(purgedId);
+    }
+
+    //TODO: Usar bulkPut ao invés do for aqui para ver se processa mais rapido
+    for(let resource of response.data.resources){
+      if(name === 'entrega'){
+        ResourceService.entregasToUpdate.push(resource.id);
+      }
+      repositoryInstance.update(new model(resource));
     }
 
     //console.log('end getResource', name);
