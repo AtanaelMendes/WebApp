@@ -1,7 +1,12 @@
-export default class{
+export default class QueueItem{
+  grouper = null;
+  type = null;
+  request = null;
+  date = null;
 
-  constructor(grouper, url, method, body, headers) {
+  constructor(grouper, type, url, method, body, headers) {
     this.grouper = grouper;
+    this.type = type;
     this.request = {
       url: url,
       method: method,
@@ -9,8 +14,4 @@ export default class{
       headers: headers,
     }
   }
-
-  grouper = null;
-  request = null;
-  date = null;
 }

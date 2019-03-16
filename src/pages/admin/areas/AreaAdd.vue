@@ -21,7 +21,6 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import localizacaoSelect from 'components/LocalizacaoSelect.vue'
-  import localizacaoService from 'assets/js/service/localizacao/LocalizacaoService'
   import area from 'assets/js/model/area/Area'
   import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import AreaService from "../../../assets/js/service/area/AreaService";
