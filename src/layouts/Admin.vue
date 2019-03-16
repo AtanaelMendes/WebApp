@@ -116,6 +116,12 @@
           <q-item-main label="Armazéns" />
         </q-item>
 
+        <!--CLASSIFICACOES-->
+        <q-item @click.native="$router.push({name:'classificacoes'})">
+          <q-item-side icon="assessment"/>
+          <q-item-main label="Classificações" />
+        </q-item>
+
       </q-list>
     </q-layout-drawer>
 

@@ -246,18 +246,20 @@
         })
       },
       parseOptions(options){
-        return options.map(function(item){
-          let obj =  {
-            label: item.nome,
-            value: item.id,
-          };
+        if(options){
+          return options.map(function(item){
+            let obj =  {
+              label: item.nome,
+              value: item.id,
+            };
 
-          if(item.descr){
-            obj.sublabel = item.descr;
-          }
+            if(item.descr){
+              obj.sublabel = item.descr;
+            }
 
-          return obj;
-        });
+            return obj;
+          });
+        }
       },
       getFilterDesciption(filter = null, options = null){
         var filterDescription = [];
