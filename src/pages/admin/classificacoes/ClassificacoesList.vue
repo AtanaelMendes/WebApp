@@ -1,6 +1,6 @@
 <template>
   <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Caminhões" searchable navigation_type="menu" @search_changed="listBySearch">
+    <toolbar slot="toolbar" title="Classificações" searchable navigation_type="menu" @search_changed="listBySearch">
       <template slot="action_itens">
         <q-btn flat round dense icon="tune" >
           <q-popover anchor="bottom left">
@@ -23,62 +23,15 @@
       </template>
     </toolbar>
 
-    <div class="row q-pa-md gutter-sm space-end" v-if="caminhoes">
+    <div class="row q-pa-md gutter-sm space-end" v-if="classificacoes">
 
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 " v-for="caminhao in caminhoes" :key="caminhao.id">
-        <q-card class="full-height">
-          <!--<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 cursor-pointer" v-for="caminhao in caminhoes" :key="caminhao.id">-->
-          <!--<q-card @click.native="viewCaminhao(caminhao.id)" class="full-height">-->
-          <q-card-media overlay-position="top">
-            <ap-image size="400x250" :file-name="caminhao.image_file_name" />
-            <q-card-title slot="overlay">
-              {{caminhao.placa}}
-              {{caminhao.nome}}
-              <q-btn @click.prevent.stop slot="right" round flat dense icon="more_vert" color="white">
-                <q-popover>
-                  <q-list link>
-                    <q-item v-close-overlay @click.native="addFotoCaminhao(caminhao.id)">
-                      <q-item-main label="Atualizar Foto"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="updateCaminhao(caminhao.id)">
-                      <q-item-main label="Editar"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="archiveCaminhao(caminhao.id)" v-if="!caminhao.deleted_at">
-                      <q-item-main label="Arquivar"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="restoreCaminhao(caminhao.id)" v-if="caminhao.deleted_at">
-                      <q-item-main label="Ativar"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="deleteCaminhao(caminhao.id)">
-                      <q-item-main label="Excluir"/>
-                    </q-item>
-                  </q-list>
-                </q-popover>
-              </q-btn>
-            </q-card-title>
-          </q-card-media>
-          <q-list>
-            <q-item>
-              <q-item-side icon="mdi-scale" :color="pesoIconColor(caminhao.lotacao)"/>
-              <q-item-main>
-                <q-item-tile v-if="caminhao.lotacao">
-                  {{numeral(caminhao.lotacao).format('0,0')}}
-                  {{caminhao.unidade_medida_sigla}}
-                </q-item-tile>
-                <q-item-tile sublabel v-else>
-                  Não informado
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-          </q-list>
-        </q-card>
-      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 " v-for="classificacao in classificacoes" :key="classificacao.id"></div>
     </div>
 
-    <div class="row items-center" style="min-height: 80vh" v-if="caminhoes.length === 0">
+    <div class="row items-center" style="min-height: 80vh" v-if="classificacoes.length === 0">
       <div class=" col-12 list-empty">
         <q-icon name="warning" size="30px"/>
-        <span>Nenhum caminhão encontrado</span>
+        <span>Nenhuma classificação encontrada</span>
       </div>
     </div>
 
@@ -118,7 +71,7 @@
   import CaminhaoService from "../../../assets/js/service/CaminhaoService";
   import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
-    name: "caminhoes-list",
+    name: "classificacoes-list",
     components: {
       apNoResults,
       toolbar,
@@ -128,126 +81,94 @@
     },
     data () {
       return {
-        caminhaoService: null,
-        caminhoes: [],
-        modalAddFotoCaminhao: false,
+        classificacaoService: null,
+        classificacoes: [],
         selectedCaminhaoId: null,
         produtorId: localStorage.getItem('account.produtor_id'),
         isEmptyList: false,
         filter: {
           type: 'non-trashed',
-          nameOrPlaque: '',
+          name: '',
         },
       }
     },
     watch: {
       filter: {
         handler: function(val, oldval) {
-          var filter = {type: val.type, nameOrPlaque:(val.nameOrPlaque.length > 2 ? val.nameOrPlaque : '')};
+          var filter = {type: val.type, name:(val.name.length > 2 ? val.name : '')};
           this.listCaminhoes(filter)
         },
         deep: true,
       }
     },
     computed: {
-      caminhaoImageUrl: function(){
-        return 'produtor/'+ this.produtorId +'/caminhao/' + this.selectedCaminhaoId + '/image';
-      },
     },
     methods: {
-      addFotoCaminhao: function(id){
-        this.selectedCaminhaoId = id;
-        this.modalAddFotoCaminhao = true;
-      },
-      closeModalAddFotoCaminhao: function(){
-        this.modalAddFotoCaminhao = false;
-        this.$refs.caminhaoImageUpload.clear();
-      },
-      uploadFotoSuccess: function(response){
-        this.closeModalAddFotoCaminhao();
-        this.listCaminhoes();
-      },
-      uploadFotoError: function(error){
-        if(error.data){
-          this.$q.notify({type: 'negative', message: error.data})
-        }else{
-          this.$q.dialog({noBackdropDismiss: true, title: 'Oops!', message: error, ok: 'OK'});
-        }
-      },
-      uploadFotoCaminhao: function(){
-        this.$refs.caminhaoImageUpload.uploadImage();
-      },
-      pesoIconColor: function (loatacao) {
-        if (loatacao) {
-          return 'primary'
-        }
-        return 'grey'
-      },
       listBySearch: function(val){
-        this.filter.nameOrPlaque = val;
+        this.filter.name = val;
       },
-      listCaminhoes: function(filter) {
+      listClassificacoes: function(filter) {
         this.$q.loading.show();
-        this.caminhaoService.listCaminhoes(filter).then(caminhoes => {
-          this.caminhoes = caminhoes;
-          this.isEmptyList = this.caminhoes.length === 0;
+        this.classificacaoService.listClassificacoes(filter).then(classificacoes => {
+          this.classificacoes = classificacoes;
+          this.isEmptyList = this.classificacoes.length === 0;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações.'});
           this.$q.loading.hide();
         });
       },
-      viewCaminhao: function(id) {
-        this.$router.push({name: 'view_caminhao', params: {id:id}});
+      viewClassificacao: function(id) {
+        this.$router.push({name: 'view_classificacao', params: {id:id}});
       },
-      addCaminhao: function(){
-        this.$router.push({name: 'add_caminhao'});
+      addClassificacao: function(){
+        this.$router.push({name: 'add_classificacao'});
       },
-      updateCaminhao: function(id){
-        this.$router.push({name: 'edit_caminhao', params: {id:id}});
+      updateClassificacao: function(id){
+        this.$router.push({name: 'edit_classificacao', params: {id:id}});
       },
-      archiveCaminhao: function(id){
+      archiveClassificacao: function(id){
         this.$q.loading.show();
-        this.caminhaoService.archiveCaminhao(id).then(() =>{
-          this.$q.notify({type: 'positive', message: 'Caminhão arquivado com sucesso.'});
-          this.listCaminhoes(this.filter);
+        this.classificacaoService.archiveClassificacao(id).then(() =>{
+          this.$q.notify({type: 'positive', message: 'Classificação arquivado com sucesso.'});
+          this.listClassificacoes(this.filter);
           this.$q.loading.hide();
         }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse caminhão.'});
+          this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse classificação.'});
           this.$q.loading.hide();
         })
       },
-      restoreCaminhao: function(id){
+      restoreClassificacao: function(id){
         this.$q.loading.show();
-        this.caminhaoService.restoreCaminhao(id).then(() =>{
-          this.$q.notify({type: 'positive', message: 'Caminhão ativado com sucesso.'});
-          this.listCaminhoes(this.filter);
+        this.classificacaoService.restoreClassificacao(id).then(() =>{
+          this.$q.notify({type: 'positive', message: 'Classificação ativada com sucesso.'});
+          this.listClassificacoes(this.filter);
           this.$q.loading.hide();
         }).catch(error =>{
           this.$q.loading.hide();
-          this.$q.notify({type: 'negative', message: 'Não foi possível restaurar esse caminhão.'});
+          this.$q.notify({type: 'negative', message: 'Não foi possível restaurar essa classificação.'});
         })
       },
-      deleteCaminhao: function(id){
+      deleteClassificacao: function(id){
         this.$q.loading.show();
-        this.caminhaoService.deleteCaminhao(id).then(() => {
-          this.$q.notify({type: 'positive', message: 'Caminhão excluido com sucesso.'});
-          this.listCaminhoes(this.filter);
+        this.classificacaoService.deleteClassificacao(id).then(() => {
+          this.$q.notify({type: 'positive', message: 'Classificação excluida com sucesso.'});
+          this.listClassificacoes(this.filter);
           this.$q.loading.hide();
         }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível excluir esse caminhão'});
+          this.$q.notify({type: 'negative', message: 'Não foi possível excluir essa classificação'});
           this.$q.loading.hide();
         })
       },
     },
     mounted () {
       new AccountRepository().getFirst().then(account => {
-        this.caminhaoService = new CaminhaoService(account.produtor_id)
-        this.listCaminhoes(this.filter);
+        this.classificacaoService = new ClassificacaoService(account.produtor_id);
+        this.listClassificacoes(this.filter);
       });
 
-      this.$root.$on('refreshCaminhoesList', () => {
-        this.listCaminhoes(this.filter);
+      this.$root.$on('refreshClassificacoesList', () => {
+        this.listClassificacoes(this.filter);
       });
     },
   }
