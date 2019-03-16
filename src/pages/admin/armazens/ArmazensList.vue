@@ -120,8 +120,8 @@
       },
       listArmazens: function(filter) {
         this.$q.loading.show();
-        this.armazemService.listArmazens(filter).then(response => {
-          this.armazens = response.data;
+        this.armazemService.listArmazens(filter).then(armazens => {
+          this.armazens = armazens;
           this.isEmptyList = this.armazens.length === 0;
           this.$q.loading.hide();
         }).catch(error => {

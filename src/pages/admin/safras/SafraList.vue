@@ -768,13 +768,13 @@
           this.areaService = new AreaService(account.produtor_id);
           this.safraCulturaService = new SafraCulturaService(account.produtor_id);
           this.safraService = new SafraService(account.produtor_id);
-        });
 
-        this.listSafras();
+          this.listSafras();
+          this.safra.inicio.value = this.getCurrentYear();
+          this.safra.fim.value = this.getCurrentYear();
+          this.selectedAnoFim = this.safra.fim.value.toString();
+        });
         this.makeYearsList(this.getCurrentYear());
-        this.safra.inicio.value = this.getCurrentYear();
-        this.safra.fim.value = this.getCurrentYear();
-        this.selectedAnoFim = this.safra.fim.value.toString();
         this.getUnidadesMedida();
         this.getUnidadesArea();
         // this.$root.$on('refreshSafraList', () => {
