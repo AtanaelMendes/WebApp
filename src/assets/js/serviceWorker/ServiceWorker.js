@@ -7,6 +7,9 @@ export default class ServiceWorker {
     if(!message instanceof ServiceMessage){
       throw new Error("Objeto não é do tipo ServiceMessage!");
     }
-    navigator.serviceWorker.controller.postMessage(message);
+
+    navigator.serviceWorker.ready.then(()=>{
+      navigator.serviceWorker.controller.postMessage(message);
+    })
   }
 }

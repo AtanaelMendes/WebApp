@@ -25,6 +25,7 @@ self.addEventListener('install', function(event){
 // Service Worker Active
 self.addEventListener('activate', function(event){
   console.log('activated!');
+  self.clients.claim();
 });
 
 
@@ -54,9 +55,9 @@ self.addEventListener('message', function(event){
   }*/
 
   //if (event.data.type === ServiceMessage.SERVER_STATUS) {
-  if (event.data.type === 'server_status') {
+  //if (event.data.type === 'server_status') {
     sendMessageToAllClients(event.data)
-  }
+  //}
 });
 
 self.addEventListener('sync', function(event) {

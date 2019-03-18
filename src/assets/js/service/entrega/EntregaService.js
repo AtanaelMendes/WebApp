@@ -149,7 +149,7 @@ export default class EntregaService{
       if(entregas === undefined){
         entregas = []
       }
-      
+
       entregas = entregas.map(entrega => {
         return new EntregaEntregueListItem(entrega);
       });

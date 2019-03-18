@@ -1,7 +1,7 @@
 import ServiceMessage from "../assets/js/serviceWorker/ServiceMessage";
 import ServiceWorker from "../assets/js/serviceWorker/ServiceWorker";
 
-export default ({ app, Vue}) => {
+export default ({ app, Vue, router}) => {
   let isUp_temp = true;
 
   let serverStatus = {
@@ -10,21 +10,23 @@ export default ({ app, Vue}) => {
   };
 
   function checkServerStatus() {
-    Vue.prototype.$axios.get('/').then(() => {
-      if(!isUp_temp){
-        serverStatus.isUp = true;
-        serverStatus.isDown = false;
-        registerEvent(serverStatus.isUp)
-      }
-      isUp_temp = true;
-    }).catch(() => {
-      if(isUp_temp){
-        serverStatus.isUp = false;
-        serverStatus.isDown = true;
-        registerEvent(serverStatus.isUp)
-      }
-      isUp_temp = false;
-    })
+    if(router.app._route.path !== '/login'){
+      Vue.prototype.$axios.get('/').then(() => {
+        if(!isUp_temp){
+          serverStatus.isUp = true;
+          serverStatus.isDown = false;
+          registerEvent(serverStatus.isUp)
+        }
+        isUp_temp = true;
+      }).catch(() => {
+        if(isUp_temp){
+          serverStatus.isUp = false;
+          serverStatus.isDown = true;
+          registerEvent(serverStatus.isUp)
+        }
+        isUp_temp = false;
+      })
+    }
   }
 
   function registerEvent(status){
