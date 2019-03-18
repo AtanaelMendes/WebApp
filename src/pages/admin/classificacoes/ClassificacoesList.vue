@@ -23,40 +23,50 @@
       </template>
     </toolbar>
 
-    <div class="row q-pa-md gutter-sm space-end" v-if="classificacoes">
+    <div class="row space-end" v-if="classificacoes">
 
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 " v-for="classificacao in classificacoes" :key="classificacao.id"></div>
-    </div>
+      <div class="col-12">
+        <q-list highlight no-border separator>
 
-    <div class="row items-center" style="min-height: 80vh" v-if="classificacoes.length === 0">
-      <div class=" col-12 list-empty">
-        <q-icon name="warning" size="30px"/>
-        <span>Nenhuma classificação encontrada</span>
+          <q-item v-for="classificacao in classificacoes" :key="classificacao.id">
+            <q-item-main>
+              <q-item-tile>
+                {{classificacao.nome}}
+              </q-item-tile>
+            </q-item-main>
+
+            <q-item-side>
+              <q-btn @click.prevent.stop round flat dense icon="more_vert">
+                <q-popover>
+                  <q-list link>
+                    <q-item v-close-overlay @click.native="updateClassificacao(classificacao.id)">
+                      <q-item-main label="Editar"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="archiveClassificacao(classificacao.id)" v-if="!classificacao.deleted_at">
+                      <q-item-main label="Arquivar"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="restoreClassificacao(classificacao.id)" v-if="classificacao.deleted_at">
+                      <q-item-main label="Ativar"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="deleteClassificacao(classificacao.id)">
+                      <q-item-main label="Excluir"/>
+                    </q-item>
+                  </q-list>
+                </q-popover>
+              </q-btn>
+            </q-item-side>
+          </q-item>
+
+        </q-list>
       </div>
     </div>
 
-    <!--MODAL ADD FOTO CAMINHAO-->
-    <q-modal v-model="modalAddFotoCaminhao" maximized no-backdrop-dismiss>
-      <div class="row justify-center q-pt-lg">
-        <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-display-1 text-center"></div>
-      </div>
-
-      <div class="row justify-center content-center" style="min-height: 80vh">
-        <imape-upload ref="caminhaoImageUpload"
-                      :url="caminhaoImageUrl"
-                      v-on:on_error="uploadFotoError"
-                      v-on:on_upload_success="uploadFotoSuccess"
-                      v-on:on_upload_error="uploadFotoError" />
-      </div>
-
-      <q-page-sticky position="bottom-right" :offset="[18, 18]">
-        <q-btn @click.native="closeModalAddFotoCaminhao" color="primary" label="Cancelar" class="q-mr-xs"/>
-        <q-btn @click.native="uploadFotoCaminhao" color="deep-orange" label="Salvar"/>
-      </q-page-sticky>
-    </q-modal>
+    <div v-if="isEmptyList" class="no-result">
+      <ap-no-results />
+    </div>
 
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
-      <q-btn round color="deep-orange" @click="addCaminhao" icon="add" size="20px" />
+      <q-btn round color="deep-orange" @click="addClassificacao" icon="add" size="20px" />
     </q-page-sticky>
 
   </custom-page>
@@ -66,25 +76,19 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
-  import apImage from 'components/ApImage'
-  import imapeUpload from 'components/ImageUpload'
-  import CaminhaoService from "../../../assets/js/service/CaminhaoService";
+  import ClassificacaoService from "../../../assets/js/service/ClassificacaoService";
   import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
     name: "classificacoes-list",
     components: {
       apNoResults,
       toolbar,
-      apImage,
-      imapeUpload,
       customPage
     },
     data () {
       return {
         classificacaoService: null,
         classificacoes: [],
-        selectedCaminhaoId: null,
-        produtorId: localStorage.getItem('account.produtor_id'),
         isEmptyList: false,
         filter: {
           type: 'non-trashed',
@@ -96,7 +100,7 @@
       filter: {
         handler: function(val, oldval) {
           var filter = {type: val.type, name:(val.name.length > 2 ? val.name : '')};
-          this.listCaminhoes(filter)
+          this.listClassificacoes(filter)
         },
         deep: true,
       }
@@ -163,7 +167,7 @@
     },
     mounted () {
       new AccountRepository().getFirst().then(account => {
-        this.classificacaoService = new ClassificacaoService(account.produtor_id);
+        this.classificacaoService = new ClassificacaoService();
         this.listClassificacoes(this.filter);
       });
 
@@ -178,17 +182,21 @@
   .space-end{
     margin-bottom: 300px;
   }
-  .list-empty{
-    height: 55px;
+  .no-result{
     text-align: center;
-    padding-top: 15px;
-    color: #8c8c8c;
-    font-weight: bold;
-    font-size: 20px;
+    padding-top: 150px;
   }
-  .list-empty i{
-    color: #ffb500;
-    font-size: 20px;
-    margin-right: 6px;
+
+  .no-result img{
+    width: 120px;
+    height: auto;
+  }
+
+  .no-result span{
+    display: block;
+    margin-top: 30px;
+    font-size: 25px;
+    font-weight: 300;
+    color: #ababab;
   }
 </style>

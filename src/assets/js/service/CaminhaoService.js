@@ -50,7 +50,7 @@ export default class CaminhaoService {
         }
       }
 
-      caminhoes = caminhoes.map(caminhao => new CaminhaoListItem(caminhao))
+      caminhoes = caminhoes.map(caminhao => new CaminhaoListItem(caminhao));
 
       resolve(caminhoes)
     });

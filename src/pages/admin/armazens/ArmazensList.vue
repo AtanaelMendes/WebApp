@@ -175,7 +175,7 @@
         this.listArmazens(this.filter);
       });
 
-      this.$root.$on('refreshCaminhoesList', () => {
+      this.$root.$on('refresh/armazensList', () => {
         this.listArmazens(this.filter);
       });
     },

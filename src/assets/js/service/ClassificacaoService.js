@@ -3,18 +3,16 @@ import ClassificacaoAPI from "../api/ClassificacaoAPI";
 import ClassificacaoRepository from "../repository/resource/ClassificacaoRepository";
 import ClassificacaoListItem from "../model/ClassificacaoListItem";
 
-export default class CaminhaoService {
-  #produtorId;
+export default class ClassificacaoService {
   #classificacaoRepository;
 
-  constructor(produtorId) {
-    this.produtorId = produtorId;
+  constructor() {
     this.classificacaoRepository = new ClassificacaoRepository();
   }
 
   listClassificacoes() {
     return new Promise((resolve, reject) => {
-      CaminhaoAPI.listClassificacoes(this.produtorId).then(response => {
+      ClassificacaoAPI.listClassificacoes().then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -28,7 +26,7 @@ export default class CaminhaoService {
 
   getClassificacaoById(id) {
     return new Promise((resolve, reject) => {
-      CaminhaoAPI.getClassificacaoById(id, this.produtorId).then(response => {
+      ClassificacaoAPI.getClassificacaoById(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -40,9 +38,9 @@ export default class CaminhaoService {
     });
   };
 
-  addClassificacao(classificacao) {
+  addClassificacao(params) {
     return new Promise((resolve, reject) => {
-      ClassificacaoAPI.addClassificacao(classificacao, this.produtorId).then(response => {
+      ClassificacaoAPI.addClassificacao(params).then(response => {
         if(response.status === 201){
           resolve(response.data);
         }else{
@@ -54,9 +52,9 @@ export default class CaminhaoService {
     });
   };
 
-  updateClassificacao(id, classificacao) {
+  updateClassificacao(id, params) {
     return new Promise((resolve, reject) => {
-      ClassificacaoAPI.updateClassificacao(classificacao, id, this.produtorId).then(response => {
+      ClassificacaoAPI.updateClassificacao(params, id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
