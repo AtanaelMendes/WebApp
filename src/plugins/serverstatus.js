@@ -11,7 +11,7 @@ export default ({ app, Vue, router}) => {
 
   function checkServerStatus() {
     if(router.app._route.path !== '/login'){
-      Vue.prototype.$axios.get('/').then(() => {
+      Vue.prototype.$axios.get('/status').then(() => {
         if(!isUp_temp){
           serverStatus.isUp = true;
           serverStatus.isDown = false;
