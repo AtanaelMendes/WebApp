@@ -49,6 +49,10 @@ export default class EntregaService{
         }));
       }
 
+      if(entregas === undefined){
+        entregas = []
+      }
+
       entregas = entregas.map(entrega => {
         return new EntregaCarregandoListItem(entrega)
       });
@@ -91,6 +95,10 @@ export default class EntregaService{
         entregas = await Promise.all(entregas.map(async entrega => {
           return this.entregaListItemBuilder.buildNoArmazemListItem(entrega);
         }));
+      }
+
+      if(entregas === undefined){
+        entregas = []
       }
 
       entregas = entregas.map(entrega => {
@@ -138,6 +146,10 @@ export default class EntregaService{
         }));
       }
 
+      if(entregas === undefined){
+        entregas = []
+      }
+      
       entregas = entregas.map(entrega => {
         return new EntregaEntregueListItem(entrega);
       });

@@ -6,7 +6,7 @@
           Filtro
         </q-toolbar-title>
       </q-toolbar>
-      <q-list dense >
+      <q-list dense v-if="options" >
         <q-item>
           <q-item-main>
             <q-select

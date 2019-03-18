@@ -147,6 +147,7 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import negocioModal from 'components/negocio/NegocioModal';
+  import apImage from 'components/ApImage'
   import apNoResults from 'components/ApNoResults'
   import NegocioService from "../../../assets/js/service/negocio/NegocioService";
   import AccountRepository from "../../../assets/js/repository/AccountRepository";
