@@ -22,7 +22,7 @@ export default class SafraAPI{
   }
 
   static updateSafra(safra, safraId, produtorId){
-    return Vue.prototype.$axios.put('produtor/' + produtorId + '/safra/' + id, safra);
+    return Vue.prototype.$axios.put('produtor/' + produtorId + '/safra/' + safraId, safra);
   }
 
   static deleteSafra(id, produtorId){
