@@ -116,6 +116,12 @@
           <q-item-main label="Armazéns" />
         </q-item>
 
+        <!--CLASSIFICACOES-->
+        <q-item @click.native="$router.push({name:'classificacoes'})">
+          <q-item-side icon="assessment"/>
+          <q-item-main label="Classificações" />
+        </q-item>
+
       </q-list>
     </q-layout-drawer>
 
@@ -165,6 +171,9 @@
   import ForbiddenAccessDialog from "../components/offline/ForbiddenAccessDialog";
   import SyncProgressDialog from "../components/offline/SyncProgressDialog";
   import ServiceMessage from '../assets/js/serviceWorker/ServiceMessage';
+  import ServiceWorker from "../assets/js/serviceWorker/ServiceWorker";
+  import AccountRepository from "../assets/js/repository/AccountRepository";
+
   export default {
     name: 'Admin',
     components:{
@@ -205,19 +214,31 @@
       }
     },
     methods: {
+      doSync(){
+        if(this.serverStatus.isUp) {
+          new AccountRepository().getFirst().then(account => {
+            this.syncService = new SyncService(account.produtor_id);
+            this.$refs.syncProgressDialog.openModal();
+            this.syncService.doSync().then(() => {
+              this.$refs.syncProgressDialog.closeModal();
+              ServiceWorker.sendMessage(new ServiceMessage(ServiceMessage.SYNC_FINISHED, status));
+            }).catch(error => {
+              this.$refs.syncProgressDialog.closeModal();
+              console.log("Erro ao sincronizar")
+            })
+          });
+
+        }
+      },
       serviceWorkerMessageEvent(event){
         switch (event.data.type) {
           case ServiceMessage.SYNC:
-            this.$refs.syncProgressDialog.openModal();
-            this.syncService.doSync().then(()=>{
-              this.$refs.syncProgressDialog.closeModal();
-              event.ports[0].postMessage("queueSyncFinished");
-            });
+            this.doSync();
             break;
           case ServiceMessage.SERVER_STATUS:
-            if(event.data.payload){
+            if(event.data.payload === true){
               this.hideOfflineStatusBar();
-              this.getAccountInfo();
+              this.doSync();
             }else{
               this.showOfflineStatusBar();
             }
@@ -238,14 +259,7 @@
           this.currentAccount.name = info.nome;
           this.currentAccount.email = info.email;
 
-          this.syncService = new SyncService(info.produtor_id);
-          this.$refs.syncProgressDialog.openModal();
-          this.syncService.doSync().then(()=>{
-            this.$refs.syncProgressDialog.closeModal();
-          }).catch(error => {
-            this.$refs.syncProgressDialog.closeModal();
-            console.log("Erro ao sincronizar")
-          })
+          this.doSync();
         })
       },
       toogleLeftDrawer() {

@@ -6,7 +6,7 @@
           Filtro
         </q-toolbar-title>
       </q-toolbar>
-      <q-list dense >
+      <q-list dense v-if="options" >
         <q-item>
           <q-item-main>
             <q-select
@@ -246,18 +246,20 @@
         })
       },
       parseOptions(options){
-        return options.map(function(item){
-          let obj =  {
-            label: item.nome,
-            value: item.id,
-          };
+        if(options){
+          return options.map(function(item){
+            let obj =  {
+              label: item.nome,
+              value: item.id,
+            };
 
-          if(item.descr){
-            obj.sublabel = item.descr;
-          }
+            if(item.descr){
+              obj.sublabel = item.descr;
+            }
 
-          return obj;
-        });
+            return obj;
+          });
+        }
       },
       getFilterDesciption(filter = null, options = null){
         var filterDescription = [];

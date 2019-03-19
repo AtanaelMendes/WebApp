@@ -242,6 +242,7 @@
   import AgroUtils from 'assets/js/AgroUtils'
   import EntregaService from "../../../assets/js/service/entrega/EntregaService";
   import AccountRepository from "../../../assets/js/repository/AccountRepository";
+  import ServiceMessage from '../../../assets/js/serviceWorker/ServiceMessage';
 
   export default {
     name: "entregas",
@@ -405,15 +406,15 @@
 
       },
       queueSyncFinishedEvent(event){
-        switch (event.data) {
-          case 'queueSyncFinished':
+        console.log('queueSyncFinishedEvent', event)
+        switch (event.data.type) {
+          case ServiceMessage.SYNC_FINISHED:
             console.log('EntregasList.queueSyncFinished')
             this.$root.$emit('refreshEntregasList', 'all');
             break;
         }
       },
       refreshEntregasListEvent(status){
-        console.log('refreshEntregasList.status: ' + status);
         switch (status) {
           case 'carregando':
             this.listEntregasCarregando();
