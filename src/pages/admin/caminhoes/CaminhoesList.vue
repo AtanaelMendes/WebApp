@@ -75,11 +75,8 @@
       </div>
     </div>
 
-    <div class="row items-center" style="min-height: 80vh" v-if="caminhoes.length === 0">
-      <div class=" col-12 list-empty">
-        <q-icon name="warning" size="30px"/>
-        <span>Nenhum caminhão encontrado</span>
-      </div>
+    <div v-if="isEmptyList" class="no-result">
+      <ap-no-results />
     </div>
 
     <!--MODAL ADD FOTO CAMINHAO-->
@@ -128,11 +125,11 @@
     },
     data () {
       return {
+        produtorId: null, //TODO: Retirar daqui quando não tiver mais produtorId nos endpoints
         caminhaoService: null,
         caminhoes: [],
         modalAddFotoCaminhao: false,
         selectedCaminhaoId: null,
-        produtorId: localStorage.getItem('account.produtor_id'),
         isEmptyList: false,
         filter: {
           type: 'non-trashed',
@@ -165,7 +162,7 @@
       },
       uploadFotoSuccess: function(response){
         this.closeModalAddFotoCaminhao();
-        this.listCaminhoes();
+        this.listCaminhoes(this.filter);
       },
       uploadFotoError: function(error){
         if(error.data){
@@ -242,7 +239,8 @@
     },
     mounted () {
       new AccountRepository().getFirst().then(account => {
-        this.caminhaoService = new CaminhaoService(account.produtor_id)
+        this.caminhaoService = new CaminhaoService(account.produtor_id);
+        this.produtorId = account.produtor_id;
         this.listCaminhoes(this.filter);
       });
 

@@ -104,8 +104,9 @@
               </div>
             </q-card-title>
 
-            <img src="statics/images/no-image-16-10.svg" v-if="!talhao.image_path"/>
-            <img :src="talhao.image_path" v-if="talhao.image_path"/>
+            <!--<img src="statics/images/no-image-16-10.svg" v-if="!talhao.image_path"/>
+            <img :src="talhao.image_path" v-if="talhao.image_path"/>-->
+            <ap-image size="400x250" :file-name="talhao.image_file_name" />
           </q-card-media>
 
           <q-card-main>
@@ -172,6 +173,7 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import imapeUpload from 'components/ImageUpload'
+  import apImage from 'components/ApImage'
   import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import AreaService from "../../../assets/js/service/area/AreaService";
   import TalhaoService from "../../../assets/js/service/area/TalhaoService";
@@ -179,6 +181,7 @@
   export default {
     name: "area-view",
     components: {
+      apImage,
       toolbar,
       customPage,
       imapeUpload,
@@ -366,7 +369,7 @@
     mounted(){
       new AccountRepository().getFirst().then(account => {
         this.areaService = new AreaService(account.produtor_id);
-        this.produtorId = account.produtor_id/
+        this.produtorId = account.produtor_id;
         this.getAreaById(this.$route.params.id)
       });
 

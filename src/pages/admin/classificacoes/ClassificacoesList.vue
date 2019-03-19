@@ -1,6 +1,6 @@
 <template>
   <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Armazéns" searchable navigation_type="menu" @search_changed="listBySearch">
+    <toolbar slot="toolbar" title="Classificações" searchable navigation_type="menu" @search_changed="listBySearch">
       <template slot="action_itens">
         <q-btn flat round dense icon="tune" >
           <q-popover anchor="bottom left">
@@ -23,19 +23,15 @@
       </template>
     </toolbar>
 
-    <div class="row space-end" v-if="armazens">
+    <div class="row space-end" v-if="classificacoes">
+
       <div class="col-12">
+        <q-list highlight no-border separator>
 
-        <q-list no-border separator highlight>
-          <q-item v-for="armazem in armazens" :key="armazem.nome">
+          <q-item v-for="classificacao in classificacoes" :key="classificacao.id">
             <q-item-main>
-
               <q-item-tile>
-                {{armazem.nome}}
-              </q-item-tile>
-
-              <q-item-tile sublabel>
-                {{armazem.endereco}}
+                {{classificacao.nome}}
               </q-item-tile>
             </q-item-main>
 
@@ -43,16 +39,16 @@
               <q-btn @click.prevent.stop round flat dense icon="more_vert">
                 <q-popover>
                   <q-list link>
-                    <q-item v-close-overlay @click.native="updateArmazem(armazem.id)">
+                    <q-item v-close-overlay @click.native="updateClassificacao(classificacao.id)">
                       <q-item-main label="Editar"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="archiveArmazem(armazem.id)" v-if="!armazem.deleted_at">
+                    <q-item v-close-overlay @click.native="archiveClassificacao(classificacao.id)" v-if="!classificacao.deleted_at">
                       <q-item-main label="Arquivar"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="restoreArmazem(armazem.id)" v-if="armazem.deleted_at">
+                    <q-item v-close-overlay @click.native="restoreClassificacao(classificacao.id)" v-if="classificacao.deleted_at">
                       <q-item-main label="Ativar"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="deleteArmazem(armazem.id)">
+                    <q-item v-close-overlay @click.native="deleteClassificacao(classificacao.id)">
                       <q-item-main label="Excluir"/>
                     </q-item>
                   </q-list>
@@ -60,20 +56,17 @@
               </q-btn>
             </q-item-side>
           </q-item>
-        </q-list>
 
+        </q-list>
       </div>
     </div>
 
-    <div class="row items-center" style="min-height: 80vh" v-if="armazens.length === 0">
-      <div class=" col-12 list-empty">
-        <q-icon name="warning" size="30px"/>
-        <span>Nenhum armazém encontrado</span>
-      </div>
+    <div v-if="isEmptyList" class="no-result">
+      <ap-no-results />
     </div>
 
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
-      <q-btn round color="deep-orange" @click="addArmazem" icon="add" size="20px" />
+      <q-btn round color="deep-orange" @click="addClassificacao" icon="add" size="20px" />
     </q-page-sticky>
 
   </custom-page>
@@ -83,10 +76,10 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
-  import ArmazemService from "../../../assets/js/service/armazem/ArmazemService";
+  import ClassificacaoService from "../../../assets/js/service/ClassificacaoService";
   import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
-    name: "armazens-list",
+    name: "classificacoes-list",
     components: {
       apNoResults,
       toolbar,
@@ -94,8 +87,8 @@
     },
     data () {
       return {
-        armazemService: null,
-        armazens: [],
+        classificacaoService: null,
+        classificacoes: [],
         isEmptyList: false,
         filter: {
           type: 'non-trashed',
@@ -107,7 +100,7 @@
       filter: {
         handler: function(val, oldval) {
           var filter = {type: val.type, name:(val.name.length > 2 ? val.name : '')};
-          this.listArmazens(filter)
+          this.listClassificacoes(filter)
         },
         deep: true,
       }
@@ -116,67 +109,70 @@
     },
     methods: {
       listBySearch: function(val){
-        this.filter.nameOrPlaque = val;
+        this.filter.name = val;
       },
-      listArmazens: function(filter) {
+      listClassificacoes: function(filter) {
         this.$q.loading.show();
-        this.armazemService.listArmazens(filter).then(armazens => {
-          this.armazens = armazens;
-          this.isEmptyList = this.armazens.length === 0;
+        this.classificacaoService.listClassificacoes(filter).then(classificacoes => {
+          this.classificacoes = classificacoes;
+          this.isEmptyList = this.classificacoes.length === 0;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações.'});
           this.$q.loading.hide();
         });
       },
-      viewArmazem: function(id) {
-        this.$router.push({name: 'view_armazem', params: {id:id}});
+      viewClassificacao: function(id) {
+        this.$router.push({name: 'view_classificacao', params: {id:id}});
       },
-      addArmazem: function(){
-        this.$router.push({name: 'add_armazem'});
+      addClassificacao: function(){
+        this.$router.push({name: 'add_classificacao'});
       },
-      archiveArmazem: function(id){
+      updateClassificacao: function(id){
+        this.$router.push({name: 'edit_classificacao', params: {id:id}});
+      },
+      archiveClassificacao: function(id){
         this.$q.loading.show();
-        this.armazemService.archiveArmazem(id).then(() =>{
-          this.$q.notify({type: 'positive', message: 'Armazém arquivado com sucesso.'});
-          this.listArmazens(this.filter);
+        this.classificacaoService.archiveClassificacao(id).then(() =>{
+          this.$q.notify({type: 'positive', message: 'Classificação arquivado com sucesso.'});
+          this.listClassificacoes(this.filter);
           this.$q.loading.hide();
         }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse armazém.'});
+          this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse classificação.'});
           this.$q.loading.hide();
         })
       },
-      restoreArmazem: function(id){
+      restoreClassificacao: function(id){
         this.$q.loading.show();
-        this.armazemService.restoreArmazem(id).then(response =>{
-          this.$q.notify({type: 'positive', message: 'Armazém ativado com sucesso.'});
-          this.listArmazens(this.filter);
+        this.classificacaoService.restoreClassificacao(id).then(() =>{
+          this.$q.notify({type: 'positive', message: 'Classificação ativada com sucesso.'});
+          this.listClassificacoes(this.filter);
           this.$q.loading.hide();
         }).catch(error =>{
           this.$q.loading.hide();
-          this.$q.notify({type: 'negative', message: 'Não foi possível restaurar esse armazém.'});
+          this.$q.notify({type: 'negative', message: 'Não foi possível restaurar essa classificação.'});
         })
       },
-      deleteArmazem: function(id){
+      deleteClassificacao: function(id){
         this.$q.loading.show();
-        this.armazemService.deleteArmazem(id).then(() => {
-          this.$q.notify({type: 'positive', message: 'Armazém excluido com sucesso.'});
-          this.listArmazens(this.filter);
+        this.classificacaoService.deleteClassificacao(id).then(() => {
+          this.$q.notify({type: 'positive', message: 'Classificação excluida com sucesso.'});
+          this.listClassificacoes(this.filter);
           this.$q.loading.hide();
         }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível excluir esse armazém'});
+          this.$q.notify({type: 'negative', message: 'Não foi possível excluir essa classificação'});
           this.$q.loading.hide();
         })
       },
     },
     mounted () {
       new AccountRepository().getFirst().then(account => {
-        this.armazemService = new ArmazemService(account.produtor_id);
-        this.listArmazens(this.filter);
+        this.classificacaoService = new ClassificacaoService();
+        this.listClassificacoes(this.filter);
       });
 
-      this.$root.$on('refresh/armazensList', () => {
-        this.listArmazens(this.filter);
+      this.$root.$on('refreshClassificacoesList', () => {
+        this.listClassificacoes(this.filter);
       });
     },
   }
@@ -186,17 +182,21 @@
   .space-end{
     margin-bottom: 300px;
   }
-  .list-empty{
-    height: 55px;
+  .no-result{
     text-align: center;
-    padding-top: 15px;
-    color: #8c8c8c;
-    font-weight: bold;
-    font-size: 20px;
+    padding-top: 150px;
   }
-  .list-empty i{
-    color: #ffb500;
-    font-size: 20px;
-    margin-right: 6px;
+
+  .no-result img{
+    width: 120px;
+    height: auto;
+  }
+
+  .no-result span{
+    display: block;
+    margin-top: 30px;
+    font-size: 25px;
+    font-weight: 300;
+    color: #ababab;
   }
 </style>

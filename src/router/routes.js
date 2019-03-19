@@ -60,6 +60,11 @@ const routes = [
       { name: 'add_armazem', path: 'armazem/add', component: () => import('pages/admin/armazens/ArmazemAdd.vue') },
       { name: 'edit_armazem', path: 'armazem/edit/:id', component: () => import('pages/admin/armazens/ArmazemEdit.vue') },
 
+      { name: 'classificacoes', path: 'classificacoes', component: () => import('pages/admin/classificacoes/ClassificacoesList.vue')},
+      { name: 'view_classificacao', path: 'classificacao/view/:id', component: () => import('pages/admin/classificacoes/ClassificacaoView.vue') },
+      { name: 'add_classificacao', path: 'classificacao/add', component: () => import('pages/admin/classificacoes/ClassificacaoAdd.vue') },
+      { name: 'edit_classificacao', path: 'armazem/edit/:id', component: () => import('pages/admin/classificacoes/ClassificacaoEdit.vue') },
+
     ]
   }
 ];
