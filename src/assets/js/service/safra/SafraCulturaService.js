@@ -70,7 +70,7 @@ export default class SafraCulturaService {
 
   updateSafraCultura(safra_id, safra_cultura_id, safraCultura){
     return new Promise((resolve, reject) => {
-      SafraCulturaAPI.updateSafraCultura(safraCultura, safra_cultura_id. safra_id).then(response => {
+      SafraCulturaAPI.updateSafraCultura(safraCultura, safra_cultura_id, safra_id).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
