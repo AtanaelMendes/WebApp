@@ -62,8 +62,14 @@
     },
     methods: {
       listLocalizacao: function(){
+        this.$q.loading.show();
         this.localizacaoService.listLocalizacao().then(response => {
           this.localizacaoOptions = response;
+          this.$q.loading.hide();
+        }).catch(error =>{
+          console.log(error);
+          this.$q.notify({type: 'negative', message: 'Não foi possivel carregar as localizações'});
+          this.$q.loading.hide();
         })
       },
       formIsValid: function(){

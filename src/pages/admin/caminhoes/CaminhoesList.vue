@@ -204,37 +204,61 @@
         this.$router.push({name: 'edit_caminhao', params: {id:id}});
       },
       archiveCaminhao: function(id){
-        this.$q.loading.show();
-        this.caminhaoService.archiveCaminhao(id).then(() =>{
-          this.$q.notify({type: 'positive', message: 'Caminhão arquivado com sucesso.'});
-          this.listCaminhoes(this.filter);
-          this.$q.loading.hide();
-        }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse caminhão.'});
-          this.$q.loading.hide();
-        })
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja arquivar este caminhão?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(() =>{
+          this.$q.loading.show();
+          this.caminhaoService.archiveCaminhao(id).then(() =>{
+            this.$q.notify({type: 'positive', message: 'Caminhão arquivado com sucesso.'});
+            this.listCaminhoes(this.filter);
+            this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse caminhão.'});
+            this.$q.loading.hide();
+          })
+        });
       },
       restoreCaminhao: function(id){
-        this.$q.loading.show();
-        this.caminhaoService.restoreCaminhao(id).then(() =>{
-          this.$q.notify({type: 'positive', message: 'Caminhão ativado com sucesso.'});
-          this.listCaminhoes(this.filter);
-          this.$q.loading.hide();
-        }).catch(error =>{
-          this.$q.loading.hide();
-          this.$q.notify({type: 'negative', message: 'Não foi possível restaurar esse caminhão.'});
-        })
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja restaurar este caminhão?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(() =>{
+          this.$q.loading.show();
+          this.caminhaoService.restoreCaminhao(id).then(() =>{
+            this.$q.notify({type: 'positive', message: 'Caminhão ativado com sucesso.'});
+            this.listCaminhoes(this.filter);
+            this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.loading.hide();
+            this.$q.notify({type: 'negative', message: 'Não foi possível restaurar esse caminhão.'});
+          })
+        });
+
       },
       deleteCaminhao: function(id){
-        this.$q.loading.show();
-        this.caminhaoService.deleteCaminhao(id).then(() => {
-          this.$q.notify({type: 'positive', message: 'Caminhão excluido com sucesso.'});
-          this.listCaminhoes(this.filter);
-          this.$q.loading.hide();
-        }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível excluir esse caminhão'});
-          this.$q.loading.hide();
-        })
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja excluir este caminhão?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(() =>{
+          this.$q.loading.show();
+          this.caminhaoService.deleteCaminhao(id).then(() => {
+            this.$q.notify({type: 'positive', message: 'Caminhão excluido com sucesso.'});
+            this.listCaminhoes(this.filter);
+            this.$q.loading.hide();
+          }).catch(error =>{
+            console.log(error);
+            this.$q.notify({type: 'negative', message: 'Não foi possível excluir esse caminhão'});
+            this.$q.loading.hide();
+          })
+        });
+
       },
     },
     mounted () {

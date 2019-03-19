@@ -85,8 +85,14 @@
     },
     methods: {
       selectUnidadeMedida: function(){
+        this.$q.loading.show();
         this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
           this.unidadeMedidaOptions = this.parsedUnidades(unidades)
+          this.$q.loading.hide();
+        }).catch(error =>{
+          console.log(error);
+          this.$q.notify({type: 'negative', message: 'Não foi possivel carregar as unidade de medida'});
+          this.$q.loading.hide();
         })
       },
       parsedUnidades: function(unidades){
@@ -164,6 +170,7 @@
           this.$q.loading.hide();
           this.backAction();
         }).catch(error =>{
+          console.log(error);
           this.$q.notify({type: 'negative', message: 'Não foi possível adicionar o caminhão'})
           this.$q.loading.hide();
         })

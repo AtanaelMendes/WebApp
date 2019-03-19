@@ -35,7 +35,8 @@
           this.armazem = armazem;
           this.$q.loading.hide();
         }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações.'});
+          console.log(error);
+          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações do armazém'});
           this.$q.loading.hide();
         })
       },

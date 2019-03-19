@@ -181,6 +181,7 @@
           this.$q.loading.hide();
           this.backAction();
         }).catch(error =>{
+          console.log(error);
           this.$q.notify({type: 'negative', message: 'Não foi possível salvar as alterações'})
           this.$q.loading.hide();
         })
