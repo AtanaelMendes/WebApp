@@ -114,11 +114,11 @@
     },
     data () {
       return {
+        produtorId: null,
         motoristaService: null,
         motoristas: [],
         modalAddFotoMotorista: false,
         selectedMotoristaId: null,
-        produtorId: localStorage.getItem('account.produtor_id'),
         isEmptyList: false,
         filter: {
           type: 'non-trashed',
@@ -224,6 +224,7 @@
     mounted () {
       new AccountRepository().getFirst().then(account => {
         this.motoristaService = new MotoristaService(account.produtor_id);
+        this.produtorId = account.produtor_id;
         this.listMotoristas(this.filter);
       });
 

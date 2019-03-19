@@ -167,6 +167,7 @@
         if(!this.nomeIsValid() || !this.placaIsValid() || !this.isUnidadeMedidaRequired()){
           return
         }
+        this.$q.loading.show();
         let params = {
           nome: this.caminhao.nome.value,
           placa: this.caminhao.placa.value,
@@ -177,9 +178,11 @@
         };
         this.caminhaoService.updateCaminhao(this.$route.params.id, params).then(() => {
           this.$q.notify({type: 'positive', message: 'Caminhão adicionado com sucesso.'});
+          this.$q.loading.hide();
           this.backAction();
         }).catch(error =>{
           this.$q.notify({type: 'negative', message: 'Não foi possível salvar as alterações'})
+          this.$q.loading.hide();
         })
       },
       backAction: function () {
