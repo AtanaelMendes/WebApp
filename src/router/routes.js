@@ -27,11 +27,11 @@ const routes = [
       // { name: 'edit_area', path: 'edit/:id', component: () => import('pages/admin/notasFiscais/AreaEdit.vue') }
 
       { name: 'areas', path: 'areas', component: () => import('pages/admin/areas/AreaList.vue')},
-      { name: 'add_area', path: 'add', component: () => import('pages/admin/areas/AreaAdd.vue') },
-      { name: 'view_area', path: 'view/:id', component: () => import('pages/admin/areas/AreaView.vue') },
-      { name: 'edit_area', path: 'edit/:id', component: () => import('pages/admin/areas/AreaEdit.vue') },
-      { name: 'add_talhao', path: 'add/:id', component: () => import('pages/admin/areas/talhao/TalhaoAdd.vue') },
-      { name: 'edit_talhao', path: ':id/edit/:talhaoId', component: () => import('pages/admin/areas/talhao/TalhaoEdit.vue') },
+      { name: 'add_area', path: 'area/add', component: () => import('pages/admin/areas/AreaAdd.vue') },
+      { name: 'view_area', path: 'area/view/:id', component: () => import('pages/admin/areas/AreaView.vue') },
+      { name: 'edit_area', path: 'area/edit/:id', component: () => import('pages/admin/areas/AreaEdit.vue') },
+      { name: 'add_talhao', path: 'talhao/add/:id', component: () => import('pages/admin/areas/talhao/TalhaoAdd.vue') },
+      { name: 'edit_talhao', path: 'area/:id/talhao/edit/:talhaoId', component: () => import('pages/admin/areas/talhao/TalhaoEdit.vue') },
 
       { name: 'safras', path: 'safras', component: () => import('pages/admin/safras/SafraList.vue')},
       { name: 'add_safra', path: 'safras/add', component: () => import('pages/admin/safras/SafraAdd.vue') },

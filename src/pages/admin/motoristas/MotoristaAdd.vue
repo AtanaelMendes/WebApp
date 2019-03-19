@@ -29,7 +29,7 @@
   import MotoristaService from "../../../assets/js/service/motorista/MotoristaService";
   import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
-    name: "motorista-update",
+    name: "motorista-add",
     components: {
       toolbar,
       customPage

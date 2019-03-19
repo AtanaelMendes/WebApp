@@ -28,7 +28,7 @@
       <div class="col-12">
         <q-list highlight no-border sparse>
 
-          <q-item separator multiline link v-for="area in areas" :key="area.id" @click.native="selectArea(area.id)">
+          <q-item separator multiline link v-for="area in areas" :key="area.id" @click.native="viewArea(area.id)">
             <q-item-main>
               <q-item-tile>
                 {{area.nome}}
@@ -46,7 +46,6 @@
       </div>
     </div>
 
-
     <div v-if="isEmptyList" class="no-result">
       <ap-no-results />
     </div>
@@ -54,7 +53,6 @@
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
       <q-btn round color="deep-orange" @click="addArea()" icon="add" size="20px" />
     </q-page-sticky>
-
 
   </custom-page>
 </template>
@@ -94,15 +92,19 @@
     },
     methods: {
       list: function(filter) {
+        this.$q.loading.show();
         this.areaService.listAreas(filter).then(areas => {
           this.areas = areas;
           this.isEmptyList = this.areas.length === 0;
+          this.$q.loading.hide();
+        }).catch(error =>{
+          console.log(error);
+          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações'});
+          this.$q.loading.hide();
         });
       },
-      selectArea: function(id) {
+      viewArea: function(id) {
         this.$router.push({name: 'view_area', params: {id:id}});
-        // this.$router.push({name: 'negocio_view', params: {id:id}});
-        // this.$router.push({name: 'add_pessoa'});
       },
       addArea: function(){
         this.$router.push({name: 'add_area'});

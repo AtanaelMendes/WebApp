@@ -43,24 +43,36 @@
     },
     methods:{
       listLocalizacao: function(){
+        this.$q.loading.show();
         this.localizacaoService.listLocalizacoesByProdutor(produtorId).then(localizacoes => {
           this.localizacaoOptions = localizacoes.map(local => {
             return {
               value: local.id,
               label: local.endereco +', '+ local.numero,
               sublabel: local.bairro +', '+ local.cidade.nome +'-'+ local.cidade.estado.sigla
-            }
+            };
           });
+          this.$q.loading.hide();
+        }).catch(error =>{
+          console.log(error);
+          this.$q.loading.hide();
+          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações'})
         })
       },
       saveArea: function(){
         if(!this.area.isValid()){
           return;
         }
+        this.$q.loading.show();
         this.areaService.saveArea(this.area.getValues()).then(() => {
           this.$q.notify({type: 'positive', message: 'Área criada com sucesso'});
           this.$root.$emit('refreshAreaList');
           this.$router.push({name: 'areas'});
+          this.$q.loading.hide();
+        }).catch(error =>{
+          console.log(error);
+          this.$q.notify({type: 'negative', message: 'Não foi possível salvar'});
+          this.$q.loading.hide();
         });
       },
       backAction: function () {

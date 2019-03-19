@@ -60,11 +60,8 @@
       </div>
     </div>
 
-    <div class="row items-center" style="min-height: 80vh" v-if="motoristas.length === 0">
-      <div class=" col-12 list-empty">
-        <q-icon name="warning" size="30px"/>
-        <span>Nenhum motorista encontrado</span>
-      </div>
+    <div v-if="isEmptyList" class="no-result">
+      <ap-no-results />
     </div>
 
     <!--MODAL ADD FOTO MOTORISTA-->
@@ -74,7 +71,7 @@
       </div>
 
       <div class="row justify-center content-center" style="min-height: 80vh">
-        <imape-upload ref="motoristaImageUpload"
+        <image-upload ref="motoristaImageUpload"
                       :url="motoristaImageUrl"
                       v-on:on_error="uploadFotoError"
                       v-on:on_upload_success="uploadFotoSuccess"
@@ -97,10 +94,9 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import motoristaService from 'assets/js/service/motorista/MotoristaService'
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
-  import imapeUpload from 'components/ImageUpload'
+  import imageUpload from 'components/ImageUpload'
   import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import MotoristaService from "../../../assets/js/service/motorista/MotoristaService";
   export default {
@@ -109,7 +105,7 @@
       apNoResults,
       toolbar,
       apImage,
-      imapeUpload,
+      imageUpload,
       customPage
     },
     data () {
