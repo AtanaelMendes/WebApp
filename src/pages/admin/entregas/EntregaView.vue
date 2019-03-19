@@ -175,9 +175,13 @@
                             {{negocio.negocio_cultura.negocio.numero_contrato}}
                           </template>
                           <br />
-                          {{numeral(negocio.negocio_cultura.quantidade).format('0,0')}}
-                          {{negocio.negocio_cultura.unidade_medida.sigla}} até
-                          {{moment(negocio.negocio_cultura.prazo_entrega_final).format('DD/MMM/YY')}}
+                          <span v-if="negocio.negocio_cultura.quantidade">
+                            {{numeral(negocio.negocio_cultura.quantidade).format('0,0')}}
+                            {{negocio.negocio_cultura.unidade_medida.sigla}}&nbsp
+                          </span>
+                          <span v-if="negocio.negocio_cultura.prazo_entrega_final">
+                            até {{moment(negocio.negocio_cultura.prazo_entrega_final).format('DD/MMM/YY')}}
+                          </span>
                         </span>
 
                     </q-list-header>

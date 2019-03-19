@@ -65,11 +65,8 @@
       </div>
     </div>
 
-    <div class="row items-center" style="min-height: 80vh" v-if="armazens.length === 0">
-      <div class=" col-12 list-empty">
-        <q-icon name="warning" size="30px"/>
-        <span>Nenhum armazém encontrado</span>
-      </div>
+    <div v-if="isEmptyList" class="no-result">
+      <ap-no-results />
     </div>
 
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
