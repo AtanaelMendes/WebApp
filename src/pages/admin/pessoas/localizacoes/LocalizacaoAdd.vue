@@ -88,33 +88,32 @@
         this.localizacao.cidadeId.value = value.id;
       },
       saveLocalizacao: function(){
-        // if(this.localizacao.isFiscal.value == false && this.localizacao.isCobranca.value == false){
-        //   this.typeError = 'Escolha ao menos um tipo de endereço'
-        //   return
-        // }else{
-        //   this.typeError = null
-        // }
         if(!this.localizacao.isValid()){
           return
         }
+        this.$q.loading.show();
         this.localizacaoService.saveLocalizacao(this.$route.params.id, this.localizacao.getValues()).then( response => {
           this.$q.notify({type: 'positive', message: 'Localização criada com sucesso'});
           this.$router.back();
+          this.$q.loading.hide();
         }).catch(error => {
-          this.$q.notify({type: 'negative', message: error.request.response})
+          this.$q.notify({type: 'negative', message: error.request.response});
+          this.$q.loading.hide();
         })
       },
       getLocationByCEP: function(cep){
         this.isLoadingAddress = true;
+        this.$q.loading.show();
         this.localizacaoService.getAddressByCEP(cep).then(address => {
           this.localizacao.endereco.value = address.endereco;
           this.localizacao.bairro.value = address.bairro;
           this.localizacao.cidadeId.value = address.cidade.id;
           this.cidadeTerms = address.cidade.nome;
-
           this.isLoadingAddress = false;
+          this.$q.loading.hide();
         }).catch(() => {
           this.isLoadingAddress = false;
+          this.$q.loading.hide();
         })
       },
       backAction: function () {

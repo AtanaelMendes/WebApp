@@ -139,21 +139,29 @@
 
       },
       getPessoa: function(id){
+        this.$q.loading.show();
         this.pessoaService.getPessoa(id).then(pessoa => {
-          this.fillForm(pessoa)
+          this.fillForm(pessoa);
+          this.$q.loading.hide();
+        }).catch(error =>{
+          console.log(error.response);
+          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações'});
+          this.$q.loading.hide();
         })
       },
       updatePessoa: function(){
         if(!this.pessoa.isValid()){
           return;
         }
-        // this.$q.notify({type: 'positive', message: 'Funcao update'})
+        this.$q.loading.show();
         this.pessoaService.updatePessoa(this.$route.params.id, this.pessoa.getValues()).then(() => {
           this.$q.notify({type: 'positive', message: 'Pessoa atualizada com sucesso'});
           this.$router.push({name: 'pessoas'});
-          this.$root.$emit('refreshPessoaList')
+          this.$root.$emit('refreshPessoaList');
+          this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.request.response})
+          this.$q.loading.hide();
         });
       },
       search (terms, done) {
@@ -162,25 +170,20 @@
           done(result)
         });
       },
-      pessoaTypeChanged: function(){
-        // if(value === 1){
-        //   this.pessoa.cnpj = null
-        // }
-        // if(value === 2){
-        //   this.pessoa.cpf = null
-        // }
-      },
       createGrupoEconomico: function(){
         if(!this.grupoEconomico.isValid(this)){
           return;
         }
+        this.$q.loading.show();
         this.grupoEconomicoService.saveGrupoEconomico(this.grupoEconomico.getValues()).then(grupoEconomico => {
           this.$q.notify({type: 'positive', message: 'Grupo Econômico criado com sucesso'});
           this.closeNovoGrupoEconomicoDialog();
           this.grupoEconomicoSearchTerms = grupoEconomico.nome;
           this.pessoa.grupoEconomico.value = grupoEconomico.id;
+          this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.request.response})
+          this.$q.loading.hide();
         })
       },
       openNovoGrupoEconomicoDialog: function(){

@@ -183,25 +183,30 @@
     },
     methods:{
       fillForm: function(data){
-        let vm = this
-        this.contatoId = data.id
-        this.contato.isFiscal = data.is_fiscal
-        this.contato.isCobranca = data.is_cobranca
-        this.contato.nome.value = data.nome
+        let vm = this;
+        this.contatoId = data.id;
+        this.contato.isFiscal = data.is_fiscal;
+        this.contato.isCobranca = data.is_cobranca;
+        this.contato.nome.value = data.nome;
         data.telefones.forEach(function (telefone) {
           let telefoneConverted = {tipo: telefone.is_celular ? 1 : 0, numero: {value: telefone.numero}};
           vm.contato.addTelefone(new Telefone(telefoneConverted))
-        })
+        });
         data.emails.forEach(function (email) {
           let emailConverted = {endereco: {value: email.endereco}};
           vm.contato.addEmail(new Email(emailConverted))
         })
       },
       getContato: function(){
-        let pessoaId = this.$route.params.id
-        let contatoId = this.$route.params.contatoId
+        let pessoaId = this.$route.params.id;
+        let contatoId = this.$route.params.contatoId;
+        this.$q.loading.show();
         this.contatoService.getContato(pessoaId, contatoId).then(contato => {
-          this.fillForm(contato)
+          this.fillForm(contato);
+          this.$q.loading.hide();
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possivel carregar as informações'});
+          this.$q.loading.hide();
         });
       },
       setTelefoneTipo: function(tipo){
@@ -226,11 +231,14 @@
             })
           }
         }
+        this.$q.loading.show();
         this.contatoService.updateContato(this.$route.params.id, this.contatoId, this.contato.getValues()).then( () => {
           this.$q.notify({type: 'positive', message: 'Contato criado com sucesso'})
           this.$router.go(-1);
+          this.$q.loading.hide();
         }).catch(error => {
-          this.$q.notify({type: 'negative', message: error})
+          this.$q.notify({type: 'negative', message: error});
+          this.$q.loading.hide();
         })
       },
       openAddPhoneDialog: function(telefone){

@@ -96,41 +96,49 @@
         this.localizacao.cidadeId.value = value.id;
       },
       fillForm: function(data){
-        this.cidadeTerms = data.cidade.nome
+        this.cidadeTerms = data.cidade.nome;
 
-        this.localizacao.cidadeId.value = data.cidade_id
-        this.localizacao.isCobranca.value = data.is_cobranca
-        this.localizacao.isFiscal.value = data.is_fiscal
-        this.localizacao.endereco.value = data.endereco
-        this.localizacao.numero.value = data.numero
-        this.localizacao.complemento.value = data.complemento
-        this.localizacao.bairro.value = data.bairro
-        this.localizacao.cep.value = data.cep
+        this.localizacao.cidadeId.value = data.cidade_id;
+        this.localizacao.isCobranca.value = data.is_cobranca;
+        this.localizacao.isFiscal.value = data.is_fiscal;
+        this.localizacao.endereco.value = data.endereco;
+        this.localizacao.numero.value = data.numero;
+        this.localizacao.complemento.value = data.complemento;
+        this.localizacao.bairro.value = data.bairro;
+        this.localizacao.cep.value = data.cep;
       },
       getLocalizacao: function(){
-        let pessoaId = this.$route.params.id
-        let localizacaoId = this.$route.params.localizacaoId
+        let pessoaId = this.$route.params.id;
+        let localizacaoId = this.$route.params.localizacaoId;
+        this.$q.loading.show();
         this.localizacaoService.getLocalizacao(pessoaId, localizacaoId).then(localizacao => {
-          this.fillForm(localizacao)
+          this.fillForm(localizacao);
+          this.$q.loading.hide();
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações da localização'});
+          this.$q.loading.hide();
         });
       },
       updateLocalizacao: function(){
-        let pessoaId = this.$route.params.id
-        let localizacaoId = this.$route.params.localizacaoId
+        let pessoaId = this.$route.params.id;
+        let localizacaoId = this.$route.params.localizacaoId;
         if(this.localizacao.isFiscal.value == false && this.localizacao.isCobranca.value == false){
-          this.typeError = 'Escolha ao menos um tipo de endereço'
+          this.typeError = 'Escolha ao menos um tipo de endereço';
           return
         }else{
-          this.typeError = null
+          this.typeError = null;
         }
         if(!this.localizacao.isValid()){
           return
         }
+        this.$q.loading.show();
         this.localizacaoService.updateLocalizacao(pessoaId, localizacaoId, this.localizacao.getValues()).then(() => {
-          this.$q.notify({type: 'positive', message: 'Localizacão atualizada com sucesso'})
+          this.$q.notify({type: 'positive', message: 'Localizacão atualizada com sucesso'});
+          this.$q.loading.hide();
           this.$router.go(-1);
         }).catch(error => {
-          this.$q.notify({type: 'negative', message: error})
+          this.$q.notify({type: 'negative', message: error});
+          this.$q.loading.hide();
         })
       },
       getLocationByCEP: function(cep){

@@ -96,9 +96,13 @@
         this.filter.email = val;
       },
       list: function(filter) {
+        this.$q.loading.show();
         this.pessoaService.listPessoas(filter).then(pessoas => {
           this.pessoas = pessoas;
           this.isEmptyList = this.pessoas.length === 0;
+          this.$q.loading.hide();
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possível carrgar as informações'})
         });
       },
       viewPessoa: function(id) {
