@@ -28,7 +28,14 @@
                   @blur="checkGrupoEconomicoInput"
                   :after="[{icon:'arrow_drop_down'}]"
                   v-model="grupoEconomicoSearchTerms">
-                  <q-autocomplete @search="searchGrupoEconomico" @selected="setGrupoEconomico" :min-characters="0" :debounce="500" value-field="label"/>
+                  <q-autocomplete
+                    max-results="20"
+                    @search="searchGrupoEconomico"
+                    @selected="setGrupoEconomico"
+                    :min-characters="0"
+                    :debounce="500"
+                    value-field="label"
+                  />
                 </q-input>
               </q-item-main>
 
@@ -79,9 +86,7 @@
       <span slot="title">Novo Grupo Econômico</span>
       <span slot="message">Crie um novo Grupo Econômico preenchendo o campo abaixo</span>
       <div slot="body">
-        <form @keyup.enter="createGrupoEconomico()">
-          <custom-input-text type="text" label="Grupo Econômico" :model="grupoEconomico.nome" />
-        </form>
+        <custom-input-text type="text" label="Grupo Econômico" :model="grupoEconomico.nome" @keyup.enter="createGrupoEconomico()"/>
       </div>
       <template slot="buttons" slot-scope="props">
         <q-btn flat @click="closeNovoGrupoEconomicoDialog"  label="Cancelar"/>
@@ -142,12 +147,15 @@
         if(!this.pessoa.isValid()){
           return;
         }
+        this.$q.loading.show();
         this.pessoaService.savePessoa(this.pessoa.getValues()).then(() => {
           this.$q.notify({type: 'positive', message: 'Pessoa criada com sucesso'});
           this.$router.push({name: 'pessoas'});
-          this.$root.$emit('refreshPessoaList')
+          this.$root.$emit('refreshPessoaList');
+          this.$q.loading.hide();
         }).catch(error => {
-          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.request.response})
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.request.response});
+          this.$q.loading.hide();
         });
 
       },
@@ -163,15 +171,16 @@
         if(!this.grupoEconomico.isValid(this)){
           return;
         }
+        this.$q.loading.show();
         this.grupoEconomicoService.saveGrupoEconomico(this.grupoEconomico.getValues()).then(grupoEconomico => {
           this.$q.notify({type: 'positive', message: 'Grupo Econômico criado com sucesso'});
           this.closeNovoGrupoEconomicoDialog();
           this.grupoEconomicoSearchTerms = grupoEconomico.nome;
           this.pessoa.grupoEconomico.value = grupoEconomico.id;
+          this.$q.loading.hide();
         }).catch(error => {
-          if (error.response.status === 422){
-            this.$q.dialog({title:'Ops', message: 'Já existe um registro com esse nome'})
-          }
+          this.$q.dialog({title:'Ops', message: error.message});
+          this.$q.loading.hide();
         })
       },
       searchGrupoEconomico (terms, done) {

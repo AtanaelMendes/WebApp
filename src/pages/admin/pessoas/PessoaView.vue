@@ -342,8 +342,13 @@
     },
     methods: {
       getPessoa: function(id){
+        this.$q.loading.show();
         this.pessoaService.getPessoa(id).then(pessoa => {
           this.pessoa = pessoa;
+          this.$q.loading.hide();
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possivel carregar as informações da pessoa'});
+          this.$q.loading.hide();
         })
       },
       editPessoa: function(){
@@ -356,10 +361,15 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           this.pessoaService.deletePessoa(this.$route.params.id).then(() => {
-            this.$q.notify({type: 'positive', message: 'Pessoa Excluir com sucesso'})
+            this.$q.notify({type: 'positive', message: 'Pessoa Excluir com sucesso'});
             this.$router.push({name:'pessoas'});
             this.$root.$emit('refreshPessoaList');
+            this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possivel excluir esta pessoa'});
+            this.$q.loading.hide();
           })
         });
       },
@@ -370,11 +380,16 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           this.pessoaService.archivePessoa(this.$route.params.id).then(() => {
-            this.$q.notify({type: 'positive', message: 'Pessoa Arquivada com sucesso'})
+            this.$q.notify({type: 'positive', message: 'Pessoa Arquivada com sucesso'});
             this.getPessoa(this.$route.params.id);
             this.$root.$emit('refreshPessoaList');
             this.$router.push({name:'pessoas'});
+            this.$q.loading.hide();
+          }).catch(erro =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esta pessoa'});
+            this.$q.loading.hide();
           })
         });
       },
@@ -385,10 +400,15 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           this.pessoaService.restorePessoa(this.$route.params.id).then(() => {
-            this.$q.notify({type: 'positive', message: 'Pessoa Ativada'})
+            this.$q.notify({type: 'positive', message: 'Pessoa Ativada'});
             this.getPessoa(this.$route.params.id);
             this.$root.$emit('refreshPessoaList');
+            this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível restaurar esta pessoa'});
+            this.$q.loading.hide();
           })
         });
       },
@@ -399,8 +419,13 @@
         this.$router.push({name: 'update_contact', params: {id:this.$route.params.id, contatoId: contatoId}});
       },
       listContatos: function(pessoaId) {
+        this.$q.loading.show();
         this.contatoService.listContatos(pessoaId).then(contatos => {
           this.contatos = contatos;
+          this.$q.loading.hide();
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possível carragar os contatos'});
+          this.$q.loading.hide();
         });
       },
       deleteContato: function(contatoId) {
@@ -410,9 +435,14 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           this.contatoService.deleteContato(contatoId, this.$route.params.id).then(() => {
-            this.$q.notify({type: 'positive', message: 'Contato excluido'})
+            this.$q.notify({type: 'positive', message: 'Contato excluido'});
             this.listContatos(this.$route.params.id);
+            this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível exlcuir este contato'});
+            this.$q.loading.hide();
           })
         });
       },
@@ -423,9 +453,14 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           this.contatoService.archiveContato(contatoId, this.$route.params.id).then(() => {
-            this.$q.notify({type: 'positive', message: 'Contato arquivado'})
+            this.$q.notify({type: 'positive', message: 'Contato arquivado'});
             this.listContatos(this.$route.params.id);
+            this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possivel arquivar este contato'});
+            this.$q.loading.hide();
           })
         });
       },
@@ -436,9 +471,14 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           this.contatoService.restoreContato(contatoId, this.$route.params.id).then(() => {
-            this.$q.notify({type: 'positive', message: 'Contato ativado'})
+            this.$q.notify({type: 'positive', message: 'Contato ativado'});
             this.listContatos(this.$route.params.id);
+            this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível restaurar este contato'});
+            this.$q.loading.hide();
           })
         });
       },
@@ -465,9 +505,14 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           this.localizacaoService.deleteLocalizacao(this.$route.params.id, localizacaoId).then(() => {
             this.$q.notify({type: 'positive', message: 'Endereço excluido com sucesso'});
-            this.listLocalizacoes(this.$route.params.id)
+            this.listLocalizacoes(this.$route.params.id);
+            this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível excluir esta localização'});
+            this.$q.loading.hide();
           });
         });
       },
@@ -478,9 +523,14 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           this.localizacaoService.archiveLocalizacao(this.$route.params.id, localizacaoId).then(() => {
-            this.$q.notify({type: 'positive', message: 'Endereço Arquivado com sucesso'})
-            this.listLocalizacoes(this.$route.params.id)
+            this.$q.notify({type: 'positive', message: 'Endereço Arquivado com sucesso'});
+            this.listLocalizacoes(this.$route.params.id);
+            this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esta localização'});
+            this.$q.loading.hide();
           });
         });
       },
@@ -491,15 +541,25 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           this.localizacaoService.restoreLocalizacao(this.$route.params.id, localizacaoId).then(() => {
             this.$q.notify({type: 'positive', message: 'Endereço Ativado com sucesso'});
             this.listLocalizacoes(this.$route.params.id)
+            this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível restaurar a localização'});
+            this.$q.loading.hide();
           });
         });
       },
       listLocalizacoes: function(pessoaId) {
+        this.$q.loading.show();
         this.localizacaoService.listLocalizacoes(pessoaId).then(localizacoes => {
           this.localizacoes = localizacoes;
+          this.$q.loading.hide();
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possivel carragar as localizações'});
+          this.$q.loading.hide();
         });
       },
       backAction: function () {

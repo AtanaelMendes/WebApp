@@ -204,14 +204,17 @@
               title: 'Ops!',
               message: 'Adicione ao menos um telefone ou um email para continuar.',
               color: 'primary'
-            })
+            });
             return;
           }
+          this.$q.loading.show();
           this.contatoService.saveContato(this.$route.params.id, this.contato.getValues()).then( () => {
-            this.$q.notify({type: 'positive', message: 'Contato criado com sucesso'})
-            this.$router.push({name:'view_pessoa'})
+            this.$q.notify({type: 'positive', message: 'Contato criado com sucesso'});
+            this.$router.push({name:'view_pessoa'});
+            this.$q.loading.hide();
           }).catch(error => {
-            this.$q.notify({type: 'negative', message: error})
+            this.$q.notify({type: 'negative', message: error});
+            this.$q.loading.hide();
           })
         }
 

@@ -10,13 +10,20 @@ export default class GrupoEconomicoService{
   saveGrupoEconomico(grupoEconomico) {
     return new Promise((resolve, reject) => {
       GrupoEconomicoAPI.saveGrupoEconomico(grupoEconomico, this.produtorId).then(response => {
-        if(response.status === 200){
+        console.log('aqui')
+        if(response.status === 201){
           resolve(response.data)
         }else{
           reject(response)
         }
       }).catch(error => {
-        reject(error)
+        console.log('no catch');
+        console.log(error.response);
+        if(error.response.status === 422){
+          reject(new Error('Já existe um registro com esse nome'))
+        }else{
+          reject(error)
+        }
       })
     });
   };
