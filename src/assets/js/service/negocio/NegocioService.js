@@ -17,7 +17,6 @@ import NegocioProdutoAPI from "../../api/NegocioProdutoAPI";
 import NegocioFixacaoAPI from "../../api/NegocioFixacaoAPI";
 
 export default class NegocioService{
-  #produtorId;
   #negocioRepository;
   #negocioCulturaRepository;
   #unidadeRepository;
@@ -29,8 +28,7 @@ export default class NegocioService{
   #localizacaoRepository;
   #negocioCulturaMovimentoRepository;
 
-  constructor(produtorId) {
-    this.produtorId = produtorId;
+  constructor() {
     this.negocioRepository = new NegocioRepository();
     this.negocioCulturaRepository = new NegocioCulturaRepository();
     this.unidadeRepository = new UnidadeRepository();
@@ -45,7 +43,7 @@ export default class NegocioService{
 
   listTipoNegocios(){
     return new Promise((resolve, reject) => {
-      NegocioAPI.listTiposNegocios(this.produtorId).then( response => {
+      NegocioAPI.listTiposNegocios().then( response => {
         if(response.status === 200) {
           resolve(response.data);
         }else{
@@ -59,7 +57,7 @@ export default class NegocioService{
 
   listNegocios(){
     return new Promise((resolve, reject) => {
-      NegocioAPI.listNegocios(this.produtorId).then( response => {
+      NegocioAPI.listNegocios().then( response => {
         if(response.status === 200) {
           resolve(response.data);
         }else{
@@ -73,7 +71,7 @@ export default class NegocioService{
 
   getNegocioById(id, fullType = false){
     return new Promise((resolve, reject) => {
-      NegocioAPI.getById(id, fullType, this.produtorId).then( response => {
+      NegocioAPI.getById(id, fullType).then( response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -101,7 +99,7 @@ export default class NegocioService{
 
   updateNegocio(id, negocio){
     return new Promise((resolve, reject) => {
-      NegocioAPI.updateNegocio(negocio, id, this.produtorId).then(response => {
+      NegocioAPI.updateNegocio(negocio, id).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
@@ -115,7 +113,7 @@ export default class NegocioService{
 
   archiveNegocio(id){
     return new Promise((resolve, reject) => {
-      NegocioAPI.archiveNegocio(id, this.produtorId).then(response => {
+      NegocioAPI.archiveNegocio(id).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
@@ -129,7 +127,7 @@ export default class NegocioService{
 
   restoreNegocio(id){
     return new Promise((resolve, reject) => {
-      NegocioAPI.restoreNegocio(id, this.produtorId).then(response => {
+      NegocioAPI.restoreNegocio(id).then(response => {
         if(response.status === 200) {
           resolve(response.data)
         }else{
@@ -143,7 +141,7 @@ export default class NegocioService{
 
   deleteNegocio(id){
     return new Promise((resolve, reject) => {
-      NegocioAPI.deleteNegocio(id, this.produtorId).then(response => {
+      NegocioAPI.deleteNegocio(id).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
@@ -198,10 +196,10 @@ export default class NegocioService{
     });
   }
 
-  listNegociosCulturasByProdutor(){
+  listNegociosCulturas(){
     return new Promise(async (resolve, reject) => {
       if(Vue.prototype.serverStatus.isUp) {
-        NegocioCulturaAPI.getByProdutor(this.produtorId).then(response => {
+        NegocioCulturaAPI.getByProdutor().then(response => {
           resolve(response.data)
         }).catch(error => {
           reject()

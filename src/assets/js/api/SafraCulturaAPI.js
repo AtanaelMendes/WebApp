@@ -6,8 +6,8 @@ export default class SafraCulturaAPI{
     return Vue.prototype.$axios.get('safra/' + safraId + '/safra_cultura/' + id);
   }
 
-  static getSafraCulturas(produtorId){
-    return Vue.prototype.$axios.get('produtor/'+ produtorId +'/safra/safra_cultura')
+  static getSafraCulturas(){
+    return Vue.prototype.$axios.get('/safra/safra_cultura')
   }
 
   static getFullSafraCulturaTalhoes(safraCulturaId){

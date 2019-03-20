@@ -337,7 +337,6 @@
   import safraQuantidades from 'components/safra/Quantidades.vue'
   import agroUtils from 'assets/js/AgroUtils'
   import SafraCulturaService from "../../../../assets/js/service/safra/SafraCulturaService";
-  import AccountRepository from "../../../../assets/js/repository/AccountRepository";
 
   export default {
     name: "safra-cultura",
@@ -362,7 +361,7 @@
     },
     data () {
       return {
-        safraCulturaService: null,
+        safraCulturaService: new SafraCulturaService(),
         safra_id: null,
         id: null,
 
@@ -686,10 +685,7 @@
       }
     },
     mounted () {
-      new AccountRepository().getFirst().then(account => {
-        this.safraCulturaService = new SafraCulturaService(account.produtor_id);
-        this.getSafraCultura();
-      });
+      this.getSafraCultura();
       this.id = this.$route.params.id;
       this.safra_id = this.$route.params.safra_id;
     },

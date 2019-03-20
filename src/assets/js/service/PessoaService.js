@@ -34,7 +34,7 @@ export default class PessoaService{
     });
   };
 
-  listPessoasByProdutorId(filter){
+  listPessoas(filter){
     return new Promise((resolve, reject) => {
       PessoaAPI.listPessoas(AgroUtils.serialize(filter)).then( response => {
         if(response.status === 200){
@@ -64,7 +64,7 @@ export default class PessoaService{
 
   searchPessoa(){
     return new Promise((resolve, reject) => {
-      this.listPessoasByProdutorId().then(pessoas => {
+      this.listPessoas().then(pessoas => {
         let pessoaOptions = pessoas.map(pessoa => {
           return {
             value: pessoa.id,

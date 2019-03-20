@@ -24,7 +24,6 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import ClassificacaoService from "../../../assets/js/service/ClassificacaoService";
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
     name: "classificacao-update",
     components: {
@@ -33,7 +32,7 @@
     },
     data () {
       return {
-        classificacaoService: null,
+        classificacaoService: new ClassificacaoService(),
         classificacao: {
           nome: {
             value: null,
@@ -100,10 +99,7 @@
       },
     },
     mounted () {
-      new AccountRepository().getFirst().then(account => {
-        this.classificacaoService = new ClassificacaoService(account.produtor_id);
-        this.getClassificacaoById(this.$route.params.id);
-      });
+      this.getClassificacaoById(this.$route.params.id);
     },
   }
 </script>

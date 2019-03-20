@@ -77,7 +77,6 @@
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
   import ClassificacaoService from "../../../assets/js/service/ClassificacaoService";
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
     name: "classificacoes-list",
     components: {
@@ -87,7 +86,7 @@
     },
     data () {
       return {
-        classificacaoService: null,
+        classificacaoService: new ClassificacaoService(),
         classificacoes: [],
         isEmptyList: false,
         filter: {
@@ -188,10 +187,7 @@
       },
     },
     mounted () {
-      new AccountRepository().getFirst().then(account => {
-        this.classificacaoService = new ClassificacaoService();
-        this.listClassificacoes(this.filter);
-      });
+      this.listClassificacoes(this.filter);
 
       this.$root.$on('refreshClassificacoesList', () => {
         this.listClassificacoes(this.filter);

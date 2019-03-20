@@ -174,7 +174,6 @@
   import customPage from 'components/CustomPage.vue'
   import imapeUpload from 'components/ImageUpload'
   import apImage from 'components/ApImage'
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import AreaService from "../../../assets/js/service/area/AreaService";
   import TalhaoService from "../../../assets/js/service/area/TalhaoService";
 
@@ -195,7 +194,7 @@
     },
     computed: {
       areaImageUrl: function(){
-        return '/produtor/' + this.produtorId + '/area/' + this.selectedAreaId + '/image';
+        return '/area/' + this.selectedAreaId + '/image';
       },
       talhaoImageUrl: function(){
         let area_id = this.$route.params.id;
@@ -213,8 +212,7 @@
     },
     data(){
       return{
-        produtorId: null, //TODO: Retirar daqui quando não tiver mais produtorId nos endpoints
-        areaService: null,
+        areaService: new AreaService(),
         talhaoService: new TalhaoService(),
         area: null,
         talhoes: [],
@@ -414,11 +412,7 @@
       }
     },
     mounted(){
-      new AccountRepository().getFirst().then(account => {
-        this.areaService = new AreaService(account.produtor_id);
-        this.produtorId = account.produtor_id;
-        this.getAreaById(this.$route.params.id)
-      });
+      this.getAreaById(this.$route.params.id);
 
       this.$root.$on('refreshTalhaoList', () => {
         this.listTalhoes(this.$route.params.id);

@@ -101,7 +101,6 @@
   import Produto from 'assets/js/model/negocio/Produto'
   import customInputText from 'components/CustomInputText.vue'
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
-  import AccountRepository from "../../assets/js/repository/AccountRepository";
   import ProdutoService from "../../assets/js/service/produto/ProdutoService";
   import IndexadorService from "../../assets/js/service/IndexadorService";
 
@@ -126,9 +125,9 @@
     },
     data(){
       return {
-        indexadorService: null,
-        produtoService: null,
-        negocioService: null,
+        indexadorService: new IndexadorService(),
+        produtoService: new ProdutoService(),
+        negocioService: new NegocioService(),
         isModalOpened: false,
         produto: new Produto(),
         negocio: null,
@@ -144,10 +143,6 @@
     },
     methods: {
       openModal: async function(negocio){
-        let account = await new AccountRepository().getFirst();
-        this.negocioService = new NegocioService(account.produtor_id);
-        this.produtoService = new ProdutoService(account.produtor_id);
-        this.indexadorService = new IndexadorService(account.produtor_id);
         this.isModalOpened = true;
         this.produto = new Produto();
         this.negocio = negocio;

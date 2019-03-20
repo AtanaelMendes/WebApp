@@ -150,7 +150,6 @@
   import apImage from 'components/ApImage'
   import apNoResults from 'components/ApNoResults'
   import NegocioService from "../../../assets/js/service/negocio/NegocioService";
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
 
   export default {
     name: "negocios",
@@ -163,7 +162,7 @@
     },
     data () {
       return {
-        negocioService: null,
+        negocioService: new NegocioService(),
         negocios: [],
         tipoNegocios: [],
       }
@@ -213,11 +212,8 @@
 
     },
     mounted () {
-      new AccountRepository().getFirst().then(account => {
-        this.negocioService = new NegocioService(account.produtor_id);
-        this.listTipoNegocios();
-        this.listNegocios();
-      });
+      this.listTipoNegocios();
+      this.listNegocios();
 
       this.$root.$on('refreshNegocioList', () => {
         this.listNegocios();

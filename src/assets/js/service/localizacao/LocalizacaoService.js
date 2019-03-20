@@ -48,7 +48,7 @@ export default class LocalizacaoService{
     });
   };
 
-  listLocalizacoes(pessoaId){
+  listLocalizacoesByPessoa(pessoaId){
     return new Promise((resolve, reject) => {
       LocalizacaoAPI.listLocalizacaos(pessoaId).then( response => {
         if(response.status === 200) {
@@ -62,9 +62,9 @@ export default class LocalizacaoService{
     });
   };
 
-  listLocalizacoesByProdutor(produtorId){
+  listLocalizacoes(){
     return new Promise((resolve, reject) => {
-      LocalizacaoAPI.listLocalizacoesByProdutor(produtorId).then( response => {
+      LocalizacaoAPI.listLocalizacoes().then( response => {
         if(response.status === 200) {
           resolve(response.data);
         }else{

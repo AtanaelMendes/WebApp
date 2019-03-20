@@ -81,7 +81,6 @@
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
   import ArmazemService from "../../../assets/js/service/armazem/ArmazemService";
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
     name: "armazens-list",
     components: {
@@ -91,7 +90,7 @@
     },
     data () {
       return {
-        armazemService: null,
+        armazemService: new ArmazemService(),
         armazens: [],
         isEmptyList: false,
         filter: {
@@ -194,10 +193,7 @@
       },
     },
     mounted () {
-      new AccountRepository().getFirst().then(account => {
-        this.armazemService = new ArmazemService(account.produtor_id);
-        this.listArmazens(this.filter);
-      });
+      this.listArmazens(this.filter);
 
       this.$root.$on('refresh/armazensList', () => {
         this.listArmazens(this.filter);

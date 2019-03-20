@@ -426,7 +426,6 @@
   import apNoResults from 'components/ApNoResults'
   import { Screen } from 'quasar'
   import NegocioService from "../../../assets/js/service/negocio/NegocioService";
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
 
   export default {
     name: "negocio-view",
@@ -441,7 +440,7 @@
     },
     data () {
       return {
-        negocioService: null,
+        negocioService: new NegocioService(),
         direita: 'col-xs-12 col-sm-12 col-md-7 col-lg-7',
         esquerda: 'col-xs-12 col-sm-12 col-md-5 col-lg-5',
         negocio: null,
@@ -540,10 +539,7 @@
       },
     },
     mounted () {
-      new AccountRepository().getFirst().then(account => {
-        this.negocioService = new NegocioService(account.produtor_id);
-        this.getNegocioById();
-      });
+      this.getNegocioById();
 
       this.$root.$on('refreshNegocio', () => {
         this.getNegocioById();

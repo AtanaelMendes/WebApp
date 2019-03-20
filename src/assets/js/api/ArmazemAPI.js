@@ -2,35 +2,35 @@ import Vue from 'vue'
 
 export default class ArmazemAPI{
 
-  static getArmazem(id,produtorId){
-    return Vue.prototype.$axios.get('produtor/' + produtorId + '/armazem/'+ id);
+  static getArmazem(id){
+    return Vue.prototype.$axios.get('/armazem/'+ id);
   }
 
-  static listArmazens(produtorId){
-    return Vue.prototype.$axios.get('produtor/' + produtorId + '/armazem');
+  static listArmazens(){
+    return Vue.prototype.$axios.get('/armazem');
   }
 
-  static listArmazensByEntrega(entregaId, produtorId){
-    return Vue.prototype.$axios.get('produtor/' + produtorId + '/armazem/by_entrega/' + entregaId);
+  static listArmazensByEntrega(entregaId){
+    return Vue.prototype.$axios.get('/armazem/by_entrega/' + entregaId);
   }
 
-  static saveArmazem(armazem, produtorId){
-    return Vue.prototype.$axios.post('produtor/' + produtorId + '/armazem', armazem);
+  static saveArmazem(armazem){
+    return Vue.prototype.$axios.post('/armazem', armazem);
   }
 
-  static updateArmazem(armazem, id, produtorId){
-    return Vue.prototype.$axios.put('produtor/' + produtorId + '/armazem/'+ id , armazem);
+  static updateArmazem(armazem, id){
+    return Vue.prototype.$axios.put('/armazem/'+ id , armazem);
   }
 
-  static archiveArmazem(id, produtorId){
-    return Vue.prototype.$axios.put('produtor/' + produtorId + '/armazem/'+ id + '/archive');
+  static archiveArmazem(id){
+    return Vue.prototype.$axios.put('/armazem/'+ id + '/archive');
   }
 
-  static restoreArmazem(id, produtorId){
-    return Vue.prototype.$axios.put('produtor/' + produtorId + '/armazem/'+ id +'/restore');
+  static restoreArmazem(id){
+    return Vue.prototype.$axios.put('/armazem/'+ id +'/restore');
   }
 
-  static deleteArmazem(id, produtorId){
-    return Vue.prototype.$axios.delete('produtor/' + produtorId + '/armazem/'+ id);
+  static deleteArmazem(id){
+    return Vue.prototype.$axios.delete('/armazem/'+ id);
   }
 }

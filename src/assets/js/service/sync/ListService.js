@@ -2,13 +2,11 @@ import EntregaAPI from "../../api/EntregaAPI";
 import EntregaViewRepository from "../../repository/list/EntregaViewRepository";
 import ResourceService from "./ResourceService";
 
-let produtorId;
 let entregaViewRepository;
 
 export default class ListService{
 
-  constructor(produtor_id) {
-    produtorId = produtor_id;
+  constructor() {
     entregaViewRepository = new EntregaViewRepository();
   }
 
@@ -26,7 +24,7 @@ async function getEntregasView(){
     await entregaViewRepository.delete(id);
   }
 
-  let promises = entregasToUpdateIds.map(id => getEntrega(id, produtorId));
+  let promises = entregasToUpdateIds.map(id => getEntrega(id));
 
   return Promise.all(promises).then(()=>{
     ResourceService.entregasToUpdate = [];
@@ -35,7 +33,7 @@ async function getEntregasView(){
   });
 }
 
-async function getEntrega(entregaId, produtorId){
-  let response = await EntregaAPI.getEntrega(entregaId, produtorId);
+async function getEntrega(entregaId){
+  let response = await EntregaAPI.getEntrega(entregaId);
   entregaViewRepository.update(response.data);
 }

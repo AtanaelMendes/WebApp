@@ -62,7 +62,6 @@
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
   import AreaService from "../../../assets/js/service/area/AreaService";
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
 
   export default {
     name: "area-list",
@@ -73,7 +72,7 @@
     },
     data () {
       return {
-        areaService: null,
+        areaService: new AreaService(),
         areas: [],
         isEmptyList: null,
         areaLoaded: false,
@@ -111,10 +110,7 @@
       },
     },
     mounted () {
-      new AccountRepository().getFirst().then(account => {
-        this.areaService = new AreaService(account.produtor_id);
-        this.list(this.filter);
-      });
+      this.list(this.filter);
 
       this.$root.$on('refreshAreaList', () => {
         this.list(this.filter);

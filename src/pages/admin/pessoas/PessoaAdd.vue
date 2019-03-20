@@ -107,7 +107,6 @@
   import { filter } from 'quasar'
   import inscricaoEstadualValidator from 'assets/js/InscricaoEstadualValidator';
   import GrupoEconomicoService from "../../../assets/js/service/GrupoEconomicoService";
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import PessoaService from "../../../assets/js/service/PessoaService";
   export default {
     name: "pessoa-add",
@@ -120,7 +119,7 @@
     data(){
       return {
         pessoaService: new PessoaService(),
-        grupoEconomicoService: null,
+        grupoEconomicoService: new GrupoEconomicoService(),
         grupoEconomicoSearchTerms: '',
         tempGrupoEconomicoList: [],
         newGrupoEconomicoDialog: false,
@@ -208,9 +207,7 @@
       }
     },
     mounted(){
-      new AccountRepository().getFirst().then(account => {
-        this.grupoEconomicoService = new GrupoEconomicoService(account.produtor_id);
-      });
+
     },
     beforeDestroy(){
       this.pessoa = new Pessoa(1)

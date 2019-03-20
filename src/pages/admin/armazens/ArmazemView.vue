@@ -14,7 +14,6 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import ArmazemService from "../../../assets/js/service/armazem/ArmazemService";
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
     name: "armazem-view",
     components: {
@@ -25,6 +24,7 @@
     computed: {},
     data(){
       return{
+        armazemService: new ArmazemService(),
         armazem: null,
       }
     },
@@ -46,10 +46,7 @@
       }
     },
     mounted(){
-      new AccountRepository().getFirst().then(account => {
-        this.armazemService = new ArmazemService(account.produtor_id);
-        this.getArmazemById(this.$route.params.id);
-      });
+
     }
   }
 </script>

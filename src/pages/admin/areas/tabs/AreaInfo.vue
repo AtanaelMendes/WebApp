@@ -44,7 +44,6 @@
 
 <script>
   import apNoResults from 'components/ApNoResults'
-  import AccountRepository from "../../../../assets/js/repository/AccountRepository";
   import AreaService from "../../../../assets/js/service/area/AreaService";
 
   export default {
@@ -54,7 +53,7 @@
     },
     data(){
       return{
-        areaService: null,
+        areaService: new AreaService(),
         area: null,
         coluna: 'col-xs-12 col-sm-12 col-md-6 col-lg-6',
       }
@@ -75,10 +74,7 @@
       },
     },
     mounted() {
-      new AccountRepository().getFirst().then(account => {
-        this.areaService = new AreaService(account.produtor_id);
-        this.getAreaById(this.$route.params.id)
-      });
+      this.getAreaById(this.$route.params.id)
     }
   }
 </script>

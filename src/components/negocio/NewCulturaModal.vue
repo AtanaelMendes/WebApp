@@ -175,7 +175,6 @@
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
-  import AccountRepository from "../../assets/js/repository/AccountRepository";
   import ArmazemService from "../../assets/js/service/armazem/ArmazemService";
   import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
   import CulturaClassificacaoService from "../../assets/js/service/cultura/CulturaClassificacaoService";
@@ -204,8 +203,8 @@
       return{
         culturaClassificacaoService: new CulturaClassificacaoService(),
         unidadeMedidaService: new UnidadeMedidaService(),
-        armazemService: null,
-        negocioService: null,
+        armazemService: new ArmazemService(),
+        negocioService: new NegocioService(),
         isModalOpened: false,
         cultura: new Cultura(),
         negocio: null,
@@ -220,9 +219,6 @@
     },
     methods: {
       openModal: async function(negocio){
-        let account = await new AccountRepository().getFirst();
-        this.armazemService = new ArmazemService(account.produtor_id);
-        this.negocioService = new NegocioService(account.produtor_id);
         this.isModalOpened = true;
         this.listSafraCulturas();
         this.getUnidadesMedida();
@@ -245,7 +241,7 @@
       },
       goToNextStep(){
         if(this.currentStep === 'classificacao'){
-          this.listArmazensByProdutor();
+          this.listArmazens();
         }
 
         this.$refs.stepperSafraCultura.next();
@@ -322,8 +318,8 @@
           this.cultura.classificacoes = response.data;
         })
       },
-      listArmazensByProdutor(){
-        armazemService.listArmazens().then(response => {
+      listArmazens(){
+        this.armazemService.listArmazens().then(response => {
           this.armazens = response.data;
         })
       }

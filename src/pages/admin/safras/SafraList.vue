@@ -422,7 +422,6 @@
   // outros
   import UnidadeMedidaService from "../../../assets/js/service/UnidadeMedidaService";
   import AreaService from "../../../assets/js/service/area/AreaService";
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import SafraCulturaService from "../../../assets/js/service/safra/SafraCulturaService";
   import SafraService from "../../../assets/js/service/safra/SafraService";
 
@@ -437,9 +436,9 @@
       },
       data () {
         return {
-          safraService: null,
-          safraCulturaService: null,
-          areaService: null,
+          safraService: new SafraService(),
+          safraCulturaService: new SafraCulturaService(),
+          areaService: new AreaService(),
           unidadeMedidaService: new UnidadeMedidaService(),
           // SAFRA
           isFavorite: false,
@@ -764,16 +763,11 @@
         },
       },
       mounted () {
-        new AccountRepository().getFirst().then(account => {
-          this.areaService = new AreaService(account.produtor_id);
-          this.safraCulturaService = new SafraCulturaService(account.produtor_id);
-          this.safraService = new SafraService(account.produtor_id);
+        this.listSafras();
+        this.safra.inicio.value = this.getCurrentYear();
+        this.safra.fim.value = this.getCurrentYear();
+        this.selectedAnoFim = this.safra.fim.value.toString();
 
-          this.listSafras();
-          this.safra.inicio.value = this.getCurrentYear();
-          this.safra.fim.value = this.getCurrentYear();
-          this.selectedAnoFim = this.safra.fim.value.toString();
-        });
         this.makeYearsList(this.getCurrentYear());
         this.getUnidadesMedida();
         this.getUnidadesArea();

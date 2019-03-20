@@ -1,11 +1,11 @@
 import Vue from 'vue'
 
 export default class GrupoEconomicoAPI{
-  static saveGrupoEconomico(grupoEconomico, produtorId){
-    return Vue.prototype.$axios.post('/produtor/' + produtorId + '/grupo_economico', grupoEconomico);
+  static saveGrupoEconomico(grupoEconomico){
+    return Vue.prototype.$axios.post('/grupo_economico', grupoEconomico);
   }
 
-  static searchGrupoEconomico(terms, produtorId){
-    return Vue.prototype.$axios.get('/produtor/'+produtorId+'/grupo_economico?nome=' + terms);
+  static searchGrupoEconomico(terms){
+    return Vue.prototype.$axios.get('/grupo_economico?nome=' + terms);
   }
 }

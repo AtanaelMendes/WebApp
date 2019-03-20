@@ -1,15 +1,13 @@
 import AreaAPI from "../../api/AreaAPI";
 
 export default class AreaService{
-  #produtorId;
 
-  constructor(produtorId) {
-    this.produtorId = produtorId;
+  constructor() {
   }
 
   listAreas(filter){
     return new Promise((resolve, reject) => {
-      AreaAPI.listAreas(this.produtorId).then( response => {
+      AreaAPI.listAreas().then( response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -23,7 +21,7 @@ export default class AreaService{
 
   saveArea(params){
     return new Promise((resolve, reject) => {
-      AreaAPI.saveArea(params, this.produtorId).then(response => {
+      AreaAPI.saveArea(params).then(response => {
         if(response.status === 201) {
           resolve(response.data)
         }else{
@@ -37,7 +35,7 @@ export default class AreaService{
 
   getAreaById(areaId){
     return new Promise((resolve, reject) => {
-      AreaAPI.getById(areaId, this.produtorId).then(response => {
+      AreaAPI.getById(areaId).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -51,7 +49,7 @@ export default class AreaService{
 
   updateArea(areaId, params){
     return new Promise((resolve, reject) => {
-      AreaAPI.updateArea(params, areaId, this.produtorId).then(response => {
+      AreaAPI.updateArea(params, areaId).then(response => {
         if(response.status === 200) {
           resolve(response.data)
         }else{
@@ -65,7 +63,7 @@ export default class AreaService{
 
   deleteArea(areaId){
     return new Promise((resolve, reject) => {
-      AreaAPI.deleteArea(areaId, this.produtorId).then(response => {
+      AreaAPI.deleteArea(areaId).then(response => {
         if(response.status === 200) {
           resolve(response.data)
         }else{
@@ -79,7 +77,7 @@ export default class AreaService{
 
   archiveArea(areaId){
     return new Promise((resolve, reject) => {
-      AreaAPI.archiveArea(areaId, this.produtorId).then(response => {
+      AreaAPI.archiveArea(areaId).then(response => {
         if(response.status === 200) {
           resolve(response.data);
         }else{
@@ -93,7 +91,7 @@ export default class AreaService{
 
   restoreArea(areaId){
     return new Promise((resolve, reject) => {
-      AreaAPI.restoreArea(areaId, this.produtorId).then(response => {
+      AreaAPI.restoreArea(areaId).then(response => {
         if(response.status === 200) {
           resolve(response.data);
         }else{

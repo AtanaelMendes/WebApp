@@ -80,7 +80,6 @@
   import User from 'assets/js/model/usuario/Usuario'
   import produtorSelect from 'components/ProdutorSelect.vue'
   import UserService from "../../../assets/js/service/UserService";
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
     name: "user-add",
     components: {

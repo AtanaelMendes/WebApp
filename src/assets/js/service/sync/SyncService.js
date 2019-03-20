@@ -6,18 +6,16 @@ import ListService from "./ListService";
 
 export default class SyncService{
   static isSynching = false;
-  #produtorId;
   #requestQueueRepository;
   #queueApiIdRelationsRepository;
   #resourceService;
   #listService;
 
-  constructor(produtorId) {
-    this.produtorId = produtorId;
+  constructor() {
     this.requestQueueRepository = new RequestQueueRepository();
     this.queueApiIdRelationsRepository = new QueueApiIdRelationsRepository();
-    this.resourceService = new ResourceService(produtorId);
-    this.listService = new ListService(produtorId);
+    this.resourceService = new ResourceService();
+    this.listService = new ListService();
   }
 
   async doSync(){

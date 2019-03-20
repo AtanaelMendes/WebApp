@@ -2,27 +2,27 @@ import Vue from 'vue'
 
 export default class MarcaAPI{
 
-  static listMarcas(filter, produtorId){
-    return Vue.prototype.$axios.get('produtor/' + produtorId + '/marca' + (filter ? '?filter='+filter : ''));
+  static listMarcas(filter){
+    return Vue.prototype.$axios.get('/marca' + (filter ? '?filter='+filter : ''));
   }
 
-  static saveMarca(marca, produtorId){
-    return Vue.prototype.$axios.post('produtor/' + produtorId + '/marca', marca)
+  static saveMarca(marca){
+    return Vue.prototype.$axios.post('/marca', marca)
   }
 
-  static deleteMarca(id, produtorId){
-    return Vue.prototype.$axios.delete('produtor/' + produtorId + '/marca/' + id)
+  static deleteMarca(id){
+    return Vue.prototype.$axios.delete('/marca/' + id)
   }
 
-  static restoreMarca(id, produtorId){
-    return Vue.prototype.$axios.put('produtor/' + produtorId + '/marca/' + id + '/restore');
+  static restoreMarca(id){
+    return Vue.prototype.$axios.put('/marca/' + id + '/restore');
   }
 
-  static archiveMarca(id, produtorId){
-    return Vue.prototype.$axios.put('produtor/' + produtorId + '/marca/' + id + '/archive');
+  static archiveMarca(id){
+    return Vue.prototype.$axios.put('/marca/' + id + '/archive');
   }
 
-  static updateMarca(marca, id, produtorId){
-    return Vue.prototype.$axios.put('produtor/' + produtorId + '/marca/' + id, marca);
+  static updateMarca(marca, id){
+    return Vue.prototype.$axios.put('/marca/' + id, marca);
   }
 }

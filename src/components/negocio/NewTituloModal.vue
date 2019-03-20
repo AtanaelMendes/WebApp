@@ -149,7 +149,6 @@
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
-  import AccountRepository from "../../assets/js/repository/AccountRepository";
   import IndexadorService from "../../assets/js/service/IndexadorService";
 
   export default {
@@ -176,8 +175,8 @@
     },
     data(){
       return {
-        indexadorService: null,
-        negocioService: null,
+        indexadorService: new IndexadorService(),
+        negocioService: new NegocioService(),
         isModalOpened: false,
         currentStep: 'pagarReceber',
         negocio: null,
@@ -192,9 +191,6 @@
     },
     methods: {
       openModal: async function(negocio){
-        let account = await new AccountRepository().getFirst();
-        this.negocioService = new NegocioService(account.produtor_id);
-        this.indexadorService = new IndexadorService(account.produtor_id);
         this.isModalOpened = true;
         this.titulo = new Titulo();
         this.negocio = negocio;
@@ -209,7 +205,7 @@
       goToNextStep(){
         if(this.currentStep === 'classificacao'){
           //this.cultura.classificacoes = this.classificacoes;
-          this.listArmazensByProdutor();
+          this.listArmazens();
         }
         this.$refs.stepperTitulo.next();
       },

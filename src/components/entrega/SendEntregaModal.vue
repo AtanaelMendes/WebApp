@@ -260,7 +260,6 @@
   import customInputDateTime from 'components/CustomInputDateTime.vue'
   import apImage from 'components/ApImage'
   import AgroUtils from "../../assets/js/AgroUtils";
-  import AccountRepository from "../../assets/js/repository/AccountRepository";
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
   import MotoristaService from "../../assets/js/service/motorista/MotoristaService";
   import ArmazemService from "../../assets/js/service/armazem/ArmazemService";
@@ -278,13 +277,13 @@
     },
     data () {
       return {
-        entregaService: null,
+        entregaService: new EntregaService(),
         unidadeMedidaService: new UnidadeMedidaService(),
         cfopService: new CfopService(),
-        armazemService: null,
-        negocioService: null,
-        motoristaService: null,
-        notaFiscalService: null,
+        armazemService: new ArmazemService(),
+        negocioService: new NegocioService(),
+        motoristaService: new MotoristaService(),
+        notaFiscalService: new NotaFiscalService(),
         currentStep: 'negocio',
         sendEntrega: new SendEntrega(),
         isModalOpened: false,
@@ -335,13 +334,6 @@
         }
       },
       openModal: async function(funcao, object = null){
-        let account = await new AccountRepository().getFirst();
-        this.entregaService = new EntregaService(account.produtor_id);
-        this.armazemService = new ArmazemService(account.produtor_id);
-        this.negocioService = new NegocioService(account.produtor_id);
-        this.motoristaService = new MotoristaService(account.produtor_id);
-        this.notaFiscalService = new NotaFiscalService(account.produtor_id);
-
         this.funcao = funcao;
         this.sendEntrega = new SendEntrega();
         switch (funcao) {
@@ -447,7 +439,7 @@
       },
       listNegocioCulturas: function(){
         if(this.funcao === 'sendEntrega'){
-          this.listNegociosCulturasByProdutor();
+          this.listNegociosCulturas();
         }else{
           this.listNegociosCulturasAvaliablesByEntrega()
         }
@@ -472,9 +464,9 @@
           this.$q.loading.hide();
         });
       },
-      listNegociosCulturasByProdutor(){
+      listNegociosCulturas(){
         this.$q.loading.show();
-        this.negocioService.listNegociosCulturasByProdutor().then(negocios => {
+        this.negocioService.listNegociosCulturas().then(negocios => {
           this.negocioCulturas = negocios;
           this.$q.loading.hide();
         }).catch(error => {
@@ -498,7 +490,7 @@
       },
       listArmazensByEntrega: function(entrega){
         if(entrega.negocios.length === 0) {
-          this.listArmazensByProdutor();
+          this.listArmazens();
           return;
         }
 
@@ -511,7 +503,7 @@
           this.$q.loading.hide();
         })
       },
-      listArmazensByProdutor(){
+      listArmazens(){
         this.$q.loading.show();
         this.armazemService.listArmazens().then(response => {
           this.armazens = response.data;

@@ -2,27 +2,31 @@ import Vue from 'vue'
 
 export default class CulturaAPI{
 
-  static listCulturas(produtorId){
-    return Vue.prototype.$axios.get('produtor/' + produtorId + '/cultura')
+  static listCulturas(){
+    return Vue.prototype.$axios.get('/cultura')
   }
 
-  static listCulturasSimpleList(produtorId){
-    return Vue.prototype.$axios.get('produtor/' + produtorId + '/cultura/simple_list');
+  static listCulturasSimpleList(){
+    return Vue.prototype.$axios.get('/cultura/simple_list');
   }
 
-  static saveCultura(cultura, produtorId){
-    return Vue.prototype.$axios.post('produtor/' + produtorId + '/cultura', cultura);
+  static saveCultura(cultura){
+    return Vue.prototype.$axios.post('/cultura', cultura);
   }
 
-  static deleteCultura(id, produtorId){
-    return Vue.prototype.$axios.delete('produtor/' + produtorId + '/cultura/' + id);
+  static updateCultura(cultura, id){
+    return Vue.prototype.$axios.put('/cultura/' + id, cultura);
   }
 
-  static restoreCultura(id, produtorId){
-    return Vue.prototype.$axios.put('produtor/' + produtorId + '/cultura/' + id + '/restore');
+  static deleteCultura(id){
+    return Vue.prototype.$axios.delete('/cultura/' + id);
   }
 
-  static archiveCultura(id, produtorId){
-    return Vue.prototype.$axios.put('produtor/' + produtorId + '/cultura/' + id + '/archive');
+  static restoreCultura(id){
+    return Vue.prototype.$axios.put('/cultura/' + id + '/restore');
+  }
+
+  static archiveCultura(id){
+    return Vue.prototype.$axios.put('/cultura/' + id + '/archive');
   }
 }

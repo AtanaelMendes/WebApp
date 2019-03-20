@@ -2,35 +2,35 @@ import Vue from 'vue'
 
 export default class CaminhaoAPI{
 
-  static getCaminhaoById(id, produtorId){
-    return Vue.prototype.$axios.get('produtor/'+ produtorId +'/caminhao/'+ id)
+  static getCaminhaoById(id,){
+    return Vue.prototype.$axios.get('/caminhao/'+ id)
   }
 
-  static getFreeCaminhoes(produtorId){
-    return Vue.prototype.$axios.get('/produtor/'+ produtorId +'/caminhao/free')
+  static getFreeCaminhoes(){
+    return Vue.prototype.$axios.get('/caminhao/free')
   }
 
-  static listCaminhoes(produtorId){
-    return Vue.prototype.$axios.get('/produtor/'+ produtorId +'/caminhao');
+  static listCaminhoes(){
+    return Vue.prototype.$axios.get('/caminhao');
   }
 
-  static saveCaminhao(caminhao, produtorId){
-    return Vue.prototype.$axios.post('/produtor/'+ produtorId +'/caminhao', caminhao);
+  static saveCaminhao(caminhao){
+    return Vue.prototype.$axios.post('/caminhao', caminhao);
   }
 
-  static updateCaminao(caminhao, id, produtorId){
-    return Vue.prototype.$axios.put('/produtor/'+ produtorId +'/caminhao/'+ id, caminhao);
+  static updateCaminao(caminhao, id){
+    return Vue.prototype.$axios.put('/caminhao/'+ id, caminhao);
   }
 
-  static archiveCaminhao(id, produtorId){
-    return Vue.prototype.$axios.put('/produtor/'+ produtorId +'/caminhao/' + id + '/archive');
+  static archiveCaminhao(id){
+    return Vue.prototype.$axios.put('/caminhao/' + id + '/archive');
   }
 
-  static restoreCaminhao(id, produtorId){
-    return Vue.prototype.$axios.put('/produtor/'+ produtorId +'/caminhao/'+id+'/restore');
+  static restoreCaminhao(id){
+    return Vue.prototype.$axios.put('/caminhao/'+id+'/restore');
   }
 
-  static deleteCaminhao(id, produtorId){
-    return Vue.prototype.$axios.delete('/produtor/'+ produtorId +'/caminhao/'+ id);
+  static deleteCaminhao(id){
+    return Vue.prototype.$axios.delete('/caminhao/'+ id);
   }
 }

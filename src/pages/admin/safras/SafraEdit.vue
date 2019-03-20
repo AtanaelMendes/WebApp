@@ -180,7 +180,6 @@
   import Cultura from 'assets/js/model/Cultura'
   import talhaoService from 'assets/js/service/area/TalhaoService'
   import UnidadeMedidaService from "../../../assets/js/service/UnidadeMedidaService";
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import AreaService from "../../../assets/js/service/area/AreaService";
   import ProdutoService from "../../../assets/js/service/produto/ProdutoService";
   import SafraService from "../../../assets/js/service/safra/SafraService";
@@ -193,9 +192,9 @@
     },
     data(){
       return {
-        safraService: null,
-        produtoService: null,
-        areaService: null,
+        safraService: new SafraService(),
+        produtoService: new ProdutoService(),
+        areaService: new AreaService(),
         unidadeMedidaService: new UnidadeMedidaService(),
         currentStep: 'info',
         safra: null,
@@ -409,16 +408,11 @@
       }
     },
     mounted(){
-      new AccountRepository().getFirst().then(account => {
-        this.areaService = new AreaService(account.produtor_id);
-        this.produtoService = new ProdutoService(account.produtor_id);
-        this.safraService = new SafraService(account.produtor_id);
-        this.getAreas();
-        this.getSafraById(this.$route.params.id).then(()=>{
-          this.makeYearsList(this.safra.inicio.value.toString());
-          this.selectedAnoFim = this.safra.fim.value.toString();
-        })
-      });
+      this.getAreas();
+      this.getSafraById(this.$route.params.id).then(()=>{
+        this.makeYearsList(this.safra.inicio.value.toString());
+        this.selectedAnoFim = this.safra.fim.value.toString();
+      })
 
       //this.safra.inicio.value = this.getCurrentYear();
       //this.safra.fim.value = this.getCurrentYear();

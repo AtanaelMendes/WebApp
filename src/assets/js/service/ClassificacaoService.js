@@ -1,7 +1,5 @@
-import Vue from 'vue'
 import ClassificacaoAPI from "../api/ClassificacaoAPI";
 import ClassificacaoRepository from "../repository/resource/ClassificacaoRepository";
-import ClassificacaoListItem from "../model/ClassificacaoListItem";
 
 export default class ClassificacaoService {
   #classificacaoRepository;
@@ -68,7 +66,7 @@ export default class ClassificacaoService {
 
   archiveClassificacao(id) {
     return new Promise((resolve, reject) => {
-      ClassificacaoAPI.archiveClassificacao(id, this.produtorId).then(response => {
+      ClassificacaoAPI.archiveClassificacao(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -82,7 +80,7 @@ export default class ClassificacaoService {
 
   restoreClassificacao(id) {
     return new Promise((resolve, reject) => {
-      ClassificacaoAPI.restoreClassificacao(id, this.produtorId).then(response => {
+      ClassificacaoAPI.restoreClassificacao(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -96,7 +94,7 @@ export default class ClassificacaoService {
 
   deleteClassificacao(id) {
     return new Promise((resolve, reject) => {
-      ClassificacaoAPI.deleteClassificacao(id, this.produtorId).then(response => {
+      ClassificacaoAPI.deleteClassificacao(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{

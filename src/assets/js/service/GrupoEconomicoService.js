@@ -1,24 +1,19 @@
 import GrupoEconomicoAPI from "../api/GrupoEconomicoAPI";
 
 export default class GrupoEconomicoService{
-  #produtorId;
 
-  constructor(produtorId) {
-    this.produtorId = produtorId;
+  constructor() {
   }
 
   saveGrupoEconomico(grupoEconomico) {
     return new Promise((resolve, reject) => {
-      GrupoEconomicoAPI.saveGrupoEconomico(grupoEconomico, this.produtorId).then(response => {
-        console.log('aqui')
+      GrupoEconomicoAPI.saveGrupoEconomico(grupoEconomico).then(response => {
         if(response.status === 201){
           resolve(response.data)
         }else{
           reject(response)
         }
       }).catch(error => {
-        console.log('no catch');
-        console.log(error.response);
         if(error.response.status === 422){
           reject(new Error('Já existe um registro com esse nome'))
         }else{
@@ -30,7 +25,7 @@ export default class GrupoEconomicoService{
 
   searchGrupoEconomico(terms){
     return new Promise((resolve, reject) => {
-      GrupoEconomicoAPI.searchGrupoEconomico(terms, this.produtorId).then(response => {
+      GrupoEconomicoAPI.searchGrupoEconomico(terms).then(response => {
         if(response.status === 200){
           resolve(this.parseGruposEconomicos(response.data))
         }else{

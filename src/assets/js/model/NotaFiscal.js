@@ -1,6 +1,5 @@
 import { helpers} from 'vuelidate/lib/validators'
 export default class{
-  produtor_id = null;
   nome = {
     value: null,
     errorMessage: null
@@ -24,7 +23,6 @@ export default class{
       this.tamanho.value = area.tamanho.value;
       this.localizacao.value = area.localizacao.value;
       this.unidade_medida.value = area.unidade_medida.value;
-      this.produtor_id = area.produtor_id;
 
     }
   };
@@ -53,7 +51,6 @@ export default class{
   };
   getValues(){
     return{
-      produtor_id: null,
       nome: this.nome.value,
       tamanho: this.tamanho.value,
       localizacao: this.localizacao.value,

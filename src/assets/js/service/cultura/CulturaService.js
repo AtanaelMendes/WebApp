@@ -1,20 +1,17 @@
-import Vue from 'vue'
 import CulturaAPI from "../../api/CulturaAPI";
 import MarcaAPI from "../../api/MarcaAPI";
 import CultivarAPI from "../../api/CultivarAPI";
 import UnidadeAPI from "../../api/UnidadeAPI";
 
 export default class CulturaService{
-  #produtorId;
 
-  constructor(produtorId) {
-    this.produtorId = produtorId;
+  constructor() {
   }
 
   // CULTURAS
   listCulturas(){
     return new Promise((resolve, reject) => {
-      CulturaAPI.listCulturas(this.produtorId).then( response => {
+      CulturaAPI.listCulturas().then( response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -28,7 +25,7 @@ export default class CulturaService{
 
   saveCultura(params){
     return new Promise((resolve, reject) => {
-      CulturaAPI.saveCultura(params, this.produtorId).then(response => {
+      CulturaAPI.saveCultura(params).then(response => {
         if(response.status === 201) {
           resolve(response.data);
         }else{
@@ -42,7 +39,7 @@ export default class CulturaService{
 
   deleteCultura(id){
     return new Promise((resolve, reject) => {
-      CulturaAPI.deleteCultura(id, this.produtorId).then(response => {
+      CulturaAPI.deleteCultura(id).then(response => {
         if(response.status === 200) {
           resolve(response.data)
         }else{
@@ -56,7 +53,7 @@ export default class CulturaService{
 
   restoreCultura(id){
     return new Promise((resolve, reject) => {
-      CulturaAPI.restoreCultura(id, this.produtorId).then(response => {
+      CulturaAPI.restoreCultura(id).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
@@ -70,7 +67,7 @@ export default class CulturaService{
 
   archiveCultura(id){
     return new Promise((resolve, reject) => {
-      CulturaAPI.archiveCultura(id, this.produtorId).then(response => {
+      CulturaAPI.archiveCultura(id).then(response => {
         if(response.status === 200) {
           resolve(response.data);
         }else{
@@ -82,9 +79,9 @@ export default class CulturaService{
     });
   };
 
-  updateCultura(id, params){
+  updateCultura(id, cultura){
     return new Promise((resolve, reject) => {
-      Vue.prototype.$axios.put('produtor/' + produtor_id + '/cultura/' + id, params).then(response => {
+      CulturaAPI.updateCultura(cultura, id).then(response => {
         resolve(response)
       }).catch(error => {
         reject(error.response)
@@ -95,7 +92,7 @@ export default class CulturaService{
   // MARCAS
   listMarcas(){
     return new Promise((resolve, reject) => {
-      MarcaAPI.listMarcas(null, this.produtorId).then( response => {
+      MarcaAPI.listMarcas(null).then( response => {
         if(response.status === 200) {
           resolve(response.data);
         }else{
@@ -109,7 +106,7 @@ export default class CulturaService{
 
   listMarcasSemCultivares(){
     return new Promise((resolve, reject) => {
-      MarcaAPI.listMarcas('has-no-cultivares', this.produtorId).then( response => {
+      MarcaAPI.listMarcas('has-no-cultivares').then( response => {
         if(response.status === 200) {
           resolve(response.data);
         }else{
@@ -123,7 +120,7 @@ export default class CulturaService{
 
   saveMarca(params){
     return new Promise((resolve, reject) => {
-      MarcaAPI.saveMarca(params, this.produtorId).then(response => {
+      MarcaAPI.saveMarca(params).then(response => {
         if(response.status === 201) {
           resolve(response.data)
         }else{
@@ -137,7 +134,7 @@ export default class CulturaService{
 
   deleteMarca(id){
     return new Promise((resolve, reject) => {
-      MarcaAPI.deleteMarca(id, this.produtorId).then(response => {
+      MarcaAPI.deleteMarca(id).then(response => {
         if(response.status === 200) {
           resolve(response.data)
         }else{
@@ -151,7 +148,7 @@ export default class CulturaService{
 
   restoreMarca(id){
     return new Promise((resolve, reject) => {
-      MarcaAPI.restoreMarca(id, this.produtorId).then(response => {
+      MarcaAPI.restoreMarca(id).then(response => {
         if(response.status === 200) {
           resolve(response.data)
         }else{
@@ -165,7 +162,7 @@ export default class CulturaService{
 
   archiveMarca(id){
     return new Promise((resolve, reject) => {
-      MarcaAPI.archiveMarca(id, this.produtorId).then(response => {
+      MarcaAPI.archiveMarca(id).then(response => {
         if(response.status === 200) {
           resolve(response.data);
         }else{
@@ -179,7 +176,7 @@ export default class CulturaService{
 
   updateMarca(id, params){
     return new Promise((resolve, reject) => {
-      MarcaAPI.updateMarca(params, id, this.produtorId).then(response => {
+      MarcaAPI.updateMarca(params, id).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{

@@ -5,19 +5,17 @@ import CaminhaoListItem from "../model/CaminhaoListItem";
 import ImageRepository from "../repository/resource/ImageRepository";
 
 export default class CaminhaoService {
-  #produtorId;
   #caminahoRepository;
   #imageRepository;
 
-  constructor(produtorId) {
-    this.produtorId = produtorId;
+  constructor() {
     this.caminahoRepository = new CaminhaoRepository();
     this.imageRepository = new ImageRepository();
   }
 
   listCaminhoes() {
     return new Promise((resolve, reject) => {
-      CaminhaoAPI.listCaminhoes(this.produtorId).then(response => {
+      CaminhaoAPI.listCaminhoes().then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -34,7 +32,7 @@ export default class CaminhaoService {
       let caminhoes = null;
 
       if(Vue.prototype.serverStatus.isUp) {
-        caminhoes = await  CaminhaoAPI.getFreeCaminhoes(this.produtorId).then(response => {
+        caminhoes = await  CaminhaoAPI.getFreeCaminhoes().then(response => {
           if(response.status === 200){
             resolve(response.data);
           }else{
@@ -58,7 +56,7 @@ export default class CaminhaoService {
 
   getCaminhaoById(id) {
     return new Promise((resolve, reject) => {
-      CaminhaoAPI.getCaminhaoById(id, this.produtorId).then(response => {
+      CaminhaoAPI.getCaminhaoById(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -72,7 +70,7 @@ export default class CaminhaoService {
 
   addCaminhao(caminhao) {
     return new Promise((resolve, reject) => {
-      CaminhaoAPI.saveCaminhao(caminhao, this.produtorId).then(response => {
+      CaminhaoAPI.saveCaminhao(caminhao).then(response => {
         if(response.status === 201){
           resolve(response.data);
         }else{
@@ -86,7 +84,7 @@ export default class CaminhaoService {
 
   updateCaminhao(id, caminhao) {
     return new Promise((resolve, reject) => {
-      CaminhaoAPI.updateCaminao(caminhao, id, this.produtorId).then(response => {
+      CaminhaoAPI.updateCaminao(caminhao, id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -100,7 +98,7 @@ export default class CaminhaoService {
 
   archiveCaminhao(id) {
     return new Promise((resolve, reject) => {
-      CaminhaoAPI.archiveCaminhao(id, this.produtorId).then(response => {
+      CaminhaoAPI.archiveCaminhao(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -114,7 +112,7 @@ export default class CaminhaoService {
 
   restoreCaminhao(id) {
     return new Promise((resolve, reject) => {
-      CaminhaoAPI.restoreCaminhao(id, this.produtorId).then(response => {
+      CaminhaoAPI.restoreCaminhao(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -128,7 +126,7 @@ export default class CaminhaoService {
 
   deleteCaminhao(id) {
     return new Promise((resolve, reject) => {
-      CaminhaoAPI.deleteCaminhao(id, this.produtorId).then(response => {
+      CaminhaoAPI.deleteCaminhao(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{

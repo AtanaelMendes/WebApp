@@ -552,9 +552,8 @@
           });
         });
       },
-      listLocalizacoes: function(pessoaId) {
-        this.$q.loading.show();
-        this.localizacaoService.listLocalizacoes(pessoaId).then(localizacoes => {
+      listLocalizacoesByPessoa: function(pessoaId) {
+        this.localizacaoService.listLocalizacoesByPessoa(pessoaId).then(localizacoes => {
           this.localizacoes = localizacoes;
           this.$q.loading.hide();
         }).catch(error =>{
@@ -569,7 +568,7 @@
     mounted(){
       this.getPessoa(this.$route.params.id);
       this.listContatos(this.$route.params.id);
-      this.listLocalizacoes(this.$route.params.id);
+      this.listLocalizacoesByPessoa(this.$route.params.id);
     }
   }
 </script>

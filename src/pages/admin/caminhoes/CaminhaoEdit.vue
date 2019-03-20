@@ -48,7 +48,6 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import CaminhaoService from "../../../assets/js/service/CaminhaoService";
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import UnidadeMedidaService from "../../../assets/js/service/UnidadeMedidaService";
   export default {
     name: "caminhao-edit",
@@ -58,7 +57,7 @@
     },
     data () {
       return {
-        caminhaoService: null,
+        caminhaoService: new CaminhaoService(),
         unidadeMedidaService: new UnidadeMedidaService(),
         unidadeMedidaOptions: [],
         caminhao: {
@@ -191,10 +190,7 @@
       },
     },
     mounted () {
-      new AccountRepository().getFirst().then(account => {
-        this.caminhaoService = new CaminhaoService(account.produtor_id)
-        this.getCaminhaoById(this.$route.params.id);
-      });
+      this.getCaminhaoById(this.$route.params.id);
       this.selectUnidadeMedida();
     },
   }

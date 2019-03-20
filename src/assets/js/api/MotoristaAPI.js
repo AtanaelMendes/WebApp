@@ -2,30 +2,30 @@ import Vue from 'vue'
 
 export default class MotoristaAPI{
 
-  static getMotorista(id, produtorId){
-    return Vue.prototype.$axios.get('produtor/' + produtorId + '/motorista/'+ id);
+  static getMotorista(id){
+    return Vue.prototype.$axios.get('/motorista/'+ id);
   }
-  static listMotoristas(produtorId){
-    return Vue.prototype.$axios.get('produtor/' + produtorId + '/motorista');
-  }
-
-  static saveMotorista(motorista, produtorId){
-    return Vue.prototype.$axios.post('produtor/' + produtorId + '/motorista', motorista)
+  static listMotoristas(){
+    return Vue.prototype.$axios.get('/motorista');
   }
 
-  static updateMotorista(motorista, id, produtorId){
-    return Vue.prototype.$axios.put('produtor/' + produtorId + '/motorista/'+ id, motorista)
+  static saveMotorista(motorista){
+    return Vue.prototype.$axios.post('/motorista', motorista)
   }
 
-  static archiveMotorista(id, produtorId){
-    return Vue.prototype.$axios.put('produtor/' + produtorId + '/motorista/'+ id +'/archive' );
+  static updateMotorista(motorista, id){
+    return Vue.prototype.$axios.put('/motorista/'+ id, motorista)
   }
 
-  static restoreMotorista(id, produtorId){
-    return Vue.prototype.$axios.put('produtor/' + produtorId + '/motorista/'+ id +'/restore');
+  static archiveMotorista(id){
+    return Vue.prototype.$axios.put('/motorista/'+ id +'/archive' );
   }
 
-  static deleteMotorista(id, produtorId){
-    return Vue.prototype.$axios.delete('produtor/' + produtorId + '/motorista/'+ id);
+  static restoreMotorista(id){
+    return Vue.prototype.$axios.put('/motorista/'+ id +'/restore');
+  }
+
+  static deleteMotorista(id){
+    return Vue.prototype.$axios.delete('/motorista/'+ id);
   }
 }

@@ -31,7 +31,6 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import localizacaoSelect from 'components/LocalizacaoSelect.vue'
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import ArmazemService from "../../../assets/js/service/armazem/ArmazemService";
   import LocalizacaoService from "../../../assets/js/service/localizacao/LocalizacaoService";
   export default {
@@ -43,8 +42,8 @@
     },
     data () {
       return {
-        armazemService: null,
-        localizacaoService: null,
+        armazemService: new ArmazemService(),
+        localizacaoService: new LocalizacaoService(),
         localizacaoOptions: [],
         armazem: {
           nome: {
@@ -135,12 +134,8 @@
       },
     },
     mounted () {
-      new AccountRepository().getFirst().then(account => {
-        this.armazemService = new ArmazemService(account.produtor_id);
-        this.localizacaoService = new LocalizacaoService(account.produtor_id);
-        this.getArmazemById(this.$route.params.id);
-        this.listLocalizacao();
-      });
+      this.getArmazemById(this.$route.params.id);
+      this.listLocalizacao();
     },
   }
 </script>

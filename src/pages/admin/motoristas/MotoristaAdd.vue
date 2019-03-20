@@ -25,9 +25,7 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import motoristaService from 'assets/js/service/motorista/MotoristaService'
   import MotoristaService from "../../../assets/js/service/motorista/MotoristaService";
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
     name: "motorista-add",
     components: {
@@ -36,7 +34,7 @@
     },
     data () {
       return {
-        motoristaService: null,
+        motoristaService: new MotoristaService(),
         motoristaId: this.$route.params.id,
         motorista: {
           nome: {
@@ -95,9 +93,6 @@
       },
     },
     mounted () {
-      new AccountRepository().getFirst().then(account => {
-        this.motoristaService = new MotoristaService(account.produtor_id);
-      });
     },
   }
 </script>

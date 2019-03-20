@@ -172,7 +172,6 @@
   import SyncProgressDialog from "../components/offline/SyncProgressDialog";
   import ServiceMessage from '../assets/js/serviceWorker/ServiceMessage';
   import ServiceWorker from "../assets/js/serviceWorker/ServiceWorker";
-  import AccountRepository from "../assets/js/repository/AccountRepository";
 
   export default {
     name: 'Admin',
@@ -216,17 +215,15 @@
     methods: {
       doSync(){
         if(this.serverStatus.isUp) {
-          new AccountRepository().getFirst().then(account => {
-            this.syncService = new SyncService(account.produtor_id);
-            this.$refs.syncProgressDialog.openModal();
-            this.syncService.doSync().then(() => {
-              this.$refs.syncProgressDialog.closeModal();
-              ServiceWorker.sendMessage(new ServiceMessage(ServiceMessage.SYNC_FINISHED, status));
-            }).catch(error => {
-              this.$refs.syncProgressDialog.closeModal();
-              console.log("Erro ao sincronizar")
-            })
-          });
+          this.syncService = new SyncService();
+          this.$refs.syncProgressDialog.openModal();
+          this.syncService.doSync().then(() => {
+            this.$refs.syncProgressDialog.closeModal();
+            ServiceWorker.sendMessage(new ServiceMessage(ServiceMessage.SYNC_FINISHED, status));
+          }).catch(error => {
+            this.$refs.syncProgressDialog.closeModal();
+            console.log("Erro ao sincronizar")
+          })
 
         }
       },
