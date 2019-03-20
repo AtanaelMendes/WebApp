@@ -12,7 +12,7 @@
           </q-field>
 
           <q-field class="q-mb-sm" :error="caminhao.placa.error" :error-label="caminhao.placa.errorMessage">
-            <q-input upper-case	 v-model="caminhao.placa.value" float-label="Placa" @input="clearErrorMessage()"/>
+            <q-input upper-case	 v-model="caminhao.placa.value" float-label="Placa" @input="clearErrorMessage()" maxlength="7"/>
           </q-field>
 
           <q-field class="q-mb-sm">
@@ -137,7 +137,7 @@
           return false
         }
         if(this.caminhao.placa.value != null){
-          if(this.caminhao.placa.value.length < 7){
+          if(this.caminhao.placa.value.length !== 7){
             this.caminhao.placa.error = true;
             this.caminhao.placa.errorMessage = 'a placa é invalida';
             return false
