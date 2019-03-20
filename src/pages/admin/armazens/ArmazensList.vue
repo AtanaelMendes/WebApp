@@ -122,6 +122,7 @@
           this.isEmptyList = this.armazens.length === 0;
           this.$q.loading.hide();
         }).catch(error => {
+          console.log(error);
           this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações.'});
           this.$q.loading.hide();
         });
@@ -133,37 +134,63 @@
         this.$router.push({name: 'add_armazem'});
       },
       archiveArmazem: function(id){
-        this.$q.loading.show();
-        this.armazemService.archiveArmazem(id).then(() =>{
-          this.$q.notify({type: 'positive', message: 'Armazém arquivado com sucesso.'});
-          this.listArmazens(this.filter);
-          this.$q.loading.hide();
-        }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse armazém.'});
-          this.$q.loading.hide();
-        })
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja arquivar o armazém?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(() =>{
+          this.$q.loading.show();
+          this.armazemService.archiveArmazem(id).then(() =>{
+            this.$q.notify({type: 'positive', message: 'Armazém arquivado com sucesso.'});
+            this.listArmazens(this.filter);
+            this.$q.loading.hide();
+          }).catch(error =>{
+            console.log(error);
+            this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse armazém.'});
+            this.$q.loading.hide();
+          })
+        });
+
       },
       restoreArmazem: function(id){
-        this.$q.loading.show();
-        this.armazemService.restoreArmazem(id).then(response =>{
-          this.$q.notify({type: 'positive', message: 'Armazém ativado com sucesso.'});
-          this.listArmazens(this.filter);
-          this.$q.loading.hide();
-        }).catch(error =>{
-          this.$q.loading.hide();
-          this.$q.notify({type: 'negative', message: 'Não foi possível restaurar esse armazém.'});
-        })
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja resturar esse armazém?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(() =>{
+          this.$q.loading.show();
+          this.armazemService.restoreArmazem(id).then(response =>{
+            this.$q.notify({type: 'positive', message: 'Armazém ativado com sucesso.'});
+            this.listArmazens(this.filter);
+            this.$q.loading.hide();
+          }).catch(error =>{
+            console.log(error);
+            this.$q.loading.hide();
+            this.$q.notify({type: 'negative', message: 'Não foi possível restaurar esse armazém.'});
+          })
+        });
+
       },
       deleteArmazem: function(id){
-        this.$q.loading.show();
-        this.armazemService.deleteArmazem(id).then(() => {
-          this.$q.notify({type: 'positive', message: 'Armazém excluido com sucesso.'});
-          this.listArmazens(this.filter);
-          this.$q.loading.hide();
-        }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível excluir esse armazém'});
-          this.$q.loading.hide();
-        })
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja excluir este armazém?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(() =>{
+          this.$q.loading.show();
+          this.armazemService.deleteArmazem(id).then(() => {
+            this.$q.notify({type: 'positive', message: 'Armazém excluido com sucesso.'});
+            this.listArmazens(this.filter);
+            this.$q.loading.hide();
+          }).catch(error =>{
+            console.log(error);
+            this.$q.notify({type: 'negative', message: 'Não foi possível excluir esse armazém'});
+            this.$q.loading.hide();
+          })
+        });
       },
     },
     mounted () {
@@ -182,18 +209,5 @@
 <style scoped>
   .space-end{
     margin-bottom: 300px;
-  }
-  .list-empty{
-    height: 55px;
-    text-align: center;
-    padding-top: 15px;
-    color: #8c8c8c;
-    font-weight: bold;
-    font-size: 20px;
-  }
-  .list-empty i{
-    color: #ffb500;
-    font-size: 20px;
-    margin-right: 6px;
   }
 </style>

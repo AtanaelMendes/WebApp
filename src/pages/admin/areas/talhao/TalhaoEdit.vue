@@ -55,24 +55,42 @@
         this.talhao.unidadeAreaId.value = data.unidade.id
       },
       getTalhaoById: function(){
+        this.$q.loading.show();
         this.talhaoService.getTalhaoById(this.areaId, this.talhaoId).then(talhao => {
           this.fillForm(talhao);
-          this.talhaoData = talhao
-        })
+          this.talhaoData = talhao;
+          this.$q.loading.hide();
+        }).catch(error =>{
+          console.log(error);
+          this.$q.notify({type: 'negative', message: 'Não foi possivel carragar as informações do talhão'});
+          this.$q.loading.hide();
+        });
       },
       updatetalhao: function(){
         if(!this.talhao.isValid()){
           return;
         }
+        this.$q.loading.show();
         this.talhaoService.updateTalhao(this.areaId, this.talhaoId, this.talhao.getValues()).then(() => {
             this.$q.notify({type: 'positive', message: 'Talhão atualizado com sucesso'});
             this.$root.$emit('refreshTalhaoList');
+          this.$q.loading.hide();
             this.$router.back();
+        }).catch(error =>{
+          console.log(error);
+          this.$q.notify({type: 'negative', message: 'Não foi possivel salvar as alterações'});
+          this.$q.loading.hide();
         });
       },
       listUnidadesArea: function(){
+        this.$q.loading.show();
         this.talhaoService.listUnidadesArea().then(response => {
           this.unidadeAreaOptions = response;
+          this.$q.loading.hide();
+        }).catch(error =>{
+          console.log(error);
+          this.$q.notify({type: 'negative', message: 'Não foi possivel listar as área'});
+          this.$q.loading.hide();
         })
       },
       backAction: function () {

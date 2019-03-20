@@ -30,7 +30,7 @@ export default class CaminhaoAPI{
     return Vue.prototype.$axios.put('/produtor/'+ produtorId +'/caminhao/'+id+'/restore');
   }
 
-  static deleteCaminhao(id, produorId){
+  static deleteCaminhao(id, produtorId){
     return Vue.prototype.$axios.delete('/produtor/'+ produtorId +'/caminhao/'+ id);
   }
 }

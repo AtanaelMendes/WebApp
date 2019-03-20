@@ -358,18 +358,18 @@
           message: 'Realmente deseja arquivar este talhão?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
-        }).then(data => {
+        }).then(() => {
           this.$q.loading.show();
           this.talhaoService.archiveTalhao(this.areaId, talhaoId).then(() => {
             this.$q.notify({type: 'positive', message: 'Talhão arquivado com sucesso'});
             this.listTalhoes(this.$route.params.id);
             this.$q.loading.hide();
-          })
-        }).catch(error =>{
-          console.log(error);
-          this.$q.notify({type: 'negative', message: 'Não foi possível arquivar este talhão'});
-          this.$q.loading.hide();
-        });
+          }).catch(error =>{
+            console.log(error);
+            this.$q.notify({type: 'negative', message: 'Não foi possível arquivar este talhão'});
+            this.$q.loading.hide();
+          });
+        })
       },
       restoreTalhao: function(talhaoId){
         this.$q.dialog({

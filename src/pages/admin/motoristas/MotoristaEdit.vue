@@ -98,8 +98,9 @@
           this.$q.loading.hide();
           this.backAction();
         }).catch(error =>{
-          this.$q.loading.hide();
+          console.log(error);
           this.$q.notify({type: 'negative', message: 'Não foi possível fazer as alterações'})
+          this.$q.loading.hide();
         })
       },
       backAction: function () {

@@ -132,36 +132,58 @@
         this.$router.push({name: 'edit_classificacao', params: {id:id}});
       },
       archiveClassificacao: function(id){
-        this.$q.loading.show();
-        this.classificacaoService.archiveClassificacao(id).then(() =>{
-          this.$q.notify({type: 'positive', message: 'Classificação arquivado com sucesso.'});
-          this.listClassificacoes(this.filter);
-          this.$q.loading.hide();
-        }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse classificação.'});
-          this.$q.loading.hide();
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja arquivar esta classificação?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(() =>{
+          this.$q.loading.show();
+          this.classificacaoService.archiveClassificacao(id).then(() =>{
+            this.$q.notify({type: 'positive', message: 'Classificação arquivado com sucesso.'});
+            this.listClassificacoes(this.filter);
+            this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse classificação.'});
+            this.$q.loading.hide();
+          })
         })
+
       },
       restoreClassificacao: function(id){
-        this.$q.loading.show();
-        this.classificacaoService.restoreClassificacao(id).then(() =>{
-          this.$q.notify({type: 'positive', message: 'Classificação ativada com sucesso.'});
-          this.listClassificacoes(this.filter);
-          this.$q.loading.hide();
-        }).catch(error =>{
-          this.$q.loading.hide();
-          this.$q.notify({type: 'negative', message: 'Não foi possível restaurar essa classificação.'});
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja restaurar esta classificação?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(() =>{
+          this.$q.loading.show();
+          this.classificacaoService.restoreClassificacao(id).then(() =>{
+            this.$q.notify({type: 'positive', message: 'Classificação ativada com sucesso.'});
+            this.listClassificacoes(this.filter);
+            this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.loading.hide();
+            this.$q.notify({type: 'negative', message: 'Não foi possível restaurar essa classificação.'});
+          })
         })
       },
       deleteClassificacao: function(id){
-        this.$q.loading.show();
-        this.classificacaoService.deleteClassificacao(id).then(() => {
-          this.$q.notify({type: 'positive', message: 'Classificação excluida com sucesso.'});
-          this.listClassificacoes(this.filter);
-          this.$q.loading.hide();
-        }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível excluir essa classificação'});
-          this.$q.loading.hide();
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja excluir esta classificação?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(() =>{
+          this.$q.loading.show();
+          this.classificacaoService.deleteClassificacao(id).then(() => {
+            this.$q.notify({type: 'positive', message: 'Classificação excluida com sucesso.'});
+            this.listClassificacoes(this.filter);
+            this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível excluir essa classificação'});
+            this.$q.loading.hide();
+          })
         })
       },
     },

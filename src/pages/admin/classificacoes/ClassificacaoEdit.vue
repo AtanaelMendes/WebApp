@@ -4,14 +4,10 @@
     </toolbar>
 
     <div class="row q-pa-md">
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-        <form @keyup.enter="updateClassificacao()">
-
-          <q-field class="q-mb-sm" :error="classificacao.nome.error" :error-label="classificacao.nome.errorMessage">
-            <q-input v-model="classificacao.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
-          </q-field>
-
-        </form>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" @keyup.enter="updateClassificacao()">
+        <q-field class="q-mb-sm" :error="classificacao.nome.error" :error-label="classificacao.nome.errorMessage">
+          <q-input v-model="classificacao.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
+        </q-field>
       </div>
     </div>
 
@@ -80,6 +76,7 @@
           this.$q.loading.hide();
           this.backAction();
         }).catch(error =>{
+          console.log(error);
           this.$q.notify({type: 'negative', message: 'Não foi possível salvar as alterações'});
           this.$q.loading.show();
         })
@@ -90,6 +87,7 @@
           this.fillFormClassificacao(request);
           this.$q.loading.hide();
         }).catch(error =>{
+          console.log(error);
           this.$q.notify({type: 'negative', message: 'Não foi possível salvar as alterações'})
           this.$q.loading.hide();
         })

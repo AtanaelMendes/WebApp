@@ -413,7 +413,6 @@
               </div>
             </div>
             <div class="row">
-              <!--SELECT UNIDADE AREA-->
               <div class="col-8">
                 <q-field :error="cultura.defaultUnidadePrecoId.errorMessage != null">
                   <q-select
@@ -1063,13 +1062,19 @@
             message: 'Realmente deseja apagar esta marca?',
             ok: 'Sim', cancel: 'Não',
             color: 'primary'
-          }).then(data => {
+          }).then(() => {
+            this.$q.loading.show();
             this.culturaService.deleteMarca(id).then(() => {
               this.listCulturas();
               this.listMarcasSemCultivares();
               this.listMarcas();
-            })
-          }).catch(()=>{});
+              this.$q.loading.hide();
+            }).catch(error =>{
+              console.log(error);
+              this.$q.notify({type: 'negative', message: 'Não foi possível excluir esta marca'});
+              this.$q.loading.hide();
+            });
+          })
 
         },
         uploadFotoMarca: function(){

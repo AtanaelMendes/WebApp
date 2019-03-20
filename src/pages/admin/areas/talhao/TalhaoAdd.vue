@@ -45,15 +45,27 @@
         if(!this.talhao.isValid()){
           return;
         }
+        this.$q.loading.show();
         this.talhaoService.saveTalhao(this.$route.params.id, this.talhao.getValues()).then(()=> {
           this.$q.notify({type: 'positive', message: 'Talhão criado com sucesso'});
           this.$router.back();
           this.$root.$emit('refreshAreaList');
+          this.$q.loading.hide();
+        }).catch(error =>{
+          console.log(error);
+          this.$q.notify({type: 'negative', message: 'Não foi possivel salvar'});
+          this.$q.loading.hide();
         });
       },
       listUnidadesArea: function(){
+        this.$q.loading.show();
         this.talhaoService.listUnidadesArea().then(response => {
           this.unidadeAreaOptions = response;
+          this.$q.loading.hide();
+        }).catch(error =>{
+          console.log(error);
+          this.$q.notify({type: 'negative', message: 'Não foi possivel carragar as unidade de área'});
+          this.$q.loading.hide();
         })
       },
       backAction: function () {

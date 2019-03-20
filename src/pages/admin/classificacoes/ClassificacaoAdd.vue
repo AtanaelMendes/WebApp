@@ -4,14 +4,10 @@
     </toolbar>
 
     <div class="row q-pa-md">
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-        <form @keyup.enter="addClassificacao()">
-
-          <q-field class="q-mb-sm" :error="classificacao.nome.error" :error-label="classificacao.nome.errorMessage">
-            <q-input v-model="classificacao.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
-          </q-field>
-
-        </form>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" @keyup.enter="addClassificacao()">
+        <q-field class="q-mb-sm" :error="classificacao.nome.error" :error-label="classificacao.nome.errorMessage">
+          <q-input v-model="classificacao.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
+        </q-field>
       </div>
     </div>
 
@@ -74,11 +70,15 @@
         let params = {
           nome: this.classificacao.nome.value,
         };
+        this.$q.loading.show();
         this.classificacaoService.addClassificacao(params).then(() => {
           this.$q.notify({type: 'positive', message: 'Classificação adicionada com sucesso.'});
           this.backAction();
+          this.$q.loading.hide();
         }).catch(error =>{
+          console.log(error);
           this.$q.notify({type: 'negative', message: 'Não foi possível adicionar o classificação'})
+          this.$q.loading.hide();
         })
       },
       backAction: function () {
