@@ -311,6 +311,7 @@
         this.safra.talhao.errorMessage = null;
       },
       getTalhoesBySafraAndArea: function(area_id){
+
         talhaoService.listTalhoes(area_id).then(response => {
           this.talhoes = response.data;
         })
@@ -412,7 +413,7 @@
       this.getSafraById(this.$route.params.id).then(()=>{
         this.makeYearsList(this.safra.inicio.value.toString());
         this.selectedAnoFim = this.safra.fim.value.toString();
-      })
+      });
 
       //this.safra.inicio.value = this.getCurrentYear();
       //this.safra.fim.value = this.getCurrentYear();
