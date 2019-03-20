@@ -12,7 +12,6 @@
       </div>
     </toolbar>
 
-
     <!-- RESUMO -->
     <div class="row space-end" v-if="iTab === 'tab-resumo'">
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
@@ -465,10 +464,6 @@
       selectTabArmazens: function () {
         this.getArmazens();
       },
-
-      talhaoClick(talhaoId) {
-      },
-
       posicionarTalhaoPeloId(talhaoId) {
         if (!this.talhoesLoaded) {
           this.talhaoIdPosicionar = talhaoId
@@ -483,19 +478,21 @@
           return
         }
 
-        console.log('posicionando no talhao' + talhaoId)
-
       },
 
       // ADD CULTIVAR
       listMarcas: function(){
+        this.$q.loading.show();
         this.safraCulturaService.listMarcas().then(marcas => {
           this.marcas = marcas;
+          this.$q.loading.hide();
         })
       },
       listCultivar: function(marcaId){
+        this.$q.loading.show();
         this.safraCulturaService.listCultivaresByMarca(this.data.cultura.id, marcaId).then(cultivares => {
           this.cultivares = cultivares;
+          this.$q.loading.hide();
         })
       },
       addCultivarModal: function(safraCulturaTalhao){
@@ -522,6 +519,7 @@
         }
         let safraCulturaTalhaoId = this.selectedSafraCulturaTalhao.talhao.id;
         let cultivarId = this.selectedCultivarId;
+        this.$q.loading.show();
         this.safraCulturaService.saveCultivarToSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhaoId, cultivarId).then(cultivar => {
           let talhao = this.data.cultura_talhoes[this.data.cultura_talhoes.map(cultura_talhao => cultura_talhao.talhao.id).indexOf(safraCulturaTalhaoId)];
           talhao.cultivar = cultivar;
@@ -535,6 +533,7 @@
           this.selectedMarcaId = null;
           this.selectedCultivarId = null;
           this.selecteTipoId = null;
+          this.$q.loading.hide();
         })
       },
       goToNextStep(){
@@ -546,9 +545,11 @@
         if (this.areasLoaded & !force) {
           return;
         }
+        this.$q.loading.show();
         this.safraCulturaService.getSafraCultura(this.safra_id, this.id).then(safraCultura => {
           this.data = safraCultura;
           this.loaded = true;
+          this.$q.loading.hide();
         })
       },
 
@@ -556,73 +557,89 @@
         if (this.diarioLoaded & !force) {
           return;
         }
+        this.$q.loading.show();
         this.safraCulturaService.getDiario(this.safra_id, this.id).then(response => {
           this.diario = response.diario;
           this.diarioLoaded = true;
+          this.$q.loading.hide();
         })
       },
       getDiarioClassificacao: function(force = false){
         if (this.diarioClassificacaoLoaded & !force) {
           return;
         }
+        this.$q.loading.show();
         this.safraCulturaService.getDiarioClassificacao(this.safra_id, this.id).then(diarioClassificacao => {
           this.diarioClassificacao = diarioClassificacao;
           this.diarioClassificacaoLoaded = true;
+          this.$q.loading.hide();
         })
       },
       getCaminhoes: function(force = false){
         if (this.caminhoesLoaded & !force) {
           return;
         }
+        this.$q.loading.show();
         this.safraCulturaService.getCaminhoes(this.safra_id, this.id).then(response => {
-          this.caminhoes = response.caminhoes
-          this.caminhoesLoaded = true
+          this.caminhoes = response.caminhoes;
+          this.caminhoesLoaded = true;
+          this.$q.loading.hide();
         })
       },
       getArmazens: function(force = false){
         if (this.armazensLoaded & !force) {
           return;
         }
+        this.$q.loading.show();
         this.safraCulturaService.getArmazens(this.safra_id, this.id).then(response => {
           this.armazens = response.armazens;
-          this.armazensLoaded = true
+          this.armazensLoaded = true;
+          this.$q.loading.hide();
         })
       },
       getAreas: function(force = false){
         if (this.areasLoaded & !force) {
           return;
         }
+        this.$q.loading.show();
         this.safraCulturaService.getAreas(this.safra_id, this.id).then(response => {
           this.areas = response.areas;
           this.areasLoaded = true;
+          this.$q.loading.hide();
         })
       },
       getTalhoes: function(force = false){
         if (this.areasLoaded & !force) {
           return;
         }
+        this.$q.loading.show();
         this.safraCulturaService.getTalhoes(this.safra_id, this.id).then(response => {
-          this.talhoes = response.data.talhoes;
+          this.talhoes = response.talhoes;
           this.talhoesLoaded = true;
           this.posicionarTalhaoPeloId();
+          this.$q.loading.hide();
         })
       },
       getMarcas: function(force = false){
         if (this.marcasLoaded & !force) {
           return;
         }
+        this.$q.loading.show();
         this.safraCulturaService.getMarcas(this.safra_id, this.id).then(response => {
           this.marcas = response.marcas;
           this.marcasLoaded = true;
+          this.$q.loading.hide();
         })
       },
       getCultivares: function(force = false){
         if (this.cultivaresLoaded & !force) {
           return;
         }
+        this.$q.loading.show();
         this.safraCulturaService.getCultivares(this.safra_id, this.id).then(response => {
           this.cultivares = response.cultivares;
           this.cultivaresLoaded = true;
+          this.$q.loading.hide();
         })
       },
 
@@ -639,14 +656,16 @@
         if(!this.safraCulturaTalhao.isValid()){
           return;
         }
+        this.$q.loading.show();
         this.safraCulturaService.updateSafraCulturaTalhao(
-          this.$route.params.id,
-          this.selectedSafraCulturaTalhao.talhao.id, this.safraCulturaTalhao.getValues()).then(() => {
+          this.$route.params.id, this.selectedSafraCulturaTalhao.talhao.id, this.safraCulturaTalhao.getValues()).then(() => {
             this.modalEditSafraCulturaTalhao = false;
             this.$q.notify({type: 'positive', message: 'Atualizdo com sucesso'});
             this.getSafraCultura();
+          this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.request.response})
+          this.$q.loading.hide();
         });
       },
       deleteSafraCulturaTalhao: function(safraCulturaTalhao){
@@ -656,11 +675,12 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           this.safraCulturaService.deleteSafraCulturaTalhao(this.$route.params.id, safraCulturaTalhao.talhao.id).then(() => {
             this.getSafraCultura();
             let talhaoIndex = this.data.cultura_talhoes.map(talhao => talhao.id).indexOf(safraCulturaTalhao.talhao.id);
             this.data.cultura_talhoes.splice(talhaoIndex, 1);
-
+            this.$q.loading.hide();
             if(this.data.cultura_talhoes.length === 0){
               this.$router.push({name: 'safras'});
             }
@@ -685,9 +705,9 @@
       }
     },
     mounted () {
-      this.getSafraCultura();
       this.id = this.$route.params.id;
       this.safra_id = this.$route.params.safra_id;
+      this.getSafraCultura();
     },
   }
 </script>

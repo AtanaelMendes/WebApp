@@ -135,8 +135,6 @@
         this.pessoa.inscricaoEstadual.value = data.inscricao_estadual;
         this.pessoa.uf.value = data.uf;
         this.pessoa.inscricaoMunicipal.value = data.inscricao_municipal;
-
-
       },
       getPessoa: function(id){
         this.$q.loading.show();

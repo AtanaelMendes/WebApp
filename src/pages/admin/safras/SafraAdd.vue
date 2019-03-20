@@ -101,12 +101,15 @@
         if(!this.safra.isValid()){
           return;
         }
+        this.$q.loading.show();
         this.safraService.saveSafra(this.safra.getValues()).then(() => {
           this.$q.notify({type: 'positive', message: 'Safra criada com sucesso'});
           this.$router.push({name: 'safras'});
-          this.$root.$emit('refreshSafraList')
+          this.$root.$emit('refreshSafraList');
+          this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          this.$q.loading.hide();
         });
       },
       setAnoInicio: function(value){

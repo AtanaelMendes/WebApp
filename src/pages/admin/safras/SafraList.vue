@@ -480,13 +480,17 @@
       methods: {
         // SAFRA CRUD
         favoriteSafra: function(id, pin){
+          this.$q.loading.show();
           this.safraService.favoriteSafra(id, pin).then(() => {
-            this.listSafras()
+            this.listSafras();
+            this.$q.loading.hide();
           })
         },
         listSafras: function(){
+          this.$q.loading.show();
           this.safraService.listSafras().then(safras => {
             this.safras = safras;
+            this.$q.loading.hide();
           })
         },
         closeSafraModal: function(){
@@ -514,6 +518,7 @@
           if(!this.safra.isValid()){
             return;
           }
+          this.$q.loading.show();
           this.safraService.saveSafra(this.safra.getValues()).then(() => {
             this.$q.notify({type: 'positive', message: 'Safra criada com sucesso'});
             this.listSafras();
@@ -521,8 +526,10 @@
             this.safra.inicio.value = this.getCurrentYear();
             this.safra.fim.value = this.getCurrentYear();
             this.selectedAnoFim = this.safra.fim.value.toString();
+            this.$q.loading.hide();
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+            this.$q.loading.hide();
           });
         },
         editSafra: function(safra){
@@ -541,6 +548,7 @@
           if(!this.safra.isValid()){
             return;
           }
+          this.$q.loading.show();
           this.safraService.updateSafra(this.selectedSafra, this.safra.getValues()).then(() => {
             this.$q.notify({type: 'positive', message: 'Safra atualizada com sucesso!'});
             this.listSafras();
@@ -548,8 +556,10 @@
             this.safra.inicio.value = this.getCurrentYear();
             this.safra.fim.value = this.getCurrentYear();
             this.selectedAnoFim = this.safra.fim.value.toString();
+            this.$q.loading.hide();
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+            this.$q.loading.hide();
           });
         },
         setAnoInicio: function(value){
@@ -560,14 +570,18 @@
           this.safra.fim.value = value.toString();
         },
         archiveSafra: function(id){
+          this.$q.loading.show();
           this.safraService.archiveSafra(id).then(() => {
             this.$q.notify({type: 'positive', message: 'Safra arquivda com sucesso!'});
-            this.listSafras()
+            this.listSafras();
+            this.$q.loading.hide();
           })
         },
         restoreSafra: function(id){
+          this.$q.loading.show();
           this.safraService.restoreSafra(id).then(() => {
-            this.listSafras()
+            this.listSafras();
+            this.$q.loading.hide();
           })
         },
         deleteSafra: function(id){
@@ -577,10 +591,13 @@
             ok: 'Sim', cancel: 'Não',
             color: 'primary'
           }).then(data => {
+            this.$q.loading.show();
             this.safraService.deleteSafra(id).then(() => {
-              this.listSafras()
+              this.listSafras();
+              this.$q.loading.hide();
             }).catch(error => {
               if(error.response.status){
+                this.$q.loading.hide();
                 this.$q.dialog({
                   title: 'Atenção',
                   message: 'Esta safra possui talhões dentro! Apague-os primeiro.',
@@ -609,12 +626,15 @@
           this.formEditSafraCultura.view_unidade_medida_id = safraCultura.view_unidade_medida.id;
         },
         updateSafraCultura: function(){
+          this.$q.loading.show();
           this.safraCulturaService.updateSafraCultura(this.selectedSafraId, this.selectedSafraCulturaId, this.formEditSafraCultura).then(() => {
             this.$q.notify({type: 'positive', message: 'Safra cultura atualizada com sucesso!'});
             this.listSafras();
             this.closeNewSafraCulturaModal();
+            this.$q.loading.hide();
           }).catch(error => {
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+            this.$q.loading.hide();
           });
         },
         closeNewSafraCulturaModal: function(){
@@ -645,8 +665,10 @@
 
         // PASSO 1 CULTURA
         listCulturas() {
+          this.$q.loading.show();
           this.safraCulturaService.listCulturas().then(culturas => {
             this.culturas = culturas;
+            this.$q.loading.hide();
           });
         },
         setCultura: function(cultura){
@@ -659,8 +681,10 @@
 
         // PASSO 2 UNIDADE MEDIDA
         getUnidadesMedida:function(){
+          this.$q.loading.show();
           this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
             this.unidadesMedida = unidades;
+            this.$q.loading.hide();
           })
         },
         getUnidadesArea:function(){
@@ -685,8 +709,10 @@
 
         // PASSO 3 AREA
         getAreas: function(){
+          this.$q.loading.show();
           this.areaService.listAreas().then(areas => {
             this.areas = areas;
+            this.$q.loading.hide();
           })
         },
         setArea: function(area){
@@ -698,7 +724,14 @@
 
         // PASSO 4 TALHOES
         getTalhoesBySafraAndArea: function(area_id){
-          this.safraService.listFreeTalhoes(area_id, this.selectedSafraId, this.safraCultura.view_unidade_area_id, this.safraCultura.view_unidade_medida_id, this.safraCultura.cultura_id).then(talhoes => {
+          this.$q.loading.show();
+          this.safraService.listFreeTalhoes(
+            area_id,
+            this.selectedSafraId,
+            this.safraCultura.view_unidade_area_id,
+            this.safraCultura.view_unidade_medida_id,
+            this.safraCultura.cultura_id
+          ).then(talhoes => {
             this.talhoes = [];
             this.safraCultura.talhoes = [];
             talhoes.forEach(function(talhao){
@@ -709,7 +742,8 @@
                 image_path: talhao.image_path,
               });
               this.safraCultura.addTalhao(new SafraCulturaTalhao(talhao))
-            },this)
+            },this);
+            this.$q.loading.hide();
           })
         },
         toggleTalhao:function(talhao){
@@ -729,23 +763,29 @@
 
         // SAFRA CULTURA VIEW CRUD
         saveSafraCultura: function(){
+          this.$q.loading.show();
           this.safraCulturaService.saveSafraCultura(this.selectedSafraId, this.safraCultura.getValues()).then(() => {
             this.$q.notify({type: 'positive', message: 'Cultura criada com sucesso'});
             this.closeNewSafraCulturaModal();
-            this.listSafras()
-          }).catch(error => { });
+            this.listSafras();
+            this.$q.loading.hide();
+          })
         },
         viewSafraCultura: function (safra_id, id) {
           this.$router.push({name: 'view_safra_cultura', params: {safra_id:safra_id, id:id}});
         },
         archiveSafraCultura: function(safra_id, id){
+          this.$q.loading.show();
           this.safraCulturaService.archiveSafraCultura(safra_id, id).then(() => {
-            this.listSafras()
+            this.listSafras();
+            this.$q.loading.hide();
           })
         },
         restoreSafraCultura: function(safra_id, id){
+          this.$q.loading.show();
           this.safraCulturaService.restoreSafraCultura(safra_id, id).then(() => {
-            this.listSafras()
+            this.listSafras();
+            this.$q.loading.hide();
           })
         },
         deleteSafraCultura: function(safra_id, id){
@@ -755,11 +795,12 @@
             ok: 'Sim', cancel: 'Não',
             color: 'primary'
           }).then(data => {
+            this.$q.loading.show();
             this.safraCulturaService.deleteSafraCultura(safra_id, id).then(() => {
-              this.listSafras()
+              this.listSafras();
+              this.$q.loading.hide();
             })
-          }).catch(()=>{});
-
+          })
         },
       },
       mounted () {
