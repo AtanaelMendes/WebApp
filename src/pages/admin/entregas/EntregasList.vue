@@ -342,32 +342,35 @@
         }
       },
       listEntregasCarregando(filter = null) {
-        console.log('listEntregasCarregando')
         this.$q.loading.show();
         this.entregaService.listEntregasCarregando(filter).then(entregas => {
           this.entregasCarregando = entregas;
           this.$q.loading.hide();
         }).catch(error => {
+          console.log(error);
+          this.$q.notify({type: 'negative', message: 'Não foi possível carragar as informações'});
           this.$q.loading.hide();
         })
       },
       listEntregasNoArmazem: function (filter = null) {
-        console.log('listEntregasNoArmazem')
         this.$q.loading.show();
         this.entregaService.listEntregasNoArmazem(filter).then(entregas => {
           this.entregasNoArmazem = entregas;
           this.$q.loading.hide();
         }).catch(error => {
+          console.log(error);
+          this.$q.notify({type: 'negative', message: 'Não foi possível carragar as informações'});
           this.$q.loading.hide();
         })
       },
       listEntregasEntregues: function (filter = null) {
-        console.log('listEntregasEntregues')
         this.$q.loading.show();
         this.entregaService.listCargasEntregues(filter).then(entregas => {
           this.entregasEntregues = entregas;
           this.$q.loading.hide();
         }).catch(error => {
+          console.log(error);
+          this.$q.notify({type: 'negative', message: 'Não foi possível carragar as informações'});
           this.$q.loading.hide();
         })
       },
@@ -397,6 +400,8 @@
               }
               this.$q.loading.hide();
             }).catch(error => {
+              console.log(error);
+              this.$q.notify({type: 'negative', message: 'Não foi possível excluir'});
               this.$q.loading.hide();
             })
           }).catch(()=>{});
