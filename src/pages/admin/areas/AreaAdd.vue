@@ -22,7 +22,6 @@
   import customInputText from 'components/CustomInputText.vue'
   import localizacaoSelect from 'components/LocalizacaoSelect.vue'
   import area from 'assets/js/model/area/Area'
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import AreaService from "../../../assets/js/service/area/AreaService";
   import LocalizacaoService from "../../../assets/js/service/localizacao/LocalizacaoService";
   export default {
@@ -36,7 +35,7 @@
     data(){
       return {
         localizacaoService: new LocalizacaoService(),
-        areaService: null,
+        areaService: new AreaService(),
         localizacaoOptions: [],
         area: new area(),
       }
@@ -44,7 +43,7 @@
     methods:{
       listLocalizacao: function(){
         this.$q.loading.show();
-        this.localizacaoService.listLocalizacoesByProdutor(produtorId).then(localizacoes => {
+        this.localizacaoService.listLocalizacoes().then(localizacoes => {
           this.localizacaoOptions = localizacoes.map(local => {
             return {
               value: local.id,
@@ -80,9 +79,6 @@
       }
     },
     mounted(){
-      new AccountRepository().getFirst().then(account => {
-        this.areaService = new AreaService(account.produtor_id);
-      });
       this.listLocalizacao();
     }
   }

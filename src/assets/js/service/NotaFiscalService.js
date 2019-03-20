@@ -3,17 +3,15 @@ import NotaFiscalAPI from "../api/NotaFiscalAPI";
 import NotaFiscalSerieRepository from "../repository/resource/NotaFiscalSerieRepository";
 
 export default class NotaFiscalService {
-  #produtorId;
   #notaFiscalSerieRepository;
 
-  constructor(produtor_id) {
-    this.produtorId = produtor_id;
+  constructor() {
     this.notaFiscalSerieRepository = new NotaFiscalSerieRepository();
   }
 
   getNotaFiscalItemById(id){
     return new Promise((resolve, reject) => {
-      NotaFiscalAPI.getNotaFiscalItemById(id, this.produtorId).then(response => {
+      NotaFiscalAPI.getNotaFiscalItemById(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -28,7 +26,7 @@ export default class NotaFiscalService {
   listSeries(){
     return new Promise((resolve, reject) => {
       if(Vue.prototype.serverStatus.isUp) {
-        NotaFiscalAPI.listSeries(this.produtorId).then(response => {
+        NotaFiscalAPI.listSeries().then(response => {
           if(response.status === 200){
             resolve(response.data);
           }else{

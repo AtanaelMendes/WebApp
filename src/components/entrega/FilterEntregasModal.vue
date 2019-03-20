@@ -122,13 +122,12 @@
 
 
   import EntregaService from "../../assets/js/service/entrega/EntregaService";
-  import AccountRepository from "../../assets/js/repository/AccountRepository";
 
   export default {
     name: "FilterEntregasModal",
     data(){
       return {
-        entregaService: null,
+        entregaService: new EntregaService(),
         isModalOpened: false,
         filter: {
           caminhao_id: null,
@@ -354,9 +353,7 @@
       },
     },
     mounted(){
-      new AccountRepository().getFirst().then(account => {
-        this.entregaService = new EntregaService(account.produtor_id);
-      });
+
     }
   }
 </script>

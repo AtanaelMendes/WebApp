@@ -16,7 +16,6 @@ import MarcaAPI from "../../api/MarcaAPI";
 import CultivarAPI from "../../api/CultivarAPI";
 import SafraCulturaTalhaoAPI from "../../api/SafraCulturaTalhaoAPI";
 export default class SafraCulturaService {
-  #produtorId;
   #safraCulturaRepository;
   #culturaRepository;
   #imageRepository;
@@ -27,8 +26,7 @@ export default class SafraCulturaService {
   #cultivarRepository;
   #marcaRepository;
 
-  constructor(produtorId) {
-    this.produtorId = produtorId;
+  constructor() {
     this.safraCulturaRepository = new SafraCulturaRepository();
     this.culturaRepository = new CulturaRepository();
     this.imageRepository = new ImageRepository();
@@ -129,7 +127,7 @@ export default class SafraCulturaService {
       let safraCulturas = null;
 
       if(Vue.prototype.serverStatus.isUp) {
-        safraCulturas = await SafraCulturaAPI.getSafraCulturas(this.produtorId).then(response => {
+        safraCulturas = await SafraCulturaAPI.getSafraCulturas(d).then(response => {
           return response.data;
         });
       }else{
@@ -163,7 +161,7 @@ export default class SafraCulturaService {
 
   listCulturas(){
     return new Promise((resolve, reject) => {
-      CulturaAPI.listCulturasSimpleList(this.produtorId).then(response => {
+      CulturaAPI.listCulturasSimpleList().then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -177,7 +175,7 @@ export default class SafraCulturaService {
 
   listMarcas(){
     return new Promise((resolve, reject) => {
-      MarcaAPI.listMarcas(null, this.produtorId).then( response => {
+      MarcaAPI.listMarcas(null).then( response => {
         if(response.status === 200){
           resolve(response.data);
         }else{

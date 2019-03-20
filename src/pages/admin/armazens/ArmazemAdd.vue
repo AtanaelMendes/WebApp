@@ -33,7 +33,6 @@
   import localizacaoSelect from 'components/LocalizacaoSelect.vue'
   import ArmazemService from "../../../assets/js/service/armazem/ArmazemService";
   import LocalizacaoService from "../../../assets/js/service/localizacao/LocalizacaoService";
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
     name: "armazem-add",
     components: {
@@ -43,8 +42,8 @@
     },
     data () {
       return {
-        armazemService: null,
-        localizacaoService: null,
+        armazemService: new ArmazemService(),
+        localizacaoService: new LocalizacaoService(),
         localizacaoOptions: [],
         armazem: {
           nome: {
@@ -122,11 +121,7 @@
       },
     },
     mounted () {
-      new AccountRepository().getFirst().then(account => {
-        this.armazemService = new ArmazemService(account.produtor_id);
-        this.localizacaoService = new LocalizacaoService(account.produtor_id);
-        this.listLocalizacao();
-      });
+      this.listLocalizacao();
     },
   }
 </script>

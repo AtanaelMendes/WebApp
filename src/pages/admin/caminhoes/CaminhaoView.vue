@@ -15,7 +15,6 @@
   import customPage from 'components/CustomPage.vue'
   import imapeUpload from 'components/ImageUpload'
   import CaminhaoService from "../../../assets/js/service/CaminhaoService";
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
 
   export default {
     name: "caminhao-view",
@@ -28,7 +27,7 @@
     computed: {},
     data(){
       return{
-        caminhaoService: null,
+        caminhaoService: new CaminhaoService(),
         caminhao: null,
       }
     },
@@ -49,10 +48,7 @@
       }
     },
     mounted(){
-      new AccountRepository().getFirst().then(account => {
-        this.caminhaoService = new CaminhaoService(account.produtor_id)
-        this.getCaminhaoById(this.$route.params.id);
-      });
+      this.getCaminhaoById(this.$route.params.id);
     }
   }
 </script>

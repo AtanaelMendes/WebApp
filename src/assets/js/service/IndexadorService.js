@@ -1,15 +1,13 @@
 import IndexadorAPI from "../api/IndexadorAPI";
 
 export default class IndexadorService{
-  #produtorId;
 
-  constructor(produtorId) {
-    this.produtorId = produtorId;
+  constructor() {
   }
 
   listIndexadores() {
     return new Promise((resolve, reject) => {
-      IndexadorAPI.listIndexadores(this.produtorId).then(response => {
+      IndexadorAPI.listIndexadores().then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{

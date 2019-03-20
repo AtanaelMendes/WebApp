@@ -66,8 +66,8 @@ export default class ResourceService{
   static entregasToUpdate = [];
   static entregasToDelete = [];
 
-  constructor(produtorId) {
-    basePath = '/produtor/' + produtorId + '/resource';
+  constructor() {
+    basePath = '/resource';
     this.resourcesSyncTimeRepository = new ResourcesSyncTimeRepository();
     this.resources = [
       ['caminhao', Caminhao, CaminhaoRepository],

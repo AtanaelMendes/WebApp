@@ -512,6 +512,7 @@
   import graficoClassificacaoDiaria from 'components/safra/graficos/GraficoClassificacaoDiaria.vue'
 
   import safraQuantidades from 'components/safra/Quantidades.vue'
+  import SafraCulturaService from "../../../../assets/js/service/safra/SafraCulturaService";
 
 
   export default {
@@ -537,7 +538,7 @@
     },
     data () {
       return {
-        safraCulturaService: null,
+        safraCulturaService: new SafraCulturaService(),
         graficoPorMedia: true,
         currentStep: 'marca',
         marcas: [],
@@ -692,10 +693,7 @@
       }
     },
     mounted () {
-      new AccountRepository().getFirst().then(account => {
-        this.safraCulturaService = new SafraCulturaService(account.produtor_id);
-        this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
-      });
+      this.getSafraCultura(this.$route.params.safra_id, this.$route.params.id);
       // this.$root.$on('refreshSafraList', () => {
       //   this.listSafras();
       // });

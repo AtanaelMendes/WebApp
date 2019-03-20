@@ -1,15 +1,13 @@
 import GrupoEconomicoAPI from "../api/GrupoEconomicoAPI";
 
 export default class GrupoEconomicoService{
-  #produtorId;
 
-  constructor(produtorId) {
-    this.produtorId = produtorId;
+  constructor() {
   }
 
   saveGrupoEconomico(grupoEconomico) {
     return new Promise((resolve, reject) => {
-      GrupoEconomicoAPI.saveGrupoEconomico(grupoEconomico, this.produtorId).then(response => {
+      GrupoEconomicoAPI.saveGrupoEconomico(grupoEconomico).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
@@ -23,7 +21,7 @@ export default class GrupoEconomicoService{
 
   searchGrupoEconomico(terms){
     return new Promise((resolve, reject) => {
-      GrupoEconomicoAPI.searchGrupoEconomico(terms, this.produtorId).then(response => {
+      GrupoEconomicoAPI.searchGrupoEconomico(terms).then(response => {
         if(response.status === 200){
           resolve(this.parseGruposEconomicos(response.data))
         }else{

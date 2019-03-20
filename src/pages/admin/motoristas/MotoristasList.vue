@@ -97,7 +97,6 @@
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
   import imageUpload from 'components/ImageUpload'
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import MotoristaService from "../../../assets/js/service/motorista/MotoristaService";
   export default {
     name: "motoristas-list",
@@ -110,8 +109,7 @@
     },
     data () {
       return {
-        produtorId: null,
-        motoristaService: null,
+        motoristaService: new MotoristaService(),
         motoristas: [],
         modalAddFotoMotorista: false,
         selectedMotoristaId: null,
@@ -133,7 +131,7 @@
     },
     computed: {
       motoristaImageUrl: function(){
-        return 'produtor/'+ this.produtorId +'/motorista/' + this.selectedMotoristaId + '/image';
+        return '/motorista/' + this.selectedMotoristaId + '/image';
       },
     },
     methods: {
@@ -218,11 +216,7 @@
       },
     },
     mounted () {
-      new AccountRepository().getFirst().then(account => {
-        this.motoristaService = new MotoristaService(account.produtor_id);
-        this.produtorId = account.produtor_id;
-        this.listMotoristas(this.filter);
-      });
+      this.listMotoristas(this.filter);
 
       this.$root.$on('refreshMotoristasList', () => {
         this.listMotoristas(this.filter);

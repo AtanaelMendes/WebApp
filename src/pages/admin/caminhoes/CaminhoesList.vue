@@ -113,7 +113,6 @@
   import apImage from 'components/ApImage'
   import imapeUpload from 'components/ImageUpload'
   import CaminhaoService from "../../../assets/js/service/CaminhaoService";
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   export default {
     name: "caminhoes-list",
     components: {
@@ -125,8 +124,7 @@
     },
     data () {
       return {
-        produtorId: null, //TODO: Retirar daqui quando não tiver mais produtorId nos endpoints
-        caminhaoService: null,
+        caminhaoService: new CaminhaoService(),
         caminhoes: [],
         modalAddFotoCaminhao: false,
         selectedCaminhaoId: null,
@@ -148,7 +146,7 @@
     },
     computed: {
       caminhaoImageUrl: function(){
-        return 'produtor/'+ this.produtorId +'/caminhao/' + this.selectedCaminhaoId + '/image';
+        return 'caminhao/' + this.selectedCaminhaoId + '/image';
       },
     },
     methods: {
@@ -262,11 +260,7 @@
       },
     },
     mounted () {
-      new AccountRepository().getFirst().then(account => {
-        this.caminhaoService = new CaminhaoService(account.produtor_id);
-        this.produtorId = account.produtor_id;
-        this.listCaminhoes(this.filter);
-      });
+      this.listCaminhoes(this.filter);
 
       this.$root.$on('refreshCaminhoesList', () => {
         this.listCaminhoes(this.filter);

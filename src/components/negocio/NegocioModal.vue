@@ -93,7 +93,6 @@
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import customInputText from 'components/CustomInputText.vue'
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
-  import AccountRepository from "../../assets/js/repository/AccountRepository";
   import PessoaService from "../../assets/js/service/PessoaService";
 
   export default {
@@ -111,7 +110,7 @@
     data(){
       return {
         pessoaServce: new PessoaService(),
-        negocioService: null,
+        negocioService: new NegocioService(),
         isModalOpened: false,
         isEditMode: false,
         currentStep: 'negociante',
@@ -198,9 +197,7 @@
       },
     },
     mounted() {
-      new AccountRepository().getFirst().then(account => {
-        this.negocioService = new NegocioService(account.produtor_id);
-      });
+
     }
   }
 </script>

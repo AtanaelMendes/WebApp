@@ -22,7 +22,6 @@
   import customInputText from 'components/CustomInputText.vue'
   import localizacaoSelect from 'components/LocalizacaoSelect.vue'
   import area from 'assets/js/model/area/Area'
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import AreaService from "../../../assets/js/service/area/AreaService";
   import LocalizacaoService from "../../../assets/js/service/localizacao/LocalizacaoService";
   export default {
@@ -35,9 +34,8 @@
     },
     data(){
       return {
-        produtorId: null,
-        localizacaoService: null,
-        areaService: null,
+        localizacaoService: new LocalizacaoService(),
+        areaService: new AreaService(),
         localizacaoOptions: [],
         area: new area(),
       }
@@ -52,9 +50,9 @@
         this.area.nome.value = area.nome
         this.area.localizacao.value = area.localizacao.id
       },
-      listLocalizacoesByProdutor(produtorId){
+      listLocalizacoes(){
         this.$q.loading.show();
-        this.localizacaoService.listLocalizacoesByProdutor(produtorId).then(localizacoes => {
+        this.localizacaoService.listLocalizacoes().then(localizacoes => {
           console.table(localizacoes);
           this.localizacaoOptions = localizacoes.map(local => {
             return {
@@ -102,13 +100,8 @@
       }
     },
     mounted() {
-      new AccountRepository().getFirst().then(account => {
-        this.areaService = new AreaService(account.produtor_id);
-        this.localizacaoService = new LocalizacaoService(account.produtor_id);
-        // this.produtorId = account.produtor_id;
-        this.getAreaById(this.$route.params.id);
-        this.listLocalizacoesByProdutor(account.produtor_id);
-      });
+      this.getAreaById(this.$route.params.id);
+      this.listLocalizacoes();
     }
   }
 </script>

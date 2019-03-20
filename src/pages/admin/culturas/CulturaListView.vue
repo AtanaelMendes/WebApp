@@ -820,7 +820,6 @@
     import Cultivar from 'assets/js/model/cultura/Cultivar'
     import imapeUpload from 'components/ImageUpload'
     import apNoResults from 'components/ApNoResults'
-    import AccountRepository from "../../../assets/js/repository/AccountRepository";
     import CulturaService from "../../../assets/js/service/cultura/CulturaService";
 
     export default {
@@ -834,8 +833,7 @@
       },
       data () {
         return {
-          produtorId: null,
-          culturaService: null,
+          culturaService: new CulturaService(),
           currentStep: 'cultura',
           modalNewCultura: false,
           modalEditCultura: false,
@@ -888,10 +886,10 @@
       },
       computed: {
         marcaImageUrl: function(){
-          return '/produtor/' + this.produtorId + '/marca/' + this.selectedMarcaId + '/image';
+          return '/marca/' + this.selectedMarcaId + '/image';
         },
         culturaImageUrl: function(){
-          return '/produtor/' + this.produtorId + '/cultura/' + this.selectedCulturaId + '/image';
+          return '/cultura/' + this.selectedCulturaId + '/image';
         }
       },
       methods: {
@@ -1288,14 +1286,10 @@
         },
       },
       mounted () {
-        new AccountRepository().getFirst().then(account => {
-          this.produtorId = account.produtor_id;
-          this.culturaService = new CulturaService(account.produtor_id);
-          this.listCulturas();
-          this.listMarcasSemCultivares();
-          this.selectUnidadeArea();
-          this.selectUnidadeMedida();
-        });
+        this.listCulturas();
+        this.listMarcasSemCultivares();
+        this.selectUnidadeArea();
+        this.selectUnidadeMedida();
       },
     }
   </script>

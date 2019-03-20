@@ -2,12 +2,12 @@ import Vue from 'vue'
 
 export default class SafraAPI{
 
-  static getSafra(id, produtorId){
-    return Vue.prototype.$axios.get('produtor/' + produtorId + '/safra/' + id);
+  static getSafra(id){
+    return Vue.prototype.$axios.get('/safra/' + id);
   }
 
-  static listSafras(produtorId){
-    return Vue.prototype.$axios.get('produtor/' + produtorId + '/safra');
+  static listSafras(){
+    return Vue.prototype.$axios.get('/safra');
   }
 
   static listFreeTalhoes(safraId, areaId, unidadeAreaId, unidadeMedidaId, culturaId){
@@ -17,27 +17,27 @@ export default class SafraAPI{
       + '&cultura_id=' + culturaId);
   }
 
-  static saveSafra(safra, produtorId){
-    return Vue.prototype.$axios.post('produtor/' + produtorId + '/safra', safra);
+  static saveSafra(safra){
+    return Vue.prototype.$axios.post('/safra', safra);
   }
 
-  static updateSafra(safra, safraId, produtorId){
-    return Vue.prototype.$axios.put('produtor/' + produtorId + '/safra/' + safraId, safra);
+  static updateSafra(safra, safraId){
+    return Vue.prototype.$axios.put('/safra/' + safraId, safra);
   }
 
-  static deleteSafra(id, produtorId){
-    return Vue.prototype.$axios.delete('produtor/' + produtorId + '/safra/' + id)
+  static deleteSafra(id){
+    return Vue.prototype.$axios.delete('/safra/' + id)
   }
 
-  static restoreSafra(id, produtorId){
-    return Vue.prototype.$axios.put('produtor/' + produtorId + '/safra/' + id + '/restore');
+  static restoreSafra(id){
+    return Vue.prototype.$axios.put('/safra/' + id + '/restore');
   }
 
-  static archiveSafra(id, produtorId){
-    return Vue.prototype.$axios.put('produtor/' + produtorId + '/safra/' + id + '/archive');
+  static archiveSafra(id){
+    return Vue.prototype.$axios.put('/safra/' + id + '/archive');
   }
 
-  static favoriteSafra(value, id, produtorId){
-    return Vue.prototype.$axios.put('produtor/' + produtorId + '/safra/' + id + '/favorite?value=' + value);
+  static favoriteSafra(value, id){
+    return Vue.prototype.$axios.put('/safra/' + id + '/favorite?value=' + value);
   }
 }

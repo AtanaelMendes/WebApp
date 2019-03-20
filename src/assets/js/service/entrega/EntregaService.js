@@ -15,13 +15,11 @@ import EntregaListItemBuilder from "../../model/entrega/builder/EntregaListItemB
 
 export default class EntregaService{
   #entregasQueue;
-  #produtorId;
   #entregaViewRepository;
   #entregaRepository;
   #entregaListItemBuilder;
 
-  constructor(produtorId) {
-    this.produtorId = produtorId;
+  constructor() {
     this.entregasQueue = new EntregasQueue();
     this.entregaViewRepository = new EntregaViewRepository();
     this.entregaRepository = new EntregaRepository();
@@ -34,7 +32,7 @@ export default class EntregaService{
       let entregasCarregandoListItemBuilder = new EntregaCarregandoListItemBuilder();
 
       if(Vue.prototype.serverStatus.isUp){
-        entregas = await EntregaAPI.listEntregasByStatus('carregando', filter, this.produtorId).then(response => {
+        entregas = await EntregaAPI.listEntregasByStatus('carregando', filter).then(response => {
           if(response.status === 200){
             return resolve(response.data);
           }else{
@@ -60,7 +58,7 @@ export default class EntregaService{
       let queueItens = await this.entregasQueue.listByType(EntregasQueue.NOVA_ENTREGA);
 
       for(let i = 0; i < queueItens.length; i++){
-        let url = Vue.prototype.$axios.defaults.baseURL + 'produtor/' + this.produtorId + '/entrega';
+        let url = Vue.prototype.$axios.defaults.baseURL + '/entrega';
         let results = await this.entregasQueue.getByUrlAndMethod(url + '/queue::' + queueItens[i].id + '/enviar_entrega', 'put').toArray();
 
         if(results.length !== 0){
@@ -82,7 +80,7 @@ export default class EntregaService{
       let entregaNoArmazemListItemBuilder = new EntregaNoArmazemListItemBuilder();
 
       if(Vue.prototype.serverStatus.isUp){
-        entregas = await EntregaAPI.listEntregasByStatus('no_armazem', filter, this.produtorId).then(response => {
+        entregas = await EntregaAPI.listEntregasByStatus('no_armazem', filter).then(response => {
           if(response.status === 200){
             return resolve(response.data);
           }else{
@@ -131,7 +129,7 @@ export default class EntregaService{
       let entregaEntregueListItemBuilder = new EntregaEntregueListItemBuilder();
 
       if(Vue.prototype.serverStatus.isUp){
-        entregas = await EntregaAPI.listEntregasByStatus('entregue', filter, this.produtorId).then(response => {
+        entregas = await EntregaAPI.listEntregasByStatus('entregue', filter).then(response => {
           if(response.status === 200){
             return resolve(response.data);
           }else{
@@ -177,7 +175,7 @@ export default class EntregaService{
 
       }else{
         if(Vue.prototype.serverStatus.isUp){
-          EntregaAPI.getEntrega(id, this.produtorId).then(response => {
+          EntregaAPI.getEntrega(id).then(response => {
             resolve(response.data);
           }).catch(error => {
             reject(new Error("Erro na API"))
@@ -195,7 +193,7 @@ export default class EntregaService{
 
   saveEntrega(entrega){
     return new Promise((resolve, reject) => {
-      EntregaAPI.saveEntrega(entrega, this.produtorId).then(response => {
+      EntregaAPI.saveEntrega(entrega).then(response => {
         if(response.status === 201) {
           resolve(response.data)
         }else{
@@ -214,7 +212,7 @@ export default class EntregaService{
 
   sendEntregaToArmazen(entrega_id, params){
     return new Promise((resolve, reject) => {
-      EntregaAPI.sendToArmazem(params, entrega_id, this.produtorId).then(response => {
+      EntregaAPI.sendToArmazem(params, entrega_id).then(response => {
         if (response.status === 200) {
           resolve(response.data);
         } else {
@@ -276,7 +274,7 @@ export default class EntregaService{
 
   addTalhaoToEntrega(entrega_id, params){
     return new Promise((resolve, reject) => {
-      EntregaAPI.addTalhao(params, entrega_id, this.produtorId).then(response => {
+      EntregaAPI.addTalhao(params, entrega_id).then(response => {
         if(response.status === 201) {
           resolve(response.data);
         }else{
@@ -290,7 +288,7 @@ export default class EntregaService{
 
   delteTalhaoOfEntrega(entrega_id, talhao_id){
     return new Promise((resolve, reject) => {
-      EntregaAPI.deleteTalhao(talhao_id, entrega_id, this.produtorId).then(response => {
+      EntregaAPI.deleteTalhao(talhao_id, entrega_id).then(response => {
         if(response.status === 200) {
           resolve(response.data);
         }else{
@@ -304,7 +302,7 @@ export default class EntregaService{
 
   listTalhoesFromEntrega(entrega_id){
     return new Promise((resolve, reject) => {
-      EntregaAPI.listTalhoes(entrega_id, this.produtorId).then( response => {
+      EntregaAPI.listTalhoes(entrega_id).then( response => {
         if(response.status === 200) {
           resolve(response.data);
         }else{
@@ -318,7 +316,7 @@ export default class EntregaService{
 
   updateTalhoesPercentual(entrega_id, params){
     return new Promise((resolve, reject) => {
-      EntregaAPI.updateTalhoesPercentual(params, entrega_id, this.produtorId).then(response => {
+      EntregaAPI.updateTalhoesPercentual(params, entrega_id).then(response => {
         if(response.status === 200) {
           resolve(response.data)
         }else{
@@ -332,7 +330,7 @@ export default class EntregaService{
 
   updateMotorista(entrega_id, motorista){
     return new Promise((resolve, reject) => {
-      EntregaAPI.updateMotorista(motorista, entrega_id, this.produtorId).then(response => {
+      EntregaAPI.updateMotorista(motorista, entrega_id).then(response => {
         if(response.status === 200) {
           resolve(response.data);
         }else{
@@ -346,7 +344,7 @@ export default class EntregaService{
 
   updateArmazem(entrega_id, armazem){
     return new Promise((resolve, reject) => {
-      EntregaAPI.updateArmazem(armazem, entrega_id, this.produtorId).then(response => {
+      EntregaAPI.updateArmazem(armazem, entrega_id).then(response => {
         if(response.status === 200) {
           resolve(response.data)
         }else{
@@ -374,7 +372,7 @@ export default class EntregaService{
 
   updateNotaFiscalItemOfNegocio(entrega_id, id, params){
     return new Promise((resolve, reject) => {
-      EntregaAPI.updateNotaFiscalItemOfNegocio(params, id, entrega_id, this.produtorId).then(response => {
+      EntregaAPI.updateNotaFiscalItemOfNegocio(params, id, entrega_id).then(response => {
         if(response.status === 200) {
           resolve(response.data)
         }else{
@@ -388,7 +386,7 @@ export default class EntregaService{
 
   deleteEntrega(id){
     return new Promise((resolve, reject) => {
-      EntregaAPI.deleteEntrega(id, this.produtorId).then(response => {
+      EntregaAPI.deleteEntrega(id).then(response => {
         if(response.status === 200) {
           resolve(response.data);
         }else{

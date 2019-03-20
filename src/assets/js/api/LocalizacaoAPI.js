@@ -10,8 +10,8 @@ export default class LocalizacaoAPI{
     return Vue.prototype.$axios.get( 'pessoa/' + pessoaId + '/localizacao' );
   }
 
-  static listLocalizacoesByProdutor(produtorId){
-    return Vue.prototype.$axios.get( 'produtor/' + produtorId + '/localizacao' );
+  static listLocalizacoes(){
+    return Vue.prototype.$axios.get('/localizacao' );
   }
 
   static saveLocalizacao(localizacao, pessoaId){

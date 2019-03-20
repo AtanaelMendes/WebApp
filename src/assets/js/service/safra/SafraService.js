@@ -1,17 +1,14 @@
-import Vue from 'vue'
 import { Loading, Dialog } from 'quasar'
 import SafraAPI from "../../api/SafraAPI";
 
 export default class SafraService {
-  #produtorId;
 
-  constructor(produtorId) {
-    this.produtorId = produtorId;
+  constructor() {
   }
 
   favoriteSafra(id, value){
     return new Promise((resolve, reject) => {
-      SafraAPI.favoriteSafra(value, id, this.produtorId).then(response => {
+      SafraAPI.favoriteSafra(value, id).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
@@ -25,7 +22,7 @@ export default class SafraService {
 
   getSafra(id){
     return new Promise((resolve, reject) => {
-      SafraAPI.getSafra(id, this.produtorId).then( response => {
+      SafraAPI.getSafra(id).then( response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
@@ -39,7 +36,7 @@ export default class SafraService {
 
   listSafras(){
     return new Promise((resolve, reject) => {
-      SafraAPI.listSafras(this.produtorId).then( response => {
+      SafraAPI.listSafras().then( response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
@@ -53,7 +50,7 @@ export default class SafraService {
 
   saveSafra(safra){
     return new Promise((resolve, reject) => {
-      SafraAPI.saveSafra(safra, this.produtorId).then(response => {
+      SafraAPI.saveSafra(safra).then(response => {
         if(response.status === 201){
           resolve(response.data)
         }else{
@@ -67,7 +64,7 @@ export default class SafraService {
 
   deleteSafra(id){
     return new Promise((resolve, reject) => {
-      SafraAPI.deleteSafra(id, this.produtorId).then(response => {
+      SafraAPI.deleteSafra(id).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
@@ -81,7 +78,7 @@ export default class SafraService {
 
   restoreSafra(id){
     return new Promise((resolve, reject) => {
-      SafraAPI.restoreSafra(id, this.produtorId).then(response => {
+      SafraAPI.restoreSafra(id).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
@@ -95,7 +92,7 @@ export default class SafraService {
 
   archiveSafra(id){
     return new Promise((resolve, reject) => {
-      SafraAPI.archiveSafra(id, this.produtorId).then(response => {
+      SafraAPI.archiveSafra(id).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
@@ -109,7 +106,7 @@ export default class SafraService {
 
   updateSafra(id, params){
     return new Promise((resolve, reject) => {
-      SafraAPI.updateSafra(params, id, this.produtorId).then(response => {
+      SafraAPI.updateSafra(params, id).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{

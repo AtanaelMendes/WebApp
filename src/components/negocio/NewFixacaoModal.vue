@@ -346,7 +346,6 @@
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import NegocioService from "../../assets/js/service/negocio/NegocioService";
   import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
-  import AccountRepository from "../../assets/js/repository/AccountRepository";
   import ContaBancariaService from "../../assets/js/service/ContaBancariaService";
   import MoedaService from "../../assets/js/service/MoedaService";
 
@@ -359,9 +358,9 @@
     data(){
       return{
         moedaService: new MoedaService(),
-        contaBancariaService: null,
+        contaBancariaService: new ContaBancariaService(),
         unidadeMedidaService: new UnidadeMedidaService(),
-        negocioService: null,
+        negocioService: new NegocioService(),
         isModalOpened: false,
         currentStep: 'negocioCultura',
         fixacao: new Fixacao(),
@@ -432,9 +431,6 @@
     },
     methods:{
       openModal: async function(negocio){
-        let account = await new AccountRepository().getFirst();
-        this.negocioService = new NegocioService(account.produtor_id);
-        this.contaBancariaService= new ContaBancariaService(account.produtor_id);
         this.isModalOpened = true;
         this.negocio = negocio;
         this.getUnidadesMedida();

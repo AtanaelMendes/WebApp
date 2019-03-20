@@ -112,7 +112,6 @@
   import Area from 'assets/js/model/area/Area'
   import Talhao from 'assets/js/model/area/Talhao'
   import UnidadeMedidaService from 'assets/js/service/UnidadeMedidaService'
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import AreaService from "../../../assets/js/service/area/AreaService";
   export default {
     name: "AreaAdd",
@@ -123,7 +122,7 @@
     },
     data(){
       return {
-        areaService: null,
+        areaService: new AreaService(),
         localizacaoSearchTerms: '',
         newTalhaoDialog: false,
         novoTalhao: new Talhao(),
@@ -206,9 +205,7 @@
       }
     },
     mounted() {
-      new AccountRepository().getFirst().then(account => {
-        this.areaService = new AreaService(account.produtor_id);
-      });
+
     }
   }
 </script>

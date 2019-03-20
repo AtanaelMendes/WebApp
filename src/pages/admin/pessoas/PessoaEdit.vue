@@ -93,8 +93,8 @@
   import estadoSiglaSelect from 'components/EstadoSiglaSelect.vue'
   import GrupoEconomico from 'assets/js/model/GrupoEconomico'
   import { filter } from 'quasar'
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import GrupoEconomicoService from "../../../assets/js/service/GrupoEconomicoService";
+  import PessoaService from "../../../assets/js/service/PessoaService";
   export default {
     name: "pessoa-edit",
     components: {
@@ -105,8 +105,8 @@
     },
     data(){
       return {
-        pessoaService: null,
-        grupoEconomicoService: null,
+        pessoaService: new PessoaService(),
+        grupoEconomicoService: new GrupoEconomicoService(),
         grupoEconomicoSearchTerms: '',
         tempGrupoEconomicoList: [],
         newGrupoEconomicoDialog: false,
@@ -210,10 +210,7 @@
       }
     },
     mounted(){
-      new AccountRepository().getFirst().then(account => {
-        this.grupoEconomicoService = new GrupoEconomicoService(account.produtor_id);
-        this.getPessoa(this.$route.params.id)
-      });
+      this.getPessoa(this.$route.params.id)
     },
 
   }

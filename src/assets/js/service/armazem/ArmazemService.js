@@ -3,18 +3,16 @@ import ArmazemAPI from "../../api/ArmazemAPI";
 import ArmazemRepository from "../../repository/resource/ArmazemRepository";
 
 export default class ArmazemService{
-  #produtorId;
   #armazemRepository;
 
-  constructor(produtor_id) {
-    this.produtorId = produtor_id;
+  constructor() {
     this.armazemRepository = new ArmazemRepository();
   }
 
   listArmazens() {
     return new Promise((resolve, reject) => {
       if(Vue.prototype.serverStatus.isUp) {
-        ArmazemAPI.listArmazens(this.produtorId).then(response => {
+        ArmazemAPI.listArmazens().then(response => {
           if(response.status === 200){
             resolve(response.data);
           }else{
@@ -36,7 +34,7 @@ export default class ArmazemService{
   listArmazensByEntrega(entregaId) {
     return new Promise((resolve, reject) => {
       if(Vue.prototype.serverStatus.isUp) {
-        ArmazemAPI.listArmazensByEntrega(entregaId, this.produtorId).then(response => {
+        ArmazemAPI.listArmazensByEntrega(entregaId).then(response => {
           if(response.status === 200){
             resolve(response.data);
           }else{
@@ -57,7 +55,7 @@ export default class ArmazemService{
 
   addArmazem(armazem) {
     return new Promise((resolve, reject) => {
-      ArmazemAPI.saveArmazem(armazem, this.produtorId).then(response => {
+      ArmazemAPI.saveArmazem(armazem).then(response => {
         if(response.status === 201){
           resolve(response.data);
         }else{
@@ -71,7 +69,7 @@ export default class ArmazemService{
 
   getArmazemById(id) {
     return new Promise((resolve, reject) => {
-      ArmazemAPI.getArmazem(id, this.produtorId).then(response => {
+      ArmazemAPI.getArmazem(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -85,7 +83,7 @@ export default class ArmazemService{
 
   updateArmazem(id, armazem) {
     return new Promise((resolve, reject) => {
-      ArmazemAPI.updateArmazem(armazem, id, this.produtorId).then(response => {
+      ArmazemAPI.updateArmazem(armazem, id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -99,7 +97,7 @@ export default class ArmazemService{
 
   archiveArmazem(id) {
     return new Promise((resolve, reject) => {
-      ArmazemAPI.archiveArmazem(id, this.produtorId).then(response => {
+      ArmazemAPI.archiveArmazem(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -113,7 +111,7 @@ export default class ArmazemService{
 
   restoreArmazem(id) {
     return new Promise((resolve, reject) => {
-      ArmazemAPI.restoreArmazem(id, this.produtorId).then(response => {
+      ArmazemAPI.restoreArmazem(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -127,7 +125,7 @@ export default class ArmazemService{
 
   deleteArmazem(id) {
     return new Promise((resolve, reject) => {
-      ArmazemAPI.deleteArmazem(id, this.produtorId).then(response => {
+      ArmazemAPI.deleteArmazem(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{

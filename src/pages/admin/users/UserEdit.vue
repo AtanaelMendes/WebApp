@@ -74,10 +74,8 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
-  import userService from 'assets/js/service/UserService'
   import produtorSelect from 'components/ProdutorSelect.vue'
   import Produtor from 'assets/js/model/produtor/Produtor'
-  import AccountRepository from "../../../assets/js/repository/AccountRepository";
   import UserService from "../../../assets/js/service/UserService";
 
   export default {

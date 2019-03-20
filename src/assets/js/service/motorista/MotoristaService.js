@@ -3,18 +3,16 @@ import MotoristaAPI from "../../api/MotoristaAPI";
 import MotoristaRepository from "../../repository/resource/MotoristaRepository";
 
 export default class MotoristaService{
-  #produtorId;
   #motoristaRepository;
 
-  constructor(produtor_id) {
-    this.produtorId = produtor_id;
+  constructor() {
     this.motoristaRepository = new MotoristaRepository();
   }
 
   listMotoristas() {
     return new Promise((resolve, reject) => {
       if(Vue.prototype.serverStatus.isUp) {
-        MotoristaAPI.listMotoristas(this.produtorId).then(response => {
+        MotoristaAPI.listMotoristas().then(response => {
           if(response.status === 200){
             resolve(response.data);
           }else{
@@ -35,7 +33,7 @@ export default class MotoristaService{
 
   getMotoristaById(id) {
     return new Promise((resolve, reject) => {
-      MotoristaAPI.getMotorista(id, this.produtorId).then(response => {
+      MotoristaAPI.getMotorista(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -49,7 +47,7 @@ export default class MotoristaService{
 
   saveMotorista(motorista){
     return new Promise((resolve, reject) => {
-      MotoristaAPI.saveMotorista(motorista, this.produtorId).then(response => {
+      MotoristaAPI.saveMotorista(motorista).then(response => {
         if(response.status === 201){
           resolve(response.data);
         }else{
@@ -63,7 +61,7 @@ export default class MotoristaService{
 
   updateMotorista(id, motorista){
     return new Promise((resolve, reject) => {
-      MotoristaAPI.updateMotorista(motorista, id, this.produtorId).then(response => {
+      MotoristaAPI.updateMotorista(motorista, id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -77,7 +75,7 @@ export default class MotoristaService{
 
   archiveMotorista(id){
     return new Promise((resolve, reject) => {
-      MotoristaAPI.archiveMotorista(id, this.produtorId).then(response => {
+      MotoristaAPI.archiveMotorista(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -91,7 +89,7 @@ export default class MotoristaService{
 
   restoreMotorista(id){
     return new Promise((resolve, reject) => {
-      MotoristaAPI.restoreMotorista(id, this.produtorId).then(response => {
+      MotoristaAPI.restoreMotorista(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -105,7 +103,7 @@ export default class MotoristaService{
 
   deleteMotorista(id){
     return new Promise((resolve, reject) => {
-      MotoristaAPI.deleteMotorista(id, this.produtorId).then(response => {
+      MotoristaAPI.deleteMotorista(id).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
