@@ -6,13 +6,19 @@
         <q-carousel-slide class="q-pa-none">
           <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
             <span class="q-subheading">Selecione um caminhão</span>
-            <q-input placeholder="Pesquisar" class=""/>
+            <!--<q-input placeholder="Pesquisar" class=""/>-->
+            <div class="row justify-center q-pt-md">
+              <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
+                <q-search v-model="searchCaminhoesQuery" placeholder="Pesquisar"/>
+              </div>
+            </div>
+
           </div>
           <div class="q-pa-md">
             <div class="row gutter-sm" v-if="caminhoes">
 
               <template v-if="$q.screen.gt.xs">
-                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 cursor-pointer" v-for="caminhao in caminhoes" :key="caminhao.id">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="caminhao in caminhoes" :key="caminhao.id">
                   <q-card @click.native="selectCaminhao(caminhao.id)" color="white" text-color="black">
                     <q-card-media overlay-position="full">
                       <ap-image size="400x250" :file-name="caminhao.image_file_name" />
@@ -320,15 +326,23 @@
       apImage,
       apModal
     },
+    watch:{
+      searchCaminhoesQuery: function(value){
+        //this.negocio.pessoaId.value = null;
+        this.filterCaminhoes(value);
+      }
+    },
     data () {
       return {
         entregaService: new EntregaService(),
         caminhaoService: new CaminhaoService(),
         safraCulturaService: new SafraCulturaService(),
         currentStep: 'escolherCaminhao',
+        searchCaminhoesQuery: '',
         novaEntrega: new NovaEntrega(),
         isModalOpened: false,
         caminhoes: [],
+        caminhoesFullList: [],
         safraCulturas: [],
         areas: [],
         talhoes: [],
@@ -384,10 +398,25 @@
         this.$q.loading.show();
         this.caminhaoService.listFreeCaminhoes().then(caminhoes => {
           this.caminhoes = caminhoes;
+          this.caminhoesFullList = caminhoes;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();
         })
+      },
+      filterCaminhoes(value){
+        value = value.toLowerCase().replace(" ", "");
+        if(value === ""){
+          this.caminhoes = this.caminhoesFullList;
+        }else{
+          this.caminhoes = this.caminhoesFullList.filter(item => {
+            if(item.nome.toLowerCase().match(value) || item.placa.toLowerCase().match(value)){
+              return true;
+            }else{
+              return false;
+            }
+          })
+        }
       },
       selectCaminhao: function(caminhaoId){
         this.novaEntrega.caminhaoId = caminhaoId;
