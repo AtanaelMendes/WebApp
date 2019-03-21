@@ -46,7 +46,7 @@
   import CaminhaoService from "assets/js/service/CaminhaoService";
   import UnidadeMedidaService from "assets/js/service/UnidadeMedidaService";
   export default {
-    name: "caminhoes-add",
+    name: "add-caminhao",
     components:{},
     data () {
       return {

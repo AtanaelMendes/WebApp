@@ -40,7 +40,7 @@
                     <q-item v-close-overlay @click.native="addFotoCaminhao(caminhao.id)">
                       <q-item-main label="Atualizar Foto"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="updateCaminhao(caminhao.id)">
+                    <q-item v-close-overlay @click.native="editCaminhao(caminhao.id)">
                       <q-item-main label="Editar"/>
                     </q-item>
                     <q-item v-close-overlay @click.native="archiveCaminhao(caminhao.id)" v-if="!caminhao.deleted_at">
@@ -103,6 +103,10 @@
       <q-btn round color="deep-orange" @click="addCaminhao" icon="add" size="20px" />
     </q-page-sticky>
 
+    <add-caminhao-modal ref="addCaminhaoModal"/>
+
+    <edit-caminhao-modal ref="editCaminhaoModal"/>
+
   </custom-page>
 </template>
 
@@ -112,7 +116,9 @@
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
   import imapeUpload from 'components/ImageUpload'
-  import CaminhaoService from "../../../assets/js/service/CaminhaoService";
+  import addCaminhaoModal from 'components/caminhao/AddCaminhaoModal'
+  import editCaminhaoModal from 'components/caminhao/EditCaminhaoModal'
+  import CaminhaoService from "assets/js/service/CaminhaoService";
   export default {
     name: "caminhoes-list",
     components: {
@@ -120,6 +126,8 @@
       toolbar,
       apImage,
       imapeUpload,
+      addCaminhaoModal,
+      editCaminhaoModal,
       customPage
     },
     data () {
@@ -196,10 +204,10 @@
         this.$router.push({name: 'view_caminhao', params: {id:id}});
       },
       addCaminhao: function(){
-        this.$router.push({name: 'add_caminhao'});
+        this.$refs.addCaminhaoModal.openModal()
       },
-      updateCaminhao: function(id){
-        this.$router.push({name: 'edit_caminhao', params: {id:id}});
+      editCaminhao: function(id){
+        this.$refs.editCaminhaoModal.openModal(id)
       },
       archiveCaminhao: function(id){
         this.$q.dialog({
@@ -261,7 +269,6 @@
     },
     mounted () {
       this.listCaminhoes(this.filter);
-
       this.$root.$on('refreshCaminhoesList', () => {
         this.listCaminhoes(this.filter);
       });
