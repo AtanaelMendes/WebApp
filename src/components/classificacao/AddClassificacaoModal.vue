@@ -1,38 +1,35 @@
 <template>
-  <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Nova classificação" navigation_type="back" @navigation_clicked="backAction">
-    </toolbar>
+  <q-modal key="addArmazem" v-model="isModalOpened" maximized @hide="closeModal">
 
-    <div class="row q-pa-md">
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" @keyup.enter="addClassificacao()">
+    <div class="row justify-center items-center q-px-md" style="min-height: 80vh">
+
+      <div class="col-12 text-center q-display-1">
+        Nova Classificação
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" @keyup.enter="addClassificacao()">
         <q-field class="q-mb-sm" :error="classificacao.nome.error" :error-label="classificacao.nome.errorMessage">
           <q-input v-model="classificacao.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
         </q-field>
       </div>
     </div>
 
-    <div class="row q-pa-md">
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" align="end">
-        <q-btn label="Salvar" color="primary" @click.native="addClassificacao()"/>
-      </div>
-    </div>
+    <q-page-sticky position="bottom-right" :offset="[30, 30]">
+      <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
+      <q-btn label="salvar" color="primary" @click="addClassificacao"/>
+    </q-page-sticky>
 
-  </custom-page>
+  </q-modal>
 </template>
-
 <script>
-  import toolbar from 'components/Toolbar.vue'
-  import customPage from 'components/CustomPage.vue'
-  import ClassificacaoService from "../../../assets/js/service/ClassificacaoService";
+  import ClassificacaoService from "assets/js/service/ClassificacaoService";
   export default {
-    name: "classificacao-add",
-    components: {
-      toolbar,
-      customPage
-    },
+    name: "add-classificacao-modal",
+    components:{},
     data () {
       return {
-        ClassificacaoService: new ClassificacaoService(),
+        isModalOpened: false,
+        selectClassificacaoId: null,
+        classificacaoService: new ClassificacaoService(),
         classificacao: {
           nome: {
             value: null,
@@ -43,6 +40,12 @@
       }
     },
     methods: {
+      openModal: function(){
+        this.isModalOpened = true;
+      },
+      closeModal: function(){
+        this.isModalOpened = false;
+      },
       nomeIsValid: function(){
         if(this.classificacao.nome.value === null || this.classificacao.nome.value === ''){
           this.classificacao.nome.error = true;
@@ -71,23 +74,24 @@
         };
         this.$q.loading.show();
         this.classificacaoService.addClassificacao(params).then(() => {
-          this.$q.notify({type: 'positive', message: 'Classificação adicionada com sucesso.'});
-          this.backAction();
           this.$q.loading.hide();
+          this.$q.notify({type: 'positive', message: 'Classificação adicionada com sucesso.'});
+          this.$root.$emit('refreshClassificacoesList');
+          this.clearFields();
+          this.closeModal();
         }).catch(error =>{
           console.log(error);
           this.$q.notify({type: 'negative', message: 'Não foi possível adicionar o classificação'})
           this.$q.loading.hide();
         })
       },
-      backAction: function () {
-        this.$router.back();
+      clearFields: function(){
+        this.classificacao.nome.value = null;
+        this.classificacao.nome.error = false;
+        this.classificacao.nome.errorMessage = null;
       },
-    },
-    mounted () {
     },
   }
 </script>
-
 <style scoped>
 </style>

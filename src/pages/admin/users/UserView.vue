@@ -6,13 +6,13 @@
         <q-btn flat round dense icon="more_vert" >
           <q-popover anchor="bottom left">
             <q-list link>
-              <q-item dense @click.native="archiveAccount(account.id)" v-if="!account.deleted_at">
+              <q-item @click.native="archiveAccount(account.id)" v-if="!account.deleted_at">
                 <q-item-main label="Arquivar usuário"/>
               </q-item>
-              <q-item dense @click.native="activateAccount(account.id)" v-if="account.deleted_at">
+              <q-item @click.native="activateAccount(account.id)" v-if="account.deleted_at">
                 <q-item-main label="Ativar usuário"/>
               </q-item>
-              <q-item dense @click.native="deleteAccount(account.id)">
+              <q-item @click.native="deleteAccount(account.id)">
                 <q-item-main label="Excluir usuário"/>
               </q-item>
             </q-list>
@@ -97,6 +97,7 @@
           }).then(data => {
             Loading.show();
             this.$axios.delete( 'account/'+ id).then( response => {
+              this.backAction();
               this.$root.$emit('refreshUserList');
               this.$q.notify({type: 'positive', message: 'Conta excluida com sucesso'});
               Loading.hide();

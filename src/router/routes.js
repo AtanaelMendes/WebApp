@@ -47,8 +47,6 @@ const routes = [
 
       { name: 'caminhoes', path: 'caminhoes', component: () => import('pages/admin/caminhoes/CaminhoesList.vue')},
       { name: 'view_caminhao', path: 'caminhao/:id/view', component: () => import('pages/admin/caminhoes/CaminhaoView.vue')},
-      { name: 'edit_caminhao', path: 'caminhao/:id/edit', component: () => import('pages/admin/caminhoes/CaminhaoEdit.vue')},
-      { name: 'add_caminhao', path: 'caminhao/add', component: () => import('pages/admin/caminhoes/CaminhaoAdd.vue')},
 
       { name: 'motoristas', path: 'motoristas', component: () => import('pages/admin/motoristas/MotoristasList.vue')},
       { name: 'view_motorista', path: 'motorista/view/:id', component: () => import('pages/admin/motoristas/MotoristaView.vue') },
@@ -57,13 +55,9 @@ const routes = [
 
       { name: 'armazens', path: 'armazens', component: () => import('pages/admin/armazens/ArmazensList.vue')},
       { name: 'view_armazem', path: 'armazem/view/:id', component: () => import('pages/admin/armazens/ArmazemView.vue') },
-      { name: 'add_armazem', path: 'armazem/add', component: () => import('pages/admin/armazens/ArmazemAdd.vue') },
-      { name: 'edit_armazem', path: 'armazem/edit/:id', component: () => import('pages/admin/armazens/ArmazemEdit.vue') },
 
       { name: 'classificacoes', path: 'classificacoes', component: () => import('pages/admin/classificacoes/ClassificacoesList.vue')},
       { name: 'view_classificacao', path: 'classificacao/view/:id', component: () => import('pages/admin/classificacoes/ClassificacaoView.vue') },
-      { name: 'add_classificacao', path: 'classificacao/add', component: () => import('pages/admin/classificacoes/ClassificacaoAdd.vue') },
-      { name: 'edit_classificacao', path: 'classificacao/edit/:id', component: () => import('pages/admin/classificacoes/ClassificacaoEdit.vue') },
 
     ]
   }

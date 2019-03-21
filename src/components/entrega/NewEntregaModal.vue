@@ -158,7 +158,7 @@
       }
     },
     methods: {
-      openModal: async function(entrega = null){
+      openModal: function(entrega = null){
         this.isModalOpened = true;
         this.novaEntrega = new NovaEntrega();
         this.selectedSafraCulturaId = null;

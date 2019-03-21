@@ -43,7 +43,7 @@
               <q-btn @click.prevent.stop round flat dense icon="more_vert">
                 <q-popover>
                   <q-list link>
-                    <q-item v-close-overlay @click.native="updateArmazem(armazem.id)">
+                    <q-item v-close-overlay @click.native="editArmazem(armazem.id)">
                       <q-item-main label="Editar"/>
                     </q-item>
                     <q-item v-close-overlay @click.native="archiveArmazem(armazem.id)" v-if="!armazem.deleted_at">
@@ -73,6 +73,9 @@
       <q-btn round color="deep-orange" @click="addArmazem" icon="add" size="20px" />
     </q-page-sticky>
 
+    <add-armazem-modal ref="addArmazemModal"/>
+    <edit-armazem-modal ref="editArmazemModal"/>
+
   </custom-page>
 </template>
 
@@ -80,12 +83,16 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
-  import ArmazemService from "../../../assets/js/service/armazem/ArmazemService";
+  import addArmazemModal from 'components/armazem/AddArmazemModal'
+  import editArmazemModal from 'components/armazem/EditArmazemModal'
+  import ArmazemService from "assets/js/service/armazem/ArmazemService";
   export default {
     name: "armazens-list",
     components: {
       apNoResults,
       toolbar,
+      addArmazemModal,
+      editArmazemModal,
       customPage
     },
     data () {
@@ -130,7 +137,10 @@
         this.$router.push({name: 'view_armazem', params: {id:id}});
       },
       addArmazem: function(){
-        this.$router.push({name: 'add_armazem'});
+        this.$refs.addArmazemModal.openModal()
+      },
+      editArmazem: function(id){
+        this.$refs.editArmazemModal.openModal(id);
       },
       archiveArmazem: function(id){
         this.$q.dialog({
@@ -194,8 +204,7 @@
     },
     mounted () {
       this.listArmazens(this.filter);
-
-      this.$root.$on('refresh/armazensList', () => {
+      this.$root.$on('refreshArmazensList', () => {
         this.listArmazens(this.filter);
       });
     },

@@ -39,7 +39,7 @@
               <q-btn @click.prevent.stop round flat dense icon="more_vert">
                 <q-popover>
                   <q-list link>
-                    <q-item v-close-overlay @click.native="updateClassificacao(classificacao.id)">
+                    <q-item v-close-overlay @click.native="editClassificacao(classificacao.id)">
                       <q-item-main label="Editar"/>
                     </q-item>
                     <q-item v-close-overlay @click.native="archiveClassificacao(classificacao.id)" v-if="!classificacao.deleted_at">
@@ -69,6 +69,10 @@
       <q-btn round color="deep-orange" @click="addClassificacao" icon="add" size="20px" />
     </q-page-sticky>
 
+    <add-classificacao-modal ref="addClassificacaoModal" key="addClassificacaoModal"/>
+
+    <edit-classificacao-modal ref="editClassificacaoModal" key="editClassificacaoModal"/>
+
   </custom-page>
 </template>
 
@@ -76,12 +80,16 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
-  import ClassificacaoService from "../../../assets/js/service/ClassificacaoService";
+  import addClassificacaoModal from 'components/classificacao/AddClassificacaoModal'
+  import editClassificacaoModal from 'components/classificacao/EditClassificacaoModal'
+  import ClassificacaoService from "assets/js/service/ClassificacaoService";
   export default {
     name: "classificacoes-list",
     components: {
       apNoResults,
       toolbar,
+      addClassificacaoModal,
+      editClassificacaoModal,
       customPage
     },
     data () {
@@ -125,10 +133,10 @@
         this.$router.push({name: 'view_classificacao', params: {id:id}});
       },
       addClassificacao: function(){
-        this.$router.push({name: 'add_classificacao'});
+        this.$refs.addClassificacaoModal.openModal()
       },
-      updateClassificacao: function(id){
-        this.$router.push({name: 'edit_classificacao', params: {id:id}});
+      editClassificacao: function(id){
+        this.$refs.editClassificacaoModal.openModal(id)
       },
       archiveClassificacao: function(id){
         this.$q.dialog({

@@ -1,47 +1,43 @@
 <template>
-  <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Novo Armazém" navigation_type="back" @navigation_clicked="backAction">
-    </toolbar>
+  <q-modal key="addArmazem" v-model="isModalOpened" maximized @hide="closeModal">
 
-    <div class="row q-pa-md">
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-        <form @keyup.enter="addArmazem()">
+    <div class="row justify-center items-center q-px-md" style="min-height: 80vh">
 
-          <q-field class="q-mb-sm" :error="armazem.nome.error" :error-label="armazem.nome.errorMessage">
-            <q-input v-model="armazem.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
-          </q-field>
+      <div class="col-12 text-center q-display-1">
+        Novo Armazém
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" @keyup.enter="addArmazem()">
 
-          <q-field class="q-mb-sm" :error="armazem.localizacaoId.error" :error-label="armazem.localizacaoId.errorMessage">
-            <q-select :options="localizacaoOptions" float-label="Localização" v-model="armazem.localizacaoId.value" @input="clearErrorMessage()"/>
-          </q-field>
-        </form>
+        <q-field class="q-mb-sm" :error="armazem.nome.error" :error-label="armazem.nome.errorMessage">
+          <q-input v-model="armazem.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
+        </q-field>
+
+        <q-field class="q-mb-sm" :error="armazem.localizacaoId.error" :error-label="armazem.localizacaoId.errorMessage">
+          <q-select :options="localizacaoOptions" float-label="Localização" v-model="armazem.localizacaoId.value" @input="clearErrorMessage()"/>
+        </q-field>
+
       </div>
     </div>
 
-    <div class="row q-pa-md">
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" align="end">
-        <q-btn label="Salvar" color="primary" @click.native="addArmazem()"/>
-      </div>
-    </div>
+    <q-page-sticky position="bottom-right" :offset="[30, 30]">
+      <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
+      <q-btn label="salvar" color="primary" @click="addArmazem"/>
+    </q-page-sticky>
 
-  </custom-page>
+  </q-modal>
 </template>
-
 <script>
-  import toolbar from 'components/Toolbar.vue'
-  import customPage from 'components/CustomPage.vue'
   import localizacaoSelect from 'components/LocalizacaoSelect.vue'
-  import ArmazemService from "../../../assets/js/service/armazem/ArmazemService";
-  import LocalizacaoService from "../../../assets/js/service/localizacao/LocalizacaoService";
+  import ArmazemService from "assets/js/service/armazem/ArmazemService";
+  import LocalizacaoService from "assets/js/service/localizacao/LocalizacaoService";
   export default {
-    name: "armazem-add",
-    components: {
-      toolbar,
+    name: "add-armazem-modal",
+    components:{
       localizacaoSelect,
-      customPage
     },
     data () {
       return {
+        isModalOpened: false,
         armazemService: new ArmazemService(),
         localizacaoService: new LocalizacaoService(),
         localizacaoOptions: [],
@@ -60,14 +56,31 @@
       }
     },
     methods: {
+      openModal: function(){
+        this.isModalOpened = true;
+        this.listLocalizacao();
+      },
+      closeModal: function(){
+        this.isModalOpened = false;
+      },
+      clearFields: function(){
+        this.armazem.nome.value = null;
+        this.armazem.nome.error = false;
+        this.armazem.nome.errorMessage = null;
+        this.armazem.localizacaoId.value = null;
+        this.armazem.localizacaoId.error = false;
+        this.armazem.localizacaoId.errorMessage = null;
+      },
       listLocalizacao: function(){
         this.$q.loading.show();
-        this.localizacaoService.listLocalizacao().then(response => {
-          this.localizacaoOptions = response;
-          this.$q.loading.hide();
-        }).catch(error =>{
-          console.log(error);
-          this.$q.notify({type: 'negative', message: 'Não foi possível carragar as localizações'});
+        this.localizacaoService.listLocalizacoes().then(response => {
+          this.localizacaoOptions = response.map(local => {
+            return {
+              value: local.id,
+              label: local.endereco +', '+ local.numero,
+              sublabel: local.bairro +', '+ local.cidade.nome +'-'+ local.cidade.estado.sigla
+            };
+          });
           this.$q.loading.hide();
         })
       },
@@ -109,22 +122,17 @@
         this.armazemService.addArmazem(params).then(() => {
           this.$q.notify({type: 'positive', message: 'Armazém adicionado com sucesso.'});
           this.$q.loading.hide();
-          this.backAction();
+          this.$root.$emit('refreshArmazensList');
+          this.clearFields();
+          this.closeModal();
         }).catch(error =>{
           console.log(error);
           this.$q.loading.show();
           this.$q.notify({type: 'negative', message: 'Não foi possível adicionar o armazém'})
         })
       },
-      backAction: function () {
-        this.$router.back();
-      },
-    },
-    mounted () {
-      this.listLocalizacao();
     },
   }
 </script>
-
 <style scoped>
 </style>

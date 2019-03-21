@@ -1,5 +1,6 @@
 import AgroUtils from 'assets/js/AgroUtils'
 import UserAPI from "../api/UserAPI";
+import { Dialog } from 'quasar'
 
 export default class UserService{
   constructor() {

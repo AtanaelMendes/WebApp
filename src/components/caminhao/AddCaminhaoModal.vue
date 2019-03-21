@@ -1,62 +1,56 @@
 <template>
-  <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Novo caminhão" navigation_type="back" @navigation_clicked="backAction">
-    </toolbar>
+  <q-modal key="addArmazem" v-model="isModalOpened" maximized @hide="closeModal">
 
-    <div class="row q-pa-md">
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-        <form @keyup.enter="addCaminhao()">
+    <div class="row justify-center items-center q-px-md" style="min-height: 80vh">
 
-          <q-field class="q-mb-sm" :error="caminhao.nome.error" :error-label="caminhao.nome.errorMessage">
-            <q-input v-model="caminhao.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
-          </q-field>
+      <div class="col-12 text-center q-display-1">
+        Novo Caminhão
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" @keyup.enter="addCaminhao()">
 
-          <q-field class="q-mb-sm" :error="caminhao.placa.error" :error-label="caminhao.placa.errorMessage">
-            <q-input upper-case	 v-model="caminhao.placa.value" float-label="Placa" @input="clearErrorMessage()" maxlength="7"/>
-          </q-field>
+        <q-field class="q-mb-sm" :error="caminhao.nome.error" :error-label="caminhao.nome.errorMessage">
+          <q-input v-model="caminhao.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
+        </q-field>
 
-          <q-field class="q-mb-sm">
-            <q-input v-model="caminhao.tara" float-label="Tara" type="number"/>
-          </q-field>
+        <q-field class="q-mb-sm" :error="caminhao.placa.error" :error-label="caminhao.placa.errorMessage">
+          <q-input upper-case	 v-model="caminhao.placa.value" float-label="Placa" @input="clearErrorMessage()" maxlength="7"/>
+        </q-field>
 
-          <q-field class="q-mb-sm">
-            <q-input v-model="caminhao.pesoBruto" float-label="Peso bruto total" type="number"/>
-          </q-field>
+        <q-field class="q-mb-sm">
+          <q-input v-model="caminhao.tara" float-label="Tara" type="number"/>
+        </q-field>
 
-          <q-field class="q-mb-sm">
-            <q-input v-model="caminhao.estimativaCarga" float-label="Estimativa da carga" type="number"/>
-          </q-field>
+        <q-field class="q-mb-sm">
+          <q-input v-model="caminhao.pesoBruto" float-label="Peso bruto total" type="number"/>
+        </q-field>
 
-          <q-field class="q-mb-sm" :error="caminhao.unidadeMedidaSigla.error" :error-label="caminhao.unidadeMedidaSigla.errorMessage">
-            <q-select v-model="caminhao.unidadeMedidaSigla.value" float-label="Unidade medida" :options="unidadeMedidaOptions" @input="clearErrorMessage()"/>
-          </q-field>
+        <q-field class="q-mb-sm">
+          <q-input v-model="caminhao.estimativaCarga" float-label="Estimativa da carga" type="number"/>
+        </q-field>
 
-        </form>
+        <q-field class="q-mb-sm" :error="caminhao.unidadeMedidaSigla.error" :error-label="caminhao.unidadeMedidaSigla.errorMessage">
+          <q-select v-model="caminhao.unidadeMedidaSigla.value" float-label="Unidade medida" :options="unidadeMedidaOptions" @input="clearErrorMessage()"/>
+        </q-field>
+
       </div>
     </div>
 
-    <div class="row q-pa-md">
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" align="end">
-        <q-btn label="Salvar" color="primary" @click.native="addCaminhao()"/>
-      </div>
-    </div>
+    <q-page-sticky position="bottom-right" :offset="[30, 30]">
+      <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
+      <q-btn label="salvar" color="primary" @click="addCaminhao"/>
+    </q-page-sticky>
 
-  </custom-page>
+  </q-modal>
 </template>
-
 <script>
-  import toolbar from 'components/Toolbar.vue'
-  import customPage from 'components/CustomPage.vue'
-  import CaminhaoService from "../../../assets/js/service/CaminhaoService";
-  import UnidadeMedidaService from "../../../assets/js/service/UnidadeMedidaService";
+  import CaminhaoService from "assets/js/service/CaminhaoService";
+  import UnidadeMedidaService from "assets/js/service/UnidadeMedidaService";
   export default {
-    name: "caminhoes-add",
-    components: {
-      toolbar,
-      customPage
-    },
+    name: "add-caminhao-modal",
+    components:{},
     data () {
       return {
+        isModalOpened: false,
         caminhaoService: new CaminhaoService(),
         unidadeMedidaService: new UnidadeMedidaService(),
         unidadeMedidaOptions: [],
@@ -83,15 +77,36 @@
       }
     },
     methods: {
+      openModal: function(){
+        this.isModalOpened = true;
+        this.selectUnidadeMedida();
+      },
+      closeModal: function(){
+        this.isModalOpened = false;
+      },
+      clearFields: function(){
+        this.caminhao.nome.value = null;
+        this.caminhao.nome.error = false;
+        this.caminhao.nome.errorMessage = null;
+        this.caminhao.placa.value = null;
+        this.caminhao.placa.error = false;
+        this.caminhao.placa.errorMessage = null;
+        this.caminhao.unidadeMedidaSigla.value = null;
+        this.caminhao.unidadeMedidaSigla.error = false;
+        this.caminhao.unidadeMedidaSigla.errorMessage = null;
+        this.caminhao.tara = null;
+        this.caminhao.pesoBruto = false;
+        this.caminhao.estimativaCarga= null;
+      },
       selectUnidadeMedida: function(){
         this.$q.loading.show();
         this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
-          this.unidadeMedidaOptions = this.parsedUnidades(unidades)
           this.$q.loading.hide();
+          this.unidadeMedidaOptions = this.parsedUnidades(unidades);
         }).catch(error =>{
+          this.$q.loading.hide();
           console.log(error);
           this.$q.notify({type: 'negative', message: 'Não foi possivel carregar as unidade de medida'});
-          this.$q.loading.hide();
         })
       },
       parsedUnidades: function(unidades){
@@ -165,24 +180,19 @@
 
         };
         this.caminhaoService.addCaminhao(params).then(() => {
-          this.$q.notify({type: 'positive', message: 'Caminhão adicionado com sucesso.'});
           this.$q.loading.hide();
-          this.backAction();
+          this.$q.notify({type: 'positive', message: 'Caminhão adicionado com sucesso.'});
+          this.$root.$emit('refreshCaminhoesList');
+          this.clearFields();
+          this.closeModal();
         }).catch(error =>{
+          this.$q.loading.hide();
           console.log(error);
           this.$q.notify({type: 'negative', message: 'Não foi possível adicionar o caminhão'})
-          this.$q.loading.hide();
         })
       },
-      backAction: function () {
-        this.$router.back();
-      },
-    },
-    mounted () {
-      this.selectUnidadeMedida();
     },
   }
 </script>
-
 <style scoped>
 </style>
