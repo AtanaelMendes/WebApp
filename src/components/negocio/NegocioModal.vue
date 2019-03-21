@@ -109,7 +109,7 @@
     },
     data(){
       return {
-        pessoaServce: new PessoaService(),
+        pessoaService: new PessoaService(),
         negocioService: new NegocioService(),
         isModalOpened: false,
         isEditMode: false,
