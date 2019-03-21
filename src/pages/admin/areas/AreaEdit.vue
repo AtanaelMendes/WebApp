@@ -53,7 +53,7 @@
       listLocalizacoes(){
         this.$q.loading.show();
         this.localizacaoService.listLocalizacoes().then(localizacoes => {
-          console.table(localizacoes);
+          this.$q.loading.hide();
           this.localizacaoOptions = localizacoes.map(local => {
             return {
               value: local.id,
@@ -61,11 +61,6 @@
               sublabel: local.bairro +', '+ local.cidade.nome +'-'+ local.cidade.estado.sigla
             }
           });
-          this.$q.loading.hide();
-        }).catch(error =>{
-          console.log(error);
-          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações'})
-          this.$q.loading.hide();
         })
       },
       getAreaById: function(areaId){

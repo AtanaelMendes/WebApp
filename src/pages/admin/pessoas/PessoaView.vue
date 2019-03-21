@@ -7,13 +7,13 @@
         <q-btn flat round dense icon="more_vert" >
           <q-popover anchor="bottom left">
             <q-list link>
-              <q-item dense @click.native="archivePessoa(pessoa.id)" v-if="!pessoa.deleted_at">
+              <q-item @click.native="archivePessoa(pessoa.id)" v-if="!pessoa.deleted_at">
                 <q-item-main label="Arquivar pessoa"  />
               </q-item>
-              <q-item dense @click.native="deletePessoa(pessoa.id)">
+              <q-item @click.native="deletePessoa(pessoa.id)">
                 <q-item-main label="Excluir pessoa"  />
               </q-item>
-              <q-item dense @click.native="restorePessoa(pessoa.id)" v-if="pessoa.deleted_at">
+              <q-item @click.native="restorePessoa(pessoa.id)" v-if="pessoa.deleted_at">
                 <q-item-main label="Ativar pessoa"  />
               </q-item>
             </q-list>
@@ -336,7 +336,7 @@
       '$route' (to, from) {
         this.getPessoa(this.$route.params.id);
         this.listContatos(this.$route.params.id);
-        this.listLocalizacoes(this.$route.params.id);
+        this.listLocalizacoesByPessoa(this.$route.params.id);
         this.pessoa = null;
       }
     },
@@ -507,13 +507,10 @@
         }).then(data => {
           this.$q.loading.show();
           this.localizacaoService.deleteLocalizacao(this.$route.params.id, localizacaoId).then(() => {
+            this.$q.loading.hide();
             this.$q.notify({type: 'positive', message: 'Endereço excluido com sucesso'});
-            this.listLocalizacoes(this.$route.params.id);
-            this.$q.loading.hide();
-          }).catch(error =>{
-            this.$q.notify({type: 'negative', message: 'Não foi possível excluir esta localização'});
-            this.$q.loading.hide();
-          });
+            this.listLocalizacoesByPessoa(this.$route.params.id);
+          })
         });
       },
       archiveLocalizacao: function(localizacaoId) {
@@ -526,7 +523,7 @@
           this.$q.loading.show();
           this.localizacaoService.archiveLocalizacao(this.$route.params.id, localizacaoId).then(() => {
             this.$q.notify({type: 'positive', message: 'Endereço Arquivado com sucesso'});
-            this.listLocalizacoes(this.$route.params.id);
+            this.listLocalizacoesByPessoa(this.$route.params.id);
             this.$q.loading.hide();
           }).catch(error =>{
             this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esta localização'});
@@ -543,12 +540,12 @@
         }).then(data => {
           this.$q.loading.show();
           this.localizacaoService.restoreLocalizacao(this.$route.params.id, localizacaoId).then(() => {
+            this.$q.loading.hide();
             this.$q.notify({type: 'positive', message: 'Endereço Ativado com sucesso'});
-            this.listLocalizacoes(this.$route.params.id)
-            this.$q.loading.hide();
+            this.listLocalizacoesByPessoa(this.$route.params.id)
           }).catch(error =>{
-            this.$q.notify({type: 'negative', message: 'Não foi possível restaurar a localização'});
             this.$q.loading.hide();
+            this.$q.notify({type: 'negative', message: 'Não foi possível restaurar a localização'});
           });
         });
       },

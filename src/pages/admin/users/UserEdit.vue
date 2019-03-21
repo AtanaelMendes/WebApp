@@ -136,15 +136,21 @@
     },
     methods:{
       getUser: function(id) {
+        this.$q.loading.show();
         this.userService.getAccount(id).then(account => {
-          this.accountId = account.id;
-          this.form.nome.value = account.nome;
-          this.form.email.value = account.email;
-          this.form.selectedRoles.value = account.roles;
-          this.form.produtor.value = account.produtor_id;
-
-          this.setFormObj(this.form);
+          this.fillFormUser(account);
+          this.$q.loading.hide();
+        }).catch(error =>{
+          this.$q.loading.hide();
         })
+      },
+      fillFormUser: function(account){
+        this.accountId = account.id;
+        this.form.nome.value = account.nome;
+        this.form.email.value = account.email;
+        this.form.selectedRoles.value = account.roles;
+        this.form.produtor.value = account.produtor_id;
+        // this.setFormObj(this.form);
       },
       openRolesDialog: function(){
         this.userService.openRolesDialog(this.form.selectedRoles.value, this.roles).then(roles =>{
@@ -156,11 +162,21 @@
         this.userService.removeRole(this.form.selectedRoles.value, role);
       },
       listRoles: function(){
-        this.userService.listRoles().then(roles => {this.roles = roles})
+        this.$q.loading.show();
+        this.userService.listRoles().then(roles => {
+          this.roles = roles;
+          this.$q.loading.hide();
+        }).catch(error =>{
+          this.$q.loading.hide();
+        })
       },
       listProdutor: function(){
+        this.$q.loading.show();
         this.userService.listProdutores().then(produtores => {
           this.produtorOptions = produtores;
+          this.$q.loading.hide();
+        }).catch(error =>{
+          this.$q.loading.hide();
         })
       },
       openNewProdutorDialog: function(){
@@ -175,12 +191,15 @@
         if(!this.produtor.isValid(this)){
           return;
         }
+        this.$q.loading.show();
         this.userService.saveProdutor(this.produtor.getValues()).then(produtor => {
           this.$q.notify({type: 'positive', message: 'Produtor criado com sucesso'});
           this.closeNewProdutorDialog();
           this.form.produtor.value = produtor.id;
           this.listProdutor();
+          this.$q.loading.hide();
         }).catch(error => {
+          this.$q.loading.hide();
           if (error.response.status === 422){
             this.$q.dialog({title:'Ops', message: 'Já existe um registro com esse nome'})
           }
@@ -188,58 +207,46 @@
       },
       updateAccount: function () {
         this.$v.form.$touch();
-
         if ( this.$v.form.$error ) {
-
           if(!this.$v.form.produtor.value.required){
             this.form.produtor.errorMessage = "Selecione um Produtor";
           }
-
           if(!this.$v.form.nome.value.required){
             this.form.nome.errorMessage = "Digite um nome";
           }else if(!this.$v.form.nome.value.minLength){
             this.form.nome.errorMessage = "O nome deve ter no mínimo 3 caracteres";
           }
-
           if(!this.$v.form.email.value.required){
             this.form.email.errorMessage = "Digite um email"
           }else if(!this.$v.form.email.value.email){
             this.form.email.errorMessage = "Este email é inválido"
           }
-
           if(!this.$v.form.password.value.minLength){
             this.form.password.errorMessage = "A senha deve ter no mínimo 8 caracteres"
           }
-
           if(!this.$v.form.repeatPassword.value.required){
             this.form.repeatPassword.errorMessage = "As senhas não são iguais"
           }
-
           if(!this.$v.form.selectedRoles.value.required){
             this.form.selectedRoles.errorMessage = "Adicione ao menos uma função"
           }
-
           return;
         }
-
         let params = {
           produtor_id: this.form.produtor.value,
           email: this.form.email.value,
           password: this.form.password.value,
           roles: this.userService.getIdsByRoles(this.form.selectedRoles.value).join()
         };
-
+        this.$q.loading.show();
         this.userService.updateAccount(params, this.accountId).then(() => {
-          this.$q.notify({
-            type: 'positive',
-            message: 'Cadastro atualizado com sucesso'
-          });
-
-          this.setFormObj(this.form);
+          this.$q.notify({type: 'positive', message: 'Cadastro atualizado com sucesso'});
+          this.$q.loading.hide();
+          // this.setFormObj(this.form);
           this.$router.push({name: 'users'});
-          this.$root.$emit('refreshUserList')
         }).catch(error => {
           if (error.response.status === 422){
+            this.$q.loading.hide();
             this.$q.dialog({
               title:'Ops',
               message: 'Já existe um cadastro com esse email'

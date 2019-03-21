@@ -111,25 +111,37 @@
         this.userService.removeRole(this.usuario.selectedRoles.value, role);
       },
       listRoles: function(){
-        this.userService.listRoles().then(roles => {this.roles = roles})
+        this.$q.loading.show();
+        this.userService.listRoles().then(roles => {
+          this.roles = roles; this.$q.loading.hide();
+        }).catch(error =>{
+          this.$q.loading.hide();
+        })
       },
       saveAccount: function () {
         if(!this.usuario.isValid()){
           return;
         }
+        this.$q.loading.show();
         this.userService.saveAccount(this.usuario.getValues()).then(() => {
           this.$q.notify({type: 'positive', message: 'Cadastro criado com sucesso'});
           this.$router.push({name: 'users'});
-          this.$root.$emit('refreshUserList')
+          this.$root.$emit('refreshUserList');
+          this.$q.loading.hide();
         }).catch(error => {
+          this.$q.loading.hide();
           if (error.response.status === 422){
             this.$q.dialog({title:'Ops', message: 'Já existe um cadastro com esse email'})
           }
         })
       },
       listProdutor: function(){
+        this.$q.loading.show();
         this.userService.listProdutores().then(produtores => {
           this.produtorOptions = produtores;
+          this.$q.loading.hide();
+        }).catch(error =>{
+          this.$q.loading.hide();
         })
       },
       openNewProdutorDialog: function(){
@@ -144,12 +156,15 @@
         if(!this.produtor.isValid(this)){
           return;
         }
+        this.$q.loading.show();
         this.userService.saveProdutor(this.produtor.getValues()).then(produtor => {
           this.$q.notify({type: 'positive', message: 'Produtor criado com sucesso'});
           this.closeNewProdutorDialog();
           this.usuario.produtor.value = produtor.id;
           this.listProdutor();
+          this.$q.loading.hide();
         }).catch(error => {
+          this.$q.loading.hide();
           if (error.response.status === 422){
             this.$q.dialog({title:'Ops', message: 'Já existe um registro com esse nome'})
           }

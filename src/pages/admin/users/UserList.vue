@@ -99,9 +99,13 @@
           this.filter.email = val;
         },
         list: function(filter) {
+          this.$q.loading.show();
           this.userService.listAccounts(filter).then(accounts => {
             this.users = accounts;
             this.isEmptyList = this.users.length === 0;
+            this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.loading.hide();
           });
         },
         viewUser: function(id) {
