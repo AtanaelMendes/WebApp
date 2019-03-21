@@ -127,7 +127,7 @@ export default class SafraCulturaService {
       let safraCulturas = null;
 
       if(Vue.prototype.serverStatus.isUp) {
-        safraCulturas = await SafraCulturaAPI.getSafraCulturas(d).then(response => {
+        safraCulturas = await SafraCulturaAPI.getSafraCulturas().then(response => {
           return response.data;
         });
       }else{
