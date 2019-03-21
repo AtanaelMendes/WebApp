@@ -1,9 +1,190 @@
 <template>
-  <q-modal key="safraCultura" v-model="isModalOpened" maximized @hide="closeModal">
+  <ap-modal title="Nova Entrega" :isModalOpened="isModalOpened">
 
-    <q-stepper key="novaEntrega" ref="stepperNovaEntrega" contractable color="positive" v-model="currentStep" class="no-shadow">
+    <template slot="content">
+      <q-carousel height="100%" no-swipe ref="stepperNovaEntrega">
+        <q-carousel-slide class="q-pa-none">
+          <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
+            <span class="q-subheading">Selecione um caminhão</span>
+            <q-input placeholder="Pesquisar" class=""/>
+          </div>
+          <div class="q-pa-md">
+            <div class="row gutter-sm" v-if="caminhoes">
 
-      <!--PASSO 1 ESCOLHER CAMINHAO -->
+              <template v-if="$q.screen.gt.xs">
+                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 cursor-pointer" v-for="caminhao in caminhoes" :key="caminhao.id">
+                  <q-card @click.native="selectCaminhao(caminhao.id)" color="white" text-color="black">
+                    <q-card-media overlay-position="full">
+                      <ap-image size="400x250" :file-name="caminhao.image_file_name" />
+                      <q-card-title slot="overlay" align="end" v-if="caminhao.id === novaEntrega.caminhaoId">
+                        <q-icon name="check_circle" size="30px" color="positive"/>
+                      </q-card-title>
+                    </q-card-media>
+                    <q-list>
+                      <q-item>
+                        <q-item-main>
+                          <q-item-tile label>
+                            {{caminhao.placa}}
+                            {{caminhao.nome}}
+                          </q-item-tile>
+                          <q-item-tile sublabel v-if="caminhao.lotacao">
+                            {{numeral(caminhao.lotacao).format('0,0')}}
+                            {{caminhao.unidade_medida_sigla}}
+                          </q-item-tile>
+                        </q-item-main>
+                      </q-item>
+                    </q-list>
+                  </q-card>
+                </div>
+              </template>
+
+              <q-list no-border style="width: 100%" link v-if="$q.screen.lt.sm">
+                <q-item v-for="caminhao in caminhoes" :key="caminhao.id" @click.native="selectCaminhao(caminhao.id)">
+                  <q-item-side>
+                    <q-item-tile style="width:80px">
+                      <ap-image size="200x125" :file-name="caminhao.image_file_name" />
+                    </q-item-tile>
+                  </q-item-side>
+                  <q-item-main>
+                    <q-item-tile label>
+                      {{caminhao.placa}}
+                      {{caminhao.nome}}
+                    </q-item-tile>
+                    <q-item-tile sublabel>
+                      {{numeral(caminhao.lotacao).format('0,0')}}
+                      {{caminhao.unidade_medida_sigla}}
+                    </q-item-tile>
+                  </q-item-main>
+                  <q-item-side right>
+                    <q-icon name="check_circle" size="30px" color="positive" v-if="caminhao.id === novaEntrega.caminhaoId"/>
+                  </q-item-side>
+                </q-item>
+              </q-list>
+
+              <div v-if="caminhoes.length === 0" class="list-empty">
+                <q-icon name="warning" />
+                <span>Nenhum caminhão encontrado</span>
+              </div>
+
+            </div>
+          </div>
+        </q-carousel-slide>
+        <q-carousel-slide >
+          <div class="row gutter-sm" >
+
+            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 cursor-pointer" v-for="safraCultura in safraCulturas" :key="safraCultura.id" >
+              <q-card @click.native="selectSafraCultura(safraCultura)" color="white" text-color="black">
+                <q-card-media overlay-position="full">
+                  <ap-image size="400x250" :file-name="safraCultura.cultura.image_file_name" />
+                  <q-card-title slot="overlay" align="end" v-if="selectedSafraCulturaId === safraCultura.id">
+                    <q-icon name="check_circle" size="30px" color="positive"/>
+                  </q-card-title>
+                </q-card-media>
+
+                <q-card-title class="q-py-xs">
+                  {{safraCultura.cultura.nome}}
+                  {{safraCultura.safra.ano_inicio}}/{{safraCultura.safra.ano_fim}}
+                </q-card-title>
+
+              </q-card>
+            </div>
+
+          </div>
+        </q-carousel-slide>
+      </q-carousel>
+    </template>
+
+    <div slot="footer">
+      <q-btn label="cancelar" color="primary" flat @click="closeModal"/>
+      <div class="float-right ">
+        <q-btn label="voltar" class="q-mr-sm" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="currentStep != 'escolherTalhao' "/>
+        <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="currentStep != 'escolherTalhao' "/>
+        <q-btn label="salvar" color="primary" @click="save" :disable="isNextStepEnabled()" v-if="currentStep == 'escolherTalhao' "/>
+      </div>
+    </div>
+  </ap-modal>
+  <!--<q-modal key="safraCultura " v-model="isModalOpened" minimized @hide="closeModal">
+
+    <div class="q-pa-md q-title text-center">
+      Titulo
+    </div>
+    <q-carousel height="400px" no-swipe ref="stepperNovaEntrega">
+      <q-carousel-slide >
+        <div style="position: fixed; top:0; left:0; right:0; z-index: 1" class="q-pa-sm">
+          <q-input placeholder="Pesquisar" inverted />
+        </div>
+        <div class="q-mt-xl">
+          <div class="row gutter-sm" v-if="caminhoes">
+
+            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 cursor-pointer" v-for="caminhao in caminhoes" :key="caminhao.id">
+              <q-card @click.native="selectCaminhao(caminhao.id)" color="white" text-color="black">
+                <q-card-media overlay-position="full">
+                  <ap-image size="400x250" :file-name="caminhao.image_file_name" />
+                  <q-card-title slot="overlay" align="end" v-if="caminhao.id === novaEntrega.caminhaoId">
+                    <q-icon name="check_circle" size="30px" color="positive"/>
+                  </q-card-title>
+                </q-card-media>
+                <q-list>
+                  <q-item>
+                    <q-item-main>
+                      <q-item-tile label>
+                        {{caminhao.placa}}
+                        {{caminhao.nome}}
+                      </q-item-tile>
+                      <q-item-tile sublabel v-if="caminhao.lotacao">
+                        {{numeral(caminhao.lotacao).format('0,0')}}
+                        {{caminhao.unidade_medida_sigla}}
+                      </q-item-tile>
+                    </q-item-main>
+                  </q-item>
+                </q-list>
+              </q-card>
+            </div>
+
+            <div v-if="caminhoes.length === 0" class="list-empty">
+              <q-icon name="warning" />
+              <span>Nenhum caminhão encontrado</span>
+            </div>
+
+          </div>
+        </div>
+      </q-carousel-slide>
+      <q-carousel-slide >
+        <div class="row gutter-sm" >
+
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 cursor-pointer" v-for="safraCultura in safraCulturas" :key="safraCultura.id" >
+            <q-card @click.native="selectSafraCultura(safraCultura)" color="white" text-color="black">
+              <q-card-media overlay-position="full">
+                <ap-image size="400x250" :file-name="safraCultura.cultura.image_file_name" />
+                <q-card-title slot="overlay" align="end" v-if="selectedSafraCulturaId === safraCultura.id">
+                  <q-icon name="check_circle" size="30px" color="positive"/>
+                </q-card-title>
+              </q-card-media>
+
+              <q-card-title class="q-py-xs">
+                {{safraCultura.cultura.nome}}
+                {{safraCultura.safra.ano_inicio}}/{{safraCultura.safra.ano_fim}}
+              </q-card-title>
+
+            </q-card>
+          </div>
+
+        </div>
+      </q-carousel-slide>
+    </q-carousel>
+    <div class="q-pa-md">
+      <q-btn label="cancelar" color="primary" flat @click="closeModal" class="q-mr-sm"/>
+      <div class="float-right ">
+        <q-btn label="voltar" class="q-mr-sm" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="currentStep != 'escolherTalhao' "/>
+        <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="currentStep != 'escolherTalhao' "/>
+        <q-btn label="salvar" color="primary" @click="save" :disable="isNextStepEnabled()" v-if="currentStep == 'escolherTalhao' "/>
+      </div>
+    </div>
+
+
+    &lt;!&ndash;<q-stepper key="novaEntrega" no-header-navigation ref="stepperNovaEntrega" contractable color="positive" v-model="currentStep" class="no-shadow">
+
+      &lt;!&ndash;PASSO 1 ESCOLHER CAMINHAO &ndash;&gt;
       <q-step default title="Caminhão" name="escolherCaminhao" v-if="!addNewTalhaoMode">
         <div class="row justify-center items-center gutter-sm" style="min-height: 80vh" v-if="caminhoes">
 
@@ -40,7 +221,7 @@
         </div>
       </q-step>
 
-      <!--PASSO 2 ESCOLHER SAFRA -->
+      &lt;!&ndash;PASSO 2 ESCOLHER SAFRA &ndash;&gt;
       <q-step title="Safra" name="escolherSafra" v-if="!addNewTalhaoMode">
         <div class="row justify-center items-center gutter-sm" style="min-height: 80vh" >
 
@@ -64,7 +245,7 @@
         </div>
       </q-step>
 
-      <!--PASSO 3 ESCOLHER AREA -->
+      &lt;!&ndash;PASSO 3 ESCOLHER AREA &ndash;&gt;
       <q-step title="Área" name="escolherArea">
         <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
 
@@ -86,7 +267,7 @@
         </div>
       </q-step>
 
-      <!--PASSO 4 ESCOLHER TALHAO -->
+      &lt;!&ndash;PASSO 4 ESCOLHER TALHAO &ndash;&gt;
       <q-step title="Talhão" name="escolherTalhao">
         <div class="row justify-center items-center gutter-sm space-end" style="min-height: 80vh">
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="talhao in talhoes" :key="talhao.id">
@@ -111,21 +292,22 @@
         </div>
       </q-step>
 
-    </q-stepper>
+    </q-stepper>&ndash;&gt;
 
-    <q-page-sticky position="bottom-right" :offset="[30, 30]">
+    &lt;!&ndash;<q-page-sticky position="bottom-right" :offset="[30, 30]">
       <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
       <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="currentStep != 'escolherTalhao' "/>
       <q-btn label="salvar" color="primary" @click="save" :disable="isNextStepEnabled()" v-if="currentStep == 'escolherTalhao' "/>
-    </q-page-sticky>
+    </q-page-sticky>&ndash;&gt;
 
-  </q-modal>
+  </q-modal>-->
 </template>
 <script>
   import NovaEntrega from 'assets/js/model/entrega/NewEntrega'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import apImage from 'components/ApImage'
+  import apModal from 'components/ApModal'
   import EntregaService from "../../assets/js/service/entrega/EntregaService";
   import CaminhaoService from "../../assets/js/service/CaminhaoService";
   import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
@@ -136,6 +318,7 @@
       customInputText,
       customInputDatetime,
       apImage,
+      apModal
     },
     data () {
       return {
@@ -340,13 +523,16 @@
       goToNextStep(){
         switch (this.currentStep) {
           case 'escolherCaminhao':
-            this.$refs.stepperNovaEntrega.goToStep('escolherSafra');
+            //this.$refs.stepperNovaEntrega.goToStep('escolherSafra');
+            this.$refs.stepperNovaEntrega.next();
             break;
           case 'escolherSafra':
-            this.$refs.stepperNovaEntrega.goToStep('escolherArea');
+            //this.$refs.stepperNovaEntrega.goToStep('escolherArea');
+            this.$refs.stepperNovaEntrega.next();
             break;
           case 'escolherArea':
-            this.$refs.stepperNovaEntrega.goToStep('escolherTalhao');
+            //this.$refs.stepperNovaEntrega.goToStep('escolherTalhao');
+            this.$refs.stepperNovaEntrega.next();
             break;
           case 'escolherTalhao':
             break;
