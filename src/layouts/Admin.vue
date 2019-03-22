@@ -67,6 +67,12 @@
           <q-item-main label="Motoristas" />
         </q-item>
 
+        <!--GRUPOS ECONOMICOS-->
+        <q-item @click.native="$router.push({name:'grupos_economicos'})">
+          <q-item-side icon="group_work" />
+          <q-item-main label="Grupos econômicos" />
+        </q-item>
+
         <!--AREAS-->
         <q-item @click.native="$router.push({name:'areas'})">
           <q-item-side icon="place" />
