@@ -1,15 +1,17 @@
 <template>
   <q-modal key="addArmazem" v-model="isModalOpened" maximized @hide="closeModal">
-
     <div class="row justify-center items-center q-px-md" style="min-height: 80vh">
 
       <div class="col-12 text-center q-display-1">
         Nova Classificação
       </div>
+
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" @keyup.enter="addClassificacao()">
-        <q-field class="q-mb-sm" :error="classificacao.nome.error" :error-label="classificacao.nome.errorMessage">
+
+        <q-field :error="classificacao.nome.error" :error-label="classificacao.nome.errorMessage">
           <q-input v-model="classificacao.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
         </q-field>
+
       </div>
     </div>
 
@@ -28,7 +30,6 @@
     data () {
       return {
         isModalOpened: false,
-        selectClassificacaoId: null,
         classificacaoService: new ClassificacaoService(),
         classificacao: {
           nome: {
@@ -80,9 +81,9 @@
           this.clearFields();
           this.closeModal();
         }).catch(error =>{
+          this.$q.loading.hide();
           console.log(error);
           this.$q.notify({type: 'negative', message: 'Não foi possível adicionar o classificação'})
-          this.$q.loading.hide();
         })
       },
       clearFields: function(){

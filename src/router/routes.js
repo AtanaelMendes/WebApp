@@ -50,8 +50,6 @@ const routes = [
 
       { name: 'motoristas', path: 'motoristas', component: () => import('pages/admin/motoristas/MotoristasList.vue')},
       { name: 'view_motorista', path: 'motorista/view/:id', component: () => import('pages/admin/motoristas/MotoristaView.vue') },
-      { name: 'add_motorista', path: 'motorista/add', component: () => import('pages/admin/motoristas/MotoristaAdd.vue') },
-      { name: 'edit_motorista', path: 'motorista/edit/:id', component: () => import('pages/admin/motoristas/MotoristaEdit.vue') },
 
       { name: 'armazens', path: 'armazens', component: () => import('pages/admin/armazens/ArmazensList.vue')},
       { name: 'view_armazem', path: 'armazem/view/:id', component: () => import('pages/admin/armazens/ArmazemView.vue') },
