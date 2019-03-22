@@ -1,41 +1,37 @@
 <template>
-  <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Novo motorista" navigation_type="back" @navigation_clicked="backAction">
-    </toolbar>
+  <q-modal key="editMotorista" v-model="isModalOpened" maximized @hide="closeModal">
+    <div class="row justify-center items-center q-px-md" style="min-height: 80vh">
 
-    <div class="row q-pa-md">
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" @keyup.enter.prevent.default="saveMotorista()">
+      <div class="col-12 text-center q-display-1">
+        Novo Motorista
+      </div>
 
-        <q-field class="q-mb-sm" :error="motorista.nome.error" :error-label="motorista.nome.errorMessage">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" @keyup.enter.prevent.default="saveMotorista()">
+
+        <q-field :error="motorista.nome.error" :error-label="motorista.nome.errorMessage">
           <q-input v-model="motorista.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
         </q-field>
 
       </div>
     </div>
 
-    <div class="row q-pa-md">
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" align="end">
-        <q-btn label="Salvar" color="primary" @click.native="saveMotorista()"/>
-      </div>
-    </div>
+    <q-page-sticky position="bottom-right" :offset="[30, 30]">
+      <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
+      <q-btn label="salvar" color="primary" @click="saveMotorista"/>
+    </q-page-sticky>
 
-  </custom-page>
+  </q-modal>
 </template>
-
 <script>
-  import toolbar from 'components/Toolbar.vue'
-  import customPage from 'components/CustomPage.vue'
-  import MotoristaService from "../../../assets/js/service/motorista/MotoristaService";
+  import MotoristaService from "assets/js/service/motorista/MotoristaService";
   export default {
-    name: "motorista-add",
-    components: {
-      toolbar,
-      customPage
-    },
+    name: "edit-motorista-modal",
+    components:{},
     data () {
       return {
+        isModalOpened: false,
+        selectMotoristaId: null,
         motoristaService: new MotoristaService(),
-        motoristaId: this.$route.params.id,
         motorista: {
           nome: {
             value: null,
@@ -46,6 +42,12 @@
       }
     },
     methods: {
+      openModal: function(){
+        this.isModalOpened = true;
+      },
+      closeModal: function(){
+        this.isModalOpened = false;
+      },
       nomeIsValid: function(){
         if(this.motorista.nome.value === null || this.motorista.nome.value === ''){
           this.motorista.nome.error = true;
@@ -79,23 +81,24 @@
         };
         this.$q.loading.show();
         this.motoristaService.saveMotorista(params).then(() => {
+          this.$q.loading.hide();
           this.$q.notify({type: 'positive', message: 'Motorista criado com sucesso.'});
-          this.$q.loading.hide();
-          this.backAction();
+          this.$root.$emit('refreshMotoristasList');
+          this.clearFields();
+          this.closeModal();
         }).catch(error =>{
-          console.log(error);
           this.$q.loading.hide();
+          console.log(error);
           this.$q.notify({type: 'negative', message: 'Não foi possível criar o motorista'})
         })
       },
-      backAction: function () {
-        this.$router.back();
+      clearFields: function(){
+        this.motorista.nome.value = null;
+        this.motorista.nome.error = false;
+        this.motorista.nome.errorMessage = null;
       },
-    },
-    mounted () {
     },
   }
 </script>
-
 <style scoped>
 </style>

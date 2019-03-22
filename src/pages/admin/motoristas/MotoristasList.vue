@@ -39,7 +39,7 @@
                     <q-item v-close-overlay @click.native="addFotoMotorista(motorista.id)">
                       <q-item-main label="Atualizar Foto"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="updateMotorista(motorista.id)">
+                    <q-item v-close-overlay @click.native="editMotorista(motorista.id)">
                       <q-item-main label="Editar"/>
                     </q-item>
                     <q-item v-close-overlay @click.native="archiveMotorista(motorista.id)" v-if="!motorista.deleted_at">
@@ -88,6 +88,10 @@
       <q-btn round color="deep-orange" @click="addMotorista" icon="add" size="20px" />
     </q-page-sticky>
 
+    <add-motorista-modal ref="addMotoristaModal"/>
+
+    <edit-motorista-modal ref="editMotoristaModal"/>
+
   </custom-page>
 </template>
 
@@ -97,7 +101,9 @@
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
   import imageUpload from 'components/ImageUpload'
-  import MotoristaService from "../../../assets/js/service/motorista/MotoristaService";
+  import addMotoristaModal from 'components/motorista/AddMotoristaModal'
+  import editMotoristaModal from 'components/motorista/EditMotoristaModal'
+  import MotoristaService from "assets/js/service/motorista/MotoristaService";
   export default {
     name: "motoristas-list",
     components: {
@@ -105,6 +111,8 @@
       toolbar,
       apImage,
       imageUpload,
+      addMotoristaModal,
+      editMotoristaModal,
       customPage
     },
     data () {
@@ -176,10 +184,10 @@
         this.$router.push({name: 'view_motorista', params: {id:id}});
       },
       addMotorista: function(){
-        this.$router.push({name: 'add_motorista'});
+        this.$refs.addMotoristaModal.openModal();
       },
-      updateMotorista: function(id){
-        this.$router.push({name: 'edit_motorista', params: {id:id}} );
+      editMotorista: function(id){
+        this.$refs.editMotoristaModal.openModal(id);
       },
       archiveMotorista: function(id){
         this.$q.loading.show();
@@ -217,7 +225,6 @@
     },
     mounted () {
       this.listMotoristas(this.filter);
-
       this.$root.$on('refreshMotoristasList', () => {
         this.listMotoristas(this.filter);
       });
