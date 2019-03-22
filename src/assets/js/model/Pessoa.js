@@ -109,23 +109,23 @@ export default class {
       return {
         grupo_economico_id: this.grupoEconomico.value,
         nome: this.nome.value,
-        cpf: this.cpf.value,
+        cpf: this.cpf.value.replace(/[^0-9]/g, ''),
         cnpj: null,
         razao_social: this.razaoSocial.value,
-        inscricao_estadual: this.inscricaoEstadual.value,
+        inscricao_estadual: this.inscricaoEstadual.value.replace(/[^0-9]/g, ''),
         uf: this.uf.value,
-        inscricao_municipal: this.inscricaoMunicipal.value,
+        inscricao_municipal: this.inscricaoMunicipal.value.replace(/[^0-9]/g, ''),
       }
     } else if (this.pessoaType === 2) {
       return {
         grupo_economico_id: this.grupoEconomico.value,
         nome: this.nome.value,
         cpf: null,
-        cnpj: this.cnpj.value,
+        cnpj: this.cnpj.value.replace(/[^0-9]/g, ''),
         razao_social: this.razaoSocial.value,
-        inscricao_estadual: this.inscricaoEstadual.value,
+        inscricao_estadual: this.inscricaoEstadual.value.replace(/[^0-9]/g, ''),
         uf: this.uf.value,
-        inscricao_municipal: this.inscricaoMunicipal.value,
+        inscricao_municipal: this.inscricaoMunicipal.value.replace(/[^0-9]/g, ''),
       }
     }
   };

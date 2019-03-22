@@ -36,8 +36,8 @@
               </q-item-side>
               <q-item-main>
                 <q-item-tile class="q-title">{{pessoa.nome}}</q-item-tile>
-                <q-item-tile v-if="pessoa.cpf" sublabel>{{pessoa.cpf}}</q-item-tile>
-                <q-item-tile v-if="pessoa.cnpj" sublabel>{{pessoa.cnpj}}</q-item-tile>
+                <q-item-tile v-if="pessoa.cpf" sublabel>{{formatCPF(pessoa.cpf)}}</q-item-tile>
+                <q-item-tile v-if="pessoa.cnpj" sublabel>{{formatCNPJ(pessoa.cnpj)}}</q-item-tile>
               </q-item-main>
               <q-item-side>
               </q-item-side>
@@ -341,6 +341,12 @@
       }
     },
     methods: {
+      formatCPF(cpf){
+        return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+      },
+      formatCNPJ(cnpj){
+        return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+      },
       getPessoa: function(id){
         this.$q.loading.show();
         this.pessoaService.getPessoa(id).then(pessoa => {
