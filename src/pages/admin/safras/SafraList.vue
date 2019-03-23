@@ -25,7 +25,7 @@
                 <q-popover>
                   <q-list link class="no-border">
                     <q-item v-close-overlay @click.native="addSafraCultura(safra.id)">
-                      <q-item-main label="Adicionar safra cultura"/>
+                      <q-item-main label="Adicionar Cultura"/>
                     </q-item>
                     <q-item v-close-overlay @click.native="editSafra(safra)">
                       <q-item-main label="Editar"/>
