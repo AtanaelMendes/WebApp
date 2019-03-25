@@ -19,11 +19,7 @@ export default {
   image: {
     makeUrl (fileName, size) {
       if (fileName == null) {
-        if ([
-          '500x500',
-          '250x250',
-          '125x125'
-        ].indexOf(size)) {
+        if ([ '500x500', '250x250', '125x125'].indexOf(size) > -1) {
           return '/statics/images/no-image-1-1.svg'
         } else {
           return '/statics/images/no-image-16-10.svg'

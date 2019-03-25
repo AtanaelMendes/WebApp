@@ -38,7 +38,7 @@ export default {
     },
     validSize: function () {
       if (this.availableSizes.indexOf(this.size) == -1) {
-        console.error(this.size + ' não é um tamanho válido, corrija para um destes:', this.availableSizes)
+        console.error(this.size + ' não é um tamanho válido, corrija para um destes:', this.availableSizes);
         return false
       }
       return true
@@ -50,7 +50,7 @@ export default {
       if (!this.validSize || !this.fileName) {
         url = 'statics/images/no-image-16-10.svg'
       }
-      url = AgroUtils.image.makeUrl(this.fileName, this.size)
+      url = AgroUtils.image.makeUrl(this.fileName, this.size);
 
       return url;
     },
