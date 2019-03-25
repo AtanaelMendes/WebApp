@@ -118,7 +118,7 @@
         this.safraCulturaService.saveSafraCultura(this.safraId, this.safraCultura.getValues()).then(() => {
           this.$q.notify({type: 'positive', message: 'Cultura criada com sucesso'});
           this.closeModal();
-          this.$root.$emit('refreshSafrasList');;
+          this.$root.$emit('refreshSafrasList');
           this.$q.loading.hide();
         })
       },
