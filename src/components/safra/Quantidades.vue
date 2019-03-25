@@ -60,6 +60,21 @@
         </q-item-side>
       </q-item>
 
+      <!-- NEGOCIADO -->
+      <q-item>
+        <q-item-side icon="gavel" color="primary"/>
+        <q-item-main multiline>
+          <q-item-tile label lines="2">
+            Negociado
+            <!--<q-progress :percentage="peso_liquido_negociado_percentual" color="primary" height="10px"/>-->
+          </q-item-tile>
+          <q-item-tile sublabel lines="1">
+            <b>{{numeral(quantidades.negociado).format('0,0')}}</b>
+            {{unidadeMedida.plural}}
+          </q-item-tile>
+        </q-item-main>
+      </q-item>
+
       <template v-if="quantidades.numero_cargas > 0">
         <!-- DESCONTO -->
         <q-item v-if="quantidades.peso_desconto>0">
@@ -119,6 +134,9 @@ export default {
     },
     peso_liquido_percentual: function () {
       return (this.quantidades.peso_liquido / this.maior_peso) * 100;
+    },
+    peso_liquido_negociado_percentual: function () {
+      return (this.quantidades.negociado / this.maior_peso) * 100;
     },
     estimativa_percentual: function () {
       return (this.quantidades.peso_estimativa / this.maior_peso) * 100;
