@@ -29,7 +29,7 @@
                   :after="[{icon:'arrow_drop_down'}]"
                   v-model="grupoEconomicoSearchTerms">
                   <q-autocomplete
-                    max-results="20"
+                    :max-results="20"
                     @search="searchGrupoEconomico"
                     @selected="setGrupoEconomico"
                     :min-characters="0"
@@ -183,10 +183,18 @@
         })
       },
       searchGrupoEconomico (terms, done) {
-        this.grupoEconomicoService.searchGrupoEconomico(terms).then(result => {
-          this.tempGrupoEconomicoList = result;
-          done(result)
+        this.grupoEconomicoService.listGruposEconomicos(terms).then(result => {
+          this.tempGrupoEconomicoList = this.parseGruposEconomicos(result);
+          done(this.tempGrupoEconomicoList)
         });
+      },
+      parseGruposEconomicos(gruposEconomicos) {
+        return gruposEconomicos.map(grupoEconomico => {
+          return {
+            label: grupoEconomico.nome,
+            id: grupoEconomico.id
+          }
+        })
       },
       setGrupoEconomico (item) {
         this.pessoa.grupoEconomico.value = item.id;
