@@ -189,7 +189,7 @@
         this.getTalhoes();
       },
       addArea(){
-        this.$refs.newAreaModal.openModal(this.safra_id);
+        this.$refs.newAreaModal.openModal(this.safraCultura);
       },
       imageMakeUrl(fileName, size) {
         return agroUtils.image.makeUrl(fileName, size)
