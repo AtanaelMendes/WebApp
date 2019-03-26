@@ -50,7 +50,7 @@
               </q-item-side>
             </q-item>
 
-            <q-item>
+            <q-item v-if="negocio.quantidade_entregar">
               <q-item-side icon="mdi-scale" :color="negocio.quantidade_entregar >= 1?'negative':'primary'" />
               <q-item-main>
                 <q-item-tile label>
@@ -60,7 +60,7 @@
                   <template v-else>
                     {{ numeral(negocio.quantidade_entregue).format('0,0') }}
                   </template>
-                  {{ negocio.unidadeMedida.plural }}
+                  <span v-if="negocio.unidadeMedida">{{ negocio.unidadeMedida.plural }}</span>
                 </q-item-tile>
                 <q-item-tile sublabel v-if="negocio.quantidade_entregar >= 1">
                   Faltando
@@ -76,7 +76,7 @@
               </q-item-main>
             </q-item>
 
-            <q-item v-if="negocio.tipoNegocio.is_fixacao">
+            <q-item v-if="negocio.tipoNegocio.is_fixacao && negocio.quantidade_fixar">
               <q-item-side icon="attach_money" :color="negocio.quantidade_fixar >= 1?'negative':'primary'" />
               <q-item-main>
                 <q-item-tile label v-for="fixacao in negocio.fixacoes" :key="negocio.id + '_' + fixacao.id">
