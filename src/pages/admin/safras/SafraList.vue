@@ -26,7 +26,7 @@
                   <q-popover>
                     <q-list link class="no-border">
                       <q-item v-close-overlay @click.native="addSafraCultura(safra.id)">
-                        <q-item-main label="Adicionar safra cultura"/>
+                        <q-item-main label="Adicionar Cultura"/>
                       </q-item>
                       <q-item v-close-overlay @click.native="editSafra(safra)">
                         <q-item-main label="Editar"/>
@@ -150,7 +150,8 @@
   import newCulturaModal from 'components/safra/NewCulturaModal'
   import newSafraModal from 'components/safra/NewSafraModal'
   import SafraService from "../../../assets/js/service/safra/SafraService";
-
+  import safraQuantidades from 'components/safra/Quantidades.vue'
+  import SafraCulturaService from "../../../assets/js/service/safra/SafraCulturaService";
 
     export default {
       name: "safra-list",
@@ -166,6 +167,7 @@
       data () {
         return {
           safraService: new SafraService(),
+          safraCulturaService: new SafraCulturaService(),
           // SAFRA
           isFavorite: false,
           safras: [],
