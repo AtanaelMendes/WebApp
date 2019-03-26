@@ -1,7 +1,7 @@
 <template>
   <custom-page isParent >
 
-    <toolbar slot="toolbar" :title="data.cultura.nome + ' ' + data.safra.ano_inicio + '/' + data.safra.ano_fim"
+    <toolbar slot="toolbar" :title="safraCultura.cultura.nome + ' ' + safraCultura.safra.ano_inicio + '/' + safraCultura.safra.ano_fim"
              navigation_type="back" @navigation_clicked="backAction" >
       <div slot="tabs">
         <q-tabs v-model="currentTab">
@@ -46,24 +46,24 @@
     data () {
       return {
         safraCulturaService: new SafraCulturaService(),
-        data: null,
+        safraCultura: null,
         currentTab: null,
       }
     },
     methods: {
       selectTabResumo(){
-        this.$refs.resumoTab.init(this.safra_id, this.id, this.data)
+        this.$refs.resumoTab.init(this.safraCultura)
       },
       selectTabAreas: function () {
-        this.$refs.areasTab.init(this.safra_id, this.id, this.data)
+        this.$refs.areasTab.init(this.safraCultura)
       },
       selectTabCultivares: function () {
-        this.$refs.cultivaresTab.init(this.safra_id, this.id, this.data)
+        this.$refs.cultivaresTab.init(this.safraCultura)
       },
       getSafraCultura: function(force = false){
         this.$q.loading.show();
         this.safraCulturaService.getSafraCultura(this.safra_id, this.id).then(safraCultura => {
-          this.data = safraCultura;
+          this.safraCultura = safraCultura;
           this.$q.loading.hide();
         })
       },

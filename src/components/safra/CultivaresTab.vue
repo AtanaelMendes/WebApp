@@ -9,19 +9,19 @@
             <q-toggle v-model="media" color="secondary" />
             <template v-if="media">
               Média
-              {{data.view_unidade_medida.sigla}}
-              por {{data.view_unidade_area.sigla}}
+              {{safraCultura.view_unidade_medida.sigla}}
+              por {{safraCultura.view_unidade_area.sigla}}
             </template>
             <template v-else>
               Total de
-              {{data.view_unidade_medida.sigla}}
+              {{safraCultura.view_unidade_medida.sigla}}
             </template>
           </div>
           <safra-grafico-quantidades-por-marca
             :marcas="marcas"
             :media="media"
-            :unidade-medida="data.view_unidade_medida"
-            :unidade-area="data.view_unidade_area"
+            :unidade-medida="safraCultura.view_unidade_medida"
+            :unidade-area="safraCultura.view_unidade_area"
             :height="200"
             :width="100"
             v-model="iMarca"
@@ -38,7 +38,7 @@
                 <q-carousel-slide v-for="marca in marcas" :key="marca.id" :img-src="imageMakeUrl(marca.image_file_name, '800x500')">
                   <div class="absolute-top carousel-caption">
                     <div class="q-card-title">{{marca.nome}}</div>
-                    <div class="q-card-subtitle text-white">{{numeral(marca.tamanho).format('0,0')}} {{data.view_unidade_area.plural}}</div>
+                    <div class="q-card-subtitle text-white">{{numeral(marca.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}</div>
                   </div>
                 </q-carousel-slide>
               </q-carousel>
@@ -47,8 +47,8 @@
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
               <safra-quantidades
                 :quantidades="marcas[iMarca]"
-                :unidade-area="data.view_unidade_area"
-                :unidade-medida="data.view_unidade_medida"
+                :unidade-area="safraCultura.view_unidade_area"
+                :unidade-medida="safraCultura.view_unidade_medida"
               />
             </div>
           </div>
@@ -66,8 +66,8 @@
             :cultivares="this.cultivares"
             :marcaId="this.activeMarca.id"
             :media="media"
-            :unidade-medida="data.view_unidade_medida"
-            :unidade-area="data.view_unidade_area"
+            :unidade-medida="safraCultura.view_unidade_medida"
+            :unidade-area="safraCultura.view_unidade_area"
             :height="200"
             :width="100"
             v-model="iCultivar"
@@ -80,10 +80,10 @@
             <!-- CARROUSEL DE CULTIVARES -->
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
               <q-carousel color="white" arrows quick-nav v-model="iCultivar" height="250px">
-                <q-carousel-slide v-for="cultivar in cultivaresDaMarca" :key="cultivar.id" :img-src="imageMakeUrl(data.cultura.image_file_name, '800x500')">
+                <q-carousel-slide v-for="cultivar in cultivaresDaMarca" :key="cultivar.id" :img-src="imageMakeUrl(safraCultura.cultura.image_file_name, '800x500')">
                   <div class="absolute-top carousel-caption">
                     <div class="q-card-title">{{activeMarca.nome}} {{cultivar.nome}}</div>
-                    <div class="q-card-subtitle text-white">{{numeral(cultivar.tamanho).format('0,0')}} {{data.view_unidade_area.plural}}</div>
+                    <div class="q-card-subtitle text-white">{{numeral(cultivar.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}</div>
                   </div>
                 </q-carousel-slide>
               </q-carousel>
@@ -92,8 +92,8 @@
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8" v-if="activeCultivar">
               <safra-quantidades
                 :quantidades="activeCultivar"
-                :unidade-area="data.view_unidade_area"
-                :unidade-medida="data.view_unidade_medida">
+                :unidade-area="safraCultura.view_unidade_area"
+                :unidade-medida="safraCultura.view_unidade_medida">
                 <q-item v-for="talhao in activeCultivar.talhoes" :key="talhao.id" class="cursor-pointer" @click.native="posicionarTalhaoPeloId(talhao.id)">
                   <q-item-side v-if="talhao.image_file_name" :image="imageMakeUrl(talhao.image_file_name, '200x125')" color="primary"/>
                   <q-item-side v-else icon="place" color="primary"/>
@@ -104,7 +104,7 @@
                     </q-item-tile>
                     <q-item-tile sublabel>
                       {{numeral(talhao.tamanho * 100 / activeCultivar.tamanho).format('0,0.0')}}%
-                      ({{numeral(talhao.tamanho).format('0,0')}} {{data.view_unidade_area.sigla}})
+                      ({{numeral(talhao.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.sigla}})
                     </q-item-tile>
                   </q-item-main>
                 </q-item>
@@ -150,9 +150,7 @@
     data(){
       return{
         safraCulturaService: new SafraCulturaService(),
-        safra_id: null,
-        safraCulturaId: null,
-        data: null,
+        safraCultura: null,
         iMarca: 0,
         iCultivar: 0,
         media: true,
@@ -161,10 +159,8 @@
       }
     },
     methods: {
-      init(safraId, safraCulturaId, data){
-        this.safra_id = safraId;
-        this.safraCulturaId = safraCulturaId;
-        this.data = data;
+      init(safraCultura){
+        this.safraCultura = safraCultura;
 
         this.iMarca = 0;
         this.iCultivar = 0;
@@ -179,7 +175,7 @@
           return;
         }
         this.$q.loading.show();
-        this.safraCulturaService.getMarcas(this.safra_id, this.safraCulturaId).then(response => {
+        this.safraCulturaService.getMarcas(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
           this.marcas = response.marcas;
           this.marcasLoaded = true;
           this.$q.loading.hide();
@@ -190,7 +186,7 @@
           return;
         }
         this.$q.loading.show();
-        this.safraCulturaService.getCultivares(this.safra_id, this.safraCulturaId).then(response => {
+        this.safraCulturaService.getCultivares(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
           this.cultivares = response.cultivares;
           this.cultivaresLoaded = true;
           this.$q.loading.hide();

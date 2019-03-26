@@ -1,21 +1,21 @@
 <template>
-  <div class="row space-end" v-if="visible && data">
-    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
+  <div class="row space-end" v-if="visible && safraCultura">
+    <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 col-xl-5">
       <q-card-media overlay-position="top" style="max-height: 40vh">
-        <ap-image size="800x500" :file-name="data.cultura.image_file_name"/>
+        <ap-image size="800x500" :file-name="safraCultura.cultura.image_file_name"/>
         <q-card-title slot="overlay">
-          {{data.cultura.nome}} {{data.safra.ano_inicio}}/{{data.safra.ano_fim}}
+          {{safraCultura.cultura.nome}} {{safraCultura.safra.ano_inicio}}/{{safraCultura.safra.ano_fim}}
           <span slot="subtitle">
-              {{numeral(data.totals.tamanho).format('0,0')}} {{data.view_unidade_area.plural}}
+              {{numeral(safraCultura.totals.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
             </span>
         </q-card-title>
       </q-card-media>
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7 col-xl-7">
       <safra-quantidades
-        :quantidades="data.totals"
-        :unidade-area="data.view_unidade_area"
-        :unidade-medida="data.view_unidade_medida"
+        :quantidades="safraCultura.totals"
+        :unidade-area="safraCultura.view_unidade_area"
+        :unidade-medida="safraCultura.view_unidade_medida"
       />
     </div>
 
@@ -31,7 +31,7 @@
           <div class="q-mb-md">
             Diário de Colheita
           </div>
-          <safra-grafico-diario :diario="diario" :unidade-medida="data.view_unidade_medida" :height="300" :width="100"/>
+          <safra-grafico-diario :diario="diario" :unidade-medida="safraCultura.view_unidade_medida" :height="300" :width="100"/>
         </q-tab-pane>
         <q-tab-pane name="tab-diario-classificacao" keep-alive>
           <div class="q-mb-md">
@@ -43,13 +43,13 @@
           <div class="q-mb-md">
             Entregas Por Caminhão
           </div>
-          <safra-grafico-quantidades-por-caminhao :unidade-medida="data.view_unidade_medida" :caminhoes="caminhoes" :height="300" :width="100"/>
+          <safra-grafico-quantidades-por-caminhao :unidade-medida="safraCultura.view_unidade_medida" :caminhoes="caminhoes" :height="300" :width="100"/>
         </q-tab-pane>
         <q-tab-pane name="tab-armazem" keep-alive>
           <div class="q-mb-md">
             Entrega Por Armazém
           </div>
-          <safra-grafico-quantidades-por-armazem :unidade-medida="data.view_unidade_medida" :armazens="armazens" :height="300" :width="100"/>
+          <safra-grafico-quantidades-por-armazem :unidade-medida="safraCultura.view_unidade_medida" :armazens="armazens" :height="300" :width="100"/>
         </q-tab-pane>
       </q-tabs>
     </div>
@@ -82,9 +82,7 @@
     data(){
       return{
         safraCulturaService: new SafraCulturaService(),
-        safra_id: null,
-        safraCulturaId: null,
-        data: null,
+        safraCultura: null,
         diario: null,
         diarioClassificacao: null,
         caminhoes: null,
@@ -92,10 +90,8 @@
       }
     },
     methods:{
-      init(safraId, safraCulturaId, data){
-        this.safra_id = safraId;
-        this.safraCulturaId = safraCulturaId;
-        this.data = data;
+      init(safraCultura){
+        this.safraCultura = safraCultura;
       },
       selectTabDiario() {
         this.getDiario();
@@ -114,7 +110,7 @@
           return;
         }
         this.$q.loading.show();
-        this.safraCulturaService.getDiario(this.safra_id, this.safraCulturaId).then(response => {
+        this.safraCulturaService.getDiario(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
           this.diario = response.diario;
           this.diarioLoaded = true;
           this.$q.loading.hide();
@@ -125,7 +121,7 @@
           return;
         }
         this.$q.loading.show();
-        this.safraCulturaService.getDiarioClassificacao(this.safra_id, this.safraCulturaId).then(diarioClassificacao => {
+        this.safraCulturaService.getDiarioClassificacao(this.safraCultura.safra.id, this.safraCultura.id).then(diarioClassificacao => {
           this.diarioClassificacao = diarioClassificacao;
           this.diarioClassificacaoLoaded = true;
           this.$q.loading.hide();
@@ -136,7 +132,7 @@
           return;
         }
         this.$q.loading.show();
-        this.safraCulturaService.getCaminhoes(this.safra_id, this.safraCulturaId).then(response => {
+        this.safraCulturaService.getCaminhoes(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
           this.caminhoes = response.caminhoes;
           this.caminhoesLoaded = true;
           this.$q.loading.hide();
@@ -147,7 +143,7 @@
           return;
         }
         this.$q.loading.show();
-        this.safraCulturaService.getArmazens(this.safra_id, this.safraCulturaId).then(response => {
+        this.safraCulturaService.getArmazens(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
           this.armazens = response.armazens;
           this.armazensLoaded = true;
           this.$q.loading.hide();
