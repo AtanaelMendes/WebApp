@@ -3,7 +3,6 @@ export default class GrupoEconomicoService{
 
   constructor() {
   }
-
   listGruposEconomicos(terms){
     return new Promise((resolve, reject) => {
       GrupoEconomicoAPI.listGruposEconomicos(terms).then(response => {
@@ -17,7 +16,6 @@ export default class GrupoEconomicoService{
       })
     });
   };
-
   getGrupoEconomicoById(id){
     return new Promise((resolve, reject) => {
       GrupoEconomicoAPI.getGrupoEconomicoById(id).then(response => {
@@ -31,7 +29,6 @@ export default class GrupoEconomicoService{
       })
     });
   };
-
   saveGrupoEconomico(params) {
     return new Promise((resolve, reject) => {
       GrupoEconomicoAPI.saveGrupoEconomico(params).then(response => {
@@ -49,7 +46,6 @@ export default class GrupoEconomicoService{
       })
     });
   };
-
   updateGrupoEconomico(id, params) {
     return new Promise((resolve, reject) => {
       GrupoEconomicoAPI.updateGrupoEconomico(id, params).then(response => {
@@ -67,7 +63,6 @@ export default class GrupoEconomicoService{
       })
     });
   };
-
   archiveGrupoEconomico(id) {
     return new Promise((resolve, reject) => {
       GrupoEconomicoAPI.archiveGrupoEconomico(id).then(response => {
@@ -81,10 +76,9 @@ export default class GrupoEconomicoService{
       })
     });
   };
-
   restoreGrupoEconomico(id) {
     return new Promise((resolve, reject) => {
-      GrupoEconomicoAPI.saveGrupoEconomico(id).then(response => {
+      GrupoEconomicoAPI.restoreGrupoEconomico(id).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
@@ -95,7 +89,6 @@ export default class GrupoEconomicoService{
       })
     });
   };
-
   deleteGrupoEconomico(id) {
     return new Promise((resolve, reject) => {
       GrupoEconomicoAPI.deleteGrupoEconomico(id).then(response => {

@@ -26,6 +26,6 @@ export default class GrupoEconomicoAPI{
   }
 
   static deleteGrupoEconomico(id){
-    return Vue.prototype.$axios.delete('/grupo_economico'+id );
+    return Vue.prototype.$axios.delete('/grupo_economico/'+id );
   }
 }
