@@ -23,11 +23,21 @@
       </template>
     </toolbar>
 
-    <div class="row space-end" v-if="gruposEconomicos">
+    <div class="row space-end " v-if="gruposEconomicos">
       <div class="col-12">
 
-        <q-list no-border separator highlight>
-          <q-item v-for="grupoEconomico in gruposEconomicos" :key="grupoEconomico.nome">
+        <q-list no-border inset-separator highlight link>
+          <q-item v-for="grupoEconomico in gruposEconomicos" :key="grupoEconomico.nome" @click.native="viewGrupoEconomico(grupoEconomico.id)">
+
+            <!--<q-item-side>-->
+              <!--<q-btn :key="grupoEconomico.nome"  round color="primary" dense>-->
+                <!--<span class="q-title text-white">-->
+                  <!--{{grupoEconomico.nome.substring(0,1)}}-->
+                <!--</span>-->
+              <!--</q-btn>-->
+            <!--</q-item-side>-->
+
+            <q-item-side icon="group_work"/>
             <q-item-main>
 
               <q-item-tile>
@@ -60,11 +70,13 @@
         </q-list>
 
       </div>
+
+      <div v-if="isEmptyList" class="no-result col-12">
+        <ap-no-results />
+      </div>
     </div>
 
-    <div v-if="isEmptyList" class="no-result">
-      <ap-no-results />
-    </div>
+
 
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
       <q-btn round color="deep-orange" @click="addGrupoEconomico" icon="add" size="20px" />
@@ -114,6 +126,7 @@
       }
     },
     computed: {
+
     },
     methods: {
       listBySearch: function(val){
@@ -132,7 +145,7 @@
         });
       },
       viewGrupoEconomico: function(id) {
-        this.$router.push({name: 'view_armazem', params: {id:id}});
+        this.$router.push({name: 'view_grupo_economico', params: {id:id}});
       },
       addGrupoEconomico: function(){
         this.$refs.addGrupoEconomicoModal.openModal()
@@ -212,5 +225,22 @@
 <style scoped>
   .space-end{
     margin-bottom: 300px;
+  }
+  .no-result{
+    text-align: center;
+    padding-top: 150px;
+  }
+
+  .no-result img{
+    width: 120px;
+    height: auto;
+  }
+
+  .no-result span{
+    display: block;
+    margin-top: 30px;
+    font-size: 25px;
+    font-weight: 300;
+    color: #ababab;
   }
 </style>

@@ -1,11 +1,12 @@
 import GrupoEconomicoAPI from "../api/GrupoEconomicoAPI";
+import AgroUtils from "../AgroUtils";
 export default class GrupoEconomicoService{
 
   constructor() {
   }
-  listGruposEconomicos(terms){
+  listGruposEconomicos(filter){
     return new Promise((resolve, reject) => {
-      GrupoEconomicoAPI.listGruposEconomicos(terms).then(response => {
+      GrupoEconomicoAPI.listGruposEconomicos(AgroUtils.serialize(filter)).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
@@ -19,6 +20,19 @@ export default class GrupoEconomicoService{
   getGrupoEconomicoById(id){
     return new Promise((resolve, reject) => {
       GrupoEconomicoAPI.getGrupoEconomicoById(id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  listPessoasOfGrupoEconomico(id){
+    return new Promise((resolve, reject) => {
+      GrupoEconomicoAPI.listPessoasOfGrupoEconomico(id).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{

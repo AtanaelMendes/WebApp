@@ -58,7 +58,7 @@ const routes = [
       { name: 'view_classificacao', path: 'classificacao/view/:id', component: () => import('pages/admin/classificacoes/ClassificacaoView.vue') },
 
       { name: 'grupos_economicos', path: 'grupos-economicos', component: () => import('pages/admin/gruposEconomicos/GruposEconomicosList.vue')},
-      { name: 'view_grupo_economico', path: 'grupos-economicos/view/:id', component: () => import('pages/admin/gruposEconomicos/GruposEconomicosView.vue') },
+      { name: 'view_grupo_economico', path: 'grupos-economicos/view/:id', component: () => import('pages/admin/gruposEconomicos/GrupoEconomicoView.vue') },
 
     ]
   }

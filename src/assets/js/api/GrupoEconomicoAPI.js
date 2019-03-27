@@ -9,6 +9,10 @@ export default class GrupoEconomicoAPI{
     return Vue.prototype.$axios.get('/grupo_economico?nome=' + terms);
   }
 
+  static listPessoasOfGrupoEconomico(id){
+    return Vue.prototype.$axios.get('/grupo_economico/'+id+'/pessoas');
+  }
+
   static getGrupoEconomicoById(id){
     return Vue.prototype.$axios.get('/grupo_economico/'+id);
   }
