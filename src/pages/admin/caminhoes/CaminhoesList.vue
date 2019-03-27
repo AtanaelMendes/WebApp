@@ -25,7 +25,7 @@
 
     <div class="row q-pa-md gutter-sm space-end">
 
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 " v-if="caminhoes" v-for="caminhao in caminhoes" :key="caminhao.id">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 " v-if="caminhoes" v-for="caminhao in caminhoes" :key="caminhao.id">
         <q-card class="full-height">
       <!--<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 cursor-pointer" v-for="caminhao in caminhoes" :key="caminhao.id">-->
         <!--<q-card @click.native="viewCaminhao(caminhao.id)" class="full-height">-->

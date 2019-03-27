@@ -1,54 +1,54 @@
 <template>
-  <q-modal key="addArmazem" v-model="isModalOpened" maximized @hide="closeModal">
-
-    <div class="row justify-center items-center q-px-md" style="min-height: 80vh">
-
-      <div class="col-12 text-center q-display-1">
+  <q-modal v-model="isModalOpened" minimized @hide="closeModal" :content-css="{minWidth: '300px', minHeight:'250px'}">
+    <q-modal-layout>
+      <div class="q-pa-md q-title text-center" slot="header">
         Editar Caminhão
       </div>
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" @keyup.enter="updateCaminhao()">
 
-        <q-field class="q-mb-sm" :error="caminhao.nome.error" :error-label="caminhao.nome.errorMessage">
-          <q-input v-model="caminhao.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
-        </q-field>
+      <div class="row q-pa-md">
+        <div class="col-12" @keyup.enter="updateCaminhao()">
 
-        <q-field class="q-mb-sm" :error="caminhao.placa.error" :error-label="caminhao.placa.errorMessage">
-          <q-input upper-case	 v-model="caminhao.placa.value" float-label="Placa" @input="clearErrorMessage()" maxlength="7"/>
-        </q-field>
+          <q-field class="q-mb-sm" :error="caminhao.nome.error" :error-label="caminhao.nome.errorMessage">
+            <q-input v-model="caminhao.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
+          </q-field>
 
-        <q-field class="q-mb-sm">
-          <q-input v-model="caminhao.tara" float-label="Tara" type="number"/>
-        </q-field>
+          <q-field class="q-mb-sm" :error="caminhao.placa.error" :error-label="caminhao.placa.errorMessage">
+            <q-input upper-case	 v-model="caminhao.placa.value" float-label="Placa" @input="clearErrorMessage()" maxlength="7"/>
+          </q-field>
 
-        <q-field class="q-mb-sm">
-          <q-input v-model="caminhao.pesoBruto" float-label="Peso bruto total" type="number"/>
-        </q-field>
+          <q-field class="q-mb-sm">
+            <q-input v-model="caminhao.tara" float-label="Tara" type="number"/>
+          </q-field>
 
-        <q-field class="q-mb-sm">
-          <q-input v-model="caminhao.estimativaCarga" float-label="Estimativa da carga" type="number"/>
-        </q-field>
+          <q-field class="q-mb-sm">
+            <q-input v-model="caminhao.pesoBruto" float-label="Peso bruto total" type="number"/>
+          </q-field>
 
-        <q-field class="q-mb-sm" :error="caminhao.unidadeMedidaSigla.error" :error-label="caminhao.unidadeMedidaSigla.errorMessage">
-          <q-select v-model="caminhao.unidadeMedidaSigla.value" float-label="Unidade medida" :options="unidadeMedidaOptions" @input="clearErrorMessage()"/>
-        </q-field>
+          <q-field class="q-mb-sm">
+            <q-input v-model="caminhao.estimativaCarga" float-label="Estimativa da carga" type="number"/>
+          </q-field>
 
+          <q-field class="q-mb-sm" :error="caminhao.unidadeMedidaSigla.error" :error-label="caminhao.unidadeMedidaSigla.errorMessage">
+            <q-select v-model="caminhao.unidadeMedidaSigla.value" float-label="Unidade medida" :options="unidadeMedidaOptions" @input="clearErrorMessage()"/>
+          </q-field>
+
+        </div>
       </div>
-    </div>
 
-    <q-page-sticky position="bottom-right" :offset="[30, 30]">
-      <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-      <q-btn label="salvar" color="primary" @click="updateCaminhao"/>
-    </q-page-sticky>
-
+      <div class="q-pa-md text-right" slot="footer">
+        <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
+        <q-btn label="salvar" color="primary" @click="updateCaminhao"/>
+      </div>
+    </q-modal-layout>
   </q-modal>
 </template>
+
 <script>
   import CaminhaoService from "assets/js/service/CaminhaoService";
   import UnidadeMedidaService from "assets/js/service/UnidadeMedidaService";
   export default {
-    name: "edit-caminhao",
-    components:{},
-    data () {
+    name: "add-motorista-modal",
+    data(){
       return {
         isModalOpened: false,
         selectCaminhaoId: null,
@@ -211,8 +211,10 @@
           this.$q.notify({type: 'negative', message: 'Não foi possível salvar as alterações'})
         })
       },
-    },
+    }
   }
 </script>
+
 <style scoped>
+
 </style>
