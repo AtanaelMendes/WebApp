@@ -26,8 +26,10 @@
     <div class="row space-end" >
       <div class="col-12" v-if="armazens">
 
-        <q-list no-border separator highlight>
+        <q-list no-border inset-separator highlight>
           <q-item v-for="armazem in armazens" :key="armazem.nome">
+
+            <q-item-side icon="location_city"/>
             <q-item-main>
 
               <q-item-tile>
@@ -68,8 +70,6 @@
         <ap-no-results />
       </div>
     </div>
-
-
 
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
       <q-btn round color="deep-orange" @click="addArmazem" icon="add" size="20px" />
