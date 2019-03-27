@@ -159,6 +159,20 @@ export default class SafraCulturaService {
     });
   }
 
+  addTalhoes(safra_id, id, talhoes){
+    return new Promise((resolve, reject) => {
+      SafraCulturaAPI.addTalhoes(id, safra_id, talhoes).then(response => {
+        if(response.status === 201){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  }
+
   listCulturas(){
     return new Promise((resolve, reject) => {
       CulturaAPI.listCulturasSimpleList().then(response => {

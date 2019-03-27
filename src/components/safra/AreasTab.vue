@@ -185,6 +185,9 @@
 
         this.iArea = 0;
         this.iTalhao = 0;
+        this.getContent()
+      },
+      getContent(){
         this.getAreas();
         this.getTalhoes();
       },
@@ -194,47 +197,26 @@
       imageMakeUrl(fileName, size) {
         return agroUtils.image.makeUrl(fileName, size)
       },
-      getAreas(force = false){
-        if (this.areasLoaded & !force) {
-          return;
-        }
+      getAreas(){
         this.$q.loading.show();
         this.safraCulturaService.getAreas(this.safraCultura.safra.id, this.safraCultura.id).then(areas => {
           this.areas = areas.areas;
-          this.areasLoaded = true;
           this.$q.loading.hide();
         })
       },
-      getTalhoes(force = false){
-        if (this.areasLoaded & !force) {
-          return;
-        }
+      getTalhoes(){
         this.$q.loading.show();
         this.safraCulturaService.getTalhoes(this.safraCultura.safra.id, this.safraCultura.id).then(talhoes => {
           this.talhoes = talhoes.talhoes;
-          this.talhoesLoaded = true;
-          this.posicionarTalhaoPeloId();
           this.$q.loading.hide();
         })
       },
-      posicionarTalhaoPeloId(talhaoId) {
-        if (!this.talhoesLoaded) {
-          this.talhaoIdPosicionar = talhaoId
-          this.getAreas()
-          this.getTalhoes()
-          return
-        }
-        if (talhaoId == null) {
-          talhaoId = this.talhaoIdPosicionar
-        }
-        if (talhaoId == null) {
-          return
-        }
-
-      },
     },
-    mounted() {
-
+    mounted () {
+      this.$root.$on('refreshAreasTab', this.getContent);
+    },
+    destroyed() {
+      this.$root.$off('refreshAreasTab', this.getContent);
     }
   }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="isModalOpened" class="ap-modal" minimized @hide="closeModal">
+  <q-modal v-model="isModalOpened" class="new-area-modal" minimized @hide="closeModal">
     <q-modal-layout>
       <div class="q-pa-md q-title text-center" slot="header">
         Nova Área
@@ -110,7 +110,7 @@
             <span class="q-subheading">Resumo</span>
           </div>
           <div class="q-pa-md">
-            <div class="row gutter-sm">
+            <div class="row gutter-sm justify-center">
               <div class="col-xs-12 col-md-6 col-lg-4">
                 <q-list separator>
                   <q-list-header>{{selectedSafraCultura.cultura.nome}}</q-list-header>
@@ -136,11 +136,13 @@
         </q-carousel-slide>
       </q-carousel>
 
-      <div class="q-pa-md text-right" slot="footer">
-        <q-btn @click="closeModal()" label="Cancelar" color="primary" class="q-mr-md"/>
-        <q-btn @click="goToPreviousStep" label="voltar" color="primary"  class="q-mr-xs" v-if="this.currentStep !== 0"/>
-        <q-btn @click="goToNextStep" label="próximo" color="primary"  class="q-mr-xs" :disabled="isNextButtonDisabled" v-if="currentStep !== 2"/>
-        <q-btn @click="" label="Salvar" color="deep-orange" v-if="currentStep === 2" class="float-right"/>
+      <div class="q-pa-md" slot="footer">
+        <q-btn @click="closeModal()" label="Cancelar" color="primary" />
+        <div class="float-right ">
+          <q-btn @click="goToPreviousStep" label="voltar" color="primary" class="q-mr-sm" v-if="this.currentStep !== 0"/>
+          <q-btn @click="goToNextStep" label="próximo" color="primary" :disabled="isNextButtonDisabled" v-if="currentStep !== 2"/>
+          <q-btn @click="saveTalhoes" label="Salvar" color="deep-orange" v-if="currentStep === 2"/>
+        </div>
       </div>
     </q-modal-layout>
   </q-modal>
@@ -152,6 +154,7 @@
   import SafraService from "../../assets/js/service/safra/SafraService";
   import apNoResults from 'components/ApNoResults'
   import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
+  import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
 
   export default {
     name: "NewAreaModal",
@@ -163,6 +166,7 @@
         isModalOpened: false,
         areaService: new AreaService(),
         safraService: new SafraService(),
+        safraCulturaService: new SafraCulturaService(),
         unidadeMedidaService: new UnidadeMedidaService(),
         selectedSafraCultura: null,
         currentStep: 0,
@@ -204,6 +208,22 @@
       closeModal(){
         this.isModalOpened = false;
         this.resetStepper();
+      },
+      saveTalhoes(){
+        console.log('saveTalhoes', this.selectedSafraCultura);
+        this.safraCulturaService.addTalhoes(
+          this.selectedSafraCultura.safra.id,
+          this.selectedSafraCultura.id,
+          {'talhoes':this.getNotEmptyTalhoes()}
+        ).then(()=>{
+          this.$q.notify({type: 'positive', message: 'Área adicionada com sucesso'});
+          this.closeModal();
+          this.$root.$emit('refreshAreasTab');
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          this.$q.loading.hide();
+        })
       },
       resetStepper(){
         this.$refs.stepperNovaArea.goToSlide(0);
@@ -280,22 +300,22 @@
       addTalhao(safraCulturaTalhao){
         this.selectedArea.talhoes.push(safraCulturaTalhao);
       },
-      getUnidadesMedida:function(){
+      getUnidadesMedida(){
         this.$q.loading.show();
         this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
           this.unidadesMedida = unidades;
           this.$q.loading.hide();
         })
       },
-      getUnidadesArea:function(){
+      getUnidadesArea(){
         this.unidadeMedidaService.listUnidadesArea().then(unidades => {
           this.unidadesArea = unidades;
         })
       },
-      getUnidadeMedidaById: function(id){
+      getUnidadeMedidaById(id){
         return this.unidadesMedida.filter(unidade => unidade.id === id)[0];
       },
-      getUnidadeAreaById: function(id){
+      getUnidadeAreaById(id){
         return this.unidadesArea.filter(unidade => unidade.id === id)[0];
       },
       goToNextStep(){
@@ -309,7 +329,7 @@
 </script>
 
 <style>
-  .ap-modal.modal.minimized .modal-content{
+  .new-area-modal.modal.minimized .modal-content{
     max-width: 90vw;
     max-height: 90vh;
     width: 90vw;
@@ -317,11 +337,11 @@
     overflow: hidden;
   }
 
-  .ap-modal .q-layout-header{
+  .new-area-modal .q-layout-header{
     box-shadow: none;
   }
 
-  .ap-modal .q-layout-footer{
+  .new-area-modal .q-layout-footer{
     box-shadow: none;
   }
 </style>

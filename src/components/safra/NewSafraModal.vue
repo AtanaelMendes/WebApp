@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="isModalOpened" minimized @hide="closeModal" :content-css="{minWidth: '300px'}">
+  <q-modal v-model="isModalOpened" class="new-safra-modal" minimized @hide="closeModal" :content-css="{minWidth: '300px'}">
     <q-modal-layout>
       <div class="q-pa-md q-title text-center" slot="header">
         Nova Safra
@@ -151,6 +151,12 @@
   }
 </script>
 
-<style scoped>
+<style>
+  .new-safra-modal .q-layout-header{
+    box-shadow: none;
+  }
 
+  .new-safra-modal .q-layout-footer{
+    box-shadow: none;
+  }
 </style>
