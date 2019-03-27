@@ -23,8 +23,8 @@
       </template>
     </toolbar>
 
-    <div class="row space-end" v-if="armazens">
-      <div class="col-12">
+    <div class="row space-end" >
+      <div class="col-12" v-if="armazens">
 
         <q-list no-border separator highlight>
           <q-item v-for="armazem in armazens" :key="armazem.nome">
@@ -63,11 +63,13 @@
         </q-list>
 
       </div>
+
+      <div v-if="isEmptyList" class="no-result col-12">
+        <ap-no-results />
+      </div>
     </div>
 
-    <div v-if="isEmptyList" class="no-result">
-      <ap-no-results />
-    </div>
+
 
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
       <q-btn round color="deep-orange" @click="addArmazem" icon="add" size="20px" />
@@ -214,5 +216,22 @@
 <style scoped>
   .space-end{
     margin-bottom: 300px;
+  }
+  .no-result{
+    text-align: center;
+    padding-top: 150px;
+  }
+
+  .no-result img{
+    width: 120px;
+    height: auto;
+  }
+
+  .no-result span{
+    display: block;
+    margin-top: 30px;
+    font-size: 25px;
+    font-weight: 300;
+    color: #ababab;
   }
 </style>

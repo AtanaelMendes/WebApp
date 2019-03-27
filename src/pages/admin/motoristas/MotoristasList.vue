@@ -23,9 +23,9 @@
       </template>
     </toolbar>
 
-    <div class="row q-pa-md gutter-sm" v-if="motoristas">
+    <div class="row q-pa-md gutter-sm space-end">
 
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 " v-for="motorista in motoristas" :key="motorista.id">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 " v-if="motoristas" v-for="motorista in motoristas" :key="motorista.id">
       <!--<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="motorista in motoristas" :key="motorista.id">-->
         <!--<q-card @click.native="viewMotorista(motorista.id)" class="full-height">-->
         <q-card class="full-height">
@@ -58,11 +58,13 @@
           </q-card-media>
         </q-card>
       </div>
+
+      <div v-if="isEmptyList" class="no-result col-12">
+        <ap-no-results />
+      </div>
     </div>
 
-    <div v-if="isEmptyList" class="no-result">
-      <ap-no-results />
-    </div>
+
 
     <!--MODAL ADD FOTO MOTORISTA-->
     <q-modal v-model="modalAddFotoMotorista" maximized no-backdrop-dismiss>
@@ -233,17 +235,24 @@
 </script>
 
 <style scoped>
-  .list-empty{
-    height: 55px;
-    text-align: center;
-    padding-top: 15px;
-    color: #8c8c8c;
-    font-weight: bold;
-    font-size: 20px;
+  .space-end{
+    margin-bottom: 300px;
   }
-  .list-empty i{
-    color: #ffb500;
-    font-size: 20px;
-    margin-right: 6px;
+  .no-result{
+    text-align: center;
+    padding-top: 150px;
+  }
+
+  .no-result img{
+    width: 120px;
+    height: auto;
+  }
+
+  .no-result span{
+    display: block;
+    margin-top: 30px;
+    font-size: 25px;
+    font-weight: 300;
+    color: #ababab;
   }
 </style>
