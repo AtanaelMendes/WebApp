@@ -1,33 +1,33 @@
 <template>
-  <q-modal key="editMotorista" v-model="isModalOpened" maximized @hide="closeModal">
-    <div class="row justify-center items-center q-px-md" style="min-height: 80vh">
-
-      <div class="col-12 text-center q-display-1">
+  <q-modal v-model="isModalOpened" minimized @hide="closeModal" :content-css="{minWidth: '300px', minHeight:'250px'}">
+    <q-modal-layout>
+      <div class="q-pa-md q-title text-center" slot="header">
         Novo Motorista
       </div>
 
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" @keyup.enter.prevent.default="saveMotorista()">
+      <div class="row q-pa-md">
+        <div class="col-12" @keyup.enter="saveMotorista()">
 
-        <q-field :error="motorista.nome.error" :error-label="motorista.nome.errorMessage">
-          <q-input v-model="motorista.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
-        </q-field>
+          <q-field :error="motorista.nome.error" :error-label="motorista.nome.errorMessage">
+            <q-input v-model="motorista.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
+          </q-field>
 
+        </div>
       </div>
-    </div>
 
-    <q-page-sticky position="bottom-right" :offset="[30, 30]">
-      <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-      <q-btn label="salvar" color="primary" @click="saveMotorista"/>
-    </q-page-sticky>
-
+      <div class="q-pa-md text-right" slot="footer">
+        <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
+        <q-btn label="salvar" color="primary" @click="saveMotorista"/>
+      </div>
+    </q-modal-layout>
   </q-modal>
 </template>
+
 <script>
   import MotoristaService from "assets/js/service/motorista/MotoristaService";
   export default {
-    name: "edit-motorista-modal",
-    components:{},
-    data () {
+    name: "add-motorista-modal",
+    data(){
       return {
         isModalOpened: false,
         selectMotoristaId: null,
@@ -47,6 +47,11 @@
       },
       closeModal: function(){
         this.isModalOpened = false;
+      },
+      clearFields: function(){
+        this.grupoEconomico.nome.value = null;
+        this.grupoEconomico.nome.error = false;
+        this.grupoEconomico.nome.errorMessage = null;
       },
       nomeIsValid: function(){
         if(this.motorista.nome.value === null || this.motorista.nome.value === ''){
@@ -97,8 +102,10 @@
         this.motorista.nome.error = false;
         this.motorista.nome.errorMessage = null;
       },
-    },
+    }
   }
 </script>
+
 <style scoped>
+
 </style>
