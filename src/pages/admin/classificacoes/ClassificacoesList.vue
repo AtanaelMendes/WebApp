@@ -26,9 +26,11 @@
     <div class="row space-end" >
 
       <div class="col-12" v-if="classificacoes">
-        <q-list highlight no-border separator>
+        <q-list highlight no-border inset-separator>
 
           <q-item v-for="classificacao in classificacoes" :key="classificacao.id">
+
+            <q-item-side icon="assessment"/>
             <q-item-main>
               <q-item-tile>
                 {{classificacao.nome}}
