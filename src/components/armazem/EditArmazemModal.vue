@@ -1,44 +1,45 @@
 <template>
-  <q-modal key="addArmazem" v-model="isModalOpened" maximized @hide="closeModal">
-
-    <div class="row justify-center items-center q-px-md" style="min-height: 80vh">
-
-      <div class="col-12 text-center q-display-1">
-        Novo Armazém
+  <q-modal v-model="isModalOpened" minimized @hide="closeModal" :content-css="{minWidth: '300px', minHeight:'250px'}">
+    <q-modal-layout>
+      <div class="q-pa-md q-title text-center" slot="header">
+        Editar Armazém
       </div>
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" @keyup.enter="editArmazem()">
 
-        <q-field class="q-mb-sm" :error="armazem.nome.error" :error-label="armazem.nome.errorMessage">
-          <q-input v-model="armazem.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
-        </q-field>
+      <div class="row q-pa-md">
+        <div class="col-12" @keyup.enter="editArmazem()">
 
-        <q-field class="q-mb-sm" :error="armazem.localizacaoId.error" :error-label="armazem.localizacaoId.errorMessage">
-          <q-select :options="localizacaoOptions" float-label="Localização" v-model="armazem.localizacaoId.value" @input="clearErrorMessage()"/>
-        </q-field>
+          <q-field class="q-mb-sm" :error="armazem.nome.error" :error-label="armazem.nome.errorMessage">
+            <q-input v-model="armazem.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
+          </q-field>
 
+          <q-field class="q-mb-sm" :error="armazem.localizacaoId.error" :error-label="armazem.localizacaoId.errorMessage">
+            <q-select :options="localizacaoOptions" float-label="Localização" v-model="armazem.localizacaoId.value" @input="clearErrorMessage()"/>
+          </q-field>
+
+        </div>
       </div>
-    </div>
 
-    <q-page-sticky position="bottom-right" :offset="[30, 30]">
-      <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-      <q-btn label="salvar" color="primary" @click="editArmazem"/>
-    </q-page-sticky>
-
+      <div class="q-pa-md text-right" slot="footer">
+        <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
+        <q-btn label="salvar" color="primary" @click="editArmazem"/>
+      </div>
+    </q-modal-layout>
   </q-modal>
 </template>
+
 <script>
   import localizacaoSelect from 'components/LocalizacaoSelect.vue'
   import ArmazemService from "assets/js/service/armazem/ArmazemService";
   import LocalizacaoService from "assets/js/service/localizacao/LocalizacaoService";
   export default {
-    name: "add-armazem-modal",
+    name: "edit-armazem-modal",
     components:{
       localizacaoSelect,
     },
-    data () {
+    data(){
       return {
-        selectedArmazem: null,
         isModalOpened: false,
+        selectedArmazemId: null,
         armazemService: new ArmazemService(),
         localizacaoService: new LocalizacaoService(),
         localizacaoOptions: [],
@@ -75,13 +76,13 @@
         this.isModalOpened = true;
         this.listLocalizacao();
         this.getArmazemById(id);
-        this.selectedArmazem = id;
+        this.selectedArmazemId = id;
       },
       closeModal: function(){
         this.isModalOpened = false;
       },
       clearFields: function(){
-        this.selectedArmazem = null;
+        this.selectedArmazemId = null;
         this.armazem.nome.value = null;
         this.armazem.nome.error = false;
         this.armazem.nome.errorMessage = null;
@@ -137,7 +138,7 @@
           localizacao_id: this.armazem.localizacaoId.value,
         };
         this.$q.loading.show();
-        this.armazemService.updateArmazem(this.selectedArmazem, params).then(() => {
+        this.armazemService.updateArmazem(this.selectedArmazemId, params).then(() => {
           this.$q.notify({type: 'positive', message: 'Armazém atualizado com sucesso.'});
           this.$q.loading.hide();
           this.$root.$emit('refreshArmazensList');
@@ -149,8 +150,10 @@
           this.$q.notify({type: 'negative', message: 'Não foi possível salvar as alterações'})
         })
       },
-    },
+    }
   }
 </script>
+
 <style scoped>
+
 </style>

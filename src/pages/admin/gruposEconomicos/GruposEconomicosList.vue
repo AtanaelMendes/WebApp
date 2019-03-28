@@ -1,6 +1,6 @@
 <template>
   <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Armazéns" searchable navigation_type="menu" @search_changed="listBySearch">
+    <toolbar slot="toolbar" title="Grupos econômicos" searchable navigation_type="menu" @search_changed="listBySearch">
       <template slot="action_itens">
         <q-btn flat round dense icon="tune" >
           <q-popover anchor="bottom left">
@@ -23,38 +23,43 @@
       </template>
     </toolbar>
 
-    <div class="row space-end" >
-      <div class="col-12" v-if="armazens">
+    <div class="row space-end " v-if="gruposEconomicos">
+      <div class="col-12">
 
-        <q-list no-border inset-separator highlight>
-          <q-item v-for="armazem in armazens" :key="armazem.nome">
+        <q-list no-border inset-separator highlight link>
+          <q-item v-for="grupoEconomico in gruposEconomicos" :key="grupoEconomico.nome" @click.native="viewGrupoEconomico(grupoEconomico.id)">
 
-            <q-item-side icon="location_city"/>
+            <!--<q-item-side>-->
+              <!--<q-btn :key="grupoEconomico.nome"  round color="primary" dense>-->
+                <!--<span class="q-title text-white">-->
+                  <!--{{grupoEconomico.nome.substring(0,1)}}-->
+                <!--</span>-->
+              <!--</q-btn>-->
+            <!--</q-item-side>-->
+
+            <q-item-side icon="group_work"/>
             <q-item-main>
 
               <q-item-tile>
-                {{armazem.nome}}
+                {{grupoEconomico.nome}}
               </q-item-tile>
 
-              <q-item-tile sublabel>
-                {{armazem.endereco}}
-              </q-item-tile>
             </q-item-main>
 
             <q-item-side>
               <q-btn @click.prevent.stop round flat dense icon="more_vert">
                 <q-popover>
                   <q-list link>
-                    <q-item v-close-overlay @click.native="editArmazem(armazem.id)">
+                    <q-item v-close-overlay @click.native="editGrupoEconomico(grupoEconomico.id)">
                       <q-item-main label="Editar"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="archiveArmazem(armazem.id)" v-if="!armazem.deleted_at">
+                    <q-item v-close-overlay @click.native="archiveGrupoEconomico(grupoEconomico.id)" v-if="!grupoEconomico.deleted_at">
                       <q-item-main label="Arquivar"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="restoreArmazem(armazem.id)" v-if="armazem.deleted_at">
+                    <q-item v-close-overlay @click.native="restoreGrupoEconomico(grupoEconomico.id)" v-if="grupoEconomico.deleted_at">
                       <q-item-main label="Ativar"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="deleteArmazem(armazem.id)">
+                    <q-item v-close-overlay @click.native="deleteGrupoEconomico(grupoEconomico.id)">
                       <q-item-main label="Excluir"/>
                     </q-item>
                   </q-list>
@@ -71,12 +76,15 @@
       </div>
     </div>
 
+
+
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
-      <q-btn round color="deep-orange" @click="addArmazem" icon="add" size="20px" />
+      <q-btn round color="deep-orange" @click="addGrupoEconomico" icon="add" size="20px" />
     </q-page-sticky>
 
-    <add-armazem-modal ref="addArmazemModal"/>
-    <edit-armazem-modal ref="editArmazemModal"/>
+    <add-grupo-economico-modal ref="addGrupoEconomicoModal"/>
+
+    <edit-grupo-economico-modal ref="editGrupoEconomicoModal"/>
 
   </custom-page>
 </template>
@@ -85,22 +93,22 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
-  import addArmazemModal from 'components/armazem/AddArmazemModal'
-  import editArmazemModal from 'components/armazem/EditArmazemModal'
-  import ArmazemService from "assets/js/service/armazem/ArmazemService";
+  import addGrupoEconomicoModal from 'components/grupoEconomico/AddGrupoEconomicoModal'
+  import editGrupoEconomicoModal from 'components/grupoEconomico/EditGrupoEconomicoModal'
+  import GrupoEconomicoService from "assets/js/service/GrupoEconomicoService"
   export default {
-    name: "armazens-list",
+    name: "grupos-economicos-list",
     components: {
       apNoResults,
       toolbar,
-      addArmazemModal,
-      editArmazemModal,
+      addGrupoEconomicoModal,
+      editGrupoEconomicoModal,
       customPage
     },
     data () {
       return {
-        armazemService: new ArmazemService(),
-        armazens: [],
+        grupoEconomicoService: new GrupoEconomicoService(),
+        gruposEconomicos: [],
         isEmptyList: false,
         filter: {
           type: 'non-trashed',
@@ -112,39 +120,40 @@
       filter: {
         handler: function(val, oldval) {
           var filter = {type: val.type, name:(val.name.length > 2 ? val.name : '')};
-          this.listArmazens(filter)
+          this.listGruposEconomicos(filter)
         },
         deep: true,
       }
     },
     computed: {
+
     },
     methods: {
       listBySearch: function(val){
         this.filter.nameOrPlaque = val;
       },
-      listArmazens: function(filter) {
+      listGruposEconomicos: function(filter) {
         this.$q.loading.show();
-        this.armazemService.listArmazens(filter).then(armazens => {
-          this.armazens = armazens;
-          this.isEmptyList = this.armazens.length === 0;
+        this.grupoEconomicoService.listGruposEconomicos(filter).then(response => {
           this.$q.loading.hide();
+          this.gruposEconomicos = response;
+          this.isEmptyList = this.gruposEconomicos.length === 0;
         }).catch(error => {
+          this.$q.loading.hide();
           console.log(error);
           this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações.'});
-          this.$q.loading.hide();
         });
       },
-      viewArmazem: function(id) {
-        this.$router.push({name: 'view_armazem', params: {id:id}});
+      viewGrupoEconomico: function(id) {
+        this.$router.push({name: 'view_grupo_economico', params: {id:id}});
       },
-      addArmazem: function(){
-        this.$refs.addArmazemModal.openModal()
+      addGrupoEconomico: function(){
+        this.$refs.addGrupoEconomicoModal.openModal()
       },
-      editArmazem: function(id){
-        this.$refs.editArmazemModal.openModal(id);
+      editGrupoEconomico: function(id){
+        this.$refs.editGrupoEconomicoModal.openModal(id);
       },
-      archiveArmazem: function(id){
+      archiveGrupoEconomico: function(id){
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente deseja arquivar o armazém?',
@@ -152,9 +161,9 @@
           color: 'primary'
         }).then(() =>{
           this.$q.loading.show();
-          this.armazemService.archiveArmazem(id).then(() =>{
+          this.grupoEconomicoService.archiveGrupoEconomico(id).then(() =>{
             this.$q.notify({type: 'positive', message: 'Armazém arquivado com sucesso.'});
-            this.listArmazens(this.filter);
+            this.listGruposEconomicos(this.filter);
             this.$q.loading.hide();
           }).catch(error =>{
             console.log(error);
@@ -164,7 +173,7 @@
         });
 
       },
-      restoreArmazem: function(id){
+      restoreGrupoEconomico: function(id){
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente deseja resturar esse armazém?',
@@ -172,9 +181,9 @@
           color: 'primary'
         }).then(() =>{
           this.$q.loading.show();
-          this.armazemService.restoreArmazem(id).then(response =>{
+          this.grupoEconomicoService.restoreGrupoEconomico(id).then(response =>{
             this.$q.notify({type: 'positive', message: 'Armazém ativado com sucesso.'});
-            this.listArmazens(this.filter);
+            this.listGruposEconomicos(this.filter);
             this.$q.loading.hide();
           }).catch(error =>{
             console.log(error);
@@ -184,7 +193,7 @@
         });
 
       },
-      deleteArmazem: function(id){
+      deleteGrupoEconomico: function(id){
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente deseja excluir este armazém?',
@@ -192,9 +201,9 @@
           color: 'primary'
         }).then(() =>{
           this.$q.loading.show();
-          this.armazemService.deleteArmazem(id).then(() => {
+          this.grupoEconomicoService.deleteGrupoEconomico(id).then(() => {
             this.$q.notify({type: 'positive', message: 'Armazém excluido com sucesso.'});
-            this.listArmazens(this.filter);
+            this.listGruposEconomicos(this.filter);
             this.$q.loading.hide();
           }).catch(error =>{
             console.log(error);
@@ -205,9 +214,9 @@
       },
     },
     mounted () {
-      this.listArmazens(this.filter);
-      this.$root.$on('refreshArmazensList', () => {
-        this.listArmazens(this.filter);
+      this.listGruposEconomicos(this.filter);
+      this.$root.$on('refreshGruposEconomicosList', () => {
+        this.listGruposEconomicos(this.filter);
       });
     },
   }

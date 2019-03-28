@@ -23,7 +23,7 @@
             <q-item class="q-px-none">
               <q-item-main>
                 <q-input v-model="grupoEconomicoSearchTerms" placeholder="Grupo Econômico" :after="[{icon:'arrow_drop_down'}]" @blur="checkGrupoEconomicoInput">
-                  <q-autocomplete @search="search" @selected="setGrupoEconomico" :min-characters="0" :debounce="500" value-field="label"/>
+                  <q-autocomplete @search="searchGrupoEconomico" @selected="setGrupoEconomico" :min-characters="0" :debounce="500" value-field="label"/>
                 </q-input>
               </q-item-main>
 
@@ -162,11 +162,19 @@
           this.$q.loading.hide();
         });
       },
-      search (terms, done) {
-        this.grupoEconomicoService.searchGrupoEconomico(terms).then(result => {
-          this.tempGrupoEconomicoList = result;
-          done(result)
+      searchGrupoEconomico (terms, done) {
+        this.grupoEconomicoService.listGruposEconomicos(terms).then(result => {
+          this.tempGrupoEconomicoList = this.parseGruposEconomicos(result);
+          done(this.tempGrupoEconomicoList)
         });
+      },
+      parseGruposEconomicos(gruposEconomicos) {
+        return gruposEconomicos.map(grupoEconomico => {
+          return {
+            label: grupoEconomico.nome,
+            id: grupoEconomico.id
+          }
+        })
       },
       createGrupoEconomico: function(){
         if(!this.grupoEconomico.isValid(this)){

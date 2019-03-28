@@ -23,12 +23,14 @@
       </template>
     </toolbar>
 
-    <div class="row space-end" v-if="classificacoes">
+    <div class="row space-end" >
 
-      <div class="col-12">
-        <q-list highlight no-border separator>
+      <div class="col-12" v-if="classificacoes">
+        <q-list highlight no-border inset-separator>
 
           <q-item v-for="classificacao in classificacoes" :key="classificacao.id">
+
+            <q-item-side icon="assessment"/>
             <q-item-main>
               <q-item-tile>
                 {{classificacao.nome}}
@@ -59,11 +61,13 @@
 
         </q-list>
       </div>
+
+      <div v-if="isEmptyList" class="no-result col-12">
+        <ap-no-results />
+      </div>
     </div>
 
-    <div v-if="isEmptyList" class="no-result">
-      <ap-no-results />
-    </div>
+
 
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
       <q-btn round color="deep-orange" @click="addClassificacao" icon="add" size="20px" />

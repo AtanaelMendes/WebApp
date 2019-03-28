@@ -9,7 +9,7 @@
         <!--HEADER-->
         <div class="col-12" :key="safra.id" >
 
-          <q-item style="border-bottom-style: solid;   border-width: 1px; border-color: #e0e0e0">
+          <q-item style="border-bottom-style: solid; border-width: 1px; border-color: #e0e0e0">
             <q-item-main class="q-title">
               <span v-if="!safra.is_safrinha">Safra</span>
               <span v-if="safra.is_safrinha">Safrinha</span>

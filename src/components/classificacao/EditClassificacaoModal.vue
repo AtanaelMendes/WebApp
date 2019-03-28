@@ -1,31 +1,34 @@
 <template>
-  <q-modal key="addArmazem" v-model="isModalOpened" maximized @hide="closeModal">
-
-    <div class="row justify-center items-center q-px-md" style="min-height: 80vh">
-
-      <div class="col-12 text-center q-display-1">
+  <q-modal v-model="isModalOpened" minimized @hide="closeModal" :content-css="{minWidth: '300px', minHeight:'250px'}">
+    <q-modal-layout>
+      <div class="q-pa-md q-title text-center" slot="header">
         Editar Classificação
       </div>
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" @keyup.enter="updateClassificacao()">
-        <q-field class="q-mb-sm" :error="classificacao.nome.error" :error-label="classificacao.nome.errorMessage">
-          <q-input v-model="classificacao.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
-        </q-field>
+
+      <div class="row q-pa-md">
+        <div class="col-12" @keyup.enter="updateClassificacao()">
+
+          <q-field :error="classificacao.nome.error" :error-label="classificacao.nome.errorMessage">
+            <q-input v-model="classificacao.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
+          </q-field>
+
+        </div>
       </div>
-    </div>
 
-    <q-page-sticky position="bottom-right" :offset="[30, 30]">
-      <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-      <q-btn label="salvar" color="primary" @click="updateClassificacao"/>
-    </q-page-sticky>
-
+      <div class="q-pa-md text-right" slot="footer">
+        <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
+        <q-btn label="salvar" color="primary" @click="updateClassificacao"/>
+      </div>
+    </q-modal-layout>
   </q-modal>
 </template>
+
 <script>
   import ClassificacaoService from "assets/js/service/ClassificacaoService";
   export default {
     name: "edit-classificacao-modal",
     components:{},
-    data () {
+    data(){
       return {
         isModalOpened: false,
         selectClassificacaoId: null,
@@ -107,8 +110,10 @@
         this.classificacao.nome.error = false;
         this.classificacao.nome.errorMessage = null;
       },
-    },
+    }
   }
 </script>
+
 <style scoped>
+
 </style>

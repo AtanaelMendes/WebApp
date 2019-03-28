@@ -8,72 +8,45 @@
 
         <!--HEADER CULTURA-->
         <div class="col-12" :key="cultura.nome">
-          <div class="row bg-blue-grey-1">
+          <div class="row ">
 
             <div class="col-12">
-              <q-item>
-                <q-item-side>
-                  <q-item-tile avatar>
-                    <img src="statics/images/no-image-1-1.svg" v-if="!cultura.image"/>
-                    <img :src="cultura.image" v-if="cultura.image" class="fit"/>
-                  </q-item-tile>
-                </q-item-side>
-                <q-item-main class="q-title">
-                  {{cultura.nome}}
-                </q-item-main>
-                <q-item-side>
-                  <q-btn dense class="q-mr-xs" icon="edit" @click.native="editCultura(cultura)" flat round color="primary"/>
-                  <q-btn color="grey-7" round flat dense icon="more_vert">
-                    <q-popover>
-                      <q-list link class="no-border">
-                        <q-item v-close-overlay @click.native="addFotoCultura(cultura.id)">
-                          <q-item-main label="Atualizar Foto"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="archiveCultura(cultura.id)" v-if="!cultura.deleted_at">
-                          <q-item-main label="Arquivar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="restoreCultura(cultura.id)" v-if="cultura.deleted_at">
-                          <q-item-main label="Ativar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
-                          <q-item-main label="Excluir"/>
-                        </q-item>
-                      </q-list>
-                    </q-popover>
-                  </q-btn>
-                </q-item-side>
-              </q-item>
+              <q-list no-border highlight>
+                <q-item style="border-bottom-style: solid; border-width: 1px; border-color: #e0e0e0">
+                  <q-item-side>
+                    <q-item-tile image>
+                      <!--<ap-image size="400x250" :file-name="cultura.image" />-->
+                      <img src="statics/images/no-image-1-1.svg" v-if="!cultura.image"/>
+                      <img :src="cultura.image" v-if="cultura.image" class="fit"/>
+                    </q-item-tile>
+                  </q-item-side>
+                  <q-item-main class="q-title">
+                    {{cultura.nome}}
+                  </q-item-main>
+                  <q-item-side>
+                    <q-btn dense class="q-mr-xs" icon="edit" @click.native="editCultura(cultura)" flat round color="primary"/>
+                    <q-btn color="grey-7" round flat dense icon="more_vert">
+                      <q-popover>
+                        <q-list link class="no-border">
+                          <q-item v-close-overlay @click.native="addFotoCultura(cultura.id)">
+                            <q-item-main label="Atualizar Foto"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="archiveCultura(cultura.id)" v-if="!cultura.deleted_at">
+                            <q-item-main label="Arquivar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="restoreCultura(cultura.id)" v-if="cultura.deleted_at">
+                            <q-item-main label="Ativar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
+                            <q-item-main label="Excluir"/>
+                          </q-item>
+                        </q-list>
+                      </q-popover>
+                    </q-btn>
+                  </q-item-side>
+                </q-item>
+              </q-list>
             </div>
-
-            <!--<div class="col-6 q-title self-center q-pa-md">-->
-              <!--{{cultura.nome}}-->
-            <!--</div>-->
-
-            <!--<div class="col-6" style="max-height: 50px; overflow: hidden">-->
-              <!--<img :src="cultura.image" v-if="cultura.image" class="full-width"/>-->
-            <!--</div>-->
-
-            <!--<div class="col-6 self-center" align="end">-->
-              <!--<q-btn dense class="q-mr-xs" icon="edit" @click.native="editCultura(cultura)" flat round color="primary"/>-->
-              <!--<q-btn color="grey-7" round flat dense icon="more_vert">-->
-                <!--<q-popover>-->
-                  <!--<q-list link class="no-border">-->
-                    <!--<q-item v-close-overlay @click.native="addFotoCultura(cultura.id)">-->
-                      <!--<q-item-main label="Atualizar Foto"/>-->
-                    <!--</q-item>-->
-                    <!--<q-item v-close-overlay @click.native="archiveCultura(cultura.id)" v-if="!cultura.deleted_at">-->
-                      <!--<q-item-main label="Arquivar"/>-->
-                    <!--</q-item>-->
-                    <!--<q-item v-close-overlay @click.native="restoreCultura(cultura.id)" v-if="cultura.deleted_at">-->
-                      <!--<q-item-main label="Ativar"/>-->
-                    <!--</q-item>-->
-                    <!--<q-item v-close-overlay @click.native="deleteCultura(cultura.id)">-->
-                      <!--<q-item-main label="Excluir"/>-->
-                    <!--</q-item>-->
-                  <!--</q-list>-->
-                <!--</q-popover>-->
-              <!--</q-btn>-->
-            <!--</div>-->
 
           </div>
         </div>
@@ -820,16 +793,17 @@
     import Cultivar from 'assets/js/model/cultura/Cultivar'
     import imapeUpload from 'components/ImageUpload'
     import apNoResults from 'components/ApNoResults'
-    import CulturaService from "../../../assets/js/service/cultura/CulturaService";
-
+    import CulturaService from "assets/js/service/cultura/CulturaService";
+    import apImage from 'components/ApImage'
     export default {
       name: "cultura-list-view",
       components: {
-        apNoResults,
         toolbar,
+        apImage,
         customPage,
-        customInputText,
-        imapeUpload
+        apNoResults,
+        imapeUpload,
+        customInputText
       },
       data () {
         return {

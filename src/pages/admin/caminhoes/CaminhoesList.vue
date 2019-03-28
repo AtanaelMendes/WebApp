@@ -23,9 +23,9 @@
       </template>
     </toolbar>
 
-    <div class="row q-pa-md gutter-sm space-end" v-if="caminhoes">
+    <div class="row q-pa-md gutter-sm space-end">
 
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 " v-for="caminhao in caminhoes" :key="caminhao.id">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 " v-if="caminhoes" v-for="caminhao in caminhoes" :key="caminhao.id">
         <q-card class="full-height">
       <!--<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 cursor-pointer" v-for="caminhao in caminhoes" :key="caminhao.id">-->
         <!--<q-card @click.native="viewCaminhao(caminhao.id)" class="full-height">-->
@@ -73,11 +73,13 @@
           </q-list>
         </q-card>
       </div>
+
+      <div v-if="isEmptyList" class="no-result col-12">
+        <ap-no-results />
+      </div>
     </div>
 
-    <div v-if="isEmptyList" class="no-result">
-      <ap-no-results />
-    </div>
+
 
     <!--MODAL ADD FOTO CAMINHAO-->
     <q-modal v-model="modalAddFotoCaminhao" maximized no-backdrop-dismiss>
@@ -280,17 +282,21 @@
   .space-end{
     margin-bottom: 300px;
   }
-  .list-empty{
-    height: 55px;
+  .no-result{
     text-align: center;
-    padding-top: 15px;
-    color: #8c8c8c;
-    font-weight: bold;
-    font-size: 20px;
+    padding-top: 150px;
   }
-  .list-empty i{
-    color: #ffb500;
-    font-size: 20px;
-    margin-right: 6px;
+
+  .no-result img{
+    width: 120px;
+    height: auto;
+  }
+
+  .no-result span{
+    display: block;
+    margin-top: 30px;
+    font-size: 25px;
+    font-weight: 300;
+    color: #ababab;
   }
 </style>
