@@ -318,6 +318,11 @@
       getUnidadeAreaById(id){
         return this.unidadesArea.filter(unidade => unidade.id === id)[0];
       },
+      checkInputMaxSize: function(value, talhao){
+        if(value > talhao.tamanho){
+          this.getTalhaoById(talhao.id).tamanho = talhao.tamanho
+        }
+      },
       goToNextStep(){
         this.$refs.stepperNovaArea.next();
       },

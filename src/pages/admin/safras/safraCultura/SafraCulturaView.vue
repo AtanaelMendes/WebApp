@@ -3,12 +3,25 @@
 
     <toolbar slot="toolbar" :title="safraCultura.cultura.nome + ' ' + safraCultura.safra.ano_inicio + '/' + safraCultura.safra.ano_fim"
              navigation_type="back" @navigation_clicked="backAction" >
+
+      <template slot="action_itens" >
+        <q-btn flat round dense icon="edit" @click.native="editSafraCultura(safraCultura.id)"/>
+        <q-btn flat round dense icon="more_vert" >
+          <!--<q-popover anchor="bottom left">
+            <q-list link>
+              <q-item @click.native="archiveAccount(account.id)">
+                <q-item-main label="Arquivar usuário"/>
+              </q-item>
+            </q-list>
+          </q-popover>-->
+        </q-btn>
+      </template>
+
       <div slot="tabs">
         <q-tabs v-model="currentTab">
           <q-tab slot="title" name="tab-resumo" label="resumo" default @select="selectTabResumo()"/>
           <q-tab slot="title" name="tab-areas" label="areas" @select="selectTabAreas()"/>
           <q-tab slot="title" name="tab-cultivares" label="cultivares" @select="selectTabCultivares()"/>
-          <!-- <q-tab slot="title" name="tab-negocios" label="negocios"/> -->
         </q-tabs>
       </div>
     </toolbar>
@@ -19,6 +32,9 @@
     <areas-tab ref="areasTab" :visible="currentTab === 'tab-areas'"/>
     <!-- CULTIVARES -->
     <cultivares-tab ref="cultivaresTab" :visible="currentTab === 'tab-cultivares'" />
+
+
+    <edit-cultura-modal ref="editCulturaModal" />
   </custom-page>
 </template>
 
@@ -31,6 +47,7 @@
   import resumoTab from 'components/safra/ResumoTab.vue'
   import cultivaresTab from 'components/safra/CultivaresTab.vue'
   import SafraCulturaService from "../../../../assets/js/service/safra/SafraCulturaService";
+  import editCulturaModal from 'components/safra/EditCulturaModal'
 
   export default {
     name: "safra-cultura",
@@ -42,6 +59,7 @@
       areasTab,
       resumoTab,
       cultivaresTab,
+      editCulturaModal,
     },
     data () {
       return {
@@ -54,18 +72,32 @@
       selectTabResumo(){
         this.$refs.resumoTab.init(this.safraCultura)
       },
-      selectTabAreas: function () {
+      selectTabAreas() {
         this.$refs.areasTab.init(this.safraCultura)
       },
-      selectTabCultivares: function () {
+      selectTabCultivares() {
         this.$refs.cultivaresTab.init(this.safraCultura)
       },
-      getSafraCultura: function(force = false){
-        this.$q.loading.show();
-        this.safraCulturaService.getSafraCultura(this.safra_id, this.id).then(safraCultura => {
-          this.safraCultura = safraCultura;
-          this.$q.loading.hide();
+      async getSafraCultura(){
+        return new Promise((resolve, reject) => {
+          this.$q.loading.show();
+          this.safraCulturaService.getSafraCultura(this.safra_id, this.id).then(safraCultura => {
+            this.safraCultura = safraCultura;
+            this.$q.loading.hide();
+            return resolve()
+          })
+        });
+      },
+      editSafraCultura(){
+        this.$refs.editCulturaModal.openModal(this.safraCultura);
+      },
+      updateView(){
+        this.getSafraCultura().then(()=>{
+          this.$refs.resumoTab.init(this.safraCultura);
+          this.$refs.areasTab.init(this.safraCultura);
+          this.$refs.cultivaresTab.init(this.safraCultura);
         })
+
       },
       backAction: function () {
         this.$router.back()
@@ -74,7 +106,11 @@
     mounted () {
       this.id = this.$route.params.id;
       this.safra_id = this.$route.params.safra_id;
+      this.$root.$on('refreshSafrasCulura', this.updateView);
       this.getSafraCultura();
+    },
+    destroyed() {
+      this.$root.$off('refreshSafrasCulura', this.updateView);
     }
   }
 </script>

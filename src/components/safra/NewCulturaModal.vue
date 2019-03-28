@@ -73,7 +73,7 @@
     methods: {
       openModal(safraId){
         this.isModalOpened = true;
-        this.safraId = safraId
+        this.safraId = safraId;
         this.getCulturas();
         this.getUnidadesMedida();
         this.getUnidadesArea();
