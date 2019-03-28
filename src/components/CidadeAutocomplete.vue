@@ -33,7 +33,7 @@
         let result = this.tempCidadeList.filter(item => ('' + item['label']).toLowerCase() === this.terms.toLowerCase());
         if(result.length === 0){
           this.terms = '';
-          this.$emit('input', '')
+          this.$emit('input', '');
           this.clearErrorMessage();
         }else{
           this.$emit('input', result[0])

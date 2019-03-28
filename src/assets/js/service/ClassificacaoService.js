@@ -20,11 +20,10 @@ export default class ClassificacaoService {
         reject(error)
       })
     });
-  }
-
-  getClassificacaoById(id) {
+  };
+  getClassificacaoById(classificacaoId) {
     return new Promise((resolve, reject) => {
-      ClassificacaoAPI.getClassificacaoById(id).then(response => {
+      ClassificacaoAPI.getClassificacaoById(classificacaoId).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -35,7 +34,6 @@ export default class ClassificacaoService {
       })
     });
   };
-
   addClassificacao(params) {
     return new Promise((resolve, reject) => {
       ClassificacaoAPI.addClassificacao(params).then(response => {
@@ -49,10 +47,48 @@ export default class ClassificacaoService {
       })
     });
   };
-
-  updateClassificacao(id, params) {
+  updateClassificacao(classificacaoId, params) {
     return new Promise((resolve, reject) => {
-      ClassificacaoAPI.updateClassificacao(params, id).then(response => {
+      ClassificacaoAPI.updateClassificacao(params, classificacaoId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  archiveClassificacao(classificacaoId) {
+    return new Promise((resolve, reject) => {
+      ClassificacaoAPI.archiveClassificacao(classificacaoId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  restoreClassificacao(classificacaoId) {
+    return new Promise((resolve, reject) => {
+      ClassificacaoAPI.restoreClassificacao(classificacaoId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  deleteClassificacao(classificacaoId) {
+    return new Promise((resolve, reject) => {
+      ClassificacaoAPI.deleteClassificacao(classificacaoId).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -64,45 +100,4 @@ export default class ClassificacaoService {
     });
   };
 
-  archiveClassificacao(id) {
-    return new Promise((resolve, reject) => {
-      ClassificacaoAPI.archiveClassificacao(id).then(response => {
-        if(response.status === 200){
-          resolve(response.data);
-        }else{
-          reject(response);
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
-
-  restoreClassificacao(id) {
-    return new Promise((resolve, reject) => {
-      ClassificacaoAPI.restoreClassificacao(id).then(response => {
-        if(response.status === 200){
-          resolve(response.data);
-        }else{
-          reject(response);
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
-
-  deleteClassificacao(id) {
-    return new Promise((resolve, reject) => {
-      ClassificacaoAPI.deleteClassificacao(id).then(response => {
-        if(response.status === 200){
-          resolve(response.data);
-        }else{
-          reject(response);
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
 }

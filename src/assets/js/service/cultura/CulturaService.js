@@ -23,6 +23,28 @@ export default class CulturaService{
     });
   };
 
+  searchCulturaByName(terms){
+    return new Promise((resolve, reject) => {
+      CulturaAPI.searchCulturaByName(terms).then( response => {
+        if(response.status === 200){
+          resolve(this.parseCulturas(response.data))
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  parseCulturas(culturas) {
+    return (culturas).map(cultura => {
+      return {
+        label: cultura.nome,
+        id: cultura.id
+      }
+    })
+  };
+
   saveCultura(params){
     return new Promise((resolve, reject) => {
       CulturaAPI.saveCultura(params).then(response => {

@@ -2,6 +2,7 @@ import Vue from 'vue';
 import CulturaClassificacaoAPI from "../../api/CulturaClassificacaoAPI";
 import CulturaClassificacaoRepository from "../../repository/resource/CulturaClassificacaoRepository";
 import ClassificacaoRepository from "../../repository/resource/ClassificacaoRepository";
+import ClassificacaoAPI from "../../api/ClassificacaoAPI";
 
 export default class CulturaClassificacaoService {
   #culturaClassificacaoRepository;
@@ -41,5 +42,83 @@ export default class CulturaClassificacaoService {
         })
       }
     });
-  }
+  };
+  getCulturasClassificacao(classificacaoId) {
+    return new Promise((resolve, reject) => {
+      CulturaClassificacaoAPI.getCulturasClassificacao(classificacaoId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  addCulturaClassificacao(params) {
+    return new Promise((resolve, reject) => {
+      CulturaClassificacaoAPI.addCulturaClassificacao(params).then(response => {
+        if(response.status === 201){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  updateCulturaClassificacao(CulturaClassificacaoId, params) {
+    return new Promise((resolve, reject) => {
+      CulturaClassificacaoAPI.updateCulturaClassificacao(CulturaClassificacaoId, params).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  archiveCulturaClassificacao(CulturaClassificacaoId) {
+    return new Promise((resolve, reject) => {
+      CulturaClassificacaoAPI.archiveCulturaClassificacao(CulturaClassificacaoId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  restoreCulturaClassificacao(CulturaClassificacaoId) {
+    return new Promise((resolve, reject) => {
+      CulturaClassificacaoAPI.restoreCulturaClassificacao(CulturaClassificacaoId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  deleteCulturaClassificacao(CulturaClassificacaoId) {
+    return new Promise((resolve, reject) => {
+      CulturaClassificacaoAPI.deleteCulturaClassificacao(CulturaClassificacaoId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
 }
