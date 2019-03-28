@@ -1,7 +1,7 @@
 <template>
   <q-modal v-model="isModalOpened" class="new-area-modal" minimized @hide="closeModal">
     <q-modal-layout>
-      <div class="q-pa-md q-title text-center" slot="header">
+      <div class="q-px-lg q-pb-sm q-pt-lg q-title" slot="header">
         Nova Área
       </div>
 
@@ -12,7 +12,7 @@
             <span class="q-subheading">Selecione uma área</span>
             <!--<q-input placeholder="Pesquisar" class=""/>-->
           </div>
-          <div class="q-pa-md">
+          <div class="q-pa-lg">
             <div class="row gutter-sm">
               <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" v-for="area in areas" :key="area.nome">
                 <q-card @click.native="setArea(area)">
@@ -34,12 +34,11 @@
         </q-carousel-slide>
 
         <!--PASSO 2 ADICIONAR TALHOES-->
-        <!--<q-carousel-slide v-bind:class="{'step-disabled':currentStep !== 1}" class="q-pa-none">-->
         <q-carousel-slide class="q-pa-none">
           <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
             <span class="q-subheading">Selecione os talhões</span>
           </div>
-          <div class="q-pa-md">
+          <div class="q-pa-lg">
             <div class="row gutter-sm" v-if="talhoes.length > 0">
               <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3" v-for="talhao in talhoes" :key="talhao.id">
                 <q-card>
@@ -109,7 +108,7 @@
           <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
             <span class="q-subheading">Resumo</span>
           </div>
-          <div class="q-pa-md">
+          <div class="q-pa-lg">
             <div class="row gutter-sm justify-center">
               <div class="col-xs-12 col-md-6 col-lg-4">
                 <q-list separator>
@@ -137,11 +136,11 @@
       </q-carousel>
 
       <div class="q-pa-md" slot="footer">
-        <q-btn @click="closeModal()" label="Cancelar" color="primary" />
+        <q-btn @click="closeModal()" flat label="Cancelar" color="primary" />
         <div class="float-right ">
-          <q-btn @click="goToPreviousStep" label="voltar" color="primary" class="q-mr-sm" v-if="this.currentStep !== 0"/>
-          <q-btn @click="goToNextStep" label="próximo" color="primary" :disabled="isNextButtonDisabled" v-if="currentStep !== 2"/>
-          <q-btn @click="saveTalhoes" label="Salvar" color="deep-orange" v-if="currentStep === 2"/>
+          <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="this.currentStep !== 0"/>
+          <q-btn @click="goToNextStep" flat label="próximo" color="primary" :disabled="isNextButtonDisabled" v-if="currentStep !== 2"/>
+          <q-btn @click="saveTalhoes" flat label="Salvar" color="deep-orange" v-if="currentStep === 2"/>
         </div>
       </div>
     </q-modal-layout>
