@@ -1,12 +1,12 @@
 <template>
   <q-modal v-model="isModalOpened" class="new-safra-modal" minimized @hide="closeModal" :content-css="{minWidth: '300px'}">
     <q-modal-layout>
-      <div class="q-pa-md q-title text-center" slot="header">
+      <div class="q-px-lg q-pb-sm q-pt-lg q-title" slot="header">
         Nova Safra
       </div>
 
-      <div class="q-pa-md">
-        <div class="" align="center">
+      <div class="q-mx-lg q-mb-lg">
+        <div class="q-my-md" align="center">
           <q-btn-toggle
             v-model="safra.safrinha.value"
             toggle-color="primary"
@@ -14,7 +14,7 @@
           />
         </div>
 
-        <div class="row">
+        <div class="row inline">
           <!--ANO INICIO-->
           <div class="col-6">
             <q-field :error="safra.inicio.errorMessage != null" class="q-mb-sm">
@@ -48,10 +48,10 @@
 
       </div>
 
-      <div class="q-pa-md text-right" slot="footer">
-        <q-btn @click.native="closeModal" color="primary" label="Cancelar" class="q-mr-xs"/>
-        <q-btn @click.native="saveSafra" label="Salvar" color="primary" v-if="!isEditMode"/>
-        <q-btn @click.native="updateSafra" label="Atualizar" color="primary" v-if="isEditMode"/>
+      <div class="q-pa-sm text-right" slot="footer">
+        <q-btn @click.native="closeModal" flat color="primary" label="Cancelar" class="q-mr-xs"/>
+        <q-btn @click.native="saveSafra" flat label="Salvar" color="primary" v-if="!isEditMode"/>
+        <q-btn @click.native="updateSafra" flat label="Atualizar" color="primary" v-if="isEditMode"/>
       </div>
     </q-modal-layout>
   </q-modal>
