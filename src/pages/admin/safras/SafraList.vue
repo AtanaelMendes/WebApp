@@ -66,9 +66,6 @@
                   <q-btn @click.stop round flat dense icon="more_vert" slot="right" color="white">
                     <q-popover>
                       <q-list link class="no-border">
-                        <q-item v-close-overlay v-if="!safraCultura.deleted_at" @click.native="editSafraCultura(safra.id, safraCultura)">
-                          <q-item-main label="Editar"/>
-                        </q-item>
                         <q-item v-close-overlay v-if="!safraCultura.deleted_at" @click.native="archiveSafraCultura(safra.id, safraCultura.id)">
                           <q-item-main label="Arquivar"/>
                         </q-item>
@@ -122,24 +119,6 @@
     <!--MODAL NEW SAFRA-->
     <new-safra-modal ref="newSafraModal" />
 
-    <!--MODAL EDIT SAFRA CULTURA-->
-    <!--<q-modal v-model="modalEditSafraCultura" minimized no-backdrop-dismiss>
-
-      <div class="row justify-center q-ma-lg">
-        <div class="col-12">
-          <q-select key="qtd" v-model="formEditSafraCultura.view_unidade_medida_id" :options="parsedUnidades(unidadesMedida)" float-label="Controlar quantidades em"/>
-          <q-select key="area" v-model="formEditSafraCultura.view_unidade_area_id" :options="parsedUnidades(unidadesArea)" float-label="Mostrar área em"/>
-        </div>
-      </div>
-
-      <div class="row q-ma-sm">
-        <div class="col-12" align="end">
-          <q-btn label="cancelar" color="primary" @click.native="closeNewSafraCulturaModal" class="q-mr-xs"/>
-          <q-btn label="salvar" color="primary" @click.native="updateSafraCultura"/>
-        </div>
-      </div>
-    </q-modal>-->
-
   </custom-page>
 </template>
 <script>
@@ -178,7 +157,6 @@
           let newSafra = [];
           for(var safra of safras){
 
-            // console.log(await this.getTotals(safra))
             newSafra.push({
               id: safra.id,
               inicio: safra.inicio,
@@ -221,7 +199,6 @@
           this.safraService.listSafras().then(safras => {
             this.getNewSafraRequest(safras);
             this.$q.loading.hide();
-            // this.getSafraCulturaTotals(safras);
           })
         },
         addSafra() {
@@ -273,43 +250,6 @@
         addSafraCultura: function(safraId){
           this.$refs.newCulturaModal.openModal(safraId)
         },
-        /*editSafraCultura: function(safraId, safraCultura){
-          this.selectedSafraId = safraId;
-          this.selectedSafraCulturaId = safraCultura.id;
-          this.modalEditSafraCultura = true;
-          this.fillFormEditSafraCultura(safraCultura);
-        },
-        fillFormEditSafraCultura: function(safraCultura){
-          this.formEditSafraCultura.view_unidade_area_id = safraCultura.view_unidade_area.id;
-          this.formEditSafraCultura.view_unidade_medida_id = safraCultura.view_unidade_medida.id;
-        },
-        updateSafraCultura: function(){
-          this.$q.loading.show();
-          this.safraCulturaService.updateSafraCultura(this.selectedSafraId, this.selectedSafraCulturaId, this.formEditSafraCultura).then(() => {
-            this.$q.notify({type: 'positive', message: 'Safra cultura atualizada com sucesso!'});
-            this.listSafras();
-            this.closeNewSafraCulturaModal();
-            this.$q.loading.hide();
-          }).catch(error => {
-            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-            this.$q.loading.hide();
-          });
-        },
-        checkInputMaxSize: function(value, talhao){
-          if(value > talhao.tamanho){
-            this.safraCultura.getTalhaoById(talhao.id).tamanho = talhao.tamanho
-          }
-        },
-        isNextButtomEnabled: function(){
-          if(this.currentStep === 'talhoes' && this.talhoes.length > 0){
-            return true
-          }
-          if(this.currentStep === 'unidades'){
-            return true
-          }
-          return false
-        },*/
-
         viewSafraCultura: function (safra_id, id) {
           this.$router.push({name: 'view_safra_cultura', params: {safra_id:safra_id, id:id}});
         },

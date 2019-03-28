@@ -34,6 +34,10 @@ export default class SafraCulturaAPI{
     return Vue.prototype.$axios.delete('/safra/' + safraId + '/safra_cultura/' + id);
   }
 
+  static addTalhoes(id, safraId, talhoes){
+    return Vue.prototype.$axios.post('/safra/' + safraId + '/safra_cultura/' + id + '/talhoes', talhoes)
+  }
+
   static getDiario(id, safraId){
     return Vue.prototype.$axios.get('safra/' + safraId + '/safra_cultura/' + id + '/diario');
   }
