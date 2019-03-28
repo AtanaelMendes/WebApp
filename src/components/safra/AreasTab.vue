@@ -37,11 +37,27 @@
               <!-- CARROUSEL DE AREAS -->
               <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
                 <q-carousel color="white" arrows quick-nav v-model="iArea" height="250px">
-                  <q-carousel-slide v-for="area in areas" :key="area.id" :img-src="imageMakeUrl(area.image_file_name, '800x500')">
-                    <div class="absolute-top carousel-caption">
-                      <div class="q-card-title">{{area.nome}}</div>
-                      <div class="q-card-subtitle text-white">{{numeral(area.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}</div>
-                    </div>
+                  <q-carousel-slide v-for="area in areas" :key="area.id" class="q-pa-none" style="overflow: hidden" >
+                    <q-card>
+                      <q-card-media overlay-position="top">
+                        <ap-image size="400x250" :file-name="area.image_file_name" />
+                        <q-card-title slot="overlay">
+                          {{area.nome}}
+                          <span slot="subtitle">{{numeral(area.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}</span>
+                          <div slot="right" class="row items-center">
+                            <q-btn flat round dense color="white" icon="more_vert" >
+                              <q-popover anchor="bottom left">
+                                <q-list link>
+                                  <q-item @click.native="deleteSafraCulturaByArea(area.id)">
+                                    <q-item-main label="Excluir Área"/>
+                                  </q-item>
+                                </q-list>
+                              </q-popover>
+                            </q-btn>
+                          </div>
+                        </q-card-title>
+                      </q-card-media>
+                    </q-card>
                   </q-carousel-slide>
                 </q-carousel>
               </div>
@@ -82,11 +98,27 @@
               <!-- CARROUSEL DE TALHOES -->
               <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
                 <q-carousel color="white" arrows quick-nav v-model="iTalhao" height="250px">
-                  <q-carousel-slide v-for="talhao in talhoesDaArea" :key="talhao.id" :img-src="imageMakeUrl(talhao.image_file_name, '800x500')">
-                    <div class="absolute-top carousel-caption">
-                      <div class="q-card-title">{{activeArea.nome}} {{talhao.nome}}</div>
-                      <div class="q-card-subtitle text-white">{{numeral(talhao.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}</div>
-                    </div>
+                  <q-carousel-slide v-for="talhao in talhoesDaArea" :key="talhao.id" class="q-pa-none" style="overflow: hidden" >
+                    <q-card>
+                      <q-card-media overlay-position="top">
+                        <ap-image size="400x250" :file-name="talhao.image_file_name" />
+                        <q-card-title slot="overlay">
+                          {{activeArea.nome}} {{talhao.nome}}
+                          <span slot="subtitle">{{numeral(talhao.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}</span>
+                          <div slot="right" class="row items-center">
+                            <q-btn flat round dense color="white" icon="more_vert" >
+                              <q-popover anchor="bottom left">
+                                <q-list link>
+                                  <q-item @click.native="deleteSafraCulturaTalhao(talhao.safra_cultura_talhao_id)">
+                                    <q-item-main label="Excluir Talhão"/>
+                                  </q-item>
+                                </q-list>
+                              </q-popover>
+                            </q-btn>
+                          </div>
+                        </q-card-title>
+                      </q-card-media>
+                    </q-card>
                   </q-carousel-slide>
                 </q-carousel>
               </div>
@@ -142,6 +174,7 @@
   import safraGraficoQuantidadesPorTalhao from 'components/safra/graficos/QuantidadesPorTalhao.vue'
   import agroUtils from 'assets/js/AgroUtils'
   import safraQuantidades from 'components/safra/Quantidades.vue'
+  import apImage from 'components/ApImage'
   import apNoResults from 'components/ApNoResults'
   import newAreaModal from 'components/safra/NewAreaModal'
 
@@ -155,7 +188,8 @@
       safraQuantidades,
       safraGraficoQuantidadesPorTalhao,
       apNoResults,
-      newAreaModal
+      newAreaModal,
+      apImage
     },
     data(){
       return{
@@ -169,13 +203,13 @@
       }
     },
     computed:{
-      activeArea: function () {
+      activeArea() {
         return this.areas[this.iArea];
       },
-      activeTalhao: function () {
+      activeTalhao() {
         return this.talhoesDaArea[this.iTalhao];
       },
-      talhoesDaArea: function () {
+      talhoesDaArea() {
         return _.filter(this.talhoes, {area_id: this.activeArea.id});
       },
     },
@@ -208,6 +242,46 @@
         this.$q.loading.show();
         this.safraCulturaService.getTalhoes(this.safraCultura.safra.id, this.safraCultura.id).then(talhoes => {
           this.talhoes = talhoes.talhoes;
+          this.$q.loading.hide();
+        })
+      },
+      deleteSafraCulturaByArea(areaId){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar essa área?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          this.$q.loading.show();
+          this.safraCulturaService.deleteSafraCulturaTalhoesByArea(this.safraCultura.id, areaId).then(() => {
+            this.$q.notify({type: 'positive', message: 'Área apagada com sucesso.'});
+            this.getContent();
+            this.$q.loading.hide();
+          });
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possível excluir esta área'});
+          this.$q.loading.hide();
+        })
+      },
+      deleteSafraCulturaTalhao(safraCulturaTalhaoId){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar esse talhão?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          this.$q.loading.show();
+          this.safraCulturaService.deleteSafraCulturaTalhao(this.safraCultura.id, safraCulturaTalhaoId).then(() => {
+            this.$q.notify({type: 'positive', message: 'Talhão excluido com sucesso.'});
+            /*let talhaoPosition = this.talhoes.findIndex(talhao => talhao.safra_cultura_talhao_id === safraCulturaTalhaoId);
+            if(talhaoPosition > -1){
+              this.talhoes.splice(talhaoPosition, 1);
+            }*/
+            this.getContent();
+            this.$q.loading.hide();
+          });
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possível excluir este talhão'});
           this.$q.loading.hide();
         })
       },

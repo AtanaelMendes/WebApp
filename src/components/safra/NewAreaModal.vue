@@ -140,7 +140,7 @@
         <div class="float-right ">
           <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="this.currentStep !== 0"/>
           <q-btn @click="goToNextStep" flat label="próximo" color="primary" :disabled="isNextButtonDisabled" v-if="currentStep !== 2"/>
-          <q-btn @click="saveTalhoes" flat label="Salvar" color="deep-orange" v-if="currentStep === 2"/>
+          <q-btn @click="saveTalhoes" flat label="Salvar" color="primary" v-if="currentStep === 2"/>
         </div>
       </div>
     </q-modal-layout>
@@ -183,7 +183,6 @@
     },
     computed:{
       isNextButtonDisabled(){
-        console.log('isNextButtonDisabled')
         if(this.currentStep === 0 && this.selectedArea.id === null){
           return true;
         }
@@ -209,7 +208,6 @@
         this.resetStepper();
       },
       saveTalhoes(){
-        console.log('saveTalhoes', this.selectedSafraCultura);
         this.safraCulturaService.addTalhoes(
           this.selectedSafraCultura.safra.id,
           this.selectedSafraCultura.id,

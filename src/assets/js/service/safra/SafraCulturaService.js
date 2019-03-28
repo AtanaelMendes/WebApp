@@ -309,6 +309,20 @@ export default class SafraCulturaService {
     });
   }
 
+  deleteSafraCulturaTalhoesByArea(safra_cultura_id, area_id){
+    return new Promise((resolve, reject) => {
+      SafraCulturaTalhaoAPI.deleteSafraCulturaTalhoesByArea(safra_cultura_id, area_id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  }
+
   saveCultivarToSafraCulturaTalhao(safra_cultura_id, safra_cultura_talhao_id, cultivar_id){
     return new Promise((resolve, reject) => {
       SafraCulturaTalhaoAPI.addCultivar(cultivar_id, safra_cultura_talhao_id, safra_cultura_id).then(response => {
