@@ -29,15 +29,7 @@
         <q-list no-border inset-separator highlight link>
           <q-item v-for="grupoEconomico in gruposEconomicos" :key="grupoEconomico.nome" @click.native="viewGrupoEconomico(grupoEconomico.id)">
 
-            <!--<q-item-side>-->
-              <!--<q-btn :key="grupoEconomico.nome"  round color="primary" dense>-->
-                <!--<span class="q-title text-white">-->
-                  <!--{{grupoEconomico.nome.substring(0,1)}}-->
-                <!--</span>-->
-              <!--</q-btn>-->
-            <!--</q-item-side>-->
-
-            <q-item-side icon="group_work"/>
+            <q-item-side icon="group_work" color="primary"/>
             <q-item-main>
 
               <q-item-tile>

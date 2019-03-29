@@ -26,11 +26,11 @@
     <div class="row space-end" >
 
       <div class="col-12" v-if="classificacoes">
-        <q-list highlight no-border inset-separator>
+        <q-list link no-border inset-separator>
 
-          <q-item v-for="classificacao in classificacoes" :key="classificacao.id">
+          <q-item v-for="classificacao in classificacoes" :key="classificacao.id" @click.native="viewClassificacao(classificacao.id)">
 
-            <q-item-side icon="assessment"/>
+            <q-item-side icon="assessment" color="primary"/>
             <q-item-main>
               <q-item-tile>
                 {{classificacao.nome}}
@@ -188,7 +188,7 @@
         }).then(() =>{
           this.$q.loading.show();
           this.classificacaoService.deleteClassificacao(id).then(() => {
-            this.$q.notify({type: 'positive', message: 'Classificação excluida com sucesso.'});
+            this.$q.notify({type: 'positive', message: 'Classificação excluída com sucesso.'});
             this.listClassificacoes(this.filter);
             this.$q.loading.hide();
           }).catch(error =>{

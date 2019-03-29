@@ -9,12 +9,12 @@
         {{grupoEconomico.nome}}
       </div>
 
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="!isEmptyList">
+      <div class="col-12" v-if="!isEmptyList">
         <q-list no-border highlight inset-separator link>
           <q-list-header>Pessoas</q-list-header>
           <q-item v-for="pessoa in grupoEconomico.pessoas" :key="pessoa.nome" @click.native="viewPessoa(pessoa.id)">
 
-            <q-item-side icon="account_circle"/>
+            <q-item-side icon="account_circle" color="primary"/>
             <q-item-main>
               <q-item-tile>
                 {{pessoa.nome}}
@@ -24,6 +24,7 @@
               </q-item-tile>
             </q-item-main>
           </q-item>
+          <q-item/>
 
         </q-list>
       </div>

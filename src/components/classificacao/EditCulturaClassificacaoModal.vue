@@ -2,29 +2,22 @@
   <q-modal v-model="isModalOpened" minimized @hide="closeModal" :content-css="{minWidth: '300px', minHeight:'250px'}">
     <q-modal-layout>
       <div class="q-pa-md q-title text-center" slot="header">
-        Adicionar cultura classificação
+        Editar cultura classificação
       </div>
 
-      <div class="row q-pa-md">
-        <div class="col-12" @keyup.enter="addCulturaClassificacao()">
-
-          <q-field :error="culturaClassificacao.culturaId.error" :error-label="culturaClassificacao.culturaId.errorMessage">
-            <q-search v-model="terms" float-label="Cultura" @blur="checkCulturaInput" v-on:input="clearErrorMessage()">
-              <q-autocomplete
-                @search="searchCulturaByName"
-                @selected="selectedCultura"
-                :min-characters="2"
-                value-field="label"
-              />
-            </q-search>
-          </q-field>
-
+      <div class="row q-pa-md gutter-x-sm justify-center">
+        <div class="col-12 text-center q-title">
+          {{terms}}
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-3 col-lg-3 self-end text-right">
+          Tolerância
+        </div>
+        <div class=" col-xs-4 col-sm-4 col-md-3 col-lg-3" @keyup.enter="updateCulturaClassificacao()">
           <q-field :error="culturaClassificacao.tolerancia.error" :error-label="culturaClassificacao.tolerancia.errorMessage">
             <q-input
               suffix="%"
-              type="number"
               align="right"
-              float-label="Tolerância"
+              type="number"
               @input="clearErrorMessage()"
               v-model="culturaClassificacao.tolerancia.value"
             />
@@ -35,7 +28,7 @@
 
       <div class="q-pa-md text-right" slot="footer">
         <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-        <q-btn label="salvar" color="primary" @click="addCulturaClassificacao"/>
+        <q-btn label="salvar" color="primary" @click="updateCulturaClassificacao"/>
       </div>
     </q-modal-layout>
   </q-modal>
@@ -46,7 +39,7 @@
   import CulturaClassificacaoService from "assets/js/service/cultura/CulturaClassificacaoService";
   import CulturaService from "assets/js/service/cultura/CulturaService";
   export default {
-    name: "add-cultura-classificacao-modal",
+    name: "edit-cultura-classificacao-modal",
     components:{},
     data(){
       return {
@@ -56,6 +49,7 @@
         isModalOpened: false,
         tempCulturaList: [],
         terms: null,
+        selectedculturaClassificacao: null,
         culturaClassificacao: {
           culturaId: {
             value: null,
@@ -71,13 +65,29 @@
       }
     },
     methods: {
-      openModal: function(){
+      openModal: function(culturaClassificacaoId){
         this.isModalOpened = true;
-        this.clearFields();
+        this.selectedculturaClassificacao = culturaClassificacaoId;
+        this.getCulturaClassificacaoById(culturaClassificacaoId);
+        // this.clearFields();
       },
       closeModal: function(){
         this.isModalOpened = false;
         this.clearFields();
+      },
+      getCulturaClassificacaoById: function(culturaClassificacaoId) {
+        this.$q.loading.show();
+        this.culturaClassificacaoService.getCulturaClassificacaoById(culturaClassificacaoId).then(response => {
+          this.$q.loading.hide();
+          this.fillFormCulturaClassificacao(response);
+          // this.isEmptyList = this.classificacao.pessoas.length === 0;
+        })
+      },
+      fillFormCulturaClassificacao: function(culturaClassificacao){
+        this.terms = culturaClassificacao.cultura;
+        this.culturaClassificacao.culturaId.value = culturaClassificacao.cultura_id;
+        this.culturaClassificacao.tolerancia.value = parseFloat(culturaClassificacao.tolerancia);
+        // console.table(culturaClassificacao)
       },
       nomeIsValid: function(){
         if(this.culturaClassificacao.culturaId.value === null || this.culturaClassificacao.culturaId.value === ''){
@@ -108,7 +118,7 @@
         this.culturaClassificacao.tolerancia.errorMessage = null;
         this.culturaClassificacao.tolerancia.error = false;
       },
-      addCulturaClassificacao: function(){
+      updateCulturaClassificacao: function(){
         if( !this.nomeIsValid() || !this.toleranciaIsValid()){
           return
         }
@@ -118,24 +128,16 @@
           classificacao_id: this.$route.params.id,
         };
         this.$q.loading.show();
-        this.culturaClassificacaoService.addCulturaClassificacao(params).then(() => {
+        this.culturaClassificacaoService.updateCulturaClassificacao(this.selectedculturaClassificacao, params).then(() => {
           this.$q.loading.hide();
-          this.$q.notify({type: 'positive', message: 'Cultura adicionada com sucesso.'});
+          this.$q.notify({type: 'positive', message: 'Cultura classificação atualizada com sucesso.'});
           this.$root.$emit('refreshCulturaClassificacaoView');
           this.clearFields();
           this.closeModal();
         }).catch(error =>{
+          console.log(error);
           this.$q.loading.hide();
-          if(error.response.status === 422){
-            this.$q.dialog({
-              title: 'Ops',
-              message: ''+error.response.data.cultura_id,
-              ok: true,
-            });
-            // this.$q.notify({type: 'negative', message: '' + error.response.data.cultura_id});
-          }else{
-            this.$q.notify({type: 'negative', message: 'Não foi possível adicionar cultura a classificação'});
-          }
+          this.$q.notify({type: 'negative', message: 'Não foi possível salvar as alterações'});
         })
       },
       searchCulturaByName: function(terms, done) {

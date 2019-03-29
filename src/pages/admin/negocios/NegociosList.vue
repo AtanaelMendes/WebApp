@@ -41,8 +41,8 @@
               <q-item class="q-px-none">
 
                 <q-item-side v-if="negocio.image_file_name">
-                  <q-item-tile avatar>
-                    <ap-image size="125x125" :file-name="negocio.image_file_name"/>
+                  <q-item-tile image>
+                    <ap-image size="200x125" :file-name="negocio.image_file_name"/>
                   </q-item-tile>
                 </q-item-side>
 
