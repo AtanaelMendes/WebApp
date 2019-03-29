@@ -112,6 +112,9 @@
                                   <q-item v-close-overlay @click.native="addCultivar(talhao)">
                                     <q-item-main label="Adicionar Cultivar"/>
                                   </q-item>
+                                  <q-item v-close-overlay @click.native="updateTamanhoCultivares(talhao.safra_cultura_talhao_id)">
+                                    <q-item-main label="Definir Tamanho dos Cultivares"/>
+                                  </q-item>
                                   <q-item v-close-overlay @click.native="deleteSafraCulturaTalhao(talhao.safra_cultura_talhao_id)">
                                     <q-item-main label="Excluir Talhão"/>
                                   </q-item>
@@ -179,6 +182,7 @@
 
     <new-area-modal ref="newAreaModal" />
     <new-cultivar-modal ref="newCultivarModal" />
+    <update-cultivares-tamanho-modal ref="updateCultivaresTamanhoModal" />
   </div>
 </template>
 
@@ -192,6 +196,7 @@
   import apNoResults from 'components/ApNoResults'
   import newAreaModal from 'components/safra/NewAreaModal'
   import newCultivarModal from 'components/safra/NewCultivarModal'
+  import updateCultivaresTamanhoModal from 'components/safra/UpdateCultivaresTamanhoModal'
 
   export default {
     name: "AreasTab",
@@ -205,6 +210,7 @@
       apNoResults,
       newAreaModal,
       newCultivarModal,
+      updateCultivaresTamanhoModal,
       apImage
     },
     data(){
@@ -245,7 +251,6 @@
         this.$refs.newAreaModal.openModal(this.safraCultura);
       },
       addCultivar(talhao){
-        console.log(talhao)
         this.$refs.newCultivarModal.openModal(talhao, this.safraCultura);
       },
       imageMakeUrl(fileName, size) {
@@ -321,6 +326,9 @@
             this.$q.loading.hide();
           })
         });
+      },
+      updateTamanhoCultivares(safraCulturaTalhaoId){
+        this.$refs.updateCultivaresTamanhoModal.openModal(safraCulturaTalhaoId, this.safraCultura);
       }
     },
     mounted () {
