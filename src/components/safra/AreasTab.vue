@@ -48,7 +48,7 @@
                             <q-btn flat round dense color="white" icon="more_vert" >
                               <q-popover anchor="bottom left">
                                 <q-list link>
-                                  <q-item @click.native="deleteSafraCulturaByArea(area.id)">
+                                  <q-item v-close-overlay @click.native="deleteSafraCulturaByArea(area.id)">
                                     <q-item-main label="Excluir Área"/>
                                   </q-item>
                                 </q-list>
@@ -109,7 +109,10 @@
                             <q-btn flat round dense color="white" icon="more_vert" >
                               <q-popover anchor="bottom left">
                                 <q-list link>
-                                  <q-item @click.native="deleteSafraCulturaTalhao(talhao.safra_cultura_talhao_id)">
+                                  <q-item v-close-overlay @click.native="addCultivar(talhao)">
+                                    <q-item-main label="Adicionar Cultivar"/>
+                                  </q-item>
+                                  <q-item v-close-overlay @click.native="deleteSafraCulturaTalhao(talhao.safra_cultura_talhao_id)">
                                     <q-item-main label="Excluir Talhão"/>
                                   </q-item>
                                 </q-list>
@@ -165,6 +168,7 @@
     </q-page-sticky>
 
     <new-area-modal ref="newAreaModal" />
+    <new-cultivar-modal ref="newCultivarModal" />
   </div>
 </template>
 
@@ -177,6 +181,7 @@
   import apImage from 'components/ApImage'
   import apNoResults from 'components/ApNoResults'
   import newAreaModal from 'components/safra/NewAreaModal'
+  import newCultivarModal from 'components/safra/NewCultivarModal'
 
   export default {
     name: "AreasTab",
@@ -189,6 +194,7 @@
       safraGraficoQuantidadesPorTalhao,
       apNoResults,
       newAreaModal,
+      newCultivarModal,
       apImage
     },
     data(){
@@ -227,6 +233,10 @@
       },
       addArea(){
         this.$refs.newAreaModal.openModal(this.safraCultura);
+      },
+      addCultivar(talhao){
+        console.log(talhao)
+        this.$refs.newCultivarModal.openModal(talhao, this.safraCultura);
       },
       imageMakeUrl(fileName, size) {
         return agroUtils.image.makeUrl(fileName, size)

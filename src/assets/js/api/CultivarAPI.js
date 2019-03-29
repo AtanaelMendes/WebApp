@@ -3,7 +3,7 @@ import Vue from 'vue'
 export default class CultivarAPI{
 
   static listCultivares(filter, culturaId){
-    return Vue.prototype.$axios.get('cultura/'+culturaId+'/cultivar' + (filter ? filter : ''));
+    return Vue.prototype.$axios.get('cultura/'+culturaId+'/cultivar' + (filter ? "?"+filter : ''));
   }
 
   static saveCultivar(cultivar, culturaId){
