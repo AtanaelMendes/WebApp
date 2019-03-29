@@ -2,14 +2,14 @@
   <q-modal v-model="isModalOpened" minimized @hide="closeModal" :content-css="{minWidth: '300px', minHeight:'250px'}">
     <q-modal-layout>
       <div class="q-pa-md q-title text-center" slot="header">
-        Adicionar cultura
+        Adicionar cultura classificação
       </div>
 
       <div class="row q-pa-md">
         <div class="col-12" @keyup.enter="addCulturaClassificacao()">
 
           <q-field :error="culturaClassificacao.culturaId.error" :error-label="culturaClassificacao.culturaId.errorMessage">
-            <q-search v-model="terms" placeholder="Cultura" @blur="checkCulturaInput" v-on:input="clearErrorMessage()">
+            <q-search v-model="terms" float-label="Cultura" @blur="checkCulturaInput" v-on:input="clearErrorMessage()">
               <q-autocomplete
                 @search="searchCulturaByName"
                 @selected="selectedCultura"
@@ -126,7 +126,16 @@
           this.closeModal();
         }).catch(error =>{
           this.$q.loading.hide();
-          this.$q.notify({type: 'negative', message: 'Não foi possível adicionar cultura a classificação'})
+          if(error.response.status === 422){
+            this.$q.dialog({
+              title: 'Ops',
+              message: ''+error.response.data.cultura_id,
+              ok: true,
+            });
+            // this.$q.notify({type: 'negative', message: '' + error.response.data.cultura_id});
+          }else{
+            this.$q.notify({type: 'negative', message: 'Não foi possível adicionar cultura a classificação'});
+          }
         })
       },
       searchCulturaByName: function(terms, done) {

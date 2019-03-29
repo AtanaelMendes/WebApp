@@ -4,39 +4,37 @@
 
     </toolbar>
 
-    <div class="row q-pa-md space-end" v-if="classificacao">
-      <div class="col-12 q-title">
+    <div class="row space-end" v-if="classificacao">
+      <div class="col-12 q-headline q-pa-md">
         {{classificacao.nome}}
       </div>
 
-      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="!isEmptyList">
+      <div class="col-12" v-if="!isEmptyList">
         <q-list no-border highlight inset-separator>
-          <q-list-header>Culturas</q-list-header>
+
+          <q-item>
+            <q-item-main inset class="row">
+              <div class="col-6 text-bold	text-faded">Cultura</div>
+              <div class="col-6 text-bold	text-faded">Tolerância</div>
+            </q-item-main>
+            <q-item-side/>
+          </q-item>
+
           <q-item v-for="cultura in culturasClassificacao" :key="cultura.nome">
 
-            <q-item-side icon="spa"/>
-            <q-item-main>
-              <q-item-tile>
-                {{cultura.cultura}}
-              </q-item-tile>
-              <q-item-tile sublabel>
-                tolerância {{cultura.tolerancia}}%
-              </q-item-tile>
+            <q-item-side icon="spa" color="positive"/>
+            <q-item-main class="row">
+              <div class="col-6">{{cultura.cultura}}</div>
+              <div class="col-6">{{cultura.tolerancia}}%</div>
             </q-item-main>
             <q-item-side>
               <q-btn @click.prevent.stop round flat dense icon="more_vert">
                 <q-popover>
                   <q-list link>
-                    <q-item v-close-overlay @click.native="editCulturaClassificacao(classificacao.id)">
+                    <q-item v-close-overlay @click.native="editCulturaClassificacao(cultura.id)">
                       <q-item-main label="Editar"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="archiveCulturaClassificacao(classificacao.id)" v-if="!classificacao.deleted_at">
-                      <q-item-main label="Arquivar"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="restoreCulturaClassificacao(classificacao.id)" v-if="classificacao.deleted_at">
-                      <q-item-main label="Ativar"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="deleteCulturaClassificacao(classificacao.id)">
+                    <q-item v-close-overlay @click.native="deleteCulturaClassificacao(cultura.id)">
                       <q-item-main label="Excluir"/>
                     </q-item>
                   </q-list>
@@ -61,6 +59,8 @@
 
     <add-cultura-classificacao-modal ref="addCulturaClassificacaoModal" key="addCulturaClassificacaoModal"/>
 
+    <edit-cultura-classificacao-modal ref="editCulturaClassificacaoModal" key="editCulturaClassificacaoModal"/>
+
   </custom-page>
 </template>
 
@@ -71,6 +71,7 @@
   import ClassificacaoService from "assets/js/service/ClassificacaoService"
   import CulturaClassificacaoService from "assets/js/service/cultura/CulturaClassificacaoService";
   import addCulturaClassificacaoModal from 'components/classificacao/AddCulturaClassificacaoModal'
+  import editCulturaClassificacaoModal from 'components/classificacao/EditCulturaClassificacaoModal'
   export default {
     name: "classificacao-view",
     components: {
@@ -78,6 +79,7 @@
       customPage,
       apNoResults,
       addCulturaClassificacaoModal,
+      editCulturaClassificacaoModal,
     },
     data () {
       return {
@@ -109,10 +111,27 @@
       addCulturaClassificacao: function(){
         this.$refs.addCulturaClassificacaoModal.openModal()
       },
-      editCulturaClassificacao: function(culturaClassificacaoId){},
-      archiveCulturaClassificacao: function(culturaClassificacaoId){},
-      restoreCulturaClassificacao: function(culturaClassificacaoId){},
-      deleteCulturaClassificacao: function(culturaClassificacaoId){},
+      editCulturaClassificacao: function(culturaClassificacaoId){
+        this.$refs.editCulturaClassificacaoModal.openModal(culturaClassificacaoId)
+      },
+      deleteCulturaClassificacao: function(culturaClassificacaoId){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja excluir esta cultura classificação?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(() =>{
+          this.$q.loading.show();
+          this.culturaClassificacaoService.deleteCulturaClassificacao(culturaClassificacaoId).then(response => {
+            this.$q.loading.hide();
+            this.getCulturasClassificacao(this.$route.params.id);
+            this.$q.notify({type: 'positive', message: 'Cultura classificação excluída com sucesso.'});
+          }).catch(error =>{
+            this.$q.loading.hide();
+            this.$q.notify({type: 'negative', message: 'Não foi possível excluir essa cultura classificação'});
+          })
+        })
+      },
       backAction: function () {
         this.$router.back();
       },

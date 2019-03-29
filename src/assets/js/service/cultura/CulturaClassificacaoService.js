@@ -56,6 +56,19 @@ export default class CulturaClassificacaoService {
       })
     });
   };
+  getCulturaClassificacaoById(culturaClassificacaoId) {
+    return new Promise((resolve, reject) => {
+      CulturaClassificacaoAPI.getCulturaClassificacaoById(culturaClassificacaoId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
   addCulturaClassificacao(params) {
     return new Promise((resolve, reject) => {
       CulturaClassificacaoAPI.addCulturaClassificacao(params).then(response => {
@@ -72,32 +85,6 @@ export default class CulturaClassificacaoService {
   updateCulturaClassificacao(CulturaClassificacaoId, params) {
     return new Promise((resolve, reject) => {
       CulturaClassificacaoAPI.updateCulturaClassificacao(CulturaClassificacaoId, params).then(response => {
-        if(response.status === 200){
-          resolve(response.data);
-        }else{
-          reject(response);
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
-  archiveCulturaClassificacao(CulturaClassificacaoId) {
-    return new Promise((resolve, reject) => {
-      CulturaClassificacaoAPI.archiveCulturaClassificacao(CulturaClassificacaoId).then(response => {
-        if(response.status === 200){
-          resolve(response.data);
-        }else{
-          reject(response);
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
-  restoreCulturaClassificacao(CulturaClassificacaoId) {
-    return new Promise((resolve, reject) => {
-      CulturaClassificacaoAPI.restoreCulturaClassificacao(CulturaClassificacaoId).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{

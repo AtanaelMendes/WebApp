@@ -29,7 +29,7 @@
         <q-list no-border inset-separator highlight>
           <q-item v-for="armazem in armazens" :key="armazem.nome">
 
-            <q-item-side icon="location_city"/>
+            <q-item-side icon="location_city" color="primary"/>
             <q-item-main>
 
               <q-item-tile>
