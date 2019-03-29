@@ -131,8 +131,7 @@
                 <safra-quantidades
                   :quantidades="activeTalhao"
                   :unidade-area="safraCultura.view_unidade_area"
-                  :unidade-medida="safraCultura.view_unidade_medida"
-                >
+                  :unidade-medida="safraCultura.view_unidade_medida">
                   <q-item v-for="cultivar in activeTalhao.cultivares" :key="cultivar.key">
                     <q-item-side v-if="cultivar.image_file_name" :image="imageMakeUrl(cultivar.image_file_name, '200x125')" color="primary"/>
                     <q-item-side v-else icon="spa" color="primary"/>
@@ -146,6 +145,17 @@
                         ({{numeral(cultivar.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.sigla}})
                       </q-item-tile>
                     </q-item-main>
+                    <q-item-side right>
+                      <q-btn flat round dense icon="more_vert" >
+                        <q-popover anchor="bottom left">
+                          <q-list link>
+                            <q-item v-close-overlay @click.native="deleteCultivar(cultivar, activeTalhao)">
+                              <q-item-main label="Excluir Cultivar"/>
+                            </q-item>
+                          </q-list>
+                        </q-popover>
+                      </q-btn>
+                    </q-item-side>
                   </q-item>
                 </safra-quantidades>
               </div>
@@ -295,6 +305,23 @@
           this.$q.loading.hide();
         })
       },
+      deleteCultivar(cultivar, activeTalhao){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar esse cultivar?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          this.safraCulturaService.deleteCultivar(cultivar.safra_cultura_talhao_cultivar_id, activeTalhao.safra_cultura_talhao_id).then(()=>{
+            this.$q.notify({type: 'positive', message: 'Cultivar excluido com sucesso.'});
+            this.getContent();
+            this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível excluir este cultivar'});
+            this.$q.loading.hide();
+          })
+        });
+      }
     },
     mounted () {
       this.$root.$on('refreshAreasTab', this.getContent);

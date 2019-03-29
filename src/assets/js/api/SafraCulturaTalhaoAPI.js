@@ -14,7 +14,11 @@ export default class SafraCulturaTalhaoAPI{
     return Vue.prototype.$axios.delete('/safra_cultura/' + safraCulturaId + '/safra_cultura_talhao/delete_by_area/' + areaId);
   }
 
-  static addCultivar(cultivarId, safraCulturaTalhao, safraCulturaId){
-    return Vue.prototype.$axios.post('/safra_cultura/' + safraCulturaId + '/safra_cultura_talhao/' + safraCulturaTalhao + '/add_cultivar/' + cultivarId)
+  static addCultivar(cultivarId, safraCulturaTalhaoId, safraCulturaId){
+    return Vue.prototype.$axios.post('/safra_cultura/' + safraCulturaId + '/safra_cultura_talhao/' + safraCulturaTalhaoId + '/add_cultivar/' + cultivarId)
+  }
+
+  static deleteCultivar(cultivarId, safraCulturaTalhaoId){
+    return Vue.prototype.$axios.delete('/safra_cultura_talhao/' + safraCulturaTalhaoId + '/cultivar/' + cultivarId);
   }
 }
