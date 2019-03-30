@@ -147,16 +147,16 @@
       <!--MARCAS SEM CULTIVARES-->
       <div class="col-12 " v-if="marcasSemCultivares.length > 0">
 
-        <div class="row q-pa-lg bg-blue-grey-1">
-          <div class="col-12 q-title">
+        <q-item style="border-bottom-style: solid; border-width: 1px; border-color: #e0e0e0">
+          <q-item-main class="q-title">
             Marcas sem Cultivares
-          </div>
-        </div>
+          </q-item-main>
+        </q-item>
 
       </div>
 
       <div class="col-xs-9 col-sm-6 col-md-4 col-lg-3" v-for="marca in marcasSemCultivares" :key="marca.nome">
-        <q-card>
+        <q-card class="q-ml-md">
           <q-card-media overlay-position="top">
             <q-card-title slot="overlay">
               {{marca.nome}}

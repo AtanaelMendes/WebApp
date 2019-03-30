@@ -26,7 +26,7 @@
     <div class="row space-end" >
 
       <div class="col-12" v-if="classificacoes">
-        <q-list link no-border inset-separator>
+        <q-list link no-border sparse inset-separator>
 
           <q-item v-for="classificacao in classificacoes" :key="classificacao.id" @click.native="viewClassificacao(classificacao.id)">
 

@@ -241,7 +241,17 @@
       closeModal: function(){
         this.isModalOpened = false;
         this.currentStep = 'safra';
+        this.clearFields();
         this.$emit('modal-closed')
+      },
+      clearFields: function(){
+        this.cultura = new Cultura();
+        this.safraCulturas = [];
+        this.hasQuantidadeDefined = false;
+        this.hasPrazoDefined = false;
+        this.selectedArmazens = [];
+        this.unidadesMedida = [];
+        this.armazens = [];
       },
       saveAttachCultura: function(){
         this.negocioService.saveAttachCultura(this.negocio.id, this.cultura.getValues()).then(() => {

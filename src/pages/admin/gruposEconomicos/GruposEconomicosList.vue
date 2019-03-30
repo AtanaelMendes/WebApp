@@ -26,7 +26,7 @@
     <div class="row space-end " v-if="gruposEconomicos">
       <div class="col-12">
 
-        <q-list no-border inset-separator highlight link>
+        <q-list no-border sparse inset-separator highlight link>
           <q-item v-for="grupoEconomico in gruposEconomicos" :key="grupoEconomico.nome" @click.native="viewGrupoEconomico(grupoEconomico.id)">
 
             <q-item-side icon="group_work" color="primary"/>

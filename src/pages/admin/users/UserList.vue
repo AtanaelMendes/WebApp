@@ -25,10 +25,12 @@
 
     <div class="row space-end">
       <div class="col-12">
-        <q-list highlight no-border sparse v-if="!isEmptyList">
+        <q-list highlight inset-separator no-border sparse v-if="!isEmptyList">
 
-          <q-item link separator multiline @click.native="viewUser(user.id)" v-for="(user, key) in users" :key="key">
-            <q-item-main style="overflow: hidden">
+          <q-item multiline @click.native="viewUser(user.id)" v-for="(user, key) in users" :key="key">
+
+            <q-item-side icon="account_circle" color="primary"/>
+            <q-item-main inset>
               <q-item-tile>
                 {{user.nome}}
                 <q-chip v-if="user.deleted_at" small square color="red">
@@ -37,11 +39,6 @@
               </q-item-tile>
               <q-item-tile sublabel>{{user.email}}</q-item-tile>
             </q-item-main>
-
-            <q-item-side right>
-              <q-item-tile stamp>{{ moment(user.created_at).format('DD MMMM YYYY') }}</q-item-tile>
-              <q-item-tile v-if="user.deleted_at" stamp>{{ moment(user.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>
-            </q-item-side>
           </q-item>
 
         </q-list>
