@@ -112,7 +112,7 @@
                                   <q-item v-close-overlay @click.native="addCultivar(talhao)">
                                     <q-item-main label="Adicionar Cultivar"/>
                                   </q-item>
-                                  <q-item v-close-overlay @click.native="updateTamanhoCultivares(talhao.safra_cultura_talhao_id)">
+                                  <q-item v-close-overlay @click.native="updateTamanhoCultivares(talhao)">
                                     <q-item-main label="Definir Tamanho dos Cultivares"/>
                                   </q-item>
                                   <q-item v-close-overlay @click.native="deleteSafraCulturaTalhao(talhao.safra_cultura_talhao_id)">
@@ -327,8 +327,8 @@
           })
         });
       },
-      updateTamanhoCultivares(safraCulturaTalhaoId){
-        this.$refs.updateCultivaresTamanhoModal.openModal(safraCulturaTalhaoId, this.safraCultura);
+      updateTamanhoCultivares(talhao){
+        this.$refs.updateCultivaresTamanhoModal.openModal(talhao, this.safraCultura);
       }
     },
     mounted () {
