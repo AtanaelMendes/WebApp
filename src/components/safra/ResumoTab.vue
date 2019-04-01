@@ -22,34 +22,58 @@
     <!-- GRAFICOS -->
     <div class="col-12 space-end q-mt-md">
       <q-tabs swipeable inverted arrows align="justify" style="min-height: 410px">
-        <q-tab slot="title" name="tab-diario" label="" icon="mdi-calendar" default @select="selectTabDiario()"/>
-        <q-tab slot="title" name="tab-diario-classificacao" label="" icon="mdi-ruler" @select="selectTabDiarioClassificacao()"/>
-        <q-tab slot="title" name="tab-caminhoes" label="" icon="mdi-truck" @select="selectTabCaminhoes()"/>
-        <q-tab slot="title" name="tab-armazem" label="" icon="place" @select="selectTabArmazens()"/>
+        <q-tab slot="title" name="tab-diario" :label="$q.screen.gt.sm ? 'Diário de Colheita' : ''" icon="mdi-calendar" default @select="selectTabDiario()"/>
+        <q-tab slot="title" name="tab-diario-classificacao" :label="$q.screen.gt.sm ? 'Diário de Classificação' : ''" icon="mdi-ruler" @select="selectTabDiarioClassificacao()"/>
+        <q-tab slot="title" name="tab-caminhoes" :label="$q.screen.gt.sm ? 'Entregas Por Caminhão' : ''" icon="mdi-truck" @select="selectTabCaminhoes()"/>
+        <q-tab slot="title" name="tab-armazem" :label="$q.screen.gt.sm ? 'Entrega Por Armazém' : ''" icon="place" @select="selectTabArmazens()"/>
 
         <q-tab-pane name="tab-diario" keep-alive>
-          <div class="q-mb-md">
-            Diário de Colheita
-          </div>
-          <safra-grafico-diario :diario="diario" :unidade-medida="safraCultura.view_unidade_medida" :height="300" :width="100"/>
+          <template v-if="diario">
+            <div class="q-mb-lg" v-if="$q.screen.lt.md">
+              <span class="q-subheading text-weight-medium text-primary uppercase">Diário de Colheita</span>
+            </div>
+            <safra-grafico-diario v-if="diario.length > 0" :diario="diario" :unidade-medida="safraCultura.view_unidade_medida" :height="300" :width="100"/>
+            <div v-else class="text-center chart-empty">
+              <q-icon name="warning" />
+              <span>Nenhuma informação disponível.</span>
+            </div>
+          </template>
         </q-tab-pane>
         <q-tab-pane name="tab-diario-classificacao" keep-alive>
-          <div class="q-mb-md">
-            Diário de Classificação
-          </div>
-          <safra-grafico-diario-classificacao :diario-classificacao="diarioClassificacao" :height="300" :width="100"/>
+          <template v-if="diarioClassificacao">
+            <div class="q-mb-lg" v-if="$q.screen.lt.md">
+              <span class="q-subheading text-weight-medium text-primary uppercase">Diário de Classificação</span>
+            </div>
+            <safra-grafico-diario-classificacao v-if="diarioClassificacao.classificacoes.length > 0" :diario-classificacao="diarioClassificacao" :height="300" :width="100"/>
+            <div v-else class="text-center chart-empty">
+              <q-icon name="warning" />
+              <span>Nenhuma informação disponível.</span>
+            </div>
+          </template>
         </q-tab-pane>
         <q-tab-pane name="tab-caminhoes" keep-alive>
-          <div class="q-mb-md">
-            Entregas Por Caminhão
-          </div>
-          <safra-grafico-quantidades-por-caminhao :unidade-medida="safraCultura.view_unidade_medida" :caminhoes="caminhoes" :height="300" :width="100"/>
+          <template v-if="caminhoes">
+            <div class="q-mb-lg" v-if="$q.screen.lt.md">
+              <span class="q-subheading text-weight-medium text-primary uppercase">Entregas Por Caminhão</span>
+            </div>
+            <safra-grafico-quantidades-por-caminhao v-if="caminhoes.length > 0" :unidade-medida="safraCultura.view_unidade_medida" :caminhoes="caminhoes" :height="300" :width="100"/>
+            <div v-else class="text-center chart-empty">
+              <q-icon name="warning" />
+              <span>Nenhuma informação disponível.</span>
+            </div>
+          </template>
         </q-tab-pane>
         <q-tab-pane name="tab-armazem" keep-alive>
-          <div class="q-mb-md">
-            Entrega Por Armazém
-          </div>
-          <safra-grafico-quantidades-por-armazem :unidade-medida="safraCultura.view_unidade_medida" :armazens="armazens" :height="300" :width="100"/>
+          <template v-if="armazens">
+            <div class="q-mb-lg" v-if="$q.screen.lt.md">
+              <span class="q-subheading text-weight-medium text-primary uppercase">Entrega Por Armazém</span>
+            </div>
+            <safra-grafico-quantidades-por-armazem v-if="armazens.length > 0" :unidade-medida="safraCultura.view_unidade_medida" :armazens="armazens" :height="300" :width="100"/>
+            <div v-else class="text-center chart-empty">
+              <q-icon name="warning" />
+              <span>Nenhuma informação disponível.</span>
+            </div>
+          </template>
         </q-tab-pane>
       </q-tabs>
     </div>
@@ -105,47 +129,43 @@
       selectTabArmazens() {
         this.getArmazens();
       },
-      getDiario: function(force = false){
-        if (this.diarioLoaded & !force) {
+      getDiario(){
+        if (this.diario) {
           return;
         }
         this.$q.loading.show();
         this.safraCulturaService.getDiario(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
           this.diario = response.diario;
-          this.diarioLoaded = true;
           this.$q.loading.hide();
         })
       },
-      getDiarioClassificacao: function(force = false){
-        if (this.diarioClassificacaoLoaded & !force) {
+      getDiarioClassificacao(){
+        if (this.diarioClassificacao) {
           return;
         }
         this.$q.loading.show();
-        this.safraCulturaService.getDiarioClassificacao(this.safraCultura.safra.id, this.safraCultura.id).then(diarioClassificacao => {
-          this.diarioClassificacao = diarioClassificacao;
-          this.diarioClassificacaoLoaded = true;
+        this.safraCulturaService.getDiarioClassificacao(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
+          this.diarioClassificacao = response;
           this.$q.loading.hide();
         })
       },
-      getCaminhoes: function(force = false){
-        if (this.caminhoesLoaded & !force) {
+      getCaminhoes(){
+        if (this.caminhoes) {
           return;
         }
         this.$q.loading.show();
         this.safraCulturaService.getCaminhoes(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
           this.caminhoes = response.caminhoes;
-          this.caminhoesLoaded = true;
           this.$q.loading.hide();
         })
       },
-      getArmazens: function(force = false){
-        if (this.armazensLoaded & !force) {
+      getArmazens(){
+        if (this.armazens) {
           return;
         }
         this.$q.loading.show();
         this.safraCulturaService.getArmazens(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
           this.armazens = response.armazens;
-          this.armazensLoaded = true;
           this.$q.loading.hide();
         })
       },
@@ -154,5 +174,21 @@
 </script>
 
 <style scoped>
+  .chart-empty{
+    height: 55px;
+    text-align: center;
+    padding-top: 15px;
 
+    width: 100%;
+  }
+  .chart-empty span{
+    color: #8c8c8c;
+    font-weight: 300;
+    font-size: 15px;
+  }
+  .chart-empty i{
+    color: #ffb500;
+    font-size: 20px;
+    margin-right: 6px;
+  }
 </style>
