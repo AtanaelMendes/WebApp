@@ -26,18 +26,19 @@
 
     <div v-if="!isEmptyList" class="space-end row">
       <div class="col-12">
-        <q-list highlight no-border sparse>
+        <q-list link sparse no-border inset-separator>
 
-          <q-item separator multiline link v-for="area in areas" :key="area.id" @click.native="viewArea(area.id)">
-            <q-item-main>
+          <q-item v-for="area in areas" :key="area.id" @click.native="viewArea(area.id)">
+            <q-item-side icon="place" color="primary"/>
+            <q-item-main inset>
               <q-item-tile>
                 {{area.nome}}
               </q-item-tile>
               <q-item-tile sublabel>
-                <span>{{area.localizacao.endereco}}</span>,&nbsp
-                <span>{{area.localizacao.bairro}}</span>,&nbsp
-                <span>{{area.localizacao.cidade.nome}}-</span>
-                <span>{{area.localizacao.cidade.estado.sigla}}</span>
+                {{area.localizacao.endereco}},
+                {{area.localizacao.bairro}}
+                {{area.localizacao.cidade.nome}} -
+                {{area.localizacao.cidade.estado.sigla}}
               </q-item-tile>
             </q-item-main>
           </q-item>

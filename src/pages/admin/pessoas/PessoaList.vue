@@ -25,10 +25,12 @@
 
     <div class="space-end row">
       <div class="col-12">
-        <q-list separator link highlight no-border  v-if="!isEmptyList">
+        <q-list inset-separator link no-border  sparse v-if="!isEmptyList">
 
-          <q-item sparse multiline @click.native="viewPessoa(pessoa.id)" v-for="(pessoa, key) in pessoas" :key="key">
-            <q-item-main >
+          <q-item @click.native="viewPessoa(pessoa.id)" v-for="(pessoa, key) in pessoas" :key="key">
+
+            <q-item-side icon="account_circle" color="primary"/>
+            <q-item-main inset>
               <q-item-tile>
                 {{pessoa.nome}}
                 <q-chip v-if="pessoa.deleted_at" small square color="red">

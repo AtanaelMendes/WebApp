@@ -6,24 +6,32 @@
       <!--PASSO 1 ESCOLHER SAFRA-->
       <q-step default title="Safra" name="safra">
         <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
-          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="safraCultura in safraCulturas" :key="safraCultura.id">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" v-for="safraCultura in safraCulturas" :key="safraCultura.id">
             <q-card @click.native="selectSafraCultura(safraCultura)">
               <q-card-media overlay-position="full">
 
-                <img src="statics/images/no-image-16-10.svg" v-if="!safraCultura.cultura.image"/>
-                <img :src="safraCultura.cultura.image" v-if="safraCultura.cultura.image"/>
+                <ap-image size="400x250" :file-name="safraCultura.cultura.image_file_name" />
 
-                <q-card-title slot="overlay" align="end" v-if="cultura.safraCulturaId.value == safraCultura.id">
-                  <q-icon name="check_circle" size="30px" color="positive"/>
+                <q-card-title slot="overlay">
+                  <div class="row">
+                    <div class="col-8">
+                      {{safraCultura.cultura.nome}}
+                      {{safraCultura.safra.ano_inicio}}-{{safraCultura.safra.ano_fim}}
+                    </div>
+                    <div class="col-4" align="end">
+                      <q-icon align="end" name="check_circle" size="30px" color="positive" v-if="cultura.safraCulturaId.value == safraCultura.id"/>
+                    </div>
+                  </div>
+
+
+
+
                 </q-card-title>
               </q-card-media>
-              <q-card-main>
-                <div class="row">
-                  <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">{{safraCultura.cultura.nome}}</div>
-                  <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">{{safraCultura.safra.ano_inicio}}-{{safraCultura.safra.ano_fim}}</div>
-                </div>
-              </q-card-main>
             </q-card>
+          </div>
+          <div v-if="!safraCulturas" class="no-result col-12">
+            <ap-no-results />
           </div>
         </div>
       </q-step>
@@ -170,18 +178,22 @@
 </template>
 
 <script>
-  import safraCulturaService from 'assets/js/service/safra/SafraCulturaService'
+  import SafraCulturaService from 'assets/js/service/safra/SafraCulturaService'
   import Cultura from 'assets/js/model/negocio/Cultura'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
-  import NegocioService from "../../assets/js/service/negocio/NegocioService";
-  import ArmazemService from "../../assets/js/service/armazem/ArmazemService";
-  import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
-  import CulturaClassificacaoService from "../../assets/js/service/cultura/CulturaClassificacaoService";
+  import NegocioService from "assets/js/service/negocio/NegocioService";
+  import ArmazemService from "assets/js/service/armazem/ArmazemService";
+  import UnidadeMedidaService from "assets/js/service/UnidadeMedidaService";
+  import CulturaClassificacaoService from "assets/js/service/cultura/CulturaClassificacaoService";
+  import apNoResults from 'components/ApNoResults'
+  import apImage from 'components/ApImage'
 
   export default {
     name: "NewCulturaModal",
     components:{
+      apImage,
+      apNoResults,
       customInputText,
       customInputDatetime
     },
@@ -203,6 +215,7 @@
       return{
         culturaClassificacaoService: new CulturaClassificacaoService(),
         unidadeMedidaService: new UnidadeMedidaService(),
+        safraCulturaService: new SafraCulturaService(),
         armazemService: new ArmazemService(),
         negocioService: new NegocioService(),
         isModalOpened: false,
@@ -228,7 +241,17 @@
       closeModal: function(){
         this.isModalOpened = false;
         this.currentStep = 'safra';
+        this.clearFields();
         this.$emit('modal-closed')
+      },
+      clearFields: function(){
+        this.cultura = new Cultura();
+        this.safraCulturas = [];
+        this.hasQuantidadeDefined = false;
+        this.hasPrazoDefined = false;
+        this.selectedArmazens = [];
+        this.unidadesMedida = [];
+        this.armazens = [];
       },
       saveAttachCultura: function(){
         this.negocioService.saveAttachCultura(this.negocio.id, this.cultura.getValues()).then(() => {
@@ -309,18 +332,18 @@
         return false;
       },
       listSafraCulturas(){
-        safraCulturaService.listSafraCulturas().then(response => {
-          this.safraCulturas = response.data;
+        this.safraCulturaService.listSafraCulturas().then(response => {
+          this.safraCulturas = response;
         })
       },
       listClassificacoesByCultura(cultura_id){
         this.culturaClassificacaoService.listClassificacoesByCultura(cultura_id).then(response => {
-          this.cultura.classificacoes = response.data;
+          this.cultura.classificacoes = response;
         })
       },
       listArmazens(){
         this.armazemService.listArmazens().then(response => {
-          this.armazens = response.data;
+          this.armazens = response;
         })
       }
     },

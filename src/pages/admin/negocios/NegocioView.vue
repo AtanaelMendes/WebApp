@@ -61,6 +61,8 @@
           <q-card class="full-height">
             <q-card-title>
               {{cultura.safra_cultura}}
+              <span v-if="cultura.is_safrinha">Safrinha</span>
+              {{cultura.safra}}
               <q-btn slot="right" flat dense icon="more_vert" round>
                 <q-popover>
                   <q-list link class="no-border">

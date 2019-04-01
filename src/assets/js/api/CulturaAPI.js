@@ -6,6 +6,10 @@ export default class CulturaAPI{
     return Vue.prototype.$axios.get('/cultura')
   }
 
+  static searchCulturaByName(terms){
+    return Vue.prototype.$axios.get('/cultura/nome?nome='+ terms)
+  }
+
   static listCulturasSimpleList(){
     return Vue.prototype.$axios.get('/cultura/simple_list');
   }

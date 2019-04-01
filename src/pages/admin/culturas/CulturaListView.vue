@@ -3,7 +3,7 @@
     <toolbar slot="toolbar" title="Cultivares" searchable navigation_type="menu" >
     </toolbar>
 
-    <div class="row q-pa-md gutter-sm space-end" v-if="culturas.length > 0">
+    <div class="row gutter-sm space-end" v-if="culturas.length > 0">
       <template v-for="cultura in culturas">
 
         <!--HEADER CULTURA-->
@@ -16,7 +16,7 @@
                   <q-item-side>
                     <q-item-tile image>
                       <!--<ap-image size="400x250" :file-name="cultura.image" />-->
-                      <img src="statics/images/no-image-1-1.svg" v-if="!cultura.image"/>
+                      <img src="statics/images/no-image-16-10.svg" class="fit" v-if="!cultura.image"/>
                       <img :src="cultura.image" v-if="cultura.image" class="fit"/>
                     </q-item-tile>
                   </q-item-side>
@@ -56,7 +56,7 @@
 
           <!--MARCA-->
           <div :key="marca.nome" class="col-xs-9 col-sm-6 col-md-4 col-lg-3">
-            <q-card>
+            <q-card class="q-ml-md">
               <q-card-media overlay-position="top">
                 <q-card-title slot="overlay">
                   {{marca.nome}}
@@ -93,13 +93,7 @@
           <!--CULTIVARES-->
           <div class="col-xs-12 col-sm-12 col-md-7 col-lg-9">
 
-            <!--<q-item style="max-height: 100px; overflow: hidden">-->
-              <!--<q-item-main>-->
-                <!--<img :src="cultura.image" v-if="cultura.image" class="full-width"/>-->
-              <!--</q-item-main>-->
-            <!--</q-item>-->
-
-            <q-list separator no-border highlight>
+            <q-list inset-separator no-border highlight>
               <q-item v-for="cultivar in marca.cultivares" :key="cultivar.nome">
                 <q-item-main>
                   <div class="row">
@@ -141,6 +135,7 @@
                   </q-btn>
                 </q-item-side>
               </q-item>
+              <q-item/>
             </q-list>
 
           </div>
@@ -152,16 +147,16 @@
       <!--MARCAS SEM CULTIVARES-->
       <div class="col-12 " v-if="marcasSemCultivares.length > 0">
 
-        <div class="row q-pa-lg bg-blue-grey-1">
-          <div class="col-12 q-title">
+        <q-item style="border-bottom-style: solid; border-width: 1px; border-color: #e0e0e0">
+          <q-item-main class="q-title">
             Marcas sem Cultivares
-          </div>
-        </div>
+          </q-item-main>
+        </q-item>
 
       </div>
 
       <div class="col-xs-9 col-sm-6 col-md-4 col-lg-3" v-for="marca in marcasSemCultivares" :key="marca.nome">
-        <q-card>
+        <q-card class="q-ml-md">
           <q-card-media overlay-position="top">
             <q-card-title slot="overlay">
               {{marca.nome}}
