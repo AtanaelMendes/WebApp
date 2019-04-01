@@ -5,15 +5,14 @@
              navigation_type="back" @navigation_clicked="backAction" >
 
       <template slot="action_itens" >
-        <q-btn flat round dense icon="edit" @click.native="editSafraCultura(safraCultura.id)"/>
         <q-btn flat round dense icon="more_vert" >
-          <!--<q-popover anchor="bottom left">
+          <q-popover anchor="bottom left">
             <q-list link>
-              <q-item @click.native="archiveAccount(account.id)">
-                <q-item-main label="Arquivar usuário"/>
+              <q-item v-close-overlay @click.native="editSafraCultura(safraCultura.id)">
+                <q-item-main label="Editar Cultura"/>
               </q-item>
             </q-list>
-          </q-popover>-->
+          </q-popover>
         </q-btn>
       </template>
 
