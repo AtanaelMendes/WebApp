@@ -183,27 +183,23 @@
       imageMakeUrl: function (fileName, size) {
         return agroUtils.image.makeUrl(fileName, size)
       },
-      getMarcas: function(force = false){
-        if (this.marcasLoaded & !force) {
+      getMarcas(){
+        if(this.marcas){
           return;
         }
         this.$q.loading.show();
         this.safraCulturaService.getMarcas(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
-          console.log('getMarcas', response.marcas)
           this.marcas = response.marcas;
-          this.marcasLoaded = true;
           this.$q.loading.hide();
         })
       },
-      getCultivares: function(force = false){
-        if (this.cultivaresLoaded & !force) {
+      getCultivares(){
+        if (this.cultivares) {
           return;
         }
         this.$q.loading.show();
         this.safraCulturaService.getCultivares(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
-          console.log('getCultivares', response.cultivares)
           this.cultivares = response.cultivares;
-          this.cultivaresLoaded = true;
           this.$q.loading.hide();
         })
       },
