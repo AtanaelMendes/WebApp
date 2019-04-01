@@ -150,7 +150,6 @@
 <script>
   import SafraCulturaTalhao from "../../assets/js/model/safra/SafraCulturaTalhao";
   import AreaService from "../../assets/js/service/area/AreaService";
-  import SafraService from "../../assets/js/service/safra/SafraService";
   import apNoResults from 'components/ApNoResults'
   import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
   import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
@@ -164,7 +163,6 @@
       return{
         isModalOpened: false,
         areaService: new AreaService(),
-        safraService: new SafraService(),
         safraCulturaService: new SafraCulturaService(),
         unidadeMedidaService: new UnidadeMedidaService(),
         selectedSafraCultura: null,
@@ -266,12 +264,10 @@
       },
       getTalhoesBySafraAndArea(area_id){
         this.$q.loading.show();
-        this.safraService.listFreeTalhoes(
-          area_id,
+        this.safraCulturaService.listFreeTalhoes(
           this.selectedSafraCultura.safra.id,
-          this.selectedSafraCultura.view_unidade_area.id,
-          this.selectedSafraCultura.view_unidade_medida.id,
-          this.selectedSafraCultura.cultura.id
+          this.selectedSafraCultura.id,
+          area_id
         ).then(talhoes => {
           this.talhoes = [];
           talhoes.forEach(function(talhao){

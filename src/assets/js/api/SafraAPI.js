@@ -10,13 +10,6 @@ export default class SafraAPI{
     return Vue.prototype.$axios.get('/safra');
   }
 
-  static listFreeTalhoes(safraId, areaId, unidadeAreaId, unidadeMedidaId, culturaId){
-    return Vue.prototype.$axios.get('safra/' + safraId + '/talhao_free/' + areaId
-      + '?unidade_area_id=' + unidadeAreaId
-      + '&unidade_medida_id=' + unidadeMedidaId
-      + '&cultura_id=' + culturaId);
-  }
-
   static saveSafra(safra){
     return Vue.prototype.$axios.post('/safra', safra);
   }

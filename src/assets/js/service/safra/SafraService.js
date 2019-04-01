@@ -118,17 +118,5 @@ export default class SafraService {
     });
   };
 
-  listFreeTalhoes(area_id, safra_id, unidade_area_id, unidade_medida_id, cultura_id){
-    return new Promise((resolve, reject) => {
-      SafraAPI.listFreeTalhoes(safra_id, area_id, unidade_area_id, unidade_medida_id, cultura_id).then( response => {
-        if(response.status === 200){
-          resolve(response.data)
-        }else{
-          reject(response)
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
+
 }

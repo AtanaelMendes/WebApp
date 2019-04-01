@@ -15,6 +15,7 @@ import CulturaAPI from "../../api/CulturaAPI";
 import MarcaAPI from "../../api/MarcaAPI";
 import CultivarAPI from "../../api/CultivarAPI";
 import SafraCulturaTalhaoAPI from "../../api/SafraCulturaTalhaoAPI";
+import SafraAPI from "../../api/SafraAPI";
 export default class SafraCulturaService {
   #safraCulturaRepository;
   #culturaRepository;
@@ -172,6 +173,20 @@ export default class SafraCulturaService {
       })
     });
   }
+
+  listFreeTalhoes(safra_id, safra_cultura_id, area_id){
+    return new Promise((resolve, reject) => {
+      SafraCulturaAPI.listFreeTalhoes(safra_cultura_id, safra_id, area_id).then( response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
 
   listCulturas(){
     return new Promise((resolve, reject) => {

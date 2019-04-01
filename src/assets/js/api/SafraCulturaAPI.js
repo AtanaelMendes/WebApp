@@ -10,6 +10,10 @@ export default class SafraCulturaAPI{
     return Vue.prototype.$axios.get('/safra/safra_cultura')
   }
 
+  static listFreeTalhoes(id, safraId, area_id){
+    return Vue.prototype.$axios.get('safra/' + safraId + '/safra_cultura/' + id + '/talhao_free?area_id=' + area_id);
+  }
+
   static getFullSafraCulturaTalhoes(safraCulturaId){
     return Vue.prototype.$axios.get('safra_cultura/' + safraCulturaId + '/safra_cultura_talhao?type=full')
   }
