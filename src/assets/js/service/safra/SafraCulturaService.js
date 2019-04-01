@@ -188,6 +188,20 @@ export default class SafraCulturaService {
     });
   };
 
+  listFreeAreas(safra_id, safra_cultura_id){
+    return new Promise((resolve, reject) => {
+      SafraCulturaAPI.listFreeAreas(safra_cultura_id, safra_id).then( response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+
   listCulturas(){
     return new Promise((resolve, reject) => {
       CulturaAPI.listCulturasSimpleList().then(response => {

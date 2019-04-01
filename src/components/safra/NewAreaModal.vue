@@ -17,8 +17,7 @@
               <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" v-for="area in areas" :key="area.nome">
                 <q-card @click.native="setArea(area)">
                   <q-card-media overlay-position="full">
-                    <img src="statics/images/no-image-16-10.svg" v-if="!area.image_path"/>
-                    <img :src="area.image_path" v-if="area.image_path"/>
+                    <ap-image size="400x250" :file-name="area.image_file_name" />
 
                     <q-card-title slot="overlay" align="end" v-if="area.id === selectedArea.id">
                       <q-icon name="check_circle" size="30px" color="positive"/>
@@ -43,9 +42,7 @@
               <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3" v-for="talhao in talhoes" :key="talhao.id">
                 <q-card>
                   <q-card-media overlay-position="full" @click.native="toggleTalhao(talhao)">
-
-                    <img src="statics/images/no-image-16-10.svg" v-if="!talhao.image_path"/>
-                    <img :src="talhao.image_path" v-if="talhao.image_path"/>
+                    <ap-image size="400x250" :file-name="talhao.image_file_name" />
 
                     <q-card-title slot="overlay" align="end" v-if="getTalhaoById(talhao.id).tamanho > 0">
                       <q-icon name="check_circle" size="30px" color="positive"/>
@@ -150,7 +147,8 @@
 <script>
   import SafraCulturaTalhao from "../../assets/js/model/safra/SafraCulturaTalhao";
   import AreaService from "../../assets/js/service/area/AreaService";
-  import apNoResults from 'components/ApNoResults'
+  import apNoResults from 'components/ApNoResults';
+  import apImage from 'components/ApImage';
   import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
   import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
 
@@ -158,6 +156,7 @@
     name: "NewAreaModal",
     components:{
       apNoResults,
+      apImage,
     },
     data(){
       return{
@@ -239,7 +238,10 @@
       },
       getAreas(){
         this.$q.loading.show();
-        this.areaService.listAreas().then(areas => {
+        this.safraCulturaService.listFreeAreas(
+          this.selectedSafraCultura.safra.id,
+          this.selectedSafraCultura.id,
+        ).then(areas => {
           this.areas = areas;
           this.$q.loading.hide();
         })
@@ -275,7 +277,7 @@
               id: talhao.id,
               nome: talhao.nome,
               tamanho: parseFloat(talhao.tamanho),
-              image_path: talhao.image_path,
+              image_file_name: talhao.image_file_name,
             });
             this.addTalhao(new SafraCulturaTalhao(talhao))
           },this);
