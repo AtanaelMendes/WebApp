@@ -1,5 +1,5 @@
 <template>
-  <custom-page isParent >
+  <custom-page isParent v-if="safraCultura" >
 
     <toolbar slot="toolbar" :title="safraCultura.cultura.nome + ' ' + safraCultura.safra.ano_inicio + '/' + safraCultura.safra.ano_fim"
              navigation_type="back" @navigation_clicked="backAction" >

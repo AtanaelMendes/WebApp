@@ -5,7 +5,7 @@
         Nova Área
       </div>
 
-      <q-carousel height="100%" no-swipe ref="stepperNovaArea" @slide-trigger="setStepperIndex">
+      <q-carousel height="100%" no-swipe ref="stepperNovaArea" v-if="selectedSafraCultura" @slide-trigger="setStepperIndex">
         <!--PASSO 1 ADICIONAR AREA-->
         <q-carousel-slide class="q-pa-none">
           <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
