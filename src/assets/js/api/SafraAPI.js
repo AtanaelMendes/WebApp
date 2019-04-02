@@ -10,6 +10,10 @@ export default class SafraAPI{
     return Vue.prototype.$axios.get('/safra');
   }
 
+  static listFreeCulturas(safraId){
+    return Vue.prototype.$axios.get('/safra/' + safraId + '/culturas_free');
+  }
+
   static saveSafra(safra){
     return Vue.prototype.$axios.post('/safra', safra);
   }

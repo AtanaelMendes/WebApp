@@ -48,6 +48,20 @@ export default class SafraService {
     });
   };
 
+  listFreeCulturas(safraId){
+    return new Promise((resolve, reject) => {
+      SafraAPI.listFreeCulturas(safraId).then( response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+
   saveSafra(safra){
     return new Promise((resolve, reject) => {
       SafraAPI.saveSafra(safra).then(response => {

@@ -8,46 +8,54 @@
       <q-carousel height="100%" no-swipe ref="stepperNovaCultura" @slide-trigger="setStepperIndex">
         <!--PASSO 1 SELECIONAR CULTURA-->
         <q-carousel-slide class="q-pa-none">
-          <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
-            <span class="q-subheading">Selecione uma cultura</span>
-          </div>
-          <div class="q-pa-lg">
-            <div class="row gutter-sm">
-              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in culturas" :key="cultura.nome">
-                <q-card @click.native="setCultura(cultura)">
-                  <q-card-media overlay-position="full">
-                    <img src="statics/images/no-image-16-10.svg" v-if="!cultura.image_path"/>
-                    <img :src="cultura.image_path" v-if="cultura.image_path"/>
+          <template v-if="culturas">
+            <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
+              <span class="q-subheading">Selecione uma cultura</span>
+            </div>
+            <div class="q-pa-lg">
+              <div class="row gutter-sm">
+                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in culturas" :key="cultura.nome">
+                  <q-card @click.native="setCultura(cultura)">
+                    <q-card-media overlay-position="full">
+                      <ap-image size="400x250" :file-name="cultura.image_file_name"/>
 
-                    <q-card-title slot="overlay" align="end" v-if="cultura.id === safraCultura.cultura_id">
-                      <q-icon name="check_circle" size="30px" color="positive"/>
+                      <q-card-title slot="overlay" align="end" v-if="cultura.id === safraCultura.cultura_id">
+                        <q-icon name="check_circle" size="30px" color="positive"/>
+                      </q-card-title>
+                    </q-card-media>
+                    <q-card-title>
+                      {{cultura.nome}}
                     </q-card-title>
-                  </q-card-media>
-                  <q-card-title>
-                    {{cultura.nome}}
-                  </q-card-title>
-                </q-card>
+                  </q-card>
+                </div>
+
+                <div v-if="culturas.length === 0" class="list-empty">
+                  <q-icon name="warning" />
+                  <span>Nenhuma cultura disponível.</span>
+                </div>
               </div>
             </div>
-          </div>
+          </template>
         </q-carousel-slide>
         <!--PASSO 2 INFORMAR UNIDADES-->
         <q-carousel-slide class="q-pa-none">
-          <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
-            <span class="q-subheading">Informe as unidades de medida</span>
-          </div>
-          <div class="q-pa-lg">
-            <div class="row gutter-sm justify-center">
-              <div class="col-xs-12 col-md-6 col-lg-3">
-                <div>
-                  <q-select key="qtd" v-model="safraCultura.view_unidade_medida_id" :options="parsedUnidades(unidadesMedida)" float-label="Controlar quantidades em"/>
-                </div>
-                <div>
-                  <q-select key="area" v-model="safraCultura.view_unidade_area_id" :options="parsedUnidades(unidadesArea)" float-label="Mostrar área em"/>
+          <template v-if="unidadesMedida && unidadesArea">
+            <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
+              <span class="q-subheading">Informe as unidades de medida</span>
+            </div>
+            <div class="q-pa-lg">
+              <div class="row gutter-sm justify-center">
+                <div class="col-xs-12 col-md-6 col-lg-3">
+                  <div>
+                    <q-select key="qtd" v-model="safraCultura.view_unidade_medida_id" :options="parsedUnidades(unidadesMedida)" float-label="Controlar quantidades em"/>
+                  </div>
+                  <div>
+                    <q-select key="area" v-model="safraCultura.view_unidade_area_id" :options="parsedUnidades(unidadesArea)" float-label="Mostrar área em"/>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </template>
         </q-carousel-slide>
       </q-carousel>
 
@@ -67,32 +75,39 @@
   import SafraCultura from "../../assets/js/model/safra/SafraCultura";
   import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
   import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
+  import SafraService from "../../assets/js/service/safra/SafraService";
+  import apImage from 'components/ApImage'
 
   export default {
     name: "NewCulturaModal",
+    components: {
+      apImage,
+    },
     data(){
       return {
         safraCulturaService: new SafraCulturaService(),
+        safraService: new SafraService(),
         unidadeMedidaService: new UnidadeMedidaService(),
         isModalOpened: false,
         currentStep: 0,
         safraId: null,
         safraCultura: new SafraCultura(),
-        culturas: [],
-        unidadesArea: [],
-        unidadesMedida: [],
+        culturas: null,
+        unidadesArea: null,
+        unidadesMedida: null,
       }
     },
     methods: {
       openModal(safraId){
         this.isModalOpened = true;
         this.safraId = safraId;
-        this.getCulturas();
+        this.getCulturas(safraId);
         this.getUnidadesMedida();
         this.getUnidadesArea();
       },
-      closeModal: function(){
+      closeModal(){
         this.isModalOpened = false;
+        this.resetStepper();
       },
       setStepperIndex(oldIndex, newIndex, direction){
         this.currentStep = newIndex
@@ -103,9 +118,16 @@
       goToPreviousStep(){
         this.$refs.stepperNovaCultura.previous();
       },
-      getCulturas() {
+      resetStepper(){
+        this.$refs.stepperNovaCultura.goToSlide(0);
+
+        this.culturas = [];
+        this.unidadesArea = [];
+        this.unidadesMedida = [];
+      },
+      getCulturas(safraId) {
         this.$q.loading.show();
-        this.safraCulturaService.listCulturas().then(culturas => {
+        this.safraService.listFreeCulturas(safraId).then(culturas => {
           this.culturas = culturas;
           this.$q.loading.hide();
         });
@@ -165,5 +187,23 @@
 
   .new-cultura-modal .q-layout-footer{
     box-shadow: none;
+  }
+
+  .list-empty{
+    height: 55px;
+    text-align: center;
+    padding-top: 15px;
+
+    width: 100%;
+  }
+  .list-empty span{
+    color: #8c8c8c;
+    font-weight: 300;
+    font-size: 15px;
+  }
+  .list-empty i{
+    color: #ffb500;
+    font-size: 20px;
+    margin-right: 6px;
   }
 </style>

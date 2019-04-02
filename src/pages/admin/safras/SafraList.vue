@@ -153,7 +153,7 @@
         }
       },
       methods: {
-        getNewSafraRequest: async function(safras){
+        async getNewSafraRequest(safras){
           let newSafra = [];
           for(var safra of safras){
 
@@ -168,7 +168,7 @@
           }
           this.safras = newSafra;
         },
-        getTotals: async function(safra){
+        async getTotals(safra){
           let result = null;
           let newSafraCultura = [];
           for(var safraCultura of safra.safra_culturas){
@@ -180,7 +180,7 @@
           }
           return newSafraCultura
         },
-        getSafraCulturaTotals: function(safraId, safraCulturaId){
+        getSafraCulturaTotals(safraId, safraCulturaId){
           return this.safraCulturaService.getSafraCultura(safraId, safraCulturaId).then(safraCulturaTotals => {
             return safraCulturaTotals
           });
@@ -207,7 +207,7 @@
         editSafra(safra){
           this.$refs.newSafraModal.openModal(safra)
         },
-        archiveSafra: function(id){
+        archiveSafra(id){
           this.$q.loading.show();
           this.safraService.archiveSafra(id).then(() => {
             this.$q.notify({type: 'positive', message: 'Safra arquivda com sucesso!'});
@@ -215,14 +215,14 @@
             this.$q.loading.hide();
           })
         },
-        restoreSafra: function(id){
+        restoreSafra(id){
           this.$q.loading.show();
           this.safraService.restoreSafra(id).then(() => {
             this.listSafras();
             this.$q.loading.hide();
           })
         },
-        deleteSafra: function(id){
+        deleteSafra(id){
           this.$q.dialog({
             title: 'Atenção',
             message: 'Realmente deseja apagar essa safra?',
@@ -247,27 +247,27 @@
         },
 
         // CREATE SAFRA CULTURA
-        addSafraCultura: function(safraId){
+        addSafraCultura(safraId){
           this.$refs.newCulturaModal.openModal(safraId)
         },
-        viewSafraCultura: function (safra_id, id) {
+        viewSafraCultura(safra_id, id) {
           this.$router.push({name: 'view_safra_cultura', params: {safra_id:safra_id, id:id}});
         },
-        archiveSafraCultura: function(safra_id, id){
+        archiveSafraCultura(safra_id, id){
           this.$q.loading.show();
           this.safraCulturaService.archiveSafraCultura(safra_id, id).then(() => {
             this.listSafras();
             this.$q.loading.hide();
           })
         },
-        restoreSafraCultura: function(safra_id, id){
+        restoreSafraCultura(safra_id, id){
           this.$q.loading.show();
           this.safraCulturaService.restoreSafraCultura(safra_id, id).then(() => {
             this.listSafras();
             this.$q.loading.hide();
           })
         },
-        deleteSafraCultura: function(safra_id, id){
+        deleteSafraCultura(safra_id, id){
           this.$q.dialog({
             title: 'Atenção',
             message: 'Realmente deseja apagar esse talhão?',
