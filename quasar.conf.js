@@ -118,9 +118,10 @@ module.exports = function (ctx) {
         'QParallax',
         'QModalLayout',
         'QBtnGroup',
-
+        'QInnerLoading',
         'QCarousel',
         'QCarouselSlide',
+        'QSpinner',
 
       ],
       directives: [
