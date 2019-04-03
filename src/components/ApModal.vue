@@ -1,10 +1,12 @@
 <template>
-  <q-modal v-model="visible" class="ap-modal relative-position" :content-css="{maxWidth: '80vh', minHeight: '80vh'}" :minimized="minimized" @hide="hideEvent">
+  <q-modal v-model="visible" no-backdrop-dismiss no-esc-dismiss class="ap-modal relative-position"
+           :content-css="{maxWidth: '80vh', maxHeight: '80vh'}" minimized @hide="hideEvent">
     <q-modal-layout>
       <div class="q-px-lg q-pb-sm q-pt-lg" slot="header">
         <div class="q-title">{{title}}</div>
-        <div class="search-container" v-bind:class="{'search-container-opened':searchVisible}">
-          <q-search v-model="searchValue" v-if="searchVisible" @input="inputSearchEvent" @blur="closeSearch(false)"
+        <div class="search-container" v-if="searchable" v-bind:class="{'search-container-opened':searchVisible}">
+          <q-search v-model="searchValue" v-if="searchVisible"
+                    @input="inputSearchEvent" @blur="closeSearch(false)" @keydown="inputSearchKeyDownEvent"
                     placeholder="Pesquisar..." style="padding-left: 16px"
                     no-icon autofocus hide-underline/>
           <q-btn flat round dense icon="search" v-if="!searchVisible" @click="openSearch" />
@@ -15,13 +17,13 @@
 
       <slot name="content"/>
 
-      <div class="q-pa-md" slot="footer">
+      <div class="q-pa-sm" slot="footer">
         <slot name="footer"/>
       </div>
     </q-modal-layout>
 
 
-    <q-inner-loading :visible="showProgress">
+    <q-inner-loading :visible="isProgressVisible">
       <q-spinner size="70px" color="red"></q-spinner>
     </q-inner-loading>
   </q-modal>
@@ -33,14 +35,13 @@
     props: {
       title: String,
       visible: Boolean,
-      showProgress: Boolean,
-      minimized: Boolean,
-      type: String,
+      searchable: Boolean,
     },
     data(){
       return {
         searchVisible: false,
         searchValue: "",
+        isProgressVisible: false,
       }
     },
     methods:{
@@ -50,7 +51,12 @@
         this.$emit('hide')
       },
       inputSearchEvent(value){
-        console.log('search', value)
+        this.$emit('search-input', value);
+      },
+      inputSearchKeyDownEvent(event){
+        if(event.key === "Escape"){
+          this.closeSearch(true);
+        }
       },
       openSearch(){
         this.searchVisible = true;
@@ -64,6 +70,12 @@
             this.closeSearch(true)
           }
         }
+      },
+      showProgress(){
+        this.isProgressVisible = true;
+      },
+      hideProgress(){
+        this.isProgressVisible = false;
       }
     }
   }
@@ -92,6 +104,10 @@
 
   .ap-modal .q-layout-footer{
     box-shadow: none;
+  }
+
+  .ap-modal.animate-shake{
+    animation: unset;
   }
 
   .search-container{

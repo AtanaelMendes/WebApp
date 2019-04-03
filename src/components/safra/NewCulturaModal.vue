@@ -1,5 +1,6 @@
 <template>
-  <ap-modal :visible="isModalOpened" :showProgress="isLoadingContent" title="Nova Cultura" minimized @hide="closeModal">
+  <ap-modal ref="newCulturaModal" title="Nova Cultura" :visible="isModalOpened"
+            :searchable="hasSearch" @search-input="search" @hide="closeModal">
     <q-carousel slot="content" height="100%" no-swipe ref="stepperNovaCultura" @slide-trigger="setStepperIndex">
       <!--PASSO 1 SELECIONAR CULTURA-->
       <q-carousel-slide class="q-pa-none">
@@ -108,7 +109,7 @@
         safraService: new SafraService(),
         unidadeMedidaService: new UnidadeMedidaService(),
         isModalOpened: false,
-        isLoadingContent: false,
+        hasSearch: true,
         currentStep: 0,
         safraId: null,
         safraCultura: new SafraCultura(),
@@ -130,12 +131,15 @@
         this.resetStepper();
       },
       setStepperIndex(oldIndex, newIndex, direction){
-        this.currentStep = newIndex
+        this.currentStep = newIndex;
+        this.hasSearch = this.currentStep === 0;
       },
       goToNextStep(){
+        this.$refs.newCulturaModal.closeSearch(true);
         this.$refs.stepperNovaCultura.next();
       },
       goToPreviousStep(){
+        this.$refs.newCulturaModal.closeSearch(true);
         this.$refs.stepperNovaCultura.previous();
       },
       resetStepper(){
@@ -146,29 +150,28 @@
         this.unidadesMedida = null;
       },
       getCulturas(safraId) {
-        //this.$q.loading.show();
-        this.isLoadingContent = true;
+        this.$refs.newCulturaModal.showProgress();
         this.safraService.listFreeCulturas(safraId).then(culturas => {
           this.culturas = culturas;
-          //this.$q.loading.hide();
-          this.isLoadingContent = false;
+          this.$refs.newCulturaModal.hideProgress();
         });
       },
       getUnidadesMedida(){
-        //this.$q.loading.show();
-        this.isLoadingContent = true;
+        this.$refs.newCulturaModal.showProgress();
         this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
           this.unidadesMedida = unidades;
-          //this.$q.loading.hide();
-          this.isLoadingContent = false;
+          this.$refs.newCulturaModal.hideProgress();
         })
       },
       getUnidadesArea(){
-        this.isLoadingContent = true;
+        this.$refs.newCulturaModal.showProgress();
         this.unidadeMedidaService.listUnidadesArea().then(unidades => {
           this.unidadesArea = unidades;
-          this.isLoadingContent = false;
+          this.$refs.newCulturaModal.hideProgress();
         })
+      },
+      search(value){
+        console.log('search', value)
       },
       setCultura(cultura){
         this.safraCultura.cultura_id = cultura.id;
