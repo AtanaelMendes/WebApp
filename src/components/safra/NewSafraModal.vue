@@ -1,68 +1,53 @@
 <template>
-  <q-modal v-model="isModalOpened" class="new-safra-modal" minimized @hide="closeModal" :content-css="{minWidth: '300px'}">
-    <q-modal-layout>
-      <div class="q-px-lg q-pb-sm q-pt-lg q-title" slot="header">
-        Nova Safra
+  <ap-modal ref="newSafraModal" title="Nova Safra" :visible="isModalOpened" @hide="closeModal">
+
+    <div slot="content" class="q-mx-lg q-mb-lg" >
+      <div class="q-my-md" align="center">
+        <q-btn-toggle
+          v-model="safra.safrinha.value"
+          toggle-color="primary"
+          :options="[ {label: 'Safra', value: false}, {label: 'Safrinha', value: true},]"
+        />
       </div>
 
-      <div class="q-mx-lg q-mb-lg">
-        <div class="q-my-md" align="center">
+      <div style="display: flex; justify-content: space-between">
+        <!--ANO INICIO;-->
+        <div class="row column justify-between">
+          <span class="q-caption q-mb-sm">Início</span>
+          <q-select class="q-my-none" v-model="safra.inicio.value" :options="yearsList" filter @input="setAnoInicio"/>
+        </div>
+        <!--ANO FIM-->
+        <div class="row column">
+          <span class="q-caption q-mb-sm">Fim</span>
           <q-btn-toggle
-            v-model="safra.safrinha.value"
+            @input="setAnoFim"
+            class="custom-toggle"
             toggle-color="primary"
-            :options="[ {label: 'Safra', value: false}, {label: 'Safrinha', value: true},]"
-          />
+            v-model="selectedAnoFim"
+            :options="[{label: safra.inicio.value, value: safra.inicio.value},
+                     {label: parseInt(safra.inicio.value) + 1, value: (parseInt(safra.inicio.value) + 1).toString()}]"/>
         </div>
-
-        <div class="row inline">
-          <!--ANO INICIO-->
-          <div class="col-6">
-            <q-field :error="safra.inicio.errorMessage != null" class="q-mb-sm">
-              <q-select float-label="Inicio" v-model="safra.inicio.value" :options="yearsList" filter @input="setAnoInicio"/>
-              <div class="q-field-bottom row no-wrap">
-                <div class="q-field-error col" v-if="safra.inicio.errorMessage != null" >{{safra.inicio.errorMessage}}</div>
-              </div>
-            </q-field>
-          </div>
-
-          <!--ANO FIM-->
-          <div class="col-6">
-            <q-item >
-              <q-item-main>
-                <q-item-tile sublabel class="q-caption">Fim</q-item-tile>
-                <q-item-tile sublabel>
-                  <q-btn-toggle
-                    @input="setAnoFim"
-                    class="custom-toggle"
-                    toggle-color="primary"
-                    v-model="selectedAnoFim"
-                    :options="[{label: safra.inicio.value, value: safra.inicio.value},
-                               {label: parseInt(safra.inicio.value) + 1, value: (parseInt(safra.inicio.value) + 1).toString()}
-                              ]"
-                  />
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-          </div>
-        </div>
-
       </div>
+    </div>
 
-      <div class="q-pa-sm text-right" slot="footer">
-        <q-btn @click.native="closeModal" flat color="primary" label="Cancelar" class="q-mr-xs"/>
-        <q-btn @click.native="saveSafra" flat label="Salvar" color="primary" v-if="!isEditMode"/>
-        <q-btn @click.native="updateSafra" flat label="Atualizar" color="primary" v-if="isEditMode"/>
-      </div>
-    </q-modal-layout>
-  </q-modal>
+    <div class="q-pa-sm text-right" slot="footer">
+      <q-btn @click.native="closeModal" flat color="primary" label="Cancelar" class="q-mr-xs"/>
+      <q-btn @click.native="saveSafra" flat label="Salvar" color="primary" v-if="!isEditMode"/>
+      <q-btn @click.native="updateSafra" flat label="Atualizar" color="primary" v-if="isEditMode"/>
+    </div>
+  </ap-modal>
 </template>
 
 <script>
   import Safra from '../../assets/js/model/safra/Safra'
   import SafraService from "../../assets/js/service/safra/SafraService";
+  import apModal from 'components/ApModal'
 
   export default {
     name: "NewSafraModal",
+    components: {
+      apModal
+    },
     data(){
       return {
         isModalOpened: false,
@@ -151,12 +136,5 @@
   }
 </script>
 
-<style>
-  .new-safra-modal .q-layout-header{
-    box-shadow: none;
-  }
-
-  .new-safra-modal .q-layout-footer{
-    box-shadow: none;
-  }
+<style scoped>
 </style>
