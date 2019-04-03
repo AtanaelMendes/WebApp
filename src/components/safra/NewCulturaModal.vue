@@ -122,9 +122,15 @@
       openModal(safraId){
         this.isModalOpened = true;
         this.safraId = safraId;
-        this.getCulturas(safraId);
-        this.getUnidadesMedida();
-        this.getUnidadesArea();
+
+        this.$refs.newCulturaModal.showProgress();
+        Promise.all([
+          this.getCulturas(safraId),
+          this.getUnidadesMedida(),
+          this.getUnidadesArea()
+        ]).then(()=>{
+          this.$refs.newCulturaModal.hideProgress();
+        });
       },
       closeModal(){
         this.isModalOpened = false;
@@ -149,25 +155,19 @@
         this.unidadesArea = null;
         this.unidadesMedida = null;
       },
-      getCulturas(safraId) {
-        this.$refs.newCulturaModal.showProgress();
-        this.safraService.listFreeCulturas(safraId).then(culturas => {
+      async getCulturas(safraId) {
+        return this.safraService.listFreeCulturas(safraId).then(culturas => {
           this.culturas = culturas;
-          this.$refs.newCulturaModal.hideProgress();
         });
       },
-      getUnidadesMedida(){
-        this.$refs.newCulturaModal.showProgress();
-        this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
+      async getUnidadesMedida(){
+        return this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
           this.unidadesMedida = unidades;
-          this.$refs.newCulturaModal.hideProgress();
         })
       },
-      getUnidadesArea(){
-        this.$refs.newCulturaModal.showProgress();
-        this.unidadeMedidaService.listUnidadesArea().then(unidades => {
+      async getUnidadesArea(){
+        return this.unidadeMedidaService.listUnidadesArea().then(unidades => {
           this.unidadesArea = unidades;
-          this.$refs.newCulturaModal.hideProgress();
         })
       },
       search(value){
