@@ -102,11 +102,11 @@
         </div>
 
       </template>
-    </div>
 
-    <!--EMPTY LIST-->
-    <div class="col-12" v-if="safras.length <= 0">
-      <ap-no-results />
+      <!--EMPTY LIST-->
+      <div class="col-12" v-if="safras.length <= 0">
+        <ap-no-results />
+      </div>
     </div>
 
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
@@ -149,7 +149,7 @@
           safraCulturaService: new SafraCulturaService(),
           // SAFRA
           isFavorite: false,
-          safras: [],
+          safras: null,
         }
       },
       methods: {
@@ -196,8 +196,8 @@
         },
         listSafras(){
           this.$q.loading.show();
-          this.safraService.listSafras().then(safras => {
-            this.getNewSafraRequest(safras);
+          this.safraService.listSafras().then(async safras => {
+            await this.getNewSafraRequest(safras);
             this.$q.loading.hide();
           })
         },
