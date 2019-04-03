@@ -190,8 +190,8 @@
         favoriteSafra(id, pin){
           this.$q.loading.show();
           this.safraService.favoriteSafra(id, pin).then(() => {
-            this.listSafras();
             this.$q.loading.hide();
+            this.listSafras();
           })
         },
         listSafras(){
@@ -211,15 +211,15 @@
           this.$q.loading.show();
           this.safraService.archiveSafra(id).then(() => {
             this.$q.notify({type: 'positive', message: 'Safra arquivda com sucesso!'});
-            this.listSafras();
             this.$q.loading.hide();
+            this.listSafras();
           })
         },
         restoreSafra(id){
           this.$q.loading.show();
           this.safraService.restoreSafra(id).then(() => {
-            this.listSafras();
             this.$q.loading.hide();
+            this.listSafras();
           })
         },
         deleteSafra(id){
@@ -231,8 +231,8 @@
           }).then(data => {
             this.$q.loading.show();
             this.safraService.deleteSafra(id).then(() => {
-              this.listSafras();
               this.$q.loading.hide();
+              this.listSafras();
             }).catch(error => {
               if(error.response.status){
                 this.$q.loading.hide();
@@ -256,15 +256,15 @@
         archiveSafraCultura(safra_id, id){
           this.$q.loading.show();
           this.safraCulturaService.archiveSafraCultura(safra_id, id).then(() => {
-            this.listSafras();
             this.$q.loading.hide();
+            this.listSafras();
           })
         },
         restoreSafraCultura(safra_id, id){
           this.$q.loading.show();
           this.safraCulturaService.restoreSafraCultura(safra_id, id).then(() => {
-            this.listSafras();
             this.$q.loading.hide();
+            this.listSafras();
           })
         },
         deleteSafraCultura(safra_id, id){
@@ -276,8 +276,8 @@
           }).then(data => {
             this.$q.loading.show();
             this.safraCulturaService.deleteSafraCultura(safra_id, id).then(() => {
-              this.listSafras();
               this.$q.loading.hide();
+              this.listSafras();
             })
           })
         },
