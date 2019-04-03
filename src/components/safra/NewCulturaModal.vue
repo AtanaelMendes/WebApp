@@ -123,13 +123,13 @@
         this.isModalOpened = true;
         this.safraId = safraId;
 
-        this.$refs.newCulturaModal.showProgress();
+        this.$refs.newCulturaModal.showInnerProgress();
         Promise.all([
           this.getCulturas(safraId),
           this.getUnidadesMedida(),
           this.getUnidadesArea()
         ]).then(()=>{
-          this.$refs.newCulturaModal.hideProgress();
+          this.$refs.newCulturaModal.hideInnerProgress();
         });
       },
       closeModal(){
@@ -181,12 +181,12 @@
         this.goToNextStep();
       },
       saveSafraCultura(){
-        this.$q.loading.show();
+        this.$refs.newCulturaModal.showOuterProgress();
         this.safraCulturaService.saveSafraCultura(this.safraId, this.safraCultura.getValues()).then(() => {
           this.$q.notify({type: 'positive', message: 'Cultura criada com sucesso'});
+          this.$refs.newCulturaModal.hideOuterProgress();
           this.closeModal();
           this.$root.$emit('refreshSafrasList');
-          this.$q.loading.hide();
         })
       },
       parsedUnidades(unidades){

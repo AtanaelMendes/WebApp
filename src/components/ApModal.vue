@@ -1,30 +1,36 @@
 <template>
   <q-modal v-model="visible" no-backdrop-dismiss no-esc-dismiss class="ap-modal"
            :content-css="{maxWidth: '80vh', maxHeight: '80vh'}" minimized @hide="hideEvent">
-    <q-modal-layout>
-      <div class="q-px-lg q-pb-sm q-pt-lg" slot="header">
-        <div class="q-title">{{title}}</div>
-        <div class="search-container" v-if="searchable" v-bind:class="{'search-container-opened':searchVisible}">
-          <q-search v-model="searchValue" v-if="searchVisible"
-                    @input="inputSearchEvent" @blur="closeSearch(false)" @keydown="inputSearchKeyDownEvent"
-                    placeholder="Pesquisar..." style="padding-left: 16px"
-                    no-icon autofocus hide-underline/>
-          <q-btn flat round dense icon="search" v-if="!searchVisible" @click="openSearch" />
-          <q-btn flat round dense icon="close" v-if="searchVisible" @click="closeSearch(true)" />
+
+      <q-modal-layout class="relative-position">
+        <div class="q-px-lg q-pb-sm q-pt-lg" slot="header">
+          <div class="q-title">{{title}}</div>
+          <div class="search-container" v-if="searchable" v-bind:class="{'search-container-opened':searchVisible}">
+            <q-search v-model="searchValue" v-if="searchVisible"
+                      @input="inputSearchEvent" @blur="closeSearch(false)" @keydown="inputSearchKeyDownEvent"
+                      placeholder="Pesquisar..." style="padding-left: 16px"
+                      no-icon autofocus hide-underline/>
+            <q-btn flat round dense icon="search" v-if="!searchVisible" @click="openSearch" />
+            <q-btn flat round dense icon="close" v-if="searchVisible" @click="closeSearch(true)" />
+          </div>
         </div>
-      </div>
 
-      <div class="relative-position" style="min-height: 100px">
-        <slot name="content"/>
-        <q-inner-loading :visible="isProgressVisible">
-          <q-spinner size="60px" color="red"></q-spinner>
-        </q-inner-loading>
-      </div>
+        <div class="relative-position" style="min-height: 100px">
+          <slot name="content"/>
+          <q-inner-loading :visible="isInnerProgressVisible">
+            <q-spinner size="60px" color="red"></q-spinner>
+          </q-inner-loading>
+        </div>
 
-      <div class="q-pa-sm" slot="footer">
-        <slot name="footer"/>
-      </div>
-    </q-modal-layout>
+        <div class="q-pa-sm" slot="footer">
+          <slot name="footer"/>
+        </div>
+      </q-modal-layout>
+
+      <q-inner-loading :visible="isOuterProgressVisible" style="pointer-events: unset; z-index: 6000">
+        <q-spinner size="50px" color="red"></q-spinner>
+      </q-inner-loading>
+
   </q-modal>
 </template>
 
@@ -40,7 +46,8 @@
       return {
         searchVisible: false,
         searchValue: "",
-        isProgressVisible: false,
+        isInnerProgressVisible: false,
+        isOuterProgressVisible: false,
       }
     },
     methods:{
@@ -70,11 +77,17 @@
           }
         }
       },
-      showProgress(){
-        this.isProgressVisible = true;
+      showInnerProgress(){
+        this.isInnerProgressVisible = true;
       },
-      hideProgress(){
-        this.isProgressVisible = false;
+      hideInnerProgress(){
+        this.isInnerProgressVisible = false;
+      },
+      showOuterProgress(){
+        this.isOuterProgressVisible = true;
+      },
+      hideOuterProgress(){
+        this.isOuterProgressVisible = false;
       }
     }
   }
