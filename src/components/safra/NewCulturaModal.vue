@@ -5,42 +5,65 @@
       <q-carousel-slide class="q-pa-none">
         <template v-if="culturas">
           <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
-            <span class="q-subheading">Selecione uma cultura</span>
+            <span class="q-subheading text-faded">Selecione uma cultura</span>
           </div>
-          <div class="q-pa-lg">
-            <div class="row gutter-sm">
-              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultura in culturas" :key="cultura.nome">
-                <q-card @click.native="setCultura(cultura)">
-                  <q-card-media overlay-position="full">
-                    <ap-image size="400x250" :file-name="cultura.image_file_name"/>
 
-                    <q-card-title slot="overlay" align="end" v-if="cultura.id === safraCultura.cultura_id">
-                      <q-icon name="check_circle" size="30px" color="positive"/>
+          <template v-if="$q.screen.gt.xs">
+            <div class="q-px-lg q-py-sm">
+              <div class="row gutter-sm">
+                <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" v-for="cultura in culturas" :key="cultura.nome">
+                  <q-card @click.native="setCultura(cultura)">
+                    <q-card-media overlay-position="full">
+                      <ap-image size="400x250" :file-name="cultura.image_file_name"/>
+
+                      <q-card-title slot="overlay" align="end" v-if="cultura.id === safraCultura.cultura_id">
+                        <q-icon name="check_circle" size="30px" color="positive"/>
+                      </q-card-title>
+                    </q-card-media>
+                    <q-card-title>
+                      {{cultura.nome}}
                     </q-card-title>
-                  </q-card-media>
-                  <q-card-title>
-                    {{cultura.nome}}
-                  </q-card-title>
-                </q-card>
-              </div>
-
-              <div v-if="culturas.length === 0" class="list-empty">
-                <q-icon name="warning" />
-                <span>Nenhuma cultura disponível.</span>
+                  </q-card>
+                </div>
               </div>
             </div>
+
+          </template>
+
+          <q-list no-border separator style="width: 100%" link v-if="$q.screen.lt.sm">
+            <q-item v-for="cultura in culturas" :key="cultura.nome" @click.native="setCultura(cultura)">
+              <q-item-side>
+                <q-item-tile style="width:70px">
+                  <ap-image size="200x125" :file-name="cultura.image_file_name" />
+                </q-item-tile>
+              </q-item-side>
+              <q-item-main>
+                <q-item-tile label>
+                  {{cultura.nome}}
+                </q-item-tile>
+              </q-item-main>
+              <q-item-side right>
+                <q-icon name="check_circle" size="30px" color="positive" v-if="cultura.id === safraCultura.cultura_id"/>
+              </q-item-side>
+            </q-item>
+          </q-list>
+
+          <div v-if="culturas.length === 0" class="list-empty">
+            <q-icon name="warning" />
+            <span>Nenhuma cultura disponível.</span>
           </div>
         </template>
+
       </q-carousel-slide>
       <!--PASSO 2 INFORMAR UNIDADES-->
       <q-carousel-slide class="q-pa-none">
         <template v-if="unidadesMedida && unidadesArea">
           <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
-            <span class="q-subheading">Informe as unidades de medida</span>
+            <span class="q-subheading text-faded">Informe as unidades de medida</span>
           </div>
           <div class="q-pa-lg">
-            <div class="row gutter-sm justify-center">
-              <div class="col-xs-12 col-md-6 col-lg-3">
+            <div class="row justify-center">
+              <div class="">
                 <div>
                   <q-select key="qtd" v-model="safraCultura.view_unidade_medida_id" :options="parsedUnidades(unidadesMedida)" float-label="Controlar quantidades em"/>
                 </div>

@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="visible" class="ap-modal relative-position" :minimized="minimized" @hide="hideEvent">
+  <q-modal v-model="visible" class="ap-modal relative-position" :content-css="{maxWidth: '80vh', minHeight: '80vh'}" :minimized="minimized" @hide="hideEvent">
     <q-modal-layout>
       <div class="q-px-lg q-pb-sm q-pt-lg" slot="header">
         <div class="q-title">{{title}}</div>
@@ -35,6 +35,7 @@
       visible: Boolean,
       showProgress: Boolean,
       minimized: Boolean,
+      type: String,
     },
     data(){
       return {
@@ -45,6 +46,7 @@
     methods:{
       hideEvent(){
         this.searchVisible = false;
+        this.searchValue = "";
         this.$emit('hide')
       },
       inputSearchEvent(value){
@@ -69,11 +71,19 @@
 
 <style>
   .ap-modal.modal.minimized .modal-content{
+    margin: 0 20px;
+    overflow: hidden;
+  }
+
+  .ap-modal-small.modal.minimized .modal-content{
+
+  }
+
+  .ap-modal-big.modal.minimized .modal-content{
     max-width: 90vw;
     max-height: 90vh;
     width: 90vw;
     height: 90vh;
-    overflow: hidden;
   }
 
   .ap-modal .q-layout-header{
