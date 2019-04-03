@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="visible" no-backdrop-dismiss no-esc-dismiss class="ap-modal relative-position"
+  <q-modal v-model="visible" no-backdrop-dismiss no-esc-dismiss class="ap-modal"
            :content-css="{maxWidth: '80vh', maxHeight: '80vh'}" minimized @hide="hideEvent">
     <q-modal-layout>
       <div class="q-px-lg q-pb-sm q-pt-lg" slot="header">
@@ -12,20 +12,19 @@
           <q-btn flat round dense icon="search" v-if="!searchVisible" @click="openSearch" />
           <q-btn flat round dense icon="close" v-if="searchVisible" @click="closeSearch(true)" />
         </div>
-
       </div>
 
-      <slot name="content"/>
+      <div class="relative-position" style="min-height: 100px">
+        <slot name="content"/>
+        <q-inner-loading :visible="isProgressVisible">
+          <q-spinner size="60px" color="red"></q-spinner>
+        </q-inner-loading>
+      </div>
 
       <div class="q-pa-sm" slot="footer">
         <slot name="footer"/>
       </div>
     </q-modal-layout>
-
-
-    <q-inner-loading :visible="isProgressVisible">
-      <q-spinner size="70px" color="red"></q-spinner>
-    </q-inner-loading>
   </q-modal>
 </template>
 

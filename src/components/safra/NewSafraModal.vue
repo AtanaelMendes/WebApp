@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <div class="q-pa-sm text-right" slot="footer">
+    <div class="text-right" slot="footer">
       <q-btn @click.native="closeModal" flat color="primary" label="Cancelar" class="q-mr-xs"/>
       <q-btn @click.native="saveSafra" flat label="Salvar" color="primary" v-if="!isEditMode"/>
       <q-btn @click.native="updateSafra" flat label="Atualizar" color="primary" v-if="isEditMode"/>
