@@ -100,30 +100,30 @@
         if(!this.safra.isValid()){
           return;
         }
-        this.$q.loading.show();
+        this.$refs.newSafraModal.showOuterProgress();
         this.safraService.saveSafra(this.safra.getValues()).then(() => {
           this.$q.notify({type: 'positive', message: 'Safra criada com sucesso'});
+          this.$refs.newSafraModal.hideOuterProgress();
           this.closeModal();
           this.$root.$emit('refreshSafrasList');
-          this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-          this.$q.loading.hide();
+          this.$refs.newSafraModal.hideOuterProgress();
         });
       },
       updateSafra(){
         if(!this.safra.isValid()){
           return;
         }
-        this.$q.loading.show();
+        this.$refs.newSafraModal.showOuterProgress();
         this.safraService.updateSafra(this.safraId, this.safra.getValues()).then(() => {
           this.$q.notify({type: 'positive', message: 'Safra atualizada com sucesso!'});
+          this.$refs.newSafraModal.hideOuterProgress();
           this.closeModal();
           this.$root.$emit('refreshSafrasList');
-          this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-          this.$q.loading.hide();
+          this.$refs.newSafraModal.hideOuterProgress();
         });
       },
       fillSafraForm(data){
