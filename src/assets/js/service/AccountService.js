@@ -1,6 +1,6 @@
 import AccountRepository from "../repository/AccountRepository";
 import AccountAPI from "../api/AccountAPI";
-import SafraAPI from "../api/SafraAPI";
+import Vue from 'vue'
 
 export default class AccountService{
   #accountRepository;
@@ -57,8 +57,9 @@ export default class AccountService{
 
   logout () {
     return new Promise((resolve, reject) => {
-      AccountAPI.logout().then(() => {
-        clearAccountInfo();
+      AccountAPI.logout().then(async () => {
+        await clearAccountInfo();
+        await deleteTables();
         resolve();
       }).catch(error => {
         reject(error)
@@ -70,4 +71,16 @@ export default class AccountService{
 function clearAccountInfo(){
   localStorage.removeItem('auth.token');
   localStorage.removeItem('auth.refresh_token');
+}
+
+function deleteTables(){
+  return Promise.all([
+    Vue.prototype.db_resources.delete(),
+    Vue.prototype.db_lists.delete(),
+    Vue.prototype.db_primary.delete()
+  ]).then(()=>{
+    Vue.prototype.db_resources.open();
+    Vue.prototype.db_lists.open();
+    Vue.prototype.db_primary.open();
+  });
 }
