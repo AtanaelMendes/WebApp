@@ -89,7 +89,7 @@
       },
       isFormValid(){
         let hasError = false;
-        console.log('oi')
+
         if(!helpers.req(this.currentAccount.nome)){
           this.nomeError = "Digite um nome";
           hasError = true;

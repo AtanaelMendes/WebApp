@@ -12,7 +12,7 @@
                 <q-item v-close-overlay @click.native="openEditAccountInfoModal">
                   <q-item-main label="Editar Informações" />
                 </q-item>
-                <q-item v-close-overlay @click.native="">
+                <q-item v-close-overlay @click.native="openChangePasswordModal">
                   <q-item-main label="Alterar senha" />
                 </q-item>
               </q-list>
@@ -34,6 +34,7 @@
     </q-modal-layout>
 
     <edit-account-info-modal ref="editAccountInfoModal" />
+    <change-password ref="changePasswordModal" />
 
     <!--MODAL UPDATE ACCOUNT PICTURE-->
     <q-modal v-model="modalUpdateAccountPicture" maximized no-backdrop-dismiss>
@@ -62,6 +63,7 @@
   import imapeUpload from 'components/ImageUpload'
   import apImage from 'components/ApImage'
   import editAccountInfoModal from 'components/account/EditAccountInfoModal'
+  import changePassword from 'components/account/ChangePasswordModal'
   import AccountService from "../../assets/js/service/AccountService";
   import AccountAPI from "../../assets/js/api/AccountAPI";
   import AccountRepository from "../../assets/js/repository/AccountRepository";
@@ -74,6 +76,7 @@
       apImage,
       imapeUpload,
       editAccountInfoModal,
+      changePassword,
     },
     data(){
       return{
@@ -110,6 +113,9 @@
       },
       openEditAccountInfoModal(){
         this.$refs.editAccountInfoModal.openModal(this.currentAccount);
+      },
+      openChangePasswordModal(){
+        this.$refs.changePasswordModal.openModal();
       },
       openModalUpdateAccountPicture(){
         this.modalUpdateAccountPicture = true;

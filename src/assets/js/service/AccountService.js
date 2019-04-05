@@ -37,6 +37,24 @@ export default class AccountService{
     });
   }
 
+  changePassword(data){
+    return new Promise((resolve, reject) => {
+      AccountAPI.changePassword(data).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        if(error.response.status === 422){
+          reject(new Error("Senha incorreta!"));
+        }else{
+          reject(error)
+        }
+      })
+    });
+  }
+
   logout () {
     return new Promise((resolve, reject) => {
       AccountAPI.logout().then(() => {
