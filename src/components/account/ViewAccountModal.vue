@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="isModalOpened" class="view-account-modal" minimized >
+  <q-modal v-model="isModalOpened" class="view-account-modal" minimized @hide="closeModal" >
     <q-modal-layout>
       <template v-if="currentAccount">
         <div class="header shadow-2">
@@ -7,10 +7,13 @@
             <q-popover>
               <q-list link class="scroll" >
                 <q-item v-close-overlay @click.native="openModalUpdateAccountPicture">
-                  <q-item-main label="Trocar Foto" />
+                  <q-item-main label="Enviar Foto" />
+                </q-item>
+                <q-item v-close-overlay @click.native="openEditAccountInfoModal">
+                  <q-item-main label="Editar Informações" />
                 </q-item>
                 <q-item v-close-overlay @click.native="">
-                  <q-item-main label="Editar Informações" />
+                  <q-item-main label="Alterar senha" />
                 </q-item>
               </q-list>
             </q-popover>
@@ -29,6 +32,8 @@
         <q-btn flat color="primary" label="OK" @click="closeModal" />
       </div>
     </q-modal-layout>
+
+    <edit-account-info-modal ref="editAccountInfoModal" />
 
     <!--MODAL UPDATE ACCOUNT PICTURE-->
     <q-modal v-model="modalUpdateAccountPicture" maximized no-backdrop-dismiss>
@@ -56,15 +61,19 @@
 <script>
   import imapeUpload from 'components/ImageUpload'
   import apImage from 'components/ApImage'
+  import editAccountInfoModal from 'components/account/EditAccountInfoModal'
   import AccountService from "../../assets/js/service/AccountService";
   import AccountAPI from "../../assets/js/api/AccountAPI";
   import AccountRepository from "../../assets/js/repository/AccountRepository";
+  import ApModal from "../ApModal";
 
   export default {
     name: "ViewAccountModal",
     components: {
+      ApModal,
       apImage,
       imapeUpload,
+      editAccountInfoModal,
     },
     data(){
       return{
@@ -73,20 +82,34 @@
         isModalOpened: false,
         modalUpdateAccountPicture: false,
         currentAccount: null,
+        accountEdited: false,
       }
     },
     methods:{
-      openModal() {
+      openModal(account) {
         this.isModalOpened = true;
-        this.getAccountInfo();
+        this.currentAccount = account;
+        this.accountEdited = false;
       },
       closeModal() {
         this.isModalOpened = false;
+        if(this.accountEdited){
+          this.$root.$emit('refreshAccountInfo')
+        }
       },
       getAccountInfo(){
-        this.accountService.getInfo().then(info => {
-          this.currentAccount = info;
-        })
+        return AccountAPI.getAccountInfo().then(response => {
+          this.accountRepository.update(response.data).then(() => {
+            this.currentAccount = response.data;
+          });
+        });
+      },
+      refreshAccountInfo(){
+        this.accountEdited = true;
+        this.getAccountInfo();
+      },
+      openEditAccountInfoModal(){
+        this.$refs.editAccountInfoModal.openModal(this.currentAccount);
       },
       openModalUpdateAccountPicture(){
         this.modalUpdateAccountPicture = true;
@@ -97,13 +120,8 @@
       },
       async uploadFotoSuccess(response){
         this.closeModalUpdateAccountPicture();
-        //TODO: Colocar em um serviço
-        await AccountAPI.getAccountInfo().then(response => {
-          this.accountRepository.update(response.data).then(() => {
-            this.currentAccount = response.data;
-            this.$root.$emit('refreshAccountInfo')
-          });
-        });
+        await this.getAccountInfo();
+        this.accountEdited = true;
       },
       uploadFotoError(error){
         if(error.data){
@@ -115,6 +133,12 @@
       uploadAccountFoto(){
         this.$refs.accountImageUpload.uploadImage();
       },
+    },
+    mounted() {
+      this.$root.$on('updateAccountInfo', this.refreshAccountInfo);
+    },
+    destroyed() {
+      this.$root.$off('updateAccountInfo', this.refreshAccountInfo);
     }
   }
 </script>

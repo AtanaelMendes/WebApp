@@ -6,6 +6,10 @@ export default class AccountAPI{
     return Vue.prototype.$axios.get( 'account/info');
   }
 
+  static updateAccountInfo(account){
+    return Vue.prototype.$axios.put('account/info', account);
+  }
+
   static logout(){
     return Vue.prototype.$axios.post('account/logout');
   }

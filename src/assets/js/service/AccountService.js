@@ -1,5 +1,6 @@
 import AccountRepository from "../repository/AccountRepository";
 import AccountAPI from "../api/AccountAPI";
+import SafraAPI from "../api/SafraAPI";
 
 export default class AccountService{
   #accountRepository;
@@ -10,6 +11,30 @@ export default class AccountService{
 
   getInfo(){
     return this.accountRepository.getFirst();
+  }
+
+  updateInfo(info){
+    return new Promise((resolve, reject) => {
+      AccountAPI.updateAccountInfo(info).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        if(error.response.status === 422){
+          let msg = null;
+          if(error.response.data.password){
+            msg = "Senha incorreta!";
+          }else if(error.response.data.email){
+            msg = error.response.data.email[0];
+          }
+          reject(new Error(msg));
+        }else{
+          reject(error)
+        }
+      })
+    });
   }
 
   logout () {

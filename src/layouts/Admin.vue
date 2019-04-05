@@ -244,7 +244,7 @@
         }
       },
       showAccountModal(){
-        this.$refs.viewAccountModal.openModal();
+        this.$refs.viewAccountModal.openModal(this.currentAccount);
       },
       showOfflineAlertDialog(){
         this.isNetworkErrorDialogOpen = true;
