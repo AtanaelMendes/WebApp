@@ -15,6 +15,6 @@ export default class AccountRepository {
   }
 
   update(info){
-    return this.table.put(1, info)
+    return this.table.put(info, 1)
   }
 }

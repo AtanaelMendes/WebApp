@@ -4,42 +4,44 @@
 
     <q-layout-drawer v-model="leftDrawerOpen" class="layout-drawer">
       <div class="navigation-header">
-        <img src="/statics/images/no-image-user.svg" class="profile-image shadow-1"/>
-        <span class="profile-name">{{currentAccount.name}}</span>
-        <span class="profile-email">{{currentAccount.email}}</span>
-        <div>
-          <q-btn flat round dense class="network_status_icon" @click="showOfflineAlertDialog" v-if="isOfflineStatusBarVisible" >
-            <q-icon name="mdi-alert" color="warning"/>
-          </q-btn>
-          <q-btn flat round dense class="settings_icon">
-            <q-icon name="settings" />
-            <q-popover>
-              <q-list link class="scroll" style="min-width: 200px">
-                <q-item @click.native="">
-                  <q-item-side left>
-                    <q-item-tile icon="mdi-account" />
-                  </q-item-side>
-                  <q-item-main label="Minha conta" />
-                </q-item>
-                <q-item @click.native="getAccountInfo()">
-                  <q-item-side left>
-                    <q-item-tile icon="mdi-sync" />
-                  </q-item-side>
-                  <q-item-main label="Sincronizar" />
-                </q-item>
-                <q-item-separator />
-                <q-item @click.native="logout()">
-                  <q-item-side left>
-                    <q-item-tile icon="mdi-power" color="red" />
-                  </q-item-side>
-                  <q-item-main label="Sair" />
-                </q-item>
-              </q-list>
-            </q-popover>
-          </q-btn>
-          <span class="app-version" >v. {{app_version}}</span>
-        </div>
-
+        <template v-if="currentAccount">
+          <img src="/statics/images/no-image-user.svg" v-if="currentAccount.image_file_name === null" class="profile-image shadow-2"/>
+          <ap-image size="250x250" :fileName="currentAccount.image_file_name" v-if="currentAccount.image_file_name !== null" class="profile-image shadow-2"/>
+          <span class="profile-name">{{currentAccount.nome}}</span>
+          <span class="profile-email">{{currentAccount.email}}</span>
+          <div>
+            <q-btn flat round dense class="network_status_icon" @click="showOfflineAlertDialog" v-if="isOfflineStatusBarVisible" >
+              <q-icon name="mdi-alert" color="warning"/>
+            </q-btn>
+            <q-btn flat round dense class="settings_icon">
+              <q-icon name="settings" />
+              <q-popover>
+                <q-list link class="scroll" style="min-width: 200px">
+                  <q-item v-close-overlay @click.native="showAccountModal">
+                    <q-item-side left>
+                      <q-item-tile icon="mdi-account" />
+                    </q-item-side>
+                    <q-item-main label="Minha conta" />
+                  </q-item>
+                  <q-item v-close-overlay @click.native="getAccountInfo()">
+                    <q-item-side left>
+                      <q-item-tile icon="mdi-sync" />
+                    </q-item-side>
+                    <q-item-main label="Sincronizar" />
+                  </q-item>
+                  <q-item-separator />
+                  <q-item v-close-overlay @click.native="logout()">
+                    <q-item-side left>
+                      <q-item-tile icon="mdi-power" color="red" />
+                    </q-item-side>
+                    <q-item-main label="Sair" />
+                  </q-item>
+                </q-list>
+              </q-popover>
+            </q-btn>
+            <span class="app-version" >v. {{app_version}}</span>
+          </div>
+        </template>
       </div>
       <q-list no-border link inset-delimiter>
 
@@ -152,6 +154,8 @@
     <forbidden-access-dialog></forbidden-access-dialog>
     <sync-progress-dialog ref="syncProgressDialog"></sync-progress-dialog>
 
+    <view-account-modal ref="viewAccountModal" />
+
     <q-layout-footer v-model="offlineStatusBar" >
       <div class="offline-status-bar">
         <q-item dense>
@@ -176,39 +180,30 @@
   import AccountService from "../assets/js/service/AccountService";
   import ForbiddenAccessDialog from "../components/offline/ForbiddenAccessDialog";
   import SyncProgressDialog from "../components/offline/SyncProgressDialog";
+  import viewAccountDialog from "../components/account/ViewAccountModal";
   import ServiceMessage from '../assets/js/serviceWorker/ServiceMessage';
   import ServiceWorker from "../assets/js/serviceWorker/ServiceWorker";
+  import ViewAccountModal from "../components/account/ViewAccountModal";
+  import apImage from 'components/ApImage'
 
   export default {
     name: 'Admin',
     components:{
+      ViewAccountModal,
       SyncProgressDialog,
-      ForbiddenAccessDialog
+      ForbiddenAccessDialog,
+      viewAccountDialog,
+      apImage
     },
     data () {
       return {
         accountService: new AccountService(),
         syncService: null,
         leftDrawerOpen: this.$q.platform.is.desktop,
-        currentAccount: {
-          name: null,
-          email: null
-        },
+        currentAccount: null,
         isOfflineStatusBarVisible: false,
         isNetworkErrorDialogOpen: false,
       }
-    },
-    mounted(){
-      this.getAccountInfo();
-      //TODO: Registrar o service worker manualmente
-      //TODO: Esse método só pode ser chamado depois que o serviceWorker for iniciado
-
-      this.$root.$on('toogleLeftDrawer', this.toogleLeftDrawer);
-
-      if('serviceWorker' in navigator){
-        navigator.serviceWorker.addEventListener('message', this.serviceWorkerMessageEvent);
-      }
-
     },
     computed:{
       app_version: function () {
@@ -248,6 +243,9 @@
             break;
         }
       },
+      showAccountModal(){
+        this.$refs.viewAccountModal.openModal();
+      },
       showOfflineAlertDialog(){
         this.isNetworkErrorDialogOpen = true;
       },
@@ -259,8 +257,7 @@
       },
       getAccountInfo(){
         this.accountService.getInfo().then(info => {
-          this.currentAccount.name = info.nome;
-          this.currentAccount.email = info.email;
+          this.currentAccount = info;
 
           this.doSync();
         })
@@ -282,7 +279,23 @@
 
       }
     },
+    mounted(){
+      this.getAccountInfo();
+      //TODO: Registrar o service worker manualmente
+      //TODO: Esse método só pode ser chamado depois que o serviceWorker for iniciado
+
+      this.$root.$on('toogleLeftDrawer', this.toogleLeftDrawer);
+      this.$root.$on('refreshAccountInfo', this.getAccountInfo);
+
+      if('serviceWorker' in navigator){
+        navigator.serviceWorker.addEventListener('message', this.serviceWorkerMessageEvent);
+      }
+
+    },
     destroyed() {
+      this.$root.$off('toogleLeftDrawer', this.toogleLeftDrawer);
+      this.$root.$off('refreshAccountInfo', this.getAccountInfo);
+
       if('serviceWorker' in navigator){
         navigator.serviceWorker.removeEventListener('message', this.serviceWorkerMessageEvent);
       }

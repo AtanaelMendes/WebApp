@@ -22,7 +22,6 @@ export default class AuthService{
         localStorage.setItem('auth.refresh_token', response.data.refresh_token);
 
         AccountAPI.getAccountInfo().then(response => {
-          delete response.data.id;
           this.accountRepository.save(response.data).then(() => {
             resolve();
           });
