@@ -3,7 +3,7 @@
 
     <div slot="content" class="q-mx-lg q-mb-lg" >
       <div id="map"></div>
-      <svg id="svg" height="400" width="400" preserveAspectRatio="xMinYMin meet"></svg>
+      <svg id="svg" height="300" width="400" preserveAspectRatio="xMinYMin meet"></svg>
     </div>
 
     <div class="text-right" slot="footer">
@@ -59,19 +59,49 @@
               position: google.maps.ControlPosition.TOP_CENTER,
               drawingModes: ['polygon']
             },
+            polygonOptions: {
+              editable: true,
+            }
           });
 
           drawingManager.setMap(this.map);
 
           var infowindow = new google.maps.InfoWindow();
+          var polygonObj = null;
 
           google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
+            polygonObj = polygon;
+            computeArea(polygon, this.map);
+
+            polygon.getPaths().forEach(function(path, index){
+              google.maps.event.addListener(path, 'insert_at', function(){
+                computeArea(polygon, this.map)
+              }.bind(this));
+
+              google.maps.event.addListener(path, 'remove_at', function(){
+                computeArea(polygon, this.map)
+              }.bind(this));
+
+              google.maps.event.addListener(path, 'set_at', function(){
+                computeArea(polygon, this.map)
+              }.bind(this));
+
+            }.bind(this));
+
+            renderPolgon(polygon);
+
+          });
+
+          function computeArea(polygon, map){
+            console.log('computeArea', polygon.getPaths().getArray()[0].length)
             var area = google.maps.geometry.spherical.computeArea(polygon.getPath());
             var areaInHectare = area / 10000;
             infowindow.setContent("Área: " + areaInHectare.toFixed(2) + " Ha.");
             infowindow.setPosition(polygon.getPath().getAt(0));
-            infowindow.open(this.map);
+            infowindow.open(map);
+          }
 
+          function renderPolgon(polygon){
             var paths = []; polygon.getPaths().forEach(function (x) { paths.push(x.getArray()); });
 
             var svgProps = poly_gm2svg(paths, function (latLng) {
@@ -81,8 +111,7 @@
               }
             });
             drawPoly(document.getElementById('svg'), svgProps)
-          });
-
+          }
 
           function latLng2point(latLng) {
 
@@ -158,9 +187,10 @@
   }
 
   #svg {
-    background:silver;
+    margin-top: 20px;
+    background:#c0ecae;
   }
   g {
-    fill:red;
+    fill:#86a579;
   }
 </style>
