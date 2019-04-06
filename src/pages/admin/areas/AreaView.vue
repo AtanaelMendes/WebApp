@@ -10,13 +10,13 @@
                 <q-item-main label="Atualizar Foto"/>
               </q-item>
               <q-item  @click.native="archiveArea(area.id)" v-if="!area.deleted_at" v-close-overlay>
-                <q-item-main label="Arquivar area"  />
+                <q-item-main label="Arquivar Área"  />
               </q-item>
               <q-item  @click.native="deleteArea(area.id)" v-close-overlay>
-                <q-item-main label="Excluir area"  />
+                <q-item-main label="Excluir Área"  />
               </q-item>
               <q-item  @click.native="restoreArea(area.id)" v-if="area.deleted_at" v-close-overlay>
-                <q-item-main label="Ativar area"  />
+                <q-item-main label="Ativar Área"  />
               </q-item>
             </q-list>
           </q-popover>
@@ -86,6 +86,9 @@
                       <q-item v-close-overlay @click.native="addFotoTalhao(talhao.id)">
                         <q-item-main label="Atualizar Foto"/>
                       </q-item>
+                      <q-item @click.native="openDelimitAreaModal()" v-close-overlay>
+                        <q-item-main label="Delimitar Área"/>
+                      </q-item>
                       <q-item v-close-overlay @click.native="updateTalhao(talhao.id)">
                         <q-item-main label="Editar"/>
                       </q-item>
@@ -126,6 +129,9 @@
         </q-fab-action>
       </q-fab>
     </q-page-sticky>
+
+    <!--MODAL DEFINIR MARCAÇÃO -->
+    <delimit-area-modal ref="delimitAreaModal" />
 
     <!--MODAL ADD FOTO AREA-->
     <q-modal v-model="modalAddFotoArea" maximized no-backdrop-dismiss>
@@ -174,6 +180,7 @@
   import customPage from 'components/CustomPage.vue'
   import imapeUpload from 'components/ImageUpload'
   import apImage from 'components/ApImage'
+  import delimitAreaModal from 'components/area/DelimitAreaModal'
   import AreaService from "../../../assets/js/service/area/AreaService";
   import TalhaoService from "../../../assets/js/service/area/TalhaoService";
 
@@ -184,6 +191,7 @@
       toolbar,
       customPage,
       imapeUpload,
+      delimitAreaModal
     },
     watch: {
       '$route' (to, from) {
@@ -406,6 +414,9 @@
             this.$q.loading.hide();
           })
         });
+      },
+      openDelimitAreaModal(){
+        this.$refs.delimitAreaModal.openModal();
       },
       backAction: function () {
         this.$router.back()
