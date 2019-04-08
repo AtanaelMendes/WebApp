@@ -82,7 +82,6 @@
       },
 
       formatTitle (tooltipItems, data) {
-        this.$emit("input", tooltipItems[0].index)
         return data.labels[tooltipItems[0].index]
       },
 
