@@ -6,11 +6,11 @@ export default class SafraCulturaTalhaoAPI{
     return Vue.prototype.$axios.put('safra_cultura/' + safraCulturaId + '/safra_cultura_talhao/'+ id, safraCulturaTalhao)
   }
 
-  static deleteSafraCulturaTalhao(id, safraCulturaId){
+  static unattachSafraCulturaTalhao(id, safraCulturaId){
     return Vue.prototype.$axios.delete('/safra_cultura/' + safraCulturaId + '/safra_cultura_talhao/' + id);
   }
 
-  static deleteSafraCulturaTalhoesByArea(safraCulturaId, areaId){
+  static unattachSafraCulturaTalhoesByArea(safraCulturaId, areaId){
     return Vue.prototype.$axios.delete('/safra_cultura/' + safraCulturaId + '/safra_cultura_talhao/delete_by_area/' + areaId);
   }
 

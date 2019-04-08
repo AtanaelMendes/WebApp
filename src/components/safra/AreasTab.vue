@@ -48,8 +48,8 @@
                               <q-btn flat round dense color="white" icon="more_vert" >
                                 <q-popover anchor="bottom left">
                                   <q-list link>
-                                    <q-item v-close-overlay @click.native="deleteSafraCulturaByArea(area.id)">
-                                      <q-item-main label="Excluir Área"/>
+                                    <q-item v-close-overlay @click.native="unattachSafraCulturaByArea(area.id)">
+                                      <q-item-main label="Desvincular Área"/>
                                     </q-item>
                                   </q-list>
                                 </q-popover>
@@ -110,13 +110,13 @@
                                 <q-popover anchor="bottom left">
                                   <q-list link>
                                     <q-item v-close-overlay @click.native="addCultivar(talhao)">
-                                      <q-item-main label="Adicionar Cultivar"/>
+                                      <q-item-main label="Informar Cultivar"/>
                                     </q-item>
                                     <q-item v-close-overlay @click.native="updateTamanhoCultivares(talhao)" v-if="talhao.cultivares.length > 0">
                                       <q-item-main label="Definir Tamanho dos Cultivares"/>
                                     </q-item>
-                                    <q-item v-close-overlay @click.native="deleteSafraCulturaTalhao(talhao.safra_cultura_talhao_id)">
-                                      <q-item-main label="Excluir Talhão"/>
+                                    <q-item v-close-overlay @click.native="unattachSafraCulturaTalhao(talhao.safra_cultura_talhao_id)">
+                                      <q-item-main label="Desvincular Talhão"/>
                                     </q-item>
                                   </q-list>
                                 </q-popover>
@@ -271,39 +271,39 @@
           this.$q.loading.hide();
         })
       },
-      deleteSafraCulturaByArea(areaId){
+      unattachSafraCulturaByArea(areaId){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente deseja apagar essa área?',
+          message: 'Realmente deseja desvincular essa área?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
           this.$q.loading.show();
-          this.safraCulturaService.deleteSafraCulturaTalhoesByArea(this.safraCultura.id, areaId).then(() => {
-            this.$q.notify({type: 'positive', message: 'Área apagada com sucesso.'});
+          this.safraCulturaService.unattachSafraCulturaTalhoesByArea(this.safraCultura.id, areaId).then(() => {
+            this.$q.notify({type: 'positive', message: 'Área desvinculada com sucesso.'});
             this.$root.$emit('refreshSafrasCulura');
             this.$q.loading.hide();
           });
         }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível excluir esta área'});
+          this.$q.notify({type: 'negative', message: 'Não foi possível desvincular esta área'});
           this.$q.loading.hide();
         })
       },
-      deleteSafraCulturaTalhao(safraCulturaTalhaoId){
+      unattachSafraCulturaTalhao(safraCulturaTalhaoId){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente deseja apagar esse talhão?',
+          message: 'Realmente deseja desvincular esse talhão?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
           this.$q.loading.show();
-          this.safraCulturaService.deleteSafraCulturaTalhao(this.safraCultura.id, safraCulturaTalhaoId).then(() => {
-            this.$q.notify({type: 'positive', message: 'Talhão excluido com sucesso.'});
-            this.getContent();
+          this.safraCulturaService.unattachSafraCulturaTalhao(this.safraCultura.id, safraCulturaTalhaoId).then(() => {
+            this.$q.notify({type: 'positive', message: 'Talhão desvinculado com sucesso.'});
+            this.$root.$emit('refreshSafrasCulura');
             this.$q.loading.hide();
           });
         }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível excluir este talhão'});
+          this.$q.notify({type: 'negative', message: 'Não foi possível desvincular este talhão'});
           this.$q.loading.hide();
         })
       },

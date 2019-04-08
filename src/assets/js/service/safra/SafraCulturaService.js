@@ -324,9 +324,9 @@ export default class SafraCulturaService {
     });
   }
 
-  deleteSafraCulturaTalhao(safra_cultura_id, id){
+  unattachSafraCulturaTalhao(safra_cultura_id, id){
     return new Promise((resolve, reject) => {
-      SafraCulturaTalhaoAPI.deleteSafraCulturaTalhao(id, safra_cultura_id).then(response => {
+      SafraCulturaTalhaoAPI.unattachSafraCulturaTalhao(id, safra_cultura_id).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
@@ -338,9 +338,9 @@ export default class SafraCulturaService {
     });
   }
 
-  deleteSafraCulturaTalhoesByArea(safra_cultura_id, area_id){
+  unattachSafraCulturaTalhoesByArea(safra_cultura_id, area_id){
     return new Promise((resolve, reject) => {
-      SafraCulturaTalhaoAPI.deleteSafraCulturaTalhoesByArea(safra_cultura_id, area_id).then(response => {
+      SafraCulturaTalhaoAPI.unattachSafraCulturaTalhoesByArea(safra_cultura_id, area_id).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
