@@ -1,5 +1,5 @@
 <template>
-    <q-list  no-border highlight inset-separator>
+    <q-list no-border inset-separator>
 
       <!-- Colhido -->
       <template v-if="quantidades.numero_cargas > 0">

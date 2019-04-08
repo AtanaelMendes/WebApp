@@ -112,9 +112,6 @@
                                     <q-item v-close-overlay @click.native="addCultivar(talhao)">
                                       <q-item-main label="Informar Cultivar"/>
                                     </q-item>
-                                    <q-item v-close-overlay @click.native="updateTamanhoCultivares(talhao)" v-if="talhao.cultivares.length > 0">
-                                      <q-item-main label="Definir Tamanho dos Cultivares"/>
-                                    </q-item>
                                     <q-item v-close-overlay @click.native="unattachSafraCulturaTalhao(talhao.safra_cultura_talhao_id)">
                                       <q-item-main label="Desvincular Talhão"/>
                                     </q-item>
@@ -135,7 +132,25 @@
                     :quantidades="activeTalhao"
                     :unidade-area="safraCultura.view_unidade_area"
                     :unidade-medida="safraCultura.view_unidade_medida">
-                    <q-item v-for="cultivar in activeTalhao.cultivares" :key="cultivar.key">
+
+                    <q-item style="background: #f3f1f1">
+                      <q-item-main>
+                        Cultivares
+                      </q-item-main>
+                      <q-item-side right>
+                        <q-btn flat round dense icon="more_vert" v-if="activeTalhao.cultivares.length > 0">
+                          <q-popover anchor="bottom left">
+                            <q-list link>
+                              <q-item v-close-overlay @click.native="updateTamanhoCultivares(activeTalhao)">
+                                <q-item-main label="Definir Tamanho dos Cultivares"/>
+                              </q-item>
+                            </q-list>
+                          </q-popover>
+                        </q-btn>
+                      </q-item-side>
+                    </q-item>
+
+                    <q-item link v-for="cultivar in activeTalhao.cultivares" :key="cultivar.key">
                       <q-item-side v-if="cultivar.image_file_name" :image="imageMakeUrl(cultivar.image_file_name, '200x125')" color="primary"/>
                       <q-item-side v-else icon="spa" color="primary"/>
                       <q-item-main>
