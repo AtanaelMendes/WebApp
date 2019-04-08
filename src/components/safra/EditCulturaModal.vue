@@ -6,7 +6,7 @@
       <q-select key="area" v-model="safraCultura.view_unidade_area.id" :options="parsedUnidades(unidadesArea)" float-label="Mostrar área em"/>
     </div>
 
-    <div slot="footer" >
+    <div slot="footer" class="text-right">
       <q-btn @click.native="closeModal" color="primary" flat label="Cancelar" class="q-mr-xs"/>
       <q-btn @click.native="updateSafraCultura" label="Atualizar" flat color="primary"/>
     </div>
