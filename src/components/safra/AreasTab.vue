@@ -109,9 +109,6 @@
                               <q-btn flat round dense color="white" icon="more_vert" >
                                 <q-popover anchor="bottom left">
                                   <q-list link>
-                                    <q-item v-close-overlay @click.native="addCultivar(talhao)">
-                                      <q-item-main label="Informar Cultivar"/>
-                                    </q-item>
                                     <q-item v-close-overlay @click.native="unattachSafraCulturaTalhao(talhao.safra_cultura_talhao_id)">
                                       <q-item-main label="Desvincular Talhão"/>
                                     </q-item>
@@ -138,10 +135,13 @@
                         Cultivares
                       </q-item-main>
                       <q-item-side right>
-                        <q-btn flat round dense icon="more_vert" v-if="activeTalhao.cultivares.length > 0">
+                        <q-btn flat round dense icon="more_vert" >
                           <q-popover anchor="bottom left">
                             <q-list link>
-                              <q-item v-close-overlay @click.native="updateTamanhoCultivares(activeTalhao)">
+                              <q-item v-close-overlay @click.native="addCultivar(activeTalhao)">
+                                <q-item-main label="Informar Cultivar"/>
+                              </q-item>
+                              <q-item v-close-overlay @click.native="updateTamanhoCultivares(activeTalhao)" v-if="activeTalhao.cultivares.length > 0">
                                 <q-item-main label="Definir Tamanho dos Cultivares"/>
                               </q-item>
                             </q-list>
@@ -150,31 +150,37 @@
                       </q-item-side>
                     </q-item>
 
-                    <q-item link v-for="cultivar in activeTalhao.cultivares" :key="cultivar.key">
-                      <q-item-side v-if="cultivar.image_file_name" :image="imageMakeUrl(cultivar.image_file_name, '200x125')" color="primary"/>
-                      <q-item-side v-else icon="spa" color="primary"/>
-                      <q-item-main>
-                        <q-item-tile>
-                          {{cultivar.marca}}
-                          {{cultivar.nome}}
-                        </q-item-tile>
-                        <q-item-tile sublabel>
-                          {{numeral(cultivar.tamanho * 100 / activeTalhao.tamanho).format('0,0.0')}}%
-                          ({{numeral(cultivar.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.sigla}})
-                        </q-item-tile>
-                      </q-item-main>
-                      <q-item-side right>
-                        <q-btn flat round dense icon="more_vert" >
-                          <q-popover anchor="bottom left">
-                            <q-list link>
-                              <q-item v-close-overlay @click.native="unattachCultivar(cultivar, activeTalhao)">
-                                <q-item-main label="Desvincular Cultivar"/>
-                              </q-item>
-                            </q-list>
-                          </q-popover>
-                        </q-btn>
-                      </q-item-side>
-                    </q-item>
+                    <template v-if="activeTalhao.cultivares.length > 0">
+                      <q-item link v-for="cultivar in activeTalhao.cultivares" :key="cultivar.key">
+                        <q-item-side v-if="cultivar.image_file_name" :image="imageMakeUrl(cultivar.image_file_name, '200x125')" color="primary"/>
+                        <q-item-side v-else icon="spa" color="primary"/>
+                        <q-item-main>
+                          <q-item-tile>
+                            {{cultivar.marca}}
+                            {{cultivar.nome}}
+                          </q-item-tile>
+                          <q-item-tile sublabel>
+                            {{numeral(cultivar.tamanho * 100 / activeTalhao.tamanho).format('0,0.0')}}%
+                            ({{numeral(cultivar.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.sigla}})
+                          </q-item-tile>
+                        </q-item-main>
+                        <q-item-side right>
+                          <q-btn flat round dense icon="more_vert" >
+                            <q-popover anchor="bottom left">
+                              <q-list link>
+                                <q-item v-close-overlay @click.native="unattachCultivar(cultivar, activeTalhao)">
+                                  <q-item-main label="Desvincular Cultivar"/>
+                                </q-item>
+                              </q-list>
+                            </q-popover>
+                          </q-btn>
+                        </q-item-side>
+                      </q-item>
+                    </template>
+                    <div v-else class="text-center list-empty">
+                      <q-icon name="warning" />
+                      <span>Nenhum cultivar informado ainda.</span>
+                    </div>
                   </safra-quantidades>
                 </div>
               </div>
@@ -353,5 +359,21 @@
 </script>
 
 <style scoped>
+  .lit-empty{
+    height: 55px;
+    text-align: center;
+    padding-top: 15px;
 
+    width: 100%;
+  }
+  .lit-empty span{
+    color: #8c8c8c;
+    font-weight: 300;
+    font-size: 15px;
+  }
+  .lit-empty i{
+    color: #ffb500;
+    font-size: 20px;
+    margin-right: 6px;
+  }
 </style>

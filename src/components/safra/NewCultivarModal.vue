@@ -11,7 +11,7 @@
           </div>
           <div class="q-pa-lg">
             <div class="row gutter-sm">
-              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="marca in marcas" :key="marca.id">
+              <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" v-for="marca in marcas" :key="marca.id">
                 <q-card @click.native="setMarca(marca.id)">
                   <q-card-media overlay-position="full">
                     <ap-image size="400x250" :file-name="marca.image_file_name"/>
@@ -42,7 +42,7 @@
           </div>
           <div class="q-pa-lg">
             <div class="row gutter-sm">
-              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="cultivar in cultivares" :key="cultivar.id">
+              <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" v-for="cultivar in cultivares" :key="cultivar.id">
                 <q-card @click.native="setCultivar(cultivar.id)">
                   <q-card-title class="text-center">
                     {{cultivar.nome}}
