@@ -281,7 +281,7 @@
           this.$q.loading.show();
           this.safraCulturaService.deleteSafraCulturaTalhoesByArea(this.safraCultura.id, areaId).then(() => {
             this.$q.notify({type: 'positive', message: 'Área apagada com sucesso.'});
-            this.getContent();
+            this.$root.$emit('refreshSafrasCulura');
             this.$q.loading.hide();
           });
         }).catch(error =>{

@@ -121,7 +121,7 @@
         ).then(() => {
           this.$q.notify({type: 'positive', message: 'Culturas atualizadas com sucesso!'});
           this.closeModal();
-          this.$root.$emit('refreshAreasTab');
+          this.$root.$emit('refreshSafrasCulura');
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})

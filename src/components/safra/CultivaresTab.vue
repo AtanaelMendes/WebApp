@@ -184,9 +184,6 @@
         return agroUtils.image.makeUrl(fileName, size)
       },
       getMarcas(){
-        if(this.marcas){
-          return;
-        }
         this.$q.loading.show();
         this.safraCulturaService.getMarcas(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
           this.marcas = response.marcas;
@@ -194,9 +191,6 @@
         })
       },
       getCultivares(){
-        if (this.cultivares) {
-          return;
-        }
         this.$q.loading.show();
         this.safraCulturaService.getCultivares(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
           this.cultivares = response.cultivares;
