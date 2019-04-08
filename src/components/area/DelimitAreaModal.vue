@@ -72,23 +72,26 @@
           google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
             polygonObj = polygon;
             computeArea(polygon, this.map);
+            renderPolgon(polygon);
 
             polygon.getPaths().forEach(function(path, index){
               google.maps.event.addListener(path, 'insert_at', function(){
                 computeArea(polygon, this.map)
+                renderPolgon(polygon);
               }.bind(this));
 
               google.maps.event.addListener(path, 'remove_at', function(){
                 computeArea(polygon, this.map)
+                renderPolgon(polygon);
               }.bind(this));
 
               google.maps.event.addListener(path, 'set_at', function(){
                 computeArea(polygon, this.map)
+                renderPolgon(polygon);
               }.bind(this));
 
             }.bind(this));
 
-            renderPolgon(polygon);
 
           });
 
@@ -183,7 +186,7 @@
 <style >
   #map {
     height: 400px;  /* The height is 400 pixels */
-    width: 600px;  /* The width is the width of the web page */
+    width: 400px;  /* The width is the width of the web page */
   }
 
   #svg {
