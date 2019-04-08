@@ -1,20 +1,17 @@
 <template>
-  <q-modal v-model="isModalOpened" class="new-area-modal" minimized @hide="closeModal">
-    <q-modal-layout>
-      <div class="q-px-lg q-pb-sm q-pt-lg q-title" slot="header">
-        Nova Área
-      </div>
+  <ap-modal ref="newAreaModal" title="Nova Área" :visible="isModalOpened"
+            :searchable="hasSearch" @search-input="search" @hide="closeModal">
 
-      <q-carousel height="100%" no-swipe ref="stepperNovaArea" v-if="selectedSafraCultura" @slide-trigger="setStepperIndex">
-        <!--PASSO 1 ADICIONAR AREA-->
-        <q-carousel-slide class="q-pa-none">
+    <q-carousel slot="content" height="100%" no-swipe ref="stepperNovaArea" v-if="selectedSafraCultura" @slide-trigger="setStepperIndex">
+      <!--PASSO 1 ADICIONAR AREA-->
+      <q-carousel-slide class="q-pa-none">
+        <template v-if="areas">
           <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
-            <span class="q-subheading">Selecione uma área</span>
-            <!--<q-input placeholder="Pesquisar" class=""/>-->
+            <span class="q-subheading text-faded">Selecione uma área</span>
           </div>
           <div class="q-pa-lg">
             <div class="row gutter-sm">
-              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" v-for="area in areas" :key="area.nome">
+              <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" v-for="area in areas" :key="area.nome">
                 <q-card @click.native="setArea(area)">
                   <q-card-media overlay-position="full">
                     <ap-image size="400x250" :file-name="area.image_file_name" />
@@ -30,118 +27,119 @@
               </div>
             </div>
           </div>
-        </q-carousel-slide>
 
-        <!--PASSO 2 ADICIONAR TALHOES-->
-        <q-carousel-slide class="q-pa-none">
-          <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
-            <span class="q-subheading">Selecione os talhões</span>
+          <div v-if="areas.length === 0" class="list-empty">
+            <q-icon name="warning" />
+            <span>Nenhuma área disponível.</span>
           </div>
-          <div class="q-pa-lg">
-            <div class="row gutter-sm" v-if="talhoes.length > 0">
-              <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3" v-for="talhao in talhoes" :key="talhao.id">
-                <q-card>
-                  <q-card-media overlay-position="full" @click.native="toggleTalhao(talhao)">
-                    <ap-image size="400x250" :file-name="talhao.image_file_name" />
+        </template>
+      </q-carousel-slide>
 
-                    <q-card-title slot="overlay" align="end" v-if="getTalhaoById(talhao.id).tamanho > 0">
-                      <q-icon name="check_circle" size="30px" color="positive"/>
-                    </q-card-title>
-                  </q-card-media>
-                  <q-card-title>
-                    {{talhao.nome}}
+      <!--PASSO 2 ADICIONAR TALHOES-->
+      <q-carousel-slide class="q-pa-none">
+        <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
+          <span class="q-subheading text-faded">Selecione os talhões</span>
+        </div>
+        <div class="q-pa-lg" v-if="talhoes && selectedArea.talhoes">
+          <div class="row gutter-sm" v-if="talhoes.length > 0">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" v-for="talhao in talhoes" :key="talhao.id">
+              <q-card>
+                <q-card-media overlay-position="full" @click.native="toggleTalhao(talhao)">
+                  <ap-image size="400x250" :file-name="talhao.image_file_name" />
+
+                  <q-card-title slot="overlay" align="end" v-if="getTalhaoById(talhao.id).tamanho > 0">
+                    <q-icon name="check_circle" size="30px" color="positive"/>
                   </q-card-title>
+                </q-card-media>
+                <q-card-title>
+                  {{talhao.nome}}
+                </q-card-title>
 
-                  <q-card-main class="q-px-none">
-                    <q-list-header>{{getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).plural}} à serem utilizados</q-list-header>
-                    <q-item dense >
-                      <div class="row full-width">
-                        <div class="col-9 self-center">
-                          <q-slider
-                            label
-                            :min="0"
-                            :max="talhao.tamanho"
-                            v-model="getTalhaoById(talhao.id).tamanho"
-                            :label-value="`${getTalhaoById(talhao.id).tamanho} ${getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).sigla}`"
-                          />
+                <q-card-main class="q-px-none">
+                  <q-list-header>{{getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).plural}} à serem utilizados</q-list-header>
+                  <q-item dense >
+                    <div class="row full-width">
+                      <div class="col-9 self-center">
+                        <q-slider
+                          label
+                          :min="0"
+                          :max="talhao.tamanho"
+                          v-model="getTalhaoById(talhao.id).tamanho"
+                          :label-value="`${getTalhaoById(talhao.id).tamanho} ${getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).sigla}`"
+                        />
+                      </div>
+                      <div class="col-3 q-pl-sm">
+                        <q-input
+                          type="number"
+                          align="center"
+                          v-model="getTalhaoById(talhao.id).tamanho"
+                          @blur="checkInputMaxSize(getTalhaoById(talhao.id).tamanho, talhao)"
+                        />
+                      </div>
+                    </div>
+                  </q-item>
+
+                  <q-list no-border dense class="q-py-none">
+                    <q-list-header>Estimativa</q-list-header>
+                    <q-item dense>
+                      <div class="row gutter-x-sm">
+                        <div class="col-3">
+                          <q-input type="number" align="center" v-model="getTalhaoById(talhao.id).estimativa" />
                         </div>
-                        <div class="col-3 q-pl-sm">
-                          <q-input
-                            type="number"
-                            align="center"
-                            v-model="getTalhaoById(talhao.id).tamanho"
-                            @blur="checkInputMaxSize(getTalhaoById(talhao.id).tamanho, talhao)"
-                          />
+                        <div class="col-9 self-center">
+                          {{getUnidadeMedidaById(selectedSafraCultura.view_unidade_medida.id).sigla}} por {{getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).nome}}
                         </div>
                       </div>
                     </q-item>
-
-                    <q-list no-border dense class="q-py-none">
-                      <q-list-header>Estimativa</q-list-header>
-                      <q-item dense>
-                        <div class="row gutter-x-sm">
-                          <div class="col-3">
-                            <q-input type="number" align="center" v-model="getTalhaoById(talhao.id).estimativa" />
-                          </div>
-                          <div class="col-9 self-center">
-                            {{getUnidadeMedidaById(selectedSafraCultura.view_unidade_medida.id).sigla}} por {{getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).nome}}
-                          </div>
-                        </div>
-                      </q-item>
-                    </q-list>
-                  </q-card-main>
-                </q-card>
-              </div>
-            </div>
-
-            <div class="column q-ma-xl items-center" v-if="talhoes.length <= 0">
-              <ap-no-results mensagem="Nenhum talhão com espaço disponível encontrado." />
+                  </q-list>
+                </q-card-main>
+              </q-card>
             </div>
           </div>
-        </q-carousel-slide>
 
-        <!--PASSO 3  RESUMO E FINALIZAR-->
-        <q-carousel-slide class="q-pa-none">
-          <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
-            <span class="q-subheading">Resumo</span>
+          <div class="column q-ma-xl items-center" v-if="talhoes.length <= 0">
+            <ap-no-results mensagem="Nenhum talhão com espaço disponível encontrado." />
           </div>
-          <div class="q-pa-lg">
-            <div class="row gutter-sm justify-center">
-              <div class="col-xs-12 col-md-6 col-lg-4">
-                <q-list separator>
-                  <q-list-header>{{selectedSafraCultura.cultura.nome}}</q-list-header>
-                  <q-item>
-                    <q-item-main label>
-                      {{selectedArea.nome}}
-                    </q-item-main>
-                  </q-item>
-                  <template v-for="talhao in selectedArea.talhoes">
-                    <q-item :key="talhao.id" v-if="talhao.tamanho > 0">
-                      <q-item-main>
-                        <div class="row">
-                          <div class="col-6">{{talhao.nome}}</div>
-                          <div class="col-6">{{talhao.tamanho}},&nbsp<span class="text-faded q-caption">{{getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).plural}}</span></div>
-                        </div>
-                      </q-item-main>
-                    </q-item>
-                  </template>
-                </q-list>
-              </div>
-            </div>
-          </div>
-        </q-carousel-slide>
-      </q-carousel>
-
-      <div class="q-pa-md" slot="footer">
-        <q-btn @click="closeModal()" flat label="Cancelar" color="primary" />
-        <div class="float-right ">
-          <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="this.currentStep !== 0"/>
-          <q-btn @click="goToNextStep" flat label="próximo" color="primary" :disabled="isNextButtonDisabled" v-if="currentStep !== 2"/>
-          <q-btn @click="saveTalhoes" flat label="Salvar" color="primary" v-if="currentStep === 2"/>
         </div>
+      </q-carousel-slide>
+
+      <!--PASSO 3  RESUMO E FINALIZAR-->
+      <q-carousel-slide class="q-pa-none">
+        <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
+          <span class="q-subheading text-faded">Resumo</span>
+        </div>
+        <div class="q-pa-lg">
+          <q-list separator>
+            <q-list-header>{{selectedSafraCultura.cultura.nome}}</q-list-header>
+            <q-item>
+              <q-item-main label>
+                {{selectedArea.nome}}
+              </q-item-main>
+            </q-item>
+            <template v-for="talhao in selectedArea.talhoes">
+              <q-item :key="talhao.id" v-if="talhao.tamanho > 0">
+                <q-item-main>
+                  <div class="row">
+                    <div class="col-6">{{talhao.nome}}</div>
+                    <div class="col-6">{{talhao.tamanho}},&nbsp<span class="text-faded q-caption">{{getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).plural}}</span></div>
+                  </div>
+                </q-item-main>
+              </q-item>
+            </template>
+          </q-list>
+        </div>
+      </q-carousel-slide>
+    </q-carousel>
+
+    <div slot="footer">
+      <q-btn @click="closeModal()" flat label="Cancelar" color="primary" />
+      <div class="float-right ">
+        <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="this.currentStep !== 0"/>
+        <q-btn @click="goToNextStep" flat label="próximo" color="primary" :disabled="isNextButtonDisabled" v-if="currentStep !== 2"/>
+        <q-btn @click="saveTalhoes" flat label="Salvar" color="primary" v-if="currentStep === 2"/>
       </div>
-    </q-modal-layout>
-  </q-modal>
+    </div>
+  </ap-modal>
 </template>
 
 <script>
@@ -149,6 +147,7 @@
   import AreaService from "../../assets/js/service/area/AreaService";
   import apNoResults from 'components/ApNoResults';
   import apImage from 'components/ApImage';
+  import apModal from 'components/ApModal'
   import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
   import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
 
@@ -157,6 +156,7 @@
     components:{
       apNoResults,
       apImage,
+      apModal
     },
     data(){
       return{
@@ -165,16 +165,16 @@
         safraCulturaService: new SafraCulturaService(),
         unidadeMedidaService: new UnidadeMedidaService(),
         selectedSafraCultura: null,
+        hasSearch: true,
         currentStep: 0,
-        areas: [],
-        talhoes: [],
-        unidadesArea: [],
-        unidadesMedida: [],
-        culturaNome: "teste",
+        areas: null,
+        talhoes: null,
+        unidadesArea: null,
+        unidadesMedida: null,
         selectedArea: {
           id: null,
           nome: '',
-          talhoes: [],
+          talhoes: null,
         },
       }
     },
@@ -184,8 +184,12 @@
           return true;
         }
 
-        if(this.currentStep === 1 && this.getNotEmptyTalhoes().length === 0){
-          return true;
+        if(this.currentStep === 1){
+          if(this.selectedArea.talhoes !== null) {
+            if (this.getNotEmptyTalhoes().length === 0) {
+              return true;
+            }
+          }
         }
 
         return false;
@@ -194,62 +198,70 @@
     methods:{
       openModal(safraCultura){
         this.isModalOpened = true;
-
         this.selectedSafraCultura = safraCultura;
-        this.getAreas();
-        this.getUnidadesMedida();
-        this.getUnidadesArea();
+
+        this.$refs.newAreaModal.showInnerProgress();
+        Promise.all([
+          this.getAreas(),
+          this.getUnidadesMedida(),
+          this.getUnidadesArea()
+        ]).then(()=>{
+          this.$refs.newAreaModal.hideInnerProgress();
+        });
       },
       closeModal(){
         this.isModalOpened = false;
         this.resetStepper();
       },
       saveTalhoes(){
+        this.$refs.newAreaModal.showOuterProgress();
         this.safraCulturaService.addTalhoes(
           this.selectedSafraCultura.safra.id,
           this.selectedSafraCultura.id,
           {'talhoes':this.getNotEmptyTalhoes()}
         ).then(()=>{
           this.$q.notify({type: 'positive', message: 'Área adicionada com sucesso'});
+          this.$refs.newAreaModal.hideOuterProgress();
           this.closeModal();
           this.$root.$emit('refreshSafrasCulura');
-          this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-          this.$q.loading.hide();
+          this.$refs.newAreaModal.hideOuterProgress();
         })
       },
       resetStepper(){
         this.$refs.stepperNovaArea.goToSlide(0);
 
-        this.areas = [];
-        this.talhoes = [];
-        this.unidadesArea = [];
-        this.unidadesMedida =  [];
+        this.areas = null;
+        this.talhoes = null;
+        this.unidadesArea = null;
+        this.unidadesMedida =  null;
 
         this.selectedArea = {
           id: null,
           nome: '',
-          talhoes: [],
+          talhoes: null,
         };
       },
       setStepperIndex(oldIndex, newIndex, direction){
-        this.currentStep = newIndex
+        this.currentStep = newIndex;
+        this.hasSearch = this.currentStep === 0;
       },
-      getAreas(){
-        this.$q.loading.show();
-        this.safraCulturaService.listFreeAreas(
+      search(value){
+        console.log('search', value)
+      },
+      async getAreas(){
+        return this.safraCulturaService.listFreeAreas(
           this.selectedSafraCultura.safra.id,
           this.selectedSafraCultura.id,
         ).then(areas => {
           this.areas = areas;
-          this.$q.loading.hide();
         })
       },
       setArea(area){
         this.selectedArea.id = area.id;
         this.selectedArea.nome = area.nome;
-        this.selectedArea.talhoes = [];
+        this.selectedArea.talhoes = null;
         this.getTalhoesBySafraAndArea(area.id);
         this.goToNextStep();
       },
@@ -265,7 +277,7 @@
         })
       },
       getTalhoesBySafraAndArea(area_id){
-        this.$q.loading.show();
+        this.$refs.newAreaModal.showInnerProgress();
         this.safraCulturaService.listFreeTalhoes(
           this.selectedSafraCultura.safra.id,
           this.selectedSafraCultura.id,
@@ -281,7 +293,7 @@
             });
             this.addTalhao(new SafraCulturaTalhao(talhao))
           },this);
-          this.$q.loading.hide();
+          this.$refs.newAreaModal.hideInnerProgress();
         })
       },
       toggleTalhao(talhao){
@@ -293,17 +305,18 @@
         }
       },
       addTalhao(safraCulturaTalhao){
+        if(this.selectedArea.talhoes === null){
+          this.selectedArea.talhoes = [];
+        }
         this.selectedArea.talhoes.push(safraCulturaTalhao);
       },
-      getUnidadesMedida(){
-        this.$q.loading.show();
-        this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
+      async getUnidadesMedida(){
+        return this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
           this.unidadesMedida = unidades;
-          this.$q.loading.hide();
         })
       },
-      getUnidadesArea(){
-        this.unidadeMedidaService.listUnidadesArea().then(unidades => {
+      async getUnidadesArea(){
+        return this.unidadeMedidaService.listUnidadesArea().then(unidades => {
           this.unidadesArea = unidades;
         })
       },
