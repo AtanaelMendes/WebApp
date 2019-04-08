@@ -18,7 +18,7 @@
         <div class="relative-position" style="min-height: 100px">
           <slot name="content"/>
           <q-inner-loading :visible="isInnerProgressVisible">
-            <q-spinner size="60px" color="red"></q-spinner>
+            <q-spinner size="60px"></q-spinner>
           </q-inner-loading>
         </div>
 
@@ -28,7 +28,7 @@
       </q-modal-layout>
 
       <q-inner-loading :visible="isOuterProgressVisible" style="pointer-events: unset; z-index: 6000">
-        <q-spinner size="50px" color="red"></q-spinner>
+        <q-spinner size="60px" ></q-spinner>
       </q-inner-loading>
 
   </q-modal>
@@ -120,6 +120,11 @@
 
   .ap-modal.animate-shake{
     animation: unset;
+  }
+
+  .ap-modal .q-spinner circle{
+    stroke-width: 6px;
+    color: #8c8c8c;
   }
 
   .search-container{
