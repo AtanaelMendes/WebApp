@@ -1,22 +1,20 @@
 <template>
-  <q-modal v-model="isModalOpened" class="new-cultivar-modal" minimized @hide="closeModal">
-    <q-modal-layout>
-      <div class="q-px-lg q-pb-sm q-pt-lg q-title" slot="header">
-        Novo Cultivar
-      </div>
-      <q-carousel height="100%" no-swipe ref="stepperNovoCultivar" @slide-trigger="setStepperIndex">
-        <!--PASSO 1 ESCOLHER MARCA-->
-        <q-carousel-slide class="q-pa-none">
+  <ap-modal ref="newCultivarModal" title="Novo Cultivar" :visible="isModalOpened"
+            :searchable="hasSearch" @search-input="search" @hide="closeModal">
+
+    <q-carousel slot="content" height="100%" no-swipe ref="stepperNovoCultivar" @slide-trigger="setStepperIndex">
+      <!--PASSO 1 ESCOLHER MARCA-->
+      <q-carousel-slide class="q-pa-none">
+        <template v-if="marcas">
           <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
-            <span class="q-subheading">Selecione uma marca</span>
+            <span class="q-subheading text-faded">Selecione uma marca</span>
           </div>
           <div class="q-pa-lg">
             <div class="row gutter-sm">
               <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" v-for="marca in marcas" :key="marca.id">
                 <q-card @click.native="setMarca(marca.id)">
                   <q-card-media overlay-position="full">
-                    <img src="statics/images/no-image-16-10.svg" v-if="!marca.image_path"/>
-                    <img :src="marca.image_path" v-if="marca.image_path"/>
+                    <ap-image size="400x250" :file-name="marca.image_file_name"/>
                     <q-card-title slot="overlay" align="end" v-if="marca.id === selectedMarcaId">
                       <q-icon name="check_circle" size="30px" color="positive"/>
                     </q-card-title>
@@ -27,19 +25,20 @@
                   </q-card-title>
                 </q-card>
               </div>
-
-              <div v-if="marcas.length === 0" class="list-empty">
-                <q-icon name="warning" />
-                <span>Nenhuma marca cadastrada ainda. Crie uma para poder continuar.</span>
-              </div>
             </div>
           </div>
-        </q-carousel-slide>
+          <div v-if="marcas.length === 0" class="list-empty">
+            <q-icon name="warning" />
+            <span>Nenhuma marca cadastrada ainda. Crie uma para poder continuar.</span>
+          </div>
+        </template>
+      </q-carousel-slide>
 
-        <!--PASSO 2 ESCOLHER TIPO-->
-        <q-carousel-slide class="q-pa-none">
+      <!--PASSO 2 ESCOLHER TIPO-->
+      <q-carousel-slide class="q-pa-none">
+        <template v-if="cultivares">
           <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
-            <span class="q-subheading">Selecione o cultivar</span>
+            <span class="q-subheading text-faded">Selecione o cultivar</span>
           </div>
           <div class="q-pa-lg">
             <div class="row gutter-sm">
@@ -64,41 +63,47 @@
                   </q-card-main>
                 </q-card>
               </div>
-
-              <div v-if="cultivares.length === 0" class="list-empty">
-                <q-icon name="warning" />
-                <span>Nenhum cultivar encontrado para essa marca ou cultura.</span>
-              </div>
             </div>
           </div>
-        </q-carousel-slide>
+          <div v-if="cultivares.length === 0" class="list-empty">
+            <q-icon name="warning" />
+            <span>Nenhum cultivar encontrado para essa marca ou cultura.</span>
+          </div>
+        </template>
+      </q-carousel-slide>
 
-      </q-carousel>
+    </q-carousel>
 
-      <div class="q-pa-md" slot="footer">
-        <q-btn @click="closeModal()" flat label="Cancelar" color="primary" />
-        <div class="float-right ">
-          <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="currentStep === 1"/>
-          <q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep === 0" :disabled="selectedMarcaId === null"/>
-          <q-btn @click="addCultivar" flat label="Salvar" color="primary" v-if="currentStep === 1" :disabled="selectedCultivarId === null"/>
-        </div>
+    <div class="q-pa-md" slot="footer">
+      <q-btn @click="closeModal()" flat label="Cancelar" color="primary" />
+      <div class="float-right ">
+        <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="currentStep === 1"/>
+        <q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep === 0" :disabled="selectedMarcaId === null"/>
+        <q-btn @click="addCultivar" flat label="Salvar" color="primary" v-if="currentStep === 1" :disabled="selectedCultivarId === null"/>
       </div>
-    </q-modal-layout>
-  </q-modal>
+    </div>
+  </ap-modal>
 </template>
 
 <script>
   import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
+  import apModal from 'components/ApModal'
+  import apImage from 'components/ApImage'
 
   export default {
     name: "NewCultivarModal",
+    components: {
+      apModal,
+      apImage
+    },
     data(){
       return{
         isModalOpened: false,
         currentStep: 0,
+        hasSearch: true,
         safraCulturaService: new SafraCulturaService(),
-        marcas: [],
-        cultivares: [],
+        marcas: null,
+        cultivares: null,
         currentSafraCultura: null,
         currentTalhao: null,
         selectedMarcaId: null,
@@ -119,6 +124,9 @@
       setStepperIndex(oldIndex, newIndex, direction){
         this.currentStep = newIndex
       },
+      search(value){
+        console.log('search', value);
+      },
       goToNextStep(){
         this.$refs.stepperNovoCultivar.next();
       },
@@ -128,19 +136,23 @@
       resetStepper(){
         this.$refs.stepperNovoCultivar.goToSlide(0);
 
-        this.marcas = [];
-        this.cultivares = [];
+        this.marcas = null;
+        this.cultivares = null;
         this.selectedMarcaId = null;
         this.selectedCultivarId =  null;
       },
       listMarcas(){
+        this.$refs.newCultivarModal.showInnerProgress();
         this.safraCulturaService.listMarcas().then(marcas => {
           this.marcas = marcas;
+          this.$refs.newCultivarModal.hideInnerProgress();
         })
       },
       listCultivarByMarca(marcaId){
+        this.$refs.newCultivarModal.showInnerProgress();
         this.safraCulturaService.listCultivaresByMarca(this.currentSafraCultura.cultura.id, marcaId).then(cultivares => {
           this.cultivares = cultivares;
+          this.$refs.newCultivarModal.hideInnerProgress();
         })
       },
       setMarca(id){
@@ -152,16 +164,17 @@
         this.selectedCultivarId = id;
       },
       addCultivar(){
+        this.$refs.newCultivarModal.showOuterProgress();
         this.safraCulturaService.saveCultivarToSafraCulturaTalhao(
           this.currentSafraCultura.id, this.currentTalhao.safra_cultura_talhao_id, this.selectedCultivarId
         ).then(cultivar => {
           this.$q.notify({type: 'positive', message: 'Cultivar adicionado com sucesso'});
+          this.$refs.newCultivarModal.hideOuterProgress();
           this.closeModal();
           this.$root.$emit('refreshSafrasCulura');
-          this.$q.loading.hide();
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-          this.$q.loading.hide();
+          this.$refs.newCultivarModal.hideOuterProgress();
         })
       },
     },
