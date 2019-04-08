@@ -62,7 +62,7 @@
 
       <!-- NEGOCIADO -->
       <q-item>
-        <q-item-side icon="gavel" color="primary"/>
+        <q-item-side icon="work" color="primary"/>
         <q-item-main multiline>
           <q-item-tile label lines="2">
             Negociado
