@@ -26,7 +26,7 @@ export default class SafraCulturaTalhaoAPI{
     return Vue.prototype.$axios.post('/safra_cultura/' + safraCulturaId + '/safra_cultura_talhao/' + safraCulturaTalhaoId + '/add_cultivar/' + cultivarId)
   }
 
-  static deleteCultivar(cultivarId, safraCulturaTalhaoId){
+  static unattachCultivar(cultivarId, safraCulturaTalhaoId){
     return Vue.prototype.$axios.delete('/safra_cultura_talhao/' + safraCulturaTalhaoId + '/cultivar/' + cultivarId);
   }
 }

@@ -152,8 +152,8 @@
                         <q-btn flat round dense icon="more_vert" >
                           <q-popover anchor="bottom left">
                             <q-list link>
-                              <q-item v-close-overlay @click.native="deleteCultivar(cultivar, activeTalhao)">
-                                <q-item-main label="Excluir Cultivar"/>
+                              <q-item v-close-overlay @click.native="unattachCultivar(cultivar, activeTalhao)">
+                                <q-item-main label="Desvincular Cultivar"/>
                               </q-item>
                             </q-list>
                           </q-popover>
@@ -307,19 +307,19 @@
           this.$q.loading.hide();
         })
       },
-      deleteCultivar(cultivar, activeTalhao){
+      unattachCultivar(cultivar, activeTalhao){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente deseja apagar esse cultivar?',
+          message: 'Realmente deseja desvincular esse cultivar?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          this.safraCulturaService.deleteCultivar(cultivar.safra_cultura_talhao_cultivar_id, activeTalhao.safra_cultura_talhao_id).then(()=>{
-            this.$q.notify({type: 'positive', message: 'Cultivar excluido com sucesso.'});
+          this.safraCulturaService.unattachCultivar(cultivar.safra_cultura_talhao_cultivar_id, activeTalhao.safra_cultura_talhao_id).then(()=>{
+            this.$q.notify({type: 'positive', message: 'Cultivar desvinculado com sucesso.'});
             this.getContent();
             this.$q.loading.hide();
           }).catch(error =>{
-            this.$q.notify({type: 'negative', message: 'Não foi possível excluir este cultivar'});
+            this.$q.notify({type: 'negative', message: 'Não foi possível desvincular este cultivar'});
             this.$q.loading.hide();
           })
         });

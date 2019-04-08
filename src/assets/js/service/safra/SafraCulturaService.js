@@ -366,9 +366,9 @@ export default class SafraCulturaService {
     });
   }
 
-  deleteCultivar(cultivarId, safra_cultura_talhao_id){
+  unattachCultivar(cultivarId, safra_cultura_talhao_id){
     return new Promise((resolve, reject) => {
-      SafraCulturaTalhaoAPI.deleteCultivar(cultivarId, safra_cultura_talhao_id).then(response => {
+      SafraCulturaTalhaoAPI.unattachCultivar(cultivarId, safra_cultura_talhao_id).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
