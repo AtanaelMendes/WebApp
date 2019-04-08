@@ -112,7 +112,7 @@
                                     <q-item v-close-overlay @click.native="addCultivar(talhao)">
                                       <q-item-main label="Adicionar Cultivar"/>
                                     </q-item>
-                                    <q-item v-close-overlay @click.native="updateTamanhoCultivares(talhao)">
+                                    <q-item v-close-overlay @click.native="updateTamanhoCultivares(talhao)" v-if="talhao.cultivares.length > 0">
                                       <q-item-main label="Definir Tamanho dos Cultivares"/>
                                     </q-item>
                                     <q-item v-close-overlay @click.native="deleteSafraCulturaTalhao(talhao.safra_cultura_talhao_id)">
