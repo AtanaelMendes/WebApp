@@ -408,6 +408,34 @@ export default class SafraCulturaService {
     });
   }
 
+  finalizeSafraCulturaTalhao(safra_cultura_id, safra_cultura_talhao_id){
+    return new Promise((resolve, reject) => {
+      SafraCulturaTalhaoAPI.finalizeSafraCulturaTalhao(safra_cultura_id, safra_cultura_talhao_id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  }
+
+  reactivateSafraCulturaTalhao(safra_cultura_id, safra_cultura_talhao_id){
+    return new Promise((resolve, reject) => {
+      SafraCulturaTalhaoAPI.reactivateSafraCulturaTalhao(safra_cultura_id, safra_cultura_talhao_id).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  }
+
   getDiario(safra_id, id){
     return new Promise((resolve, reject) => {
       SafraCulturaAPI.getDiario(id, safra_id).then(response => {

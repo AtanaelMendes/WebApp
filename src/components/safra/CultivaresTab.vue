@@ -96,21 +96,21 @@
                     :quantidades="activeCultivar"
                     :unidade-area="safraCultura.view_unidade_area"
                     :unidade-medida="safraCultura.view_unidade_medida">
-                    <q-item v-for="talhao in activeCultivar.talhoes" :key="talhao.id" class="cursor-pointer" @click.native="posicionarTalhaoPeloId(talhao.id)">
-                      <q-item-side v-if="talhao.image_file_name" :image="imageMakeUrl(talhao.image_file_name, '200x125')" color="primary"/>
-                      <q-item-side v-else icon="place" color="primary"/>
-                      <q-item-main>
-                        <q-item-tile>
-                          {{talhao.area}}
-                          {{talhao.nome}}
-                        </q-item-tile>
-                        <q-item-tile sublabel>
-                          {{numeral(talhao.tamanho * 100 / activeCultivar.tamanho).format('0,0.0')}}%
-                          ({{numeral(talhao.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.sigla}})
-                        </q-item-tile>
-                      </q-item-main>
-                    </q-item>
                   </safra-quantidades>
+                  <q-item v-for="talhao in activeCultivar.talhoes" :key="talhao.id" class="cursor-pointer" @click.native="posicionarTalhaoPeloId(talhao.id)">
+                    <q-item-side v-if="talhao.image_file_name" :image="imageMakeUrl(talhao.image_file_name, '200x125')" color="primary"/>
+                    <q-item-side v-else icon="place" color="primary"/>
+                    <q-item-main>
+                      <q-item-tile>
+                        {{talhao.area}}
+                        {{talhao.nome}}
+                      </q-item-tile>
+                      <q-item-tile sublabel>
+                        {{numeral(talhao.tamanho * 100 / activeCultivar.tamanho).format('0,0.0')}}%
+                        ({{numeral(talhao.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.sigla}})
+                      </q-item-tile>
+                    </q-item-main>
+                  </q-item>
                 </div>
               </div>
             </div>

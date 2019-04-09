@@ -125,63 +125,79 @@
 
                 <!-- DETALHES DO TALHAO -->
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8" v-if="activeTalhao">
+                  <q-item style="background: #f3f1f1">
+                    <q-item-main></q-item-main>
+                    <q-item-side right>
+                      <q-btn flat round dense icon="more_vert" >
+                        <q-popover anchor="bottom left">
+                          <q-list link>
+                            <q-item v-close-overlay @click.native="finalizeSafraCulturaTalhao(activeTalhao)" v-if="!activeTalhao.finalizado">
+                              <q-item-main label="Finalizar Colheita"/>
+                            </q-item>
+                            <q-item v-close-overlay @click.native="reactivateSafraCulturaTalhao(activeTalhao)" v-if="activeTalhao.finalizado">
+                              <q-item-main label="Reativar Colheita"/>
+                            </q-item>
+                          </q-list>
+                        </q-popover>
+                      </q-btn>
+                    </q-item-side>
+                  </q-item>
                   <safra-quantidades
                     :quantidades="activeTalhao"
                     :unidade-area="safraCultura.view_unidade_area"
                     :unidade-medida="safraCultura.view_unidade_medida">
+                  </safra-quantidades>
+                  <q-item style="background: #f3f1f1">
+                    <q-item-main>
+                      Cultivares
+                    </q-item-main>
+                    <q-item-side right>
+                      <q-btn flat round dense icon="more_vert" >
+                        <q-popover anchor="bottom left">
+                          <q-list link>
+                            <q-item v-close-overlay @click.native="addCultivar(activeTalhao)">
+                              <q-item-main label="Informar Cultivar"/>
+                            </q-item>
+                            <q-item v-close-overlay @click.native="updateTamanhoCultivares(activeTalhao)" v-if="activeTalhao.cultivares.length > 0">
+                              <q-item-main label="Definir Tamanho dos Cultivares"/>
+                            </q-item>
+                          </q-list>
+                        </q-popover>
+                      </q-btn>
+                    </q-item-side>
+                  </q-item>
 
-                    <q-item style="background: #f3f1f1">
+                  <template v-if="activeTalhao.cultivares.length > 0">
+                    <q-item link v-for="cultivar in activeTalhao.cultivares" :key="cultivar.key">
+                      <q-item-side v-if="cultivar.image_file_name" :image="imageMakeUrl(cultivar.image_file_name, '200x125')" color="primary"/>
+                      <q-item-side v-else icon="spa" color="primary"/>
                       <q-item-main>
-                        Cultivares
+                        <q-item-tile>
+                          {{cultivar.marca}}
+                          {{cultivar.nome}}
+                        </q-item-tile>
+                        <q-item-tile sublabel>
+                          {{numeral(cultivar.tamanho * 100 / activeTalhao.tamanho).format('0,0.0')}}%
+                          ({{numeral(cultivar.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.sigla}})
+                        </q-item-tile>
                       </q-item-main>
                       <q-item-side right>
                         <q-btn flat round dense icon="more_vert" >
                           <q-popover anchor="bottom left">
                             <q-list link>
-                              <q-item v-close-overlay @click.native="addCultivar(activeTalhao)">
-                                <q-item-main label="Informar Cultivar"/>
-                              </q-item>
-                              <q-item v-close-overlay @click.native="updateTamanhoCultivares(activeTalhao)" v-if="activeTalhao.cultivares.length > 0">
-                                <q-item-main label="Definir Tamanho dos Cultivares"/>
+                              <q-item v-close-overlay @click.native="unattachCultivar(cultivar, activeTalhao)">
+                                <q-item-main label="Desvincular Cultivar"/>
                               </q-item>
                             </q-list>
                           </q-popover>
                         </q-btn>
                       </q-item-side>
                     </q-item>
-
-                    <template v-if="activeTalhao.cultivares.length > 0">
-                      <q-item link v-for="cultivar in activeTalhao.cultivares" :key="cultivar.key">
-                        <q-item-side v-if="cultivar.image_file_name" :image="imageMakeUrl(cultivar.image_file_name, '200x125')" color="primary"/>
-                        <q-item-side v-else icon="spa" color="primary"/>
-                        <q-item-main>
-                          <q-item-tile>
-                            {{cultivar.marca}}
-                            {{cultivar.nome}}
-                          </q-item-tile>
-                          <q-item-tile sublabel>
-                            {{numeral(cultivar.tamanho * 100 / activeTalhao.tamanho).format('0,0.0')}}%
-                            ({{numeral(cultivar.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.sigla}})
-                          </q-item-tile>
-                        </q-item-main>
-                        <q-item-side right>
-                          <q-btn flat round dense icon="more_vert" >
-                            <q-popover anchor="bottom left">
-                              <q-list link>
-                                <q-item v-close-overlay @click.native="unattachCultivar(cultivar, activeTalhao)">
-                                  <q-item-main label="Desvincular Cultivar"/>
-                                </q-item>
-                              </q-list>
-                            </q-popover>
-                          </q-btn>
-                        </q-item-side>
-                      </q-item>
-                    </template>
-                    <div v-else class="text-center list-empty">
-                      <q-icon name="warning" />
-                      <span>Nenhum cultivar informado ainda.</span>
-                    </div>
-                  </safra-quantidades>
+                  </template>
+                  <div v-else class="text-center list-empty">
+                    <q-icon name="warning" />
+                    <span>Nenhum cultivar informado ainda.</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -304,10 +320,10 @@
             this.$q.notify({type: 'positive', message: 'Área desvinculada com sucesso.'});
             this.$root.$emit('refreshSafrasCulura');
             this.$q.loading.hide();
-          });
-        }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível desvincular esta área'});
-          this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível desvincular esta área'});
+            this.$q.loading.hide();
+          })
         })
       },
       unattachSafraCulturaTalhao(safraCulturaTalhaoId){
@@ -347,7 +363,34 @@
       },
       updateTamanhoCultivares(talhao){
         this.$refs.updateCultivaresTamanhoModal.openModal(talhao, this.safraCultura);
-      }
+      },
+      finalizeSafraCulturaTalhao(talhao){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja finalizar essa colheita?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(()=>{
+          this.$q.loading.show();
+          this.safraCulturaService.finalizeSafraCulturaTalhao(this.safraCultura.id, talhao.safra_cultura_talhao_id).then(()=>{
+            this.$q.loading.hide();
+            this.$root.$emit('refreshSafrasCulura');
+          }).catch(error =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível finalizar essa colheita'});
+            this.$q.loading.hide();
+          })
+        })
+      },
+      reactivateSafraCulturaTalhao(talhao){
+        this.$q.loading.show();
+        this.safraCulturaService.reactivateSafraCulturaTalhao(this.safraCultura.id, talhao.safra_cultura_talhao_id).then(()=>{
+          this.$q.loading.hide();
+          this.$root.$emit('refreshSafrasCulura');
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possível reativar essa colheita'});
+          this.$q.loading.hide();
+        })
+      },
     },
     mounted () {
       this.$root.$on('refreshAreasTab', this.getContent);

@@ -1,5 +1,5 @@
 <template>
-    <q-list no-border inset-separator>
+    <q-list no-border inset-separator class="q-pa-none">
 
       <!-- Colhido -->
       <template v-if="quantidades.numero_cargas > 0">
@@ -7,25 +7,15 @@
           <q-item-side icon="mdi-scale" color="primary" />
           <q-item-main multiline>
             <q-item-tile label lines="2">
-              Colheita
-              <template v-if="quantidades.finalizado">
-                finalizada
-              </template>
-              <template v-else>
-                <template v-if="quantidades.colhendo">
-                  em andamento
-                </template>
-                <template v-else>
-                  ainda não começou
-                </template>
-              </template>
+              {{status}}
               <q-progress :percentage="peso_liquido_percentual" color="primary" height="10px" :stripe="quantidades.colhendo" :animate="quantidades.colhendo"/>
             </q-item-tile>
             <q-item-tile sublabel lines="1">
               <b>{{numeral(quantidades.peso_liquido).format('0,0')}}</b>
-              {{unidadeMedida.plural}} <br />
+              {{unidadeMedida.plural}}
             </q-item-tile>
           </q-item-main>
+
           <q-item-side right>
             <q-item-tile stamp>
               {{numeral(quantidades.peso_liquido / quantidades.tamanho).format('0,0.00')}}
@@ -34,6 +24,7 @@
               {{unidadeMedida.sigla}}/{{unidadeArea.sigla}}
             </q-item-tile>
           </q-item-side>
+
         </q-item>
       </template>
 
@@ -50,6 +41,7 @@
             {{unidadeMedida.plural}}
           </q-item-tile>
         </q-item-main>
+
         <q-item-side right>
           <q-item-tile stamp>
             {{numeral(quantidades.peso_estimativa / quantidades.tamanho).format('0,0.00')}}
@@ -115,9 +107,6 @@
         </q-item>
 
       </template>
-
-      <slot></slot>
-
     </q-list>
 </template>
 <script>
@@ -129,16 +118,29 @@ export default {
     unidadeArea: Object,
   },
   computed: {
-    maior_peso: function () {
+    status(){
+      let message = "Colheita ";
+      if(this.quantidades.finalizado){
+        message += "finalizada";
+      } else {
+        if (this.quantidades.colhendo) {
+          message += "em andamento";
+        } else {
+          message += "ainda não começou";
+        }
+      }
+      return message;
+    },
+    maior_peso(){
       return (this.quantidades.peso_estimativa > this.quantidades.peso_liquido)?this.quantidades.peso_estimativa:this.quantidades.peso_liquido;
     },
-    peso_liquido_percentual: function () {
+    peso_liquido_percentual(){
       return (this.quantidades.peso_liquido / this.maior_peso) * 100;
     },
-    peso_liquido_negociado_percentual: function () {
+    peso_liquido_negociado_percentual(){
       return (this.quantidades.negociado / this.maior_peso) * 100;
     },
-    estimativa_percentual: function () {
+    estimativa_percentual(){
       return (this.quantidades.peso_estimativa / this.maior_peso) * 100;
     },
   }
