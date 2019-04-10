@@ -64,6 +64,7 @@
                 <!-- DETALHES DA AREA -->
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
                   <safra-quantidades
+                    :safra-cultura-id="safraCultura.id"
                     :quantidades="areas[iArea]"
                     :unidade-area="safraCultura.view_unidade_area"
                     :unidade-medida="safraCultura.view_unidade_medida"
@@ -125,24 +126,8 @@
 
                 <!-- DETALHES DO TALHAO -->
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8" v-if="activeTalhao">
-                  <q-item style="background: #f3f1f1">
-                    <q-item-main></q-item-main>
-                    <q-item-side right>
-                      <q-btn flat round dense icon="more_vert" >
-                        <q-popover anchor="bottom left">
-                          <q-list link>
-                            <q-item v-close-overlay @click.native="finalizeSafraCulturaTalhao(activeTalhao)" v-if="!activeTalhao.finalizado">
-                              <q-item-main label="Finalizar Colheita"/>
-                            </q-item>
-                            <q-item v-close-overlay @click.native="reactivateSafraCulturaTalhao(activeTalhao)" v-if="activeTalhao.finalizado">
-                              <q-item-main label="Reativar Colheita"/>
-                            </q-item>
-                          </q-list>
-                        </q-popover>
-                      </q-btn>
-                    </q-item-side>
-                  </q-item>
                   <safra-quantidades
+                    :safra-cultura-id="safraCultura.id"
                     :quantidades="activeTalhao"
                     :unidade-area="safraCultura.view_unidade_area"
                     :unidade-medida="safraCultura.view_unidade_medida">
@@ -235,6 +220,7 @@
   import newAreaModal from 'components/safra/NewAreaModal'
   import newCultivarModal from 'components/safra/NewCultivarModal'
   import updateCultivaresTamanhoModal from 'components/safra/UpdateCultivaresTamanhoModal'
+  import SafraCulturaTalhaoService from "../../assets/js/service/safra/SafraCulturaTalhaoService";
 
   export default {
     name: "AreasTab",
@@ -254,6 +240,7 @@
     data(){
       return{
         safraCulturaService: new SafraCulturaService(),
+        safraCulturaTalhaoService: new SafraCulturaTalhaoService(),
         media: true,
         safraCultura: null,
         areas: null,
@@ -316,7 +303,7 @@
           color: 'primary'
         }).then(data => {
           this.$q.loading.show();
-          this.safraCulturaService.unattachSafraCulturaTalhoesByArea(this.safraCultura.id, areaId).then(() => {
+          this.safraCulturaTalhaoService.unattachSafraCulturaTalhoesByArea(this.safraCultura.id, areaId).then(() => {
             this.$q.notify({type: 'positive', message: 'Área desvinculada com sucesso.'});
             this.$root.$emit('refreshSafrasCulura');
             this.$q.loading.hide();
@@ -334,7 +321,7 @@
           color: 'primary'
         }).then(data => {
           this.$q.loading.show();
-          this.safraCulturaService.unattachSafraCulturaTalhao(this.safraCultura.id, safraCulturaTalhaoId).then(() => {
+          this.safraCulturaTalhaoService.unattachSafraCulturaTalhao(this.safraCultura.id, safraCulturaTalhaoId).then(() => {
             this.$q.notify({type: 'positive', message: 'Talhão desvinculado com sucesso.'});
             this.$root.$emit('refreshSafrasCulura');
             this.$q.loading.hide();
@@ -351,7 +338,7 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
-          this.safraCulturaService.unattachCultivar(cultivar.safra_cultura_talhao_cultivar_id, activeTalhao.safra_cultura_talhao_id).then(()=>{
+          this.safraCulturaTalhaoService.unattachCultivar(cultivar.safra_cultura_talhao_cultivar_id, activeTalhao.safra_cultura_talhao_id).then(()=>{
             this.$q.notify({type: 'positive', message: 'Cultivar desvinculado com sucesso.'});
             this.getContent();
             this.$q.loading.hide();
@@ -363,33 +350,6 @@
       },
       updateTamanhoCultivares(talhao){
         this.$refs.updateCultivaresTamanhoModal.openModal(talhao, this.safraCultura);
-      },
-      finalizeSafraCulturaTalhao(talhao){
-        this.$q.dialog({
-          title: 'Atenção',
-          message: 'Realmente deseja finalizar essa colheita?',
-          ok: 'Sim', cancel: 'Não',
-          color: 'primary'
-        }).then(()=>{
-          this.$q.loading.show();
-          this.safraCulturaService.finalizeSafraCulturaTalhao(this.safraCultura.id, talhao.safra_cultura_talhao_id).then(()=>{
-            this.$q.loading.hide();
-            this.$root.$emit('refreshSafrasCulura');
-          }).catch(error =>{
-            this.$q.notify({type: 'negative', message: 'Não foi possível finalizar essa colheita'});
-            this.$q.loading.hide();
-          })
-        })
-      },
-      reactivateSafraCulturaTalhao(talhao){
-        this.$q.loading.show();
-        this.safraCulturaService.reactivateSafraCulturaTalhao(this.safraCultura.id, talhao.safra_cultura_talhao_id).then(()=>{
-          this.$q.loading.hide();
-          this.$root.$emit('refreshSafrasCulura');
-        }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível reativar essa colheita'});
-          this.$q.loading.hide();
-        })
       },
     },
     mounted () {

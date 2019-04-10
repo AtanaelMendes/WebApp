@@ -129,6 +129,7 @@
   import EntregaService from "../../assets/js/service/entrega/EntregaService";
   import CaminhaoService from "../../assets/js/service/CaminhaoService";
   import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
+  import SafraCulturaTalhaoService from "../../assets/js/service/safra/SafraCulturaTalhaoService";
 
   export default {
     name: "stepper-nova-carga",
@@ -142,6 +143,7 @@
         entregaService: new EntregaService(),
         caminhaoService: new CaminhaoService(),
         safraCulturaService: new SafraCulturaService(),
+        safraCulturaTalhaoService: new SafraCulturaTalhaoService(),
         currentStep: 'escolherCaminhao',
         novaEntrega: new NovaEntrega(),
         isModalOpened: false,
@@ -266,7 +268,7 @@
       },
       listSafraCulturaTalhaoBySafraCultura(safra_cultura_id){
         this.$q.loading.show();
-        this.safraCulturaService.listFullSafraCulturaTalhao(safra_cultura_id).then(safraCulturaTalhoes => {
+        this.safraCulturaTalhaoService.listFullSafraCulturaTalhao(safra_cultura_id).then(safraCulturaTalhoes => {
           this.safraCulturaTalhoes = safraCulturaTalhoes;
 
           //Removendo os safra_cultura_talhoes já cadastrados

@@ -18,10 +18,6 @@ export default class SafraCulturaAPI{
     return Vue.prototype.$axios.get('safra/' + safraId + '/safra_cultura/' + id + '/area_free');
   }
 
-  static getFullSafraCulturaTalhoes(safraCulturaId){
-    return Vue.prototype.$axios.get('safra_cultura/' + safraCulturaId + '/safra_cultura_talhao?type=full')
-  }
-
   static saveSafraCultura(safraCultura, safraId){
     return Vue.prototype.$axios.post('safra/' + safraId + '/safra_cultura', safraCultura);
   }

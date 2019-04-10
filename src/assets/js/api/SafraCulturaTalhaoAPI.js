@@ -2,6 +2,22 @@ import Vue from 'vue'
 
 export default class SafraCulturaTalhaoAPI{
 
+  static listSafraCulturaTalhoes(safraCulturaId){
+    return Vue.prototype.$axios.get('safra_cultura/' + safraCulturaId + '/safra_cultura_talhao')
+  }
+
+  static listSafraCulturaTalhoesStatus(safraCulturaId){
+    return Vue.prototype.$axios.get('safra_cultura/' + safraCulturaId + '/safra_cultura_talhao/status')
+  }
+
+  static getFullSafraCulturaTalhoes(safraCulturaId){
+    return Vue.prototype.$axios.get('safra_cultura/' + safraCulturaId + '/safra_cultura_talhao?type=full')
+  }
+
+  static updateSafraCulturaTalhoesStatus(talhoes, safraCulturaId){
+    return Vue.prototype.$axios.put('safra_cultura/' + safraCulturaId + '/safra_cultura_talhao/status', talhoes);
+  }
+
   static updateSafraCulturaTalhao(safraCulturaTalhao, id, safraCulturaId){
     return Vue.prototype.$axios.put('safra_cultura/' + safraCulturaId + '/safra_cultura_talhao/'+ id, safraCulturaTalhao)
   }
@@ -28,13 +44,5 @@ export default class SafraCulturaTalhaoAPI{
 
   static unattachCultivar(cultivarId, safraCulturaTalhaoId){
     return Vue.prototype.$axios.delete('/safra_cultura_talhao/' + safraCulturaTalhaoId + '/cultivar/' + cultivarId);
-  }
-
-  static finalizeSafraCulturaTalhao(safraCulturaId, safraCulturaTalhaoId){
-    return Vue.prototype.$axios.put('/safra_cultura/' + safraCulturaId + '/safra_cultura_talhao/' + safraCulturaTalhaoId + '/finalizar')
-  }
-
-  static reactivateSafraCulturaTalhao(safraCulturaId, safraCulturaTalhaoId){
-    return Vue.prototype.$axios.put('/safra_cultura/' + safraCulturaId + '/safra_cultura_talhao/' + safraCulturaTalhaoId + '/reativar')
   }
 }

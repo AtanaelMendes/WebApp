@@ -1,4 +1,5 @@
 <template>
+  <div>
     <q-list no-border inset-separator class="q-pa-none">
 
       <!-- Colhido -->
@@ -7,7 +8,7 @@
           <q-item-side icon="mdi-scale" color="primary" />
           <q-item-main multiline>
             <q-item-tile label lines="2">
-              {{status}}
+              <a href="#" @click.stop="openChangeColheitaStatusModal">{{status}}</a>
               <q-progress :percentage="peso_liquido_percentual" color="primary" height="10px" :stripe="quantidades.colhendo" :animate="quantidades.colhendo"/>
             </q-item-tile>
             <q-item-tile sublabel lines="1">
@@ -108,41 +109,54 @@
 
       </template>
     </q-list>
+
+    <change-colheita-status-modal ref="changeColheitaStatusModal" />
+  </div>
 </template>
 <script>
-export default {
-  name: "safra-quantidades",
-  props: {
-    quantidades: Object,
-    unidadeMedida: Object,
-    unidadeArea: Object,
-  },
-  computed: {
-    status(){
-      let message = "Colheita ";
-      if(this.quantidades.finalizado){
-        message += "finalizada";
-      } else {
-        if (this.quantidades.colhendo) {
-          message += "em andamento";
+  import changeColheitaStatusModal from 'components/safra/ChangeColheitaStatusModal';
+  export default {
+    name: "safra-quantidades",
+    props: {
+      safraCulturaId: Number,
+      quantidades: Object,
+      unidadeMedida: Object,
+      unidadeArea: Object,
+    },
+    components:{
+      changeColheitaStatusModal,
+    },
+    computed: {
+      status(){
+        let message = "Colheita ";
+        if(this.quantidades.finalizado){
+          message += "finalizada";
         } else {
-          message += "ainda não começou";
+          if (this.quantidades.colhendo) {
+            message += "em andamento";
+          } else {
+            message += "ainda não começou";
+          }
         }
-      }
-      return message;
+        return message;
+      },
+      maior_peso(){
+        return (this.quantidades.peso_estimativa > this.quantidades.peso_liquido)?this.quantidades.peso_estimativa:this.quantidades.peso_liquido;
+      },
+      peso_liquido_percentual(){
+        return (this.quantidades.peso_liquido / this.maior_peso) * 100;
+      },
+      peso_liquido_negociado_percentual(){
+        return (this.quantidades.negociado / this.maior_peso) * 100;
+      },
+      estimativa_percentual(){
+        return (this.quantidades.peso_estimativa / this.maior_peso) * 100;
+      },
     },
-    maior_peso(){
-      return (this.quantidades.peso_estimativa > this.quantidades.peso_liquido)?this.quantidades.peso_estimativa:this.quantidades.peso_liquido;
-    },
-    peso_liquido_percentual(){
-      return (this.quantidades.peso_liquido / this.maior_peso) * 100;
-    },
-    peso_liquido_negociado_percentual(){
-      return (this.quantidades.negociado / this.maior_peso) * 100;
-    },
-    estimativa_percentual(){
-      return (this.quantidades.peso_estimativa / this.maior_peso) * 100;
-    },
+    methods:{
+      openChangeColheitaStatusModal(){
+        this.$refs.changeColheitaStatusModal.openModal(this.safraCulturaId);
+      },
+    }
   }
-}
 </script>

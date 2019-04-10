@@ -89,6 +89,7 @@
   import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
   import apModal from 'components/ApModal'
   import apImage from 'components/ApImage'
+  import SafraCulturaTalhaoService from "../../assets/js/service/safra/SafraCulturaTalhaoService";
 
   export default {
     name: "NewCultivarModal",
@@ -102,6 +103,7 @@
         currentStep: 0,
         hasSearch: true,
         safraCulturaService: new SafraCulturaService(),
+        safraCulturaTalhaoService: new SafraCulturaTalhaoService(),
         marcas: null,
         cultivares: null,
         currentSafraCultura: null,
@@ -165,7 +167,7 @@
       },
       addCultivar(){
         this.$refs.newCultivarModal.showOuterProgress();
-        this.safraCulturaService.saveCultivarToSafraCulturaTalhao(
+        this.safraCulturaTalhaoService.saveCultivarToSafraCulturaTalhao(
           this.currentSafraCultura.id, this.currentTalhao.safra_cultura_talhao_id, this.selectedCultivarId
         ).then(cultivar => {
           this.$q.notify({type: 'positive', message: 'Cultivar adicionado com sucesso'});

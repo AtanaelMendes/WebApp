@@ -57,9 +57,9 @@
 </template>
 
 <script>
-  import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
   import apImage from 'components/ApImage'
   import apModal from 'components/ApModal'
+  import SafraCulturaTalhaoService from "../../assets/js/service/safra/SafraCulturaTalhaoService";
 
   export default {
     name: "UpdateCultivaresTamanhoModal",
@@ -70,7 +70,7 @@
     data(){
       return {
         isModalOpened:false,
-        safraCulturaService: new SafraCulturaService(),
+        safraCulturaTalhaoService: new SafraCulturaTalhaoService(),
         currentSafraCultura: null,
         currentTalhao: null,
         cultivares: null,
@@ -115,7 +115,7 @@
       },
       listCultivares(safraCulturaTalhaoId){
         this.$refs.updateCultivaresTamanhoModal.showInnerProgress();
-        this.safraCulturaService.listSafraCulturaTalhoesCultivares(
+        this.safraCulturaTalhaoService.listSafraCulturaTalhoesCultivares(
           this.currentSafraCultura.id, safraCulturaTalhaoId
         ).then(cultivares => {
           this.cultivares = cultivares;
@@ -169,7 +169,7 @@
       },
       save(){
         this.$refs.updateCultivaresTamanhoModal.showOuterProgress();
-        this.safraCulturaService.updateSafraCulturaTalhoesCultivaresTamanho(
+        this.safraCulturaTalhaoService.updateSafraCulturaTalhoesCultivaresTamanho(
           {
             'estimativa': this.estimativa,
             'tamanho': this.tamanho,
@@ -183,6 +183,7 @@
           this.closeModal();
           this.$root.$emit('refreshSafrasCulura');
         }).catch(error => {
+          this.closeModal();
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           this.$refs.updateCultivaresTamanhoModal.hideOuterProgress();
         });

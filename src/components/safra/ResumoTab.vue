@@ -13,6 +13,7 @@
     </div>
     <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7 col-xl-7">
       <safra-quantidades
+        :safra-cultura-id="safraCultura.id"
         :quantidades="safraCultura.totals"
         :unidade-area="safraCultura.view_unidade_area"
         :unidade-medida="safraCultura.view_unidade_medida"

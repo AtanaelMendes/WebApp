@@ -48,6 +48,7 @@
                 <!-- DETALHES DA AREA -->
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
                   <safra-quantidades
+                    :safra-cultura-id="safraCultura.id"
                     :quantidades="marcas[iMarca]"
                     :unidade-area="safraCultura.view_unidade_area"
                     :unidade-medida="safraCultura.view_unidade_medida"
@@ -93,6 +94,7 @@
                 <!-- DETALHES DO CULTIVARES -->
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-8" v-if="activeCultivar">
                   <safra-quantidades
+                    :safra-cultura-id="safraCultura.id"
                     :quantidades="activeCultivar"
                     :unidade-area="safraCultura.view_unidade_area"
                     :unidade-medida="safraCultura.view_unidade_medida">

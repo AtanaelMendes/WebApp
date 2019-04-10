@@ -84,6 +84,7 @@
 
               <q-card-main class="fullheight">
                 <safra-quantidades
+                  :safra-cultura-id="safraCultura.id"
                   :quantidades="safraCultura.totals"
                   :unidade-area="safraCultura.view_unidade_area"
                   :unidade-medida="safraCultura.view_unidade_medida"
