@@ -250,22 +250,6 @@
 </script>
 
 <style>
-  .new-cultivar-modal.modal.minimized .modal-content{
-    max-width: 90vw;
-    max-height: 90vh;
-    width: 90vw;
-    height: 90vh;
-    overflow: hidden;
-  }
-
-  .new-cultivar-modal .q-layout-header{
-    box-shadow: none;
-  }
-
-  .new-cultivar-modal .q-layout-footer{
-    box-shadow: none;
-  }
-
   .list-empty{
     height: 55px;
     text-align: center;

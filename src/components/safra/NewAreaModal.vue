@@ -377,19 +377,5 @@
 </script>
 
 <style>
-  .new-area-modal.modal.minimized .modal-content{
-    max-width: 90vw;
-    max-height: 90vh;
-    width: 90vw;
-    height: 90vh;
-    overflow: hidden;
-  }
 
-  .new-area-modal .q-layout-header{
-    box-shadow: none;
-  }
-
-  .new-area-modal .q-layout-footer{
-    box-shadow: none;
-  }
 </style>
