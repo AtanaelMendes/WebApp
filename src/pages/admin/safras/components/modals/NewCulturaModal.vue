@@ -137,7 +137,7 @@
       },
       closeModal(){
         this.isModalOpened = false;
-        this.resetStepper();
+        this.resetModal();
       },
       setStepperIndex(oldIndex, newIndex, direction){
         this.currentStep = newIndex;
@@ -159,7 +159,7 @@
           this.$refs.newCulturaModal.openSearch(this.searchValueByStep.get(this.currentStep));
         }
       },
-      resetStepper(){
+      resetModal(){
         this.$refs.stepperNovaCultura.goToSlide(0);
 
         this.culturas = null;

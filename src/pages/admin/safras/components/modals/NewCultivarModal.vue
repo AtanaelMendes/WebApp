@@ -125,7 +125,7 @@
       },
       closeModal() {
         this.isModalOpened = false;
-        this.resetStepper();
+        this.resetModal();
       },
       setStepperIndex(oldIndex, newIndex, direction){
         this.currentStep = newIndex
@@ -194,7 +194,7 @@
           this.$refs.newCultivarModal.openSearch(this.searchValueByStep.get(this.currentStep));
         }
       },
-      resetStepper(){
+      resetModal(){
         this.$refs.stepperNovoCultivar.goToSlide(0);
 
         this.marcas = null;

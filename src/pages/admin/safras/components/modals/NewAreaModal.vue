@@ -214,7 +214,7 @@
       },
       closeModal(){
         this.isModalOpened = false;
-        this.resetStepper();
+        this.resetModal();
       },
       saveTalhoes(){
         this.$refs.newAreaModal.showOuterProgress();
@@ -232,7 +232,7 @@
           this.$refs.newAreaModal.hideOuterProgress();
         })
       },
-      resetStepper(){
+      resetModal(){
         this.$refs.stepperNovaArea.goToSlide(0);
 
         this.areas = null;
