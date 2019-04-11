@@ -179,24 +179,26 @@
 
         this.iMarca = 0;
         this.iCultivar = 0;
-        this.getMarcas();
-        this.getCultivares();
+
+        this.$q.loading.show();
+        Promise.all([
+          this.getMarcas(),
+          this.getCultivares(),
+        ]).then(()=>{
+          this.$q.loading.hide();
+        });
       },
       imageMakeUrl: function (fileName, size) {
         return agroUtils.image.makeUrl(fileName, size)
       },
-      getMarcas(){
-        this.$q.loading.show();
-        this.safraCulturaService.getMarcas(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
+      async getMarcas(){
+        return this.safraCulturaService.getMarcas(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
           this.marcas = response.marcas;
-          this.$q.loading.hide();
         })
       },
-      getCultivares(){
-        this.$q.loading.show();
-        this.safraCulturaService.getCultivares(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
+      async getCultivares(){
+        return this.safraCulturaService.getCultivares(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
           this.cultivares = response.cultivares;
-          this.$q.loading.hide();
         })
       },
     }

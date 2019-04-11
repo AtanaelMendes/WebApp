@@ -269,8 +269,13 @@
         this.getContent()
       },
       getContent(){
-        this.getAreas();
-        this.getTalhoes();
+        this.$q.loading.show();
+        Promise.all([
+          this.getAreas(),
+          this.getTalhoes(),
+        ]).then(()=>{
+          this.$q.loading.hide();
+        });
       },
       addArea(){
         this.$refs.newAreaModal.openModal(this.safraCultura);
@@ -281,18 +286,14 @@
       imageMakeUrl(fileName, size) {
         return agroUtils.image.makeUrl(fileName, size)
       },
-      getAreas(){
-        this.$q.loading.show();
-        this.safraCulturaService.getAreas(this.safraCultura.safra.id, this.safraCultura.id).then(areas => {
+      async getAreas(){
+        return this.safraCulturaService.getAreas(this.safraCultura.safra.id, this.safraCultura.id).then(areas => {
           this.areas = areas.areas;
-          this.$q.loading.hide();
         })
       },
-      getTalhoes(){
-        this.$q.loading.show();
-        this.safraCulturaService.getTalhoes(this.safraCultura.safra.id, this.safraCultura.id).then(talhoes => {
+      async getTalhoes(){
+        return this.safraCulturaService.getTalhoes(this.safraCultura.safra.id, this.safraCultura.id).then(talhoes => {
           this.talhoes = talhoes.talhoes;
-          this.$q.loading.hide();
         })
       },
       unattachSafraCulturaByArea(areaId){
