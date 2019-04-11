@@ -59,7 +59,7 @@
 <script>
   import apImage from 'components/ApImage'
   import apModal from 'components/ApModal'
-  import SafraCulturaTalhaoService from "../../assets/js/service/safra/SafraCulturaTalhaoService";
+  import SafraCulturaTalhaoService from "../../../../../assets/js/service/safra/SafraCulturaTalhaoService";
 
   export default {
     name: "UpdateCultivaresTamanhoModal",

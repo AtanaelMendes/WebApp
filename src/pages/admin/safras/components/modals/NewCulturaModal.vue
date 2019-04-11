@@ -90,10 +90,10 @@
 </template>
 
 <script>
-  import SafraCultura from "../../assets/js/model/safra/SafraCultura";
-  import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
-  import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
-  import SafraService from "../../assets/js/service/safra/SafraService";
+  import SafraCultura from "../../../../../assets/js/model/safra/SafraCultura";
+  import SafraCulturaService from "../../../../../assets/js/service/safra/SafraCulturaService";
+  import UnidadeMedidaService from "../../../../../assets/js/service/UnidadeMedidaService";
+  import SafraService from "../../../../../assets/js/service/safra/SafraService";
   import apImage from 'components/ApImage'
   import apModal from 'components/ApModal'
 

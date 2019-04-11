@@ -11,21 +11,21 @@
   />
 </template>
 <script>
-import safraGraficoQuantidades from 'components/safra/graficos/Quantidades.vue'
+import safraGraficoQuantidades from '../graficos/Quantidades.vue'
 
 export default {
-  name: "safra-grafico-quantidades-por-talhao",
+  name: "safra-grafico-quantidades-por-cultivar",
   components: {
     safraGraficoQuantidades
   },
   props: {
     media: Boolean,
-    talhoes: Array,
+    cultivares: Array,
     unidadeMedida: Object,
     unidadeArea: Object,
     height: Number,
     width: Number,
-    areaId: Number,
+    marcaId: Number,
   },
   data() {
     return {
@@ -41,18 +41,18 @@ export default {
     }
   },
   computed: {
-    talhoesDaArea: function () {
-      return _.filter(this.talhoes, {area_id: this.areaId});
+    cultivaresDaArea: function () {
+      return _.filter(this.cultivares, {marca_id: this.marcaId});
     },
   },
   watch: {
     media: function (val) {
       this.parse()
     },
-    talhoes: function (val) {
+    cultivares: function (val) {
       this.parse()
     },
-    areaId: function (val) {
+    marcaId: function (val) {
       this.parse()
     },
     index: function (val) {
@@ -62,31 +62,31 @@ export default {
   methods: {
     // cria séries de dados para o grático
     parse () {
-      this.series.labels = _.map(this.talhoesDaArea, 'nome')
-      this.series.numeroCargas = _.map(this.talhoesDaArea, 'numero_cargas')
+      this.series.labels = _.map(this.cultivaresDaArea, 'nome')
+      this.series.numeroCargas = _.map(this.cultivaresDaArea, 'numero_cargas')
       if (this.media) {
-        this.series.pesoDescarregando = _.map(this.talhoesDaArea, function (item) {
+        this.series.pesoDescarregando = _.map(this.cultivaresDaArea, function (item) {
           if (!item.peso_descarregando || !item.tamanho) {
             return null
           }
           return item.peso_descarregando / item.tamanho;
         })
-        this.series.pesoLiquido = _.map(this.talhoesDaArea, function (item) {
+        this.series.pesoLiquido = _.map(this.cultivaresDaArea, function (item) {
           return (item.peso_liquido - item.peso_descarregando) / item.tamanho;
         })
-        this.series.pesoDesconto = _.map(this.talhoesDaArea, function (item) {
+        this.series.pesoDesconto = _.map(this.cultivaresDaArea, function (item) {
           return item.peso_desconto / item.tamanho;
         })
-        this.series.pesoEstimativa = _.map(this.talhoesDaArea, function (item) {
+        this.series.pesoEstimativa = _.map(this.cultivaresDaArea, function (item) {
           return (item.peso_estimativa) / item.tamanho;
         })
       } else {
-        this.series.pesoDescarregando = _.map(this.talhoesDaArea, 'peso_descarregando');
-        this.series.pesoLiquido = _.map(this.talhoesDaArea, function (item) {
+        this.series.pesoDescarregando = _.map(this.cultivaresDaArea, 'peso_descarregando');
+        this.series.pesoLiquido = _.map(this.cultivaresDaArea, function (item) {
           return (item.peso_liquido - item.peso_descarregando);
         })
-        this.series.pesoDesconto = _.map(this.talhoesDaArea, 'peso_desconto');
-        this.series.pesoEstimativa = _.map(this.talhoesDaArea, function (item) {
+        this.series.pesoDesconto = _.map(this.cultivaresDaArea, 'peso_desconto');
+        this.series.pesoEstimativa = _.map(this.cultivaresDaArea, function (item) {
           return (item.peso_estimativa);
         })
       }

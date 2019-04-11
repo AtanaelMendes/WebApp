@@ -33,7 +33,7 @@
 
 <script>
   import apModal from 'components/ApModal'
-  import SafraCulturaTalhaoService from "../../assets/js/service/safra/SafraCulturaTalhaoService";
+  import SafraCulturaTalhaoService from "../../../../../assets/js/service/safra/SafraCulturaTalhaoService";
   import apImage from 'components/ApImage'
   export default {
     name: "ChangeColheitaStatusModal",

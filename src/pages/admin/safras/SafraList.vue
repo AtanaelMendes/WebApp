@@ -127,10 +127,10 @@
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
-  import newCulturaModal from 'components/safra/NewCulturaModal'
-  import newSafraModal from 'components/safra/NewSafraModal'
+  import newCulturaModal from './components/modals/NewCulturaModal'
+  import newSafraModal from './components/modals/NewSafraModal'
   import SafraService from "../../../assets/js/service/safra/SafraService";
-  import safraQuantidades from 'components/safra/Quantidades.vue'
+  import safraQuantidades from './components/Quantidades.vue'
   import SafraCulturaService from "../../../assets/js/service/safra/SafraCulturaService";
 
     export default {

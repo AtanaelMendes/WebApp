@@ -86,10 +86,10 @@
 </template>
 
 <script>
-  import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
+  import SafraCulturaService from "../../../../../assets/js/service/safra/SafraCulturaService";
   import apModal from 'components/ApModal'
   import apImage from 'components/ApImage'
-  import SafraCulturaTalhaoService from "../../assets/js/service/safra/SafraCulturaTalhaoService";
+  import SafraCulturaTalhaoService from "../../../../../assets/js/service/safra/SafraCulturaTalhaoService";
 
   export default {
     name: "NewCultivarModal",

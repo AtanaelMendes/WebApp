@@ -84,12 +84,12 @@
 
 <script>
   import apImage from 'components/ApImage'
-  import safraQuantidades from 'components/safra/Quantidades.vue'
-  import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
-  import safraGraficoDiario from 'components/safra/graficos/Diario.vue'
-  import safraGraficoDiarioClassificacao from 'components/safra/graficos/DiarioClassificacao.vue'
-  import safraGraficoQuantidadesPorCaminhao from 'components/safra/graficos/QuantidadesPorCaminhao.vue'
-  import safraGraficoQuantidadesPorArmazem from 'components/safra/graficos/QuantidadesPorArmazem.vue'
+  import safraQuantidades from '../Quantidades.vue'
+  import SafraCulturaService from "../../../../../assets/js/service/safra/SafraCulturaService";
+  import safraGraficoDiario from '../graficos/Diario.vue'
+  import safraGraficoDiarioClassificacao from '../graficos/DiarioClassificacao.vue'
+  import safraGraficoQuantidadesPorCaminhao from '../graficos/QuantidadesPorCaminhao.vue'
+  import safraGraficoQuantidadesPorArmazem from '../graficos/QuantidadesPorArmazem.vue'
 
   export default {
     name: "ResumoTab",

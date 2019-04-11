@@ -114,7 +114,7 @@
   </div>
 </template>
 <script>
-  import changeColheitaStatusModal from 'components/safra/ChangeColheitaStatusModal';
+  import changeColheitaStatusModal from './modals/ChangeColheitaStatusModal';
   export default {
     name: "safra-quantidades",
     props: {

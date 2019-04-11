@@ -14,8 +14,8 @@
 </template>
 
 <script>
-  import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
-  import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
+  import UnidadeMedidaService from "../../../../../assets/js/service/UnidadeMedidaService";
+  import SafraCulturaService from "../../../../../assets/js/service/safra/SafraCulturaService";
   import apModal from 'components/ApModal'
 
   export default {

@@ -210,17 +210,17 @@
 </template>
 
 <script>
-  import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
-  import safraGraficoQuantidadesPorArea from 'components/safra/graficos/QuantidadesPorArea.vue'
-  import safraGraficoQuantidadesPorTalhao from 'components/safra/graficos/QuantidadesPorTalhao.vue'
+  import SafraCulturaService from "../../../../../assets/js/service/safra/SafraCulturaService";
+  import safraGraficoQuantidadesPorArea from '../graficos/QuantidadesPorArea.vue'
+  import safraGraficoQuantidadesPorTalhao from '../graficos/QuantidadesPorTalhao.vue'
   import agroUtils from 'assets/js/AgroUtils'
-  import safraQuantidades from 'components/safra/Quantidades.vue'
+  import safraQuantidades from '../Quantidades.vue'
   import apImage from 'components/ApImage'
   import apNoResults from 'components/ApNoResults'
-  import newAreaModal from 'components/safra/NewAreaModal'
-  import newCultivarModal from 'components/safra/NewCultivarModal'
-  import updateCultivaresTamanhoModal from 'components/safra/UpdateCultivaresTamanhoModal'
-  import SafraCulturaTalhaoService from "../../assets/js/service/safra/SafraCulturaTalhaoService";
+  import newAreaModal from '../modals/NewAreaModal'
+  import newCultivarModal from '../modals/NewCultivarModal'
+  import updateCultivaresTamanhoModal from '../modals/UpdateCultivaresTamanhoModal'
+  import SafraCulturaTalhaoService from "../../../../../assets/js/service/safra/SafraCulturaTalhaoService";
 
   export default {
     name: "AreasTab",

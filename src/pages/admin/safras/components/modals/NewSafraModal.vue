@@ -39,8 +39,8 @@
 </template>
 
 <script>
-  import Safra from '../../assets/js/model/safra/Safra'
-  import SafraService from "../../assets/js/service/safra/SafraService";
+  import Safra from '../../../../../assets/js/model/safra/Safra'
+  import SafraService from "../../../../../assets/js/service/safra/SafraService";
   import apModal from 'components/ApModal'
 
   export default {

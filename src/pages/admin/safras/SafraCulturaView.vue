@@ -42,11 +42,11 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import apImage from 'components/ApImage'
-  import areasTab from 'components/safra/AreasTab.vue'
-  import resumoTab from 'components/safra/ResumoTab.vue'
-  import cultivaresTab from 'components/safra/CultivaresTab.vue'
-  import SafraCulturaService from "../../../../assets/js/service/safra/SafraCulturaService";
-  import editCulturaModal from 'components/safra/EditCulturaModal'
+  import areasTab from './components/tabs/AreasTab.vue'
+  import resumoTab from './components/tabs/ResumoTab.vue'
+  import cultivaresTab from './components/tabs/CultivaresTab.vue'
+  import SafraCulturaService from "../../../assets/js/service/safra/SafraCulturaService";
+  import editCulturaModal from './components/modals/EditCulturaModal'
 
   export default {
     name: "safra-cultura",

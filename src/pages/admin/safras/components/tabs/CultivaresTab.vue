@@ -133,10 +133,10 @@
 </template>
 
 <script>
-  import safraQuantidades from 'components/safra/Quantidades.vue'
-  import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
-  import safraGraficoQuantidadesPorMarca from 'components/safra/graficos/QuantidadesPorMarca.vue'
-  import safraGraficoQuantidadesPorCultivar from 'components/safra/graficos/QuantidadesPorCultivar.vue'
+  import safraQuantidades from '../Quantidades.vue'
+  import SafraCulturaService from "../../../../../assets/js/service/safra/SafraCulturaService";
+  import safraGraficoQuantidadesPorMarca from '../graficos/QuantidadesPorMarca.vue'
+  import safraGraficoQuantidadesPorCultivar from '../graficos/QuantidadesPorCultivar.vue'
   import agroUtils from 'assets/js/AgroUtils'
   import apNoResults from 'components/ApNoResults'
 

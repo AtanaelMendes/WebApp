@@ -10,16 +10,16 @@
   />
 </template>
 <script>
-import safraGraficoQuantidades from 'components/safra/graficos/Quantidades.vue'
+import safraGraficoQuantidades from '../graficos/Quantidades.vue'
 
 export default {
-  name: "safra-grafico-quantidades-por-marca",
+  name: "safra-grafico-quantidades-por-area",
   components: {
     safraGraficoQuantidades
   },
   props: {
     media: Boolean,
-    marcas: Array,
+    areas: Array,
     unidadeMedida: Object,
     unidadeArea: Object,
     height: Number,
@@ -42,7 +42,7 @@ export default {
     media: function (val) {
       this.parse()
     },
-    marcas: function (val) {
+    areas: function (val) {
       this.parse()
     },
     index: function (val) {
@@ -52,31 +52,31 @@ export default {
   methods: {
     // cria séries de dados para o grático
     parse () {
-      this.series.labels = _.map(this.marcas, 'nome')
-      this.series.numeroCargas = _.map(this.marcas, 'numero_cargas')
+      this.series.labels = _.map(this.areas, 'nome')
+      this.series.numeroCargas = _.map(this.areas, 'numero_cargas')
       if (this.media) {
-        this.series.pesoDescarregando = _.map(this.marcas, function (item) {
+        this.series.pesoDescarregando = _.map(this.areas, function (item) {
           if (!item.peso_descarregando || !item.tamanho) {
             return null
           }
           return item.peso_descarregando / item.tamanho;
         })
-        this.series.pesoLiquido = _.map(this.marcas, function (item) {
+        this.series.pesoLiquido = _.map(this.areas, function (item) {
           return (item.peso_liquido - item.peso_descarregando) / item.tamanho;
         })
-        this.series.pesoDesconto = _.map(this.marcas, function (item) {
+        this.series.pesoDesconto = _.map(this.areas, function (item) {
           return item.peso_desconto / item.tamanho;
         })
-        this.series.pesoEstimativa = _.map(this.marcas, function (item) {
+        this.series.pesoEstimativa = _.map(this.areas, function (item) {
           return (item.peso_estimativa) / item.tamanho;
         })
       } else {
-        this.series.pesoDescarregando = _.map(this.marcas, 'peso_descarregando');
-        this.series.pesoLiquido = _.map(this.marcas, function (item) {
+        this.series.pesoDescarregando = _.map(this.areas, 'peso_descarregando');
+        this.series.pesoLiquido = _.map(this.areas, function (item) {
           return (item.peso_liquido - item.peso_descarregando);
         })
-        this.series.pesoDesconto = _.map(this.marcas, 'peso_desconto');
-        this.series.pesoEstimativa = _.map(this.marcas, function (item) {
+        this.series.pesoDesconto = _.map(this.areas, 'peso_desconto');
+        this.series.pesoEstimativa = _.map(this.areas, function (item) {
           return (item.peso_estimativa);
         })
       }

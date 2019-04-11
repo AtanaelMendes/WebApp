@@ -143,13 +143,13 @@
 </template>
 
 <script>
-  import SafraCulturaTalhao from "../../assets/js/model/safra/SafraCulturaTalhao";
-  import AreaService from "../../assets/js/service/area/AreaService";
+  import SafraCulturaTalhao from "../../../../../assets/js/model/safra/SafraCulturaTalhao";
+  import AreaService from "../../../../../assets/js/service/area/AreaService";
   import apNoResults from 'components/ApNoResults';
   import apImage from 'components/ApImage';
   import apModal from 'components/ApModal'
-  import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
-  import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
+  import UnidadeMedidaService from "../../../../../assets/js/service/UnidadeMedidaService";
+  import SafraCulturaService from "../../../../../assets/js/service/safra/SafraCulturaService";
 
   export default {
     name: "NewAreaModal",
