@@ -11,7 +11,7 @@
           </div>
           <div class="q-pa-lg">
             <div class="row gutter-sm">
-              <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" v-for="marca in marcas" :key="marca.id">
+              <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" v-for="marca in marcasFiltered" :key="marca.id">
                 <q-card @click.native="setMarca(marca.id)">
                   <q-card-media overlay-position="full">
                     <ap-image size="400x250" :file-name="marca.image_file_name"/>
@@ -27,9 +27,9 @@
               </div>
             </div>
           </div>
-          <div v-if="marcas.length === 0" class="list-empty">
+          <div v-if="marcasFiltered.length === 0" class="list-empty">
             <q-icon name="warning" />
-            <span>Nenhuma marca cadastrada ainda. Crie uma para poder continuar.</span>
+            <span>Nenhuma marca encontrada.</span>
           </div>
         </template>
       </q-carousel-slide>
@@ -42,7 +42,7 @@
           </div>
           <div class="q-pa-lg">
             <div class="row gutter-sm">
-              <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" v-for="cultivar in cultivares" :key="cultivar.id">
+              <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" v-for="cultivar in cultivaresFiltered" :key="cultivar.id">
                 <q-card @click.native="setCultivar(cultivar.id)">
                   <q-card-title class="text-center">
                     {{cultivar.nome}}
@@ -65,9 +65,9 @@
               </div>
             </div>
           </div>
-          <div v-if="cultivares.length === 0" class="list-empty">
+          <div v-if="cultivaresFiltered.length === 0" class="list-empty">
             <q-icon name="warning" />
-            <span>Nenhum cultivar encontrado para essa marca ou cultura.</span>
+            <span>Nenhum cultivar encontrado.</span>
           </div>
         </template>
       </q-carousel-slide>
@@ -105,7 +105,9 @@
         safraCulturaService: new SafraCulturaService(),
         safraCulturaTalhaoService: new SafraCulturaTalhaoService(),
         marcas: null,
+        marcasFiltered: null,
         cultivares: null,
+        cultivaresFiltered: null,
         currentSafraCultura: null,
         currentTalhao: null,
         selectedMarcaId: null,
@@ -127,19 +129,49 @@
         this.currentStep = newIndex
       },
       search(value){
-        console.log('search', value);
+        if(this.currentStep === 0){
+          value = value.toLowerCase().replace(" ", "");
+          if(value === ""){
+            this.marcasFiltered = this.marcas;
+          }else{
+            this.marcasFiltered = this.marcas.filter(item => {
+              if(item.nome.toLowerCase().match(value)){
+                return true;
+              }else{
+                return false;
+              }
+            })
+          }
+        } else if(this.currentStep === 1){
+          value = value.toLowerCase().replace(" ", "");
+          if(value === ""){
+            this.cultivaresFiltered = this.cultivares;
+          }else{
+            this.cultivaresFiltered = this.cultivares.filter(item => {
+              if(item.nome.toLowerCase().match(value)){
+                return true;
+              }else{
+                return false;
+              }
+            })
+          }
+        }
       },
       goToNextStep(){
+        this.$refs.newCultivarModal.closeSearch(true);
         this.$refs.stepperNovoCultivar.next();
       },
       goToPreviousStep(){
+        this.$refs.newCultivarModal.closeSearch(true);
         this.$refs.stepperNovoCultivar.previous();
       },
       resetStepper(){
         this.$refs.stepperNovoCultivar.goToSlide(0);
 
         this.marcas = null;
+        this.marcasFiltered = null;
         this.cultivares = null;
+        this.cultivaresFiltered = null;
         this.selectedMarcaId = null;
         this.selectedCultivarId =  null;
       },
@@ -147,6 +179,7 @@
         this.$refs.newCultivarModal.showInnerProgress();
         this.safraCulturaService.listMarcas().then(marcas => {
           this.marcas = marcas;
+          this.marcasFiltered = marcas;
           this.$refs.newCultivarModal.hideInnerProgress();
         })
       },
@@ -154,6 +187,7 @@
         this.$refs.newCultivarModal.showInnerProgress();
         this.safraCulturaService.listCultivaresByMarca(this.currentSafraCultura.cultura.id, marcaId).then(cultivares => {
           this.cultivares = cultivares;
+          this.cultivaresFiltered = cultivares;
           this.$refs.newCultivarModal.hideInnerProgress();
         })
       },

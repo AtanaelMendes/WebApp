@@ -12,7 +12,7 @@
           <template v-if="$q.screen.gt.xs">
             <div class="q-px-lg q-py-sm">
               <div class="row gutter-sm">
-                <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" v-for="cultura in culturas" :key="cultura.nome">
+                <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" v-for="cultura in culturasFiltered" :key="cultura.nome">
                   <q-card @click.native="setCultura(cultura)">
                     <q-card-media overlay-position="full">
                       <ap-image size="400x250" :file-name="cultura.image_file_name"/>
@@ -49,9 +49,9 @@
             </q-item>
           </q-list>
 
-          <div v-if="culturas.length === 0" class="list-empty">
+          <div v-if="culturasFiltered.length === 0" class="list-empty">
             <q-icon name="warning" />
-            <span>Nenhuma cultura disponível.</span>
+            <span>Nenhuma cultura encontrada.</span>
           </div>
         </template>
 
@@ -114,6 +114,7 @@
         safraId: null,
         safraCultura: new SafraCultura(),
         culturas: null,
+        culturasFiltered: null,
         unidadesArea: null,
         unidadesMedida: null,
       }
@@ -152,12 +153,14 @@
         this.$refs.stepperNovaCultura.goToSlide(0);
 
         this.culturas = null;
+        this.culturasFiltered = null;
         this.unidadesArea = null;
         this.unidadesMedida = null;
       },
       async getCulturas(safraId) {
         return this.safraService.listFreeCulturas(safraId).then(culturas => {
           this.culturas = culturas;
+          this.culturasFiltered = culturas;
         });
       },
       async getUnidadesMedida(){
@@ -171,7 +174,18 @@
         })
       },
       search(value){
-        console.log('search', value)
+        value = value.toLowerCase().replace(" ", "");
+        if(value === ""){
+          this.culturasFiltered = this.culturas;
+        }else{
+          this.culturasFiltered = this.culturas.filter(item => {
+            if(item.nome.toLowerCase().match(value)){
+              return true;
+            }else{
+              return false;
+            }
+          })
+        }
       },
       setCultura(cultura){
         this.safraCultura.cultura_id = cultura.id;

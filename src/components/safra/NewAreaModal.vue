@@ -11,7 +11,7 @@
           </div>
           <div class="q-pa-lg">
             <div class="row gutter-sm">
-              <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" v-for="area in areas" :key="area.nome">
+              <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" v-for="area in areasFiltered" :key="area.nome">
                 <q-card @click.native="setArea(area)">
                   <q-card-media overlay-position="full">
                     <ap-image size="400x250" :file-name="area.image_file_name" />
@@ -28,9 +28,9 @@
             </div>
           </div>
 
-          <div v-if="areas.length === 0" class="list-empty">
+          <div v-if="areasFiltered.length === 0" class="list-empty">
             <q-icon name="warning" />
-            <span>Nenhuma área disponível.</span>
+            <span>Nenhuma área encontrada.</span>
           </div>
         </template>
       </q-carousel-slide>
@@ -168,6 +168,7 @@
         hasSearch: true,
         currentStep: 0,
         areas: null,
+        areasFiltered: null,
         talhoes: null,
         unidadesArea: null,
         unidadesMedida: null,
@@ -233,6 +234,7 @@
         this.$refs.stepperNovaArea.goToSlide(0);
 
         this.areas = null;
+        this.areasFiltered = null;
         this.talhoes = null;
         this.unidadesArea = null;
         this.unidadesMedida =  null;
@@ -248,7 +250,18 @@
         this.hasSearch = this.currentStep === 0;
       },
       search(value){
-        console.log('search', value)
+        value = value.toLowerCase().replace(" ", "");
+        if(value === ""){
+          this.areasFiltered = this.areas;
+        }else{
+          this.areasFiltered = this.areas.filter(item => {
+            if(item.nome.toLowerCase().match(value)){
+              return true;
+            }else{
+              return false;
+            }
+          })
+        }
       },
       async getAreas(){
         return this.safraCulturaService.listFreeAreas(
@@ -256,6 +269,7 @@
           this.selectedSafraCultura.id,
         ).then(areas => {
           this.areas = areas;
+          this.areasFiltered = areas;
         })
       },
       setArea(area){
