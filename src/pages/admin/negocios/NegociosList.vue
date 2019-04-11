@@ -153,14 +153,14 @@
       </q-fab>
     </q-page-sticky>
 
-    <negocio-modal ref="negocioModal" />
+    <new-negocio-modal ref="newNegocioModal" />
 
   </custom-page>
 </template>
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import negocioModal from 'components/negocio/NegocioModal';
+  import newNegocioModal from './components/modals/NewNegocioModal';
   import apImage from 'components/ApImage'
   import apNoResults from 'components/ApNoResults'
   import NegocioService from "../../../assets/js/service/negocio/NegocioService";
@@ -172,7 +172,7 @@
       apImage,
       toolbar,
       customPage,
-      negocioModal,
+      newNegocioModal,
     },
     data () {
       return {
@@ -188,10 +188,10 @@
         });
       },
       addNegocio: function(tipo_negocio_id){
-        this.$refs.negocioModal.openModal(tipo_negocio_id);
+        this.$refs.newNegocioModal.openModal(tipo_negocio_id);
       },
       editNegocio: function(negocioId){
-        this.$refs.negocioModal.openModalEditMode(negocioId);
+        this.$refs.newNegocioModal.openModalEditMode(negocioId);
       },
       archiveNegocio: function(id){
         this.negocioService.archiveNegocio(id).then(() => {
