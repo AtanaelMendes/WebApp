@@ -7,11 +7,11 @@
           <div class="q-title">{{title}}</div>
           <div class="search-container" v-if="searchable" v-bind:class="{'search-container-opened':searchVisible}">
             <q-search v-model="searchValue" v-if="searchVisible"
-                      @input="inputSearchEvent" @blur="closeSearch(false)" @keydown="inputSearchKeyDownEvent"
+                      @input="inputSearchEvent" @blur="closeSearchOnBlur" @keydown="inputSearchKeyDownEvent"
                       placeholder="Pesquisar..." style="padding-left: 16px"
                       no-icon autofocus hide-underline/>
-            <q-btn flat round dense icon="search" v-if="!searchVisible" @click="openSearch" />
-            <q-btn flat round dense icon="close" v-if="searchVisible" @click="closeSearch(true)" />
+            <q-btn flat round dense icon="search" v-if="!searchVisible" @click="openSearch(null)" />
+            <q-btn flat round dense icon="close" v-if="searchVisible" @click="closeSearchOnButtonClicked" />
           </div>
         </div>
 
@@ -59,23 +59,34 @@
       inputSearchEvent(value){
         this.$emit('search-input', value);
       },
-      inputSearchKeyDownEvent(event){
+      closeSearchEvent(event){
+        this.$emit('search-close', event);
+      },
+      inputSearchKeyDownEvent(){
         if(event.key === "Escape"){
-          this.closeSearch(true);
+          this.closeSearch();
+          this.closeSearchEvent('escape');
         }
       },
-      openSearch(){
+      openSearch(value = null){
+        if(value){
+          this.searchValue = value;
+        }
         this.searchVisible = true;
       },
-      closeSearch(force = false){
-        if(force){
-          this.searchValue = '';
-          this.searchVisible = false;
-        }else{
-          if(this.searchValue === ""){
-            this.closeSearch(true)
-          }
+      closeSearchOnBlur(){
+        if(this.searchValue === ""){
+          this.closeSearch();
+          this.closeSearchEvent('blur');
         }
+      },
+      closeSearchOnButtonClicked(){
+        this.closeSearch();
+        this.closeSearchEvent('click');
+      },
+      closeSearch(){
+        this.searchValue = "";
+        this.searchVisible = false;
       },
       showInnerProgress(){
         this.isInnerProgressVisible = true;

@@ -1,6 +1,6 @@
 <template>
   <ap-modal ref="newCulturaModal" title="Nova Cultura" :visible="isModalOpened"
-            :searchable="hasSearch" @search-input="search" @hide="closeModal">
+            :searchable="hasSearch" @search-input="search" @search-close="closeSearch" @hide="closeModal">
     <q-carousel slot="content" height="100%" no-swipe ref="stepperNovaCultura" @slide-trigger="setStepperIndex">
       <!--PASSO 1 SELECIONAR CULTURA-->
       <q-carousel-slide class="q-pa-none">
@@ -117,12 +117,14 @@
         culturasFiltered: null,
         unidadesArea: null,
         unidadesMedida: null,
+        searchValueByStep: null,
       }
     },
     methods: {
       openModal(safraId){
         this.isModalOpened = true;
         this.safraId = safraId;
+        this.searchValueByStep = new Map();
 
         this.$refs.newCulturaModal.showInnerProgress();
         Promise.all([
@@ -144,10 +146,18 @@
       goToNextStep(){
         this.$refs.newCulturaModal.closeSearch(true);
         this.$refs.stepperNovaCultura.next();
+
+        if(this.searchValueByStep.has(this.currentStep)){
+          this.$refs.newCulturaModal.openSearch(this.searchValueByStep.get(this.currentStep));
+        }
       },
       goToPreviousStep(){
         this.$refs.newCulturaModal.closeSearch(true);
         this.$refs.stepperNovaCultura.previous();
+
+        if(this.searchValueByStep.has(this.currentStep)){
+          this.$refs.newCulturaModal.openSearch(this.searchValueByStep.get(this.currentStep));
+        }
       },
       resetStepper(){
         this.$refs.stepperNovaCultura.goToSlide(0);
@@ -174,6 +184,12 @@
         })
       },
       search(value){
+        if(value === ""){
+          this.searchValueByStep.delete(this.currentStep);
+        }else{
+          this.searchValueByStep.set(this.currentStep, value);
+        }
+
         value = value.toLowerCase().replace(" ", "");
         if(value === ""){
           this.culturasFiltered = this.culturas;
@@ -185,6 +201,11 @@
               return false;
             }
           })
+        }
+      },
+      closeSearch(event){
+        if(event === 'click'){
+          this.search("");
         }
       },
       setCultura(cultura){

@@ -1,6 +1,6 @@
 <template>
   <ap-modal ref="newAreaModal" title="Nova Área" :visible="isModalOpened"
-            :searchable="hasSearch" @search-input="search" @hide="closeModal">
+            :searchable="hasSearch" @search-input="search" @search-close="closeSearch" @hide="closeModal">
 
     <q-carousel slot="content" height="100%" no-swipe ref="stepperNovaArea" v-if="selectedSafraCultura" @slide-trigger="setStepperIndex">
       <!--PASSO 1 ADICIONAR AREA-->
@@ -177,6 +177,7 @@
           nome: '',
           talhoes: null,
         },
+        searchValueByStep: null,
       }
     },
     computed:{
@@ -200,6 +201,7 @@
       openModal(safraCultura){
         this.isModalOpened = true;
         this.selectedSafraCultura = safraCultura;
+        this.searchValueByStep = new Map();
 
         this.$refs.newAreaModal.showInnerProgress();
         Promise.all([
@@ -250,6 +252,12 @@
         this.hasSearch = this.currentStep === 0;
       },
       search(value){
+        if(value === ""){
+          this.searchValueByStep.delete(this.currentStep);
+        }else{
+          this.searchValueByStep.set(this.currentStep, value);
+        }
+
         value = value.toLowerCase().replace(" ", "");
         if(value === ""){
           this.areasFiltered = this.areas;
@@ -261,6 +269,11 @@
               return false;
             }
           })
+        }
+      },
+      closeSearch(event){
+        if(event === 'click'){
+          this.search("");
         }
       },
       async getAreas(){
@@ -347,9 +360,17 @@
       },
       goToNextStep(){
         this.$refs.stepperNovaArea.next();
+
+        if(this.searchValueByStep.has(this.currentStep)){
+          this.$refs.newAreaModal.openSearch(this.searchValueByStep.get(this.currentStep));
+        }
       },
       goToPreviousStep(){
         this.$refs.stepperNovaArea.previous();
+
+        if(this.searchValueByStep.has(this.currentStep)){
+          this.$refs.newAreaModal.openSearch(this.searchValueByStep.get(this.currentStep));
+        }
       },
     }
   }

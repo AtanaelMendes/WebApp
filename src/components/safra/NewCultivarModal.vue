@@ -1,6 +1,6 @@
 <template>
   <ap-modal ref="newCultivarModal" title="Novo Cultivar" :visible="isModalOpened"
-            :searchable="hasSearch" @search-input="search" @hide="closeModal">
+            :searchable="hasSearch" @search-input="search" @search-close="closeSearch" @hide="closeModal">
 
     <q-carousel slot="content" height="100%" no-swipe ref="stepperNovoCultivar" @slide-trigger="setStepperIndex">
       <!--PASSO 1 ESCOLHER MARCA-->
@@ -112,6 +112,7 @@
         currentTalhao: null,
         selectedMarcaId: null,
         selectedCultivarId: null,
+        searchValueByStep: null,
       }
     },
     methods: {
@@ -119,6 +120,7 @@
         this.isModalOpened = true;
         this.currentTalhao = talhao;
         this.currentSafraCultura = safraCultura;
+        this.searchValueByStep = new Map();
         this.listMarcas()
       },
       closeModal() {
@@ -129,41 +131,68 @@
         this.currentStep = newIndex
       },
       search(value){
-        if(this.currentStep === 0){
-          value = value.toLowerCase().replace(" ", "");
-          if(value === ""){
-            this.marcasFiltered = this.marcas;
-          }else{
-            this.marcasFiltered = this.marcas.filter(item => {
-              if(item.nome.toLowerCase().match(value)){
-                return true;
-              }else{
-                return false;
-              }
-            })
-          }
-        } else if(this.currentStep === 1){
-          value = value.toLowerCase().replace(" ", "");
-          if(value === ""){
-            this.cultivaresFiltered = this.cultivares;
-          }else{
-            this.cultivaresFiltered = this.cultivares.filter(item => {
-              if(item.nome.toLowerCase().match(value)){
-                return true;
-              }else{
-                return false;
-              }
-            })
-          }
+        if(value === ""){
+          this.searchValueByStep.delete(this.currentStep);
+        }else{
+          this.searchValueByStep.set(this.currentStep, value);
+        }
+        switch (this.currentStep) {
+          case 0:
+            this.filterMarcas(value);
+            break;
+          case 1:
+            this.filterCultivares(value);
+            break;
+        }
+      },
+      filterMarcas(value){
+        value = value.toLowerCase().replace(" ", "");
+        if(value === ""){
+          this.marcasFiltered = this.marcas;
+        }else{
+         this.marcasFiltered = this.marcas.filter(item => {
+            if(item.nome.toLowerCase().match(value)){
+              return true;
+            }else{
+              return false;
+            }
+          })
+        }
+      },
+      filterCultivares(value){
+        value = value.toLowerCase().replace(" ", "");
+        if(value === ""){
+          this.cultivaresFiltered = this.cultivares;
+        }else{
+          this.cultivaresFiltered = this.cultivares.filter(item => {
+            if(item.nome.toLowerCase().match(value)){
+              return true;
+            }else{
+              return false;
+            }
+          })
+        }
+      },
+      closeSearch(event){
+        if(event === 'click'){
+          this.search("");
         }
       },
       goToNextStep(){
         this.$refs.newCultivarModal.closeSearch(true);
         this.$refs.stepperNovoCultivar.next();
+
+        if(this.searchValueByStep.has(this.currentStep)){
+          this.$refs.newCultivarModal.openSearch(this.searchValueByStep.get(this.currentStep));
+        }
       },
       goToPreviousStep(){
         this.$refs.newCultivarModal.closeSearch(true);
         this.$refs.stepperNovoCultivar.previous();
+
+        if(this.searchValueByStep.has(this.currentStep)){
+          this.$refs.newCultivarModal.openSearch(this.searchValueByStep.get(this.currentStep));
+        }
       },
       resetStepper(){
         this.$refs.stepperNovoCultivar.goToSlide(0);
@@ -185,6 +214,8 @@
       },
       listCultivarByMarca(marcaId){
         this.$refs.newCultivarModal.showInnerProgress();
+        this.cultivares = null;
+        this.cultivaresFiltered = null;
         this.safraCulturaService.listCultivaresByMarca(this.currentSafraCultura.cultura.id, marcaId).then(cultivares => {
           this.cultivares = cultivares;
           this.cultivaresFiltered = cultivares;
@@ -193,6 +224,7 @@
       },
       setMarca(id){
         this.selectedMarcaId = id;
+        this.searchValueByStep.delete(1);
         this.listCultivarByMarca(id);
         this.goToNextStep();
       },
