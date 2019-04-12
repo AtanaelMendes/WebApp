@@ -182,7 +182,7 @@ export default class NegocioService{
     });
   }
 
-  listNegociosCulturas(negocioId){
+  listNegociosCulturasWithoutEmpty(negocioId){
     return new Promise((resolve, reject) => {
       NegocioCulturaAPI.listNegociosCulturas(negocioId).then(response => {
         if(response.status === 200){

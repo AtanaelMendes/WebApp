@@ -4,7 +4,7 @@
 
       <!--PASSO 1 ESCOLHER NEGOCIANTE-->
       <q-carousel-slide class="q-pa-none" style="padding-right: 1px">
-        <template v-if="true">
+        <template>
           <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
             <span class="q-subheading text-faded">Selecione a pessoa que você está negociando</span>
           </div>
@@ -155,9 +155,6 @@
         this.isModalOpened = false;
         this.resetModal();
         //this.$emit('modal-closed')
-      },
-      setStepperIndex(oldIndex, newIndex, direction){
-        this.currentStep = newIndex;
       },
       resetModal(){
         this.$refs.stepperNovoNegocio.goToSlide(0);

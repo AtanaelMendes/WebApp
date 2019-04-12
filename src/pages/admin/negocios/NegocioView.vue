@@ -424,9 +424,8 @@
   import newCulturaModal from 'components/negocio/NewCulturaModal';
   import newTituloModal from 'components/negocio/NewTituloModal';
   import newProdutoModal from 'components/negocio/NewProdutoModal';
-  import newFixacaoModal from 'components/negocio/NewFixacaoModal';
+  import newFixacaoModal from './components/modals/NewFixacaoModal';
   import apNoResults from 'components/ApNoResults'
-  import { Screen } from 'quasar'
   import NegocioService from "../../../assets/js/service/negocio/NegocioService";
 
   export default {
