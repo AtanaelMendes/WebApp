@@ -3,7 +3,7 @@
     <q-carousel slot="content" height="100%" no-swipe ref="stepperNovoNegocio" @slide-trigger="setStepperIndex">
 
       <!--PASSO 1 ESCOLHER NEGOCIANTE-->
-      <q-carousel-slide class="q-pa-none">
+      <q-carousel-slide class="q-pa-none" style="padding-right: 1px">
         <template v-if="true">
           <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
             <span class="q-subheading text-faded">Selecione a pessoa que você está negociando</span>
@@ -11,68 +11,44 @@
 
           <div>
             <div class="row justify-center q-mb-md">
-              <q-search inverted-light color="grey-3" align="center" v-model="searchPessoasQuery" placeholder="Busque por uma pessoa"/>
+              <q-search inverted-light color="grey-2" v-model="searchPessoasQuery" placeholder="Busque por uma pessoa"/>
             </div>
 
-            <q-scroll-area style="width: auto; height: 400px;">
-              <q-list no-border link separator>
-                <template v-for="grupo in pessoas">
-                  <q-list-header :key="grupo.id" class="q-py-sm" style="min-height: unset; background: #f9f9f9; border-bottom: 1px solid #e2e2e2; border-top: 1px solid #e2e2e2;">
-                    {{grupo.nome}}
-                  </q-list-header>
-                  <q-item @click.native="selectPesssoa(pessoa.id)" v-for="pessoa in grupo.pessoas" :key="pessoa.id">
-                    <q-item-main>
-                      <q-item-tile label>{{pessoa.nome}}</q-item-tile>
-                      <q-item-tile sublabel>{{pessoa.cpf ? pessoa.cpf : pessoa.cnpj}}</q-item-tile>
-                      <q-item-tile sublabel>{{pessoa.inscricao_estadual}} {{pessoa.inscricao_municipal}}</q-item-tile>
-                    </q-item-main>
+            <div class="relative-position">
+              <q-scroll-area style="width: auto; height: 350px;">
+                <q-list no-border link separator>
+                  <template v-for="grupo in pessoas">
+                    <q-list-header :key="grupo.id" class="q-py-sm" style="min-height: unset; background: #f9f9f9; border-bottom: 1px solid #e2e2e2; border-top: 1px solid #e2e2e2;">
+                      {{grupo.nome}}
+                    </q-list-header>
+                    <q-item @click.native="selectPesssoa(pessoa.id)" v-for="pessoa in grupo.pessoas" :key="pessoa.id">
+                      <q-item-main>
+                        <q-item-tile label>{{pessoa.nome}}</q-item-tile>
+                        <q-item-tile sublabel>{{pessoa.cpf ? pessoa.cpf : pessoa.cnpj}}</q-item-tile>
+                        <q-item-tile sublabel>{{pessoa.inscricao_estadual}} {{pessoa.inscricao_municipal}}</q-item-tile>
+                      </q-item-main>
 
-                    <q-item-side right>
-                      <q-btn icon="done" size="8px" round dense color="positive" v-if="pessoa.id == negocio.pessoaId.value"/>
-                    </q-item-side>
-                  </q-item>
-                </template>
-              </q-list>
-            </q-scroll-area>
+                      <q-item-side right>
+                        <q-btn icon="done" size="8px" round dense color="positive" v-if="pessoa.id == negocio.pessoaId.value"/>
+                      </q-item-side>
+                    </q-item>
+                  </template>
 
-
-            <!--<div class="row" v-for="grupo in pessoas" :key="grupo.id">
-              <div class="col-12">
-
-                <div class="row bg-blue-grey-1 q-pa-sm">
-                  <div class="col-12 q-title">
-                    {{grupo.nome}}
+                  <div v-if="!pessoas" class="list-empty">
+                    <q-icon name="warning" />
+                    <span>Busque pela pessoa no campo acima.</span>
                   </div>
-                </div>
-
-                <div class="row justify-center">
-                  <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
-                    <q-list no-border link separator>
-                      <q-item class="row" @click.native="selectPesssoa(pessoa.id)" v-for="pessoa in grupo.pessoas" :key="pessoa.id">
-                        <div class="col-1">
-                          <q-btn icon="done" size="8px" round dense color="positive" v-if="pessoa.id == negocio.pessoaId.value"/>
-                        </div>
-                        <div class="col-11">
-                          {{pessoa.nome}}
-                        </div>
-                        <div class="col-12 offset-1 q-caption text-faded">
-                          {{pessoa.cpf ? pessoa.cpf : pessoa.cnpj}}
-                        </div>
-                        <div class="col-12 offset-1 q-caption text-faded">
-                          {{pessoa.inscricao_estadual}} {{pessoa.inscricao_municipal}}
-                        </div>
-                      </q-item>
-                    </q-list>
+                  <div v-if="pessoas && pessoas.length === 0" class="list-empty">
+                    <q-icon name="warning" />
+                    <span>Nenhuma pessoa encontrada.</span>
                   </div>
-                </div>
+                </q-list>
+              </q-scroll-area>
 
-              </div>
-            </div>-->
-
-            <!--<div v-if="pessoas.length === 0" class="list-empty">
-              <q-icon name="warning" />
-              <span>Nenhum resultado encontrado</span>
-            </div>-->
+              <q-inner-loading :visible="isSearching">
+                <q-spinner size="60px"></q-spinner>
+              </q-inner-loading>
+            </div>
           </div>
 
         </template>
@@ -84,16 +60,30 @@
           <span class="q-subheading text-faded">Informações</span>
         </div>
 
-        <div class="row justify-center items-center gutter-sm" >
+        <div class="row gutter-x-sm" >
 
-          <div class="col-3">
-            <q-datetime v-model="negocio.emissao.value" float-label="Emissão"
-                        type="date" align="center" format="DD/MM/YYYY" modal/>
-            <custom-input-text :model="negocio.numeroContrato" label="Número do contrato"/>
-            <custom-input-text :model="negocio.numeroPedido" label="Número do Pedido"/>
+          <div class="col-6">
+            <q-datetime v-model="negocio.emissao.value" stack-label="Emissão"
+                        type="date" format="DD/MM/YYYY" modal/>
           </div>
-          <div class="col-3">
-            <q-input v-model="negocio.observacoes.value" type="textarea" float-label="Observações"/>
+        </div>
+        <div class="row gutter-x-sm q-mt-sm">
+          <div class="col-6">
+            <q-field orientation="vertical"
+                     :error="negocio.numeroContrato.errorMessage !== null"
+                     :error-label="negocio.numeroContrato.errorMessage">
+              <q-input v-model="negocio.numeroContrato.value" stack-label="Número do Contrato"
+                       @input="negocio.numeroContrato.errorMessage = null"/>
+            </q-field>
+          </div>
+
+          <div class="col-6">
+            <q-input v-model="negocio.numeroPedido.value" stack-label="Número do Pedido" />
+          </div>
+        </div>
+        <div class="row q-mt-sm">
+          <div class="col-12">
+            <q-input v-model="negocio.observacoes.value" type="textarea" stack-label="Observações"/>
           </div>
         </div>
       </q-carousel-slide>
@@ -108,95 +98,6 @@
       </div>
     </div>
   </ap-modal>
-
-
-  <!--<q-modal v-model="isModalOpened" maximized @hide="closeModal">
-
-    <q-stepper ref="stepper" contractable color="positive" v-model="currentStep" class="no-shadow" >
-
-      &lt;!&ndash;PASSO 1 ESCOLHER NEGOCIANTE&ndash;&gt;
-      <q-step default title="Negociante" name="negociante">
-
-        <div class="row text-center justify-center q-title">
-          <div class="col-12">
-            Com quem está negociando?
-          </div>
-
-          <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
-            <q-search align="center" v-model="searchPessoasQuery" placeholder="Busque por uma pessoa"/>
-          </div>
-        </div>
-
-        <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
-          <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-
-            <div class="row" v-for="grupo in pessoas" :key="grupo.id">
-              <div class="col-12">
-
-                <div class="row bg-blue-grey-1 q-pa-sm">
-                  <div class="col-12 q-title">
-                    {{grupo.nome}}
-                  </div>
-                </div>
-
-                <div class="row justify-center">
-                  <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
-                    <q-list no-border link separator>
-                      <q-item class="row" @click.native="selectPesssoa(pessoa.id)" v-for="pessoa in grupo.pessoas" :key="pessoa.id">
-                        <div class="col-1">
-                          <q-btn icon="done" size="8px" round dense color="positive" v-if="pessoa.id == negocio.pessoaId.value"/>
-                        </div>
-                        <div class="col-11">
-                          {{pessoa.nome}}
-                        </div>
-                        <div class="col-12 offset-1 q-caption text-faded">
-                          {{pessoa.cpf ? pessoa.cpf : pessoa.cnpj}}
-                        </div>
-                        <div class="col-12 offset-1 q-caption text-faded">
-                          {{pessoa.inscricao_estadual}} {{pessoa.inscricao_municipal}}
-                        </div>
-                      </q-item>
-                    </q-list>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-            <div v-if="pessoas.length === 0" class="list-empty">
-              <q-icon name="warning" />
-              <span>Nenhum resultado encontrado</span>
-            </div>
-
-          </div>
-        </div>
-      </q-step>
-
-      &lt;!&ndash;PASSO 2 INFORMAR DETALHES &ndash;&gt;
-      <q-step title="Informações" name="informacoes">
-        <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
-
-          <div class="col-3">
-            <q-datetime v-model="negocio.emissao.value" float-label="Emissão"
-                        type="date" align="center" format="DD/MM/YYYY" modal/>
-            <custom-input-text :model="negocio.numeroContrato" label="Número do contrato"/>
-            <custom-input-text :model="negocio.numeroPedido" label="Número do Pedido"/>
-          </div>
-          <div class="col-3">
-            <q-input v-model="negocio.observacoes.value" type="textarea" float-label="Observações"/>
-          </div>
-        </div>
-      </q-step>
-
-    </q-stepper>
-
-    <q-page-sticky position="bottom-right" :offset="[30, 30]">
-      <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-      <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="!isNextButtomEnabled()" v-if="currentStep == 'negociante' "/>
-      <q-btn label="salvar" color="primary" @click="saveNegocio" v-if="currentStep == 'informacoes' && !isEditMode"/>
-      <q-btn label="atualizar" color="primary" @click="updateNegocio" v-if="currentStep == 'informacoes' && isEditMode"/>
-    </q-page-sticky>
-  </q-modal>-->
 </template>
 
 <script>
@@ -217,7 +118,11 @@
     watch:{
       searchPessoasQuery: function(value){
         this.negocio.pessoaId.value = null;
-        this.searchPessoas(value);
+        if(value === ""){
+          this.pessoas = null;
+        }else{
+          this.searchPessoas(value);
+        }
       }
     },
     data(){
@@ -230,6 +135,7 @@
         searchPessoasQuery: '',
         pessoas: null,
         negocio: new Negocio(),
+        isSearching: false,
       }
     },
     methods: {
@@ -267,12 +173,17 @@
         if(!this.negocio.isValid()){
           return;
         }
+
+        this.$refs.newNegocioModal.showOuterProgress();
         this.negocioService.saveNegocio(this.negocio.getValues()).then(() => {
           this.$q.notify({type: 'positive', message: 'Negócio criado com sucesso'});
+          this.$refs.newNegocioModal.hideOuterProgress();
           this.closeModal();
           this.$root.$emit('refreshNegocioList')
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          this.$refs.newNegocioModal.hideOuterProgress();
+          this.closeModal();
         });
       },
       updateNegocio: function(){
@@ -296,25 +207,27 @@
         this.negocio.observacoes.value = negocio.observacoes;
       },
       selectPesssoa: function(id){
-        if(id === this.negocio.pessoaId.value){
-          this.negocio.pessoaId.value = null;
-        }else{
-          this.negocio.pessoaId.value = id;
-        }
+        this.negocio.pessoaId.value = id;
+        this.goToNextStep();
       },
       searchPessoas: function (params) {
+        this.isSearching = true;
         this.pessoaService.searchPessoaGroupedByGrupoEconomico(params).then(result => {
           this.pessoas = result;
+          this.isSearching = false;
         });
       },
       isNextButtomEnabled: function(){
-        if(this.currentStep === 'negociante' && this.negocio.pessoaId.value !== null){
+        if(this.currentStep === 0 && this.negocio.pessoaId.value !== null){
           return true
         }
         return false
       },
       goToNextStep(){
-        this.$refs.stepper.next();
+        this.$refs.stepperNovoNegocio.next();
+      },
+      goToPreviousStep(){
+        this.$refs.stepperNovoNegocio.previous();
       },
     },
     mounted() {
