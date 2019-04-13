@@ -161,6 +161,9 @@
         this.pessoas = null;
         this.searchPessoasQuery = '';
       },
+      setStepperIndex(oldIndex, newIndex, direction){
+        this.currentStep = newIndex;
+      },
       getNegocioById: function(negocioId){
         this.negocioService.getNegocioById(negocioId).then(negocio => {
           this.fillFormNegocio(negocio)
