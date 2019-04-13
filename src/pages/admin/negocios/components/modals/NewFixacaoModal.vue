@@ -47,13 +47,13 @@
           <!--<q-slider v-model="fixacao.quantidade.value" :min="0" :max="maxQuantidade" label  snap/>-->
           <div class="q-px-lg q-py-sm">
             <div class="row justify-center">
-              <div class="col-6">
+              <div class="col-xs-12 col-sm-6">
                 <q-input stack-label="Quantidade" v-model="fixacao.quantidade.value" type="number" align="right" @blur="validaQuantidade"/>
               </div>
             </div>
 
             <div class="row justify-center q-mt-sm">
-              <div class="col-6">
+              <div class="col-xs-12 col-sm-6">
                 <q-select
                   float-label="Unidade de medida"
                   :options="parsedUnidades(unidadesMedida)"
@@ -90,12 +90,12 @@
           </div>
           <div class="q-px-lg q-py-sm" style="text-align: center">
             <div class="row justify-center">
-              <div class="col-6">
-                <q-input type="number" :suffix="fixacao.moeda.simbolo" v-model="fixacao.preco.value" stack-label="Preço" align="right"/>
+              <div class="col-xs-12 col-sm-6">
+                <q-input type="number" :prefix="fixacao.moeda.simbolo" v-model="fixacao.preco.value" stack-label="Preço" align="right"/>
               </div>
             </div>
             <div class="row justify-center q-mt-sm">
-              <div class="col-6" >
+              <div class="col-xs-12 col-sm-6" >
                 <q-select
                   float-label="Unidade de medida"
                   :options="parsedUnidades(unidadesMedida)"
@@ -240,372 +240,82 @@
         <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
           <span class="q-subheading text-faded">Quantas Parcelas?</span>
         </div>
-        <div class="row justify-center q-px-lg q-py-sm">
-          <div class="col-6" >
-            <q-field>
-              <q-option-group type="radio" color="secondary" v-model="numParcelasFixacao"
-                              :options="[{ label: 'Uma', value: 1 },
-                                               { label: 'Duas', value: 2},
-                                               { label: 'Três', value: 3}
-                                             ]"
-              />
-            </q-field>
-            <q-input v-model="numParcelasFixacao" type="number" suffix="x" align="center"/>
+        <div class="q-px-lg q-py-sm text-center">
+          <div class="counter-container">
+            <q-btn icon="remove" class="counter-minus" round outline color="primary" @click="decreaseParcelaValue"/>
+            <q-input type="number" class="counter-input" @blur="validParcelaValue"
+                     v-model="numParcelasFixacao" hide-underline align="center"/>
+            <q-btn icon="add" class="counter-plus" round outline color="primary" @click="increaseParcelaValue" />
           </div>
         </div>
+        <!--<div class="row justify-center q-px-lg q-py-sm">
+         <div class="col-6" >
+
+           <!field>
+             <q-option-group type="radio" color="secondary" v-model="numParcelasFixacao"
+                             :options="[{ label: 'Uma', value: 1 },
+                                              { label: 'Duas', value: 2},
+                                              { label: 'Três', value: 3}
+                                            ]"
+             />
+           </q-field>
+           <q-input v-model="numParcelasFixacao" type="number" suffix="x" align="center"/>
+          </div>
+        </div>-->
       </q-carousel-slide>
+
+      <!--PASSO 9 INFORMAR VENCIMENTOS-->
+      <q-carousel-slide class="q-pa-none">
+        <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
+          <span class="q-subheading text-faded">Informe o vencimento das parcelas</span>
+        </div>
+
+        <q-scroll-area style="width: auto; height: 315px;">
+          <q-list no-border inset-separator>
+            <q-item v-for="(parcela, index) in fixacaoParcelas" :key="parcela.numero">
+              <!--<q-item-side :letter="(index + 1) + 'ª'" color="primary" inverted/>-->
+              <q-item-main>
+                <div class="row" >
+
+                  <div class="col-sm-6 col-xs-8">
+                    <q-datetime v-model="parcela.vencimento.value" type="date" class="responsive-text-input"
+                                :key="index" inverted color="primary"
+                                align="center" modal format="DD/MM/YYYY"/>
+                  </div>
+
+                  <div class="col-sm-6 col-xs-4 self-center text-center text-faded">
+                    <span class="q-body-1">{{ numeral((moment(parcela.vencimento.value) - moment(dataAtual)) / (1000 * 3600 * 24)).format('0') }} Dias</span>
+                  </div>
+                </div>
+
+              </q-item-main>
+              <q-item-side right style="width:100px">
+                <q-input type="number" v-model="parcela.valor.value" inverted-light color="grey-1" width="100px"
+                         :decimals="2" :prefix="fixacao.moeda.simbolo" align="right" class="responsive-text-input"/>
+              </q-item-side>
+            </q-item>
+          </q-list>
+        </q-scroll-area>
+        <div class="row q-mx-md q-my-sm justify-end">
+          <span class="text-faded" v-if="fixacao.moeda">Total: {{fixacao.moeda.simbolo}}</span>&nbsp
+          <span :class="errorValueFixacao">{{numeral(fixacao.totalLiquido.value).format('0,0.00')}}</span>
+        </div>
+
+      </q-carousel-slide>
+
     </q-carousel>
 
 
     <div slot="footer">
       <q-btn @click="closeModal()" flat label="Cancelar" color="primary" />
       <div class="float-right ">
-        <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="currentStep !== 8"/>
+        <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="currentStep > 0"/>
         <q-btn @click="goToNextStep" flat label="próximo" color="primary" :disable="isNextFixacaoStep()" v-if="!isSaveButtonVisible()" />
-        <q-btn @click="" flat label="Salvar" color="primary" v-if="isSaveButtonVisible()"/>
+        <q-btn @click="saveAttachFixacao" :disable="isValidFixacaoParcelas" flat label="Salvar" color="primary" v-if="isSaveButtonVisible()"/>
       </div>
     </div>
   </ap-modal>
 
-  <!--<q-modal key="fixacao" v-model="isModalOpened" maximized @hide="closeModal">
-
-    <q-stepper key="fixacao" ref="stepperFixacao" contractable color="positive" v-model="currentStep" class="no-shadow" >
-
-      &lt;!&ndash;PASSO 1 ESCOLHER NEGOCIO CULTURA&ndash;&gt;
-      <q-step default title="Safras" name="negocioCultura">
-        <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
-          <div class="col-xs-12 col-sm-8 col-md-6 col-lg-5">
-
-            <div class="row justify-center">
-              <div class="col-12 text-center q-title q-mb-sm">
-                Selecione a Safra
-              </div>
-              <div class="col-12">
-                <q-list link no-border separator>
-
-                  <q-item v-for="negocioCultura in negociosCulturas" :key="negocioCultura.id" @click.native="selectNegocioCultura(negocioCultura)">
-                    <q-item-side>
-                      <q-btn v-if="isNegocioCulturaSelected(negocioCultura.id)" icon="done" color="positive" size="8px" round dense/>
-                    </q-item-side>
-                    <q-item-main class="row">
-                      <div class="col-4">
-                        {{negocioCultura.safra_cultura.cultura.nome}}&nbsp<span v-if="negocioCultura.safra_cultura.safra.is_safrinha">Safrinha</span>
-                      </div>
-                      <div class="col-4">
-                        {{negocioCultura.safra_cultura.safra.ano_inicio}}/{{negocioCultura.safra_cultura.safra.ano_fim}}
-                      </div>
-                      <div class="col-4 text-faded q-caption">
-                        {{negocioCulturaRestanteLabel(negocioCultura)}}
-                      </div>
-                    </q-item-main>
-                  </q-item>
-
-                  <div v-if="negociosCulturas.length === 0" class="list-empty">
-                    <q-icon name="warning" />
-                    <span>Nenhuma safra disponível para seleção</span>
-                  </div>
-                </q-list>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </q-step>
-
-      &lt;!&ndash;PASSO 2 INFORMAR QUANTIDADE &ndash;&gt;
-      <q-step title="Quantidade" name="quantidade">
-        <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
-          <div class="col-xs-12 col-sm-8 col-md-5 col-lg-3">
-
-            <div class="row justify-center gutter-xs">
-              <div class="col-12 text-center q-title q-mb-sm">
-                Qual foi a quantidade fixada?
-              </div>
-              <div class="col-12" >
-                <q-slider v-model="fixacao.quantidade.value" :min="0" :max="maxQuantidade" label  snap/>
-              </div>
-              <div class="col-6">
-                <custom-input-text @blur="validaQuantidade" :model="fixacao.quantidade" type="number" label="Quantidade" align="right"/>
-              </div>
-              <div class="col-6" >
-                <q-select
-                  align="center"
-                  float-label="Unidade de medida"
-                  :options="parsedUnidades(unidadesMedida)"
-                  v-model="fixacao.unidadeMedidaQuantidadeId" v-if="selectedNegocioCultura"
-                />
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </q-step>
-
-      &lt;!&ndash;PASSO 3 INFORMAR MOEDA &ndash;&gt;
-      <q-step title="Moedas" name="moeda">
-        <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
-          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-
-            <div class="row gutter-y-xs">
-              <div class="col-12 q-title text-center">Qual a moeda?</div>
-              <div class="col-12" v-for="moeda in moedas" :key="moeda.nome">
-                <q-btn class="full-width" @click.native="selectMoedaFixacao(moeda)" :color="isMoedaSelected(moeda.id) ? 'positive' : ''">
-                  {{moeda.simbolo}}&nbsp{{moeda.nome}}
-                </q-btn>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </q-step>
-
-      &lt;!&ndash;PASSO 4 INFORMAR PRECO &ndash;&gt;
-      <q-step title="Preço" name="preco">
-        <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
-          <div class="col-xs-12 col-sm-8 col-md-5 col-lg-3">
-
-            <div class="row justify-center gutter-xs">
-              <div class="col-12 text-center q-title q-mb-sm">
-                Qual foi o preço fixado?
-              </div>
-              <div class="col-6">
-                <custom-input-text :prefix="fixacao.moeda.simbolo" :model="fixacao.preco" v-if="fixacao.moeda" type="number" label="Preço" align="center"/>
-              </div>
-              <div class="col-6" >
-                <q-select
-                  align="center"
-                  float-label="Unidade de medida"
-                  :options="parsedUnidades(unidadesMedida)"
-                  v-model="fixacao.unidadeMedidaPrecoId"
-                />
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </q-step>
-
-      &lt;!&ndash;PASSO 5 INFORMAR SE HAVERA DESCONTOS/ACRESCIMOS &ndash;&gt;
-      <q-step title="Valor Líquido ou com desconto" name="descontos">
-        <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
-          <div class="col-xs-12 col-sm-10 col-md-6 col-lg-5">
-
-            <div class="row justify-center">
-              <div class="col-12 text-center q-title q-mb-sm">
-                Este preço é
-              </div>
-              <div class="col-12">
-                <q-list link no-border separator>
-                  <q-item @click.native="selectDescontoAcrescimos(1)">
-                    <q-item-side>
-                      <q-btn v-if="selectedDescontoAcrescimoType == 1" icon="done" color="positive" size="8px" round dense/>
-                    </q-item-side>
-                    <q-item-main>
-                      Líquido
-                    </q-item-main>
-                  </q-item>
-
-                  <q-item @click.native="selectDescontoAcrescimos(2)">
-                    <q-item-side>
-                      <q-btn v-if="selectedDescontoAcrescimoType == 2" icon="done" color="positive" size="8px" round dense/>
-                    </q-item-side>
-                    <q-item-main>
-                      Haverá descontos ou acréscimos e quero informar agora.
-                    </q-item-main>
-                  </q-item>
-
-                  <q-item @click.native="selectDescontoAcrescimos(3)">
-                    <q-item-side>
-                      <q-btn v-if="selectedDescontoAcrescimoType == 3" icon="done" color="positive" size="8px" round dense/>
-                    </q-item-side>
-                    <q-item-main>
-                      Haverá descontos ou acréscimos mas não sei os valores.
-                    </q-item-main>
-                  </q-item>
-                </q-list>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </q-step>
-
-      &lt;!&ndash;PASSO 6 INFORMAR DESCONTOS VALORES &ndash;&gt;
-      <q-step title="Descontos e acréscimos" name="descontosAcrescimos" :disable="selectedDescontoAcrescimoType !== 2">
-        <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
-          <div class="col-xs-12 col-sm-9 col-md-7 col-lg-5">
-
-            <div class="row justify-center" v-if="fixacao.moeda">
-              <div class="col-12 text-center q-title q-mb-sm">
-                Quais os valores de desconto/acréscimos?
-              </div>
-
-              <div class="col-3 self-center">Bruto:</div>
-              <div class="col-4">
-                <custom-input-text type="number" :model="fixacao.totalBruto" :disable="true" align="right" :prefix="fixacao.moeda.simbolo" />
-              </div>
-              <div class="col-5 self-center" align="end">
-                {{ numeral(totalBrutoUn).format('0,0.00') }} <span class="text-faded">por {{getUnidadeMedidaById(fixacao.unidadeMedidaPrecoId).plural}}</span>
-              </div>
-
-              <div class="col-3 self-center">Impostos:</div>
-              <div class="col-4">
-                <custom-input-text type="number" :model="fixacao.totalImpostos" align="right" :prefix="fixacao.moeda.simbolo"/>
-              </div>
-              <div class="col-5 self-center" align="end">
-                {{ numeral(totalImpostosUn).format('0,0.00') }}
-                <span class="text-faded">por {{getUnidadeMedidaById(fixacao.unidadeMedidaPrecoId).plural}}</span>
-              </div>
-
-              <div class="col-3 self-center">Descontos:</div>
-              <div class="col-4">
-                <custom-input-text type="number" :model="fixacao.valorOutrosDescontos" align="right" :prefix="fixacao.moeda.simbolo"/>
-              </div>
-              <div class="col-5 self-center" align="end">
-                {{ numeral(totalDescontosUn).format('0,0.00') }}
-                <span class="text-faded">por {{getUnidadeMedidaById(fixacao.unidadeMedidaPrecoId).plural}}</span>
-              </div>
-
-              <div class="col-3 self-center">Acrescimos:</div>
-              <div class="col-4">
-                <custom-input-text type="number" :model="fixacao.valorOutrosAcrescimos" align="right" :prefix="fixacao.moeda.simbolo" />
-              </div>
-              <div class="col-5 self-center" align="end">
-                {{ numeral(totalAcrescimosUn).format('0,0.00') }}
-                <span class="text-faded">por {{getUnidadeMedidaById(fixacao.unidadeMedidaPrecoId).plural}}</span>
-              </div>
-
-              <div class="col-3 self-center">Total:</div>
-              <div class="col-4">
-                <custom-input-text type="number" :model="fixacao.totalLiquido" align="right" :disable="true" :prefix="fixacao.moeda.simbolo" />
-              </div>
-              <div class="col-5 self-center" align="end">
-                {{ numeral(totalLiquidoUn).format('0,0.00') }}
-                <span class="text-faded">por {{getUnidadeMedidaById(fixacao.unidadeMedidaPrecoId).plural}}</span>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </q-step>
-
-      &lt;!&ndash;PASSO 7 INFORMAR CONTA DE DEPOSITO &ndash;&gt;
-      <q-step title="Contas" name="contaDeposito">
-        <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
-          <div class="col-xs-12 col-sm-10 col-md-6 col-lg-5">
-
-            <div class="row justify-center">
-              <div class="col-12 text-center q-title q-mb-sm">
-                Em qual conta o valor será depositado?
-              </div>
-              <div class="col-12">
-                <q-list link no-border separator>
-                  <q-item v-for="conta in contasBancarias" @click.native="selectContaBancaria(conta)" :key="conta.id">
-                    <q-item-side>
-                      <q-btn v-if="isContaSelected(conta.id)" icon="done" color="positive" size="8px" round dense/>
-                    </q-item-side>
-                    <q-item-main>
-                      <q-item-tile>{{conta.banco.nome}}</q-item-tile>
-                      <q-item-tile sublabel>{{conta.pessoa.nome}}</q-item-tile>
-                      <q-item-tile sublabel>
-                        <span class="text-faded">Agência:</span> {{conta.agencia}}-{{conta.agencia_digito}},
-                        <span class="text-faded">Operação:</span> {{conta.operacao}},
-                        <span class="text-faded">conta:</span> {{conta.numero}}
-                      </q-item-tile>
-                    </q-item-main>
-                  </q-item>
-
-                  <div v-if="contasBancarias.length === 0" class="list-empty">
-                    <q-icon name="warning" />
-                    <span>Nenhuma conta associada a essa pessoa. Cadastre uma para pode continuar</span>
-                  </div>
-                </q-list>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </q-step>
-
-      &lt;!&ndash;PASSO 8 INFORMAR PARCELAS &ndash;&gt;
-      <q-step title="Parcelas" name="parcelas">
-        <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
-          <div class="col-xs-8 col-sm-4 col-md-3 col-lg-2">
-
-            <div class="row justify-center">
-              <div class="col-12 text-center q-title q-mb-sm">
-                Quantas Parcelas?
-              </div>
-              <div class="col-6" >
-                <q-field>
-                  <q-option-group type="radio" color="secondary" v-model="numParcelasFixacao"
-                                  :options="[{ label: 'Uma', value: 1 },
-                                               { label: 'Duas', value: 2},
-                                               { label: 'Três', value: 3}
-                                             ]"
-                  />
-                </q-field>
-              </div>
-              <div class="col-7">
-                <q-input v-model="numParcelasFixacao" type="number" suffix="X" align="center"/>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </q-step>
-
-      &lt;!&ndash;PASSO 9 INFORMAR VENCIMENTOS &ndash;&gt;
-      <q-step title="Vencimentos" name="vencimentos">
-        <div class="row justify-center items-center gutter-xs" style="min-height: 80vh">
-          <div class="col-xs-12 col-sm-9 col-md-7 col-lg-5 text-center">
-            <span class="q-title">Informe os vencimentos</span>
-
-            <q-list no-border separator>
-              <q-item v-for="(parcela, index) in fixacaoParcelas" :key="parcela.numero">
-                <q-item-main>
-                  <div class="row justify-center q-mt-md" >
-
-                    <div class="col-xs-4 col-lg-2 self-center">
-                      <span class="text-faded">Parcela</span> {{index + 1}}
-                    </div>
-
-                    <div class="col-xs-8 col-lg-3">
-                      <q-datetime v-model="parcela.vencimento.value" type="date" :key="index"
-                                  align="center" modal format="DD/MM/YYYY"/>
-                    </div>
-
-                    <div class="col-xs-6 col-lg-3 self-center text-center">
-                      {{ numeral((moment(parcela.vencimento.value) - moment(dataAtual)) / (1000 * 3600 * 24)).format('0') }} Dias
-                    </div>
-
-                    <div class="col-xs-6 col-lg-4">
-                      <q-input type="number" v-model="parcela.valor.value" :decimals="2" :prefix="fixacao.moeda.simbolo" align="right"/>
-                    </div>
-                  </div>
-
-                </q-item-main>
-              </q-item>
-              <div class="row q-mt-md justify-end">
-                <div class="col-xs-6 col-lg-4 self-center text-justify">
-                  <span class="text-faded" v-if="fixacao.moeda">Total: {{fixacao.moeda.simbolo}}</span>&nbsp
-                  <span :class="errorValueFixacao">{{numeral(fixacao.totalLiquido.value).format('0,0.00')}}</span>
-                </div>
-              </div>
-            </q-list>
-
-          </div>
-        </div>
-      </q-step>
-
-    </q-stepper>
-
-    <q-page-sticky position="bottom-right" :offset="[30, 30]">
-      <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-      <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextFixacaoStep()" v-if="currentStep != 'vencimentos' "/>
-      <q-btn label="salvar" color="primary" @click="saveAttachFixacao" :disable="isValidFixacaoParcelas" v-if="currentStep == 'vencimentos' "/>
-    </q-page-sticky>
-  </q-modal>-->
 </template>
 
 <script>
@@ -640,10 +350,10 @@
         maxQuantidade: 0,
         unidadesMedida: null,
         dataAtual: this.moment().format('YYYYMMDD'),
-        fixacaoParcelas: null,
+        fixacaoParcelas: [],
         errorValueFixacao: 'text-positive',
         isValidFixacaoParcelas: false,
-        numParcelasFixacao: null,
+        numParcelasFixacao: 1,
         selectedDescontoAcrescimoType: null,
         moedas: null,
         negociosCulturas: null,
@@ -657,11 +367,21 @@
         },
         deep: true
       },
-      currentStep: function (val) {
-        if(val === 'vencimentos'){
+      currentStep: function (value) {
+        console.log('currentStep',this.selectedDescontoAcrescimoType, value)
+        /*if(this.selectedDescontoAcrescimoType === 2 && value === 8){
+          console.log('entrou aqui 1')
           this.generateFormFixacaoParcelas()
-        }
-        if(val !== 'vencimentos'){
+        }else if(this.selectedDescontoAcrescimoType !== 2 && value === 7){
+          console.log('entrou aqui 2')
+          this.generateFormFixacaoParcelas()
+        }else{
+          console.log('entrou aqui 3')
+          this.fixacaoParcelas = [];
+        }*/
+        if(value === 7 || value === 8){
+          this.generateFormFixacaoParcelas()
+        }else{
           this.fixacaoParcelas = [];
         }
       }
@@ -715,8 +435,6 @@
         ]).then(()=>{
           this.$refs.newFixacaoModal.hideInnerProgress();
         })
-
-        /*this.listContasBancarias(negocio.pessoa.id)*/
       },
       closeModal(){
         this.isModalOpened = false;
@@ -774,9 +492,9 @@
         return false;
       },
       isSaveButtonVisible(){
-        if(this.selectedDescontoAcrescimoType === 2 && this.currentStep === 7){
+        if(this.selectedDescontoAcrescimoType === 2 && this.currentStep === 8){
           return true;
-        }else if(this.selectedDescontoAcrescimoType !== 2 && this.currentStep === 6){
+        }else if(this.selectedDescontoAcrescimoType !== 2 && this.currentStep === 7){
           return true;
         }
         return false;
@@ -789,8 +507,8 @@
         this.selectedDescontoAcrescimoType = type;
         if(this.selectedDescontoAcrescimoType === 1){
           this.fixacao.isPrecoLiquido.value = true;
-        }else if(this.selectedDescontoAcrescimoType === 2){
-          this.fixacao.isPrecoLiquido.value = false;
+          this.fixacao.totalBruto.value = this.fixacao.quantidade.value * this.fixacao.preco.value;
+          this.fixacao.totalLiquido.value = this.fixacao.totalBruto.value;
         }else{
           this.fixacao.isPrecoLiquido.value = false;
         }
@@ -814,6 +532,7 @@
         }
       },
       generateFormFixacaoParcelas(){
+        console.log('generateFormFixacaoParcelas', this.fixacao.totalLiquido.value)
         let total = 0;
         for (var parcela = 1; parcela <= this.numParcelasFixacao; parcela++) {
           let valorParcela = 0;
@@ -824,11 +543,26 @@
           }
           total += valorParcela;
 
+          console.log('generateFormFixacaoParcelas.push',  valorParcela)
           this.fixacaoParcelas.push({
             //numero: parcela,
             vencimento:{ value: this.moment().add(parcela * 30, 'days').format('YYYY-MM-DD')} ,
             valor: { value: valorParcela }
           });
+        }
+      },
+      increaseParcelaValue(){
+        this.numParcelasFixacao++;
+      },
+      decreaseParcelaValue(){
+        if(this.numParcelasFixacao === 1){
+          return;
+        }
+        this.numParcelasFixacao--;
+      },
+      validParcelaValue(){
+        if(this.numParcelasFixacao < 1){
+          this.numParcelasFixacao = 1;
         }
       },
       validateVerifyFixacaoParcelas(){
@@ -852,14 +586,17 @@
         }
       },
       saveAttachFixacao(){
+        this.$refs.newFixacaoModal.showOuterProgress();
         this.fixacao.parcelas = this.fixacaoParcelas;
         this.fixacao.dataFixacao.value = new Date();
         this.negocioService.saveAttachFixacao(this.selectedNegocioCultura.id, this.fixacao.getValues()).then(() => {
           this.$q.notify({type: 'positive', message: 'Fixação vinculada com sucesso'});
+          this.$refs.newFixacaoModal.hideOuterProgress();
           this.closeModal();
           this.$root.$emit('refreshNegocio')
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+          this.$refs.newFixacaoModal.hideOuterProgress();
         });
       },
       isMoedaSelected(id){
@@ -954,7 +691,7 @@
     border-radius: 60px;
   }
   .moeda-icon-selected{
-    background: #21ba45;
+    background: #005f5f;
     color: white;
   }
   .moeda-nome{
@@ -966,4 +703,47 @@
   .custom-field .q-field-label-inner{
     color: #333333;
   }
+  
+  .counter-container{
+    align-items: center;
+    display: inline-flex;
+    margin-top: 20px;
+  }
+  .counter-container .counter-input{
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    padding: 10px;
+    margin: 0 12px;
+    background: #fafafa;
+    border: 1px solid #005f5f;
+  }
+
+  .counter-container .counter-input input{
+    font-size: 30px;
+    height: auto;
+    color: #005f5f;
+    font-weight: 500;
+  }
+
+  .responsive-text-input{
+    background: #fafafa !important;
+  }
+
+  .responsive-text-input .q-icon,
+  .responsive-text-input .q-input-target{
+    color: #000;
+  }
+
+  @media (max-width: 425px) {
+    .responsive-text-input.q-datetime-input .q-icon{
+      display:none;
+    }
+    .responsive-text-input.q-datetime-input,
+    .responsive-text-input span,
+    .responsive-text-input input{
+      font-size: 13px;
+    }
+  }
+
 </style>
