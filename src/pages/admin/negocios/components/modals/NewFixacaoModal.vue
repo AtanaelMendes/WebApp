@@ -368,17 +368,6 @@
         deep: true
       },
       currentStep: function (value) {
-        console.log('currentStep',this.selectedDescontoAcrescimoType, value)
-        /*if(this.selectedDescontoAcrescimoType === 2 && value === 8){
-          console.log('entrou aqui 1')
-          this.generateFormFixacaoParcelas()
-        }else if(this.selectedDescontoAcrescimoType !== 2 && value === 7){
-          console.log('entrou aqui 2')
-          this.generateFormFixacaoParcelas()
-        }else{
-          console.log('entrou aqui 3')
-          this.fixacaoParcelas = [];
-        }*/
         if(value === 7 || value === 8){
           this.generateFormFixacaoParcelas()
         }else{

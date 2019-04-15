@@ -33,16 +33,16 @@
                       </q-item-side>
                     </q-item>
                   </template>
-
-                  <div v-if="!pessoas" class="list-empty">
-                    <q-icon name="warning" />
-                    <span>Busque pela pessoa no campo acima.</span>
-                  </div>
-                  <div v-if="pessoas && pessoas.length === 0" class="list-empty">
-                    <q-icon name="warning" />
-                    <span>Nenhuma pessoa encontrada.</span>
-                  </div>
                 </q-list>
+                <div v-if="!pessoas" class="list-empty">
+                  <q-icon name="warning" />
+                  <span>Busque pela pessoa no campo acima.</span>
+                </div>
+                <div v-if="pessoas && pessoas.length === 0" class="list-empty">
+                  <q-icon name="warning" />
+                  <span>Nenhuma pessoa encontrada.</span>
+                </div>
+
               </q-scroll-area>
 
               <q-inner-loading :visible="isSearching">
