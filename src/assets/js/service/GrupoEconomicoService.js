@@ -6,7 +6,7 @@ export default class GrupoEconomicoService{
   }
   listGruposEconomicos(filter){
     return new Promise((resolve, reject) => {
-      GrupoEconomicoAPI.listGruposEconomicos(AgroUtils.serialize(filter)).then(response => {
+      GrupoEconomicoAPI.listGruposEconomicos(filter).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
