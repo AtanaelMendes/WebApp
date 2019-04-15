@@ -107,8 +107,8 @@
           this.closeModal();
           this.$root.$emit('refreshSafrasList');
         }).catch(error => {
-          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           this.$refs.newSafraModal.hideOuterProgress();
+          this.$q.dialog({title: 'Ops!', message: error.message, ok: 'Sim', color: 'primary'});
         });
       },
       updateSafra(){

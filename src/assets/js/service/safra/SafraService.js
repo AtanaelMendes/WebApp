@@ -71,7 +71,11 @@ export default class SafraService {
           reject(response)
         }
       }).catch(error => {
-        reject(error)
+        if(error.response.status === 422){
+          reject(new Error('Já existe uma safra nesse período'))
+        }else{
+          reject(error)
+        }
       })
     });
   };
