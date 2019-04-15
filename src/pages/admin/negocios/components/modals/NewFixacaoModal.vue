@@ -433,6 +433,7 @@
       resetModal(){
         this.$refs.stepperNovaFixacao.goToSlide(0);
         this.negociosCulturas = null;
+        this.numParcelasFixacao = 1;
         this.selectedNegocioCultura = null;
       },
       setStepperIndex(oldIndex, newIndex, direction){
