@@ -273,7 +273,7 @@
         <q-scroll-area style="width: auto; height: 315px;">
           <q-list no-border inset-separator>
             <q-item v-for="(parcela, index) in fixacaoParcelas" :key="parcela.numero">
-              <!--<q-item-side :letter="(index + 1) + 'ª'" color="primary" inverted/>-->
+              <q-item-side :letter="(index + 1) + 'ª'" color="primary" inverted/>
               <q-item-main>
                 <div class="row" >
 
@@ -730,13 +730,14 @@
     background: #fafafa !important;
   }
 
-  .responsive-text-input .q-icon,
+  .q-if-focused:not(.q-if-readonly) .q-if-control,
+  .responsive-text-input .q-if-control,
   .responsive-text-input .q-input-target{
     color: #000;
   }
 
   @media (max-width: 425px) {
-    .responsive-text-input.q-datetime-input .q-icon{
+    .responsive-text-input.q-datetime-input .q-if-control{
       display:none;
     }
     .responsive-text-input.q-datetime-input,
