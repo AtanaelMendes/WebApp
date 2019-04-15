@@ -112,9 +112,9 @@ export default class {
         cpf: this.cpf.value.replace(/[^0-9]/g, ''),
         cnpj: null,
         razao_social: this.razaoSocial.value,
-        inscricao_estadual: this.inscricaoEstadual.value.replace(/[^0-9]/g, ''),
+        inscricao_estadual: this.inscricaoEstadual.value ? this.inscricaoEstadual.value.replace(/[^0-9]/g, '') : null,
         uf: this.uf.value,
-        inscricao_municipal: this.inscricaoMunicipal.value.replace(/[^0-9]/g, ''),
+        inscricao_municipal: this.inscricaoMunicipal.value ? this.inscricaoMunicipal.value.replace(/[^0-9]/g, '') : null,
       }
     } else if (this.pessoaType === 2) {
       return {
@@ -123,9 +123,9 @@ export default class {
         cpf: null,
         cnpj: this.cnpj.value.replace(/[^0-9]/g, ''),
         razao_social: this.razaoSocial.value,
-        inscricao_estadual: this.inscricaoEstadual.value.replace(/[^0-9]/g, ''),
+        inscricao_estadual: this.inscricaoEstadual.value ? this.inscricaoEstadual.value.replace(/[^0-9]/g, '') : null,
         uf: this.uf.value,
-        inscricao_municipal: this.inscricaoMunicipal.value.replace(/[^0-9]/g, ''),
+        inscricao_municipal: this.inscricaoMunicipal.value ? this.inscricaoMunicipal.value.replace(/[^0-9]/g, '') : null,
       }
     }
   };
