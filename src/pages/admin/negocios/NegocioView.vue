@@ -421,7 +421,7 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import newCulturaModal from 'components/negocio/NewCulturaModal';
+  import newCulturaModal from './components/modals/NewCulturaModal';
   import newTituloModal from './components/modals/NewTituloModal';
   import newProdutoModal from './components/modals/NewProdutoModal';
   import newFixacaoModal from './components/modals/NewFixacaoModal';
