@@ -1,5 +1,5 @@
 <template>
-  <ap-modal ref="newNegocioModal" title="Novo Negócio" :visible="isModalOpened" @hide="closeModal">
+  <ap-modal ref="newNegocioModal" :title="(isEditMode? 'Editar' : 'Novo') + ' Negócio ('+tipoNegocioNome+')' " :visible="isModalOpened" @hide="closeModal">
     <q-carousel slot="content" height="100%" no-swipe ref="stepperNovoNegocio" @slide-trigger="setStepperIndex">
 
       <!--PASSO 1 ESCOLHER NEGOCIANTE-->
@@ -136,14 +136,16 @@
         pessoas: null,
         negocio: new Negocio(),
         isSearching: false,
+        tipoNegocioNome: "",
       }
     },
     methods: {
-      openModal: function(tipo_negocio_id){
+      openModal: function(tipoNegocio){
         this.isModalOpened = true;
         this.isEditMode = false;
         this.negocio = new Negocio();
-        this.negocio.tipoNegocioId = tipo_negocio_id;
+        this.negocio.tipoNegocioId = tipoNegocio.id;
+        this.tipoNegocioNome = tipoNegocio.nome;
       },
       openModalEditMode: function(negocioId){
         this.isModalOpened = true;

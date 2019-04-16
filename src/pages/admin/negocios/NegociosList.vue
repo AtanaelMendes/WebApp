@@ -147,7 +147,7 @@
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
       <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
         <q-fab-action color="grey-1" text-color="grey-7" icon="add"  v-for="tipoNegocio in tipoNegocios" :key="tipoNegocio.id"
-                      @click="addNegocio(tipoNegocio.id)">
+                      @click="addNegocio(tipoNegocio)">
           <span class="shadow-2">{{tipoNegocio.nome}}</span>
         </q-fab-action>
       </q-fab>
@@ -187,8 +187,8 @@
           this.negocios = negocios;
         });
       },
-      addNegocio: function(tipo_negocio_id){
-        this.$refs.newNegocioModal.openModal(tipo_negocio_id);
+      addNegocio: function(tipoNegocio){
+        this.$refs.newNegocioModal.openModal(tipoNegocio);
       },
       editNegocio: function(negocioId){
         this.$refs.newNegocioModal.openModalEditMode(negocioId);
