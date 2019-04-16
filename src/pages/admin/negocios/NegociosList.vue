@@ -4,7 +4,7 @@
     </toolbar>
 
     <!--LISTA DE CONTRATOS-->
-    <div class="row gutter-sm space-end q-pa-md" v-if="negocios.length > 0">
+    <div class="row gutter-sm space-end q-pa-md" v-if="negocios">
       <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4" v-for="negocio in negocios" :key="negocio.id">
 
         <q-card @click.native="viewNegocio(negocio.id)" class="cursor-pointer full-height">
@@ -134,25 +134,22 @@
         </q-card>
 
       </div>
-    </div>
 
-    <!--EMPTY LIST-->
-    <div class="row">
-      <div class="no-result col-12" v-if="negocios.length <= 0">
+      <!--EMPTY LIST-->
+      <div class="col-12" v-if="negocios.length <= 0">
         <ap-no-results />
       </div>
+
+      <!--PAGE STICKY BUTTOMS-->
+      <q-page-sticky position="bottom-right" :offset="[35, 35]">
+        <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
+          <q-fab-action color="grey-1" text-color="grey-7" icon="add"  v-for="tipoNegocio in tipoNegocios" :key="tipoNegocio.id"
+                        @click="addNegocio(tipoNegocio)">
+            <span class="shadow-2">{{tipoNegocio.nome}}</span>
+          </q-fab-action>
+        </q-fab>
+      </q-page-sticky>
     </div>
-
-    <!--PAGE STICKY BUTTOMS-->
-    <q-page-sticky position="bottom-right" :offset="[35, 35]">
-      <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
-        <q-fab-action color="grey-1" text-color="grey-7" icon="add"  v-for="tipoNegocio in tipoNegocios" :key="tipoNegocio.id"
-                      @click="addNegocio(tipoNegocio)">
-          <span class="shadow-2">{{tipoNegocio.nome}}</span>
-        </q-fab-action>
-      </q-fab>
-    </q-page-sticky>
-
     <new-negocio-modal ref="newNegocioModal" />
 
   </custom-page>
@@ -177,33 +174,33 @@
     data () {
       return {
         negocioService: new NegocioService(),
-        negocios: [],
-        tipoNegocios: [],
+        negocios: null,
+        tipoNegocios: null,
       }
     },
     methods: {
-      listNegocios: function(){
-        this.negocioService.listNegocios().then(negocios => {
+      async listNegocios(){
+        return this.negocioService.listNegocios().then(negocios => {
           this.negocios = negocios;
         });
       },
-      addNegocio: function(tipoNegocio){
+      addNegocio(tipoNegocio){
         this.$refs.newNegocioModal.openModal(tipoNegocio);
       },
-      editNegocio: function(negocioId){
+      editNegocio(negocioId){
         this.$refs.newNegocioModal.openModalEditMode(negocioId);
       },
-      archiveNegocio: function(id){
+      archiveNegocio(id){
         this.negocioService.archiveNegocio(id).then(() => {
           this.listNegocios()
         })
       },
-      restoreNegocio: function(id){
+      restoreNegocio(id){
         this.negocioService.restoreNegocio(id).then(() => {
           this.listNegocios()
         })
       },
-      deleteNegocio: function(id){
+      deleteNegocio(id){
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente deseja apagar esta Negocio?',
@@ -215,19 +212,24 @@
           })
         }).catch(()=>{});
       },
-      viewNegocio: function(id){
+      viewNegocio(id){
         this.$router.push({name: 'negocio_view', params: {id:id}});
       },
-      listTipoNegocios: function(){
-        this.negocioService.listTipoNegocios().then(tiposNegocios => {
+      async listTipoNegocios(){
+        return this.negocioService.listTipoNegocios().then(tiposNegocios => {
           this.tipoNegocios = tiposNegocios;
         });
       },
 
     },
     mounted () {
-      this.listTipoNegocios();
-      this.listNegocios();
+      this.$q.loading.show();
+      Promise.all([
+        this.listTipoNegocios(),
+        this.listNegocios()
+      ]).then(()=>{
+        this.$q.loading.hide();
+      });
 
       this.$root.$on('refreshNegocioList', () => {
         this.listNegocios();

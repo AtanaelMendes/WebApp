@@ -381,11 +381,6 @@
 
     </div>
 
-    <!--EMPTY LIST-->
-    <div class="column q-ma-xl items-center" v-if="!negocio">
-      <ap-no-results />
-    </div>
-
     <!--PAGE STICKY BUTTOMS-->
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
       <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
@@ -448,22 +443,21 @@
         progressModel: 50,
       }
     },
-    computed: {},
     methods: {
-      attachCultura: function(){
+      attachCultura(){
         this.$refs.culturaModal.openModal(this.negocio);
       },
-      attachTitulo: function(){
+      attachTitulo(){
         this.$refs.tituloModal.openModal(this.negocio);
       },
-      attachProduto: function(){
+      attachProduto(){
         this.$refs.produtoModal.openModal(this.negocio);
       },
-      attachFixacao: function(){
+      attachFixacao(){
         this.$refs.fixacaoModal.openModal(this.negocio);
       },
 
-      archiveNegocio: function(id){
+      archiveNegocio(id){
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente deseja Arquivar esta negocio?',
@@ -475,7 +469,7 @@
           })
         }).catch(()=>{});
       },
-      deleteNegocio: function(id){
+      deleteNegocio(id){
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente deseja apagar esta negocio?',
@@ -487,8 +481,7 @@
           })
         }).catch(()=>{});
       },
-
-      deleteCultura: function(id){
+      deleteCultura(id){
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente deseja apagar esta cultura do negócio?',
@@ -505,7 +498,7 @@
           })
         }).catch(()=>{});
       },
-      deleteTitulo:function(id){
+      deleteTitulo(id){
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente deseja apagar este título?',
@@ -517,7 +510,7 @@
           })
         }).catch(()=>{});
       },
-      deleteProduto:function(id){
+      deleteProduto(id){
         this.$q.dialog({
           title: 'Atenção',
           message: 'Realmente deseja desvincular este produto do negócio?',
@@ -530,12 +523,14 @@
         }).catch(()=>{});
       },
 
-      getNegocioById: function(){
+      getNegocioById(){
+        this.$q.loading.show();
         this.negocioService.getNegocioById(this.$route.params.id, true).then(negocio => {
           this.negocio = negocio;
+          this.$q.loading.hide();
         });
       },
-      backAction: function () {
+      backAction () {
         this.$router.back();
       },
     },
@@ -562,14 +557,3 @@
     padding: 7px 10px;
   }
 </style>
-
-
-<!--<q-btn slot="right" flat dense icon="more_vert" round>-->
-<!--<q-popover>-->
-<!--<q-list link class="no-border">-->
-<!--<q-item v-close-overlay @click.native="deleteCultura(cultura.id)">-->
-<!--<q-item-main label="Excluir"/>-->
-<!--</q-item>-->
-<!--</q-list>-->
-<!--</q-popover>-->
-<!--</q-btn>-->
