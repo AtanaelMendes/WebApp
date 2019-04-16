@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFr">
     <q-layout-header></q-layout-header>
 
-    <q-layout-drawer v-model="leftDrawerOpen" class="layout-drawer">
+    <q-layout-drawer v-model="leftDrawerOpen" class="layout-drawer" behavior="mobile">
       <div class="navigation-header">
         <template v-if="currentAccount">
           <img src="/statics/images/no-image-user.svg" v-if="currentAccount.image_file_name === null" class="profile-image shadow-2"/>
