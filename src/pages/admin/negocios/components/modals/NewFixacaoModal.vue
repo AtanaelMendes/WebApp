@@ -416,7 +416,6 @@
         this.fixacao = new Fixacao();
 
         this.$refs.newFixacaoModal.showInnerProgress();
-
         Promise.all([
           this.listNegociosCulturas(negocio.id),
           this.listMoedas(),

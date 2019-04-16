@@ -94,7 +94,7 @@
       <div class="float-right ">
         <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="currentStep === 1"/>
         <q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep === 0" :disabled="!isNextButtomEnabled()"/>
-        <q-btn @click="saveNegocio" flat label="Salvar" color="primary" v-if="currentStep === 1"/>
+        <q-btn @click="isEditMode ? updateNegocio() : saveNegocio()" flat label="Salvar" color="primary" v-if="currentStep === 1"/>
       </div>
     </div>
   </ap-modal>
@@ -140,20 +140,21 @@
       }
     },
     methods: {
-      openModal: function(tipoNegocio){
+      openModal(tipoNegocio){
         this.isModalOpened = true;
         this.isEditMode = false;
         this.negocio = new Negocio();
         this.negocio.tipoNegocioId = tipoNegocio.id;
         this.tipoNegocioNome = tipoNegocio.nome;
       },
-      openModalEditMode: function(negocioId){
+      async openModalEditMode(negocioId, tiposNegocios){
         this.isModalOpened = true;
         this.isEditMode = true;
         this.negocio = new Negocio();
-        this.getNegocioById(negocioId)
+        await this.getNegocioById(negocioId);
+        this.tipoNegocioNome = tiposNegocios.find(item => item.id === this.negocio.tipoNegocioId).nome;
       },
-      closeModal: function(){
+      closeModal(){
         this.isModalOpened = false;
         this.resetModal();
         //this.$emit('modal-closed')
@@ -166,12 +167,14 @@
       setStepperIndex(oldIndex, newIndex, direction){
         this.currentStep = newIndex;
       },
-      getNegocioById: function(negocioId){
-        this.negocioService.getNegocioById(negocioId).then(negocio => {
+      async getNegocioById(negocioId){
+        this.$refs.newNegocioModal.showInnerProgress();
+        return this.negocioService.getNegocioById(negocioId).then(negocio => {
           this.fillFormNegocio(negocio)
+          this.$refs.newNegocioModal.hideInnerProgress();
         });
       },
-      saveNegocio: function(){
+      saveNegocio(){
         if(!this.negocio.isValid()){
           return;
         }
@@ -188,7 +191,7 @@
           this.closeModal();
         });
       },
-      updateNegocio: function(){
+      updateNegocio(){
         if (!this.negocio.isValid()) {
           return;
         }
@@ -198,7 +201,7 @@
           this.$root.$emit('refreshNegocioList')
         })
       },
-      fillFormNegocio: function(negocio){
+      fillFormNegocio(negocio){
         this.searchPessoas(negocio.pessoa.nome);
         this.negocio.id = negocio.id;
         this.negocio.tipoNegocioId = negocio.tipo_negocio_id;
@@ -208,18 +211,18 @@
         this.negocio.numeroContrato.value = negocio.numero_contrato;
         this.negocio.observacoes.value = negocio.observacoes;
       },
-      selectPesssoa: function(id){
+      selectPesssoa(id){
         this.negocio.pessoaId.value = id;
         this.goToNextStep();
       },
-      searchPessoas: function (params) {
+      searchPessoas(params) {
         this.isSearching = true;
         this.pessoaService.searchPessoaGroupedByGrupoEconomico(params).then(result => {
           this.pessoas = result;
           this.isSearching = false;
         });
       },
-      isNextButtomEnabled: function(){
+      isNextButtomEnabled(){
         if(this.currentStep === 0 && this.negocio.pessoaId.value !== null){
           return true
         }

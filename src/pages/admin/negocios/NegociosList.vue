@@ -188,7 +188,7 @@
         this.$refs.newNegocioModal.openModal(tipoNegocio);
       },
       editNegocio(negocioId){
-        this.$refs.newNegocioModal.openModalEditMode(negocioId);
+        this.$refs.newNegocioModal.openModalEditMode(negocioId, this.tipoNegocios);
       },
       archiveNegocio(id){
         this.negocioService.archiveNegocio(id).then(() => {
