@@ -108,8 +108,10 @@
                     <div class="col-12">
                       <span class="text-faded">Entregue</span> 3.500
                       <span class="text-faded">de</span> 5.000 SC/60
-                      <span class="text-faded">entre</span> 5 jan 2018
-                      <span class="text-faded">e</span> 31 jan 2019.
+                      <template v-if="cultura.prazo_entrega_inicial">
+                        <span class="text-faded">entre</span> {{ moment(cultura.prazo_entrega_inicial).format('DD/MMM') }}
+                        <span class="text-faded">e</span> {{ moment(cultura.prazo_entrega_final).format('DD/MMM/YYYY') }}.
+                      </template>
                       <br/>
                       <span class="text-faded">Armazens: </span> {{cultura.armazens}}.
                       <br/>
