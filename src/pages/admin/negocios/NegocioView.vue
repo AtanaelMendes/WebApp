@@ -476,10 +476,15 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           this.negocioService.deleteNegocio(id).then(() => {
-            this.getNegocioById()
+            this.$q.loading.hide();
+            this.backAction();
           })
-        }).catch(()=>{});
+        }).catch(()=>{
+          this.$q.loading.hide();
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+        });
       },
       deleteCultura(id){
         this.$q.dialog({
@@ -488,15 +493,21 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           this.negocioService.deleteCultura(this.negocio.id, id).then(() => {
+            this.$q.loading.hide();
             this.getNegocioById()
           }).catch(error => {
+            this.$q.loading.hide();
             if(error.status === 422){
               this.$q.dialog({
                 title: 'Erro', message: 'Não é possível apagar esta cultura! Erro: ' + error.data, ok: 'Ok', color: 'primary'})
             }
           })
-        }).catch(()=>{});
+        }).catch(()=>{
+          this.$q.loading.hide();
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+        });
       },
       deleteTitulo(id){
         this.$q.dialog({
@@ -505,10 +516,15 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           this.negocioService.deleteTitulo(this.negocio.id, id).then(() => {
+            this.$q.loading.hide();
             this.getNegocioById()
           })
-        }).catch(()=>{});
+        }).catch(()=>{
+          this.$q.loading.hide();
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+        });
       },
       deleteProduto(id){
         this.$q.dialog({
@@ -517,10 +533,15 @@
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
+          this.$q.loading.show();
           this.negocioService.deleteProduto(this.negocio.id, id).then(() => {
+            this.$q.loading.hide();
             this.getNegocioById()
           })
-        }).catch(()=>{});
+        }).catch(()=>{
+          this.$q.loading.hide();
+          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+        });
       },
 
       getNegocioById(){
