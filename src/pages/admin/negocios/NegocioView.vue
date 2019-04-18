@@ -82,7 +82,7 @@
 
                     <div class="col-12 q-caption">
                       Entrega
-                      <q-progress :percentage="cultura.entrega_porcentagem" height="6px" color="blue" animate stripe/>
+                      <q-progress :percentage="cultura.quantidade_entregue / cultura.quantidade * 100" height="6px" color="blue" animate stripe/>
                     </div>
 
                     <div class="col-12  q-caption">
@@ -106,8 +106,8 @@
                 <div :class="esquerda">
                   <div class="row gutter-xs">
                     <div class="col-12">
-                      <span class="text-faded">Entregue</span> 3.500
-                      <span class="text-faded">de</span> 5.000 SC/60
+                      <span class="text-faded">Entregue</span> {{ numeral(cultura.quantidade_entregue).format('0,0') }}
+                      <span class="text-faded">de</span> {{ numeral(cultura.quantidade).format('0,0') }} {{cultura.unidade_medida.sigla}}
                       <template v-if="cultura.prazo_entrega_inicial">
                         <span class="text-faded">entre</span> {{ moment(cultura.prazo_entrega_inicial).format('DD/MMM') }}
                         <span class="text-faded">e</span> {{ moment(cultura.prazo_entrega_final).format('DD/MMM/YYYY') }}.
