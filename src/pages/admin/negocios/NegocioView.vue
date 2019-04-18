@@ -486,6 +486,12 @@
           this.negocioService.deleteNegocio(id).then(() => {
             this.$q.loading.hide();
             this.backAction();
+          }).catch(error => {
+            this.$q.loading.hide();
+            if(error.status === 422){
+              this.$q.dialog({
+                title: 'Erro', message: 'Não é possível apagar esse negócio!', ok: 'Ok', color: 'primary'})
+            }
           })
         });
       },
@@ -577,7 +583,7 @@
         this.negocioService.getNegocioById(this.$route.params.id, true).then(negocio => {
           this.negocio = negocio;
           this.$q.loading.hide();
-        });
+        })
       },
       backAction () {
         this.$router.back();
