@@ -1,6 +1,21 @@
 <template>
   <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Detalhes do Negocio" navigation_type="back" @navigation_clicked="backAction"></toolbar>
+    <toolbar slot="toolbar" title="Detalhes do Negocio" navigation_type="back" @navigation_clicked="backAction">
+      <template slot="action_itens" v-if="negocio">
+        <q-btn slot="right" flat dense icon="more_vert" round>
+          <q-popover>
+            <q-list link class="no-border">
+              <q-item v-close-overlay @click.native="archiveNegocio(negocio.id)" v-if="!negocio.deleted_at">
+                <q-item-main label="Arquivar"/>
+              </q-item>
+              <q-item v-close-overlay @click.native="deleteNegocio(negocio.id)">
+                <q-item-main label="Excluir"/>
+              </q-item>
+            </q-list>
+          </q-popover>
+        </q-btn>
+      </template>
+    </toolbar>
 
     <!--CONTRATO VIEW-->
     <div class="row gutter-sm space-end q-pa-md" v-if="negocio">
@@ -16,18 +31,7 @@
             <span slot="subtitle" class="lt-sm">
                 {{negocio.numero_pedido}} / {{negocio.numero_contrato}} - {{moment(negocio.emissao).calendar()}}
               </span>
-            <q-btn slot="right" flat dense icon="more_vert" round>
-              <q-popover>
-                <q-list link class="no-border">
-                  <q-item v-close-overlay @click.native="archiveNegocio(negocio.id)" v-if="!negocio.deleted_at">
-                    <q-item-main label="Arquivar"/>
-                  </q-item>
-                  <q-item v-close-overlay @click.native="deleteNegocio(negocio.id)">
-                    <q-item-main label="Excluir"/>
-                  </q-item>
-                </q-list>
-              </q-popover>
-            </q-btn>
+
           </q-card-title>
 
           <q-card-main class="row gutter-xs">
@@ -67,7 +71,7 @@
                 <q-popover>
                   <q-list link class="no-border">
                     <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
-                      <q-item-main label="Excluir"/>
+                      <q-item-main label="Excluir Cultura"/>
                     </q-item>
                   </q-list>
                 </q-popover>
@@ -171,8 +175,8 @@
                                 <q-btn dense flat icon="more_vert" round>
                                   <q-popover>
                                     <q-list link class="no-border">
-                                      <q-item v-close-overlay>
-                                        <q-item-main label="Excluir"/>
+                                      <q-item v-close-overlay @click.native="deleteFixacaoTitulo(item.id, fixacao.id, cultura.id)">
+                                        <q-item-main label="Excluir Título"/>
                                       </q-item>
                                     </q-list>
                                   </q-popover>
@@ -199,8 +203,8 @@
                         <q-btn class="float-right" color="grey-7" flat dense icon="more_vert" round>
                           <q-popover>
                             <q-list link class="no-border">
-                              <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
-                                <q-item-main label="Excluir"/>
+                              <q-item v-close-overlay @click.native="deleteFixacao(fixacao.id, cultura.id)">
+                                <q-item-main label="Excluir Fixação"/>
                               </q-item>
                             </q-list>
                           </q-popover>
@@ -301,7 +305,7 @@
                           <q-popover>
                             <q-list link class="no-border">
                               <q-item v-close-overlay @click.native="deleteTitulo(item.id)">
-                                <q-item-main label="Excluir"/>
+                                <q-item-main label="Excluir Título"/>
                               </q-item>
                             </q-list>
                           </q-popover>
@@ -469,7 +473,7 @@
           this.negocioService.archiveNegocio(id).then(() => {
             this.getNegocioById()
           })
-        }).catch(()=>{});
+        });
       },
       deleteNegocio(id){
         this.$q.dialog({
@@ -483,9 +487,6 @@
             this.$q.loading.hide();
             this.backAction();
           })
-        }).catch(()=>{
-          this.$q.loading.hide();
-          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
       },
       deleteCultura(id){
@@ -503,12 +504,43 @@
             this.$q.loading.hide();
             if(error.status === 422){
               this.$q.dialog({
-                title: 'Erro', message: 'Não é possível apagar esta cultura! Erro: ' + error.data, ok: 'Ok', color: 'primary'})
+                title: 'Erro', message: 'Não é possível apagar essa cultura!', ok: 'Ok', color: 'primary'})
             }
           })
-        }).catch(()=>{
-          this.$q.loading.hide();
-          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+        });
+      },
+      deleteFixacao(id, culturaId){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar esta fixação do negócio?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          this.$q.loading.show();
+          this.negocioService.deleteFixacao(culturaId, id).then(()=>{
+            this.$q.loading.hide();
+            this.getNegocioById()
+          }).catch(error => {
+            this.$q.loading.hide();
+            if(error.status === 422){
+              this.$q.dialog({
+                title: 'Erro', message: 'Primeiro apague os títulos associados a essa fixação!', ok: 'Ok', color: 'primary'})
+            }
+          })
+        });
+      },
+      deleteFixacaoTitulo(id, fixacaoId, culturaId){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar este título?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          this.$q.loading.show();
+          this.negocioService.deleteTituloFixacao(id, fixacaoId, culturaId).then(()=>{
+            this.$q.loading.hide();
+            this.getNegocioById()
+          })
         });
       },
       deleteTitulo(id){
@@ -523,9 +555,6 @@
             this.$q.loading.hide();
             this.getNegocioById()
           })
-        }).catch(()=>{
-          this.$q.loading.hide();
-          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
       },
       deleteProduto(id){
@@ -540,9 +569,6 @@
             this.$q.loading.hide();
             this.getNegocioById()
           })
-        }).catch(()=>{
-          this.$q.loading.hide();
-          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
         });
       },
 

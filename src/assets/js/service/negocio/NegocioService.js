@@ -365,4 +365,32 @@ export default class NegocioService{
       })
     });
   }
+
+  deleteFixacao(negocioCulturaId, id){
+    return new Promise((resolve, reject) => {
+      NegocioFixacaoAPI.deleteFixacao(id, negocioCulturaId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  }
+
+  deleteTituloFixacao(id, fixacaoId, negocioCulturaId){
+    return new Promise((resolve, reject) => {
+      NegocioFixacaoAPI.deleteTituloFixacao(id, fixacaoId, negocioCulturaId).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  }
 }
