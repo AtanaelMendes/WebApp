@@ -96,13 +96,13 @@
 
             <div class="row justify-center q-mt-md">
               <div class="col-xs-12 col-sm-6">
-                <q-input stack-label="Quantidade" v-model="cultura.quantidade.value" :disable="!hasQuantidadeDefined"
+                <q-input stack-label="Quantidade" v-model="cultura.quantidade.value" :disable="!hasQuantidadeDefined" @click.native="enableStep3Form()"
                          type="number" align="right"/>
               </div>
             </div>
             <div class="row justify-center q-mt-sm">
               <div class="col-xs-12 col-sm-6">
-                <q-select :disable="!hasQuantidadeDefined" stack-label="Unidade de medida"
+                <q-select :disable="!hasQuantidadeDefined" stack-label="Unidade de medida" @click.native="enableStep3Form()"
                   v-model="cultura.unidadeMedidaId.value" :options="parsedUnidades(unidadesMedida)"
                 />
               </div>
@@ -122,14 +122,14 @@
 
           <div class="row justify-center q-mt-md">
             <div class="col-xs-12 col-sm-6">
-              <q-datetime v-model="cultura.prazoEntregaInicial.value" type="date"
+              <q-datetime v-model="cultura.prazoEntregaInicial.value" type="date" @click.native="enableStep4Form()" @input="initialDateInputEvent"
                           stack-label="Prazo inicial" :disable="!hasPrazoDefined"
                           align="center" modal format="DD/MM/YYYY"/>
             </div>
           </div>
           <div class="row justify-center q-mt-md">
             <div class="col-xs-12 col-sm-6">
-              <q-datetime v-model="cultura.prazoEntregaFinal.value" type="date"
+              <q-datetime v-model="cultura.prazoEntregaFinal.value" type="date" @click.native="enableStep4Form()" @input="finalDateInputEvent"
                           stack-label="Prazo final" :disable="!hasPrazoDefined"
                           align="center" modal format="DD/MM/YYYY"/>
             </div>
@@ -228,7 +228,7 @@
       hasQuantidadeDefined: function(value){
         if(!value){
           this.cultura.quantidade.value = null;
-          this.cultura.unidadeMedidaId.value = null;
+          //this.cultura.unidadeMedidaId.value = null;
         }
       },
       hasPrazoDefined: function(value){
@@ -386,6 +386,30 @@
         return this.armazemService.listArmazens().then(response => {
           this.armazens = response;
         })
+      },
+      enableStep3Form(){
+        this.hasQuantidadeDefined = true;
+      },
+      enableStep4Form(){
+        this.hasPrazoDefined = true;
+      },
+      initialDateInputEvent(value){
+        if(this.cultura.prazoEntregaFinal.value === null){
+          this.cultura.prazoEntregaFinal.value = value;
+        }
+
+        if(this.moment(value).isAfter(this.cultura.prazoEntregaFinal.value)){
+          this.cultura.prazoEntregaFinal.value = value;
+        }
+      },
+      finalDateInputEvent(value){
+        if(this.cultura.prazoEntregaInicial.value === null){
+          this.cultura.prazoEntregaInicial.value = value;
+        }
+
+        if(this.moment(value).isBefore(this.cultura.prazoEntregaInicial.value)){
+          this.cultura.prazoEntregaInicial.value = value;
+        }
       }
     },
   }
