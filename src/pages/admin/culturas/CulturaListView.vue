@@ -1,6 +1,6 @@
 <template>
   <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Cultivares" searchable navigation_type="menu" >
+    <toolbar slot="toolbar" title="Culturas" searchable navigation_type="menu" >
     </toolbar>
 
     <div class="row gutter-sm space-end" v-if="culturas.length > 0">

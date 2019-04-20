@@ -37,7 +37,7 @@ const routes = [
       { name: 'add_safra', path: 'safras/add', component: () => import('pages/admin/safras/SafraAdd.vue') },
       { name: 'view_safra_cultura', path: 'safras/:safra_id/safra_cultura/view/:id', component: () => import('pages/admin/safras/SafraCulturaView.vue') },
 
-      { name: 'culturas', path: 'culturas', component: () => import('pages/admin/culturas/CulturaListView.vue')},
+      { name: 'culturas', path: 'culturas', component: () => import('pages/admin/culturas/CulturaList.vue')},
 
       { name: 'negocios', path: 'negocios', component: () => import('pages/admin/negocios/NegociosList.vue')},
       { name: 'negocio_view', path: 'negocios/:id/view', component: () => import('pages/admin/negocios/NegocioView.vue')},
