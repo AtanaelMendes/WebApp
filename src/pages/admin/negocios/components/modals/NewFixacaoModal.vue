@@ -11,23 +11,121 @@
 
           <div class="relative-position" >
             <q-scroll-area style="width: auto; height: 350px;">
-              <q-list link no-border separator>
-                <q-item v-for="negocioCultura in negociosCulturas" :key="negocioCultura.id" @click.native="selectNegocioCultura(negocioCultura)">
-                  <q-item-main>
-                    <q-item-tile label>
-                      {{negocioCultura.safra_cultura.cultura.nome}} {{negocioCultura.safra_cultura.safra.ano_inicio}}/{{negocioCultura.safra_cultura.safra.ano_fim}} &nbsp<span v-if="negocioCultura.safra_cultura.safra.is_safrinha">Safrinha</span>
-                    </q-item-tile>
 
-                    <q-item-tile sublabel>
-                      {{negocioCulturaRestanteLabel(negocioCultura)}}
-                    </q-item-tile>
-                  </q-item-main>
+              <div class="row gutter-sm space-end q-pa-md" >
+                <div class="col-sm-6 col-xs-12" v-for="negocioCultura in negociosCulturas" :key="negocioCultura.id">
 
-                  <q-item-side right>
-                    <q-btn v-if="isNegocioCulturaSelected(negocioCultura.id)" icon="done" color="positive" size="8px" round dense/>
-                  </q-item-side>
-                </q-item>
-              </q-list>
+                  <q-card @click.native="selectNegocioCultura(negocioCultura)" class="cursor-pointer	full-height">
+
+                    <q-card-title>
+                      {{negocioCultura.negocio.pessoa}}
+                      <q-btn v-if="isNegocioCulturaSelected(negocioCultura.id)" slot="right" icon="done" color="positive" size="8px" round/>
+                      <span slot="subtitle" v-if="negocioCultura.negocio.numero_contrato != ''">
+                    {{negocioCultura.negocio.numero_contrato}}
+                  </span>
+                    </q-card-title>
+                    <q-card-separator />
+                    <q-list dense>
+
+                      <!-- Prazo -->
+                      <q-item v-if="negocioCultura.prazo_entrega_final">
+                        <q-item-side icon="mdi-calendar" />
+                        <q-item-main>
+                          <q-item-tile label>
+                            {{moment(negocioCultura.prazo_entrega_final).format('DD/MMM/YYYY')}}
+                          </q-item-tile>
+                          <q-item-tile sublabel>
+                            {{moment(negocioCultura.prazo_entrega_final).fromNow()}}
+                          </q-item-tile>
+                        </q-item-main>
+                      </q-item>
+
+                      <!-- Quantidade -->
+                      <q-item>
+                        <q-item-side icon="mdi-scale" />
+                        <q-item-main>
+                          <q-item-tile label>
+                            {{numeral(negocioCultura.quantidade).format('0,0')}} {{negocioCultura.unidade_medida_sigla}}
+                          </q-item-tile>
+                          <q-item-tile sublabel>
+                            Quantidade Total
+                          </q-item-tile>
+                        </q-item-main>
+                      </q-item>
+
+                      <!-- entregue -->
+                      <q-item>
+                        <q-item-side icon="mdi-arrow-top-right" color="green" />
+                        <q-item-main v-if="negocioCultura.quantidade_entregue">
+                          <q-item-tile label>
+                            {{numeral(negocioCultura.quantidade_entregue).format('0,0')}} {{negocioCultura.unidade_medida_sigla}}
+                          </q-item-tile>
+                          <q-item-tile sublabel>
+                            Já Entregue
+                          </q-item-tile>
+                        </q-item-main>
+                        <q-item-main v-else>
+                          Nada entregue
+                        </q-item-main>
+
+                      </q-item>
+
+                      <!-- QUANTIDADE -->
+                      <!--SE NAO FINALIZADO-->
+                      <q-item v-if="negocioCultura.quantidade_entregue < negocioCultura.quantidade">
+                        <q-item-side icon="mdi-arrow-bottom-left" color="red" />
+                        <q-item-main>
+
+                          <q-item-tile label>
+                            {{numeral(negocioCultura.quantidade_restante).format('0,0')}} {{negocioCultura.unidade_medida_sigla}}
+                          </q-item-tile>
+
+                          <q-item-tile sublabel>
+                            Faltando
+                          </q-item-tile>
+
+                          <q-item-tile class="text-negative" v-if="negocioCultura.entregas_pendentes">
+                            {{negocioCultura.entregas_pendentes}} Cargas aguardando no armazém
+                          </q-item-tile>
+
+                        </q-item-main>
+                      </q-item>
+
+                      <!--SE QUANTIDADE ENTREGUE MAIOR QUE O COMBINADO-->
+                      <q-item v-if=" Math.floor(negocioCultura.quantidade_entregue) > negocioCultura.quantidade">
+                        <q-item-side icon="arrow_upward" color="warning" />
+                        <q-item-main>
+
+                          <q-item-tile label>
+                            {{numeral(negocioCultura.quantidade_restante).format('0,0')}} {{negocioCultura.unidade_medida_sigla}}
+                          </q-item-tile>
+
+                          <q-item-tile sublabel>
+                            Passando
+                          </q-item-tile>
+
+                          <q-item-tile class="text-negative" v-if="negocioCultura.entregas_pendentes">
+                            {{negocioCultura.entregas_pendentes}} Cargas aguardando no armazém
+                          </q-item-tile>
+
+                        </q-item-main>
+                      </q-item>
+
+                      <!--SE JA FINALIZADO-->
+                      <q-item v-if="negocioCultura.quantidade == Math.floor(negocioCultura.quantidade_entregue)">
+                        <q-item-side icon="thumb_up_alt" color="positive"/>
+                        <q-item-main>
+                          Finalizado
+                        </q-item-main>
+                      </q-item>
+
+                    </q-list>
+
+
+                  </q-card>
+                </div>
+              </div>
+
               <div v-if="negociosCulturas.length === 0" class="list-empty">
                 <q-icon name="warning" />
                 <span>Nenhuma safra disponível para seleção</span>
