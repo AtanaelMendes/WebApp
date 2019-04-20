@@ -468,6 +468,7 @@
         this.$q.loading.show();
         //this.negocioService.listNegociosCulturasWithoutEmpty().then(negocios => {
         this.negocioService.listNegociosCulturas().then(negocios => {
+          console.log('negocios', negocios);
           this.negocioCulturas = negocios;
           this.$q.loading.hide();
         }).catch(error => {
