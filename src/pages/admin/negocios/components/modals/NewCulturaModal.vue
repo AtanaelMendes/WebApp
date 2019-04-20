@@ -5,12 +5,12 @@
       <q-carousel-slide class="q-pa-none">
         <template v-if="safraCulturas">
           <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
-            <span class="q-subheading text-faded">Selecione uma cultura</span>
+            <span class="q-subheading text-faded">Selecione uma safra</span>
           </div>
           <template v-if="$q.screen.gt.xs">
             <div class="q-px-lg q-py-sm">
               <div class="row gutter-sm">
-                <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" v-for="safraCultura in safraCulturas" :key="safraCultura.id">
+                <div class="col-xs-6 " v-for="safraCultura in safraCulturas" :key="safraCultura.id">
                   <q-card @click.native="selectSafraCultura(safraCultura)">
                     <q-card-media overlay-position="full">
                       <ap-image size="400x250" :file-name="safraCultura.cultura.image_file_name" />
