@@ -97,7 +97,7 @@
         <!--CULTURAS-->
         <q-item @click.native="$router.push({name:'culturas'})">
           <q-item-side icon="spa"/>
-          <q-item-main label="Cultivares" />
+          <q-item-main label="Culturas" />
         </q-item>
 
         <!--CONTRATOS-->
