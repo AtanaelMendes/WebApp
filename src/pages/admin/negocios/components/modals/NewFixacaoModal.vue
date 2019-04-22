@@ -611,7 +611,9 @@
       },
       validaQuantidade(){
         if(this.fixacao.quantidade.value > this.maxQuantidade){
-          this.fixacao.quantidade.value = this.maxQuantidade
+          this.fixacao.quantidade.value = this.maxQuantidade;
+        }else if(this.fixacao.quantidade.value < 0){
+          this.fixacao.quantidade.value = 0;
         }
       },
       selectContaBancaria(conta){
