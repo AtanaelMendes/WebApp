@@ -196,10 +196,10 @@ export default class NegocioService{
     });
   }
 
-  listNegociosCulturas(){
+  listNegociosCulturas(filter){
     return new Promise(async (resolve, reject) => {
       if(Vue.prototype.serverStatus.isUp) {
-        NegocioCulturaAPI.getByProdutor().then(response => {
+        NegocioCulturaAPI.getByProdutor(filter).then(response => {
           resolve(response.data)
         }).catch(error => {
           reject()

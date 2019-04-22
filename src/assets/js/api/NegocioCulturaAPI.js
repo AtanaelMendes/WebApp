@@ -2,8 +2,8 @@ import Vue from 'vue'
 
 export default class NegocioCulturaAPI{
 
-  static getByProdutor(){
-    return Vue.prototype.$axios.get('negocio/cultura/by_produtor');
+  static getByProdutor(filter){
+    return Vue.prototype.$axios.get('negocio/cultura/by_produtor' + (filter ? "?"+filter : ''));
   }
 
   static listArmazensByNegocioCultura(negocioCulturaId){

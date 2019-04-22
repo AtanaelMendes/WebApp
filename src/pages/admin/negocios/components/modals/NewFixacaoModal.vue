@@ -521,7 +521,7 @@
 
         this.$refs.newFixacaoModal.showInnerProgress();
         Promise.all([
-          this.listNegociosCulturas(negocio.id),
+          this.listNegociosCulturas(),
           this.listMoedas(),
           this.listContasBancarias(negocio.pessoa.id)
         ]).then(()=>{
@@ -729,8 +729,8 @@
       getUnidadeMedidaById(id){
         return this.unidadesMedida.filter(unidade => unidade.id === id)[0];
       },
-      async listNegociosCulturas(negocioId){
-        return this.negocioService.listNegociosCulturas(negocioId).then(negociosCulturas => {
+      async listNegociosCulturas(){
+        return this.negocioService.listNegociosCulturas('filter=without_empty').then(negociosCulturas => {
           this.negociosCulturas = negociosCulturas;
         })
       },
