@@ -2,6 +2,10 @@ import Vue from 'vue'
 
 export default class CulturaAPI{
 
+  static getCultura(id){
+    return Vue.prototype.$axios.get('/cultura/' + id);
+  }
+
   static listCulturas(){
     return Vue.prototype.$axios.get('/cultura')
   }

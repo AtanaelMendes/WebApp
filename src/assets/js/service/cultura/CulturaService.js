@@ -9,6 +9,20 @@ export default class CulturaService{
   }
 
   // CULTURAS
+  getCultura(id){
+    return new Promise((resolve, reject) => {
+      CulturaAPI.getCultura(id).then( response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  }
+
   listCulturas(){
     return new Promise((resolve, reject) => {
       CulturaAPI.listCulturas().then( response => {

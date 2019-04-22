@@ -5,28 +5,28 @@
 
     <div class="row gutter-sm space-end q-pa-md" v-if="culturas">
       <div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 col-xl-3" v-for="cultura in culturas" :key="cultura.id">
-        <q-card class="cursor-pointer" @click.native="">
+        <q-card class="cursor-pointer" @click.native="viewCultura(cultura.id)">
           <q-card-media overlay-position="top">
 
             <ap-image size="400x250" :file-name="cultura.image_file_name"/>
 
             <q-card-title slot="overlay">
               {{cultura.nome}}
-              <!--<q-btn @click.stop round flat dense icon="more_vert" slot="right" color="white">
+              <q-btn @click.stop round flat dense icon="more_vert" slot="right" color="white">
                 <q-popover>
                   <q-list link class="no-border">
-                    <q-item v-close-overlay v-if="!safraCultura.deleted_at" @click.native="archiveSafraCultura(safra.id, safraCultura.id)">
+                    <q-item v-close-overlay @click.native="archiveCultura(cultura.id)" v-if="!cultura.deleted_at">
                       <q-item-main label="Arquivar"/>
                     </q-item>
-                    <q-item v-close-overlay v-if="safraCultura.deleted_at" @click.native="restoreSafraCultura(safra.id, safraCultura.id)">
+                    <q-item v-close-overlay @click.native="restoreCultura(cultura.id)" v-if="cultura.deleted_at">
                       <q-item-main label="Ativar"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="deleteSafraCultura(safra.id, safraCultura.id)">
+                    <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
                       <q-item-main label="Excluir"/>
                     </q-item>
                   </q-list>
                 </q-popover>
-              </q-btn>-->
+              </q-btn>
 
             </q-card-title>
           </q-card-media>
@@ -85,7 +85,33 @@
       },
       openNewCulturaModal(){
         this.$refs.newCulturaModal.openModal();
-      }
+      },
+      viewCultura(id){
+        this.$router.push({name: 'view_cultura', params: {id:id}});
+      },
+      archiveCultura(id){
+        this.culturaService.archiveCultura(id).then(() => {
+          this.listCulturas()
+        })
+      },
+      restoreCultura(id){
+        this.culturaService.restoreCultura(id).then(() => {
+          this.listCulturas()
+        })
+      },
+      deleteCultura(id){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar esta cultura?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          this.culturaService.deleteCultura(id).then(() => {
+            this.listCulturas()
+          })
+        });
+
+      },
     },
     mounted () {
       this.listCulturas();
