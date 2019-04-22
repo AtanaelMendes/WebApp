@@ -142,9 +142,15 @@
             <span class="q-subheading text-faded">Informe a quantidade fixada</span>
           </div>
 
-          <!--<q-slider v-model="fixacao.quantidade.value" :min="0" :max="maxQuantidade" label  snap/>-->
+
           <div class="q-px-lg q-py-sm">
-            <div class="row justify-center">
+            <div class="row justify-center q-mt-lg">
+              <div class="col-xs-12 col-sm-6">
+                <q-slider v-model="fixacao.quantidade.value" :min="0" :max="maxQuantidade" label  snap/>
+              </div>
+            </div>
+
+            <div class="row justify-center q-mt-sm">
               <div class="col-xs-12 col-sm-6">
                 <q-input stack-label="Quantidade" v-model="fixacao.quantidade.value" type="number" align="right" @blur="validaQuantidade"/>
               </div>
@@ -538,7 +544,7 @@
       },
       selectNegocioCultura(negocioCultura){
         this.selectedNegocioCultura = negocioCultura;
-        this.maxQuantidade = negocioCultura.quantidade - negocioCultura.quantidade_ocupada;
+        this.maxQuantidade = negocioCultura.quantidade - negocioCultura.quantidade_entregue;
         this.fixacao.quantidade.value = this.maxQuantidade;
         this.fixacao.unidadeMedidaPrecoId = negocioCultura.unidade_medida.id;
         this.fixacao.unidadeMedidaQuantidadeId = negocioCultura.safra_cultura.cultura.default_unidade_preco_id;
