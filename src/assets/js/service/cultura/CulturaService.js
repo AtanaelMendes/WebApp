@@ -281,58 +281,12 @@ export default class CulturaService{
     });
   };
 
-  // OUTROS
-  selectUnidadeArea(){
-    return new Promise((resolve, reject) => {
-      this.getUnidadeArea().then(response => {
-        let unidadeAreaOptions = response.data.map(unit => {
-          return {
-            value: unit.id,
-            label: unit.nome,
-            sublabel: unit.descricao
-          }
-        });
-        resolve(unidadeAreaOptions)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  };
-
-  getUnidadeArea(id){
-    return new Promise((resolve, reject) => {
-      UnidadeAPI.getUnidadesArea().then( response => {
-        resolve(response);
-      }).catch(error => {
-        reject(error)
-      })
+  parseUnidades(unidades){
+    return unidades.map(unidade => {
+      return {
+        value: unidade.id,
+        label: unidade.nome
+      }
     });
-  };
-
-  selectUnidadeMedida(){
-    return new Promise((resolve, reject) => {
-      this.getUnidadeMedida().then(response => {
-        let unidadeMediaOptions = response.data.map(unit => {
-          return {
-            value: unit.id,
-            label: unit.nome,
-            sublabel: unit.descricao
-          }
-        });
-        resolve(unidadeMediaOptions)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  };
-
-  getUnidadeMedida(){
-    return new Promise((resolve, reject) => {
-      UnidadeAPI.getUnidadesMedida().then( response => {
-        resolve(response);
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
+  }
 }

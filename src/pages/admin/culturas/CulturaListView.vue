@@ -1218,11 +1218,7 @@
             this.unidadeAreaOptions = response;
           })
         },
-        clearErrorMessage: function(){
-          this.cultivar.ciclo.errorMessage = null;
-          this.cultura.defaultUnidadeMedidaId.errorMessage = null;
-          this.cultura.defaultUnidadeAreaId.errorMessage = null;
-        },
+
         choiseTypeValidation: function(value){
           if(value === true){
             //this.cultivar.isConvencional.value = true;
