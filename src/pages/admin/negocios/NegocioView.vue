@@ -490,7 +490,7 @@
             this.$q.loading.hide();
             if(error.status === 422){
               this.$q.dialog({
-                title: 'Erro', message: 'Não é possível apagar esse negócio!', ok: 'Ok', color: 'primary'})
+                title: 'Erro', message: 'Não é possível apagar esse negócio! O negócio está associado a outras atividades.', ok: 'Ok', color: 'primary'})
             }
           })
         });

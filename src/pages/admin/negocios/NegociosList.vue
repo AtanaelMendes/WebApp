@@ -209,8 +209,14 @@
         }).then(data => {
           this.negocioService.deleteNegocio(id).then(() => {
             this.listNegocios()
+          }).catch(error => {
+            this.$q.loading.hide();
+            if(error.status === 422){
+              this.$q.dialog({
+                title: 'Erro', message: 'Não é possível apagar esse negócio! \r\nO negócio está associado a outras atividades.', ok: 'Ok', color: 'primary'})
+            }
           })
-        }).catch(()=>{});
+        })
       },
       viewNegocio(id){
         this.$router.push({name: 'negocio_view', params: {id:id}});
