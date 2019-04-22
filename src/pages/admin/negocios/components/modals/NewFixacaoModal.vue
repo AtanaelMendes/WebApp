@@ -377,7 +377,7 @@
         <q-scroll-area style="width: auto; height: 315px;">
           <q-list no-border inset-separator>
             <q-item v-for="(parcela, index) in fixacaoParcelas" :key="parcela.numero">
-              <q-item-side :letter="(index + 1) + 'ª'" color="primary" inverted/>
+              <q-item-side class="q-item-letter bg-primary q-item-inverted flex flex-center">{{(index + 1) + 'ª'}}</q-item-side>
               <q-item-main>
                 <div class="row" >
 
@@ -538,6 +538,8 @@
         this.negociosCulturas = null;
         this.numParcelasFixacao = 1;
         this.selectedNegocioCultura = null;
+        this.selectedDescontoAcrescimoType = null;
+        this.fixacaoParcelas = [];
       },
       setStepperIndex(oldIndex, newIndex, direction){
         this.currentStep = newIndex;
