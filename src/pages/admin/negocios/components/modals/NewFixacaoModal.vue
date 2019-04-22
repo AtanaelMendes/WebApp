@@ -466,21 +466,11 @@
         deep: true
       },
       currentStep: function (value) {
-        /*if(this.selectedDescontoAcrescimoType === 2 && value === 8){
-         console.log('entrou aqui 1')
+        if(this.selectedDescontoAcrescimoType === 2 && value === 8){
          this.generateFormFixacaoParcelas()
        }else if(this.selectedDescontoAcrescimoType !== 2 && value === 7){
-         console.log('entrou aqui 2')
          this.generateFormFixacaoParcelas()
-       }else{
-         console.log('entrou aqui 3')
-         this.fixacaoParcelas = [];
-       }*/
-        if(value === 7 || value === 8){
-          this.generateFormFixacaoParcelas()
-        }else{
-          this.fixacaoParcelas = [];
-        }
+       }
       }
     },
     computed: {
@@ -631,6 +621,7 @@
         }
       },
       generateFormFixacaoParcelas(){
+        this.fixacaoParcelas = [];
         let total = 0;
         for (var parcela = 1; parcela <= this.numParcelasFixacao; parcela++) {
           let valorParcela = 0;
