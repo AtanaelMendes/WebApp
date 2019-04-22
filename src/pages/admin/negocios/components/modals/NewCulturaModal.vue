@@ -8,27 +8,29 @@
             <span class="q-subheading text-faded">Selecione uma safra</span>
           </div>
           <template v-if="$q.screen.gt.xs">
-            <div class="q-px-lg q-py-sm">
-              <div class="row gutter-sm">
-                <div class="col-xs-6 " v-for="safraCultura in safraCulturas" :key="safraCultura.id">
-                  <q-card @click.native="selectSafraCultura(safraCultura)">
-                    <q-card-media overlay-position="full">
-                      <ap-image size="400x250" :file-name="safraCultura.cultura.image_file_name" />
-                      <q-card-title slot="overlay">
-                        <div class="row">
-                          <div class="col-8">
-                            {{safraCultura.cultura.nome}}
-                            {{safraCultura.safra.ano_inicio}}-{{safraCultura.safra.ano_fim}}
+            <div class="relative-position">
+              <q-scroll-area style="width: auto; height: 350px;">
+                <div class="row gutter-sm q-px-lg q-py-sm">
+                  <div class="col-xs-6 " v-for="safraCultura in safraCulturas" :key="safraCultura.id">
+                    <q-card @click.native="selectSafraCultura(safraCultura)">
+                      <q-card-media overlay-position="full">
+                        <ap-image size="400x250" :file-name="safraCultura.cultura.image_file_name" />
+                        <q-card-title slot="overlay">
+                          <div class="row">
+                            <div class="col-8">
+                              {{safraCultura.cultura.nome}}
+                              {{safraCultura.safra.ano_inicio}}-{{safraCultura.safra.ano_fim}}
+                            </div>
+                            <div class="col-4" align="end">
+                              <q-icon align="end" name="check_circle" size="30px" color="positive" v-if="cultura.safraCulturaId.value == safraCultura.id"/>
+                            </div>
                           </div>
-                          <div class="col-4" align="end">
-                            <q-icon align="end" name="check_circle" size="30px" color="positive" v-if="cultura.safraCulturaId.value == safraCultura.id"/>
-                          </div>
-                        </div>
-                      </q-card-title>
-                    </q-card-media>
-                  </q-card>
+                        </q-card-title>
+                      </q-card-media>
+                    </q-card>
+                  </div>
                 </div>
-              </div>
+              </q-scroll-area>
             </div>
           </template>
 
