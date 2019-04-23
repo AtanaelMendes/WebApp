@@ -90,20 +90,23 @@ export default class{
     return !hasError;
   };
 
-  getValues(){
-    return{
+  getValues(withClassificacoes = true) {
+    let values = {
       nome: this.nome.value,
       default_estimativa: this.defaultEstimativa.value,
       default_unidade_medida_id: this.defaultUnidadeMedidaId.value,
       default_unidade_area_id: this.defaultUnidadeAreaId.value,
       default_unidade_preco_id: this.defaultUnidadePrecoId.value,
       default_unidade_pesagem_id: this.defaultUnidadePesagemId.value,
-      classificacoes: this.classificacoes.value.filter(classificacao => classificacao.selected).map(function (classificacao) {
-        return {
-          id: classificacao.id,
-          tolerancia: classificacao.tolerancia
-        }
-      })
+    };
+
+    if (withClassificacoes) {
+      values.classificacoes = this.classificacoes.value.filter(classificacao => classificacao.selected).map(function (classificacao) {
+        return {id: classificacao.id, tolerancia: classificacao.tolerancia}
+      });
     }
+
+    return values;
   }
+
 }
