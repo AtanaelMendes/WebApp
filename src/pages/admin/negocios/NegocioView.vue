@@ -5,6 +5,9 @@
         <q-btn slot="right" flat dense icon="more_vert" round>
           <q-popover>
             <q-list link class="no-border">
+              <q-item v-close-overlay @click.native="editNegocio(negocio)">
+                <q-item-main label="Editar"/>
+              </q-item>
               <q-item v-close-overlay @click.native="archiveNegocio(negocio.id)" v-if="!negocio.deleted_at">
                 <q-item-main label="Arquivar"/>
               </q-item>
@@ -417,12 +420,14 @@
     <!--MODAL VINCULAR FIXACAO -->
     <new-fixacao-modal ref="fixacaoModal" />
 
+    <edit-negocio-modal ref="editNegocioModal" />
   </custom-page>
 </template>
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import newCulturaModal from './components/modals/NewCulturaModal';
+  import editNegocioModal from './components/modals/EditNegocioModal';
   import newTituloModal from './components/modals/NewTituloModal';
   import newProdutoModal from './components/modals/NewProdutoModal';
   import newFixacaoModal from './components/modals/NewFixacaoModal';
@@ -439,6 +444,7 @@
       newTituloModal,
       newProdutoModal,
       newFixacaoModal,
+      editNegocioModal,
     },
     data () {
       return {
@@ -462,7 +468,9 @@
       attachFixacao(){
         this.$refs.fixacaoModal.openModal(this.negocio);
       },
-
+      editNegocio(negocio){
+        this.$refs.editNegocioModal.openModal(negocio);
+      },
       archiveNegocio(id){
         this.$q.dialog({
           title: 'Atenção',
@@ -592,10 +600,11 @@
     mounted () {
       this.getNegocioById();
 
-      this.$root.$on('refreshNegocio', () => {
-        this.getNegocioById();
-      });
+      this.$root.$on('refreshNegocio', this.getNegocioById);
     },
+    destroyed() {
+      this.$root.$off('refreshNegocio', this.getNegocioById);
+    }
   }
 
 </script>

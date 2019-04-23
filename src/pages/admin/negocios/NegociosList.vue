@@ -17,9 +17,6 @@
             <q-btn slot="right" @click.stop round flat icon="more_vert" @click.stop>
               <q-popover>
                 <q-list link no-boder>
-                  <q-item v-close-overlay @click.native="editNegocio(negocio.id)">
-                    <q-item-main label="Editar"/>
-                  </q-item>
                   <q-item v-close-overlay @click.native="archiveNegocio(negocio.id)" v-if="!negocio.deleted_at">
                     <q-item-main label="Arquivar"/>
                   </q-item>
@@ -187,9 +184,6 @@
       addNegocio(tipoNegocio){
         this.$refs.newNegocioModal.openModal(tipoNegocio);
       },
-      editNegocio(negocioId){
-        this.$refs.newNegocioModal.openModalEditMode(negocioId, this.tipoNegocios);
-      },
       archiveNegocio(id){
         this.negocioService.archiveNegocio(id).then(() => {
           this.listNegocios()
@@ -213,7 +207,7 @@
             this.$q.loading.hide();
             if(error.status === 422){
               this.$q.dialog({
-                title: 'Erro', message: 'Não é possível apagar esse negócio! \r\nO negócio está associado a outras atividades.', ok: 'Ok', color: 'primary'})
+                title: 'Erro', message: 'Não é possível apagar esse negócio! O negócio está associado a outras atividades.', ok: 'Ok', color: 'primary'})
             }
           })
         })

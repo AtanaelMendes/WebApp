@@ -1,6 +1,6 @@
 <template>
-  <ap-modal ref="newNegocioModal" :title="'Novo Negócio ('+tipoNegocioNome+')' " :visible="isModalOpened" @hide="closeModal">
-    <q-carousel slot="content" height="100%" no-swipe ref="stepperNovoNegocio" @slide-trigger="setStepperIndex">
+  <ap-modal ref="editNegocioModal" :title="'Editar Negócio ('+ tipoNegocioNome +')' " :visible="isModalOpened" @hide="closeModal">
+    <q-carousel slot="content" height="100%" no-swipe ref="stepperEditNegocio" @slide-trigger="setStepperIndex">
 
       <!--PASSO 1 ESCOLHER NEGOCIANTE-->
       <q-carousel-slide class="q-pa-none" style="padding-right: 1px">
@@ -94,7 +94,7 @@
       <div class="float-right ">
         <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="currentStep === 1"/>
         <q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep === 0" :disabled="!isNextButtomEnabled()"/>
-        <q-btn @click="saveNegocio()" flat label="Salvar" color="primary" v-if="currentStep === 1"/>
+        <q-btn @click="updateNegocio()" flat label="Salvar" color="primary" v-if="currentStep === 1"/>
       </div>
     </div>
   </ap-modal>
@@ -102,17 +102,13 @@
 
 <script>
   import Negocio from 'assets/js/model/negocio/Negocio'
-  import customInputDatetime from 'components/CustomInputDateTime.vue'
-  import customInputText from 'components/CustomInputText.vue'
   import NegocioService from "../../../../../assets/js/service/negocio/NegocioService";
   import PessoaService from "../../../../../assets/js/service/PessoaService";
   import apModal from 'components/ApModal'
 
   export default {
-    name: "NewNegocioModal",
+    name: "EditNegocioModal",
     components: {
-      customInputDatetime,
-      customInputText,
       apModal
     },
     watch:{
@@ -125,7 +121,7 @@
         }
       }
     },
-    data(){
+    data() {
       return {
         pessoaService: new PessoaService(),
         negocioService: new NegocioService(),
@@ -139,11 +135,11 @@
       }
     },
     methods: {
-      openModal(tipoNegocio){
+      async openModal(negocio){
         this.isModalOpened = true;
         this.negocio = new Negocio();
-        this.negocio.tipoNegocioId = tipoNegocio.id;
-        this.tipoNegocioNome = tipoNegocio.nome;
+        this.tipoNegocioNome = negocio.tipo;
+        await this.getNegocioById(negocio.id);
       },
       closeModal(){
         this.isModalOpened = false;
@@ -151,7 +147,7 @@
         //this.$emit('modal-closed')
       },
       resetModal(){
-        this.$refs.stepperNovoNegocio.goToSlide(0);
+        this.$refs.stepperEditNegocio.goToSlide(0);
         this.pessoas = null;
         this.searchPessoasQuery = '';
       },
@@ -159,28 +155,38 @@
         this.currentStep = newIndex;
       },
       async getNegocioById(negocioId){
-        this.$refs.newNegocioModal.showInnerProgress();
+        this.$refs.editNegocioModal.showInnerProgress();
         return this.negocioService.getNegocioById(negocioId).then(negocio => {
           this.fillFormNegocio(negocio)
-          this.$refs.newNegocioModal.hideInnerProgress();
+          this.$refs.editNegocioModal.hideInnerProgress();
         });
       },
-      saveNegocio(){
-        if(!this.negocio.isValid()){
+      updateNegocio(){
+        if (!this.negocio.isValid()) {
           return;
         }
 
-        this.$refs.newNegocioModal.showOuterProgress();
-        this.negocioService.saveNegocio(this.negocio.getValues()).then(() => {
-          this.$q.notify({type: 'positive', message: 'Negócio criado com sucesso'});
-          this.$refs.newNegocioModal.hideOuterProgress();
+        this.$refs.editNegocioModal.showOuterProgress();
+        this.negocioService.updateNegocio(this.negocio.id, this.negocio.getValues()).then(() => {
+          this.$q.notify({type: 'positive', message: 'Negócio atualizado com sucesso!'});
+          this.$refs.editNegocioModal.hideOuterProgress();
           this.closeModal();
-          this.$root.$emit('refreshNegocioList')
+          this.$root.$emit('refreshNegocio')
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-          this.$refs.newNegocioModal.hideOuterProgress();
+          this.$refs.editNegocioModal.hideOuterProgress();
           this.closeModal();
         });
+      },
+      fillFormNegocio(negocio){
+        this.searchPessoas(negocio.pessoa.nome);
+        this.negocio.id = negocio.id;
+        this.negocio.tipoNegocioId = negocio.tipo_negocio_id;
+        this.negocio.pessoaId.value = negocio.pessoa.id;
+        this.negocio.emissao.value = this.moment(negocio.emissao).format('YYYY-MM-DD');
+        this.negocio.numeroPedido.value = negocio.numero_pedido;
+        this.negocio.numeroContrato.value = negocio.numero_contrato;
+        this.negocio.observacoes.value = negocio.observacoes;
       },
       selectPesssoa(id){
         this.negocio.pessoaId.value = id;
@@ -200,32 +206,15 @@
         return false
       },
       goToNextStep(){
-        this.$refs.stepperNovoNegocio.next();
+        this.$refs.stepperEditNegocio.next();
       },
       goToPreviousStep(){
-        this.$refs.stepperNovoNegocio.previous();
+        this.$refs.stepperEditNegocio.previous();
       },
-    },
-    mounted() {
-
     }
   }
 </script>
 
 <style scoped>
-  .list-empty{
-    height: 55px;
-    text-align: center;
-    padding-top: 15px;
-  }
-  .list-empty span{
-    color: #8c8c8c;
-    font-weight: 300;
-    font-size: 15px;
-  }
-  .list-empty i{
-    color: #ffb500;
-    font-size: 20px;
-    margin-right: 6px;
-  }
+
 </style>
