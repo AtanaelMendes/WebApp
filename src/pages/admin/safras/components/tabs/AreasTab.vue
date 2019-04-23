@@ -141,7 +141,7 @@
                         <q-popover anchor="bottom left">
                           <q-list link>
                             <q-item v-close-overlay @click.native="addCultivar(activeTalhao)">
-                              <q-item-main label="Informar Cultivar"/>
+                              <q-item-main label="Vincular Cultivar"/>
                             </q-item>
                             <q-item v-close-overlay @click.native="updateTamanhoCultivares(activeTalhao)" v-if="activeTalhao.cultivares.length > 0">
                               <q-item-main label="Definir Tamanho dos Cultivares"/>

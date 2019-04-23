@@ -1,5 +1,5 @@
 <template>
-  <ap-modal ref="newAreaModal" title="Nova Área" :visible="isModalOpened"
+  <ap-modal ref="newAreaModal" title="Vincular Área" :visible="isModalOpened"
             :searchable="hasSearch" @search-input="search" @search-close="closeSearch" @hide="closeModal">
 
     <q-carousel slot="content" height="100%" no-swipe ref="stepperNovaArea" v-if="selectedSafraCultura" @slide-trigger="setStepperIndex">
@@ -223,7 +223,7 @@
           this.selectedSafraCultura.id,
           {'talhoes':this.getNotEmptyTalhoes()}
         ).then(()=>{
-          this.$q.notify({type: 'positive', message: 'Área adicionada com sucesso'});
+          this.$q.notify({type: 'positive', message: 'Área vinculada com sucesso!'});
           this.$refs.newAreaModal.hideOuterProgress();
           this.closeModal();
           this.$root.$emit('refreshSafrasCulura');

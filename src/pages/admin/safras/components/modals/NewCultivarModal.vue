@@ -1,5 +1,5 @@
 <template>
-  <ap-modal ref="newCultivarModal" title="Novo Cultivar" :visible="isModalOpened"
+  <ap-modal ref="newCultivarModal" title="Vincular Cultivar" :visible="isModalOpened"
             :searchable="hasSearch" @search-input="search" @search-close="closeSearch" @hide="closeModal">
 
     <q-carousel slot="content" height="100%" no-swipe ref="stepperNovoCultivar" @slide-trigger="setStepperIndex">
