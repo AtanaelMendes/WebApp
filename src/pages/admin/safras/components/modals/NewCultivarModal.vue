@@ -90,6 +90,7 @@
   import apModal from 'components/ApModal'
   import apImage from 'components/ApImage'
   import SafraCulturaTalhaoService from "../../../../../assets/js/service/safra/SafraCulturaTalhaoService";
+  import CultivarService from "../../../../../assets/js/service/cultura/CultivarService";
 
   export default {
     name: "NewCultivarModal",
@@ -103,6 +104,7 @@
         currentStep: 0,
         hasSearch: true,
         safraCulturaService: new SafraCulturaService(),
+        cultivarService: new CultivarService(),
         safraCulturaTalhaoService: new SafraCulturaTalhaoService(),
         marcas: null,
         marcasFiltered: null,
@@ -216,7 +218,7 @@
         this.$refs.newCultivarModal.showInnerProgress();
         this.cultivares = null;
         this.cultivaresFiltered = null;
-        this.safraCulturaService.listCultivaresByMarca(this.currentSafraCultura.cultura.id, marcaId).then(cultivares => {
+        this.cultivarService.listCultivaresByMarca(this.currentSafraCultura.cultura.id, marcaId).then(cultivares => {
           this.cultivares = cultivares;
           this.cultivaresFiltered = cultivares;
           this.$refs.newCultivarModal.hideInnerProgress();

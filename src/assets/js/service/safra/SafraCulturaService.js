@@ -213,34 +213,6 @@ export default class SafraCulturaService {
     });
   }
 
-  listCultivaresByMarca(culturaId, marcaId){
-    return new Promise((resolve, reject) => {
-      CultivarAPI.listCultivares('marca_id='+ marcaId, culturaId).then( response => {
-        if(response.status === 200){
-          resolve(response.data);
-        }else{
-          reject(response)
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  }
-
-  listCultivares(culturaId){
-    return new Promise((resolve, reject) => {
-      CultivarAPI.listCultivares(null, culturaId).then( response => {
-        if(response.status === 200){
-          resolve(response.data);
-        }else{
-          reject(response)
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  }
-
   getDiario(safra_id, id){
     return new Promise((resolve, reject) => {
       SafraCulturaAPI.getDiario(id, safra_id).then(response => {

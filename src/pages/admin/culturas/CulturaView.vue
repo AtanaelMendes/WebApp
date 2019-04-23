@@ -21,13 +21,27 @@
           </q-popover>
         </q-btn>
       </template>
+
+      <div slot="tabs">
+        <q-tabs v-model="currentTab">
+          <q-tab slot="title" name="tab-resumo" label="resumo" default @select="selectTabResumo()"/>
+          <q-tab slot="title" name="tab-cultivares" label="cultivares" @select="selectTabCultivares()"/>
+        </q-tabs>
+      </div>
     </toolbar>
+
+    <!-- RESUMO -->
+    <resumo-tab ref="resumoTab" :visible="currentTab === 'tab-resumo'"/>
+    <!-- CULTIVARES -->
+    <cultivares-tab ref="cultivaresTab" :visible="currentTab === 'tab-cultivares'" />
 
     <edit-cultura-modal ref="editCulturaModal" />
   </custom-page>
 </template>
 
 <script>
+  import resumoTab from './components/tabs/ResumoTab.vue'
+  import cultivaresTab from './components/tabs/CultivaresTab.vue'
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import CulturaService from "../../../assets/js/service/cultura/CulturaService";
@@ -38,15 +52,24 @@
     components: {
       toolbar,
       customPage,
-      editCulturaModal
+      editCulturaModal,
+      resumoTab,
+      cultivaresTab,
     },
     data () {
       return {
         culturaService: new CulturaService(),
         cultura: null,
+        currentTab: null,
       }
     },
     methods:{
+      selectTabResumo(){
+        this.$refs.resumoTab.init(this.cultura)
+      },
+      selectTabCultivares() {
+        this.$refs.cultivaresTab.init(this.cultura)
+      },
       getCulturaById(){
         this.culturaService.getCultura(this.$route.params.id).then(cultura => {
           this.cultura = cultura;
