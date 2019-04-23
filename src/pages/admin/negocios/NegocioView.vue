@@ -474,7 +474,7 @@
       archiveNegocio(id){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente deseja Arquivar esta negocio?',
+          message: 'Realmente deseja arquivar esta negocio?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
