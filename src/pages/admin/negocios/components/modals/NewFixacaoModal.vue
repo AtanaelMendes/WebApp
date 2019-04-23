@@ -1,5 +1,6 @@
 <template>
-  <ap-modal ref="newFixacaoModal" title="Nova Fixação" :visible="isModalOpened" @hide="closeModal">
+  <ap-modal ref="newFixacaoModal" title="Nova Fixação" :visible="isModalOpened"
+            :searchable="hasSearch" @search-input="search" @search-close="closeSearch" @hide="closeModal">
     <q-carousel slot="content" height="100%" no-swipe ref="stepperNovaFixacao" @slide-trigger="setStepperIndex">
 
       <!--PASSO 1 ESCOLHER NEGOCIO CULTURA-->
@@ -13,7 +14,7 @@
             <q-scroll-area style="width: auto; height: 350px;">
 
               <div class="row gutter-sm space-end q-pa-md" >
-                <div class="col-sm-6 col-xs-12" v-for="negocioCultura in negociosCulturas" :key="negocioCultura.id">
+                <div class="col-sm-6 col-xs-12" v-for="negocioCultura in negociosCulturasFiltered" :key="negocioCultura.id">
 
                   <q-card @click.native="selectNegocioCultura(negocioCultura)" class="cursor-pointer	full-height">
 
@@ -126,9 +127,9 @@
                 </div>
               </div>
 
-              <div v-if="negociosCulturas.length === 0" class="list-empty">
+              <div v-if="negociosCulturasFiltered.length === 0" class="list-empty">
                 <q-icon name="warning" />
-                <span>Nenhuma safra disponível para seleção</span>
+                <span>Nenhum negócio encontrado!</span>
               </div>
             </q-scroll-area>
           </div>
@@ -461,7 +462,10 @@
         selectedDescontoAcrescimoType: null,
         moedas: null,
         negociosCulturas: null,
+        negociosCulturasFiltered: null,
         contasBancarias: null,
+        searchValueByStep: null,
+        hasSearch: true,
       }
     },
     watch:{
@@ -518,6 +522,7 @@
         this.isModalOpened = true;
         this.negocio = negocio;
         this.fixacao = new Fixacao();
+        this.searchValueByStep = new Map();
 
         this.$refs.newFixacaoModal.showInnerProgress();
         Promise.all([
@@ -536,6 +541,7 @@
       resetModal(){
         this.$refs.stepperNovaFixacao.goToSlide(0);
         this.negociosCulturas = null;
+        this.negociosCulturasFiltered = null;
         this.numParcelasFixacao = 1;
         this.selectedNegocioCultura = null;
         this.selectedDescontoAcrescimoType = null;
@@ -543,6 +549,34 @@
       },
       setStepperIndex(oldIndex, newIndex, direction){
         this.currentStep = newIndex;
+        this.hasSearch = this.currentStep === 0;
+      },
+      search(value){
+        if(value === ""){
+          this.searchValueByStep.delete(this.currentStep);
+        }else{
+          this.searchValueByStep.set(this.currentStep, value);
+        }
+
+        value = value.toLowerCase().replace(" ", "");
+        if(value === ""){
+          this.negociosCulturasFiltered = this.negociosCulturas;
+        }else{
+          this.negociosCulturasFiltered = this.negociosCulturas.filter(item => {
+            if(item.negocio.pessoa.toLowerCase().match(value) ||
+              item.negocio.numero_contrato.toLowerCase().match(value) ||
+              (item.negocio.numero_pedido != null && item.negocio.numero_pedido.toLowerCase().match(value))){
+              return true;
+            }else{
+              return false;
+            }
+          })
+        }
+      },
+      closeSearch(event){
+        if(event === 'click'){
+          this.search("");
+        }
       },
       selectNegocioCultura(negocioCultura){
         this.selectedNegocioCultura = negocioCultura;
@@ -732,6 +766,7 @@
       async listNegociosCulturas(){
         return this.negocioService.listNegociosCulturas('filter=without_empty').then(negociosCulturas => {
           this.negociosCulturas = negociosCulturas;
+          this.negociosCulturasFiltered = negociosCulturas;
         })
       },
       async listMoedas(){
