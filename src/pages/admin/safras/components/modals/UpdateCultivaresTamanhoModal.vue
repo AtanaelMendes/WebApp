@@ -4,7 +4,7 @@
       <q-list no-border>
         <q-item v-for="(cultivar, index) in cultivares" :key="cultivar.id">
           <q-item-side>
-            <q-item-tile avatar>
+            <q-item-tile style="width:70px">
               <ap-image size="200x125" :file-name="cultivar.marca.image_file_name" />
             </q-item-tile>
           </q-item-side>
@@ -13,38 +13,44 @@
             <q-item-tile sublabel>{{cultivar.marca.nome}}</q-item-tile>
           </q-item-main>
           <q-item-side right style="display: flex; align-items: baseline">
-            <q-input type="number" align="right" @blur="checkTamanhoCultivares"
+            <q-input type="number" align="right" @input="checkTamanhoCultivares"
                      v-model="getCultivarFormByIndex(index).tamanho" :suffix="currentSafraCultura.view_unidade_area.sigla"
-                     style="width: 80px;" class="q-mr-sm"/>
+                     style="width: 140px;" class="q-mr-sm"/>
           </q-item-side>
         </q-item>
-        <q-item >
-          <q-item-main>
-            <div class="row gutter-sm q-mt-sm" style="width:350px">
-              <div class="col-6">
-                <q-input type="number" align="right" stack-label="Estimativa" @blur="checkEstimativaValue"
-                         v-model="estimativa" :suffix="currentSafraCultura.view_unidade_medida.sigla"/>
-              </div>
 
-              <div class="col-6">
-                <q-input type="number" align="right" stack-label="Área Ocupada" inverted :color="isTotalErrado ? 'red' : 'blue'" @blur="checkAreaOcupada"
-                         v-model="tamanho" :suffix="currentSafraCultura.view_unidade_area.sigla"/>
-              </div>
-            </div>
+        <q-item>
+          <q-item-side style="width:70px">
+            <ap-image size="200x125" :file-name="currentTalhao.image_file_name" />
+          </q-item-side>
+          <q-item-main>
+            Total Ocupado <br/>De {{currentTalhao.tamanho_talhao}} {{currentSafraCultura.view_unidade_area.plural}}
           </q-item-main>
+          <q-item-side right>
+            <q-input type="number" align="right" style="width: 140px;" class="q-mr-sm" @blur="checkTamanhoMaximo" @input="checkAreaOcupada"
+                     v-model="tamanho" :suffix="currentSafraCultura.view_unidade_area.sigla"/>
+          </q-item-side>
         </q-item>
         <q-item>
-          <q-item-main>
-            <div class="row gutter-sm" style="width:350px">
-              <div class="col-6">
-              </div>
+          <q-item-side style="width:70px" icon="schedule" align="center">
 
-              <div class="col-6">
-                <q-input type="number" align="right" stack-label="Área Total" readonly disable
-                         v-model="currentTalhao.tamanho" :suffix="currentSafraCultura.view_unidade_area.sigla"/>
-              </div>
-            </div>
+          </q-item-side>
+          <q-item-main>
+            Estimativa <br/>Por Hectare
           </q-item-main>
+          <q-item-side right>
+            <q-input type="number" align="right" style="width: 140px;" class="q-mr-sm" @input="checkEstimativaValue"
+                     v-model="estimativa" :suffix="currentSafraCultura.view_unidade_medida.sigla + '/' + currentSafraCultura.view_unidade_area.sigla"/>
+          </q-item-side>
+        </q-item>
+        <q-item>
+          <q-item-side style="width:70px"></q-item-side>
+          <q-item-main>
+            Estimativa <br/>Total
+          </q-item-main>
+          <q-item-side right>
+            {{tamanho * estimativa}} {{currentSafraCultura.view_unidade_medida.sigla}}
+          </q-item-side>
         </q-item>
       </q-list>
     </template>
@@ -77,6 +83,14 @@
         cultivaresForm: null,
         estimativa: null,
         tamanho: null,
+        tamanhoMaximo: null,
+      }
+    },
+    watch:{
+      tamanho(value){
+        if(!value){
+          this.tamanho = this.currentTalhao.tamanho;
+        }
       }
     },
     computed:{
@@ -94,7 +108,7 @@
         if(this.cultivares === null){
           return true;
         }
-        return this.isTotalErrado;
+        return this.isTotalErrado || this.estimativa <= 0;
       }
     },
     methods:{
@@ -134,7 +148,7 @@
         return this.cultivaresForm[index];
       },
       checkEstimativaValue(){
-        if(this.estimativa > this.currentTalhao.estimativa){
+        if(this.estimativa > this.currentTalhao.estimativa || this.estimativa <= 0){
           this.estimativa = this.currentTalhao.estimativa;
         }
       },
@@ -143,6 +157,11 @@
           this.tamanho = this.currentTalhao.tamanho;
         }
         this.recalculateCultivares()
+      },
+      checkTamanhoMaximo(){
+        if(this.tamanho > this.currentTalhao.tamanho || this.tamanho <= 0){
+          this.tamanho = this.currentTalhao.tamanho;
+        }
       },
       checkTamanhoCultivares(){
         this.tamanho = this.totalOcupado;
@@ -168,25 +187,27 @@
         }
       },
       save(){
-        this.$refs.updateCultivaresTamanhoModal.showOuterProgress();
-        this.safraCulturaTalhaoService.updateSafraCulturaTalhoesCultivaresTamanho(
-          {
-            'estimativa': this.estimativa,
-            'tamanho': this.tamanho,
-            'cultivares': this.cultivaresForm
-          },
-          this.currentSafraCultura.id,
-          this.currentTalhao.safra_cultura_talhao_id
-        ).then(() => {
-          this.$q.notify({type: 'positive', message: 'Culturas atualizadas com sucesso!'});
-          this.$refs.updateCultivaresTamanhoModal.hideOuterProgress();
-          this.closeModal();
-          this.$root.$emit('refreshSafrasCulura');
-        }).catch(error => {
-          this.closeModal();
-          this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-          this.$refs.updateCultivaresTamanhoModal.hideOuterProgress();
-        });
+        setTimeout(() => {
+          this.$refs.updateCultivaresTamanhoModal.showOuterProgress();
+          this.safraCulturaTalhaoService.updateSafraCulturaTalhoesCultivaresTamanho(
+            {
+              'estimativa': this.estimativa,
+              'tamanho': this.tamanho,
+              'cultivares': this.cultivaresForm
+            },
+            this.currentSafraCultura.id,
+            this.currentTalhao.safra_cultura_talhao_id
+          ).then(() => {
+            this.$q.notify({type: 'positive', message: 'Culturas atualizadas com sucesso!'});
+            this.$refs.updateCultivaresTamanhoModal.hideOuterProgress();
+            this.closeModal();
+            this.$root.$emit('refreshSafrasCulura');
+          }).catch(error => {
+            this.closeModal();
+            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+            this.$refs.updateCultivaresTamanhoModal.hideOuterProgress();
+          });
+        }, 300);
       }
     }
   }
