@@ -1,7 +1,5 @@
 import CulturaAPI from "../../api/CulturaAPI";
-import MarcaAPI from "../../api/MarcaAPI";
 import CultivarAPI from "../../api/CultivarAPI";
-import UnidadeAPI from "../../api/UnidadeAPI";
 
 export default class CulturaService{
 
@@ -119,105 +117,6 @@ export default class CulturaService{
     return new Promise((resolve, reject) => {
       CulturaAPI.updateCultura(cultura, id).then(response => {
         resolve(response)
-      }).catch(error => {
-        reject(error.response)
-      })
-    });
-  };
-
-  // MARCAS
-  listMarcas(){
-    return new Promise((resolve, reject) => {
-      MarcaAPI.listMarcas(null).then( response => {
-        if(response.status === 200) {
-          resolve(response.data);
-        }else{
-          reject(response)
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
-
-  listMarcasSemCultivares(){
-    return new Promise((resolve, reject) => {
-      MarcaAPI.listMarcas('has-no-cultivares').then( response => {
-        if(response.status === 200) {
-          resolve(response.data);
-        }else{
-          reject(response)
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
-
-  saveMarca(params){
-    return new Promise((resolve, reject) => {
-      MarcaAPI.saveMarca(params).then(response => {
-        if(response.status === 201) {
-          resolve(response.data)
-        }else{
-          reject(response)
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
-
-  deleteMarca(id){
-    return new Promise((resolve, reject) => {
-      MarcaAPI.deleteMarca(id).then(response => {
-        if(response.status === 200) {
-          resolve(response.data)
-        }else{
-          reject(response);
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
-
-  restoreMarca(id){
-    return new Promise((resolve, reject) => {
-      MarcaAPI.restoreMarca(id).then(response => {
-        if(response.status === 200) {
-          resolve(response.data)
-        }else{
-          reject(response)
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
-
-  archiveMarca(id){
-    return new Promise((resolve, reject) => {
-      MarcaAPI.archiveMarca(id).then(response => {
-        if(response.status === 200) {
-          resolve(response.data);
-        }else{
-          reject(response)
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
-
-  updateMarca(id, params){
-    return new Promise((resolve, reject) => {
-      MarcaAPI.updateMarca(params, id).then(response => {
-        if(response.status === 200){
-          resolve(response.data)
-        }else{
-          reject(response);
-        }
       }).catch(error => {
         reject(error.response)
       })

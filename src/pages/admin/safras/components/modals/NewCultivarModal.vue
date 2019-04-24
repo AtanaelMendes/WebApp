@@ -27,9 +27,9 @@
               </div>
             </div>
           </div>
-          <div v-if="marcasFiltered.length === 0" class="list-empty">
+          <div v-if="marcasFiltered.length === 0" class="list-empty q-pa-lg">
             <q-icon name="warning" />
-            <span>Nenhuma marca encontrada.</span>
+            <span>Nenhuma marca com cultivares disponíveis para essa cultura foi encontrada.</span>
           </div>
         </template>
       </q-carousel-slide>
@@ -91,6 +91,7 @@
   import apImage from 'components/ApImage'
   import SafraCulturaTalhaoService from "../../../../../assets/js/service/safra/SafraCulturaTalhaoService";
   import CultivarService from "../../../../../assets/js/service/cultura/CultivarService";
+  import MarcaService from "../../../../../assets/js/service/cultura/MarcaService";
 
   export default {
     name: "NewCultivarModal",
@@ -104,6 +105,7 @@
         currentStep: 0,
         hasSearch: true,
         safraCulturaService: new SafraCulturaService(),
+        marcaService: new MarcaService(),
         cultivarService: new CultivarService(),
         safraCulturaTalhaoService: new SafraCulturaTalhaoService(),
         marcas: null,
@@ -208,7 +210,7 @@
       },
       listMarcas(){
         this.$refs.newCultivarModal.showInnerProgress();
-        this.safraCulturaService.listMarcas().then(marcas => {
+        this.marcaService.listMarcas('only-with-cultivar&cultura_id=' + this.currentSafraCultura.cultura.id).then(marcas => {
           this.marcas = marcas;
           this.marcasFiltered = marcas;
           this.$refs.newCultivarModal.hideInnerProgress();

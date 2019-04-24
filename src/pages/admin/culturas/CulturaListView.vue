@@ -790,6 +790,7 @@
     import apNoResults from 'components/ApNoResults'
     import CulturaService from "assets/js/service/cultura/CulturaService";
     import apImage from 'components/ApImage'
+    import MarcaService from "../../../assets/js/service/cultura/MarcaService";
     export default {
       name: "cultura-list-view",
       components: {
@@ -803,6 +804,7 @@
       data () {
         return {
           culturaService: new CulturaService(),
+          marcaService: new MarcaService(),
           currentStep: 'cultura',
           modalNewCultura: false,
           modalEditCultura: false,
@@ -951,7 +953,7 @@
 
         // CRUD MARCA
         listMarcas: function(){
-          this.culturaService.listMarcas().then(marcas => {
+          this.marcaService.listMarcas().then(marcas => {
             this.marcas = marcas;
           })
 
@@ -966,7 +968,7 @@
           if(!this.marca.isValid()){
             return;
           }
-          this.culturaService.saveMarca(this.marca.getValues()).then(() => {
+          this.marcaService.saveMarca(this.marca.getValues()).then(() => {
             this.$q.notify({type: 'positive', message: 'Marca criada com sucesso'});
             this.marca = new Marca();
             this.listCulturas();
@@ -1001,7 +1003,7 @@
           if(!this.marca.isValid()){
             return;
           }
-          this.culturaService.updateMarca(this.selectedMarcaId, this.marca.getValues()).then(() => {
+          this.marcaService.updateMarca(this.selectedMarcaId, this.marca.getValues()).then(() => {
             this.$q.notify({type: 'positive', message: 'Marca atualizada com sucesso!'});
             this.listCulturas();
             this.listMarcasSemCultivares();
@@ -1012,13 +1014,13 @@
           });
         },
         archiveMarca: function(id){
-          this.culturaService.archiveMarca(id).then(() => {
+          this.marcaService.archiveMarca(id).then(() => {
             this.listCulturas();
             this.listMarcas();
           })
         },
         restoreMarca: function(id){
-          this.culturaService.restoreMarca(id).then(() => {
+          this.marcaService.restoreMarca(id).then(() => {
             this.listCulturas();
             this.listMarcas();
           })
@@ -1031,7 +1033,7 @@
             color: 'primary'
           }).then(() => {
             this.$q.loading.show();
-            this.culturaService.deleteMarca(id).then(() => {
+            this.marcaService.deleteMarca(id).then(() => {
               this.listCulturas();
               this.listMarcasSemCultivares();
               this.listMarcas();
@@ -1066,7 +1068,7 @@
 
         // MARCA SEM CULTIVAR
         listMarcasSemCultivares: function(){
-          this.culturaService.listMarcasSemCultivares().then(marcas => {
+          this.marcaService.listMarcas('has-no-cultivares').then(marcas => {
             this.marcasSemCultivares = marcas;
           })
         },

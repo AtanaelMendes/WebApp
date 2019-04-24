@@ -5,9 +5,6 @@ import SafraCulturaListitem from "../../model/safra/SafraCulturaListitem";
 import CulturaRepository from "../../repository/resource/CulturaRepository";
 import ImageRepository from "../../repository/resource/ImageRepository";
 import SafraRepository from "../../repository/resource/SafraRepository";
-import CulturaAPI from "../../api/CulturaAPI";
-import MarcaAPI from "../../api/MarcaAPI";
-import CultivarAPI from "../../api/CultivarAPI";
 
 export default class SafraCulturaService {
   #safraCulturaRepository;
@@ -184,34 +181,6 @@ export default class SafraCulturaService {
       })
     });
   };
-
-  listCulturas(){
-    return new Promise((resolve, reject) => {
-      CulturaAPI.listCulturasSimpleList().then(response => {
-        if(response.status === 200){
-          resolve(response.data);
-        }else{
-          reject(response)
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  }
-
-  listMarcas(){
-    return new Promise((resolve, reject) => {
-      MarcaAPI.listMarcas(null).then( response => {
-        if(response.status === 200){
-          resolve(response.data);
-        }else{
-          reject(response)
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  }
 
   getDiario(safra_id, id){
     return new Promise((resolve, reject) => {
