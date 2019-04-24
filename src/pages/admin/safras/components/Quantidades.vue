@@ -8,7 +8,7 @@
           <q-item-side icon="mdi-scale" color="primary" />
           <q-item-main multiline>
             <q-item-tile label lines="2">
-              <a href="#" @click.stop="openChangeColheitaStatusModal">{{status}}</a>
+              {{status}} <q-btn dense round size="sm" flat icon="edit" @click="openChangeColheitaStatusModal" />
               <q-progress :percentage="peso_liquido_percentual" color="primary" height="10px" :stripe="quantidades.colhendo" :animate="quantidades.colhendo"/>
             </q-item-tile>
             <q-item-tile sublabel lines="1">
