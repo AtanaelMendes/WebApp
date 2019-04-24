@@ -153,7 +153,7 @@
                   </q-item>
 
                   <template v-if="activeTalhao.cultivares.length > 0">
-                    <q-item link v-for="cultivar in activeTalhao.cultivares" :key="cultivar.key">
+                    <q-item link v-for="cultivar in activeTalhao.cultivares" :key="cultivar.key" @click.native="goToCultivar(cultivar.id)">
                       <q-item-side v-if="cultivar.image_file_name" :image="imageMakeUrl(cultivar.image_file_name, '200x125')" color="primary"/>
                       <q-item-side v-else icon="spa" color="primary"/>
                       <q-item-main>
@@ -275,6 +275,12 @@
           this.getTalhoes(),
         ]).then(()=>{
           this.$q.loading.hide();
+
+          if(this.$route.query.id){
+            let talhao = this.talhoes.find(talhao => talhao.id === this.$route.query.id);
+            this.iArea = this.areas.findIndex(area => area.id === talhao.area_id);
+            this.iTalhao = this.talhoesDaArea.findIndex(talhaoArea => talhaoArea.id === talhao.id)
+          }
         });
       },
       addArea(){
@@ -352,6 +358,9 @@
       updateTamanhoCultivares(talhao){
         this.$refs.updateCultivaresTamanhoModal.openModal(talhao, this.safraCultura);
       },
+      goToCultivar(cultivarId){;
+        this.$router.replace({path:'cultivares',query:{id:cultivarId}});
+      }
     },
     mounted () {
       this.$root.$on('refreshAreasTab', this.getContent);

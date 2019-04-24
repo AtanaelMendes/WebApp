@@ -18,9 +18,9 @@
 
       <div slot="tabs">
         <q-tabs v-model="currentTab">
-          <q-tab slot="title" name="tab-resumo" label="resumo" default @select="selectTabResumo()"/>
-          <q-tab slot="title" name="tab-areas" label="areas" @select="selectTabAreas()"/>
-          <q-tab slot="title" name="tab-cultivares" label="cultivares" @select="selectTabCultivares()"/>
+          <q-route-tab slot="title" to="resumo" replace name="tab-resumo" label="resumo" default @select="selectTabResumo()"/>
+          <q-route-tab slot="title" to="areas" replace name="tab-areas" label="areas" @select="selectTabAreas()"/>
+          <q-route-tab slot="title" to="cultivares" replace name="tab-cultivares" label="cultivares" @select="selectTabCultivares()"/>
         </q-tabs>
       </div>
     </toolbar>
@@ -78,14 +78,11 @@
         this.$refs.cultivaresTab.init(this.safraCultura)
       },
       async getSafraCultura(){
-        return new Promise((resolve, reject) => {
-          this.$q.loading.show();
-          this.safraCulturaService.getSafraCultura(this.safra_id, this.id).then(safraCultura => {
-            this.safraCultura = safraCultura;
-            this.$q.loading.hide();
-            return resolve()
-          })
-        });
+        this.$q.loading.show();
+        return this.safraCulturaService.getSafraCultura(this.$route.params.safra_id, this.$route.params.id).then(safraCultura => {
+          this.safraCultura = safraCultura;
+          this.$q.loading.hide();
+        })
       },
       editSafraCultura(){
         this.$refs.editCulturaModal.openModal(this.safraCultura);
@@ -96,15 +93,12 @@
           this.$refs.areasTab.init(this.safraCultura);
           this.$refs.cultivaresTab.init(this.safraCultura);
         })
-
       },
       backAction: function () {
         this.$router.back()
       }
     },
     mounted () {
-      this.id = this.$route.params.id;
-      this.safra_id = this.$route.params.safra_id;
       this.$root.$on('refreshSafrasCulura', this.updateView);
       this.getSafraCultura();
     },

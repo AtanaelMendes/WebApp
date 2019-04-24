@@ -99,7 +99,7 @@
                     :unidade-area="safraCultura.view_unidade_area"
                     :unidade-medida="safraCultura.view_unidade_medida">
                   </safra-quantidades>
-                  <q-item v-for="talhao in activeCultivar.talhoes" :key="talhao.id" class="cursor-pointer" @click.native="posicionarTalhaoPeloId(talhao.id)">
+                  <q-item link v-for="talhao in activeCultivar.talhoes" :key="talhao.id" @click.native="goToTalhao(talhao.id)">
                     <q-item-side v-if="talhao.image_file_name" :image="imageMakeUrl(talhao.image_file_name, '200x125')" color="primary"/>
                     <q-item-side v-else icon="place" color="primary"/>
                     <q-item-main>
@@ -180,12 +180,21 @@
         this.iMarca = 0;
         this.iCultivar = 0;
 
+        this.getContent();
+      },
+      getContent(){
         this.$q.loading.show();
         Promise.all([
           this.getMarcas(),
           this.getCultivares(),
         ]).then(()=>{
           this.$q.loading.hide();
+
+          if(this.$route.query.id){
+            let cultivar = this.cultivares.find(cultivar => cultivar.id === this.$route.query.id);
+            this.iMarca = this.marcas.findIndex(marca => marca.id === cultivar.marca_id);
+            this.iCultivar = this.cultivaresDaMarca.findIndex(cultivarMarca => cultivarMarca.id === cultivar.id)
+          }
         });
       },
       imageMakeUrl: function (fileName, size) {
@@ -201,6 +210,15 @@
           this.cultivares = response.cultivares;
         })
       },
+      goToTalhao(talhaoId){;
+        this.$router.replace({path:'areas',query:{id:talhaoId}});
+      }
+    },
+    mounted () {
+      this.$root.$on('refreshCultivaresTab', this.getContent);
+    },
+    destroyed() {
+      this.$root.$off('refreshCultivaresTab', this.getContent);
     }
   }
 </script>

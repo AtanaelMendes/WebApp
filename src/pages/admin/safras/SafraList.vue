@@ -252,7 +252,7 @@
           this.$refs.newCulturaModal.openModal(safraId)
         },
         viewSafraCultura(safra_id, id) {
-          this.$router.push({name: 'view_safra_cultura', params: {safra_id:safra_id, id:id}});
+          this.$router.push({path:'safras/' + safra_id + '/safra_cultura/view/'+ id +'/resumo'});
         },
         archiveSafraCultura(safra_id, id){
           this.$q.loading.show();
