@@ -9,9 +9,9 @@
 
       <div slot="tabs">
         <q-tabs v-model="tabs" ref="tabs" @select="switchTab">
-          <q-route-tab slot="title" :to="{ name: 'entregas', query: { status: 'carregando' }}" default name="carregando" label="Carregando" ></q-route-tab>
-          <q-route-tab slot="title" :to="{ name: 'entregas', query: { status: 'no-armazem' }}" name="no-armazem" label="No armazém" ></q-route-tab>
-          <q-route-tab slot="title" :to="{ name: 'entregas', query: { status: 'entregue' }}" name="entregue" label="Entregue" ></q-route-tab>
+          <q-route-tab slot="title" :to="{ name: 'entregas', query: { status: 'carregando' }}" replace default name="carregando" label="Carregando" ></q-route-tab>
+          <q-route-tab slot="title" :to="{ name: 'entregas', query: { status: 'no-armazem' }}" replace name="no-armazem" label="No armazém" ></q-route-tab>
+          <q-route-tab slot="title" :to="{ name: 'entregas', query: { status: 'entregue' }}" replace name="entregue" label="Entregue" ></q-route-tab>
         </q-tabs>
       </div>
 
