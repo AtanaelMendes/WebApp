@@ -27,6 +27,7 @@
         <q-tab slot="title" name="tab-diario-classificacao" :label="$q.screen.gt.sm ? 'Diário de Classificação' : ''" icon="mdi-ruler" @select="selectTabDiarioClassificacao()"/>
         <q-tab slot="title" name="tab-caminhoes" :label="$q.screen.gt.sm ? 'Entregas Por Caminhão' : ''" icon="mdi-truck" @select="selectTabCaminhoes()"/>
         <q-tab slot="title" name="tab-armazem" :label="$q.screen.gt.sm ? 'Entrega Por Armazém' : ''" icon="place" @select="selectTabArmazens()"/>
+        <q-tab slot="title" name="tab-descontos-armazem" :label="$q.screen.gt.sm ? 'Descontos Por Armazém' : ''" icon="location_city" @select="selectTabDescontoArmazens()"/>
 
         <q-tab-pane name="tab-diario" keep-alive>
           <template v-if="diario">
@@ -76,6 +77,18 @@
             </div>
           </template>
         </q-tab-pane>
+        <q-tab-pane name="tab-descontos-armazem" keep-alive>
+          <template v-if="descontosArmazens">
+            <div class="q-mb-lg" v-if="$q.screen.lt.md">
+              <span class="q-subheading text-weight-medium text-primary uppercase">Descontos por Armazém</span>
+            </div>
+            <safra-grafico-diario-descontos-por-armazem v-if="descontosArmazens.armazens.length > 0" :descontosArmazem="descontosArmazens" :height="300" :width="100"/>
+            <div v-else class="text-center chart-empty">
+              <q-icon name="warning" />
+              <span>Nenhuma informação disponível.</span>
+            </div>
+          </template>
+        </q-tab-pane>
       </q-tabs>
     </div>
 
@@ -90,6 +103,7 @@
   import safraGraficoDiarioClassificacao from '../graficos/DiarioClassificacao.vue'
   import safraGraficoQuantidadesPorCaminhao from '../graficos/QuantidadesPorCaminhao.vue'
   import safraGraficoQuantidadesPorArmazem from '../graficos/QuantidadesPorArmazem.vue'
+  import safraGraficoDiarioDescontosPorArmazem from '../graficos/DiarioDescontosArmazens.vue'
 
   export default {
     name: "ResumoTab",
@@ -103,6 +117,7 @@
       safraGraficoDiarioClassificacao,
       safraGraficoQuantidadesPorCaminhao,
       safraGraficoQuantidadesPorArmazem,
+      safraGraficoDiarioDescontosPorArmazem,
     },
     data(){
       return{
@@ -112,6 +127,7 @@
         diarioClassificacao: null,
         caminhoes: null,
         armazens: null,
+        descontosArmazens: null,
       }
     },
     methods:{
@@ -129,6 +145,9 @@
       },
       selectTabArmazens() {
         this.getArmazens();
+      },
+      selectTabDescontoArmazens() {
+        this.getDescontosArmazens();
       },
       getDiario(){
         if (this.diario) {
@@ -167,6 +186,17 @@
         this.$q.loading.show();
         this.safraCulturaService.getArmazens(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
           this.armazens = response.armazens;
+          this.$q.loading.hide();
+        })
+      },
+      getDescontosArmazens(){
+        console.log('')
+        if (this.descontosArmazens) {
+          return;
+        }
+        this.$q.loading.show();
+        this.safraCulturaService.getDescontosArmazens(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
+          this.descontosArmazens = response;
           this.$q.loading.hide();
         })
       },

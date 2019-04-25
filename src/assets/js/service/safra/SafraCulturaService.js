@@ -294,4 +294,18 @@ export default class SafraCulturaService {
     });
   }
 
+  getDescontosArmazens(safra_id, id){
+    return new Promise((resolve, reject) => {
+      SafraCulturaAPI.getDescontosArmazens(id, safra_id).then(response => {
+        if(response.status ===  200){
+          resolve(response.data)
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  }
+
 }

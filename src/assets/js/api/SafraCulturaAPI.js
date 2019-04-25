@@ -47,7 +47,7 @@ export default class SafraCulturaAPI{
   }
 
   static getDiarioClassificacao(id, safraId){
-    return Vue.prototype.$axios.get('safra/' + safraId + '/safra_cultura/' + id + '/diario-classificacao')
+    return Vue.prototype.$axios.get('safra/' + safraId + '/safra_cultura/' + id + '/diario_classificacao')
   }
 
   static getAreas(id, safraId){
@@ -72,5 +72,9 @@ export default class SafraCulturaAPI{
 
   static getArmazens(id, safraId){
     return Vue.prototype.$axios.get('safra/' + safraId + '/safra_cultura/' + id + '/armazens');
+  }
+
+  static getDescontosArmazens(id, safraId){
+    return Vue.prototype.$axios.get('safra/' + safraId + '/safra_cultura/' + id + '/descontos_armazens');
   }
 }
