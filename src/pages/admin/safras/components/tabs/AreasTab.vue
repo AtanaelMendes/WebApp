@@ -153,10 +153,10 @@
                   </q-item>
 
                   <template v-if="activeTalhao.cultivares.length > 0">
-                    <q-item link v-for="cultivar in activeTalhao.cultivares" :key="cultivar.key" @click.native="goToCultivar(cultivar.id)">
+                    <q-item link v-for="cultivar in activeTalhao.cultivares" :key="cultivar.key" >
                       <q-item-side v-if="cultivar.image_file_name" :image="imageMakeUrl(cultivar.image_file_name, '200x125')" color="primary"/>
-                      <q-item-side v-else icon="spa" color="primary"/>
-                      <q-item-main>
+                      <q-item-side v-else icon="spa" color="primary" @click.native="goToCultivar(cultivar.id)" />
+                      <q-item-main @click.native="goToCultivar(cultivar.id)" >
                         <q-item-tile>
                           {{cultivar.marca}}
                           {{cultivar.nome}}
@@ -170,7 +170,7 @@
                         <q-btn flat round dense icon="more_vert" >
                           <q-popover anchor="bottom left">
                             <q-list link>
-                              <q-item v-close-overlay @click.native="unattachCultivar(cultivar, activeTalhao)">
+                              <q-item v-close-overlay @click.stop="unattachCultivar(cultivar, activeTalhao)">
                                 <q-item-main label="Desvincular Cultivar"/>
                               </q-item>
                             </q-list>
