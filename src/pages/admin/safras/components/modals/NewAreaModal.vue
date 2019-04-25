@@ -4,27 +4,31 @@
 
     <q-carousel slot="content" height="100%" no-swipe ref="stepperNovaArea" v-if="selectedSafraCultura" @slide-trigger="setStepperIndex">
       <!--PASSO 1 ADICIONAR AREA-->
-      <q-carousel-slide class="q-pa-none">
+      <q-carousel-slide class="q-pa-none" style="width:400px">
         <template v-if="areas">
           <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
             <span class="q-subheading text-faded">Selecione uma área</span>
           </div>
-          <div class="q-pa-lg">
-            <div class="row gutter-sm">
-              <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" v-for="area in areasFiltered" :key="area.nome">
-                <q-card @click.native="setArea(area)">
-                  <q-card-media overlay-position="full">
-                    <ap-image size="400x250" :file-name="area.image_file_name" />
+          <div >
+            <div class="relative-position">
+              <q-scroll-area style="width: auto; height: 350px;">
+                <div class="row gutter-sm q-pa-lg">
+                  <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" v-for="area in areasFiltered" :key="area.nome">
+                    <q-card @click.native="setArea(area)">
+                      <q-card-media overlay-position="full">
+                        <ap-image size="400x250" :file-name="area.image_file_name" />
 
-                    <q-card-title slot="overlay" align="end" v-if="area.id === selectedArea.id">
-                      <q-icon name="check_circle" size="30px" color="positive"/>
-                    </q-card-title>
-                  </q-card-media>
-                  <q-card-title>
-                    {{area.nome}}
-                  </q-card-title>
-                </q-card>
-              </div>
+                        <q-card-title slot="overlay" align="end" v-if="area.id === selectedArea.id">
+                          <q-icon name="check_circle" size="30px" color="positive"/>
+                        </q-card-title>
+                      </q-card-media>
+                      <q-card-title>
+                        {{area.nome}}
+                      </q-card-title>
+                    </q-card>
+                  </div>
+                </div>
+              </q-scroll-area>
             </div>
           </div>
 
@@ -40,61 +44,63 @@
         <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
           <span class="q-subheading text-faded">Selecione os talhões</span>
         </div>
-        <div class="q-pa-lg" v-if="talhoes && selectedArea.talhoes">
-          <div class="row gutter-sm" v-if="talhoes.length > 0">
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" v-for="talhao in talhoes" :key="talhao.id">
-              <q-card>
-                <q-card-media overlay-position="full" @click.native="toggleTalhao(talhao)">
-                  <ap-image size="400x250" :file-name="talhao.image_file_name" />
+        <div v-if="talhoes && selectedArea.talhoes">
+          <div class="relative-position">
+            <q-scroll-area style="width: auto; height: 350px;">
+              <div class="row gutter-sm q-pa-lg" v-if="talhoes.length > 0">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" v-for="talhao in talhoes" :key="talhao.id">
+                  <q-card>
+                    <q-card-media overlay-position="top" @click.native="toggleTalhao(talhao)">
+                      <ap-image size="400x250" :file-name="talhao.image_file_name" />
 
-                  <q-card-title slot="overlay" align="end" v-if="getTalhaoById(talhao.id).tamanho > 0">
-                    <q-icon name="check_circle" size="30px" color="positive"/>
-                  </q-card-title>
-                </q-card-media>
-                <q-card-title>
-                  {{talhao.nome}}
-                </q-card-title>
+                      <q-card-title slot="overlay">
+                        {{talhao.nome}}
+                        <q-icon name="check_circle" slot="right" size="30px" color="positive" v-if="getTalhaoById(talhao.id).tamanho > 0"/>
+                      </q-card-title>
+                    </q-card-media>
 
-                <q-card-main class="q-px-none">
-                  <q-list-header>{{getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).plural}} à serem utilizados</q-list-header>
-                  <q-item dense >
-                    <div class="row full-width">
-                      <div class="col-9 self-center">
-                        <q-slider
-                          label
-                          :min="0"
-                          :max="talhao.tamanho"
-                          v-model="getTalhaoById(talhao.id).tamanho"
-                          :label-value="`${getTalhaoById(talhao.id).tamanho} ${getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).sigla}`"
-                        />
-                      </div>
-                      <div class="col-3 q-pl-sm">
-                        <q-input
-                          type="number"
-                          align="center"
-                          v-model="getTalhaoById(talhao.id).tamanho"
-                          @blur="checkInputMaxSize(getTalhaoById(talhao.id).tamanho, talhao)"
-                        />
-                      </div>
-                    </div>
-                  </q-item>
-
-                  <q-list no-border dense class="q-py-none">
-                    <q-list-header>Estimativa</q-list-header>
-                    <q-item dense>
-                      <div class="row gutter-x-sm">
-                        <div class="col-3">
-                          <q-input type="number" align="center" v-model="getTalhaoById(talhao.id).estimativa" />
+                    <q-card-main class="q-px-none">
+                      <q-list-header>{{getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).plural}} à serem utilizados</q-list-header>
+                      <q-item dense >
+                        <div class="row full-width">
+                          <div class="col-9 self-center">
+                            <q-slider
+                              label
+                              :min="0"
+                              :max="talhao.tamanho"
+                              v-model="getTalhaoById(talhao.id).tamanho"
+                              :label-value="`${getTalhaoById(talhao.id).tamanho} ${getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).sigla}`"
+                            />
+                          </div>
+                          <div class="col-3 q-pl-sm">
+                            <q-input
+                              type="number"
+                              align="center"
+                              v-model="getTalhaoById(talhao.id).tamanho"
+                              @blur="checkInputMaxSize(getTalhaoById(talhao.id).tamanho, talhao)"
+                            />
+                          </div>
                         </div>
-                        <div class="col-9 self-center">
-                          {{getUnidadeMedidaById(selectedSafraCultura.view_unidade_medida.id).sigla}} por {{getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).nome}}
-                        </div>
-                      </div>
-                    </q-item>
-                  </q-list>
-                </q-card-main>
-              </q-card>
-            </div>
+                      </q-item>
+
+                      <q-list no-border dense class="q-py-none">
+                        <q-list-header>Estimativa</q-list-header>
+                        <q-item dense>
+                          <div class="row gutter-x-sm">
+                            <div class="col-3">
+                              <q-input type="number" align="center" v-model="getTalhaoById(talhao.id).estimativa" />
+                            </div>
+                            <div class="col-9 self-center">
+                              {{getUnidadeMedidaById(selectedSafraCultura.view_unidade_medida.id).sigla}} por {{getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).nome}}
+                            </div>
+                          </div>
+                        </q-item>
+                      </q-list>
+                    </q-card-main>
+                  </q-card>
+                </div>
+              </div>
+            </q-scroll-area>
           </div>
 
           <div class="column q-ma-xl items-center" v-if="talhoes.length <= 0">
@@ -108,25 +114,27 @@
         <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
           <span class="q-subheading text-faded">Resumo</span>
         </div>
-        <div class="q-pa-lg">
-          <q-list separator>
-            <q-list-header>{{selectedSafraCultura.cultura.nome}}</q-list-header>
-            <q-item>
-              <q-item-main label>
-                {{selectedArea.nome}}
-              </q-item-main>
-            </q-item>
-            <template v-for="talhao in selectedArea.talhoes">
-              <q-item :key="talhao.id" v-if="talhao.tamanho > 0">
-                <q-item-main>
-                  <div class="row">
-                    <div class="col-6">{{talhao.nome}}</div>
-                    <div class="col-6">{{talhao.tamanho}}&nbsp<span class="text-faded q-caption">{{getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).plural}}</span></div>
-                  </div>
+        <div class="relative-position">
+          <q-scroll-area style="width: auto; height: 350px;">
+            <q-list separator class="q-ma-lg">
+              <q-list-header>{{selectedSafraCultura.cultura.nome}}</q-list-header>
+              <q-item>
+                <q-item-main label>
+                  {{selectedArea.nome}}
                 </q-item-main>
               </q-item>
-            </template>
-          </q-list>
+              <template v-for="talhao in selectedArea.talhoes">
+                <q-item :key="talhao.id" v-if="talhao.tamanho > 0">
+                  <q-item-main>
+                    <div class="row">
+                      <div class="col-6">{{talhao.nome}}</div>
+                      <div class="col-6">{{talhao.tamanho}}&nbsp<span class="text-faded q-caption">{{getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).plural}}</span></div>
+                    </div>
+                  </q-item-main>
+                </q-item>
+              </template>
+            </q-list>
+          </q-scroll-area>
         </div>
       </q-carousel-slide>
     </q-carousel>
