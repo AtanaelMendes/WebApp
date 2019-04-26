@@ -15,7 +15,7 @@
           <q-item-side right style="display: flex; align-items: baseline">
             <q-input type="number" align="right" @input="checkTamanhoCultivares"
                      v-model="getCultivarFormByIndex(index).tamanho" :suffix="currentSafraCultura.view_unidade_area.sigla"
-                     style="width: 140px;" class="q-mr-sm"/>
+                     style="width: 140px;" class="q-mr-sm" min="1"/>
           </q-item-side>
         </q-item>
 
@@ -27,8 +27,13 @@
             Total Ocupado <br/>De {{currentTalhao.tamanho_talhao}} {{currentSafraCultura.view_unidade_area.plural}}
           </q-item-main>
           <q-item-side right>
-            <q-input type="number" align="right" style="width: 140px;" class="q-mr-sm" @blur="checkTamanhoMaximo" @input="checkAreaOcupada"
-                     v-model="tamanho" :suffix="currentSafraCultura.view_unidade_area.sigla" :disabled="cultivares.length > 0" :readonly="cultivares.length > 0"/>
+            <q-input type="number" align="right" style="width: 140px;" class="q-mr-sm"  min="1"
+                     v-if="cultivares.length > 0" v-model="tamanho"
+                     :suffix="currentSafraCultura.view_unidade_area.sigla" disabled readonly/>
+
+            <q-input type="number" align="right" style="width: 140px;" class="q-mr-sm" min="1"
+                     :max="currentTalhao.tamanho_talhao" v-if="cultivares.length == 0" v-model="tamanho"
+                     :suffix="currentSafraCultura.view_unidade_area.sigla"/>
           </q-item-side>
         </q-item>
         <q-item>
@@ -39,7 +44,7 @@
             Estimativa <br/>Por Hectare
           </q-item-main>
           <q-item-side right>
-            <q-input type="number" align="right" style="width: 140px;" class="q-mr-sm" @blur="checkEstimativaValue"
+            <q-input type="number" align="right" style="width: 140px;" class="q-mr-sm" @blur="checkEstimativaValue" min="1"
                      v-model="estimativa" :suffix="currentSafraCultura.view_unidade_medida.sigla + '/' + currentSafraCultura.view_unidade_area.sigla"/>
           </q-item-side>
         </q-item>
@@ -102,7 +107,7 @@
         return total;
       },
       isTotalErrado(){
-        return this.tamanho > parseFloat(this.currentTalhao.tamanho);
+        return this.tamanho > parseFloat(this.currentTalhao.tamanho_talhao);
       },
       isSaveButtonDisable(){
         if(this.cultivares === null){
@@ -156,35 +161,9 @@
         if(this.tamanho > this.currentTalhao.tamanho_talhao){
           this.tamanho = this.currentTalhao.tamanho_talhao;
         }
-        this.recalculateCultivares()
-      },
-      checkTamanhoMaximo(){
-        if(this.tamanho > this.currentTalhao.tamanho_talhao || this.tamanho <= 0){
-          this.tamanho = this.currentTalhao.tamanho_talhao;
-        }
       },
       checkTamanhoCultivares(){
         this.tamanho = this.totalOcupado;
-        if(this.tamanho > this.currentTalhao.tamanho){
-          this.checkAreaOcupada();
-        }
-      },
-      recalculateCultivares(){
-        let quantidadeCultivares = this.cultivaresForm.length;
-        let valueToDivide = this.tamanho;
-        let totalValorSomado = 0;
-
-        for(let i = 0; i < quantidadeCultivares; i++){
-          let valor = Math.floor(valueToDivide / quantidadeCultivares);
-
-          if(i === quantidadeCultivares - 1){
-            valor = valueToDivide - totalValorSomado;
-          }
-
-          this.cultivaresForm[i].tamanho = valor;
-
-          totalValorSomado += valor;
-        }
       },
       save(){
         setTimeout(() => {
