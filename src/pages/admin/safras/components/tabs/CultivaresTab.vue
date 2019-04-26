@@ -174,6 +174,11 @@
         return this.cultivaresDaMarca[this.iCultivar];
       },
     },
+    watch:{
+      iMarca(){
+        this.iCultivar = 0;
+      }
+    },
     data(){
       return{
         safraCulturaService: new SafraCulturaService(),

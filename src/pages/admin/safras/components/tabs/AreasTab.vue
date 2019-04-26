@@ -224,6 +224,11 @@
       updateCultivaresTamanhoModal,
       apImage
     },
+    watch:{
+      iArea(){
+        this.iTalhao = 0;
+      }
+    },
     data(){
       return{
         safraCulturaService: new SafraCulturaService(),
