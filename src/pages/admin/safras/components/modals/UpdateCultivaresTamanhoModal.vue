@@ -28,7 +28,7 @@
           </q-item-main>
           <q-item-side right>
             <q-input type="number" align="right" style="width: 140px;" class="q-mr-sm" @blur="checkTamanhoMaximo" @input="checkAreaOcupada"
-                     v-model="tamanho" :suffix="currentSafraCultura.view_unidade_area.sigla"/>
+                     v-model="tamanho" :suffix="currentSafraCultura.view_unidade_area.sigla" :disabled="cultivares.length > 0" :readonly="cultivares.length > 0"/>
           </q-item-side>
         </q-item>
         <q-item>
