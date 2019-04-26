@@ -113,6 +113,12 @@
                                     <q-item v-close-overlay @click.native="unattachSafraCulturaTalhao(talhao.safra_cultura_talhao_id)">
                                       <q-item-main label="Desvincular Talhão"/>
                                     </q-item>
+                                    <q-item v-close-overlay @click.native="addCultivar(activeTalhao)">
+                                      <q-item-main label="Vincular Cultivar"/>
+                                    </q-item>
+                                    <q-item v-close-overlay @click.native="updateTamanhoCultivares(activeTalhao)" v-if="activeTalhao.cultivares.length > 0">
+                                      <q-item-main label="Estimativa e Tamanho"/>
+                                    </q-item>
                                   </q-list>
                                 </q-popover>
                               </q-btn>
@@ -132,25 +138,6 @@
                     :unidade-area="safraCultura.view_unidade_area"
                     :unidade-medida="safraCultura.view_unidade_medida">
                   </safra-quantidades>
-                  <q-item style="background: #f3f1f1">
-                    <q-item-main>
-                      Cultivares
-                    </q-item-main>
-                    <q-item-side right>
-                      <q-btn flat round dense icon="more_vert" >
-                        <q-popover anchor="bottom left">
-                          <q-list link>
-                            <q-item v-close-overlay @click.native="addCultivar(activeTalhao)">
-                              <q-item-main label="Vincular Cultivar"/>
-                            </q-item>
-                            <q-item v-close-overlay @click.native="updateTamanhoCultivares(activeTalhao)" v-if="activeTalhao.cultivares.length > 0">
-                              <q-item-main label="Estimativa e Tamanho"/>
-                            </q-item>
-                          </q-list>
-                        </q-popover>
-                      </q-btn>
-                    </q-item-side>
-                  </q-item>
 
                   <template v-if="activeTalhao.cultivares.length > 0">
                     <q-item link v-for="cultivar in activeTalhao.cultivares" :key="cultivar.key" >
