@@ -98,7 +98,7 @@
               <div class="row">
                 <!-- CARROUSEL DE TALHOES -->
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
-                  <q-carousel color="white" arrows quick-nav v-model="iTalhao" height="250px">
+                  <q-carousel color="white" arrows quick-nav v-model="iTalhao">
                     <q-carousel-slide v-for="talhao in talhoesDaArea" :key="talhao.id" class="q-pa-none" style="overflow: hidden" >
                       <q-card>
                         <q-card-media overlay-position="top">
