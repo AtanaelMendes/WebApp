@@ -1,29 +1,11 @@
 <template>
-  <q-page style="display: flex">
-    <div style="flex-grow: 1; position: relative" v-if="!hideMainPage">
+  <q-page>
+    <slot name="toolbar"></slot>
 
-      <slot name="toolbar"></slot>
+    <slot></slot>
 
-      <q-scroll-area v-if="!noScroll" style="width: 100%; height: 100vh; z-index: 2" :class="{'shadow-4': isParent}" :thumb-style="{
-        right: '4px',
-        borderRadius: '5px',
-        background: '#dfdfdf',
-        width: '8px',
-        opacity: 1}">
-
-        <div :class="getContainerClasses" >
-          <slot></slot>
-        </div>
-
-      </q-scroll-area>
-
-      <div v-if="noScroll" :class="getContainerClasses" class="child" >
-        <slot></slot>
-      </div>
-
-      <div class="fab-container">
-        <slot name="fab-container"></slot>
-      </div>
+    <div class="fab-container">
+      <slot name="fab-container"></slot>
     </div>
 
     <router-view :style="{width: childWidth}"  v-bind:class="{'child-full-width' : hideMainPage}" />

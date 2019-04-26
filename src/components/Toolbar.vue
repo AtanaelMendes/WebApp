@@ -1,5 +1,5 @@
 <template>
-  <div style="overflow: hidden" class="shadow-3">
+  <div class="ap-toolbar shadow-3">
     <q-toolbar color="primary"  >
       <q-btn flat round dense :icon="navigation_icon" v-if="isNavigationVisible" v-on:click="navigationClicked" />
       <q-toolbar-title>
@@ -105,6 +105,12 @@
 </script>
 
 <style scoped>
+  .ap-toolbar{
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+    z-index: 10000;
+  }
   .q-tabs{
     border-radius: 0px;
   }

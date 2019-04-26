@@ -305,7 +305,7 @@
 
 <style>
   body{
-    overflow: hidden;
+    /*overflow: hidden;*/
   }
   .navigation-header{
     height: 150px;
