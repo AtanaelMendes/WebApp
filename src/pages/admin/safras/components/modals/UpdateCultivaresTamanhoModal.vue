@@ -39,7 +39,7 @@
             Estimativa <br/>Por Hectare
           </q-item-main>
           <q-item-side right>
-            <q-input type="number" align="right" style="width: 140px;" class="q-mr-sm" @input="checkEstimativaValue"
+            <q-input type="number" align="right" style="width: 140px;" class="q-mr-sm" @blur="checkEstimativaValue"
                      v-model="estimativa" :suffix="currentSafraCultura.view_unidade_medida.sigla + '/' + currentSafraCultura.view_unidade_area.sigla"/>
           </q-item-side>
         </q-item>
@@ -148,19 +148,19 @@
         return this.cultivaresForm[index];
       },
       checkEstimativaValue(){
-        if(this.estimativa > this.currentTalhao.estimativa || this.estimativa <= 0){
+        if(this.estimativa <= 0){
           this.estimativa = this.currentTalhao.estimativa;
         }
       },
       checkAreaOcupada(){
-        if(this.tamanho > this.currentTalhao.tamanho){
-          this.tamanho = this.currentTalhao.tamanho;
+        if(this.tamanho > this.currentTalhao.tamanho_talhao){
+          this.tamanho = this.currentTalhao.tamanho_talhao;
         }
         this.recalculateCultivares()
       },
       checkTamanhoMaximo(){
-        if(this.tamanho > this.currentTalhao.tamanho || this.tamanho <= 0){
-          this.tamanho = this.currentTalhao.tamanho;
+        if(this.tamanho > this.currentTalhao.tamanho_talhao || this.tamanho <= 0){
+          this.tamanho = this.currentTalhao.tamanho_talhao;
         }
       },
       checkTamanhoCultivares(){
