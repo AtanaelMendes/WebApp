@@ -36,12 +36,17 @@
               <div class="row" v-if="marcas">
                 <!-- CARROUSEL DE MARCAS -->
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
-                  <q-carousel color="white" arrows quick-nav v-model="iMarca" height="250px">
-                    <q-carousel-slide v-for="marca in marcas" :key="marca.id" :img-src="imageMakeUrl(marca.image_file_name, '800x500')">
-                      <div class="absolute-top carousel-caption">
-                        <div class="q-card-title">{{marca.nome}}</div>
-                        <div class="q-card-subtitle text-white">{{numeral(marca.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}</div>
-                      </div>
+                  <q-carousel color="white" arrows quick-nav v-model="iMarca">
+                    <q-carousel-slide v-for="marca in marcas" :key="marca.id" class="q-pa-none" style="overflow: hidden">
+                      <q-card>
+                        <q-card-media overlay-position="top">
+                          <ap-image size="400x250" :file-name="marca.image_file_name" />
+                          <q-card-title slot="overlay">
+                            {{marca.nome}}
+                            <span slot="subtitle">{{numeral(marca.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}</span>
+                          </q-card-title>
+                        </q-card-media>
+                      </q-card>
                     </q-carousel-slide>
                   </q-carousel>
                 </div>
@@ -82,12 +87,17 @@
               <div class="row">
                 <!-- CARROUSEL DE CULTIVARES -->
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
-                  <q-carousel color="white" arrows quick-nav v-model="iCultivar" height="250px">
-                    <q-carousel-slide v-for="cultivar in cultivaresDaMarca" :key="cultivar.id" :img-src="imageMakeUrl(safraCultura.cultura.image_file_name, '800x500')">
-                      <div class="absolute-top carousel-caption">
-                        <div class="q-card-title">{{activeMarca.nome}} {{cultivar.nome}}</div>
-                        <div class="q-card-subtitle text-white">{{numeral(cultivar.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}</div>
-                      </div>
+                  <q-carousel color="white" arrows quick-nav v-model="iCultivar" >
+                    <q-carousel-slide v-for="cultivar in cultivaresDaMarca" :key="cultivar.id"  class="q-pa-none" style="overflow: hidden" >
+                      <q-card>
+                        <q-card-media overlay-position="top">
+                          <ap-image size="400x250" :file-name="safraCultura.cultura.image_file_name" />
+                          <q-card-title slot="overlay">
+                            {{activeMarca.nome}} {{cultivar.nome}}
+                            <span slot="subtitle">{{numeral(cultivar.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}</span>
+                          </q-card-title>
+                        </q-card-media>
+                      </q-card>
                     </q-carousel-slide>
                   </q-carousel>
                 </div>
@@ -139,6 +149,7 @@
   import safraGraficoQuantidadesPorCultivar from '../graficos/QuantidadesPorCultivar.vue'
   import agroUtils from 'assets/js/AgroUtils'
   import apNoResults from 'components/ApNoResults'
+  import apImage from 'components/ApImage'
 
   export default {
     name: "CultivaresTab",
@@ -146,7 +157,8 @@
       safraQuantidades,
       safraGraficoQuantidadesPorMarca,
       safraGraficoQuantidadesPorCultivar,
-      apNoResults
+      apNoResults,
+      apImage
     },
     props:{
       visible: false
