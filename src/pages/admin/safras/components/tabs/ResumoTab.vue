@@ -25,8 +25,8 @@
       <q-tabs swipeable inverted arrows align="justify" style="min-height: 410px">
         <q-tab slot="title" name="tab-diario" :label="$q.screen.gt.sm ? 'Diário de Colheita' : ''" icon="mdi-calendar" default @select="selectTabDiario()"/>
         <q-tab slot="title" name="tab-diario-classificacao" :label="$q.screen.gt.sm ? 'Diário de Classificação' : ''" icon="mdi-ruler" @select="selectTabDiarioClassificacao()"/>
-        <q-tab slot="title" name="tab-descontos-armazem" :label="$q.screen.gt.sm ? 'Diário de Descontos' : ''" icon="location_city" @select="selectTabDescontoArmazens()"/>
-        <q-tab slot="title" name="tab-armazem" :label="$q.screen.gt.sm ? 'Entregas Por Armazém' : ''" icon="mdi-delete" @select="selectTabArmazens()"/>
+        <q-tab slot="title" name="tab-descontos-armazem" :label="$q.screen.gt.sm ? 'Diário de Descontos' : ''" icon="mdi-delete" @select="selectTabDescontoArmazens()"/>
+        <q-tab slot="title" name="tab-armazem" :label="$q.screen.gt.sm ? 'Entregas Por Armazém' : ''" icon="place" @select="selectTabArmazens()"/>
         <q-tab slot="title" name="tab-caminhoes" :label="$q.screen.gt.sm ? 'Entregas Por Caminhão' : ''" icon="mdi-truck" @select="selectTabCaminhoes()"/>
 
         <q-tab-pane name="tab-diario" keep-alive>
