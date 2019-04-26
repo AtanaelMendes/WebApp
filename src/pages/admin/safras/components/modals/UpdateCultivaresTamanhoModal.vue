@@ -157,11 +157,6 @@
           this.estimativa = this.currentTalhao.estimativa;
         }
       },
-      checkAreaOcupada(){
-        if(this.tamanho > this.currentTalhao.tamanho_talhao){
-          this.tamanho = this.currentTalhao.tamanho_talhao;
-        }
-      },
       checkTamanhoCultivares(){
         this.tamanho = this.totalOcupado;
       },
