@@ -201,7 +201,7 @@
             this.$q.notify({type: 'positive', message: 'Culturas atualizadas com sucesso!'});
             this.$refs.updateCultivaresTamanhoModal.hideOuterProgress();
             this.closeModal();
-            this.$root.$emit('refreshSafrasCulura');
+            this.$root.$emit('refreshSafrasCulura', false);
           }).catch(error => {
             this.closeModal();
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})

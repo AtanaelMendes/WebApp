@@ -87,10 +87,10 @@
       editSafraCultura(){
         this.$refs.editCulturaModal.openModal(this.safraCultura);
       },
-      updateView(){
+      updateView(resetIndexes = true){
         this.getSafraCultura().then(()=>{
           this.$refs.resumoTab.init(this.safraCultura);
-          this.$refs.areasTab.init(this.safraCultura);
+          this.$refs.areasTab.init(this.safraCultura, resetIndexes);
           this.$refs.cultivaresTab.init(this.safraCultura);
         })
       },

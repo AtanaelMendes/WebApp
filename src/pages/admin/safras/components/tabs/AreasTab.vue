@@ -248,11 +248,13 @@
       },
     },
     methods:{
-      init(safraCultura){
+      init(safraCultura, resetIndexes = true){
         this.safraCultura = safraCultura;
 
-        this.iArea = 0;
-        this.iTalhao = 0;
+        if(resetIndexes){
+          this.iArea = 0;
+          this.iTalhao = 0;
+        }
         this.getContent()
       },
       getContent(){
