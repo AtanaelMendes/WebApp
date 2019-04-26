@@ -1,5 +1,5 @@
 <template>
-  <ap-modal ref="updateCultivaresTamanhoModal" title="Atualizar tamanho dos cultivares" :visible="isModalOpened" @hide="closeModal">
+  <ap-modal ref="updateCultivaresTamanhoModal" title="Estimativa e Tamanho" :visible="isModalOpened" @hide="closeModal">
     <template slot="content" v-if="cultivares && cultivaresForm && currentSafraCultura">
       <q-list no-border>
         <q-item v-for="(cultivar, index) in cultivares" :key="cultivar.id">
