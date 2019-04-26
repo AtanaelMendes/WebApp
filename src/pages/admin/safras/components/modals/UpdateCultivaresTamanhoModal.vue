@@ -57,7 +57,7 @@
 
     <div slot="footer" class="text-right">
       <q-btn @click.native="closeModal" flat color="primary" label="Cancelar" class="q-mr-xs"/>
-      <q-btn @click.native="save" flat label="Atualizar" color="primary" :disabled="isSaveButtonDisable" />
+      <q-btn @click.native="save" flat label="Salvar" color="primary" :disabled="isSaveButtonDisable" />
     </div>
   </ap-modal>
 </template>
