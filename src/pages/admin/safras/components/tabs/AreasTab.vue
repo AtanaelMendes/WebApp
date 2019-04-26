@@ -157,7 +157,7 @@
                         <q-btn flat round dense icon="more_vert" >
                           <q-popover anchor="bottom left">
                             <q-list link>
-                              <q-item v-close-overlay @click.stop="unattachCultivar(cultivar, activeTalhao)">
+                              <q-item v-close-overlay @click.native="unattachCultivar(cultivar, activeTalhao)">
                                 <q-item-main label="Desvincular Cultivar"/>
                               </q-item>
                             </q-list>
