@@ -63,6 +63,8 @@
               }
 						}],
 					},
+
+          onClick: this.onClicked,
         }
 
       }
@@ -76,7 +78,11 @@
       },
     },
     methods: {
-
+      onClicked(event, chartElement){
+        if(chartElement.length > 0){
+          this.$emit("input", chartElement[0]._index);
+        }
+      },
       formatXAxisLabel (value) {
         return value.substr(0, this.labelCharSize)
       },
