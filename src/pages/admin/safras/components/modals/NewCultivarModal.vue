@@ -243,7 +243,7 @@
           this.$q.notify({type: 'positive', message: 'Cultivar adicionado com sucesso'});
           this.$refs.newCultivarModal.hideOuterProgress();
           this.closeModal();
-          this.$root.$emit('refreshSafrasCulura');
+          this.$root.$emit('refreshSafrasCulura', false);
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           this.$refs.newCultivarModal.hideOuterProgress();
