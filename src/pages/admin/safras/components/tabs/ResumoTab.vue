@@ -25,9 +25,9 @@
       <q-tabs swipeable inverted arrows align="justify" style="min-height: 410px">
         <q-tab slot="title" name="tab-diario" :label="$q.screen.gt.sm ? 'Diário de Colheita' : ''" icon="mdi-calendar" default @select="selectTabDiario()"/>
         <q-tab slot="title" name="tab-diario-classificacao" :label="$q.screen.gt.sm ? 'Diário de Classificação' : ''" icon="mdi-ruler" @select="selectTabDiarioClassificacao()"/>
+        <q-tab slot="title" name="tab-descontos-armazem" :label="$q.screen.gt.sm ? 'Diário de Descontos' : ''" icon="location_city" @select="selectTabDescontoArmazens()"/>
+        <q-tab slot="title" name="tab-armazem" :label="$q.screen.gt.sm ? 'Entregas Por Armazém' : ''" icon="mdi-delete" @select="selectTabArmazens()"/>
         <q-tab slot="title" name="tab-caminhoes" :label="$q.screen.gt.sm ? 'Entregas Por Caminhão' : ''" icon="mdi-truck" @select="selectTabCaminhoes()"/>
-        <q-tab slot="title" name="tab-armazem" :label="$q.screen.gt.sm ? 'Entrega Por Armazém' : ''" icon="place" @select="selectTabArmazens()"/>
-        <q-tab slot="title" name="tab-descontos-armazem" :label="$q.screen.gt.sm ? 'Descontos Por Armazém' : ''" icon="location_city" @select="selectTabDescontoArmazens()"/>
 
         <q-tab-pane name="tab-diario" keep-alive>
           <template v-if="diario">
@@ -53,12 +53,12 @@
             </div>
           </template>
         </q-tab-pane>
-        <q-tab-pane name="tab-caminhoes" keep-alive>
-          <template v-if="caminhoes">
+        <q-tab-pane name="tab-descontos-armazem" keep-alive>
+          <template v-if="descontosArmazens">
             <div class="q-mb-lg" v-if="$q.screen.lt.md">
-              <span class="q-subheading text-weight-medium text-primary uppercase">Entregas Por Caminhão</span>
+              <span class="q-subheading text-weight-medium text-primary uppercase">Diário de Descontos</span>
             </div>
-            <safra-grafico-quantidades-por-caminhao v-if="caminhoes.length > 0" :unidade-medida="safraCultura.view_unidade_medida" :caminhoes="caminhoes" :height="300" :width="100"/>
+            <safra-grafico-diario-descontos-por-armazem v-if="descontosArmazens.armazens.length > 0" :descontosArmazem="descontosArmazens" :height="300" :width="100"/>
             <div v-else class="text-center chart-empty">
               <q-icon name="warning" />
               <span>Nenhuma informação disponível.</span>
@@ -68,7 +68,7 @@
         <q-tab-pane name="tab-armazem" keep-alive>
           <template v-if="armazens">
             <div class="q-mb-lg" v-if="$q.screen.lt.md">
-              <span class="q-subheading text-weight-medium text-primary uppercase">Entrega Por Armazém</span>
+              <span class="q-subheading text-weight-medium text-primary uppercase">Entregas Por Armazém</span>
             </div>
             <safra-grafico-quantidades-por-armazem v-if="armazens.length > 0" :unidade-medida="safraCultura.view_unidade_medida" :armazens="armazens" :height="300" :width="100"/>
             <div v-else class="text-center chart-empty">
@@ -77,12 +77,12 @@
             </div>
           </template>
         </q-tab-pane>
-        <q-tab-pane name="tab-descontos-armazem" keep-alive>
-          <template v-if="descontosArmazens">
+        <q-tab-pane name="tab-caminhoes" keep-alive>
+          <template v-if="caminhoes">
             <div class="q-mb-lg" v-if="$q.screen.lt.md">
-              <span class="q-subheading text-weight-medium text-primary uppercase">Descontos por Armazém</span>
+              <span class="q-subheading text-weight-medium text-primary uppercase">Entregas Por Caminhão</span>
             </div>
-            <safra-grafico-diario-descontos-por-armazem v-if="descontosArmazens.armazens.length > 0" :descontosArmazem="descontosArmazens" :height="300" :width="100"/>
+            <safra-grafico-quantidades-por-caminhao v-if="caminhoes.length > 0" :unidade-medida="safraCultura.view_unidade_medida" :caminhoes="caminhoes" :height="300" :width="100"/>
             <div v-else class="text-center chart-empty">
               <q-icon name="warning" />
               <span>Nenhuma informação disponível.</span>

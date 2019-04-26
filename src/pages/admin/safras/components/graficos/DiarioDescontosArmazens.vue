@@ -22,7 +22,7 @@
           maintainAspectRatio: false,
           title: {
             display: false,
-            text: 'Descontos armazém',
+            text: 'Diário de Descontos',
             fontSize: 16
           },
           legend: {
