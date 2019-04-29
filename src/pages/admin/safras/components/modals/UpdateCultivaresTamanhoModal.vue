@@ -13,7 +13,7 @@
             <q-item-tile sublabel>{{cultivar.marca.nome}}</q-item-tile>
           </q-item-main>
           <q-item-side right style="display: flex; align-items: baseline">
-            <q-input type="number" align="right" @input="checkTamanhoCultivares"
+            <q-input type="number" align="right" @input="cultivarTamanhoInputEvent" @blur="cultivarTamanhoBlurEvent(getCultivarFormByIndex(index).tamanho, index)"
                      v-model="getCultivarFormByIndex(index).tamanho" :suffix="currentSafraCultura.view_unidade_area.sigla"
                      style="width: 140px;" class="q-mr-sm" min="1"/>
           </q-item-side>
@@ -44,7 +44,7 @@
             Estimativa <br/>Por Hectare
           </q-item-main>
           <q-item-side right>
-            <q-input type="number" align="right" style="width: 140px;" class="q-mr-sm" @blur="checkEstimativaValue" min="1"
+            <q-input type="number" align="right" style="width: 140px;" class="q-mr-sm" @blur="estimativaBlurEvent" min="1"
                      v-model="estimativa" :suffix="currentSafraCultura.view_unidade_medida.sigla + '/' + currentSafraCultura.view_unidade_area.sigla"/>
           </q-item-side>
         </q-item>
@@ -152,13 +152,19 @@
       getCultivarFormByIndex(index){
         return this.cultivaresForm[index];
       },
-      checkEstimativaValue(){
+      estimativaBlurEvent(){
         if(this.estimativa <= 0){
           this.estimativa = this.currentTalhao.estimativa;
         }
       },
-      checkTamanhoCultivares(){
+      cultivarTamanhoInputEvent(){
         this.tamanho = this.totalOcupado;
+      },
+      cultivarTamanhoBlurEvent(value, index){
+        if(value < 1){
+          this.getCultivarFormByIndex(index).tamanho = 1;
+          this.cultivarTamanhoInputEvent();
+        }
       },
       save(){
         setTimeout(() => {
