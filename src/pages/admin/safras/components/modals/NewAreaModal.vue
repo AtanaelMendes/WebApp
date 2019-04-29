@@ -234,7 +234,7 @@
           this.$q.notify({type: 'positive', message: 'Área vinculada com sucesso!'});
           this.$refs.newAreaModal.hideOuterProgress();
           this.closeModal();
-          this.$root.$emit('refreshSafrasCulura');
+          this.$root.$emit('refreshSafrasCulura', true);
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           this.$refs.newAreaModal.hideOuterProgress();

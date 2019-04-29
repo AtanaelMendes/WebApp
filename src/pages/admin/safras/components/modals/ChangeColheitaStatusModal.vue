@@ -92,7 +92,7 @@
           this.$q.notify({type: 'positive', message: 'Status atualizados com sucesso'});
           this.$refs.changeColheitaStatusModal.hideOuterProgress();
           this.closeModal();
-          this.$root.$emit('refreshSafrasCulura');
+          this.$root.$emit('refreshSafrasCulura', true);
         }).catch(()=>{
           this.closeModal();
           this.$refs.changeColheitaStatusModal.hideOuterProgress();

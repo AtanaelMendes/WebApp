@@ -141,11 +141,11 @@
 
                   <template v-if="activeTalhao.cultivares.length > 0">
                     <q-item link v-for="cultivar in activeTalhao.cultivares" :key="cultivar.key" >
-                      <q-item-side v-if="cultivar.image_file_name" :image="imageMakeUrl(cultivar.image_file_name, '200x125')" color="primary"/>
+                      <q-item-side v-if="cultivar.marca.image_file_name" :image="imageMakeUrl(cultivar.marca.image_file_name, '200x125')" color="primary"/>
                       <q-item-side v-else icon="spa" color="primary" @click.native="goToCultivar(cultivar.id)" />
                       <q-item-main @click.native="goToCultivar(cultivar.id)" >
                         <q-item-tile>
-                          {{cultivar.marca}}
+                          {{cultivar.marca.nome}}
                           {{cultivar.nome}}
                         </q-item-tile>
                         <q-item-tile sublabel>
@@ -253,7 +253,8 @@
       },
     },
     methods:{
-      init(safraCultura, resetIndexes = true){
+      init(safraCultura, resetIndexes = false){
+        console.log('init.resetIndexes', resetIndexes)
         this.safraCultura = safraCultura;
 
         if(resetIndexes){
@@ -271,9 +272,10 @@
           this.$q.loading.hide();
 
           if(this.$route.query.id){
-            let talhao = this.talhoes.find(talhao => talhao.id === this.$route.query.id);
+            let talhao = this.talhoes.find(talhao => talhao.id == this.$route.query.id);
             this.iArea = this.areas.findIndex(area => area.id === talhao.area_id);
             this.iTalhao = this.talhoesDaArea.findIndex(talhaoArea => talhaoArea.id === talhao.id)
+
           }
         });
       },
@@ -306,7 +308,7 @@
           this.$q.loading.show();
           this.safraCulturaTalhaoService.unattachSafraCulturaTalhoesByArea(this.safraCultura.id, areaId).then(() => {
             this.$q.notify({type: 'positive', message: 'Área desvinculada com sucesso.'});
-            this.$root.$emit('refreshSafrasCulura');
+            this.$root.$emit('refreshSafrasCulura', true);
             this.$q.loading.hide();
           }).catch(error =>{
             this.$q.notify({type: 'negative', message: 'Não foi possível desvincular esta área'});
@@ -324,7 +326,7 @@
           this.$q.loading.show();
           this.safraCulturaTalhaoService.unattachSafraCulturaTalhao(this.safraCultura.id, safraCulturaTalhaoId).then(() => {
             this.$q.notify({type: 'positive', message: 'Talhão desvinculado com sucesso.'});
-            this.$root.$emit('refreshSafrasCulura');
+            this.$root.$emit('refreshSafrasCulura', true);
             this.$q.loading.hide();
           });
         }).catch(error =>{
@@ -341,6 +343,7 @@
         }).then(data => {
           this.safraCulturaTalhaoService.unattachCultivar(cultivar.safra_cultura_talhao_cultivar_id, activeTalhao.safra_cultura_talhao_id).then(()=>{
             this.$q.notify({type: 'positive', message: 'Cultivar desvinculado com sucesso.'});
+            //this.getContent();
             this.$root.$emit('refreshSafrasCulura', false, true);
             this.$q.loading.hide();
           }).catch(error =>{
@@ -352,7 +355,7 @@
       updateTamanhoCultivares(talhao){
         this.$refs.updateCultivaresTamanhoModal.openModal(talhao, this.safraCultura);
       },
-      goToCultivar(cultivarId){;
+      goToCultivar(cultivarId){
         this.$router.replace({path:'cultivares',query:{id:cultivarId}});
       }
     },

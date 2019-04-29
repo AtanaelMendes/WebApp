@@ -74,7 +74,7 @@
           this.$q.notify({type: 'positive', message: 'Cultura atualizada com sucesso!'});
           this.$refs.editCulturaModal.hideOuterProgress();
           this.closeModal();
-          this.$root.$emit('refreshSafrasCulura');
+          this.$root.$emit('refreshSafrasCulura', true);
         }).catch(error => {
           this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
           this.$refs.editCulturaModal.hideOuterProgress();
