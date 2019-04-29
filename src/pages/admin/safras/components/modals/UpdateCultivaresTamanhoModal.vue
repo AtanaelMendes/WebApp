@@ -33,7 +33,7 @@
 
             <q-input type="number" align="right" style="width: 140px;" class="q-mr-sm" min="1"
                      :max="currentTalhao.tamanho_talhao" v-if="cultivares.length == 0" v-model="tamanho"
-                     :suffix="currentSafraCultura.view_unidade_area.sigla"/>
+                     :suffix="currentSafraCultura.view_unidade_area.sigla" @blur="tamanhoOcupadoBlurEvent"/>
           </q-item-side>
         </q-item>
         <q-item>
@@ -113,7 +113,7 @@
         if(this.cultivares === null){
           return true;
         }
-        return this.isTotalErrado || this.estimativa <= 0;
+        return this.isTotalErrado || this.estimativa < 1 || this.tamanho < 1;
       }
     },
     methods:{
@@ -164,6 +164,11 @@
         if(value < 1){
           this.getCultivarFormByIndex(index).tamanho = 1;
           this.cultivarTamanhoInputEvent();
+        }
+      },
+      tamanhoOcupadoBlurEvent(){
+        if(this.tamanho < 1){
+          this.tamanho = 1;
         }
       },
       save(){
