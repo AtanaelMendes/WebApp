@@ -87,7 +87,12 @@
       editSafraCultura(){
         this.$refs.editCulturaModal.openModal(this.safraCultura);
       },
-      updateView(resetIndexes = true){
+      updateView(resetIndexes = true, removeQueryString = false){
+        if(removeQueryString){
+          let query = Object.assign({}, this.$route.query);
+          delete query.id;
+          this.$router.replace({ query });
+        }
         this.getSafraCultura().then(()=>{
           this.$refs.resumoTab.init(this.safraCultura);
           this.$refs.areasTab.init(this.safraCultura, resetIndexes);

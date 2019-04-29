@@ -206,9 +206,8 @@
           this.getCultivares(),
         ]).then(()=>{
           this.$q.loading.hide();
-
           if(this.$route.query.id){
-            let cultivar = this.cultivares.find(cultivar => cultivar.id === this.$route.query.id);
+            let cultivar = this.cultivares.find(cultivar => cultivar.id == this.$route.query.id);
             this.iMarca = this.marcas.findIndex(marca => marca.id === cultivar.marca_id);
             this.iCultivar = this.cultivaresDaMarca.findIndex(cultivarMarca => cultivarMarca.id === cultivar.id)
           }
@@ -227,7 +226,7 @@
           this.cultivares = response.cultivares;
         })
       },
-      goToTalhao(talhaoId){;
+      goToTalhao(talhaoId){
         this.$router.replace({path:'areas',query:{id:talhaoId}});
       }
     },

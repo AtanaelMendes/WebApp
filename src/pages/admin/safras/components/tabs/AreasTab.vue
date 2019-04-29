@@ -341,7 +341,7 @@
         }).then(data => {
           this.safraCulturaTalhaoService.unattachCultivar(cultivar.safra_cultura_talhao_cultivar_id, activeTalhao.safra_cultura_talhao_id).then(()=>{
             this.$q.notify({type: 'positive', message: 'Cultivar desvinculado com sucesso.'});
-            this.getContent();
+            this.$root.$emit('refreshSafrasCulura', false, true);
             this.$q.loading.hide();
           }).catch(error =>{
             this.$q.notify({type: 'negative', message: 'Não foi possível desvincular este cultivar'});
