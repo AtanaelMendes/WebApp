@@ -209,7 +209,9 @@
           if(this.$route.query.id){
             let cultivar = this.cultivares.find(cultivar => cultivar.id == this.$route.query.id);
             this.iMarca = this.marcas.findIndex(marca => marca.id === cultivar.marca_id);
-            this.iCultivar = this.cultivaresDaMarca.findIndex(cultivarMarca => cultivarMarca.id === cultivar.id)
+            setTimeout(function() {
+              this.iCultivar = this.cultivaresDaMarca.findIndex(cultivarMarca => cultivarMarca.id === cultivar.id)
+            }.bind(this), 300);
           }
         });
       },

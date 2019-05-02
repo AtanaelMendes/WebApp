@@ -274,7 +274,9 @@
           if(this.$route.query.id){
             let talhao = this.talhoes.find(talhao => talhao.id == this.$route.query.id);
             this.iArea = this.areas.findIndex(area => area.id === talhao.area_id);
-            this.iTalhao = this.talhoesDaArea.findIndex(talhaoArea => talhaoArea.id === talhao.id)
+            setTimeout(function() {
+              this.iTalhao = this.talhoesDaArea.findIndex(talhaoArea => talhaoArea.id === talhao.id)
+            }.bind(this), 300);
 
           }
         });
