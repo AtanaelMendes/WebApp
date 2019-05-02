@@ -6,7 +6,7 @@ export default class GrupoEconomicoService{
   }
   listGruposEconomicos(filter){
     return new Promise((resolve, reject) => {
-      GrupoEconomicoAPI.listGruposEconomicos(filter).then(response => {
+      GrupoEconomicoAPI.listGruposEconomicos(AgroUtils.serialize(filter)).then(response => {
         if(response.status === 200){
           resolve(response.data)
         }else{
@@ -53,7 +53,7 @@ export default class GrupoEconomicoService{
         }
       }).catch(error => {
         if(error.response.status === 422){
-          reject(new Error('Já existe um registro com esse nome'))
+          reject(new Error('Já existe um registro com este nome'))
         }else{
           reject(error)
         }
@@ -70,7 +70,7 @@ export default class GrupoEconomicoService{
         }
       }).catch(error => {
         if(error.response.status === 422){
-          reject(new Error('Já existe um registro com esse nome'))
+          reject(new Error('Já existe um registro com este nome'))
         }else{
           reject(error)
         }
