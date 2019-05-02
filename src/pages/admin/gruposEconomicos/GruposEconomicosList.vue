@@ -122,7 +122,7 @@
     },
     methods: {
       listBySearch: function(val){
-        this.filter.nameOrPlaque = val;
+        this.filter.name = val;
       },
       listGruposEconomicos: function(filter) {
         this.$q.loading.show();
@@ -130,11 +130,7 @@
           this.$q.loading.hide();
           this.gruposEconomicos = response;
           this.isEmptyList = this.gruposEconomicos.length === 0;
-        }).catch(error => {
-          this.$q.loading.hide();
-          console.log(error);
-          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações.'});
-        });
+        })
       },
       viewGrupoEconomico: function(id) {
         this.$router.push({name: 'view_grupo_economico', params: {id:id}});
@@ -157,10 +153,6 @@
             this.$q.notify({type: 'positive', message: 'Armazém arquivado com sucesso.'});
             this.listGruposEconomicos(this.filter);
             this.$q.loading.hide();
-          }).catch(error =>{
-            console.log(error);
-            this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse armazém.'});
-            this.$q.loading.hide();
           })
         });
 
@@ -177,10 +169,6 @@
             this.$q.notify({type: 'positive', message: 'Armazém ativado com sucesso.'});
             this.listGruposEconomicos(this.filter);
             this.$q.loading.hide();
-          }).catch(error =>{
-            console.log(error);
-            this.$q.loading.hide();
-            this.$q.notify({type: 'negative', message: 'Não foi possível restaurar esse armazém.'});
           })
         });
 
@@ -196,10 +184,6 @@
           this.grupoEconomicoService.deleteGrupoEconomico(id).then(() => {
             this.$q.notify({type: 'positive', message: 'Armazém excluido com sucesso.'});
             this.listGruposEconomicos(this.filter);
-            this.$q.loading.hide();
-          }).catch(error =>{
-            console.log(error);
-            this.$q.notify({type: 'negative', message: 'Não foi possível excluir esse armazém'});
             this.$q.loading.hide();
           })
         });
