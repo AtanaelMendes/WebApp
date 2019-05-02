@@ -207,7 +207,7 @@
         let cultivar = this.cultivares.find(cultivar => cultivar.id === cultivarId);
         let marcaIndex = this.marcas.findIndex(marca => marca.id === cultivar.marca_id);
         this.iMarca = marcaIndex;
-        let cultivarIndex = this.cultivaresDaMarca.findIndex(cultivar => cultivar.id === cultivar.id);
+        let cultivarIndex = this.cultivaresDaMarca.findIndex(cultivarMarca => cultivarMarca.id === cultivar.id);
         this.iCultivar = cultivarIndex;
         this.$refs.marcasCarousel.goToSlide(marcaIndex);
         this.$refs.cultivaresCarousel.goToSlide(cultivarIndex);
