@@ -36,7 +36,7 @@
               <div class="row" v-if="areas">
                 <!-- CARROUSEL DE AREAS -->
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
-                  <q-carousel color="white" arrows quick-nav v-model="iArea" >
+                  <q-carousel color="white" arrows quick-nav v-model="iArea" ref="areasCarousel" keep-alive >
                     <q-carousel-slide v-for="area in areas" :key="area.id" class="q-pa-none" style="overflow: hidden" >
                       <q-card>
                         <q-card-media overlay-position="top">
@@ -98,7 +98,7 @@
               <div class="row">
                 <!-- CARROUSEL DE TALHOES -->
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
-                  <q-carousel color="white" arrows quick-nav v-model="iTalhao">
+                  <q-carousel color="white" arrows quick-nav v-model="iTalhao" ref="talhoesCarousel" keep-alive>
                     <q-carousel-slide v-for="talhao in talhoesDaArea" :key="talhao.id" class="q-pa-none" style="overflow: hidden" >
                       <q-card>
                         <q-card-media overlay-position="top">
@@ -212,7 +212,8 @@
   export default {
     name: "AreasTab",
     props:{
-      visible: false
+      visible: false,
+      safraCultura: Object,
     },
     components:{
       safraGraficoQuantidadesPorArea,
@@ -227,14 +228,13 @@
     watch:{
       iArea(){
         this.iTalhao = 0;
-      }
+      },
     },
     data(){
       return{
         safraCulturaService: new SafraCulturaService(),
         safraCulturaTalhaoService: new SafraCulturaTalhaoService(),
         media: true,
-        safraCultura: null,
         areas: null,
         talhoes: null,
         iArea: 0,
@@ -253,16 +253,6 @@
       },
     },
     methods:{
-      init(safraCultura, resetIndexes = false){
-        console.log('init.resetIndexes', resetIndexes)
-        this.safraCultura = safraCultura;
-
-        if(resetIndexes){
-          this.iArea = 0;
-          this.iTalhao = 0;
-        }
-        this.getContent()
-      },
       getContent(){
         this.$q.loading.show();
         Promise.all([
@@ -270,15 +260,6 @@
           this.getTalhoes(),
         ]).then(()=>{
           this.$q.loading.hide();
-
-          if(this.$route.query.id){
-            let talhao = this.talhoes.find(talhao => talhao.id == this.$route.query.id);
-            this.iArea = this.areas.findIndex(area => area.id === talhao.area_id);
-            setTimeout(function() {
-              this.iTalhao = this.talhoesDaArea.findIndex(talhaoArea => talhaoArea.id === talhao.id)
-            }.bind(this), 300);
-
-          }
         });
       },
       addArea(){
@@ -358,14 +339,27 @@
         this.$refs.updateCultivaresTamanhoModal.openModal(talhao, this.safraCultura);
       },
       goToCultivar(cultivarId){
-        this.$router.replace({path:'cultivares',query:{id:cultivarId}});
+        this.$router.replace({path:'cultivares',query:{cultivar_id:cultivarId}});
+      },
+      changeSlidesByTalhaoId(talhaoId){
+        let talhao = this.talhoes.find(talhao => talhao.id === talhaoId);
+        let areaIndex = this.areas.findIndex(area => area.id === talhao.area_id);
+        let talhaoIndex = this.talhoesDaArea.findIndex(talhaoArea => talhaoArea.id === talhao.id);
+        this.$refs.areasCarousel.goToSlide(areaIndex);
+        this.$refs.talhoesCarousel.goToSlide(talhaoIndex);
       }
     },
     mounted () {
-      this.$root.$on('refreshAreasTab', this.getContent);
+      this.$root.$on('refreshSafrasCulura', this.getContent);
+      this.getContent();
     },
     destroyed() {
-      this.$root.$off('refreshAreasTab', this.getContent);
+      this.$root.$off('refreshSafrasCulura', this.getContent);;
+    },
+    updated() {
+      if(this.$route.query.talhao_id && this.talhoes && this.areas){
+        this.changeSlidesByTalhaoId(parseInt(this.$route.query.talhao_id));
+      }
     }
   }
 </script>

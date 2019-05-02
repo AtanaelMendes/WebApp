@@ -108,7 +108,8 @@
   export default {
     name: "ResumoTab",
     props:{
-      visible: false
+      visible: false,
+      safraCultura: Object,
     },
     components: {
       apImage,
@@ -122,7 +123,7 @@
     data(){
       return{
         safraCulturaService: new SafraCulturaService(),
-        safraCultura: null,
+        //safraCultura: null,
         diario: null,
         diarioClassificacao: null,
         caminhoes: null,
@@ -131,9 +132,6 @@
       }
     },
     methods:{
-      init(safraCultura){
-        this.safraCultura = safraCultura;
-      },
       selectTabDiario() {
         this.getDiario();
       },
@@ -201,6 +199,9 @@
         })
       },
     },
+    mounted() {
+
+    }
   }
 </script>
 

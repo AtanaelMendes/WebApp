@@ -18,19 +18,19 @@
 
       <div slot="tabs">
         <q-tabs v-model="currentTab">
-          <q-route-tab slot="title" to="resumo" replace name="tab-resumo" label="resumo" default @select="selectTabResumo()"/>
-          <q-route-tab slot="title" to="areas" replace name="tab-areas" label="areas" @select="selectTabAreas()"/>
-          <q-route-tab slot="title" to="cultivares" replace name="tab-cultivares" label="cultivares" @select="selectTabCultivares()"/>
+          <q-route-tab slot="title" to="resumo" replace name="tab-resumo" label="resumo" default />
+          <q-route-tab slot="title" to="areas" replace name="tab-areas" label="areas" />
+          <q-route-tab slot="title" to="cultivares" replace name="tab-cultivares" label="cultivares" />
         </q-tabs>
       </div>
     </toolbar>
 
     <!-- RESUMO -->
-    <resumo-tab ref="resumoTab" :visible="currentTab === 'tab-resumo'"/>
+    <resumo-tab ref="resumoTab" :visible="currentTab === 'tab-resumo'" :safra-cultura="safraCultura"/>
     <!-- AREAS -->
-    <areas-tab ref="areasTab" :visible="currentTab === 'tab-areas'"/>
+    <areas-tab ref="areasTab" :visible="currentTab === 'tab-areas'" :safra-cultura="safraCultura"/>
     <!-- CULTIVARES -->
-    <cultivares-tab ref="cultivaresTab" :visible="currentTab === 'tab-cultivares'" />
+    <cultivares-tab ref="cultivaresTab" :visible="currentTab === 'tab-cultivares'" :safra-cultura="safraCultura"/>
 
 
     <edit-cultura-modal ref="editCulturaModal" />
@@ -68,15 +68,6 @@
       }
     },
     methods: {
-      selectTabResumo(){
-        this.$refs.resumoTab.init(this.safraCultura)
-      },
-      selectTabAreas() {
-        this.$refs.areasTab.init(this.safraCultura)
-      },
-      selectTabCultivares() {
-        this.$refs.cultivaresTab.init(this.safraCultura)
-      },
       async getSafraCultura(){
         this.$q.loading.show();
         return this.safraCulturaService.getSafraCultura(this.$route.params.safra_id, this.$route.params.id).then(safraCultura => {
@@ -88,15 +79,15 @@
         this.$refs.editCulturaModal.openModal(this.safraCultura);
       },
       updateView(resetIndexes = true, removeQueryString = false){
-        if(removeQueryString){
+        /*if(removeQueryString){
           let query = Object.assign({}, this.$route.query);
           delete query.id;
           this.$router.replace({ query });
-        }
+        }*/
         this.getSafraCultura().then(()=>{
-          this.$refs.resumoTab.init(this.safraCultura);
+          /*this.$refs.resumoTab.init(this.safraCultura);
           this.$refs.areasTab.init(this.safraCultura, resetIndexes);
-          this.$refs.cultivaresTab.init(this.safraCultura);
+          this.$refs.cultivaresTab.init(this.safraCultura);*/
         })
       },
       backAction: function () {

@@ -36,7 +36,7 @@
               <div class="row" v-if="marcas">
                 <!-- CARROUSEL DE MARCAS -->
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
-                  <q-carousel color="white" arrows quick-nav v-model="iMarca">
+                  <q-carousel color="white" arrows quick-nav v-model="iMarca" ref="marcasCarousel">
                     <q-carousel-slide v-for="marca in marcas" :key="marca.id" class="q-pa-none" style="overflow: hidden">
                       <q-card>
                         <q-card-media overlay-position="top">
@@ -87,7 +87,7 @@
               <div class="row">
                 <!-- CARROUSEL DE CULTIVARES -->
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
-                  <q-carousel color="white" arrows quick-nav v-model="iCultivar" >
+                  <q-carousel color="white" arrows quick-nav v-model="iCultivar" ref="cultivaresCarousel">
                     <q-carousel-slide v-for="cultivar in cultivaresDaMarca" :key="cultivar.id"  class="q-pa-none" style="overflow: hidden" >
                       <q-card>
                         <q-card-media overlay-position="top">
@@ -161,7 +161,8 @@
       apImage
     },
     props:{
-      visible: false
+      visible: false,
+      safraCultura: Object,
     },
     computed:{
       activeMarca: function () {
@@ -177,12 +178,21 @@
     watch:{
       iMarca(){
         this.iCultivar = 0;
+      },
+      '$route'(to, from){
+        if(to.query.cultivar_id){
+          let cultivar = this.cultivares.find(cultivar => cultivar.id === parseInt(this.$route.query.cultivar_id));
+          this.iMarca = this.marcas.findIndex(marca => marca.id === cultivar.marca_id);
+          setTimeout(function() {
+            this.iCultivar = this.cultivaresDaMarca.findIndex(cultivarMarca => cultivarMarca.id === cultivar.id)
+          }.bind(this), 300);
+        }
       }
     },
     data(){
       return{
         safraCulturaService: new SafraCulturaService(),
-        safraCultura: null,
+        //safraCultura: null,
         iMarca: 0,
         iCultivar: 0,
         media: true,
@@ -191,14 +201,6 @@
       }
     },
     methods: {
-      init(safraCultura){
-        this.safraCultura = safraCultura;
-
-        this.iMarca = 0;
-        this.iCultivar = 0;
-
-        this.getContent();
-      },
       getContent(){
         this.$q.loading.show();
         Promise.all([
@@ -206,13 +208,6 @@
           this.getCultivares(),
         ]).then(()=>{
           this.$q.loading.hide();
-          if(this.$route.query.id){
-            let cultivar = this.cultivares.find(cultivar => cultivar.id == this.$route.query.id);
-            this.iMarca = this.marcas.findIndex(marca => marca.id === cultivar.marca_id);
-            setTimeout(function() {
-              this.iCultivar = this.cultivaresDaMarca.findIndex(cultivarMarca => cultivarMarca.id === cultivar.id)
-            }.bind(this), 300);
-          }
         });
       },
       imageMakeUrl: function (fileName, size) {
@@ -229,14 +224,27 @@
         })
       },
       goToTalhao(talhaoId){
-        this.$router.replace({path:'areas',query:{id:talhaoId}});
+        this.$router.replace({path:'areas',query:{talhao_id:talhaoId}});
+      },
+      changeSlidesByCultivarId(cultivarId){
+        let cultivar = this.cultivares.find(cultivar => cultivar.id === cultivarId);
+        let marcaIndex = this.marcas.findIndex(marca => marca.id === cultivar.marca_id);
+        let cultivarIndex = this.cultivaresDaMarca.findIndex(cultivar => cultivar.id === cultivar.id);
+        this.$refs.marcasCarousel.goToSlide(marcaIndex);
+        this.$refs.cultivaresCarousel.goToSlide(cultivarIndex);
       }
     },
     mounted () {
-      this.$root.$on('refreshCultivaresTab', this.getContent);
+      this.$root.$on('refreshSafrasCulura', this.getContent);
+      this.getContent();
     },
     destroyed() {
-      this.$root.$off('refreshCultivaresTab', this.getContent);
+      this.$root.$off('refreshSafrasCulura', this.getContent);
+    },
+    updated() {
+      if(this.$route.query.cultivar_id && this.cultivares && this.marcas){
+        this.changeSlidesByCultivarId(parseInt(this.$route.query.cultivar_id));
+      }
     }
   }
 </script>
