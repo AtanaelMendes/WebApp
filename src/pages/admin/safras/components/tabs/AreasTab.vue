@@ -311,10 +311,10 @@
             this.$q.notify({type: 'positive', message: 'Talhão desvinculado com sucesso.'});
             this.$root.$emit('refreshSafrasCulura', true);
             this.$q.loading.hide();
-          });
-        }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível desvincular este talhão'});
-          this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível desvincular este talhão.'});
+            this.$q.loading.hide();
+          })
         })
       },
       unattachCultivar(cultivar, activeTalhao){
