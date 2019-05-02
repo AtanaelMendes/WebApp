@@ -178,9 +178,16 @@
       },
     },
     watch:{
-      iMarca(){
+      iMarca(value){
         this.iCultivar = 0;
+        let marcaId = this.marcas[value].id;
+        let cultivarId = this.cultivaresDaMarca[0].id;
+        this.$router.replace({query: Object.assign({}, this.$route.query, {marca_id:marcaId, cultivar_id:cultivarId})});
       },
+      iCultivar(value){
+        let cultivarId = this.cultivaresDaMarca[value].id;
+        this.$router.replace({query:Object.assign({}, this.$route.query, {cultivar_id:cultivarId})});
+      }
     },
     data(){
       return{
