@@ -123,7 +123,6 @@
     data(){
       return{
         safraCulturaService: new SafraCulturaService(),
-        //safraCultura: null,
         diario: null,
         diarioClassificacao: null,
         caminhoes: null,
@@ -133,6 +132,8 @@
     },
     methods:{
       onTabSelected(){
+      },
+      onDataLoaded(){
       },
       selectTabDiario() {
         this.getDiario();

@@ -85,32 +85,29 @@
         this.$q.loading.show();
         return this.safraCulturaService.getSafraCultura(this.$route.params.safra_id, this.$route.params.id).then(safraCultura => {
           this.safraCultura = safraCultura;
-
-          Promise.all([
+          return Promise.all([
             this.getAreas(),
             this.getTalhoes(),
             this.getMarcas(),
             this.getCultivares(),
           ]).then(()=>{
             this.$q.loading.hide();
+
+            if(this.$refs.resumoTab){
+              this.$refs.resumoTab.onDataLoaded();
+            }
+            if(this.$refs.areasTab) {
+              this.$refs.areasTab.onDataLoaded();
+            }
+            if(this.$refs.cultivaresTab) {
+              this.$refs.cultivaresTab.onDataLoaded();
+            }
           });
 
         })
       },
       editSafraCultura(){
         this.$refs.editCulturaModal.openModal(this.safraCultura);
-      },
-      updateView(resetIndexes = true, removeQueryString = false){
-        /*if(removeQueryString){
-          let query = Object.assign({}, this.$route.query);
-          delete query.id;
-          this.$router.replace({ query });
-        }*/
-        this.getSafraCultura().then(()=>{
-          /*this.$refs.resumoTab.init(this.safraCultura);
-          this.$refs.areasTab.init(this.safraCultura, resetIndexes);
-          this.$refs.cultivaresTab.init(this.safraCultura);*/
-        })
       },
       async getAreas(){
         return this.safraCulturaService.getAreas(this.safraCultura.safra.id, this.safraCultura.id).then(areas => {
@@ -137,11 +134,11 @@
       }
     },
     mounted () {
-      this.$root.$on('refreshSafrasCulura', this.updateView);
+      this.$root.$on('refreshSafrasCulura', this.getSafraCultura);
       this.getSafraCultura();
     },
     destroyed() {
-      this.$root.$off('refreshSafrasCulura', this.updateView);
+      this.$root.$off('refreshSafrasCulura', this.getSafraCultura);
     }
   }
 </script>

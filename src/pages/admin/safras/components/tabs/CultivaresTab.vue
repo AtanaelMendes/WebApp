@@ -192,7 +192,12 @@
     },
     methods: {
       onTabSelected(){
-        if(this.$route.query.cultivar_id && this.cultivares && this.marcas){
+        if(this.$route.query.cultivar_id){
+          this.changeSlidesByCultivarId(parseInt(this.$route.query.cultivar_id));
+        }
+      },
+      onDataLoaded(){
+        if(this.$route.query.cultivar_id){
           this.changeSlidesByCultivarId(parseInt(this.$route.query.cultivar_id));
         }
       },
@@ -213,12 +218,6 @@
         this.$refs.cultivaresCarousel.goToSlide(cultivarIndex);
 
       }
-    },
-    mounted () {
-      this.$root.$on('refreshSafrasCulura', this.getContent);
-    },
-    destroyed() {
-      this.$root.$off('refreshSafrasCulura', this.getContent);
     },
   }
 </script>

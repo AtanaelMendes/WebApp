@@ -254,8 +254,12 @@
     },
     methods:{
       onTabSelected(){
-        console.log('onTabSelected')
+        if(this.$route.query.talhao_id && this.talhoes && this.areas){
+          this.changeSlidesByTalhaoId(parseInt(this.$route.query.talhao_id));
+        }
 
+      },
+      onDataLoaded(){
         if(this.$route.query.talhao_id && this.talhoes && this.areas){
           this.changeSlidesByTalhaoId(parseInt(this.$route.query.talhao_id));
         }
@@ -314,7 +318,6 @@
         }).then(data => {
           this.safraCulturaTalhaoService.unattachCultivar(cultivar.safra_cultura_talhao_cultivar_id, activeTalhao.safra_cultura_talhao_id).then(()=>{
             this.$q.notify({type: 'positive', message: 'Cultivar desvinculado com sucesso.'});
-            //this.getContent();
             this.$root.$emit('refreshSafrasCulura', false, true);
             this.$q.loading.hide();
           }).catch(error =>{
@@ -339,13 +342,6 @@
         this.$refs.areasCarousel.goToSlide(areaIndex);
         this.$refs.talhoesCarousel.goToSlide(talhaoIndex);
       }
-    },
-    mounted () {
-      console.log('AreasTab.mounted')
-      this.$root.$on('refreshSafrasCulura', this.getContent);
-    },
-    destroyed() {
-      this.$root.$off('refreshSafrasCulura', this.getContent);;
     },
   }
 </script>
