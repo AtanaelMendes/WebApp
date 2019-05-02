@@ -1,5 +1,5 @@
 <template>
-  <div class="row space-end" v-if="visible">
+  <div class="row space-end" >
     <template v-if="marcas && cultivares">
       <template v-if="marcas.length > 0 && cultivares.length > 0">
         <div class="col-12 ">
@@ -163,6 +163,8 @@
     props:{
       visible: false,
       safraCultura: Object,
+      marcas: Array,
+      cultivares: Array,
     },
     computed:{
       activeMarca: function () {
@@ -179,73 +181,45 @@
       iMarca(){
         this.iCultivar = 0;
       },
-      '$route'(to, from){
-        if(to.query.cultivar_id){
-          let cultivar = this.cultivares.find(cultivar => cultivar.id === parseInt(this.$route.query.cultivar_id));
-          this.iMarca = this.marcas.findIndex(marca => marca.id === cultivar.marca_id);
-          setTimeout(function() {
-            this.iCultivar = this.cultivaresDaMarca.findIndex(cultivarMarca => cultivarMarca.id === cultivar.id)
-          }.bind(this), 300);
-        }
-      }
     },
     data(){
       return{
         safraCulturaService: new SafraCulturaService(),
-        //safraCultura: null,
         iMarca: 0,
         iCultivar: 0,
         media: true,
-        marcas: null,
-        cultivares: null,
       }
     },
     methods: {
-      getContent(){
-        this.$q.loading.show();
-        Promise.all([
-          this.getMarcas(),
-          this.getCultivares(),
-        ]).then(()=>{
-          this.$q.loading.hide();
-        });
+      onTabSelected(){
+        if(this.$route.query.cultivar_id && this.cultivares && this.marcas){
+          this.changeSlidesByCultivarId(parseInt(this.$route.query.cultivar_id));
+        }
       },
       imageMakeUrl: function (fileName, size) {
         return agroUtils.image.makeUrl(fileName, size)
       },
-      async getMarcas(){
-        return this.safraCulturaService.getMarcas(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
-          this.marcas = response.marcas;
-        })
-      },
-      async getCultivares(){
-        return this.safraCulturaService.getCultivares(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
-          this.cultivares = response.cultivares;
-        })
-      },
+
       goToTalhao(talhaoId){
         this.$router.replace({path:'areas',query:{talhao_id:talhaoId}});
       },
       changeSlidesByCultivarId(cultivarId){
         let cultivar = this.cultivares.find(cultivar => cultivar.id === cultivarId);
         let marcaIndex = this.marcas.findIndex(marca => marca.id === cultivar.marca_id);
+        this.iMarca = marcaIndex;
         let cultivarIndex = this.cultivaresDaMarca.findIndex(cultivar => cultivar.id === cultivar.id);
+        this.iCultivar = cultivarIndex;
         this.$refs.marcasCarousel.goToSlide(marcaIndex);
         this.$refs.cultivaresCarousel.goToSlide(cultivarIndex);
+
       }
     },
     mounted () {
       this.$root.$on('refreshSafrasCulura', this.getContent);
-      this.getContent();
     },
     destroyed() {
       this.$root.$off('refreshSafrasCulura', this.getContent);
     },
-    updated() {
-      if(this.$route.query.cultivar_id && this.cultivares && this.marcas){
-        this.changeSlidesByCultivarId(parseInt(this.$route.query.cultivar_id));
-      }
-    }
   }
 </script>
 

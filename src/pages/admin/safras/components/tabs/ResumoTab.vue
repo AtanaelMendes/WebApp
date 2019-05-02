@@ -1,5 +1,5 @@
 <template>
-  <div class="row space-end" v-if="visible && safraCultura">
+  <div class="row space-end" v-if="safraCultura">
     <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 col-xl-5">
       <q-card-media overlay-position="top" style="max-height: 40vh">
         <ap-image size="800x500" :file-name="safraCultura.cultura.image_file_name"/>
@@ -132,6 +132,8 @@
       }
     },
     methods:{
+      onTabSelected(){
+      },
       selectTabDiario() {
         this.getDiario();
       },
