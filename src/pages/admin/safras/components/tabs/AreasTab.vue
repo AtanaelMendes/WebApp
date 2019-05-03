@@ -261,7 +261,9 @@
     },
     methods:{
       onTabSelected(){
-        this.checkRoute();
+        if(this.talhoes && this.areas){
+          this.checkRoute();
+        }
       },
       onDataLoaded(){
         this.checkRoute();

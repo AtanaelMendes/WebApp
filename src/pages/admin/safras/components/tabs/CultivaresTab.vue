@@ -199,7 +199,9 @@
     },
     methods: {
       onTabSelected(){
-        this.checkRoute();
+        if(this.cultivares && this.marcas) {
+          this.checkRoute();
+        }
       },
       onDataLoaded(){
         this.checkRoute();
