@@ -346,7 +346,6 @@
         this.$router.replace({path:'cultivares',query:{marca_id:cultivar.marca_id, cultivar_id:cultivar.id}});
       },
       changeSlidesByTalhaoId(talhaoId){
-        console.log('changeSlidesByTalhaoId', talhaoId);
         let talhao = this.talhoes.find(talhao => talhao.id === talhaoId);
         let areaIndex = this.areas.findIndex(area => area.id === talhao.area_id);
         this.iArea = areaIndex;
