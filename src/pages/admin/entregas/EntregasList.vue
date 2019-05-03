@@ -271,6 +271,7 @@
         entregasNoArmazem:[],
         entregasEntregues:[],
         entregasEntreguesCurrentPage: 1,
+        currentFilter: {},
       }
     },
     watch: {
@@ -282,9 +283,9 @@
     },
     methods: {
       loadMoreEntregasEntregues(index, done){
-        let filter = {};
-        filter.page = index;
-        this.listEntregasEntregues(AgroUtils.serialize(filter), function(hasResult){
+        //let filter = {};
+        this.currentFilter.page = index;
+        this.listEntregasEntregues(AgroUtils.serialize(this.currentFilter), function(hasResult){
           if(hasResult){
             done();
           }
@@ -325,7 +326,10 @@
       filterEntregas(filters){
         this.$refs.filerResultBar.show(this.$refs.filterEntregasModal.getFilterDesciption());
 
-        let queryFilter = AgroUtils.serialize(filters);
+        this.currentFilter = Object.assign(this.currentFilter, filters);
+
+        let queryFilter = AgroUtils.serialize(this.currentFilter);
+        console.log('queryFilter', queryFilter)
         switch (this.tabs) {
           case 'carregando':
             this.listEntregasCarregando(queryFilter);
