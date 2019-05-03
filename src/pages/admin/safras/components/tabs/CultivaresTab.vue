@@ -199,15 +199,12 @@
     },
     methods: {
       onTabSelected(){
-        if(_.isEmpty(this.$route.query)){
-          let marcaId = this.marcas[0].id;
-          let cultivarId = this.cultivaresDaMarca[0].id;
-          this.$router.replace({query: Object.assign({}, this.$route.query, {marca_id:marcaId, cultivar_id:cultivarId})});
-        }else{
-          this.changeSlidesByCultivarId(parseInt(this.$route.query.cultivar_id));
-        }
+        this.checkRoute();
       },
       onDataLoaded(){
+        this.checkRoute();
+      },
+      checkRoute(){
         if(_.isEmpty(this.$route.query)){
           let marcaId = this.marcas[0].id;
           let cultivarId = this.cultivaresDaMarca[0].id;

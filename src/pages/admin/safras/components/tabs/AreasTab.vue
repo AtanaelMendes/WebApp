@@ -261,16 +261,12 @@
     },
     methods:{
       onTabSelected(){
-        if(_.isEmpty(this.$route.query)){
-          let areaId = this.areas[0].id;
-          let talhaoId = this.talhoesDaArea[0].id;
-          this.$router.replace({query: Object.assign({}, this.$route.query, {area_id:areaId, talhao_id:talhaoId})});
-        }else{
-          this.changeSlidesByTalhaoId(parseInt(this.$route.query.talhao_id));
-        }
-
+        this.checkRoute();
       },
       onDataLoaded(){
+        this.checkRoute();
+      },
+      checkRoute(){
         if(_.isEmpty(this.$route.query)){
           let areaId = this.areas[0].id;
           let talhaoId = this.talhoesDaArea[0].id;
