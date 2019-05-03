@@ -220,7 +220,7 @@
       },
 
       goToTalhao(talhao){
-        this.$router.replace({path:'areas', query:{talhao_id:talhao.id, area_id:talhao.area_id}});
+        this.$router.replace({path:'areas', query:{area_id:talhao.area_id, talhao_id:talhao.id}});
       },
       changeSlidesByCultivarId(cultivarId){
         let cultivar = this.cultivares.find(cultivar => cultivar.id === cultivarId);

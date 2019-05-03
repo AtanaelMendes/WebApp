@@ -343,7 +343,7 @@
         this.$refs.updateCultivaresTamanhoModal.openModal(talhao, this.safraCultura);
       },
       goToCultivar(cultivar){
-        this.$router.replace({path:'cultivares',query:{cultivar_id:cultivar.id, marca_id:cultivar.marca_id}});
+        this.$router.replace({path:'cultivares',query:{marca_id:cultivar.marca_id, cultivar_id:cultivar.id}});
       },
       changeSlidesByTalhaoId(talhaoId){
         console.log('changeSlidesByTalhaoId', talhaoId);
