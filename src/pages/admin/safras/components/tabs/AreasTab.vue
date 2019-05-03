@@ -1,5 +1,5 @@
 <template>
-  <div class="row space-end" v-if="visible">
+  <div class="row space-end" >
     <template v-if="areas">
       <template v-if="areas.length > 0">
         <div class="col-12 ">
@@ -36,7 +36,7 @@
               <div class="row" v-if="areas">
                 <!-- CARROUSEL DE AREAS -->
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
-                  <q-carousel color="white" arrows quick-nav v-model="iArea" >
+                  <q-carousel color="white" arrows quick-nav v-model="iArea" ref="areasCarousel" keep-alive >
                     <q-carousel-slide v-for="area in areas" :key="area.id" class="q-pa-none" style="overflow: hidden" >
                       <q-card>
                         <q-card-media overlay-position="top">
@@ -98,7 +98,7 @@
               <div class="row">
                 <!-- CARROUSEL DE TALHOES -->
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
-                  <q-carousel color="white" arrows quick-nav v-model="iTalhao">
+                  <q-carousel color="white" arrows quick-nav v-model="iTalhao" ref="talhoesCarousel" keep-alive>
                     <q-carousel-slide v-for="talhao in talhoesDaArea" :key="talhao.id" class="q-pa-none" style="overflow: hidden" >
                       <q-card>
                         <q-card-media overlay-position="top">
@@ -212,7 +212,10 @@
   export default {
     name: "AreasTab",
     props:{
-      visible: false
+      visible: false,
+      safraCultura: Object,
+      areas: Array,
+      talhoes: Array,
     },
     components:{
       safraGraficoQuantidadesPorArea,
@@ -225,8 +228,15 @@
       apImage
     },
     watch:{
-      iArea(){
+      iArea(value){
         this.iTalhao = 0;
+        let areaId = this.areas[value].id;
+        let talhaoId = this.talhoesDaArea[0].id;
+        this.$router.replace({query: Object.assign({}, this.$route.query, {area_id:areaId, talhao_id:talhaoId})});
+      },
+      iTalhao(value){
+        let talhaoId = this.talhoesDaArea[value].id;
+        this.$router.replace({query:Object.assign({}, this.$route.query, {talhao_id:talhaoId})});
       }
     },
     data(){
@@ -234,9 +244,6 @@
         safraCulturaService: new SafraCulturaService(),
         safraCulturaTalhaoService: new SafraCulturaTalhaoService(),
         media: true,
-        safraCultura: null,
-        areas: null,
-        talhoes: null,
         iArea: 0,
         iTalhao: 0,
       }
@@ -253,33 +260,16 @@
       },
     },
     methods:{
-      init(safraCultura, resetIndexes = false){
-        console.log('init.resetIndexes', resetIndexes)
-        this.safraCultura = safraCultura;
-
-        if(resetIndexes){
-          this.iArea = 0;
-          this.iTalhao = 0;
+      onTabSelected(){
+        if(this.$route.query.talhao_id && this.talhoes && this.areas){
+          this.changeSlidesByTalhaoId(parseInt(this.$route.query.talhao_id));
         }
-        this.getContent()
+
       },
-      getContent(){
-        this.$q.loading.show();
-        Promise.all([
-          this.getAreas(),
-          this.getTalhoes(),
-        ]).then(()=>{
-          this.$q.loading.hide();
-
-          if(this.$route.query.id){
-            let talhao = this.talhoes.find(talhao => talhao.id == this.$route.query.id);
-            this.iArea = this.areas.findIndex(area => area.id === talhao.area_id);
-            setTimeout(function() {
-              this.iTalhao = this.talhoesDaArea.findIndex(talhaoArea => talhaoArea.id === talhao.id)
-            }.bind(this), 300);
-
-          }
-        });
+      onDataLoaded(){
+        if(this.$route.query.talhao_id && this.talhoes && this.areas){
+          this.changeSlidesByTalhaoId(parseInt(this.$route.query.talhao_id));
+        }
       },
       addArea(){
         this.$refs.newAreaModal.openModal(this.safraCultura);
@@ -289,16 +279,6 @@
       },
       imageMakeUrl(fileName, size) {
         return agroUtils.image.makeUrl(fileName, size)
-      },
-      async getAreas(){
-        return this.safraCulturaService.getAreas(this.safraCultura.safra.id, this.safraCultura.id).then(areas => {
-          this.areas = areas.areas;
-        })
-      },
-      async getTalhoes(){
-        return this.safraCulturaService.getTalhoes(this.safraCultura.safra.id, this.safraCultura.id).then(talhoes => {
-          this.talhoes = talhoes.talhoes;
-        })
       },
       unattachSafraCulturaByArea(areaId){
         this.$q.dialog({
@@ -330,10 +310,10 @@
             this.$q.notify({type: 'positive', message: 'Talhão desvinculado com sucesso.'});
             this.$root.$emit('refreshSafrasCulura', true);
             this.$q.loading.hide();
-          });
-        }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível desvincular este talhão'});
-          this.$q.loading.hide();
+          }).catch(error =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível desvincular este talhão.'});
+            this.$q.loading.hide();
+          })
         })
       },
       unattachCultivar(cultivar, activeTalhao){
@@ -345,7 +325,6 @@
         }).then(data => {
           this.safraCulturaTalhaoService.unattachCultivar(cultivar.safra_cultura_talhao_cultivar_id, activeTalhao.safra_cultura_talhao_id).then(()=>{
             this.$q.notify({type: 'positive', message: 'Cultivar desvinculado com sucesso.'});
-            //this.getContent();
             this.$root.$emit('refreshSafrasCulura', false, true);
             this.$q.loading.hide();
           }).catch(error =>{
@@ -358,15 +337,19 @@
         this.$refs.updateCultivaresTamanhoModal.openModal(talhao, this.safraCultura);
       },
       goToCultivar(cultivarId){
-        this.$router.replace({path:'cultivares',query:{id:cultivarId}});
+        this.$router.replace({path:'cultivares',query:{cultivar_id:cultivarId}});
+      },
+      changeSlidesByTalhaoId(talhaoId){
+        console.log('changeSlidesByTalhaoId', talhaoId);
+        let talhao = this.talhoes.find(talhao => talhao.id === talhaoId);
+        let areaIndex = this.areas.findIndex(area => area.id === talhao.area_id);
+        this.iArea = areaIndex;
+        let talhaoIndex = this.talhoesDaArea.findIndex(talhaoArea => talhaoArea.id === talhao.id);
+        this.iTalhao = talhaoIndex;
+        this.$refs.areasCarousel.goToSlide(areaIndex);
+        this.$refs.talhoesCarousel.goToSlide(talhaoIndex);
       }
     },
-    mounted () {
-      this.$root.$on('refreshAreasTab', this.getContent);
-    },
-    destroyed() {
-      this.$root.$off('refreshAreasTab', this.getContent);
-    }
   }
 </script>
 

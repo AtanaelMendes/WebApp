@@ -1,5 +1,5 @@
 <template>
-  <div class="row space-end" v-if="visible">
+  <div class="row space-end" >
     <template v-if="marcas && cultivares">
       <template v-if="marcas.length > 0 && cultivares.length > 0">
         <div class="col-12 ">
@@ -36,7 +36,7 @@
               <div class="row" v-if="marcas">
                 <!-- CARROUSEL DE MARCAS -->
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
-                  <q-carousel color="white" arrows quick-nav v-model="iMarca">
+                  <q-carousel color="white" arrows quick-nav v-model="iMarca" ref="marcasCarousel">
                     <q-carousel-slide v-for="marca in marcas" :key="marca.id" class="q-pa-none" style="overflow: hidden">
                       <q-card>
                         <q-card-media overlay-position="top">
@@ -87,7 +87,7 @@
               <div class="row">
                 <!-- CARROUSEL DE CULTIVARES -->
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 ">
-                  <q-carousel color="white" arrows quick-nav v-model="iCultivar" >
+                  <q-carousel color="white" arrows quick-nav v-model="iCultivar" ref="cultivaresCarousel">
                     <q-carousel-slide v-for="cultivar in cultivaresDaMarca" :key="cultivar.id"  class="q-pa-none" style="overflow: hidden" >
                       <q-card>
                         <q-card-media overlay-position="top">
@@ -161,7 +161,10 @@
       apImage
     },
     props:{
-      visible: false
+      visible: false,
+      safraCultura: Object,
+      marcas: Array,
+      cultivares: Array,
     },
     computed:{
       activeMarca: function () {
@@ -175,69 +178,54 @@
       },
     },
     watch:{
-      iMarca(){
+      iMarca(value){
         this.iCultivar = 0;
+        let marcaId = this.marcas[value].id;
+        let cultivarId = this.cultivaresDaMarca[0].id;
+        this.$router.replace({query: Object.assign({}, this.$route.query, {marca_id:marcaId, cultivar_id:cultivarId})});
+      },
+      iCultivar(value){
+        let cultivarId = this.cultivaresDaMarca[value].id;
+        this.$router.replace({query:Object.assign({}, this.$route.query, {cultivar_id:cultivarId})});
       }
     },
     data(){
       return{
         safraCulturaService: new SafraCulturaService(),
-        safraCultura: null,
         iMarca: 0,
         iCultivar: 0,
         media: true,
-        marcas: null,
-        cultivares: null,
       }
     },
     methods: {
-      init(safraCultura){
-        this.safraCultura = safraCultura;
-
-        this.iMarca = 0;
-        this.iCultivar = 0;
-
-        this.getContent();
+      onTabSelected(){
+        if(this.$route.query.cultivar_id){
+          this.changeSlidesByCultivarId(parseInt(this.$route.query.cultivar_id));
+        }
       },
-      getContent(){
-        this.$q.loading.show();
-        Promise.all([
-          this.getMarcas(),
-          this.getCultivares(),
-        ]).then(()=>{
-          this.$q.loading.hide();
-          if(this.$route.query.id){
-            let cultivar = this.cultivares.find(cultivar => cultivar.id == this.$route.query.id);
-            this.iMarca = this.marcas.findIndex(marca => marca.id === cultivar.marca_id);
-            setTimeout(function() {
-              this.iCultivar = this.cultivaresDaMarca.findIndex(cultivarMarca => cultivarMarca.id === cultivar.id)
-            }.bind(this), 300);
-          }
-        });
+      onDataLoaded(){
+        if(this.$route.query.cultivar_id){
+          this.changeSlidesByCultivarId(parseInt(this.$route.query.cultivar_id));
+        }
       },
       imageMakeUrl: function (fileName, size) {
         return agroUtils.image.makeUrl(fileName, size)
       },
-      async getMarcas(){
-        return this.safraCulturaService.getMarcas(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
-          this.marcas = response.marcas;
-        })
-      },
-      async getCultivares(){
-        return this.safraCulturaService.getCultivares(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
-          this.cultivares = response.cultivares;
-        })
-      },
+
       goToTalhao(talhaoId){
-        this.$router.replace({path:'areas',query:{id:talhaoId}});
+        this.$router.replace({path:'areas',query:{talhao_id:talhaoId}});
+      },
+      changeSlidesByCultivarId(cultivarId){
+        let cultivar = this.cultivares.find(cultivar => cultivar.id === cultivarId);
+        let marcaIndex = this.marcas.findIndex(marca => marca.id === cultivar.marca_id);
+        this.iMarca = marcaIndex;
+        let cultivarIndex = this.cultivaresDaMarca.findIndex(cultivarMarca => cultivarMarca.id === cultivar.id);
+        this.iCultivar = cultivarIndex;
+        this.$refs.marcasCarousel.goToSlide(marcaIndex);
+        this.$refs.cultivaresCarousel.goToSlide(cultivarIndex);
+
       }
     },
-    mounted () {
-      this.$root.$on('refreshCultivaresTab', this.getContent);
-    },
-    destroyed() {
-      this.$root.$off('refreshCultivaresTab', this.getContent);
-    }
   }
 </script>
 

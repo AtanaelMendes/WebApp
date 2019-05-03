@@ -18,19 +18,19 @@
 
       <div slot="tabs">
         <q-tabs v-model="currentTab">
-          <q-route-tab slot="title" to="resumo" replace name="tab-resumo" label="resumo" default @select="selectTabResumo()"/>
-          <q-route-tab slot="title" to="areas" replace name="tab-areas" label="areas" @select="selectTabAreas()"/>
-          <q-route-tab slot="title" to="cultivares" replace name="tab-cultivares" label="cultivares" @select="selectTabCultivares()"/>
+          <q-route-tab slot="title" to="resumo" replace name="tab-resumo" label="resumo" default @select="resumoTabSelected" />
+          <q-route-tab slot="title" to="areas" replace name="tab-areas" label="areas" @select="areasTabSelected" />
+          <q-route-tab slot="title" to="cultivares" replace name="tab-cultivares" label="cultivares" @select="cultivaresTabSelected" />
         </q-tabs>
       </div>
     </toolbar>
 
     <!-- RESUMO -->
-    <resumo-tab ref="resumoTab" :visible="currentTab === 'tab-resumo'"/>
+    <resumo-tab ref="resumoTab" v-if="currentTab === 'tab-resumo'" :safra-cultura="safraCultura" />
     <!-- AREAS -->
-    <areas-tab ref="areasTab" :visible="currentTab === 'tab-areas'"/>
+    <areas-tab ref="areasTab" v-if="currentTab === 'tab-areas'" :safra-cultura="safraCultura" :areas="areas" :talhoes="talhoes" />
     <!-- CULTIVARES -->
-    <cultivares-tab ref="cultivaresTab" :visible="currentTab === 'tab-cultivares'" />
+    <cultivares-tab ref="cultivaresTab" v-if="currentTab === 'tab-cultivares'" :safra-cultura="safraCultura" :marcas="marcas" :cultivares="cultivares"/>
 
 
     <edit-cultura-modal ref="editCulturaModal" />
@@ -65,38 +65,68 @@
         safraCulturaService: new SafraCulturaService(),
         safraCultura: null,
         currentTab: null,
+        areas: null,
+        talhoes: null,
+        marcas: null,
+        cultivares: null,
       }
     },
     methods: {
-      selectTabResumo(){
-        this.$refs.resumoTab.init(this.safraCultura)
+      resumoTabSelected(){
+        this.$refs.resumoTab.onTabSelected();
       },
-      selectTabAreas() {
-        this.$refs.areasTab.init(this.safraCultura)
+      areasTabSelected(){
+        this.$refs.areasTab.onTabSelected();
       },
-      selectTabCultivares() {
-        this.$refs.cultivaresTab.init(this.safraCultura)
+      cultivaresTabSelected(){
+        this.$refs.cultivaresTab.onTabSelected();
       },
       async getSafraCultura(){
         this.$q.loading.show();
         return this.safraCulturaService.getSafraCultura(this.$route.params.safra_id, this.$route.params.id).then(safraCultura => {
           this.safraCultura = safraCultura;
-          this.$q.loading.hide();
+          return Promise.all([
+            this.getAreas(),
+            this.getTalhoes(),
+            this.getMarcas(),
+            this.getCultivares(),
+          ]).then(()=>{
+            this.$q.loading.hide();
+
+            if(this.$refs.resumoTab){
+              this.$refs.resumoTab.onDataLoaded();
+            }
+            if(this.$refs.areasTab) {
+              this.$refs.areasTab.onDataLoaded();
+            }
+            if(this.$refs.cultivaresTab) {
+              this.$refs.cultivaresTab.onDataLoaded();
+            }
+          });
+
         })
       },
       editSafraCultura(){
         this.$refs.editCulturaModal.openModal(this.safraCultura);
       },
-      updateView(resetIndexes = true, removeQueryString = false){
-        if(removeQueryString){
-          let query = Object.assign({}, this.$route.query);
-          delete query.id;
-          this.$router.replace({ query });
-        }
-        this.getSafraCultura().then(()=>{
-          this.$refs.resumoTab.init(this.safraCultura);
-          this.$refs.areasTab.init(this.safraCultura, resetIndexes);
-          this.$refs.cultivaresTab.init(this.safraCultura);
+      async getAreas(){
+        return this.safraCulturaService.getAreas(this.safraCultura.safra.id, this.safraCultura.id).then(areas => {
+          this.areas = areas.areas;
+        })
+      },
+      async getTalhoes(){
+        return this.safraCulturaService.getTalhoes(this.safraCultura.safra.id, this.safraCultura.id).then(talhoes => {
+          this.talhoes = talhoes.talhoes;
+        })
+      },
+      async getMarcas(){
+        return this.safraCulturaService.getMarcas(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
+          this.marcas = response.marcas;
+        })
+      },
+      async getCultivares(){
+        return this.safraCulturaService.getCultivares(this.safraCultura.safra.id, this.safraCultura.id).then(response => {
+          this.cultivares = response.cultivares;
         })
       },
       backAction: function () {
@@ -104,11 +134,11 @@
       }
     },
     mounted () {
-      this.$root.$on('refreshSafrasCulura', this.updateView);
+      this.$root.$on('refreshSafrasCulura', this.getSafraCultura);
       this.getSafraCultura();
     },
     destroyed() {
-      this.$root.$off('refreshSafrasCulura', this.updateView);
+      this.$root.$off('refreshSafrasCulura', this.getSafraCultura);
     }
   }
 </script>
