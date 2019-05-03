@@ -6,7 +6,7 @@ export default class GrupoEconomicoAPI{
   }
 
   static listGruposEconomicos(terms){
-    return Vue.prototype.$axios.get('/grupo_economico?' + terms);
+    return Vue.prototype.$axios.get('/grupo_economico?nome=' + terms);
   }
 
   static listPessoasOfGrupoEconomico(id){
