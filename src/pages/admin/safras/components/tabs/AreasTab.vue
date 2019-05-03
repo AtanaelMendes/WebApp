@@ -231,8 +231,7 @@
       iArea(value){
         this.iTalhao = 0;
         let areaId = this.areas[value].id;
-        let talhaoId = this.talhoesDaArea[0].id;
-        this.$router.replace({query: Object.assign({}, this.$route.query, {area_id:areaId, talhao_id:talhaoId})});
+        this.$router.replace({query: Object.assign({}, this.$route.query, {area_id:areaId})});
       },
       iTalhao(value){
         let talhaoId = this.talhoesDaArea[value].id;

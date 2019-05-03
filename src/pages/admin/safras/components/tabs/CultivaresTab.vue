@@ -181,8 +181,7 @@
       iMarca(value){
         this.iCultivar = 0;
         let marcaId = this.marcas[value].id;
-        let cultivarId = this.cultivaresDaMarca[0].id;
-        this.$router.replace({query: Object.assign({}, this.$route.query, {marca_id:marcaId, cultivar_id:cultivarId})});
+        this.$router.replace({query: Object.assign({}, this.$route.query, {marca_id:marcaId})});
       },
       iCultivar(value){
         let cultivarId = this.cultivaresDaMarca[value].id;
@@ -200,13 +199,11 @@
     methods: {
       onTabSelected(){
         if(!_.isEmpty(this.marcas) && !_.isEmpty(this.cultivares)) {
-          console.log('passou aqui 2')
           this.checkRoute();
         }
       },
       onDataLoaded(){
         if(!_.isEmpty(this.marcas) && !_.isEmpty(this.cultivares)) {
-          console.log('passou aqui 2')
           this.checkRoute();
         }
       },
