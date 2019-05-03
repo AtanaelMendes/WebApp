@@ -196,7 +196,7 @@
           <div class="q-px-lg q-py-sm" style="text-align: center">
             <div class="row justify-center">
               <div class="col-xs-12 col-sm-6">
-                <q-input type="number" :prefix="fixacao.moeda.simbolo" v-model="fixacao.preco.value" stack-label="Preço" align="right"/>
+                <q-input v-money="money" :prefix="fixacao.moeda.simbolo" v-model="fixacao.preco.value" stack-label="Preço" align="right"/>
               </div>
             </div>
             <div class="row justify-center q-mt-sm">
@@ -432,14 +432,16 @@
   import ContaBancariaService from "../../../../../assets/js/service/ContaBancariaService";
   import MoedaService from "../../../../../assets/js/service/MoedaService";
   import apModal from 'components/ApModal'
+  import {VMoney} from 'v-money'
 
   export default {
     name: "NewFixacaoModal",
     components:{
       customInputText,
       customInputDatetime,
-      apModal
+      apModal,
     },
+    directives: {money: VMoney},
     data(){
       return{
         moedaService: new MoedaService(),
@@ -466,6 +468,11 @@
         contasBancarias: null,
         searchValueByStep: null,
         hasSearch: true,
+        money: {
+          decimal: ',',
+          thousands: '.',
+          precision: 2,
+        },
       }
     },
     watch:{
