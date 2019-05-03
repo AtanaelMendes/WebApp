@@ -353,7 +353,9 @@
         let talhaoIndex = this.talhoesDaArea.findIndex(talhaoArea => talhaoArea.id === talhao.id);
         this.iTalhao = talhaoIndex;
         this.$refs.areasCarousel.goToSlide(areaIndex);
-        this.$refs.talhoesCarousel.goToSlide(talhaoIndex);
+        setTimeout(function () {
+          this.$refs.talhoesCarousel.goToSlide(talhaoIndex);
+        }.bind(this, talhaoIndex), 300);
       }
     },
   }

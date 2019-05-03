@@ -229,8 +229,9 @@
         let cultivarIndex = this.cultivaresDaMarca.findIndex(cultivarMarca => cultivarMarca.id === cultivar.id);
         this.iCultivar = cultivarIndex;
         this.$refs.marcasCarousel.goToSlide(marcaIndex);
-        this.$refs.cultivaresCarousel.goToSlide(cultivarIndex);
-
+        setTimeout(function () {
+          this.$refs.cultivaresCarousel.goToSlide(cultivarIndex);
+        }.bind(this, cultivarIndex), 300);
       }
     },
   }
