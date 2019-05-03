@@ -143,7 +143,7 @@
                     <q-item link v-for="cultivar in activeTalhao.cultivares" :key="cultivar.key" >
                       <q-item-side v-if="cultivar.marca.image_file_name" :image="imageMakeUrl(cultivar.marca.image_file_name, '200x125')" color="primary"/>
                       <q-item-side v-else icon="spa" color="primary" @click.native="goToCultivar(cultivar.id)" />
-                      <q-item-main @click.native="goToCultivar(cultivar.id)" >
+                      <q-item-main @click.native="goToCultivar(cultivar)" >
                         <q-item-tile>
                           {{cultivar.marca.nome}}
                           {{cultivar.nome}}
@@ -261,13 +261,21 @@
     },
     methods:{
       onTabSelected(){
-        if(this.$route.query.talhao_id && this.talhoes && this.areas){
+        if(_.isEmpty(this.$route.query)){
+          let areaId = this.areas[0].id;
+          let talhaoId = this.talhoesDaArea[0].id;
+          this.$router.replace({query: Object.assign({}, this.$route.query, {area_id:areaId, talhao_id:talhaoId})});
+        }else{
           this.changeSlidesByTalhaoId(parseInt(this.$route.query.talhao_id));
         }
 
       },
       onDataLoaded(){
-        if(this.$route.query.talhao_id && this.talhoes && this.areas){
+        if(_.isEmpty(this.$route.query)){
+          let areaId = this.areas[0].id;
+          let talhaoId = this.talhoesDaArea[0].id;
+          this.$router.replace({query: Object.assign({}, this.$route.query, {area_id:areaId, talhao_id:talhaoId})});
+        }else{
           this.changeSlidesByTalhaoId(parseInt(this.$route.query.talhao_id));
         }
       },
@@ -336,8 +344,8 @@
       updateTamanhoCultivares(talhao){
         this.$refs.updateCultivaresTamanhoModal.openModal(talhao, this.safraCultura);
       },
-      goToCultivar(cultivarId){
-        this.$router.replace({path:'cultivares',query:{cultivar_id:cultivarId}});
+      goToCultivar(cultivar){
+        this.$router.replace({path:'cultivares',query:{cultivar_id:cultivar.id, marca_id:cultivar.marca_id}});
       },
       changeSlidesByTalhaoId(talhaoId){
         console.log('changeSlidesByTalhaoId', talhaoId);
