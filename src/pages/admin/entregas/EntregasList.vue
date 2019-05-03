@@ -151,67 +151,73 @@
     <!--TAB ENTREGUE-->
     <div v-if="tabs === 'entregue' ">
 
-
       <div class="row gutter-sm space-end" >
         <div class="col-12">
-          <q-list no-border link separator>
-            <q-item multiline v-for="entrega in entregasEntregues" :key="entrega.id" @click.native="viewCarga(entrega)">
-              <q-item-side class="q-item-image" style="position: relative" >
-                <ap-image  size="200x125" :file-name="entrega.caminhao.image_file_name" />
-                <div class="q-ma-sm q-pa-xs" style="position: absolute;bottom: 0;right: 0;background:#f4f4f4;border-radius:50%;" v-if="entrega.isInQueueState">
-                  <q-icon name="mdi-sync-alert" size="20px" style="" color="deep-orange"/>
-                  <q-tooltip anchor="center right" self="center left" :offset="[10, 10]" :delay="200">Item não sincronizado</q-tooltip>
+
+          <q-infinite-scroll :handler="loadMoreEntregasEntregues" ref="infiniteScroll">
+
+            <q-list no-border link separator>
+              <q-item multiline v-for="entrega in entregasEntregues" :key="entrega.id" @click.native="viewCarga(entrega)">
+                <q-item-side class="q-item-image" style="position: relative" >
+                  <ap-image  size="200x125" :file-name="entrega.caminhao.image_file_name" />
+                  <div class="q-ma-sm q-pa-xs" style="position: absolute;bottom: 0;right: 0;background:#f4f4f4;border-radius:50%;" v-if="entrega.isInQueueState">
+                    <q-icon name="mdi-sync-alert" size="20px" style="" color="deep-orange"/>
+                    <q-tooltip anchor="center right" self="center left" :offset="[10, 10]" :delay="200">Item não sincronizado</q-tooltip>
+                  </div>
+                </q-item-side>
+                <q-item-main>
+                  <q-item-tile class="content-center">
+                    <div class="row">
+                      <div class="col-sm-12 col-md-6">
+                        {{entrega.armazem}}
+                      </div>
+                      <div class="col-sm-12 col-md-6">
+                        {{entrega.peso}}
+                      </div>
+                    </div>
+                  </q-item-tile>
+                  <q-item-tile sublabel>
+                    <div class="row">
+                      <div class="col-sm-12 col-md-6">
+                        {{entrega.safra}}
+                      </div>
+                      <div class="col-sm-12 col-md-6">
+                        {{entrega.motorista}}
+                      </div>
+                      <div class="col-xs-12 col-sm-12 col-md-6 lt-md">
+                        {{moment(entrega.entregue).format('DD MMM YYYY')}} <br>
+                        {{entrega.caminhao.placa}}
+                      </div>
+                    </div>
+                  </q-item-tile>
+                </q-item-main>
+                <q-item-side right class="gt-sm">
+                  <q-item-tile stamp>
+                    {{moment(entrega.entregue).format('DD MMM YYYY')}}
+                  </q-item-tile>
+                  <q-item-tile sublabel>
+                    {{entrega.caminhao.placa}}
+                  </q-item-tile>
+                </q-item-side>
+                <div >
+                  <q-btn @click.stop round flat dense icon="more_vert"  @click.stop>
+                    <q-popover>
+                      <q-list link no-boder>
+                        <q-item v-close-overlay @click.native="deleteEntrega(entrega.id)">
+                          <q-item-main label="Excluir"/>
+                        </q-item>
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
                 </div>
-              </q-item-side>
-              <q-item-main>
-                <q-item-tile class="content-center">
-                  <div class="row">
-                    <div class="col-sm-12 col-md-6">
-                      {{entrega.armazem}}
-                    </div>
-                    <div class="col-sm-12 col-md-6">
-                      {{entrega.peso}}
-                    </div>
-                  </div>
-                </q-item-tile>
-                <q-item-tile sublabel>
-                  <div class="row">
-                    <div class="col-sm-12 col-md-6">
-                      {{entrega.safra}}
-                    </div>
-                    <div class="col-sm-12 col-md-6">
-                      {{entrega.motorista}}
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-6 lt-md">
-                      {{moment(entrega.entregue).format('DD MMM YYYY')}} <br>
-                      {{entrega.caminhao.placa}}
-                    </div>
-                  </div>
-                </q-item-tile>
-              </q-item-main>
-              <q-item-side right class="gt-sm">
-                <q-item-tile stamp>
-                  {{moment(entrega.entregue).format('DD MMM YYYY')}}
-                </q-item-tile>
-                <q-item-tile sublabel>
-                  {{entrega.caminhao.placa}}
-                </q-item-tile>
-              </q-item-side>
-              <div >
-                <q-btn @click.stop round flat dense icon="more_vert"  @click.stop>
-                  <q-popover>
-                    <q-list link no-boder>
-                      <q-item v-close-overlay @click.native="deleteEntrega(entrega.id)">
-                        <q-item-main label="Excluir"/>
-                      </q-item>
-                    </q-list>
-                  </q-popover>
-                </q-btn>
-              </div>
 
-            </q-item>
+              </q-item>
 
-          </q-list>
+            </q-list>
+
+          </q-infinite-scroll>
+
+
         </div>
 
         <!--EMPTY LIST-->
@@ -264,6 +270,7 @@
         entregasCarregando:[],
         entregasNoArmazem:[],
         entregasEntregues:[],
+        entregasEntreguesCurrentPage: 1,
       }
     },
     watch: {
@@ -274,10 +281,19 @@
       },
     },
     methods: {
+      loadMoreEntregasEntregues(index, done){
+        let filter = {};
+        filter.page = index;
+        this.listEntregasEntregues(AgroUtils.serialize(filter), function(hasResult){
+          if(hasResult){
+            done();
+          }
+        });
+      },
       switchTab(value){
 
         if(this.$store.state.entrega.filter.value){
-          this.filterEntregas(this.$store.state.entrega.filter.value);
+          //this.filterEntregas(this.$store.state.entrega.filter.value);
           return;
         }
 
@@ -289,7 +305,7 @@
             this.listEntregasNoArmazem();
             break;
           case 'entregue':
-            this.listEntregasEntregues();
+            //this.listEntregasEntregues();
             break
         }
       },
@@ -318,6 +334,7 @@
             this.listEntregasNoArmazem(queryFilter);
             break;
           case 'entregue':
+            this.entregasEntregues = [];
             this.listEntregasEntregues(queryFilter);
             break;
         }
@@ -333,7 +350,7 @@
               break;
             case 'no-armazem':
               this.listEntregasNoArmazem();
-              break
+              break;
             case 'entregue':
               this.listEntregasEntregues();
               break
@@ -345,33 +362,28 @@
         this.entregaService.listEntregasCarregando(filter).then(entregas => {
           this.entregasCarregando = entregas;
           this.$q.loading.hide();
-        }).catch(error => {
-          console.log(error);
-          this.$q.notify({type: 'negative', message: 'Não foi possível carragar as informações'});
-          this.$q.loading.hide();
         })
       },
-      listEntregasNoArmazem: function (filter = null) {
+      listEntregasNoArmazem(filter = null) {
         this.$q.loading.show();
         this.entregaService.listEntregasNoArmazem(filter).then(entregas => {
           this.entregasNoArmazem = entregas;
           this.$q.loading.hide();
-        }).catch(error => {
-          console.log(error);
-          this.$q.notify({type: 'negative', message: 'Não foi possível carragar as informações'});
-          this.$q.loading.hide();
         })
       },
-      listEntregasEntregues: function (filter = null) {
+      listEntregasEntregues(filter = null, callback = null) {
         this.$q.loading.show();
+
         this.entregaService.listCargasEntregues(filter).then(entregas => {
-          this.entregasEntregues = entregas;
+          this.entregasEntregues = this.entregasEntregues.concat(entregas);
+
           this.$q.loading.hide();
-        }).catch(error => {
-          console.log(error);
-          this.$q.notify({type: 'negative', message: 'Não foi possível carragar as informações'});
-          this.$q.loading.hide();
+          if(callback !== null){
+            this.$q.notify({color: 'primary', message: 'Ver mais', icon: 'arrow_downward'});
+            callback(entregas.length > 0)
+          }
         })
+
       },
       viewCarga: function (entrega) {
         this.$router.push({name: 'entrega_view', params: {id:entrega.id}});
@@ -398,22 +410,16 @@
                   break
               }
               this.$q.loading.hide();
-            }).catch(error => {
-              console.log(error);
-              this.$q.notify({type: 'negative', message: 'Não foi possível excluir'});
-              this.$q.loading.hide();
             })
-          }).catch(()=>{});
+          })
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
         }
 
       },
       queueSyncFinishedEvent(event){
-        console.log('queueSyncFinishedEvent', event)
         switch (event.data.type) {
           case ServiceMessage.SYNC_FINISHED:
-            console.log('EntregasList.queueSyncFinished')
             this.$root.$emit('refreshEntregasList', 'all');
             break;
         }
@@ -427,9 +433,11 @@
             this.listEntregasNoArmazem();
             break;
           case 'entregue':
+            this.entregasEntregues = [];
             this.listEntregasEntregues();
             break;
           case  'all':
+            this.entregasEntregues = [];
             this.listEntregasCarregando();
             this.listEntregasNoArmazem();
             this.listEntregasEntregues();
