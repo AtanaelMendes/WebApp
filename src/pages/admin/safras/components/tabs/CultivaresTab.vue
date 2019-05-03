@@ -199,12 +199,16 @@
     },
     methods: {
       onTabSelected(){
-        if(this.cultivares && this.marcas) {
+        if(!_.isEmpty(this.marcas) && !_.isEmpty(this.cultivares)) {
+          console.log('passou aqui 2')
           this.checkRoute();
         }
       },
       onDataLoaded(){
-        this.checkRoute();
+        if(!_.isEmpty(this.marcas) && !_.isEmpty(this.cultivares)) {
+          console.log('passou aqui 2')
+          this.checkRoute();
+        }
       },
       checkRoute(){
         if(_.isEmpty(this.$route.query)){

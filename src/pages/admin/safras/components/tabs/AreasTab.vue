@@ -261,12 +261,14 @@
     },
     methods:{
       onTabSelected(){
-        if(this.talhoes && this.areas){
+        if(!_.isEmpty(this.talhoes) && !_.isEmpty(this.areas)){
           this.checkRoute();
         }
       },
       onDataLoaded(){
-        this.checkRoute();
+        if(!_.isEmpty(this.talhoes) && !_.isEmpty(this.areas)){
+          this.checkRoute();
+        }
       },
       checkRoute(){
         if(_.isEmpty(this.$route.query)){
