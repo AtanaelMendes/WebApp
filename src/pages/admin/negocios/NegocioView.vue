@@ -27,27 +27,21 @@
       <div class="col-12">
         <q-card class="full-height">
           <q-card-title>
-            {{negocio.tipo}}
-            <span class="gt-xs">
-                {{negocio.numero_pedido}} / {{negocio.numero_contrato}} - {{moment(negocio.emissao).calendar()}}
-              </span>
-            <span slot="subtitle" class="lt-sm">
-                {{negocio.numero_pedido}} / {{negocio.numero_contrato}} - {{moment(negocio.emissao).calendar()}}
-              </span>
+            {{negocio.tipo}} {{negocio.numero_contrato}},
+            <span v-if="negocio.numero_pedido">Nº {{negocio.numero_pedido}} -</span>
+            {{moment(negocio.emissao).format('ll')}}
+            <span slot="subtitle">
+                Contrato  {{negocio.pessoa.nome}}
+            </span>
 
           </q-card-title>
 
           <q-card-main class="row gutter-xs">
 
-            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 text-faded ">
-              Contrato de {{negocio.tipo.toLowerCase()}}
-              com {{negocio.pessoa.nome}}
-              emitido em {{moment(negocio.emissao).format('ll')}}.
-              Número do pedido {{negocio.numero_pedido}}
-              Número do contrato {{negocio.numero_contrato}}
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
 
               <p  v-if="negocio.observacoes">
-                Observações <br/>
+                <span class="text-weight-bold">Observações</span> <br/>
                 <span class="text-faded ">{{negocio.observacoes}}</span>
               </p>
             </div>
