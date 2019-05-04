@@ -92,7 +92,7 @@
                       <q-progress :percentage="cultura.quantidade_entregue / cultura.quantidade * 100" height="6px" color="blue" animate stripe/>
                     </div>
 
-                    <div class="col-12  q-caption">
+                    <div class="col-12  q-caption" v-if="negocio.tipo !== 'Troca'">
                       Fixações
                       <q-progress :percentage="cultura.fixacao_porcentagem"  height="6px" color="blue" animate stripe/>
                     </div>
@@ -402,7 +402,7 @@
         <q-fab-action color="grey-1" text-color="grey-7" @click="attachProduto()" icon="add">
           <span class="shadow-2">Produto</span>
         </q-fab-action>
-        <q-fab-action color="grey-1" text-color="grey-7" @click="attachFixacao()" icon="add">
+        <q-fab-action color="grey-1" text-color="grey-7" @click="attachFixacao()" icon="add" v-if="negocio.tipo !== 'Troca'">
           <span class="shadow-2">Fixação</span>
         </q-fab-action>
       </q-fab>
