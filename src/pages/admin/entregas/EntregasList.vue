@@ -324,12 +324,12 @@
         }
       },
       filterEntregas(filters){
+
         this.$refs.filerResultBar.show(this.$refs.filterEntregasModal.getFilterDesciption());
 
         this.currentFilter = Object.assign(this.currentFilter, filters);
 
         let queryFilter = AgroUtils.serialize(this.currentFilter);
-        console.log('queryFilter', queryFilter)
         switch (this.tabs) {
           case 'carregando':
             this.listEntregasCarregando(queryFilter);
@@ -338,12 +338,14 @@
             this.listEntregasNoArmazem(queryFilter);
             break;
           case 'entregue':
+            this.$refs.infiniteScroll.reset();
             this.entregasEntregues = [];
             this.listEntregasEntregues(queryFilter);
             break;
         }
       },
       clearFilter(refreshList = false){
+        this.$refs.infiniteScroll.reset();
         this.$refs.filterEntregasModal.clearForm();
         this.$refs.filerResultBar.hide();
 
@@ -441,6 +443,7 @@
             this.listEntregasEntregues();
             break;
           case  'all':
+            // this.$refs.infiniteScroll.reset();
             this.entregasEntregues = [];
             this.listEntregasCarregando();
             this.listEntregasNoArmazem();
