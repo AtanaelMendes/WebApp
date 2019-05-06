@@ -1,12 +1,14 @@
 <template>
   <q-modal key="safraCultura" v-model="isModalOpened" maximized @hide="closeModal">
     <div class="row justify-center items-center q-pa-md" style="min-height: 80vh">
+
       <div class="col-12 q-title text-center">
         Definir Quantidade dos Negócios
       </div>
-      <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
 
+      <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
         <div class="row q-mb-lg" v-for="negocio in negocios" :key="negocio.id">
+
           <div class="col-xs-6 col-lg-9 self-center" >
             {{negocio.negocio_cultura.negocio.pessoa}}
             <p class="q-body-1">{{negocio.negocio_cultura.negocio.tipo}} {{negocio.negocio_cultura.negocio.numero_contrato}}</p>
@@ -26,6 +28,29 @@
 
         </div>
 
+        <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
+
+          <div class="row q-mb-lg">
+            <div class="col-xs-6 col-lg-9 self-center" >
+              Total
+            </div>
+            <div class="col-xs-6 col-lg-3 text-right">
+              {{somaTotal}}
+            </div>
+          </div>
+
+          <div class="row q-mb-lg">
+            <div class="col-xs-6 col-lg-9 self-center" >
+              Total dividido
+            </div>
+            <div class="col-xs-6 col-lg-3 text-right">
+              <span :class="(totalDividido > somaTotal || totalDividido < somaTotal)?'text-red': 'text-green' ">
+                {{totalDividido}}
+              </span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -39,16 +64,37 @@
 </template>
 
 <script>
-  import entregaService from 'assets/js/service/entrega/EntregaService'
+  import EntregaService from 'assets/js/service/entrega/EntregaService'
 
   export default {
     name: "SetNegociosQuantidadeModal",
     data () {
       return {
+        entregaService: new EntregaService(),
         isModalOpened: false,
         entrega: null,
         negocios: [],
       }
+    },
+    computed: {
+      somaTotal(){
+        let calculoTotal = 0;
+        this.entrega.negocios.forEach(function (negocio) {
+          calculoTotal += negocio.quantidade
+        });
+        return calculoTotal
+      },
+      totalDividido(){
+        let totalDividido = 0;
+        this.negocios.forEach(function (negocio) {
+          if(negocio.quantidade != null){
+            totalDividido += negocio.quantidade;
+          }else{
+            totalDividido += 0
+          }
+        });
+        return totalDividido
+      },
     },
     methods: {
       openModal(entrega){
@@ -58,6 +104,17 @@
       },
       closeModal(){
         this.isModalOpened = false;
+      },
+      isDivisaoValid(){
+        if(this.totalDividido > this.somaTotal){
+          this.$q.notify({type: 'negative', message: 'O total dividido é maior que o total disponível'});
+          return false
+        }
+        if(this.totalDividido < this.somaTotal){
+          this.$q.notify({type: 'negative', message: 'O total dividido é menor que o total disponível'});
+          return false
+        }
+        return true
       },
       parseNegocios(negocios){
         return negocios.map(function (negocio) {
@@ -76,6 +133,11 @@
         })
       },
       updateNegociosQuantidade(){
+
+        if(!this.isDivisaoValid()){
+          return
+        }
+
         let body = this.negocios.map(function (negocio) {
           return {
             id: negocio.id,
@@ -84,7 +146,7 @@
         });
 
         this.$q.loading.show();
-        entregaService.updateNegociosQuantidade(this.entrega.id, {negocios: body}).then(response => {
+        this.entregaService.updateNegociosQuantidade(this.entrega.id, {negocios: body}).then(response => {
           this.$q.notify({type: 'positive', message: 'Quantidades atualizadas com sucesso!'});
           this.closeModal();
           this.$root.$emit('refreshEntregaView');

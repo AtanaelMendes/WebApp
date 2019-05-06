@@ -31,7 +31,7 @@ export default class EntregaAPI{
   }
 
   static updateNegocioQuantidade(params, entregaId){
-    return Vue.prototype.$axios.put('entrega/'+ entregaId + '/negocio', params);
+    return Vue.prototype.$axios.put('entrega/'+ entregaId + '/negocio/update_quantidade', params);
   }
 
   static addTalhao(talhao, entregaId){
