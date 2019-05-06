@@ -24,8 +24,6 @@
     <div class="row gutter-sm space-end q-pa-md" v-if="negocio">
 
       <!--CABECALHO-->
-
-
       <div class="col-12 q-title">
         {{negocio.tipo}} {{negocio.numero_contrato}},
         <span v-if="negocio.numero_pedido">Nº {{negocio.numero_pedido}} -</span>
@@ -42,30 +40,25 @@
         <span class="text-faded ">{{negocio.observacoes}}</span>
       </div>
 
-
-
       <!--NEGOCIO CULTURAS & NEGOCIO CULTURA FIXAÇOES-->
       <div class="col-12" v-for="(cultura, index) in negocio.culturas" :key="cultura.id">
         <q-card class="full-height">
+
+          <q-card-title>
+            {{cultura.safra_cultura}}
+            <span v-if="cultura.is_safrinha">Safrinha</span>
+            {{cultura.safra}}
+            <q-btn slot="right" flat dense icon="more_vert" round>
+              <q-popover>
+                <q-list link class="no-border">
+                  <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
+                    <q-item-main label="Excluir Cultura"/>
+                  </q-item>
+                </q-list>
+              </q-popover>
+            </q-btn>
+          </q-card-title>
           <q-card-main>
-            <div class="row">
-              <div class="col-12 q-title">
-
-                {{cultura.safra_cultura}}
-                <span v-if="cultura.is_safrinha">Safrinha</span>
-                {{cultura.safra}}
-                <q-btn class="float-right" flat dense icon="more_vert" color="grey-7" round>
-                  <q-popover>
-                    <q-list link class="no-border">
-                      <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
-                        <q-item-main label="Excluir Cultura"/>
-                      </q-item>
-                    </q-list>
-                  </q-popover>
-                </q-btn>
-
-              </div>
-            </div>
             <div class="row gutter-sm" >
 
               <!--NEGOCIO CULTURAS-->
