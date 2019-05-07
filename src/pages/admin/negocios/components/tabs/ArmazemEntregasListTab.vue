@@ -25,7 +25,9 @@
 
   </q-list>-->
 
-  <q-table :data="movimentosMaped" :columns="columns" row-key="n_nota" v-if="movimentos"/>
+  <q-table :data="movimentosMaped" :columns="columns" row-key="n_nota" v-if="movimentos">
+
+  </q-table>
 </template>
 
 <script>
@@ -42,8 +44,8 @@
         return this.movimentos.map(movimento => {
           console.log(movimento)
           return {
-            'n_nota': 123,
-            'n_ticket': 321,
+            'n_nota': movimento.entrega.numero_nf,
+            'n_ticket': movimento.entrega.numero_ticket,
             'placa': movimento.entrega.caminhao.placa,
             'p_liquido': this.numeral(movimento.entrega.total_peso_liquido).format('0,0') + " " + movimento.entrega.total_peso_unidade_medida_sigla,
             'p_bruto': this.numeral(movimento.entrega.total_peso_bruto_produto).format('0,0') + " " + movimento.entrega.total_peso_unidade_medida_sigla,
