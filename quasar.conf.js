@@ -122,6 +122,7 @@ module.exports = function (ctx) {
         'QCarousel',
         'QCarouselSlide',
         'QSpinner',
+        'QPagination'
 
       ],
       directives: [

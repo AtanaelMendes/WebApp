@@ -120,7 +120,7 @@
                         <span class="text-faded">e</span> {{ moment(cultura.prazo_entrega_final).format('DD/MMM/YYYY') }}.
                       </template>
                       <br/>
-                      <span class="text-faded">Armazens: </span> {{cultura.armazens}}.
+                      <span class="text-faded">Armazens: </span> {{armazensConcat(cultura.armazens)}}.
                       <br/>
                       <span class="text-faded">Classificação: </span>{{cultura.classificacao}}.
                     </div>
@@ -129,6 +129,16 @@
 
                 <!--NEGOCIO CULTURA FIXAÇOES-->
                 <template v-for="(fixacao, index) in cultura.fixacoes" >
+                  <div class="col-12">
+                    <q-card-separator/>
+                  </div>
+
+                  <div style="overflow-x: auto; width: auto; padding: 16px 0">
+                    <div style="width: max-content">
+                      <negocio-cultura-armazem-list-item :negocio-cultura="cultura" :armazem="armazem" v-for="armazem in cultura.armazens" :key="armazem.id" />
+                    </div>
+                  </div>
+
                   <div class="col-12">
                     <q-card-separator/>
                   </div>
@@ -391,7 +401,7 @@
     </div>
 
     <!--PAGE STICKY BUTTOMS-->
-    <q-page-sticky position="bottom-right" :offset="[35, 35]">
+    <q-page-sticky position="bottom-right" :offset="[35, 35]" v-if="negocio">
       <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
         <q-fab-action color="grey-1" text-color="grey-7" icon="add" @click="attachCultura()">
           <span class="shadow-2">Cultura</span>
@@ -431,6 +441,7 @@
   import newTituloModal from './components/modals/NewTituloModal';
   import newProdutoModal from './components/modals/NewProdutoModal';
   import newFixacaoModal from './components/modals/NewFixacaoModal';
+  import negocioCulturaArmazemListItem from './components/itens/NegocioCulturaArmazemListItem';
   import apNoResults from 'components/ApNoResults'
   import NegocioService from "../../../assets/js/service/negocio/NegocioService";
 
@@ -445,6 +456,7 @@
       newProdutoModal,
       newFixacaoModal,
       editNegocioModal,
+      negocioCulturaArmazemListItem,
     },
     data () {
       return {
@@ -592,6 +604,9 @@
           this.negocio = negocio;
           this.$q.loading.hide();
         })
+      },
+      armazensConcat(armazens){
+        return _.map(armazens, 'nome').join(', ');
       },
       backAction () {
         this.$router.back();
