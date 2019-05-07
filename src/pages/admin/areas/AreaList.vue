@@ -29,7 +29,11 @@
         <q-list link sparse no-border inset-separator>
 
           <q-item v-for="area in areas" :key="area.id" @click.native="viewArea(area.id)">
-            <q-item-side icon="place" color="primary"/>
+            <q-item-side>
+              <q-item-tile icon="place" color="primary" v-if="!area.deleted_at"/>
+              <q-item-tile icon="location_off" color="negative" v-if="area.deleted_at"/>
+              <q-item-tile stamp v-if="area.deleted_at">Inativa</q-item-tile>
+            </q-item-side>
             <q-item-main inset>
               <q-item-tile>
                 {{area.nome}}
@@ -97,11 +101,7 @@
           this.areas = areas;
           this.isEmptyList = this.areas.length === 0;
           this.$q.loading.hide();
-        }).catch(error =>{
-          console.log(error);
-          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações'});
-          this.$q.loading.hide();
-        });
+        })
       },
       viewArea: function(id) {
         this.$router.push({name: 'view_area', params: {id:id}});
