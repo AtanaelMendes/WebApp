@@ -3,8 +3,17 @@
     <toolbar slot="toolbar" title="Entregas" navigation_type="menu">
 
       <template slot="action_itens">
-        <q-btn flat round dense icon="mdi-filter" @click="openFilterModal" />
-        <q-btn flat round dense icon="mdi-file-excel" />
+        <q-btn flat round dense icon="mdi-filter" @click="openFilterModal">
+          <q-tooltip>
+            Filtro
+          </q-tooltip>
+        </q-btn>
+        <q-btn flat round dense icon="mdi-file-excel">
+          <q-tooltip>
+            Limpar filtro
+          </q-tooltip>
+        </q-btn>
+
       </template>
 
       <div slot="tabs">

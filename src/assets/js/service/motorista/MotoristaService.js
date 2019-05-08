@@ -9,10 +9,10 @@ export default class MotoristaService{
     this.motoristaRepository = new MotoristaRepository();
   }
 
-  listMotoristas() {
+  listMotoristas(filter) {
     return new Promise((resolve, reject) => {
       if(Vue.prototype.serverStatus.isUp) {
-        MotoristaAPI.listMotoristas().then(response => {
+        MotoristaAPI.listMotoristas(filter).then(response => {
           if(response.status === 200){
             resolve(response.data);
           }else{

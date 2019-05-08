@@ -12,7 +12,7 @@
                                   :options="[
                             { label: 'Ativos', value: 'non-trashed'},
                             { label: 'Inativos', value: 'trashed' },
-                            { label: 'Todos', value: '' }
+                            { label: 'Todos', value: 'all' }
                             ]"
                   />
                 </q-item-main>
@@ -29,10 +29,24 @@
       <!--<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cursor-pointer" v-for="motorista in motoristas" :key="motorista.id">-->
         <!--<q-card @click.native="viewMotorista(motorista.id)" class="full-height">-->
         <q-card class="full-height">
+
+          <q-item v-if="motorista.deleted_at" class="bg-negative">
+            <q-item-side icon="voice_over_off" color="white"/>
+            <q-item-main class="text-white">
+              Inativo
+            </q-item-main>
+          </q-item>
+
           <q-card-media overlay-position="top">
             <ap-image size="400x250" :file-name="motorista.image_file_name" />
             <q-card-title slot="overlay">
-              {{motorista.nome}}
+              <q-item class="q-pa-none">
+                <q-item-main>
+                  <q-item-tile>
+                    {{motorista.nome}}
+                  </q-item-tile>
+                </q-item-main>
+              </q-item>
               <q-btn @click.prevent.stop slot="right" round flat dense icon="more_vert" color="white">
                 <q-popover>
                   <q-list link>
@@ -106,6 +120,7 @@
   import addMotoristaModal from 'components/motorista/AddMotoristaModal'
   import editMotoristaModal from 'components/motorista/EditMotoristaModal'
   import MotoristaService from "assets/js/service/motorista/MotoristaService";
+  import agroUtils from "assets/js/AgroUtils";
   export default {
     name: "motoristas-list",
     components: {
@@ -173,14 +188,11 @@
       },
       listMotoristas: function(filter) {
         this.$q.loading.show();
-        this.motoristaService.listMotoristas(filter).then(motoristas => {
+        this.motoristaService.listMotoristas(agroUtils.serialize(filter)).then(motoristas => {
           this.motoristas = motoristas;
           this.isEmptyList = this.motoristas.length === 0;
           this.$q.loading.hide();
-        }).catch(error => {
-          this.$q.loading.hide();
-          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações'});
-        });
+        })
       },
       viewMotorista: function(id) {
         this.$router.push({name: 'view_motorista', params: {id:id}});
@@ -197,9 +209,6 @@
           this.$q.notify({type: 'positive', message: 'Motorista arquivado com sucesso.'});
           this.listMotoristas(this.filter);
           this.$q.loading.hide();
-        }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse Motorista.'});
-          this.$q.loading.hide();
         })
       },
       restoreMotorista: function(id){
@@ -208,9 +217,6 @@
           this.$q.notify({type: 'positive', message: 'Motorista ativado com sucesso.'});
           this.listMotoristas(this.filter);
           this.$q.loading.hide();
-        }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível restaurar esse Motorista.'});
-          this.$q.loading.hide();
         })
       },
       deleteMotorista: function(id){
@@ -218,9 +224,6 @@
         this.motoristaService.deleteMotorista(id).then(() => {
           this.$q.notify({type: 'positive', message: 'Motorista excluido com sucesso.'});
           this.listMotoristas(this.filter);
-          this.$q.loading.hide();
-        }).catch(error =>{
-          this.$q.notify({type: 'negative', message: 'Não foi possível excluir esse Motorista'});
           this.$q.loading.hide();
         })
       },

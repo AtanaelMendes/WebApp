@@ -29,6 +29,14 @@
         <q-card class="full-height">
       <!--<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 cursor-pointer" v-for="caminhao in caminhoes" :key="caminhao.id">-->
         <!--<q-card @click.native="viewCaminhao(caminhao.id)" class="full-height">-->
+
+          <q-item class="bg-negative" v-if="caminhao.deleted_at">
+            <q-item-side icon="not_interested" color="white"/>
+            <q-item-main class="text-white">
+              Veículo inativo
+            </q-item-main>
+          </q-item>
+          
           <q-card-media overlay-position="top">
             <ap-image size="400x250" :file-name="caminhao.image_file_name" />
             <q-card-title slot="overlay">
@@ -57,13 +65,6 @@
               </q-btn>
             </q-card-title>
           </q-card-media>
-
-          <q-item class="bg-negative" v-if="caminhao.deleted_at">
-            <q-item-side icon="not_interested" color="white"/>
-            <q-item-main class="text-white">
-              Veículo inativo
-            </q-item-main>
-          </q-item>
 
           <q-item>
             <q-item-side icon="mdi-scale" :color="pesoIconColor(caminhao.lotacao)"/>
@@ -156,7 +157,6 @@
     watch: {
       filter: {
         handler: function (val, oldval) {
-          console.log(val);
           let params = {type: val.type, nameOrPlaque:(val.nameOrPlaque.length > 2 ? val.nameOrPlaque : '')};
           this.listCaminhoes(params)
         },
