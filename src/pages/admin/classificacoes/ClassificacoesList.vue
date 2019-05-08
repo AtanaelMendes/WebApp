@@ -12,7 +12,7 @@
                                   :options="[
                             { label: 'Ativos', value: 'non-trashed'},
                             { label: 'Inativos', value: 'trashed' },
-                            { label: 'Todos', value: '' }
+                            { label: 'Todos', value: 'all' }
                             ]"
                   />
                 </q-item-main>
@@ -32,9 +32,10 @@
 
             <q-item-side icon="assessment" color="primary"/>
             <q-item-main>
-              <q-item-tile>
-                {{classificacao.nome}}
-              </q-item-tile>
+              {{classificacao.nome}}
+              <q-chip color="negative" dense pointing="left" v-if="classificacao.deleted_at">
+                Inativo
+              </q-chip>
             </q-item-main>
 
             <q-item-side>
@@ -87,6 +88,7 @@
   import addClassificacaoModal from 'components/classificacao/AddClassificacaoModal'
   import editClassificacaoModal from 'components/classificacao/EditClassificacaoModal'
   import ClassificacaoService from "assets/js/service/ClassificacaoService";
+  import agroUtils from "assets/js/AgroUtils";
   export default {
     name: "classificacoes-list",
     components: {
@@ -111,7 +113,7 @@
       filter: {
         handler: function(val, oldval) {
           var filter = {type: val.type, name:(val.name.length > 2 ? val.name : '')};
-          this.listClassificacoes(filter)
+          this.listClassificacoesWithFilter(filter)
         },
         deep: true,
       }
@@ -122,16 +124,13 @@
       listBySearch: function(val){
         this.filter.name = val;
       },
-      listClassificacoes: function(filter) {
+      listClassificacoesWithFilter: function(filter) {
         this.$q.loading.show();
-        this.classificacaoService.listClassificacoes(filter).then(classificacoes => {
+        this.classificacaoService.listClassificacoesWithFilter(agroUtils.serialize(filter)).then(classificacoes => {
           this.classificacoes = classificacoes;
           this.isEmptyList = this.classificacoes.length === 0;
           this.$q.loading.hide();
-        }).catch(error => {
-          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações.'});
-          this.$q.loading.hide();
-        });
+        })
       },
       viewClassificacao: function(id) {
         this.$router.push({name: 'view_classificacao', params: {id:id}});
@@ -152,10 +151,7 @@
           this.$q.loading.show();
           this.classificacaoService.archiveClassificacao(id).then(() =>{
             this.$q.notify({type: 'positive', message: 'Classificação arquivado com sucesso.'});
-            this.listClassificacoes(this.filter);
-            this.$q.loading.hide();
-          }).catch(error =>{
-            this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse classificação.'});
+            this.listClassificacoesWithFilter(this.filter);
             this.$q.loading.hide();
           })
         })
@@ -171,11 +167,8 @@
           this.$q.loading.show();
           this.classificacaoService.restoreClassificacao(id).then(() =>{
             this.$q.notify({type: 'positive', message: 'Classificação ativada com sucesso.'});
-            this.listClassificacoes(this.filter);
+            this.listClassificacoesWithFilter(this.filter);
             this.$q.loading.hide();
-          }).catch(error =>{
-            this.$q.loading.hide();
-            this.$q.notify({type: 'negative', message: 'Não foi possível restaurar essa classificação.'});
           })
         })
       },
@@ -189,20 +182,17 @@
           this.$q.loading.show();
           this.classificacaoService.deleteClassificacao(id).then(() => {
             this.$q.notify({type: 'positive', message: 'Classificação excluída com sucesso.'});
-            this.listClassificacoes(this.filter);
-            this.$q.loading.hide();
-          }).catch(error =>{
-            this.$q.notify({type: 'negative', message: 'Não foi possível excluir essa classificação'});
+            this.listClassificacoesWithFilter(this.filter);
             this.$q.loading.hide();
           })
         })
       },
     },
     mounted () {
-      this.listClassificacoes(this.filter);
+      this.listClassificacoesWithFilter(this.filter);
 
       this.$root.$on('refreshClassificacoesList', () => {
-        this.listClassificacoes(this.filter);
+        this.listClassificacoesWithFilter(this.filter);
       });
     },
   }

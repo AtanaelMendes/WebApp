@@ -5,8 +5,11 @@ export default class ClassificacaoAPI{
   static getClassificacaoById(classificacaoId){
     return Vue.prototype.$axios.get('/classificacao/'+ classificacaoId)
   }
-  static listClassificacoes(){
-    return Vue.prototype.$axios.get('/classificacao');
+  static listClassificacoes(filter){
+    return Vue.prototype.$axios.get('/classificacao?'+ filter);
+  }
+  static listClassificacoesWithFilter(filter){
+    return Vue.prototype.$axios.get('/classificacao/list?'+ filter);
   }
   static addClassificacao(params){
     return Vue.prototype.$axios.post('/classificacao', params);
