@@ -134,21 +134,30 @@
                   </div>
 
                   <q-card style="padding: 0; width:100%">
-                    <q-tabs class="full-width">
+                    <q-tabs class="full-width" inverted>
                       <q-tab slot="title" name="tab-resumo" label="Resumo" default/>
                       <q-tab slot="title" :name="'tab-' + index" :label="armazemTitulo" v-for="(armazemTitulo, index) in armazensTitulos(cultura.armazens)" :key="armazemTitulo"/>
 
-                      <q-tab-pane name="tab-resumo">Tab One</q-tab-pane>
-                      <q-tab-pane class="q-pa-none" :name="'tab-' + index" v-for="(armazem, index) in cultura.armazens" :key="armazem.id">
+                      <q-tab-pane class="q-pa-none" name="tab-resumo">
+                        <q-list no-border>
+                          <q-item>
+                            <q-item-main subheading>
+                              {{ numeral(cultura.quantidade).format('0,0') }} {{cultura.unidade_medida.sigla}}
+                            </q-item-main>
+                          </q-item>
+                          <q-item v-for="armazem in cultura.armazens" :key="armazem.id">
+                            {{numeral(armazem.quantidade).format('0,0')}} {{cultura.unidade_medida.sigla}} {{armazem.nome}}
+                          </q-item>
+                          <q-item>
+                            {{numeral(cultura.quantidade - cultura.quantidade_entregue).format('0,0')}} {{cultura.unidade_medida.sigla}} Saldo
+                          </q-item>
+                        </q-list>
+                      </q-tab-pane>
+                      <q-tab-pane class="q-pa-none" :name="'tab-' + index" v-for="(armazem, index) in cultura.armazens" :key="armazem.id" keep-alive>
                         <armazem-entregas-list-tabs :negocio-cultura="cultura" :armazem="armazem" />
                       </q-tab-pane>
                     </q-tabs>
                   </q-card>
-                  <!--<div style="overflow-x: auto; width: auto; padding: 16px 0">
-                    <div style="width: max-content">
-                      <negocio-cultura-armazem-list-item :negocio-cultura="cultura" :armazem="armazem" v-for="armazem in cultura.armazens" :key="armazem.id" />
-                    </div>
-                  </div>-->
 
                   <div class="col-12">
                     <q-card-separator/>
@@ -452,7 +461,6 @@
   import newTituloModal from './components/modals/NewTituloModal';
   import newProdutoModal from './components/modals/NewProdutoModal';
   import newFixacaoModal from './components/modals/NewFixacaoModal';
-  import negocioCulturaArmazemListItem from './components/itens/NegocioCulturaArmazemListItem';
   import armazemEntregasListTabs from './components/tabs/ArmazemEntregasListTab';
   import apNoResults from 'components/ApNoResults'
   import NegocioService from "../../../assets/js/service/negocio/NegocioService";
@@ -468,7 +476,6 @@
       newProdutoModal,
       newFixacaoModal,
       editNegocioModal,
-      negocioCulturaArmazemListItem,
       armazemEntregasListTabs
     },
     data () {
