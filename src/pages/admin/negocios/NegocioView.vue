@@ -111,31 +111,55 @@
                   <q-card-separator/>
                 </div>
 
-                <q-card style="padding: 0; width:100%">
-                  <q-tabs class="full-width" inverted>
-                    <q-tab slot="title" name="tab-resumo" label="Resumo" default/>
-                    <q-tab slot="title" :name="'tab-' + index" :label="armazemTitulo" v-for="(armazemTitulo, index) in armazensTitulos(cultura.armazens)" :key="armazemTitulo"/>
+                <div class="col-12">
+                  <div class="row gutter-sm">
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                      <q-card style="padding: 0">
+                        <q-tabs class="full-width" inverted>
+                          <q-tab slot="title" name="tab-resumo" label="Resumo" default/>
+                          <q-tab slot="title" :name="'tab-' + index" :label="armazemTitulo" v-for="(armazemTitulo, index) in armazensTitulos(cultura.armazens)" :key="armazemTitulo"/>
 
-                    <q-tab-pane class="q-pa-none" name="tab-resumo">
-                      <q-list no-border>
-                        <q-item>
-                          <q-item-main subheading>
-                            {{ numeral(cultura.quantidade).format('0,0') }} {{cultura.unidade_medida.sigla}}
-                          </q-item-main>
-                        </q-item>
-                        <q-item v-for="armazem in cultura.armazens" :key="armazem.id">
-                          {{numeral(armazem.quantidade).format('0,0')}} {{cultura.unidade_medida.sigla}} {{armazem.nome}}
-                        </q-item>
-                        <q-item>
-                          {{numeral(cultura.quantidade - cultura.quantidade_entregue).format('0,0')}} {{cultura.unidade_medida.sigla}} Saldo
-                        </q-item>
-                      </q-list>
-                    </q-tab-pane>
-                    <q-tab-pane class="q-pa-none" :name="'tab-' + index" v-for="(armazem, index) in cultura.armazens" :key="armazem.id" keep-alive>
-                      <armazem-entregas-list-tabs :negocio-cultura="cultura" :armazem="armazem" />
-                    </q-tab-pane>
-                  </q-tabs>
-                </q-card>
+                          <q-tab-pane class="q-pa-none" name="tab-resumo">
+                            <q-list no-border>
+                              <q-item class="q-body-1">
+                                <q-item-main>
+                                  Total
+                                </q-item-main>
+                                <q-item-side right>
+                                  {{ numeral(cultura.quantidade).format('0,0') }} {{cultura.unidade_medida.sigla}}
+                                </q-item-side>
+                              </q-item>
+                              <q-item v-for="armazem in cultura.armazens" :key="armazem.id" class="q-body-1">
+                                <q-item-main>
+                                  {{armazem.nome}}
+                                </q-item-main>
+                                <q-item-side right>
+                                  {{numeral(armazem.quantidade).format('0,0')}} {{cultura.unidade_medida.sigla}}
+                                </q-item-side>
+                              </q-item>
+                              <q-item class="q-body-1">
+                                <q-item-main>
+                                  Saldo
+                                </q-item-main>
+                                <q-item-side right>
+                                  {{numeral(cultura.quantidade - cultura.quantidade_entregue).format('0,0')}} {{cultura.unidade_medida.sigla}}
+                                </q-item-side>
+                              </q-item>
+                            </q-list>
+                          </q-tab-pane>
+                          <q-tab-pane class="q-pa-none" :name="'tab-' + index" v-for="(armazem, index) in cultura.armazens" :key="armazem.id" keep-alive>
+                            <armazem-entregas-list-tabs :negocio-cultura="cultura" :armazem="armazem" />
+                          </q-tab-pane>
+                        </q-tabs>
+                      </q-card>
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                      <q-card>
+                        Informações Fiscais
+                      </q-card>
+                    </div>
+                  </div>
+                </div>
 
                 <div class="col-12">
                   <q-card-separator/>
