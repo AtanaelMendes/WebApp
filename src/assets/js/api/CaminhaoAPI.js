@@ -10,8 +10,8 @@ export default class CaminhaoAPI{
     return Vue.prototype.$axios.get('/caminhao/free')
   }
 
-  static listCaminhoes(){
-    return Vue.prototype.$axios.get('/caminhao');
+  static listCaminhoes(filter){
+    return Vue.prototype.$axios.get('/caminhao?'+ filter);
   }
 
   static saveCaminhao(caminhao){

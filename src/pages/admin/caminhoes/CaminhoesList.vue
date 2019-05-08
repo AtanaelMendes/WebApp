@@ -12,7 +12,7 @@
                                   :options="[
                             { label: 'Ativos', value: 'non-trashed'},
                             { label: 'Inativos', value: 'trashed' },
-                            { label: 'Todos', value: '' }
+                            { label: 'Todos', value: 'all' }
                             ]"
                   />
                 </q-item-main>
@@ -29,6 +29,14 @@
         <q-card class="full-height">
       <!--<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 cursor-pointer" v-for="caminhao in caminhoes" :key="caminhao.id">-->
         <!--<q-card @click.native="viewCaminhao(caminhao.id)" class="full-height">-->
+
+          <q-item class="bg-negative" v-if="caminhao.deleted_at">
+            <q-item-side icon="not_interested" color="white"/>
+            <q-item-main class="text-white">
+              Veículo inativo
+            </q-item-main>
+          </q-item>
+          
           <q-card-media overlay-position="top">
             <ap-image size="400x250" :file-name="caminhao.image_file_name" />
             <q-card-title slot="overlay">
@@ -57,20 +65,20 @@
               </q-btn>
             </q-card-title>
           </q-card-media>
-          <q-list>
-            <q-item>
-              <q-item-side icon="mdi-scale" :color="pesoIconColor(caminhao.lotacao)"/>
-              <q-item-main>
-                <q-item-tile v-if="caminhao.lotacao">
-                  {{numeral(caminhao.lotacao).format('0,0')}}
-                  {{caminhao.unidade_medida_sigla}}
-                </q-item-tile>
-                <q-item-tile sublabel v-else>
-                  Não informado
-                </q-item-tile>
-              </q-item-main>
-            </q-item>
-          </q-list>
+
+          <q-item>
+            <q-item-side icon="mdi-scale" :color="pesoIconColor(caminhao.lotacao)"/>
+            <q-item-main>
+              <q-item-tile v-if="caminhao.lotacao">
+                {{numeral(caminhao.lotacao).format('0,0')}}
+                {{caminhao.unidade_medida_sigla}}
+              </q-item-tile>
+              <q-item-tile sublabel v-else>
+                Não informado
+              </q-item-tile>
+            </q-item-main>
+          </q-item>
+
         </q-card>
       </div>
 
@@ -121,6 +129,7 @@
   import addCaminhaoModal from 'components/caminhao/AddCaminhaoModal'
   import editCaminhaoModal from 'components/caminhao/EditCaminhaoModal'
   import CaminhaoService from "assets/js/service/CaminhaoService";
+  import agroUtils from "assets/js/AgroUtils";
   export default {
     name: "caminhoes-list",
     components: {
@@ -147,9 +156,9 @@
     },
     watch: {
       filter: {
-        handler: function(val, oldval) {
-          var filter = {type: val.type, nameOrPlaque:(val.nameOrPlaque.length > 2 ? val.nameOrPlaque : '')};
-          this.listCaminhoes(filter)
+        handler: function (val, oldval) {
+          let params = {type: val.type, nameOrPlaque:(val.nameOrPlaque.length > 2 ? val.nameOrPlaque : '')};
+          this.listCaminhoes(params)
         },
         deep: true,
       }
@@ -193,14 +202,11 @@
       },
       listCaminhoes: function(filter) {
         this.$q.loading.show();
-        this.caminhaoService.listCaminhoes(filter).then(caminhoes => {
+        this.caminhaoService.listCaminhoes(agroUtils.serialize(filter)).then(caminhoes => {
           this.caminhoes = caminhoes;
           this.isEmptyList = this.caminhoes.length === 0;
           this.$q.loading.hide();
-        }).catch(error => {
-          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações.'});
-          this.$q.loading.hide();
-        });
+        })
       },
       viewCaminhao: function(id) {
         this.$router.push({name: 'view_caminhao', params: {id:id}});
@@ -223,9 +229,6 @@
             this.$q.notify({type: 'positive', message: 'Caminhão arquivado com sucesso.'});
             this.listCaminhoes(this.filter);
             this.$q.loading.hide();
-          }).catch(error =>{
-            this.$q.notify({type: 'negative', message: 'Não foi possível arquivar esse caminhão.'});
-            this.$q.loading.hide();
           })
         });
       },
@@ -241,9 +244,6 @@
             this.$q.notify({type: 'positive', message: 'Caminhão ativado com sucesso.'});
             this.listCaminhoes(this.filter);
             this.$q.loading.hide();
-          }).catch(error =>{
-            this.$q.loading.hide();
-            this.$q.notify({type: 'negative', message: 'Não foi possível restaurar esse caminhão.'});
           })
         });
 
@@ -259,10 +259,6 @@
           this.caminhaoService.deleteCaminhao(id).then(() => {
             this.$q.notify({type: 'positive', message: 'Caminhão excluido com sucesso.'});
             this.listCaminhoes(this.filter);
-            this.$q.loading.hide();
-          }).catch(error =>{
-            console.log(error);
-            this.$q.notify({type: 'negative', message: 'Não foi possível excluir esse caminhão'});
             this.$q.loading.hide();
           })
         });

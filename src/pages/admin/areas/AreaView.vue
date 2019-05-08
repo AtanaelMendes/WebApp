@@ -48,6 +48,10 @@
                   {{numeral(areaTotal).format('0,0')}} Hectares
                 </q-item-tile>
               </q-item-main>
+              <q-item-side>
+                <q-item-tile icon="location_off" color="negative" v-if="area.deleted_at"/>
+                <q-item-tile stamp v-if="area.deleted_at">Inativa</q-item-tile>
+              </q-item-side>
             </q-item>
 
             <q-item>
@@ -238,10 +242,6 @@
         this.areaService.getAreaById(areaId).then(area => {
           this.area = area;
           this.$q.loading.hide();
-        }).catch(error =>{
-          console.log(error);
-          this.$q.notify({type: 'negative', message: 'Não foi possível carregar as informações da área'});
-          this.$q.loading.hide();
         })
       },
       uploadFotoSuccess: function(response){
@@ -280,12 +280,9 @@
         }).then(data => {
           this.$q.loading.show();
           this.areaService.archiveArea(this.areaId).then(() => {
+            this.getAreaById(this.$route.params.id);
+            this.listTalhoes(this.$route.params.id);
             this.$q.notify({type: 'positive', message: 'Área arquivada'});
-            this.$router.push({name:'areas'})
-            this.$q.loading.hide();
-          }).catch(error =>{
-            console.log(error);
-            this.$q.notify({type: 'negative', message: 'Não foi possivel arquivar essa área'});
             this.$q.loading.hide();
           })
         });
@@ -301,10 +298,7 @@
           this.areaService.restoreArea(this.areaId).then(response => {
             this.$q.notify({type: 'positive', message: 'Área ativada'});
             this.getAreaById(this.$route.params.id);
-            this.$q.loading.hide();
-          }).catch(error =>{
-            console.log(error);
-            this.$q.notify({type: 'negative', message: 'Não foi possivel restaurar essa área'});
+            this.listTalhoes(this.$route.params.id);
             this.$q.loading.hide();
           })
         });
@@ -322,10 +316,6 @@
             this.$router.push({name:'areas'});
             this.$root.$emit('refreshAreaList');
             this.$q.loading.hide();
-          }).catch(error =>{
-            console.log(error);
-            this.$q.notify({type: 'negative', message: 'Não foi possivel excluir essa área'});
-            this.$q.loading.hide();
           })
         });
       },
@@ -333,10 +323,6 @@
         this.$q.loading.show();
         this.talhaoService.listTalhoes(id).then(talhoes => {
           this.talhoes = talhoes;
-          this.$q.loading.hide();
-        }).catch(error =>{
-          console.log(error);
-          this.$q.notify({type: 'negative', message: 'Não foi possivel listar os talhões'});
           this.$q.loading.hide();
         })
       },
@@ -370,11 +356,7 @@
             this.$q.notify({type: 'positive', message: 'Talhão arquivado com sucesso'});
             this.listTalhoes(this.$route.params.id);
             this.$q.loading.hide();
-          }).catch(error =>{
-            console.log(error);
-            this.$q.notify({type: 'negative', message: 'Não foi possível arquivar este talhão'});
-            this.$q.loading.hide();
-          });
+          })
         })
       },
       restoreTalhao: function(talhaoId){
@@ -388,10 +370,6 @@
           this.talhaoService.restoreTalhao(this.areaId, talhaoId).then(() => {
             this.$q.notify({type: 'positive', message: 'Talhão ativado com suceso'});
             this.listTalhoes(this.$route.params.id);
-            this.$q.loading.hide();
-          }).catch(error =>{
-            console.log(error);
-            this.$q.notify({type: 'negative', message: 'Não foi possivel restaurar este talhão'});
             this.$q.loading.hide();
           })
         });
@@ -407,10 +385,6 @@
           this.talhaoService.deleteTalhao(this.areaId, talhaoId).then(response => {
             this.$q.notify({type: 'positive', message: 'Talhão excluido com sucesso'});
             this.listTalhoes(this.$route.params.id);
-            this.$q.loading.hide();
-          }).catch(error =>{
-            console.log(error);
-            this.$q.notify({type: 'negative', message: 'Não foi possivel excluir este talhão'});
             this.$q.loading.hide();
           })
         });

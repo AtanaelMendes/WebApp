@@ -5,8 +5,8 @@ export default class MotoristaAPI{
   static getMotorista(id){
     return Vue.prototype.$axios.get('/motorista/'+ id);
   }
-  static listMotoristas(){
-    return Vue.prototype.$axios.get('/motorista');
+  static listMotoristas(filter){
+    return Vue.prototype.$axios.get('/motorista?'+filter);
   }
 
   static saveMotorista(motorista){

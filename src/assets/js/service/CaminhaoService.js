@@ -13,9 +13,9 @@ export default class CaminhaoService {
     this.imageRepository = new ImageRepository();
   }
 
-  listCaminhoes() {
+  listCaminhoes(filter) {
     return new Promise((resolve, reject) => {
-      CaminhaoAPI.listCaminhoes().then(response => {
+      CaminhaoAPI.listCaminhoes(filter).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
