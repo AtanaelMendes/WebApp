@@ -17,6 +17,19 @@ export default class GrupoEconomicoService{
       })
     });
   };
+  listGruposEconomicosWithFilter(filter){
+    return new Promise((resolve, reject) => {
+      GrupoEconomicoAPI.listGruposEconomicosWithFilter(filter).then(response => {
+        if(response.status === 200){
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
   getGrupoEconomicoById(id){
     return new Promise((resolve, reject) => {
       GrupoEconomicoAPI.getGrupoEconomicoById(id).then(response => {
