@@ -75,7 +75,7 @@
                 </q-item-tile>
 
                 <q-item-tile sublabel>
-                  {{negocio.numero_contrato}}
+                  {{negocio.numero_contrato}}<span v-if="negocio.numero_contrato && negocio.numero_pedido">,</span>
                   {{negocio.numero_pedido}}
                 </q-item-tile>
               </q-item-main>
@@ -93,7 +93,6 @@
                   <span v-if="negocio.quantidade">
                     {{ numeral(negocio.quantidade).format('0,0') }}
                   </span>
-
 
                   <span v-if="negocio.unidadeMedida" class="text-faded">{{ negocio.unidadeMedida.plural }}</span>
                 </q-item-tile>
@@ -207,14 +206,14 @@
         tipoNegocios: null,
         filter: {
           type: 'non-trashed',
-          name: '',
+          search: '',
         },
       }
     },
     watch: {
       filter: {
         handler: function(val, oldval) {
-          var filter = {type: val.type, name:(val.name.length > 2 ? val.name : '')};
+          var filter = {type: val.type, search:(val.search.length > 2 ? val.search : '')};
           this.listNegocios(filter)
         },
         deep: true,
@@ -222,7 +221,7 @@
     },
     methods: {
       listBySearch: function(val){
-        this.filter.name = val;
+        this.filter.search = val;
       },
       async listNegocios(filter){
         return this.negocioService.listNegocios(agroUtils.serialize(filter)).then(negocios => {
