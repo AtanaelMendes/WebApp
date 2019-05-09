@@ -152,8 +152,18 @@
                     </q-card>
                   </div>
                   <div class="col-md-6 col-sm-12 col-xs-12">
-                    <q-card>
-                      Informações Fiscais
+                    <q-card style="padding: 0">
+                      <q-tabs class="full-width" inverted>
+                        <q-tab slot="title" name="tab-resumo" label="Resumo" default/>
+                        <q-tab slot="title" :name="'tab-' + index" :label="armazemTitulo" v-for="(armazemTitulo, index) in armazensTitulos(cultura.armazens)" :key="armazemTitulo"/>
+
+                        <q-tab-pane class="q-pa-none" name="tab-resumo">
+
+                        </q-tab-pane>
+                        <q-tab-pane class="q-pa-none" :name="'tab-' + index" v-for="(armazem, index) in cultura.armazens" :key="armazem.id" keep-alive>
+                          <armazem-notas-list-tabs :negocio-cultura="cultura" :armazem="armazem" />
+                        </q-tab-pane>
+                      </q-tabs>
                     </q-card>
                   </div>
                 </div>
@@ -467,6 +477,7 @@
   import newProdutoModal from './components/modals/NewProdutoModal';
   import newFixacaoModal from './components/modals/NewFixacaoModal';
   import armazemEntregasListTabs from './components/tabs/ArmazemEntregasListTab';
+  import armazemNotasListTabs from './components/tabs/ArmazemNotasListTab';
   import apNoResults from 'components/ApNoResults'
   import NegocioService from "../../../assets/js/service/negocio/NegocioService";
 
@@ -481,7 +492,8 @@
       newProdutoModal,
       newFixacaoModal,
       editNegocioModal,
-      armazemEntregasListTabs
+      armazemEntregasListTabs,
+      armazemNotasListTabs
     },
     data () {
       return {

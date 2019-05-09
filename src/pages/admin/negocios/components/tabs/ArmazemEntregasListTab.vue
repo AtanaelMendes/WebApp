@@ -39,9 +39,7 @@
     data(){
       return {
         negocioService: new NegocioService(),
-        currentPage: 1,
         movimentos: null,
-        maxItens: 5,
         columns: [
           {label: 'Nº Nota', name:'n_nota', field:'n_nota', align: 'left',},
           {label: 'N° Ticket', name:'n_ticket', field:'n_ticket', align: 'left',},
@@ -81,6 +79,6 @@
   }
   .row_div{
     padding: 7px 24px;
-    line-height: 34px;
+    line-height: 33px;
   }
 </style>

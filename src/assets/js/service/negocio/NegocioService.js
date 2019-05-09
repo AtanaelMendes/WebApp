@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Loading, Dialog } from 'quasar'
+
 import NegocioCulturaAPI from "../../api/NegocioCulturaAPI";
 import NegocioRepository from "../../repository/resource/NegocioRepository";
 import NegocioCulturaRepository from "../../repository/resource/NegocioCulturaRepository";
@@ -15,7 +15,6 @@ import NegocioAPI from "../../api/NegocioAPI";
 import NegocioTituloAPI from "../../api/NegocioTituloAPI";
 import NegocioProdutoAPI from "../../api/NegocioProdutoAPI";
 import NegocioFixacaoAPI from "../../api/NegocioFixacaoAPI";
-import NegocioCulturaMovimentoAPI from "../../api/NegocioCulturaMovimentoAPI";
 
 export default class NegocioService{
   #negocioRepository;
@@ -296,7 +295,21 @@ export default class NegocioService{
 
   listMovimentosByArmazem(negocioCulturaId, armazemId){
     return new Promise((resolve, reject) => {
-      NegocioCulturaMovimentoAPI.getAllByNegocioCulturaAndArmazem(negocioCulturaId, armazemId).then(response => {
+      NegocioCulturaAPI.getAllMovimentosByNegocioCulturaAndArmazem(negocioCulturaId, armazemId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  }
+
+  listNotasFiscaisByArmazem(negocioCulturaId, armazemId){
+    return new Promise((resolve, reject) => {
+      NegocioCulturaAPI.getAllNotasFiscaisByNegocioCulturaAndArmazem(negocioCulturaId, armazemId).then(response => {
         if(response.status === 200) {
           resolve(response.data)
         }else{
