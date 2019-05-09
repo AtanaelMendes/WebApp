@@ -1,6 +1,6 @@
 <template>
   <custom-page isChild style="background: #fdfdfd">
-    <toolbar slot="toolbar" navigation_type="noneAndBack" @navigation_clicked="backAction">
+    <toolbar slot="toolbar" navigation_type="back" @navigation_clicked="backAction">
       <template slot="action_itens" v-if="account">
         <q-btn flat round dense icon="edit" @click.native="editUser(account.id)"/>
         <q-btn flat round dense icon="more_vert" >
@@ -22,16 +22,8 @@
     </toolbar>
 
     <q-list no-border v-if="account">
-      <q-item class="bg-red text-white q-mx-md q-py-sm round-borders" v-if="account.deleted_at">
-        <q-item-side icon="error" color="white"/>
-        <q-item-main>
-          Conta desativada
-        </q-item-main>
-        <q-item-side>
-          <q-item-tile stamp class="text-white">{{ moment(account.deleted_at).format('DD MMMM YYYY') }}</q-item-tile>
-        </q-item-side>
-      </q-item>
       <q-list-header>Informações Básicas</q-list-header>
+
       <q-item v-if="account.produtor">
         <q-item-main>
           {{account.produtor.nome}}
@@ -40,6 +32,9 @@
       <q-item>
         <q-item-main>
           {{account.email}}
+          <q-chip v-if="account.deleted_at" dense color="negative" pointing="left">
+            Inativo
+          </q-chip>
         </q-item-main>
       </q-item>
       <q-item-separator />

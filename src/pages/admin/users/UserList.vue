@@ -33,8 +33,8 @@
             <q-item-main inset>
               <q-item-tile>
                 {{user.nome}}
-                <q-chip v-if="user.deleted_at" small square color="red">
-                  INATIVO
+                <q-chip v-if="user.deleted_at" dense color="red" pointing="left">
+                  Inativo
                 </q-chip>
               </q-item-tile>
               <q-item-tile sublabel>{{user.email}}</q-item-tile>
