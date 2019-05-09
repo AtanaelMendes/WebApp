@@ -6,8 +6,8 @@ export default class NegocioAPI{
     return Vue.prototype.$axios.get('/tipo_negocio');
   }
 
-  static listNegocios(){
-    return Vue.prototype.$axios.get('/negocio');
+  static listNegocios(filter){
+    return Vue.prototype.$axios.get('/negocio?'+filter);
   }
 
   static getById(id, fullType){
