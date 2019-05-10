@@ -36,7 +36,7 @@
               Veículo inativo
             </q-item-main>
           </q-item>
-          
+
           <q-card-media overlay-position="top">
             <ap-image size="400x250" :file-name="caminhao.image_file_name" />
             <q-card-title slot="overlay">

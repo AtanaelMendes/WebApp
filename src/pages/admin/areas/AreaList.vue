@@ -29,14 +29,16 @@
         <q-list link sparse no-border inset-separator>
 
           <q-item v-for="area in areas" :key="area.id" @click.native="viewArea(area.id)">
-            <q-item-side>
+            <q-item-side align="center">
               <q-item-tile icon="place" color="primary" v-if="!area.deleted_at"/>
               <q-item-tile icon="location_off" color="negative" v-if="area.deleted_at"/>
-              <q-item-tile stamp v-if="area.deleted_at">Inativa</q-item-tile>
             </q-item-side>
             <q-item-main inset>
               <q-item-tile>
                 {{area.nome}}
+                <q-chip color="negative" dense pointing="left" v-if="area.deleted_at">
+                  inativo
+                </q-chip>
               </q-item-tile>
               <q-item-tile sublabel>
                 {{area.localizacao.endereco}},

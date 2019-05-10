@@ -12,7 +12,7 @@
                                   :options="[
                             { label: 'Ativos', value: 'non-trashed'},
                             { label: 'Inativos', value: 'trashed' },
-                            { label: 'Todos', value: '' }
+                            { label: 'Todos', value: 'all' }
                             ]"
                   />
                 </q-item-main>
@@ -29,15 +29,13 @@
         <q-list no-border sparse inset-separator highlight link>
           <q-item v-for="grupoEconomico in gruposEconomicos" :key="grupoEconomico.nome" @click.native="viewGrupoEconomico(grupoEconomico.id)">
 
-            <q-item-side icon="group_work" color="primary"/>
+            <q-item-side icon="group_work" color="primary" />
             <q-item-main>
-
-              <q-item-tile>
                 {{grupoEconomico.nome}}
-              </q-item-tile>
-
+                <q-chip color="negative" dense v-if="grupoEconomico.deleted_at" pointing="left">
+                  Inativo
+                </q-chip>
             </q-item-main>
-
             <q-item-side>
               <q-btn @click.prevent.stop round flat dense icon="more_vert">
                 <q-popover>
@@ -88,6 +86,7 @@
   import addGrupoEconomicoModal from 'components/grupoEconomico/AddGrupoEconomicoModal'
   import editGrupoEconomicoModal from 'components/grupoEconomico/EditGrupoEconomicoModal'
   import GrupoEconomicoService from "assets/js/service/GrupoEconomicoService"
+  import agroUtils from "assets/js/AgroUtils";
   export default {
     name: "grupos-economicos-list",
     components: {
@@ -117,16 +116,13 @@
         deep: true,
       }
     },
-    computed: {
-
-    },
     methods: {
       listBySearch: function(val){
         this.filter.name = val;
       },
       listGruposEconomicos: function(filter) {
         this.$q.loading.show();
-        this.grupoEconomicoService.listGruposEconomicos('').then(response => {
+        this.grupoEconomicoService.listGruposEconomicosWithFilter(agroUtils.serialize(filter)).then(response => {
           this.$q.loading.hide();
           this.gruposEconomicos = response;
           this.isEmptyList = this.gruposEconomicos.length === 0;
@@ -155,7 +151,6 @@
             this.$q.loading.hide();
           })
         });
-
       },
       restoreGrupoEconomico: function(id){
         this.$q.dialog({
@@ -171,7 +166,6 @@
             this.$q.loading.hide();
           })
         });
-
       },
       deleteGrupoEconomico: function(id){
         this.$q.dialog({

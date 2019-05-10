@@ -6,7 +6,11 @@ export default class GrupoEconomicoAPI{
   }
 
   static listGruposEconomicos(terms){
-    return Vue.prototype.$axios.get('/grupo_economico?nome=' + terms);
+    return Vue.prototype.$axios.get('/grupo_economico?type=non-trashed&name=' + terms);
+  }
+
+  static listGruposEconomicosWithFilter(filter){
+    return Vue.prototype.$axios.get('/grupo_economico?'+ filter);
   }
 
   static listPessoasOfGrupoEconomico(id){

@@ -32,21 +32,24 @@
 
             <q-item>
               <q-item-side>
-                <q-icon name="account_circle" size="40px"/>
+                <q-icon name="account_circle" size="40px" color="primary"/>
               </q-item-side>
               <q-item-main>
-                <q-item-tile class="q-title">{{pessoa.nome}}</q-item-tile>
-                <q-item-tile v-if="pessoa.cpf" sublabel>{{formatCPF(pessoa.cpf)}}</q-item-tile>
-                <q-item-tile v-if="pessoa.cnpj" sublabel>{{formatCNPJ(pessoa.cnpj)}}</q-item-tile>
+                <q-item-tile class="q-title">
+                  {{pessoa.nome}}
+                  <q-chip v-if="pessoa.deleted_at" dense color="negative" pointing="left">
+                    Inativo
+                  </q-chip>
+                </q-item-tile>
+                <q-item-tile v-if="pessoa.cpf" sublabel>
+                  {{formatCPF(pessoa.cpf)}}
+                </q-item-tile>
+                <q-item-tile v-if="pessoa.cnpj" sublabel>
+                  {{formatCNPJ(pessoa.cnpj)}}
+                </q-item-tile>
               </q-item-main>
               <q-item-side>
               </q-item-side>
-            </q-item>
-
-            <q-item class="bg-negative" v-if="pessoa.delete_at">
-              <q-item-main class="text-white">
-                Pessoa Inativa
-              </q-item-main>
             </q-item>
           </div>
 

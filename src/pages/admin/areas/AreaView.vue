@@ -48,7 +48,7 @@
                   {{numeral(areaTotal).format('0,0')}} Hectares
                 </q-item-tile>
               </q-item-main>
-              <q-item-side>
+              <q-item-side align="center">
                 <q-item-tile icon="location_off" color="negative" v-if="area.deleted_at"/>
                 <q-item-tile stamp v-if="area.deleted_at">Inativa</q-item-tile>
               </q-item-side>

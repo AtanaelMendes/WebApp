@@ -1,11 +1,31 @@
 <template>
   <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Negócios" searchable navigation_type="menu" >
+    <toolbar slot="toolbar" title="Negócios" searchable @search_changed="listBySearch" navigation_type="menu" >
+      <template slot="action_itens">
+        <q-btn flat round dense icon="tune" >
+          <q-popover anchor="bottom left">
+            <q-list>
+              <q-list-header>Filtrar por:</q-list-header>
+              <q-item dense>
+                <q-item-main>
+                  <q-option-group type="radio" color="primary" v-model="filter.type"
+                                  :options="[
+                            { label: 'Ativos', value: 'non-trashed'},
+                            { label: 'Inativos', value: 'trashed' },
+                            { label: 'Todos', value: 'all' }
+                            ]"
+                  />
+                </q-item-main>
+              </q-item>
+            </q-list>
+          </q-popover>
+        </q-btn>
+      </template>
     </toolbar>
 
     <!--LISTA DE CONTRATOS-->
     <div class="row gutter-sm space-end q-pa-md" v-if="negocios">
-      <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4" v-for="negocio in negocios" :key="negocio.id">
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" v-for="negocio in negocios" :key="negocio.id">
 
         <q-card @click.native="viewNegocio(negocio.id)" class="cursor-pointer full-height">
           <q-card-title>
@@ -32,100 +52,111 @@
           </q-card-title>
 
           <q-card-separator/>
-          <q-card-main>
-            <q-list inset-separator no-border>
+          <q-item class="bg-negative" v-if="negocio.deleted_at">
+            <q-item-side icon="folder" color="white"/>
+            <q-item-main class="text-white">
+              Arquivado
+            </q-item-main>
+          </q-item>
+          <q-card-main class="q-pa-none">
+            <q-item inset-separator>
 
-              <q-item class="q-px-none">
+              <q-item-side v-if="negocio.image_file_name">
+                <q-item-tile avatar>
+                  <ap-image size="250x250" :file-name="negocio.image_file_name"/>
+                </q-item-tile>
+              </q-item-side>
 
-                <q-item-side v-if="negocio.image_file_name">
-                  <q-item-tile image>
-                    <ap-image size="200x125" :file-name="negocio.image_file_name"/>
-                  </q-item-tile>
-                </q-item-side>
+              <q-item-side icon="work" v-if="!negocio.image_file_name"/>
 
-                <q-item-main>
+              <q-item-main>
+                <q-item-tile>
+                  {{ negocio.safra }}
+                </q-item-tile>
 
-                  <q-item-tile>
-                    {{ negocio.safra }}
-                  </q-item-tile>
+                <q-item-tile sublabel>
+                  {{negocio.numero_contrato}}<span v-if="negocio.numero_contrato && negocio.numero_pedido">,</span>
+                  {{negocio.numero_pedido}}
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
 
-                  <q-item-tile sublabel>
-                    {{negocio.numero_contrato}}
-                    {{negocio.numero_pedido}}
-                  </q-item-tile>
+            <q-item inset-separator v-if="negocio.quantidade_entregue || negocio.quantidade">
+              <q-item-side icon="mdi-scale" :color="negocio.quantidade_entregar >= 1?'negative':'primary'" />
+              <q-item-main>
+                <q-item-tile>
 
-                </q-item-main>
-              </q-item>
+                  <span class="text-faded">Entregue</span>
+                  {{ numeral(negocio.quantidade_entregue).format('0,0') }}
 
-              <q-item class="q-px-none" v-if="negocio.quantidade_entregar">
-                <q-item-side icon="mdi-scale" :color="negocio.quantidade_entregar >= 1?'negative':'primary'" />
-                <q-item-main>
-                  <q-item-tile label>
-                    <template v-if="negocio.tipoNegocio.is_quantidade">
-                      {{ numeral(negocio.quantidade).format('0,0') }}
-                    </template>
-                    <template v-else>
-                      {{ numeral(negocio.quantidade_entregue).format('0,0') }}
-                    </template>
-                    <span v-if="negocio.unidadeMedida">{{ negocio.unidadeMedida.plural }}</span>
-                  </q-item-tile>
-                  <q-item-tile sublabel v-if="negocio.quantidade_entregar >= 1">
-                    Faltando
-                    {{ numeral(negocio.quantidade_entregar).format('0,0') }}
-                    {{negocio.unidadeMedida.sigla}}
-                    ({{ numeral(negocio.quantidade_entregar / negocio.quantidade * 100).format('0,0.0') }}%)
-                  </q-item-tile>
-                  <q-item-tile sublabel v-else-if="negocio.quantidade_entregar <= -1">
-                    Sobrando
-                    {{ numeral(negocio.quantidade_entregar*-1).format('0,0') }}
-                    {{negocio.unidadeMedida.sigla}}
-                  </q-item-tile>
-                </q-item-main>
-              </q-item>
+                  <span class="text-faded" v-if="negocio.quantidade">de</span>
+                  <span v-if="negocio.quantidade">
+                    {{ numeral(negocio.quantidade).format('0,0') }}
+                  </span>
 
-              <q-item class="q-px-none" v-if="negocio.tipoNegocio.is_fixacao && negocio.quantidade_fixar">
-                <q-item-side icon="attach_money" :color="negocio.quantidade_fixar >= 1?'negative':'primary'" />
-                <q-item-main>
-                  <q-item-tile label v-for="fixacao in negocio.fixacoes" :key="negocio.id + '_' + fixacao.id">
-                    <template v-if="negocio.quantidade != fixacao.quantidade">
-                      {{ numeral(fixacao.quantidade).format('0,0') }}
-                      {{ fixacao.unidade_medida_quantidade }}
-                      à
-                    </template>
-                    {{ fixacao.moeda }}
-                    {{ numeral(fixacao.preco).format('0,0.00') }}/{{ fixacao.unidade_medida_preco }}
-                    <template v-if="fixacao.is_preco_liquido">
-                      Líquido
-                    </template>
-                    <template v-else>
-                      Bruto
-                    </template>
-                  </q-item-tile>
-                  <q-item-tile v-if="negocio.quantidade_fixar >= 1">
-                    {{ numeral(negocio.quantidade_fixar).format('0,0') }}
-                    {{negocio.unidadeMedida.sigla}}
-                    à fixar
-                  </q-item-tile>
-                </q-item-main>
-              </q-item>
+                  <span v-if="negocio.unidadeMedida" class="text-faded">{{ negocio.unidadeMedida.plural }}</span>
+                </q-item-tile>
 
-              <q-item class="q-px-none" v-if="negocio.prazo_entrega_final">
-                <q-item-side icon="date_range" :color="(negocio.quantidade_entregar >= 1 && moment(negocio.prazo_entrega_final).isBefore())?'negative':'primary'" />
-                <q-item-main>
-                  <q-item-tile label>
-                    <template v-if="negocio.prazo_entrega_inicial">
-                      {{ moment(negocio.prazo_entrega_inicial).format('DD/MMM') }}
-                      a
-                    </template>
-                    {{ moment(negocio.prazo_entrega_final).format('DD/MMM/YYYY') }}
-                  </q-item-tile>
-                  <q-item-tile sublabel v-if="negocio.quantidade_entregar >= 1">
-                    {{ moment(negocio.prazo_entrega_final).fromNow() }}
-                  </q-item-tile>
-                </q-item-main>
-              </q-item>
+                <q-item-tile sublabel v-if="negocio.quantidade_entregar >= 1">
+                  Faltando
+                  {{ numeral(negocio.quantidade_entregar).format('0,0') }}
+                  {{negocio.unidadeMedida.sigla}}
+                  ({{ numeral(negocio.quantidade_entregar / negocio.quantidade * 100).format('0,0.0') }}%)
+                </q-item-tile>
 
-            </q-list>
+                <q-item-tile sublabel v-else-if="negocio.quantidade_entregar <= -1">
+                  Sobrando
+                  {{ numeral(negocio.quantidade_entregar*-1).format('0,0') }}
+                  {{negocio.unidadeMedida.sigla}}
+                </q-item-tile>
+
+              </q-item-main>
+            </q-item>
+
+
+            <q-item v-if="negocio.tipoNegocio.is_fixacao && negocio.quantidade_fixar" inset-separator	>
+              <q-item-side icon="attach_money" :color="negocio.quantidade_fixar >= 1?'negative':'primary'" />
+              <q-item-main>
+                <q-item-tile label v-for="fixacao in negocio.fixacoes" :key="negocio.id + '_' + fixacao.id">
+                  <template v-if="negocio.quantidade != fixacao.quantidade">
+                    {{ numeral(fixacao.quantidade).format('0,0') }}
+                    {{ fixacao.unidade_medida_quantidade }}
+                    à
+                  </template>
+                  {{ fixacao.moeda }}
+                  {{ numeral(fixacao.preco).format('0,0.00') }}/{{ fixacao.unidade_medida_preco }}
+                  <template v-if="fixacao.is_preco_liquido">
+                    Líquido
+                  </template>
+                  <template v-else>
+                    Bruto
+                  </template>
+                </q-item-tile>
+                <q-item-tile v-if="negocio.quantidade_fixar >= 1">
+                  {{ numeral(negocio.quantidade_fixar).format('0,0') }}
+                  {{negocio.unidadeMedida.sigla}}
+                  à fixar
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+
+            <q-item v-if="negocio.prazo_entrega_final" inset-separator>
+              <q-item-side icon="date_range" :color="(negocio.quantidade_entregar >= 1 && moment(negocio.prazo_entrega_final).isBefore())?'negative':'primary'" />
+              <q-item-main>
+                <q-item-tile label>
+                  <template v-if="negocio.prazo_entrega_inicial">
+                    {{ moment(negocio.prazo_entrega_inicial).format('DD/MMM') }}
+                    a
+                  </template>
+                  {{ moment(negocio.prazo_entrega_final).format('DD/MMM/YYYY') }}
+                </q-item-tile>
+                <q-item-tile sublabel v-if="negocio.quantidade_entregar >= 1">
+                  {{ moment(negocio.prazo_entrega_final).fromNow() }}
+                </q-item-tile>
+              </q-item-main>
+            </q-item>
+
+
 
           </q-card-main>
         </q-card>
@@ -157,8 +188,8 @@
   import newNegocioModal from './components/modals/NewNegocioModal';
   import apImage from 'components/ApImage'
   import apNoResults from 'components/ApNoResults'
-  import NegocioService from "../../../assets/js/service/negocio/NegocioService";
-
+  import NegocioService from "assets/js/service/negocio/NegocioService";
+  import agroUtils from "assets/js/AgroUtils";
   export default {
     name: "negocios",
     components: {
@@ -173,11 +204,27 @@
         negocioService: new NegocioService(),
         negocios: null,
         tipoNegocios: null,
+        filter: {
+          type: 'non-trashed',
+          search: '',
+        },
+      }
+    },
+    watch: {
+      filter: {
+        handler: function(val, oldval) {
+          var filter = {type: val.type, search:(val.search.length > 2 ? val.search : '')};
+          this.listNegocios(filter)
+        },
+        deep: true,
       }
     },
     methods: {
-      async listNegocios(){
-        return this.negocioService.listNegocios().then(negocios => {
+      listBySearch: function(val){
+        this.filter.search = val;
+      },
+      async listNegocios(filter){
+        return this.negocioService.listNegocios(agroUtils.serialize(filter)).then(negocios => {
           this.negocios = negocios;
         });
       },
@@ -186,12 +233,12 @@
       },
       archiveNegocio(id){
         this.negocioService.archiveNegocio(id).then(() => {
-          this.listNegocios()
+          this.listNegocios(this.filter)
         })
       },
       restoreNegocio(id){
         this.negocioService.restoreNegocio(id).then(() => {
-          this.listNegocios()
+          this.listNegocios(this.filter)
         })
       },
       deleteNegocio(id){
@@ -202,13 +249,7 @@
           color: 'primary'
         }).then(data => {
           this.negocioService.deleteNegocio(id).then(() => {
-            this.listNegocios()
-          }).catch(error => {
-            this.$q.loading.hide();
-            if(error.status === 422){
-              this.$q.dialog({
-                title: 'Erro', message: 'Não é possível apagar esse negócio! O negócio está associado a outras atividades.', ok: 'Ok', color: 'primary'})
-            }
+            this.listNegocios(this.filter)
           })
         })
       },
@@ -226,7 +267,7 @@
       this.$q.loading.show();
       Promise.all([
         this.listTipoNegocios(),
-        this.listNegocios()
+        this.listNegocios(this.filter)
       ]).then(()=>{
         this.$q.loading.hide();
       });

@@ -12,7 +12,7 @@
                                   :options="[
                             { label: 'Ativos', value: 'non-trashed'},
                             { label: 'Inativos', value: 'trashed' },
-                            { label: 'Todos', value: '' }
+                            { label: 'Todos', value: 'all' }
                             ]"
                   />
                 </q-item-main>
@@ -33,9 +33,15 @@
             <q-item-main inset>
               <q-item-tile>
                 {{pessoa.nome}}
-                <q-chip v-if="pessoa.deleted_at" small square color="red">
-                  INATIVO
+                <q-chip v-if="pessoa.deleted_at" dense color="negative" pointing="left">
+                  Inativo
                 </q-chip>
+              </q-item-tile>
+              <q-item-tile sublabel v-if="pessoa.cpf">
+                {{formatCPF(pessoa.cpf)}}
+              </q-item-tile>
+              <q-item-tile sublabel v-if="pessoa.cnpj">
+                {{formatCNPJ(pessoa.cnpj)}}
               </q-item-tile>
             </q-item-main>
 
@@ -80,14 +86,14 @@
         isEmptyList: false,
         filter: {
           type: 'non-trashed',
-          email: '',
+          search: '',
         },
       }
     },
     watch: {
       filter: {
         handler: function(val, oldval) {
-          var filter = {type: val.type, email:(val.email.length > 2 ? val.email : '')};
+          var filter = {type: val.type, search:(val.search.length > 2 ? val.search : '')};
           this.list(filter)
         },
         deep: true,
@@ -95,7 +101,15 @@
     },
     methods: {
       listBySearch: function(val){
-        this.filter.email = val;
+        // let regex = /[^a-z0-9]/gi;
+        // this.filter.search = val.replace(regex, '');
+        this.filter.search = val;
+      },
+      formatCPF(cpf){
+        return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+      },
+      formatCNPJ(cnpj){
+        return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
       },
       list: function(filter) {
         this.$q.loading.show();

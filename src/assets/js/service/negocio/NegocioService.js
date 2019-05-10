@@ -55,9 +55,9 @@ export default class NegocioService{
     });
   }
 
-  listNegocios(){
+  listNegocios(filter){
     return new Promise((resolve, reject) => {
-      NegocioAPI.listNegocios().then( response => {
+      NegocioAPI.listNegocios(filter).then( response => {
         if(response.status === 200) {
           resolve(response.data);
         }else{

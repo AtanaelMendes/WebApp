@@ -8,9 +8,22 @@ export default class ClassificacaoService {
     this.classificacaoRepository = new ClassificacaoRepository();
   }
 
-  listClassificacoes() {
+  listClassificacoesWithFilter(filter) {
     return new Promise((resolve, reject) => {
-      ClassificacaoAPI.listClassificacoes().then(response => {
+      ClassificacaoAPI.listClassificacoesWithFilter(filter).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  listClassificacoes(filter) {
+    return new Promise((resolve, reject) => {
+      ClassificacaoAPI.listClassificacoes(filter).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
