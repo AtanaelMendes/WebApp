@@ -126,7 +126,7 @@
 
           <!--INFO DOS NEGÓCIOS-->
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-6" v-if="entrega.status !== 'Carregando'">
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-3" v-if="entrega.negocios">
               <q-card>
                 <q-card-title>
                   Negócios
@@ -379,7 +379,7 @@
                   <q-btn slot="right" icon="more_vert" dense round flat>
                     <q-popover>
                       <q-list link class="no-border">
-                        <q-item v-close-overlay @click.native="deletePesagem(pesagem.id)" v-if="entrega.pesagens.length > 1">
+                        <q-item v-close-overlay @click.native="deletePesagem(pesagem.id, entrega.pesagens)">
                           <q-item-main label="Excluir"/>
                         </q-item>
                       </q-list>
@@ -529,7 +529,7 @@
 
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import pesagemService from 'assets/js/service/entrega/PesagemService'
+  import PesagemService from 'assets/js/service/entrega/PesagemService'
   import sendEntregaModal from 'components/entrega/SendEntregaModal'
   import newPesagemModal from 'components/entrega/NewPesagemModal'
   import addTalhaoPercentageModal from 'components/entrega/AddTalhaoPercentageModal'
@@ -538,7 +538,7 @@
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
   import agroUtils from 'assets/js/AgroUtils'
-  import EntregaService from "../../../assets/js/service/entrega/EntregaService";
+  import EntregaService from "assets/js/service/entrega/EntregaService";
 
   export default {
     name: "carga-view",
@@ -556,6 +556,7 @@
     data () {
       return {
         entregaService: new EntregaService(),
+        pesagemService: new PesagemService(),
         carga: true,
         entregaView: null,
         entrega: null,
@@ -653,7 +654,9 @@
       },
       openSetNegociosQuantidadeModal(entrega){
         if(this.serverStatus.isUp){
-          this.$refs.setNegociosQuantidadeModal.openModal(entrega);
+          if(entrega){
+            this.$refs.setNegociosQuantidadeModal.openModal(entrega);
+          }
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
         }
@@ -678,11 +681,8 @@
               this.$q.notify({type: 'positive', message: 'Talhão removido com sucesso'});
               this.$q.loading.hide();
               this.getEntrega()
-            }).catch(error => {
-              this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-              this.$q.loading.hide();
-            });
-          }).catch(()=>{});
+            })
+          })
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
         }
@@ -700,17 +700,14 @@
               this.$q.notify({type: 'positive', message: 'Negócio removido com sucesso'});
               this.getEntrega();
               this.$q.loading.hide();
-            }).catch(error => {
-              this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
-              this.$q.loading.hide();
-            });
-          }).catch(()=>{});
+            })
+          })
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
         }
 
       },
-      deletePesagem: function(id){
+      deletePesagem: function(id, pesagens){
         if(this.serverStatus.isUp){
           this.$q.dialog({
             title: 'Atenção',
@@ -719,13 +716,15 @@
             color: 'primary'
           }).then(data => {
             this.$q.loading.show();
-            pesagemService.deletePesagem(this.entrega.id, id).then(() => {
+            this.pesagemService.deletePesagem(this.entrega.id, id).then(() => {
               this.$q.loading.hide();
-              this.getEntrega()
-            }).catch(error => {
-              this.$q.loading.hide();
+              if(pesagens.length === 1 ){
+                this.backAction();
+              }else{
+                this.getEntrega()
+              }
             })
-          }).catch(()=>{});
+          })
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
         }
@@ -736,8 +735,6 @@
         this.entregaService.getEntregaById(this.$route.params.id).then(entrega => {
           this.$q.loading.hide();
           this.entrega = entrega;
-        }).catch(error => {
-          this.$q.loading.hide();
         })
       },
       backAction: function () {
