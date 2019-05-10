@@ -66,6 +66,8 @@ module.exports = function (ctx) {
 
         // adicionado
         'QTable',
+        'QTr',
+        'QTd',
         'QBtnDropdown',
         'QInfiniteScroll',
         'QLayoutFooter',
@@ -122,6 +124,7 @@ module.exports = function (ctx) {
         'QCarousel',
         'QCarouselSlide',
         'QSpinner',
+        'QPagination'
 
       ],
       directives: [

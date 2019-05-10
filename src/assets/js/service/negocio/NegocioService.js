@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Loading, Dialog } from 'quasar'
+
 import NegocioCulturaAPI from "../../api/NegocioCulturaAPI";
 import NegocioRepository from "../../repository/resource/NegocioRepository";
 import NegocioCulturaRepository from "../../repository/resource/NegocioCulturaRepository";
@@ -290,6 +290,34 @@ export default class NegocioService{
 
         resolve(negociosCulturasArmazens);
       }
+    });
+  }
+
+  listMovimentosByArmazem(negocioCulturaId, armazemId){
+    return new Promise((resolve, reject) => {
+      NegocioCulturaAPI.getAllMovimentosByNegocioCulturaAndArmazem(negocioCulturaId, armazemId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  }
+
+  listNotasFiscaisByArmazem(negocioCulturaId, armazemId){
+    return new Promise((resolve, reject) => {
+      NegocioCulturaAPI.getAllNotasFiscaisByNegocioCulturaAndArmazem(negocioCulturaId, armazemId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error.response)
+      })
     });
   }
 
