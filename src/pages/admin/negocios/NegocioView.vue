@@ -111,7 +111,7 @@
 
               <div class="col-12">
                 <div class="row gutter-sm">
-                  <div class="col-md-6 col-sm-12 col-xs-12">
+                  <div class="col-md-12 col-sm-12 col-xs-12">
                     <q-card style="padding: 0">
                       <q-tabs class="full-width" inverted>
                         <q-tab slot="title" name="tab-resumo" label="Resumo" default/>
@@ -151,40 +151,7 @@
                       </q-tabs>
                     </q-card>
                   </div>
-                  <div class="col-md-6 col-sm-12 col-xs-12">
-                    <q-card style="padding: 0">
-                      <q-tabs class="full-width" inverted>
-                        <q-tab slot="title" name="tab-resumo" label="Resumo" default/>
-                        <q-tab slot="title" :name="'tab-' + index" :label="armazemTitulo" v-for="(armazemTitulo, index) in armazensTitulos(cultura.armazens)" :key="armazemTitulo"/>
 
-                        <q-tab-pane class="q-pa-none" name="tab-resumo">
-                          <!--<q-list no-border>
-                            <q-item class="q-body-1">
-                              <q-item-main>
-                                Total
-                              </q-item-main>
-                              <q-item-side right>
-                                R$ {{ numeral(somaNotasFiscais(cultura.armazens)).format('0,0.00') }}
-                              </q-item-side>
-                            </q-item>
-                            <q-item v-for="armazem in cultura.armazens" :key="armazem.id" class="q-body-1">
-                              <q-item-main>
-                                {{armazem.nome}}
-                              </q-item-main>
-                              <q-item-side right>
-                                R$ {{numeral(armazem.valor_total_nf).format('0,0.00')}}
-                              </q-item-side>
-                            </q-item>
-                          </q-list>-->
-                          <q-table :data="getResumoFiscalData(cultura.armazens)" :columns="fiscalResumoColumns" row-key="id">
-                          </q-table>
-                        </q-tab-pane>
-                        <q-tab-pane class="q-pa-none" :name="'tab-' + index" v-for="(armazem, index) in cultura.armazens" :key="armazem.id" keep-alive>
-                          <armazem-notas-list-tabs :negocio-cultura="cultura" :armazem="armazem" />
-                        </q-tab-pane>
-                      </q-tabs>
-                    </q-card>
-                  </div>
                 </div>
               </div>
 
@@ -496,7 +463,6 @@
   import newProdutoModal from './components/modals/NewProdutoModal';
   import newFixacaoModal from './components/modals/NewFixacaoModal';
   import armazemEntregasListTabs from './components/tabs/ArmazemEntregasListTab';
-  import armazemNotasListTabs from './components/tabs/ArmazemNotasListTab';
   import apNoResults from 'components/ApNoResults'
   import NegocioService from "../../../assets/js/service/negocio/NegocioService";
 
@@ -511,21 +477,13 @@
       newProdutoModal,
       newFixacaoModal,
       editNegocioModal,
-      armazemEntregasListTabs,
-      armazemNotasListTabs
+      armazemEntregasListTabs
     },
     data () {
       return {
         negocioService: new NegocioService(),
         negocio: null,
         progressModel: 50,
-        fiscalResumoColumns: [
-          {label: 'Armazém', name:'armazem', field:'armazem', align: 'left',},
-          {label: 'Peso Fiscal', name:'peso_fiscal', field:'peso_fiscal', align: 'left',},
-          {label: 'Peso Físico', name:'peso_fisico', field:'peso_fisico', align: 'left',},
-          {label: 'Preço Fiscal', name:'preco_fiscal', field:'preco_fiscal', align: 'left',},
-          {label: 'Preço Físico', name:'preco_fisico', field:'preco_fisico', align: 'left',},
-        ],
       }
     },
     methods: {
@@ -668,32 +626,6 @@
       },
       armazensTitulos(armazens){
         return _.map(armazens, 'nome');
-      },
-      somaNotasFiscais(armazens){
-        let total = 0;
-
-        for(let armazem of armazens){
-          total += armazem.valor_total_nf;
-        }
-
-        return total;
-      },
-      getResumoFiscalData(armazens){
-
-        let result = [];
-
-        for(let armazem of armazens){
-          result.push({
-            'id': armazem.id,
-            'armazem': armazem.nome,
-            'peso_fiscal': this.numeral(armazem.pesagem_total_nf).format('0,0'),
-            'peso_fisico': this.numeral(armazem.pesagem_total_entregas).format('0,0'),
-            'preco_fiscal': 'R$ ' + this.numeral(armazem.valor_total_nf).format('0,0.00'),
-            'preco_fisico': 'R$ ' + this.numeral(armazem.valor_total_entregas).format('0,0.00'),
-          });
-        }
-
-        return result;
       },
       backAction () {
         this.$router.back();
