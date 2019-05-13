@@ -88,6 +88,12 @@
         this.localizacao.cidadeId.value = value.id;
       },
       saveLocalizacao: function(){
+        if(this.localizacao.isFiscal.value == false && this.localizacao.isCobranca.value == false){
+          this.typeError = 'Escolha ao menos um tipo de endereço';
+          return
+        }else{
+          this.typeError = null;
+        }
         if(!this.localizacao.isValid()){
           return
         }
