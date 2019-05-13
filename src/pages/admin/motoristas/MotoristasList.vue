@@ -220,12 +220,19 @@
         })
       },
       deleteMotorista: function(id){
-        this.$q.loading.show();
-        this.motoristaService.deleteMotorista(id).then(() => {
-          this.$q.notify({type: 'positive', message: 'Motorista excluido com sucesso.'});
-          this.listMotoristas(this.filter);
-          this.$q.loading.hide();
-        })
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja exluir esse motorista?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          this.$q.loading.show();
+          this.motoristaService.deleteMotorista(id).then(() => {
+            this.$q.notify({type: 'positive', message: 'Motorista excluido com sucesso.'});
+            this.listMotoristas(this.filter);
+            this.$q.loading.hide();
+          })
+        });
       },
     },
     mounted () {
