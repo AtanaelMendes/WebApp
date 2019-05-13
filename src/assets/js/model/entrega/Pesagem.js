@@ -6,7 +6,7 @@ export default class{
     errorMessage: null
   };
   emissao = {
-    value: moment(),
+    value: new Date(moment()).toISOString(),
     errorMessage: null
   };
   pesoBrutoTotal = {
