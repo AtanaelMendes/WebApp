@@ -140,13 +140,13 @@
       archiveGrupoEconomico: function(id){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente deseja arquivar o armazém?',
+          message: 'Realmente deseja arquivar o grupo econômico?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(() =>{
           this.$q.loading.show();
           this.grupoEconomicoService.archiveGrupoEconomico(id).then(() =>{
-            this.$q.notify({type: 'positive', message: 'Armazém arquivado com sucesso.'});
+            this.$q.notify({type: 'positive', message: 'Grupo econômico arquivado com sucesso.'});
             this.listGruposEconomicos(this.filter);
             this.$q.loading.hide();
           })
@@ -155,13 +155,13 @@
       restoreGrupoEconomico: function(id){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente deseja resturar esse armazém?',
+          message: 'Realmente deseja resturar esse grupo econômico?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(() =>{
           this.$q.loading.show();
           this.grupoEconomicoService.restoreGrupoEconomico(id).then(response =>{
-            this.$q.notify({type: 'positive', message: 'Armazém ativado com sucesso.'});
+            this.$q.notify({type: 'positive', message: 'Grupo econômico ativado com sucesso.'});
             this.listGruposEconomicos(this.filter);
             this.$q.loading.hide();
           })
@@ -170,13 +170,13 @@
       deleteGrupoEconomico: function(id){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente deseja excluir este armazém?',
+          message: 'Realmente deseja excluir este grupo econômico?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(() =>{
           this.$q.loading.show();
           this.grupoEconomicoService.deleteGrupoEconomico(id).then(() => {
-            this.$q.notify({type: 'positive', message: 'Armazém excluido com sucesso.'});
+            this.$q.notify({type: 'positive', message: 'Grupo econômico excluido com sucesso.'});
             this.listGruposEconomicos(this.filter);
             this.$q.loading.hide();
           })
