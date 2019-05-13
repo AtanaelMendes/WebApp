@@ -7,7 +7,7 @@ export default class AccountAPI{
   }
 
   static listAccounts(filter){
-    return Vue.prototype.$axios.get( 'account?' + filter);
+    return Vue.prototype.$axios.get( 'account' + (filter ? "?"+filter : ''));
   }
 
   static saveAccount(account){

@@ -6,7 +6,7 @@ export default class PessoaAPI{
   }
 
   static listPessoas(filter){
-    return Vue.prototype.$axios.get( 'pessoa?' + filter );
+    return Vue.prototype.$axios.get( 'pessoa' + (filter ? "?"+filter : '') );
   }
 
   static searchPessoa(value){
