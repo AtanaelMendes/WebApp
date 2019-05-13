@@ -366,13 +366,13 @@
       deletePessoa:function(){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente excluir essa pessoa?',
+          message: 'Realmente deseja excluir essa pessoa?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
           this.$q.loading.show();
           this.pessoaService.deletePessoa(this.$route.params.id).then(() => {
-            this.$q.notify({type: 'positive', message: 'Pessoa Excluir com sucesso'});
+            this.$q.notify({type: 'positive', message: 'Pessoa exluida com sucesso'});
             this.$router.push({name:'pessoas'});
             this.$root.$emit('refreshPessoaList');
             this.$q.loading.hide();
