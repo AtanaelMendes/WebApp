@@ -10,7 +10,7 @@ export default class PessoaAPI{
   }
 
   static searchPessoa(value){
-    return Vue.prototype.$axios.get( 'pessoa?search='+value );
+    return Vue.prototype.$axios.get( 'pessoa/search?value=' + value );
   }
 
   static savePessoa(pessoa){
