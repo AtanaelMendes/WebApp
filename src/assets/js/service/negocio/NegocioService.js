@@ -41,6 +41,20 @@ export default class NegocioService{
     this.negocioCulturaMovimentoRepository = new NegocioCulturaMovimentoRepository();
   }
 
+  setTransferenciaNegocio(negocioOrigemId, params){
+    return new Promise((resolve, reject) => {
+      NegocioAPI.setTransferenciaNegocio(negocioOrigemId, params).then( response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  }
+
   listTipoNegocios(){
     return new Promise((resolve, reject) => {
       NegocioAPI.listTiposNegocios().then( response => {

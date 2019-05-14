@@ -66,7 +66,6 @@
                   <ap-image size="250x250" :file-name="negocio.image_file_name"/>
                 </q-item-tile>
               </q-item-side>
-
               <q-item-side icon="work" v-if="!negocio.image_file_name"/>
 
               <q-item-main>
