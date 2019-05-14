@@ -1,6 +1,6 @@
 <template>
   <q-modal v-model="visible" no-backdrop-dismiss no-esc-dismiss class="ap-modal"
-           :content-css="{maxWidth: '80vh', maxHeight: '80vh'}" minimized @hide="hideEvent">
+           :content-css="{maxWidth: '100vh', maxHeight: '80vh'}" minimized @hide="hideEvent">
 
       <q-modal-layout class="relative-position">
         <div class="q-px-lg q-pb-sm q-pt-lg" slot="header">
@@ -106,7 +106,7 @@
 
 <style>
   .ap-modal.modal.minimized .modal-content{
-    margin: 0 20px;
+    margin: 0 10px;
     overflow: hidden;
   }
 

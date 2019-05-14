@@ -10,52 +10,51 @@
           <span class="q-subheading text-faded">Informar o negócio de destino</span>
         </div>
 
-        <div class="q-px-lg q-py-sm" style="text-align: center">
-          <q-list v-if="negociosDestino.length > 0" no-border inset-separator link>
-            <q-item v-for="negocioDestino in negociosDestino" @click.native="selectNegocioDestino(negocioDestino.id)">
+        <q-list v-if="negociosDestino" no-border separator link>
+          <q-item v-for="negocioDestino in negociosDestino" :key="negocioDestino.id" @click.native="selectNegocioDestino(negocioDestino)">
 
-              <q-item-side icon="check_circle" color="positive"
-                           v-if="transferencia.negocioCulturaDestinoId === negocioDestino.id"
-              />
+            <q-item-main>
 
-              <q-item-main inset>
+              <q-item-tile>
+                {{negocioDestino.nome}} {{negocioDestino.safra}}
+              </q-item-tile>
 
-                <q-item-tile>
-                  {{negocioDestino.nome}} {{negocioDestino.safra}}
-                </q-item-tile>
+              <q-item-tile sublabel v-if="negocioDestino.numero_pedido">
+                Pedido {{negocioDestino.numero_pedido}}
+              </q-item-tile>
 
-                <q-item-tile sublabel v-if="negocioDestino.numero_pedido">
-                  Pedido {{negocioDestino.numero_pedido}}
-                </q-item-tile>
+              <q-item-tile sublabel v-if="negocioDestino.tipoNegocio.is_quantidade">
+                Contrato {{negocioDestino.numero_contrato}}
+              </q-item-tile>
 
-                <q-item-tile sublabel v-if="negocioDestino.tipoNegocio.is_quantidade">
-                  Contrato {{negocioDestino.numero_contrato}}
-                </q-item-tile>
+              <q-item-tile sublabel v-if="!negocioDestino.tipoNegocio.is_quantidade">
+                {{negocioDestino.numero_contrato}}
+              </q-item-tile>
 
-                <q-item-tile sublabel v-if="!negocioDestino.tipoNegocio.is_quantidade">
-                  {{negocioDestino.numero_contrato}}
-                </q-item-tile>
-
-                <q-item-tile sublabel>
+              <q-item-tile sublabel>
                   <span>
                     Entregue {{numeral(negocioDestino.quantidade_entregue).format('0,0')}}
                   </span>
-                  <span v-if="negocioDestino.quantidade">
+                <span v-if="negocioDestino.quantidade">
                     de {{numeral(negocioDestino.quantidade).format('0,0')}}
                   </span>
-                  {{negocioDestino.unidadeMedida.sigla}}
-                </q-item-tile>
+                {{negocioDestino.unidadeMedida.sigla}}
+              </q-item-tile>
 
-                <q-item-tile></q-item-tile>
-              </q-item-main>
+            </q-item-main>
+            <q-item-side v-if="transferencia.negocioCulturaDestinoId === negocioDestino.id"
+                         icon="check_circle"
+                         color="positive"
+            />
 
-              <q-item-side v-if="negocioDestino.prazo_entrega_final">
-                <q-item-tile stamp>
-                  {{moment(negocioDestino.prazo_entrega_final).format('ll')}}
-                </q-item-tile>
-              </q-item-side>
-            </q-item>
-          </q-list>
+          </q-item>
+        </q-list>
+
+
+        <div class="row" v-if="!negociosDestino">
+          <div class="col-12" align="center">
+            <q-icon name="compare_arrows" size="200px" color="grey-4"/>
+          </div>
         </div>
       </q-carousel-slide>
 
@@ -64,8 +63,17 @@
         <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
           <span class="q-subheading text-faded">Informe a Quantidade</span>
         </div>
-        <div class="q-px-lg q-py-sm" style="text-align: center">
-          Campos
+        <div class="q-px-lg q-py-sm row justify-center" v-if="selectedNegocio">
+          <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
+            <q-field>
+              <q-input v-model="transferencia.quantidade"
+                       float-label="Quantidade"
+                       clearable align="right"
+                       :suffix="selectedNegocio.unidadeMedida.sigla"
+                       type="number"
+              />
+            </q-field>
+          </div>
         </div>
       </q-carousel-slide>
     </q-carousel>
@@ -74,9 +82,10 @@
       <q-btn @click="closeModal()" flat label="Cancelar" color="primary" />
       <div class="float-right ">
         <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="currentStep !== 0"/>
-        <q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep !== 2"/>
-        <!--<q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep !== 4" :disable=""/>-->
-        <q-btn @click="saveTransferencia" flat label="Salvar" color="primary"/>
+        <q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep !== 1"
+               :disable="transferencia.negocioCulturaDestinoId === null"
+        />
+        <q-btn @click="saveTransferencia" flat label="Salvar" color="primary" :disable="transferencia.quantidade > 1" v-if="currentStep == 1"/>
       </div>
     </div>
   </ap-modal>
@@ -100,13 +109,15 @@
         negocioService: new NegocioService(),
         searchValueByStep: null,
         isModalOpened: false,
-        negociosDestino: [],
+        negociosDestino: null,
+        selectedNegocio: null,
         hasSearch: true,
         currentStep: 0,
+        searchValueByStep: null,
         negocio: null,
         filter: {
-          type: 'non-trashed',
-          search: 'all',
+          type: 'all',
+          search: ' ',
         },
         transferencia: {
           quantidade: null,
@@ -119,7 +130,10 @@
       filter: {
         handler: function(val, oldval) {
           var filter = {type: 'all', search:(val.search.length > 2 ? val.search : '')};
-          this.listNegocios(filter)
+          if(val.search.length > 2){
+            this.listNegocios(filter)
+          }
+
         },
         deep: true,
       }
@@ -127,46 +141,75 @@
     methods: {
       openModal(negocio){
         this.isModalOpened = true;
-        this.negocio = negocio
-
+        this.negocio = negocio;
+        this.transferencia.negocioCulturaOrigemId = negocio.id;
+        this.searchValueByStep = new Map();
       },
       closeModal(){
         this.isModalOpened = false;
-        this.$emit('modal-closed')
+        this.$emit('modal-closed');
+        this.clearFields();
       },
-      selectNegocioDestino(negocioDestinoId){
-        this.transferencia.negocioCulturaDestinoId = negocioDestinoId;
+      selectNegocioDestino(negocioDestino){
+        this.selectedNegocio = negocioDestino;
+        this.transferencia.negocioCulturaDestinoId = negocioDestino.id;
+        this.goToNextStep();
       },
       setStepperIndex(oldIndex, newIndex, direction){
         this.currentStep = newIndex;
       },
       goToNextStep(){
+        this.$refs.transferenciaModal.closeSearch(true);
         this.$refs.stepperTransferencia.next();
+
+        if(this.searchValueByStep.has(this.currentStep)){
+          this.$refs.transferenciaModal.openSearch(this.searchValueByStep.get(this.currentStep));
+        }
       },
       goToPreviousStep(){
+        this.$refs.transferenciaModal.closeSearch(true);
         this.$refs.stepperTransferencia.previous();
+
+        if(this.searchValueByStep.has(this.currentStep)){
+          this.$refs.transferenciaModal.openSearch(this.searchValueByStep.get(this.currentStep));
+        }
       },
-      listBySearch: function(val){
-        this.filter.search = val;
+      listBySearch: function(value){
+        if(value === ""){
+          this.searchValueByStep.delete(this.currentStep);
+        }else{
+          this.searchValueByStep.set(this.currentStep, value);
+        }
+
+        this.filter.search = value;
       },
       listNegocios(filter){
         this.negocioService.listNegocios(agroUtils.serialize(filter)).then(search => {
           this.negociosDestino = search;
         });
       },
-
+      clearFields(){
+        this.filter.search = null;
+        this.negociosDestino = null;
+        this.selectedNegocio = null;
+        this.transferencia.quantidade = null;
+        this.transferencia.negocioCulturaOrigemId = null;
+        this.transferencia.negocioCulturaDestinoId = null;
+      },
       closeSearch(event){
         if(event === 'click'){
-          this.search("");
+          this.listBySearch("");
         }
       },
       saveTransferencia(){
         let params = {
-          negocio_cultura_destino_id: null,
-          quantidade: null,
+          negocio_cultura_destino_id: this.transferencia.negocioCulturaDestinoId,
+          quantidade: this.transferencia.quantidade,
         };
         this.negocioService.setTransferenciaNegocio(this.negocio.id, params).then(negocios => {
-          this.negocios = negocios;
+          this.$q.notify({type: 'positive', message: 'Transferencia efetuada'});
+          // this.negocios = negocios;
+          this.closeModal();
         });
       },
     }
