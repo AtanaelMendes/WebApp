@@ -234,6 +234,7 @@
         }
         let params = {
           produtor_id: this.form.produtor.value,
+          nome: this.form.nome.value,
           email: this.form.email.value,
           password: this.form.password.value,
           roles: this.userService.getIdsByRoles(this.form.selectedRoles.value).join()

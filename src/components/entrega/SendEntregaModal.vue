@@ -497,9 +497,9 @@
         }
 
         this.$q.loading.show();
-        this.armazemService.listArmazensByEntrega(entrega.id).then(response => {
+        this.armazemService.listArmazensByEntrega(entrega.id).then(armazens => {
           //TODO: Remover o armazem já selecionadooo
-          this.armazens = response.data;
+          this.armazens = armazens;
           this.$q.loading.hide();
         }).catch(error => {
           this.$q.loading.hide();

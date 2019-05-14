@@ -1,5 +1,5 @@
 <template>
-  <custom-page isChild>
+  <custom-page isChild v-if="talhaoData">
     <toolbar slot="toolbar" navigation_type="back" @navigation_clicked="backAction" title="Editar Talhão">
       <q-btn slot="action_itens" flat icon="done" round dense @click="updatetalhao()"/>
     </toolbar>
@@ -50,8 +50,8 @@
     methods:{
       fillForm: function(data){
         this.talhao.areaId.value = data.area.id;
-        this.talhao.nome.value = data.nome
-        this.talhao.tamanho.value = data.tamanho
+        this.talhao.nome.value = data.nome;
+        this.talhao.tamanho.value = data.tamanho;
         this.talhao.unidadeAreaId.value = data.unidade.id
       },
       getTalhaoById: function(){

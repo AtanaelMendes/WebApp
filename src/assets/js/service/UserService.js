@@ -1,6 +1,8 @@
 import AgroUtils from 'assets/js/AgroUtils'
-import UserAPI from "../api/UserAPI";
 import { Dialog } from 'quasar'
+import AccountAPI from "../api/AccountAPI";
+import ProdutorAPI from "../api/ProdutoAPI";
+import RoleAPI from "../api/RoleAPI";
 
 export default class UserService{
   constructor() {
@@ -24,7 +26,7 @@ export default class UserService{
 
   getListProdutor(){
     return new Promise((resolve, reject) => {
-      UserAPI.listProdutores().then( response => {
+      ProdutorAPI.listProdutores().then( response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -38,7 +40,7 @@ export default class UserService{
 
   saveProdutor(params){
     return new Promise((resolve, reject) => {
-      UserAPI.saveProdutor(params).then(response => {
+      ProdutorAPI.saveProdutor(params).then(response => {
         if (response.status === 201) {
           resolve(response)
         }
@@ -50,7 +52,7 @@ export default class UserService{
 
   listAccounts(filter){
     return new Promise((resolve, reject) => {
-      UserAPI.listAccounts(AgroUtils.serialize(filter)).then( response => {
+      AccountAPI.listAccounts(AgroUtils.serialize(filter)).then( response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -64,7 +66,7 @@ export default class UserService{
 
   getAccount(accountId){
     return new Promise((resolve, reject) => {
-      UserAPI.getAccount(accountId).then(response => {
+      AccountAPI.getAccount(accountId).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -78,7 +80,7 @@ export default class UserService{
 
   saveAccount(params){
     return new Promise((resolve, reject) => {
-      UserAPI.saveAccount(params).then(response => {
+      AccountAPI.saveAccount(params).then(response => {
         if(response.status === 201){
           resolve(response.data);
         }else{
@@ -92,7 +94,7 @@ export default class UserService{
 
   updateAccount(params, accountId){
     return new Promise((resolve, reject) => {
-      UserAPI.updateAccount(params, accountId).then(response => {
+      AccountAPI.updateAccount(params, accountId).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -146,7 +148,7 @@ export default class UserService{
 
   listRoles(){
     return new Promise((resolve, reject) => {
-      UserAPI.listRoles().then(response => {
+      RoleAPI.listRoles().then(response => {
         resolve(response.data);
       }).catch(error => {
         reject(error)

@@ -10,7 +10,7 @@ export default class GrupoEconomicoAPI{
   }
 
   static listGruposEconomicosWithFilter(filter){
-    return Vue.prototype.$axios.get('/grupo_economico?'+ filter);
+    return Vue.prototype.$axios.get('/grupo_economico' + (filter ? "?"+filter : ''));
   }
 
   static listPessoasOfGrupoEconomico(id){

@@ -290,7 +290,7 @@
       restoreArea: function(){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente Ativar essa área?',
+          message: 'Realmente deseja ativar essa área?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(data => {
