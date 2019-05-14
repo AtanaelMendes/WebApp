@@ -4,7 +4,7 @@
     <q-carousel slot="content" height="100%" no-swipe ref="stepperNovaCultura" @slide-trigger="setStepperIndex">
       <!--PASSO 1 SELECIONAR CULTURA-->
       <q-carousel-slide class="q-pa-none">
-        <template v-if="culturas">
+        <template v-if="culturasFiltered">
           <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
             <span class="q-subheading text-faded">Selecione uma cultura</span>
           </div>
@@ -32,7 +32,7 @@
           </template>
 
           <q-list no-border separator style="width: 100%" link v-if="$q.screen.lt.sm">
-            <q-item v-for="cultura in culturas" :key="cultura.nome" @click.native="setCultura(cultura)">
+            <q-item v-for="cultura in culturasFiltered" :key="cultura.nome" @click.native="setCultura(cultura)">
               <q-item-side>
                 <q-item-tile style="width:70px">
                   <ap-image size="200x125" :file-name="cultura.image_file_name" />
