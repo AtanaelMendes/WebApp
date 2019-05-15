@@ -85,7 +85,7 @@
         <q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep !== 1"
                :disable="transferencia.negocioCulturaDestinoId === null"
         />
-        <q-btn @click="saveTransferencia" flat label="Salvar" color="primary" :disable="transferencia.quantidade > 1" v-if="currentStep == 1"/>
+        <q-btn @click="saveTransferencia" flat label="Salvar" color="primary" :disable="transferencia.quantidade < 1" v-if="currentStep == 1"/>
       </div>
     </div>
   </ap-modal>
@@ -201,7 +201,23 @@
           this.listBySearch("");
         }
       },
+      isFormValid(){
+        if(transferencia.quantidade === null || transferencia.quantidade < 1){
+          return false
+        }
+        if(transferencia.negocioCulturaDestinoId === null || transferencia.negocioCulturaDestinoId === undefined){
+          return false
+        }
+        if(transferencia.negocioCulturaOrigemId === null || transferencia.negocioCulturaOrigemId === undefined){
+          return false
+        }
+        return true
+      },
       saveTransferencia(){
+        if (!this.isFormValid()){
+          this.$q.notify({type: 'negative', message: 'Preencha as informações corretamente'});
+          return
+        }
         let params = {
           negocio_cultura_destino_id: this.transferencia.negocioCulturaDestinoId,
           quantidade: this.transferencia.quantidade,
