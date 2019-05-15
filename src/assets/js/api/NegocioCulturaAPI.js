@@ -37,4 +37,12 @@ export default class NegocioCulturaAPI{
   static getAllNotasFiscaisByNegocioCulturaAndArmazem(negocioCulturaId, armazemId){
     return Vue.prototype.$axios.get('negocio/cultura/' + negocioCulturaId +  '/nota_fiscal?armazem_id=' + armazemId);
   }
+
+  static transferir(negocioCulturaId, params){
+    return Vue.prototype.$axios.post('/negocio/cultura/'+negocioCulturaId+'/transferir', params);
+  }
+
+  static listNegociosCulturasParaTransferir(negocioCulturaId, filter){
+    return Vue.prototype.$axios.get('/negocio/cultura/'+negocioCulturaId+'/transferir/negocio' + (filter ? "?"+filter : ''));
+  }
 }

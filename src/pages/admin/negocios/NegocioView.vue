@@ -51,7 +51,7 @@
             <q-btn slot="right" flat dense icon="more_vert" round>
               <q-popover>
                 <q-list link class="no-border">
-                  <q-item v-close-overlay @click.native="newTrasnferencia()">
+                  <q-item v-close-overlay @click.native="newTrasnferencia(cultura)">
                     <q-item-main label="Nova transferência"/>
                   </q-item>
                   <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
@@ -443,7 +443,7 @@
     </q-page-sticky>
 
     <!--MODAL NOVA TRANSFERENCIA -->
-    <transferencia-modal ref="transferenciaModal"  />
+    <new-transferencia-modal ref="transferenciaModal"  />
 
     <!--MODAL VINCULAR SAFRA CULTURA -->
     <new-cultura-modal ref="culturaModal"  />
@@ -468,7 +468,7 @@
   import newTituloModal from './components/modals/NewTituloModal';
   import newProdutoModal from './components/modals/NewProdutoModal';
   import newFixacaoModal from './components/modals/NewFixacaoModal';
-  import transferenciaModal from './components/modals/TransferenciaModal';
+  import newTransferenciaModal from './components/modals/NewTransferenciaModal';
   import armazemEntregasListTabs from './components/tabs/ArmazemEntregasListTab';
   import apNoResults from 'components/ApNoResults'
   import NegocioService from "assets/js/service/negocio/NegocioService";
@@ -484,7 +484,7 @@
       newProdutoModal,
       newFixacaoModal,
       editNegocioModal,
-      transferenciaModal,
+      newTransferenciaModal,
       armazemEntregasListTabs
     },
     data () {
@@ -495,8 +495,8 @@
       }
     },
     methods: {
-      newTrasnferencia(){
-        this.$refs.transferenciaModal.openModal(this.negocio);
+      newTrasnferencia(cultura){
+        this.$refs.transferenciaModal.openModal(cultura);
       },
       attachCultura(){
         this.$refs.culturaModal.openModal(this.negocio);

@@ -41,20 +41,6 @@ export default class NegocioService{
     this.negocioCulturaMovimentoRepository = new NegocioCulturaMovimentoRepository();
   }
 
-  setTransferenciaNegocio(negocioOrigemId, params){
-    return new Promise((resolve, reject) => {
-      NegocioAPI.setTransferenciaNegocio(negocioOrigemId, params).then( response => {
-        if(response.status === 200) {
-          resolve(response.data);
-        }else{
-          reject(response)
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  }
-
   listTipoNegocios(){
     return new Promise((resolve, reject) => {
       NegocioAPI.listTiposNegocios().then( response => {
@@ -331,6 +317,34 @@ export default class NegocioService{
         }
       }).catch(error => {
         reject(error.response)
+      })
+    });
+  }
+
+  transferirParaNegocio(negocioOrigemId, params){
+    return new Promise((resolve, reject) => {
+      NegocioCulturaAPI.transferir(negocioOrigemId, params).then( response => {
+        if(response.status === 201) {
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  }
+
+  listNegociosCulturasParaTransferir(negocioCulturaId, filter){
+    return new Promise((resolve, reject) => {
+      NegocioCulturaAPI.listNegociosCulturasParaTransferir(negocioCulturaId, filter).then( response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error)
       })
     });
   }

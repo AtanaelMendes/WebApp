@@ -6,10 +6,6 @@ export default class NegocioAPI{
     return Vue.prototype.$axios.get('/tipo_negocio');
   }
 
-  static setTransferenciaNegocio(negocioOrigemId, params){
-    return Vue.prototype.$axios.post('/negocio/cultura/'+negocioOrigemId+'/transferir', params);
-  }
-
   static listNegocios(filter){
     return Vue.prototype.$axios.get('/negocio' + (filter ? "?"+filter : ''));
   }
