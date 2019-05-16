@@ -497,7 +497,8 @@
       newProdutoModal,
       newFixacaoModal,
       editNegocioModal,
-      transferenciaModal,
+      newTransferenciaModal,
+      movimentoModal,
       armazemEntregasListTabs
     },
     data () {
