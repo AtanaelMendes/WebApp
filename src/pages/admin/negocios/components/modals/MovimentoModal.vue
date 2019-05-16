@@ -51,7 +51,6 @@
 
 <script>
   import NegocioService from "assets/js/service/negocio/NegocioService";
-  import agroUtils from "assets/js/AgroUtils";
   import apModal from 'components/ApModal'
   import apImage from 'components/ApImage'
   export default {
