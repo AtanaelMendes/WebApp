@@ -28,6 +28,9 @@
         {{negocio.tipo}} {{negocio.numero_contrato}},
         <span v-if="negocio.numero_pedido">Nº {{negocio.numero_pedido}} -</span>
         {{moment(negocio.emissao).format('ll')}}
+        <q-chip dense color="negative" pointing="left" v-if="negocio.deleted_at">
+          Inativo
+        </q-chip>
       </div>
 
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -41,20 +44,23 @@
       </div>
 
       <!--NEGOCIO CULTURAS & NEGOCIO CULTURA FIXAÇOES-->
-      <div class="col-12" v-for="(cultura, index) in negocio.culturas" :key="cultura.id">
+      <div class="col-12" v-for="(negocioCultura, index) in negocio.culturas" :key="negocioCultura.id">
         <q-card class="full-height">
 
           <q-card-title>
-            {{cultura.safra_cultura}}
-            <span v-if="cultura.is_safrinha">Safrinha</span>
-            {{cultura.safra}}
+            {{negocioCultura.safra_cultura}}
+            <span v-if="negocioCultura.is_safrinha">Safrinha</span>
+            {{negocioCultura.safra}}
             <q-btn slot="right" flat dense icon="more_vert" round>
               <q-popover>
                 <q-list link class="no-border">
                   <q-item v-close-overlay @click.native="newTrasnferencia(cultura)">
                     <q-item-main label="Nova transferência"/>
                   </q-item>
-                  <q-item v-close-overlay @click.native="deleteCultura(cultura.id)">
+                  <q-item v-close-overlay @click.native="newMovimento(negocioCultura)">
+                    <q-item-main label="Novo movimento"/>
+                  </q-item>
+                  <q-item v-close-overlay @click.native="deleteCultura(negocioCultura.id)">
                     <q-item-main label="Excluir Cultura"/>
                   </q-item>
                 </q-list>
@@ -70,12 +76,12 @@
 
                   <div class="col-12 q-caption">
                     Entrega
-                    <q-progress :percentage="cultura.quantidade_entregue / cultura.quantidade * 100" height="6px" color="blue" animate stripe/>
+                    <q-progress :percentage="negocioCultura.quantidade_entregue / negocioCultura.quantidade * 100" height="6px" color="blue" animate stripe/>
                   </div>
 
-                  <div class="col-12  q-caption" v-if="negocio.tipo !== 'Troca'">
+                  <div class="col-12  q-caption" v-if="negocio.culturas.fixacoes">
                     Fixações
-                    <q-progress :percentage="cultura.fixacao_porcentagem"  height="6px" color="blue" animate stripe/>
+                    <q-progress :percentage="negocioCultura.fixacao_porcentagem"  height="6px" color="blue" animate stripe/>
                   </div>
 
                   <div class="col-12  q-caption" v-if="false">
@@ -83,9 +89,9 @@
                     <q-progress :percentage="progressModel + 20" height="6px" color="blue" animate stripe/>
                   </div>
 
-                  <div class="col-12" v-if="cultura.observacoes">
+                  <div class="col-12" v-if="negocioCultura.observacoes">
                     <span class="text-bold">Observações</span>
-                    <p>{{cultura.observacoes}}</p>
+                    <p>{{negocioCultura.observacoes}}</p>
                   </div>
                 </div>
               </div>
@@ -94,16 +100,19 @@
               <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                 <div class="row gutter-xs">
                   <div class="col-12">
-                    <span class="text-faded">Entregue</span> {{ numeral(cultura.quantidade_entregue).format('0,0') }}
-                    <span class="text-faded">de</span> {{ numeral(cultura.quantidade).format('0,0') }} {{cultura.unidade_medida.sigla}}
-                    <template v-if="cultura.prazo_entrega_inicial">
-                      <span class="text-faded">entre</span> {{ moment(cultura.prazo_entrega_inicial).format('DD/MMM') }}
-                      <span class="text-faded">e</span> {{ moment(cultura.prazo_entrega_final).format('DD/MMM/YYYY') }}.
+                    <span class="text-faded">Entregue</span> {{ numeral(negocioCultura.quantidade_entregue).format('0,0') }}
+                    <span class="text-faded" v-if="negocioCultura.quantidade >0">
+                      de {{ numeral(negocioCultura.quantidade).format('0,0') }}
+                    </span>
+                     {{negocioCultura.unidade_medida.sigla}}
+                    <template v-if="negocioCultura.prazo_entrega_inicial">
+                      <span class="text-faded">entre</span> {{ moment(negocioCultura.prazo_entrega_inicial).format('DD/MMM') }}
+                      <span class="text-faded">e</span> {{ moment(negocioCultura.prazo_entrega_final).format('DD/MMM/YYYY') }}.
                     </template>
                     <br/>
-                    <span class="text-faded">Armazens: </span> {{armazensTitulos(cultura.armazens).join(', ')}}.
+                    <span class="text-faded">Armazens: </span> {{armazensTitulos(negocioCultura.armazens).join(', ')}}.
                     <br/>
-                    <span class="text-faded">Classificação: </span>{{cultura.classificacao}}.
+                    <span class="text-faded">Classificação: </span>{{negocioCultura.classificacao}}.
                   </div>
                 </div>
               </div>
@@ -118,7 +127,7 @@
                     <q-card style="padding: 0">
                       <q-tabs class="full-width" inverted>
                         <q-tab slot="title" name="tab-resumo" label="Resumo" default/>
-                        <q-tab slot="title" :name="'tab-' + index" :label="armazemTitulo" v-for="(armazemTitulo, index) in armazensTitulos(cultura.armazens)" :key="armazemTitulo"/>
+                        <q-tab slot="title" :name="'tab-' + index" :label="armazemTitulo" v-for="(armazemTitulo, index) in armazensTitulos(negocioCultura.armazens)" :key="armazemTitulo"/>
 
                         <q-tab-pane class="q-pa-none" name="tab-resumo">
                           <q-list no-border>
@@ -127,15 +136,15 @@
                                 Total
                               </q-item-main>
                               <q-item-side right>
-                                {{ numeral(cultura.quantidade).format('0,0') }} {{cultura.unidade_medida.sigla}}
+                                {{ numeral(negocioCultura.quantidade).format('0,0') }} {{negocioCultura.unidade_medida.sigla}}
                               </q-item-side>
                             </q-item>
-                            <q-item v-for="armazem in cultura.armazens" :key="armazem.id" class="q-body-1">
+                            <q-item v-for="armazem in negocioCultura.armazens" :key="armazem.id" class="q-body-1">
                               <q-item-main>
                                 {{armazem.nome}}
                               </q-item-main>
                               <q-item-side right>
-                                {{numeral(armazem.quantidade_entrega).format('0,0')}} {{cultura.unidade_medida.sigla}}
+                                {{numeral(armazem.quantidade_entrega).format('0,0')}} {{negocioCultura.unidade_medida.sigla}}
                               </q-item-side>
                             </q-item>
                             <q-item class="q-body-1">
@@ -143,13 +152,13 @@
                                 Saldo
                               </q-item-main>
                               <q-item-side right>
-                                {{numeral(cultura.quantidade - cultura.quantidade_entregue).format('0,0')}} {{cultura.unidade_medida.sigla}}
+                                {{numeral(negocioCultura.quantidade - negocioCultura.quantidade_entregue).format('0,0')}} {{negocioCultura.unidade_medida.sigla}}
                               </q-item-side>
                             </q-item>
                           </q-list>
                         </q-tab-pane>
-                        <q-tab-pane class="q-pa-none" :name="'tab-' + index" v-for="(armazem, index) in cultura.armazens" :key="armazem.id" keep-alive>
-                          <armazem-entregas-list-tabs :negocio-cultura="cultura" :armazem="armazem" />
+                        <q-tab-pane class="q-pa-none" :name="'tab-' + index" v-for="(armazem, index) in negocioCultura.armazens" :key="armazem.id" keep-alive>
+                          <armazem-entregas-list-tabs :negocio-cultura="negocioCultura" :armazem="armazem" />
                         </q-tab-pane>
                       </q-tabs>
                     </q-card>
@@ -159,7 +168,7 @@
               </div>
 
               <!--NEGOCIO CULTURA FIXAÇOES-->
-              <template v-for="(fixacao, index) in cultura.fixacoes" >
+              <template v-for="(fixacao, index) in negocioCultura.fixacoes" >
 
 
                 <div class="col-12">
@@ -212,7 +221,7 @@
                               <q-btn dense flat icon="more_vert" round>
                                 <q-popover>
                                   <q-list link class="no-border">
-                                    <q-item v-close-overlay @click.native="deleteFixacaoTitulo(item.id, fixacao.id, cultura.id)">
+                                    <q-item v-close-overlay @click.native="deleteFixacaoTitulo(item.id, fixacao.id, negocioCultura.id)">
                                       <q-item-main label="Excluir Título"/>
                                     </q-item>
                                   </q-list>
@@ -240,7 +249,7 @@
                       <q-btn class="float-right" color="grey-7" flat dense icon="more_vert" round>
                         <q-popover>
                           <q-list link class="no-border">
-                            <q-item v-close-overlay @click.native="deleteFixacao(fixacao.id, cultura.id)">
+                            <q-item v-close-overlay @click.native="deleteFixacao(fixacao.id, negocioCultura.id)">
                               <q-item-main label="Excluir Fixação"/>
                             </q-item>
                           </q-list>
@@ -445,6 +454,9 @@
     <!--MODAL NOVA TRANSFERENCIA -->
     <new-transferencia-modal ref="transferenciaModal"  />
 
+    <!--MODAL NOVO MOVIMENTO -->
+    <movimento-modal ref="movimentoModal"  />
+
     <!--MODAL VINCULAR SAFRA CULTURA -->
     <new-cultura-modal ref="culturaModal"  />
 
@@ -469,6 +481,7 @@
   import newProdutoModal from './components/modals/NewProdutoModal';
   import newFixacaoModal from './components/modals/NewFixacaoModal';
   import newTransferenciaModal from './components/modals/NewTransferenciaModal';
+  import movimentoModal from './components/modals/MovimentoModal';
   import armazemEntregasListTabs from './components/tabs/ArmazemEntregasListTab';
   import apNoResults from 'components/ApNoResults'
   import NegocioService from "assets/js/service/negocio/NegocioService";
@@ -484,7 +497,7 @@
       newProdutoModal,
       newFixacaoModal,
       editNegocioModal,
-      newTransferenciaModal,
+      transferenciaModal,
       armazemEntregasListTabs
     },
     data () {
@@ -497,6 +510,9 @@
     methods: {
       newTrasnferencia(cultura){
         this.$refs.transferenciaModal.openModal(cultura);
+      },
+      newMovimento(negocioCultura){
+        this.$refs.movimentoModal.openModal(negocioCultura);
       },
       attachCultura(){
         this.$refs.culturaModal.openModal(this.negocio);
