@@ -147,13 +147,11 @@
         }
         return true
       },
-      isUnidadeMedidaRequired: function(){
-        if(this.caminhao.tara != null || this.caminhao.pesoBruto != null || this.caminhao.estimativaCarga != null){
-          if(this.caminhao.unidadeMedidaSigla.value === null || this.caminhao.unidadeMedidaSigla.value === undefined){
-            this.caminhao.unidadeMedidaSigla.error = true;
-            this.caminhao.unidadeMedidaSigla.errorMessage = 'informe a unidade de medida';
-            return false
-          }
+      unidadeMedidaValid: function(){
+        if(this.caminhao.unidadeMedidaSigla.value === null || this.caminhao.unidadeMedidaSigla.value === undefined){
+          this.caminhao.unidadeMedidaSigla.error = true;
+          this.caminhao.unidadeMedidaSigla.errorMessage = 'informe a unidade de medida';
+          return false
         }
         return true
       },
@@ -166,7 +164,7 @@
         this.caminhao.unidadeMedidaSigla.errorMessage = null;
       },
       addCaminhao: function(){
-        if(!this.nomeIsValid() || !this.placaIsValid() || !this.isUnidadeMedidaRequired()){
+        if(!this.nomeIsValid() || !this.placaIsValid() || !this.unidadeMedidaValid()){
           return
         }
         this.$q.loading.show();
