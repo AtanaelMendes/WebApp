@@ -126,7 +126,7 @@
       },
       listGruposEconomicos: function(filter) {
         this.$q.loading.show();
-        this.grupoEconomicoService.listGruposEconomicos(filter).then(response => {
+        this.grupoEconomicoService.listGruposEconomicos('').then(response => {
           this.$q.loading.hide();
           this.gruposEconomicos = response;
           this.isEmptyList = this.gruposEconomicos.length === 0;

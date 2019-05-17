@@ -143,7 +143,7 @@
                     <q-item link v-for="cultivar in activeTalhao.cultivares" :key="cultivar.key" >
                       <q-item-side v-if="cultivar.marca.image_file_name" :image="imageMakeUrl(cultivar.marca.image_file_name, '200x125')" color="primary"/>
                       <q-item-side v-else icon="spa" color="primary" @click.native="goToCultivar(cultivar.id)" />
-                      <q-item-main @click.native="goToCultivar(cultivar.id)" >
+                      <q-item-main @click.native="goToCultivar(cultivar)" >
                         <q-item-tile>
                           {{cultivar.marca.nome}}
                           {{cultivar.nome}}
@@ -231,8 +231,7 @@
       iArea(value){
         this.iTalhao = 0;
         let areaId = this.areas[value].id;
-        let talhaoId = this.talhoesDaArea[0].id;
-        this.$router.replace({query: Object.assign({}, this.$route.query, {area_id:areaId, talhao_id:talhaoId})});
+        this.$router.replace({query: Object.assign({}, this.$route.query, {area_id:areaId})});
       },
       iTalhao(value){
         let talhaoId = this.talhoesDaArea[value].id;
@@ -261,13 +260,21 @@
     },
     methods:{
       onTabSelected(){
-        if(this.$route.query.talhao_id && this.talhoes && this.areas){
-          this.changeSlidesByTalhaoId(parseInt(this.$route.query.talhao_id));
+        if(!_.isEmpty(this.talhoes) && !_.isEmpty(this.areas)){
+          this.checkRoute();
         }
-
       },
       onDataLoaded(){
-        if(this.$route.query.talhao_id && this.talhoes && this.areas){
+        if(!_.isEmpty(this.talhoes) && !_.isEmpty(this.areas)){
+          this.checkRoute();
+        }
+      },
+      checkRoute(){
+        if(_.isEmpty(this.$route.query)){
+          let areaId = this.areas[0].id;
+          let talhaoId = this.talhoesDaArea[0].id;
+          this.$router.replace({query: Object.assign({}, this.$route.query, {area_id:areaId, talhao_id:talhaoId})});
+        }else{
           this.changeSlidesByTalhaoId(parseInt(this.$route.query.talhao_id));
         }
       },
@@ -336,18 +343,19 @@
       updateTamanhoCultivares(talhao){
         this.$refs.updateCultivaresTamanhoModal.openModal(talhao, this.safraCultura);
       },
-      goToCultivar(cultivarId){
-        this.$router.replace({path:'cultivares',query:{cultivar_id:cultivarId}});
+      goToCultivar(cultivar){
+        this.$router.replace({path:'cultivares',query:{marca_id:cultivar.marca_id, cultivar_id:cultivar.id}});
       },
       changeSlidesByTalhaoId(talhaoId){
-        console.log('changeSlidesByTalhaoId', talhaoId);
         let talhao = this.talhoes.find(talhao => talhao.id === talhaoId);
         let areaIndex = this.areas.findIndex(area => area.id === talhao.area_id);
         this.iArea = areaIndex;
         let talhaoIndex = this.talhoesDaArea.findIndex(talhaoArea => talhaoArea.id === talhao.id);
         this.iTalhao = talhaoIndex;
         this.$refs.areasCarousel.goToSlide(areaIndex);
-        this.$refs.talhoesCarousel.goToSlide(talhaoIndex);
+        setTimeout(function () {
+          this.$refs.talhoesCarousel.goToSlide(talhaoIndex);
+        }.bind(this, talhaoIndex), 300);
       }
     },
   }

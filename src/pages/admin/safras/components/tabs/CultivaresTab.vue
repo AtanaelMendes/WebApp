@@ -109,7 +109,7 @@
                     :unidade-area="safraCultura.view_unidade_area"
                     :unidade-medida="safraCultura.view_unidade_medida">
                   </safra-quantidades>
-                  <q-item link v-for="talhao in activeCultivar.talhoes" :key="talhao.id" @click.native="goToTalhao(talhao.id)">
+                  <q-item link v-for="talhao in activeCultivar.talhoes" :key="talhao.id" @click.native="goToTalhao(talhao)">
                     <q-item-side v-if="talhao.image_file_name" :image="imageMakeUrl(talhao.image_file_name, '200x125')" color="primary"/>
                     <q-item-side v-else icon="place" color="primary"/>
                     <q-item-main>
@@ -181,8 +181,7 @@
       iMarca(value){
         this.iCultivar = 0;
         let marcaId = this.marcas[value].id;
-        let cultivarId = this.cultivaresDaMarca[0].id;
-        this.$router.replace({query: Object.assign({}, this.$route.query, {marca_id:marcaId, cultivar_id:cultivarId})});
+        this.$router.replace({query: Object.assign({}, this.$route.query, {marca_id:marcaId})});
       },
       iCultivar(value){
         let cultivarId = this.cultivaresDaMarca[value].id;
@@ -199,12 +198,21 @@
     },
     methods: {
       onTabSelected(){
-        if(this.$route.query.cultivar_id){
-          this.changeSlidesByCultivarId(parseInt(this.$route.query.cultivar_id));
+        if(!_.isEmpty(this.marcas) && !_.isEmpty(this.cultivares)) {
+          this.checkRoute();
         }
       },
       onDataLoaded(){
-        if(this.$route.query.cultivar_id){
+        if(!_.isEmpty(this.marcas) && !_.isEmpty(this.cultivares)) {
+          this.checkRoute();
+        }
+      },
+      checkRoute(){
+        if(_.isEmpty(this.$route.query)){
+          let marcaId = this.marcas[0].id;
+          let cultivarId = this.cultivaresDaMarca[0].id;
+          this.$router.replace({query: Object.assign({}, this.$route.query, {marca_id:marcaId, cultivar_id:cultivarId})});
+        }else{
           this.changeSlidesByCultivarId(parseInt(this.$route.query.cultivar_id));
         }
       },
@@ -212,8 +220,8 @@
         return agroUtils.image.makeUrl(fileName, size)
       },
 
-      goToTalhao(talhaoId){
-        this.$router.replace({path:'areas',query:{talhao_id:talhaoId}});
+      goToTalhao(talhao){
+        this.$router.replace({path:'areas', query:{area_id:talhao.area_id, talhao_id:talhao.id}});
       },
       changeSlidesByCultivarId(cultivarId){
         let cultivar = this.cultivares.find(cultivar => cultivar.id === cultivarId);
@@ -222,8 +230,9 @@
         let cultivarIndex = this.cultivaresDaMarca.findIndex(cultivarMarca => cultivarMarca.id === cultivar.id);
         this.iCultivar = cultivarIndex;
         this.$refs.marcasCarousel.goToSlide(marcaIndex);
-        this.$refs.cultivaresCarousel.goToSlide(cultivarIndex);
-
+        setTimeout(function () {
+          this.$refs.cultivaresCarousel.goToSlide(cultivarIndex);
+        }.bind(this, cultivarIndex), 300);
       }
     },
   }
