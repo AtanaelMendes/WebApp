@@ -126,8 +126,8 @@
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
   import imapeUpload from 'components/ImageUpload'
-  import addCaminhaoModal from 'components/caminhao/AddCaminhaoModal'
-  import editCaminhaoModal from 'components/caminhao/EditCaminhaoModal'
+  import addCaminhaoModal from './components/modals/AddCaminhaoModal'
+  import editCaminhaoModal from './components/modals/EditCaminhaoModal'
   import CaminhaoService from "assets/js/service/CaminhaoService";
   import agroUtils from "assets/js/AgroUtils";
   export default {

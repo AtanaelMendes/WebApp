@@ -34,6 +34,7 @@
 
               <q-item-tile>
                 {{armazem.nome}}
+                <span class="text-faded">#{{armazem.id}}</span>
               </q-item-tile>
 
               <q-item-tile sublabel>

@@ -71,10 +71,10 @@
             <div class="row gutter-sm" >
 
               <!--NEGOCIO CULTURAS-->
-              <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="negocio.culturas.fixacoes || negocioCultura.quantidade || negocioCultura.observacoes">
                 <div class="row gutter-xs text-faded">
 
-                  <div class="col-12 q-caption">
+                  <div class="col-12 q-caption" v-if="negocioCultura.quantidade">
                     Entrega
                     <q-progress :percentage="negocioCultura.quantidade_entregue / negocioCultura.quantidade * 100" height="6px" color="blue" animate stripe/>
                   </div>
@@ -84,10 +84,10 @@
                     <q-progress :percentage="negocioCultura.fixacao_porcentagem"  height="6px" color="blue" animate stripe/>
                   </div>
 
-                  <div class="col-12  q-caption" v-if="false">
-                    Financeiro
-                    <q-progress :percentage="progressModel + 20" height="6px" color="blue" animate stripe/>
-                  </div>
+                  <!--<div class="col-12  q-caption" v-if="false">-->
+                    <!--Financeiro-->
+                    <!--<q-progress :percentage="progressModel + 20" height="6px" color="blue" animate stripe/>-->
+                  <!--</div>-->
 
                   <div class="col-12" v-if="negocioCultura.observacoes">
                     <span class="text-bold">Observações</span>
@@ -97,10 +97,13 @@
               </div>
 
                 <!--NEGOCIO CULTURAS DETALHES-->
-              <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                 <div class="row gutter-xs">
                   <div class="col-12">
-                    <span class="text-faded">Entregue</span> {{ numeral(negocioCultura.quantidade_entregue).format('0,0') }}
+                    <span class="text-faded" v-if="negocio.tipo === 'Venda' || negocio.tipo === 'Troca' ">Entregue</span>
+                    <span class="text-faded" v-if="negocio.tipo === 'Balcão' ">Balcão</span>
+                    <span class="text-faded" v-if="negocio.tipo === 'Disponível' ">Disponível</span>
+                    {{ numeral(negocioCultura.quantidade_entregue).format('0,0') }}
                     <span class="text-faded" v-if="negocioCultura.quantidade >0">
                       de {{ numeral(negocioCultura.quantidade).format('0,0') }}
                     </span>
@@ -121,6 +124,7 @@
                 <q-card-separator/>
               </div>
 
+              <!--TABELA RESUMO E LISTA DE ENTREGAS-->
               <div class="col-12">
                 <div class="row gutter-sm">
                   <div class="col-md-12 col-sm-12 col-xs-12">

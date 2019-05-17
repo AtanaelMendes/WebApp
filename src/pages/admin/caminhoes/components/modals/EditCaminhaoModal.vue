@@ -2,11 +2,11 @@
   <q-modal v-model="isModalOpened" minimized @hide="closeModal" :content-css="{minWidth: '300px', minHeight:'250px'}">
     <q-modal-layout>
       <div class="q-pa-md q-title text-center" slot="header">
-        Novo Caminhão
+        Editar Caminhão
       </div>
 
       <div class="row q-pa-md">
-        <div class="col-12" @keyup.enter="addCaminhao()">
+        <div class="col-12" @keyup.enter="updateCaminhao()">
 
           <q-field class="q-mb-sm" :error="caminhao.nome.error" :error-label="caminhao.nome.errorMessage">
             <q-input v-model="caminhao.nome.value" float-label="Nome" @input="clearErrorMessage()"/>
@@ -37,7 +37,7 @@
 
       <div class="q-pa-md text-right" slot="footer">
         <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-        <q-btn label="salvar" color="primary" @click="addCaminhao"/>
+        <q-btn label="salvar" color="primary" @click="updateCaminhao"/>
       </div>
     </q-modal-layout>
   </q-modal>
@@ -51,6 +51,7 @@
     data(){
       return {
         isModalOpened: false,
+        selectCaminhaoId: null,
         caminhaoService: new CaminhaoService(),
         unidadeMedidaService: new UnidadeMedidaService(),
         unidadeMedidaOptions: [],
@@ -77,9 +78,29 @@
       }
     },
     methods: {
-      openModal: function(){
+      openModal: function(id){
+        this.selectCaminhaoId = id;
         this.isModalOpened = true;
+        this.getCaminhaoById(id);
         this.selectUnidadeMedida();
+      },
+      getCaminhaoById: function(id){
+        this.$q.loading.show();
+        this.caminhaoService.getCaminhaoById(id).then(caminhao => {
+          this.fillFormCaminhao(caminhao);
+          this.$q.loading.hide();
+        }).catch(error =>{
+          this.$q.notify({type: 'negative', message: 'Não foi possivel carregar as informações'})
+          this.$q.loading.hide();
+        })
+      },
+      fillFormCaminhao(caminhao){
+        this.caminhao.nome.value = caminhao.nome;
+        this.caminhao.placa.value = caminhao.placa;
+        this.caminhao.tara = caminhao.tara;
+        this.caminhao.pesoBruto = caminhao.pbt;
+        this.caminhao.estimativaCarga = caminhao.estimativa_carga;
+        this.caminhao.unidadeMedidaSigla.value = caminhao.unidade_medida_id;
       },
       closeModal: function(){
         this.isModalOpened = false;
@@ -147,13 +168,11 @@
         }
         return true
       },
-      isUnidadeMedidaRequired: function(){
-        if(this.caminhao.tara != null || this.caminhao.pesoBruto != null || this.caminhao.estimativaCarga != null){
-          if(this.caminhao.unidadeMedidaSigla.value === null || this.caminhao.unidadeMedidaSigla.value === undefined){
-            this.caminhao.unidadeMedidaSigla.error = true;
-            this.caminhao.unidadeMedidaSigla.errorMessage = 'informe a unidade de medida';
-            return false
-          }
+      unidadeMedidaValid: function(){
+        if(this.caminhao.unidadeMedidaSigla.value === null || this.caminhao.unidadeMedidaSigla.value === undefined){
+          this.caminhao.unidadeMedidaSigla.error = true;
+          this.caminhao.unidadeMedidaSigla.errorMessage = 'informe a unidade de medida';
+          return false
         }
         return true
       },
@@ -165,8 +184,8 @@
         this.caminhao.unidadeMedidaSigla.error = false;
         this.caminhao.unidadeMedidaSigla.errorMessage = null;
       },
-      addCaminhao: function(){
-        if(!this.nomeIsValid() || !this.placaIsValid() || !this.isUnidadeMedidaRequired()){
+      updateCaminhao: function(){
+        if(!this.nomeIsValid() || !this.placaIsValid() || !this.unidadeMedidaValid()){
           return
         }
         this.$q.loading.show();
@@ -175,11 +194,10 @@
           placa: this.caminhao.placa.value,
           tara: this.caminhao.tara,
           pbt: this.caminhao.pesoBruto,
-          estimativa_carga: this.caminhao.estimativaCarga,
+          estimativa_carga: this.estimativaCarga,
           unidade_medida_id: this.caminhao.unidadeMedidaSigla.value
-
         };
-        this.caminhaoService.addCaminhao(params).then(() => {
+        this.caminhaoService.updateCaminhao(this.selectCaminhaoId, params).then(() => {
           this.$q.loading.hide();
           this.$q.notify({type: 'positive', message: 'Caminhão adicionado com sucesso.'});
           this.$root.$emit('refreshCaminhoesList');
@@ -188,7 +206,7 @@
         }).catch(error =>{
           this.$q.loading.hide();
           console.log(error);
-          this.$q.notify({type: 'negative', message: 'Não foi possível adicionar o caminhão'})
+          this.$q.notify({type: 'negative', message: 'Não foi possível salvar as alterações'})
         })
       },
     }
