@@ -15,6 +15,7 @@ import NegocioAPI from "../../api/NegocioAPI";
 import NegocioTituloAPI from "../../api/NegocioTituloAPI";
 import NegocioProdutoAPI from "../../api/NegocioProdutoAPI";
 import NegocioFixacaoAPI from "../../api/NegocioFixacaoAPI";
+import NegocioCulturaMovimentoAPI from "../../api/NegocioCulturaMovimentoAPI";
 
 export default class NegocioService{
   #negocioRepository;
@@ -339,6 +340,34 @@ export default class NegocioService{
     return new Promise((resolve, reject) => {
       NegocioCulturaAPI.listNegociosCulturasParaTransferir(negocioCulturaId, filter).then( response => {
         if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  }
+
+  listTiposMovimentos(){
+    return new Promise((resolve, reject) => {
+      NegocioCulturaMovimentoAPI.getTipos().then( response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  }
+
+  saveMovimento(negocioCulturaId, params){
+    return new Promise((resolve, reject) => {
+      NegocioCulturaAPI.saveMovimento(negocioCulturaId, params).then( response => {
+        if(response.status === 201) {
           resolve(response.data);
         }else{
           reject(response)

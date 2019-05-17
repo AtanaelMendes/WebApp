@@ -1,19 +1,21 @@
 <template>
-  <ap-modal ref="transferenciaModal" title="Novo movimento" :visible="isModalOpened" @hide="closeModal">
-    <q-carousel slot="content" height="100%" no-swipe ref="stepperTransferencia" @slide-trigger="setStepperIndex">
+  <ap-modal ref="newMovimentoModal" title="Novo movimento" :visible="isModalOpened" @hide="closeModal">
+    <q-carousel slot="content" height="100%" no-swipe ref="stepperMovimento" @slide-trigger="setStepperIndex">
 
       <!--PASSO 1 ESCOLHER O TIPO DE MOVIMENTO-->
       <q-carousel-slide class="q-pa-none" style="width:300px; height: 200px">
         <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
-          <span class="q-subheading text-faded">Informar tipo de movimento</span>
+          <span class="q-subheading text-faded">Informar o tipo de movimento</span>
         </div>
 
-        <div class="row justify-center">
-          <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
-            <q-field>
-              <q-select v-model="movimento.movimentoTipoId" :options="tiposMovimentos" float-label="Tipo de movimento"/>
-            </q-field>
-          </div>
+        <div class="q-px-lg q-py-sm" style="text-align: center">
+          <q-card style="width: 110px" class="movimento-tipo-card cursor-pointer" flat inline
+                  @click.native="selectTipoMovimento(tipo.id)" v-for="tipo in tiposMovimentos" :key="tipo.id">
+            <q-card-main>
+              <div class="movimento-tipo-icon" v-bind:class="{'movimento-tipo-icon-selected':isMovimentoTipoSelected(tipo.id)}">{{tipo.sigla}}</div>
+              <div class="movimento-tipo-nome">{{tipo.nome}}</div>
+            </q-card-main>
+          </q-card>
         </div>
 
       </q-carousel-slide>
@@ -21,13 +23,13 @@
       <!--PASSO 2 INFORMAR A QUANTIDADE DO MOVIMENTO-->
       <q-carousel-slide class="q-pa-none">
         <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
-          <span class="q-subheading text-faded">Informe a Quantidade</span>
+          <span class="q-subheading text-faded">Informe a quantidade</span>
         </div>
         <div class="row justify-center" v-if="negocioCultura">
           <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
             <q-field>
               <q-input v-model="movimento.quantidade"
-                       float-label="Quantidade"
+                       stack-label="Quantidade"
                        clearable align="right"
                        :suffix="negocioCultura.unidade_medida.sigla"
                        type="number"
@@ -51,14 +53,11 @@
 
 <script>
   import NegocioService from "assets/js/service/negocio/NegocioService";
-  import agroUtils from "assets/js/AgroUtils";
   import apModal from 'components/ApModal'
-  import apImage from 'components/ApImage'
   export default {
-    name: "movimento-modal",
+    name: "new-movimento-modal",
     components: {
       apModal,
-      apImage,
     },
     watch:{
     },
@@ -80,34 +79,49 @@
       openModal(negocioCultura){
         this.isModalOpened = true;
         this.negocioCultura = negocioCultura;
-        this.movimento.movimentoTipoId = negocioCultura.id;
+
+        this.$refs.newMovimentoModal.showInnerProgress();
+        Promise.all([
+          this.listTiposMovimento(),
+        ]).then(()=> {
+          this.$refs.newMovimentoModal.hideInnerProgress();
+        });
       },
       closeModal(){
         this.isModalOpened = false;
         this.$emit('modal-closed');
-        this.clearFields();
+        this.resetModal();
       },
-      selectTipoMovimento(tipo){
-        this.movimento.movimentoTipoId = tipo;
+      resetModal(){
+        this.$refs.stepperMovimento.goToSlide(0);
+        this.movimento.quantidade = null;
+        this.movimento.movimentoTipoId = null;
+      },
+      selectTipoMovimento(tipoId){
+        this.movimento.movimentoTipoId = tipoId;
         this.goToNextStep();
       },
       setStepperIndex(oldIndex, newIndex, direction){
         this.currentStep = newIndex;
       },
       goToNextStep(){
-        this.$refs.stepperTransferencia.next();
+        this.$refs.stepperMovimento.next();
       },
       goToPreviousStep(){
-        this.$refs.stepperTransferencia.previous();
+        this.$refs.stepperMovimento.previous();
+      },
+      isMovimentoTipoSelected(id){
+        if(this.movimento.movimentoTipoId === null){
+          return false;
+        }
+        if(this.movimento.movimentoTipoId === id){
+          return true;
+        }
       },
       listTiposMovimento(){
-        this.negocioService.listTiposMovimento().then(result => {
-          this.tiposMovimentos = result;
+        this.negocioService.listTiposMovimentos().then(tipos => {
+          this.tiposMovimentos = tipos;
         });
-      },
-      clearFields(){
-        this.movimento.quantidade = null;
-        this.movimento.movimentoTipoId = null;
       },
       isFormValid(){
         if(this.movimento.quantidade === null || this.movimento.quantidade < 1){
@@ -124,12 +138,11 @@
           return
         }
         let params = {
-          negocio_cultura_movimento_tipo_id: this.movimento.movimentoTipoId,
+          movimento_tipo_id: this.movimento.movimentoTipoId,
           quantidade: this.movimento.quantidade,
         };
-        this.negocioService.setMovimentoNegocio(this.negocioCultura.id, params).then(negocios => {
+        this.negocioService.saveMovimento(this.negocioCultura.id, params).then(() => {
           this.$q.notify({type: 'positive', message: 'Movimento efetuado com sucesso'});
-          // this.negocios = negocios;
           this.closeModal();
         });
       },
@@ -152,5 +165,28 @@
     color: #ffb500;
     font-size: 20px;
     margin-right: 6px;
+  }
+  .movimento-tipo-card{
+    text-align: center;
+    margin: 8px;
+  }
+  .movimento-tipo-icon{
+    background: #f3f1f1;
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 60px;
+    border-radius: 60px;
+  }
+  .movimento-tipo-nome{
+    margin-top: 12px;
+    font-size: 16px;
+    color: #454545;
+  }
+  .movimento-tipo-icon-selected{
+    background: #005f5f;
+    color: white;
   }
 </style>

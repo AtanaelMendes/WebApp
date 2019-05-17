@@ -45,4 +45,8 @@ export default class NegocioCulturaAPI{
   static listNegociosCulturasParaTransferir(negocioCulturaId, filter){
     return Vue.prototype.$axios.get('/negocio/cultura/'+negocioCulturaId+'/transferir/negocio' + (filter ? "?"+filter : ''));
   }
+
+  static saveMovimento(negocioCulturaId, params){
+    return Vue.prototype.$axios.post('/negocio/cultura/'+negocioCulturaId+'/movimento', params);
+  }
 }

@@ -455,7 +455,7 @@
     <new-transferencia-modal ref="transferenciaModal"  />
 
     <!--MODAL NOVO MOVIMENTO -->
-    <movimento-modal ref="movimentoModal"  />
+    <new-movimento-modal ref="movimentoModal"  />
 
     <!--MODAL VINCULAR SAFRA CULTURA -->
     <new-cultura-modal ref="culturaModal"  />
@@ -481,7 +481,7 @@
   import newProdutoModal from './components/modals/NewProdutoModal';
   import newFixacaoModal from './components/modals/NewFixacaoModal';
   import newTransferenciaModal from './components/modals/NewTransferenciaModal';
-  import movimentoModal from './components/modals/MovimentoModal';
+  import newMovimentoModal from './components/modals/NewMovimentoModal';
   import armazemEntregasListTabs from './components/tabs/ArmazemEntregasListTab';
   import apNoResults from 'components/ApNoResults'
   import NegocioService from "assets/js/service/negocio/NegocioService";
@@ -498,7 +498,7 @@
       newFixacaoModal,
       editNegocioModal,
       newTransferenciaModal,
-      movimentoModal,
+      newMovimentoModal,
       armazemEntregasListTabs
     },
     data () {
