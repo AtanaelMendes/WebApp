@@ -186,7 +186,8 @@
                 <q-item-tile sublabel>
                   <div class="row">
                     <div class="col-sm-12 col-md-6">
-                      {{entrega.safra}}
+                      {{entrega.safra}} <br/>
+                      Entrega {{entrega.id}}
                     </div>
                     <div class="col-sm-12 col-md-6">
                       {{entrega.motorista}}
