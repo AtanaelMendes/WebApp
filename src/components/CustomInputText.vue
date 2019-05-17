@@ -1,5 +1,5 @@
 <template>
-  <q-field :error="model.errorMessage != null" class="q-mb-sm">
+  <q-field :error="model.errorMessage != null">
     <q-input
       :type="type"
       v-mask="mask"

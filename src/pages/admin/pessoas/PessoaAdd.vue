@@ -5,7 +5,7 @@
     </toolbar>
 
     <!--INFORMACOES BASICAS-->
-    <div class="row q-pa-md space-end">
+    <div class="row q-pa-md space-end justify-center">
       <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
         <form @keyup.enter="savePessoa()">
 
@@ -101,11 +101,11 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
-  import Pessoa from 'assets/js/model/Pessoa'
-  import GrupoEconomico from 'assets/js/model/GrupoEconomico'
+  import Pessoa from '../../../assets/js/model/Pessoa'
+  import GrupoEconomico from '../../../assets/js/model/GrupoEconomico'
   import estadoSiglaSelect from 'components/EstadoSiglaSelect.vue'
   import { filter } from 'quasar'
-  import inscricaoEstadualValidator from 'assets/js/InscricaoEstadualValidator';
+  import inscricaoEstadualValidator from '../../../assets/js/InscricaoEstadualValidator';
   import GrupoEconomicoService from "../../../assets/js/service/GrupoEconomicoService";
   import PessoaService from "../../../assets/js/service/PessoaService";
   export default {
@@ -125,6 +125,20 @@
         newGrupoEconomicoDialog: false,
         grupoEconomico: GrupoEconomico,
         pessoa: new Pessoa(1),
+        inscricaoEstadualIndicadorSelect: [
+          {
+            tipo: 1,
+            nome: '1 - Contribuinte ICMS',
+          },
+          {
+            tipo: 2,
+            nome: '2 - Isento',
+          },
+          {
+            tipo: 9,
+            nome: '9 - Não Contribuinte',
+          }
+        ],
       }
     },
     methods:{

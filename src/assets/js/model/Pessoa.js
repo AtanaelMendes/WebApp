@@ -8,6 +8,10 @@ export default class {
     value: null,
     errorMessage: null
   };
+  razaoSocial = {
+    value: null,
+    errorMessage: null
+  };
   grupoEconomico = {
     value: null,
     errorMessage: null
@@ -24,6 +28,10 @@ export default class {
     value: null,
     errorMessage: null
   };
+  inscricaoEstadualIndicador = {
+    value: null,
+    errorMessage: null
+  };
   uf = {
     value: null,
     errorMessage: null
@@ -32,8 +40,24 @@ export default class {
     value: null,
     errorMessage: null
   };
-  razaoSocial = {
+  inscricaoSuframa = {
     value: null,
+    errorMessage: null
+  };
+  inscricaoEstrangeiro = {
+    value: null,
+    errorMessage: null
+  };
+  cnae = {
+    value: null,
+    errorMessage: null
+  };
+  crt = {
+    value: null,
+    errorMessage: null
+  };
+  isConsumidor = {
+    value: false,
     errorMessage: null
   };
   constructor(pessoaType, pessoa) {
