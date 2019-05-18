@@ -1,5 +1,5 @@
 <template>
-  <q-field :error="model.errorMessage != null">
+  <q-field :error="model.errorMessage != null" :error-label="model.errorMessage">
     <q-input
       :type="type"
       v-mask="mask"
@@ -19,9 +19,6 @@
       v-on:input="clearErrorMessage()"
       @blur="$emit('blur', model.value)"
     />
-    <div class="q-field-bottom row no-wrap" style="height: 22px">
-      <div class="q-field-error col" v-if="model.errorMessage != null" >{{model.errorMessage}}</div>
-    </div>
   </q-field>
 </template>
 

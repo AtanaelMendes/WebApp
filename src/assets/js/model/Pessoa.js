@@ -64,13 +64,19 @@ export default class {
     this.pessoaType = pessoaType;
     if (pessoa !== undefined || pessoa != null) {
       this.nome.value = pessoa.nome.value;
+      this.razaoSocial.value = pessoa.razaoSocial.value;
       this.grupoEconomico.value = pessoa.grupoEconomico.value;
       this.cpf.value = pessoa.cpf.value;
       this.cnpj.value = pessoa.cnpj.value;
       this.inscricaoEstadual.value = pessoa.inscricaoEstadual.value;
+      this.inscricaoEstadualIndicador.value = pessoa.inscricaoEstadualIndicador.value;
       this.uf.value = pessoa.uf.value;
       this.inscricaoMunicipal.value = pessoa.inscricaoMunicipal.value;
-      this.razaoSocial.value = pessoa.razaoSocial.value;
+      this.inscricaoSuframa.value = pessoa.inscricaoSuframa.value;
+      this.inscricaoEstrangeiro.value = pessoa.inscricaoEstrangeiro.value;
+      this.cnae.value = pessoa.cnae.value;
+      this.crt.value = pessoa.crt.value;
+      this.isConsumidor.value = pessoa.isConsumidor.value;
     }
   };
 
@@ -87,6 +93,11 @@ export default class {
           hasError = true;
         }
       }
+    }
+
+    if (this.inscricaoEstadual.value != null) {
+      this.inscricaoEstadualIndicador.errorMessage = 'Informe o indicador da inscrição estadual'
+      hasError = true;
     }
 
     if (!helpers.req(this.nome.value)) {
@@ -137,8 +148,14 @@ export default class {
         cnpj: null,
         razao_social: this.razaoSocial.value,
         inscricao_estadual: this.inscricaoEstadual.value ? this.inscricaoEstadual.value.replace(/[^0-9]/g, '') : null,
+        inscricao_estadual_indicador: this.inscricaoEstadualIndicador.value,
         uf: this.uf.value,
         inscricao_municipal: this.inscricaoMunicipal.value ? this.inscricaoMunicipal.value.replace(/[^0-9]/g, '') : null,
+        inscricao_Suframa: this.inscricaoSuframa.value,
+        inscricao_estrangeiro: this.inscricaoEstrangeiro.value,
+        cnae: this.cnae.value,
+        crt: this.crt.value,
+        is_consumidor: this.isConsumidor.value,
       }
     } else if (this.pessoaType === 2) {
       return {
@@ -148,8 +165,14 @@ export default class {
         cnpj: this.cnpj.value.replace(/[^0-9]/g, ''),
         razao_social: this.razaoSocial.value,
         inscricao_estadual: this.inscricaoEstadual.value ? this.inscricaoEstadual.value.replace(/[^0-9]/g, '') : null,
+        inscricao_estadual_indicador: this.inscricaoEstadualIndicador.value,
         uf: this.uf.value,
         inscricao_municipal: this.inscricaoMunicipal.value ? this.inscricaoMunicipal.value.replace(/[^0-9]/g, '') : null,
+        inscricao_Suframa: this.inscricaoSuframa.value,
+        inscricao_estrangeiro: this.inscricaoEstrangeiro.value,
+        cnae: this.cnae.value,
+        crt: this.crt.value,
+        is_consumidor: this.isConsumidor.value,
       }
     }
   };
