@@ -9,7 +9,7 @@ export default class ClassificacaoAPI{
     return Vue.prototype.$axios.get('/classificacao' + (filter ? "?"+filter : ''));
   }
   static listClassificacoesWithFilter(filter){
-    return Vue.prototype.$axios.get('/classificacao/list'+ + (filter ? "?"+filter : ''));
+    return Vue.prototype.$axios.get('/classificacao/list' + (filter ? "?"+filter : ''));
   }
   static addClassificacao(params){
     return Vue.prototype.$axios.post('/classificacao', params);

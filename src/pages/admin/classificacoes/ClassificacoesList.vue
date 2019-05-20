@@ -88,7 +88,7 @@
   import addClassificacaoModal from 'components/classificacao/AddClassificacaoModal'
   import editClassificacaoModal from 'components/classificacao/EditClassificacaoModal'
   import ClassificacaoService from "assets/js/service/ClassificacaoService";
-  import agroUtils from "assets/js/AgroUtils";
+  import agroUtils from "../../../assets/js/AgroUtils";
   export default {
     name: "classificacoes-list",
     components: {
