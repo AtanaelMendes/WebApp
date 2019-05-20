@@ -7,8 +7,7 @@
     <!--INFORMACOES BASICAS-->
     <div class="row q-pa-md space-end justify-center">
       <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4" @keyup.enter="savePessoa()">
-
-        <div class="row gutter-y-md">
+        <div class="row gutter-y-sm">
 
           <!--TOGGLE PESSOA FISICA JURIDICA-->
           <div class="col-12">
@@ -23,77 +22,109 @@
           <div class="col-12">
             <q-checkbox v-model="pessoa.isConsumidor.value" label="Consumidor" />
           </div>
-        </div>
 
-        <!--INPUT GRUPO ECONOMICO-->
-        <q-field :error="pessoa.grupoEconomico.errorMessage != null" class="q-mt-sm">
-          <q-item class="q-pa-none">
-            <q-item-main>
-              <q-input placeholder="Grupo Econômico" @blur="checkGrupoEconomicoInput" :after="[{icon:'arrow_drop_down'}]"
-                       v-model="grupoEconomicoSearchTerms">
-                <q-autocomplete :max-results="20" @search="searchGrupoEconomico" @selected="setGrupoEconomico"
-                                :min-characters="0"
-                                :debounce="500"
-                                value-field="label"
-                />
-              </q-input>
-            </q-item-main>
+          <!--INPUT GRUPO ECONOMICO-->
+          <div class="col-12">
+            <q-field :error="pessoa.grupoEconomico.errorMessage != null">
+              <q-item class="q-pa-none">
+                <q-item-main>
+                  <q-input placeholder="Grupo Econômico" @blur="checkGrupoEconomicoInput" :after="[{icon:'arrow_drop_down'}]"
+                           v-model="grupoEconomicoSearchTerms">
+                    <q-autocomplete :max-results="20" @search="searchGrupoEconomico" @selected="setGrupoEconomico"
+                                    :min-characters="0"
+                                    :debounce="500"
+                                    value-field="label"
+                    />
+                  </q-input>
+                </q-item-main>
 
-            <q-item-side>
-              <q-btn color="deep-orange" round size="md" icon="add" @click.native="openNovoGrupoEconomicoDialog()"/>
-              <q-tooltip>
-                Novo grupo econômico
-              </q-tooltip>
-            </q-item-side>
-          </q-item>
+                <q-item-side>
+                  <q-btn color="deep-orange" round size="md" icon="add" @click.native="openNovoGrupoEconomicoDialog()"/>
+                  <q-tooltip>
+                    Novo grupo econômico
+                  </q-tooltip>
+                </q-item-side>
+              </q-item>
 
-          <div class="q-field-bottom row no-wrap" >
-            <div class="q-field-error col" v-if="pessoa.grupoEconomico.errorMessage != null" >{{pessoa.grupoEconomico.errorMessage}}</div>
+              <div class="q-field-bottom row no-wrap" >
+                <div class="q-field-error col" v-if="pessoa.grupoEconomico.errorMessage != null" >{{pessoa.grupoEconomico.errorMessage}}</div>
+              </div>
+            </q-field>
           </div>
-        </q-field>
 
-        <!--INPUT NOME-->
-        <custom-input-text label="Nome" :model="pessoa.nome" maxlength="100"/>
+          <!--INPUT NOME-->
+          <div class="col-12">
+            <custom-input-text label="Nome" :model="pessoa.nome" maxlength="100"/>
+          </div>
 
-        <!--INPUT RAZAO SOCIAL-->
-        <custom-input-text label="Razão Social" :model="pessoa.razaoSocial" maxlength="100"/>
+          <!--INPUT RAZAO SOCIAL-->
+          <div class="col-12">
+            <custom-input-text label="Razão Social" :model="pessoa.razaoSocial" maxlength="100"/>
+          </div>
 
-        <!--INPUT CPF-->
-        <custom-input-text key="cpf"label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1" @blur="pessoaTypeChanged" align="right"/>
+          <!--INPUT CPF-->
+          <div class="col-12">
+            <custom-input-text key="cpf"label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1" @blur="pessoaTypeChanged" align="right"/>
+          </div>
 
-        <!--INPUT CNPJ-->
-        <custom-input-text key="cnpj" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2" @blur="pessoaTypeChanged" align="right"/>
+          <!--INPUT CNPJ-->
+          <div class="col-12">
+            <custom-input-text key="cnpj" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2" @blur="pessoaTypeChanged" align="right"/>
+          </div>
 
-        <!--INPUT INSCRICAO ESTADUAL-->
-        <q-item class="q-px-none">
-          <!--<q-item-side>-->
-          <!--<q-btn label="Testar" @click="testaInscricoesEstaduais" />-->
-          <!--</q-item-side>-->
-          <q-item-main>
-            <custom-input-text type="text" label="Inscrição Estadual" maxlength="14" :model="pessoa.inscricaoEstadual" align="right"/>
-          </q-item-main>
-          <q-item-side >
-            <estado-sigla-select label="UF" :model="pessoa.uf"/>
-          </q-item-side>
-        </q-item>
+          <!--INPUT INSCRICAO ESTADUAL-->
+          <div class="col-12">
+            <div class="row gutter-x-xs">
+              <!--<q-item-side>-->
+              <!--<q-btn label="Testar" @click="testaInscricoesEstaduais" />-->
+              <!--</q-item-side>-->
 
-        <q-select v-model="pessoa.inscricaoEstadualIndicador.value" float-label="Indicador da Inscrição Estadual" :options="inscricaoEstadualIndicadorOptions"/>
+              <div class="col-9">
+                <custom-input-text type="text" label="Inscrição Estadual" maxlength="14" :model="pessoa.inscricaoEstadual" align="right"/>
+              </div>
+              <div class="col-3">
+                <estado-sigla-select label="UF" :model="pessoa.uf"/>
+              </div>
+            </div>
+          </div>
 
-        <!--INPUT INSCRICAO MUNICIPAL-->
-        <custom-input-text label="Inscrição Municipal" :model="pessoa.inscricaoMunicipal" align="right"/>
+          <!--INPUT INSCRICAO ESTADUAL INDICADOR-->
+          <div class="col-12">
+            <q-field :error="pessoa.inscricaoEstadualIndicador.errorMessage !== null" :error-label="pessoa.inscricaoEstadualIndicador.errorMessage">
+              <q-select v-model="pessoa.inscricaoEstadualIndicador.value"
+                        float-label="Indicador da Inscrição Estadual"
+                        :options="inscricaoEstadualIndicadorOptions"
+                        v-on:input="pessoa.inscricaoEstadualIndicador.errorMessage = null"
+              />
+            </q-field>
+          </div>
 
-        <!--INPUT INSCRICAO SUFRAMA-->
-        <custom-input-text label="Inscrição Suframa" :model="pessoa.inscricaoSuframa" align="right" type="number"/>
+          <!--INPUT INSCRICAO MUNICIPAL-->
+          <div class="col-12">
+            <custom-input-text label="Inscrição Municipal" :model="pessoa.inscricaoMunicipal" align="right"/>
+          </div>
 
-        <!--INPUT INSCRICAO ESTRANGEIRO-->
-        <custom-input-text label="Inscrição Estrangeiro" :model="pessoa.inscricaoEstrangeiro"/>
+          <!--INPUT INSCRICAO SUFRAMA-->
+          <div class="col-12">
+            <custom-input-text label="Inscrição Suframa" :model="pessoa.inscricaoSuframa" align="right" type="number"/>
+          </div>
 
-        <!--INPUT CNAE-->
-        <custom-input-text label="CNAE" :model="pessoa.cnae" align="right" type="number"/>
+          <!--INPUT INSCRICAO ESTRANGEIRO-->
+          <div class="col-12">
+            <custom-input-text label="Inscrição Estrangeiro" :model="pessoa.inscricaoEstrangeiro"/>
+          </div>
 
-        <!--INPUT CRT-->
-        <custom-input-text label="CRT" :model="pessoa.crt" align="right" type="number"/>
+          <!--INPUT CNAE-->
+          <div class="col-12">
+            <custom-input-text label="CNAE" :model="pessoa.cnae" align="right" type="number"/>
+          </div>
 
+          <!--INPUT CRT-->
+          <div class="col-12">
+            <custom-input-text label="CRT" :model="pessoa.crt" align="right" type="number"/>
+          </div>
+
+        </div>
       </div>
     </div>
 

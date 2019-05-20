@@ -4,65 +4,126 @@
       <q-btn slot="action_itens" flat dense round icon="done" @click="updatePessoa()"/>
     </toolbar>
 
-    <div class="row q-pa-md space-end">
-      <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
-        <form @keyup.enter="updatePessoa()">
+    <div class="row q-pa-md space-end justify-center">
+      <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4" @keyup.enter="savePessoa()">
+        <div class="row gutter-y-sm">
 
           <!--TOGGLE PESSOA FISICA JURIDICA-->
-          <q-field>
-            <q-btn-toggle
-              inverted
-              toggle-color="primary"
-              v-model="pessoa.pessoaType"
-              :options="[{label: 'Física', value: 1},{label: 'Jurídica', value: 2}]"
+          <div class="col-12">
+            <q-btn-toggle inverted
+                          toggle-color="primary"
+                          v-model="pessoa.pessoaType"
+                          :options="[{label: 'Física', value: 1},{label: 'Jurídica', value: 2}]"
             />
-          </q-field>
+          </div>
+
+          <!--INPUT IS CONSUMIDOR-->
+          <div class="col-12">
+            <q-checkbox v-model="pessoa.isConsumidor.value" label="Consumidor" />
+          </div>
 
           <!--INPUT GRUPO ECONOMICO-->
-          <q-field :error="pessoa.grupoEconomico.errorMessage != null" class="q-mt-sm">
-            <q-item class="q-px-none">
-              <q-item-main>
-                <q-input v-model="grupoEconomicoSearchTerms" placeholder="Grupo Econômico" :after="[{icon:'arrow_drop_down'}]" @blur="checkGrupoEconomicoInput">
-                  <q-autocomplete @search="searchGrupoEconomico" @selected="setGrupoEconomico" :min-characters="0" :debounce="500" value-field="label"/>
-                </q-input>
-              </q-item-main>
+          <div class="col-12">
+            <q-field :error="pessoa.grupoEconomico.errorMessage != null">
+              <q-item class="q-pa-none">
+                <q-item-main>
+                  <q-input placeholder="Grupo Econômico" @blur="checkGrupoEconomicoInput" :after="[{icon:'arrow_drop_down'}]"
+                           v-model="grupoEconomicoSearchTerms">
+                    <q-autocomplete :max-results="20" @search="searchGrupoEconomico" @selected="setGrupoEconomico"
+                                    :min-characters="0"
+                                    :debounce="500"
+                                    value-field="label"
+                    />
+                  </q-input>
+                </q-item-main>
 
-              <q-item-side>
-                <q-btn color="deep-orange" rounded size="md" icon="add" @click.native="openNovoGrupoEconomicoDialog()" class="q-px-sm"/>
-              </q-item-side>
-            </q-item>
+                <q-item-side>
+                  <q-btn color="deep-orange" round size="md" icon="add" @click.native="openNovoGrupoEconomicoDialog()"/>
+                  <q-tooltip>
+                    Novo grupo econômico
+                  </q-tooltip>
+                </q-item-side>
+              </q-item>
 
-            <div class="q-field-bottom row no-wrap" >
-              <div class="q-field-error col" v-if="pessoa.grupoEconomico.errorMessage != null" >{{pessoa.grupoEconomico.errorMessage}}</div>
-            </div>
-          </q-field>
+              <div class="q-field-bottom row no-wrap" >
+                <div class="q-field-error col" v-if="pessoa.grupoEconomico.errorMessage != null" >{{pessoa.grupoEconomico.errorMessage}}</div>
+              </div>
+            </q-field>
+          </div>
 
           <!--INPUT NOME-->
-          <custom-input-text label="Nome" :model="pessoa.nome" maxlength="100"/>
+          <div class="col-12">
+            <custom-input-text label="Nome" :model="pessoa.nome" maxlength="100"/>
+          </div>
 
           <!--INPUT RAZAO SOCIAL-->
-          <custom-input-text  label="Razão Social" :model="pessoa.razaoSocial" maxlength="100"/>
+          <div class="col-12">
+            <custom-input-text label="Razão Social" :model="pessoa.razaoSocial" maxlength="100"/>
+          </div>
 
           <!--INPUT CPF-->
-          <custom-input-text key="cpf" label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1"/>
+          <div class="col-12">
+            <custom-input-text key="cpf"label="CPF" :model="pessoa.cpf" mask="###.###.###-##" v-if="pessoa.pessoaType === 1" @blur="pessoaTypeChanged" align="right"/>
+          </div>
 
           <!--INPUT CNPJ-->
-          <custom-input-text key="cnpj" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2"/>
+          <div class="col-12">
+            <custom-input-text key="cnpj" label="CNPJ" :model="pessoa.cnpj" mask="##.###.###/####-##" v-if="pessoa.pessoaType === 2" @blur="pessoaTypeChanged" align="right"/>
+          </div>
 
           <!--INPUT INSCRICAO ESTADUAL-->
-          <q-item class="q-px-none">
-            <q-item-main>
-              <custom-input-text type="text" label="Inscrição Estadual" maxlength="14" :model="pessoa.inscricaoEstadual"/>
-            </q-item-main>
-            <q-item-side>
-              <estado-sigla-select label="UF" :model="pessoa.uf"/>
-            </q-item-side>
-          </q-item>
+          <div class="col-12">
+            <div class="row gutter-x-xs">
+              <!--<q-item-side>-->
+              <!--<q-btn label="Testar" @click="testaInscricoesEstaduais" />-->
+              <!--</q-item-side>-->
+
+              <div class="col-9">
+                <custom-input-text type="text" label="Inscrição Estadual" maxlength="14" :model="pessoa.inscricaoEstadual" align="right"/>
+              </div>
+              <div class="col-3">
+                <estado-sigla-select label="UF" :model="pessoa.uf"/>
+              </div>
+            </div>
+          </div>
+
+          <!--INPUT INSCRICAO ESTADUAL INDICADOR-->
+          <div class="col-12">
+            <q-field :error="pessoa.inscricaoEstadualIndicador.errorMessage !== null" :error-label="pessoa.inscricaoEstadualIndicador.errorMessage">
+              <q-select v-model="pessoa.inscricaoEstadualIndicador.value"
+                        float-label="Indicador da Inscrição Estadual"
+                        :options="inscricaoEstadualIndicadorOptions"
+                        v-on:input="pessoa.inscricaoEstadualIndicador.errorMessage = null"
+              />
+            </q-field>
+          </div>
 
           <!--INPUT INSCRICAO MUNICIPAL-->
-          <custom-input-text type="text" label="Inscrição Municipal" :model="pessoa.inscricaoMunicipal"/>
+          <div class="col-12">
+            <custom-input-text label="Inscrição Municipal" :model="pessoa.inscricaoMunicipal" align="right"/>
+          </div>
 
-        </form>
+          <!--INPUT INSCRICAO SUFRAMA-->
+          <div class="col-12">
+            <custom-input-text label="Inscrição Suframa" :model="pessoa.inscricaoSuframa" align="right" type="number"/>
+          </div>
+
+          <!--INPUT INSCRICAO ESTRANGEIRO-->
+          <div class="col-12">
+            <custom-input-text label="Inscrição Estrangeiro" :model="pessoa.inscricaoEstrangeiro"/>
+          </div>
+
+          <!--INPUT CNAE-->
+          <div class="col-12">
+            <custom-input-text label="CNAE" :model="pessoa.cnae" align="right" type="number"/>
+          </div>
+
+          <!--INPUT CRT-->
+          <div class="col-12">
+            <custom-input-text label="CRT" :model="pessoa.crt" align="right" type="number"/>
+          </div>
+
+        </div>
       </div>
     </div>
 
@@ -86,12 +147,12 @@
 </template>
 
 <script>
-  import toolbar from 'components/Toolbar.vue'
-  import customPage from 'components/CustomPage.vue'
-  import customInputText from 'components/CustomInputText.vue'
-  import Pessoa from 'assets/js/model/Pessoa'
-  import estadoSiglaSelect from 'components/EstadoSiglaSelect.vue'
-  import GrupoEconomico from 'assets/js/model/GrupoEconomico'
+  import toolbar from '../../../components/Toolbar.vue'
+  import customPage from '../../../components/CustomPage.vue'
+  import customInputText from '../../../components/CustomInputText.vue'
+  import Pessoa from '../../../assets/js/model/Pessoa'
+  import estadoSiglaSelect from '../../../components/EstadoSiglaSelect.vue'
+  import GrupoEconomico from '../../../assets/js/model/GrupoEconomico'
   import { filter } from 'quasar'
   import GrupoEconomicoService from "../../../assets/js/service/GrupoEconomicoService";
   import PessoaService from "../../../assets/js/service/PessoaService";
@@ -113,6 +174,20 @@
         pessoa: new Pessoa(1),
         pessoaData: null,
         grupoEconomico: GrupoEconomico,
+        inscricaoEstadualIndicadorOptions: [
+          {
+            label: '1 - Contribuinte ICMS',
+            value: 1,
+          },
+          {
+            label: '2 - Isento',
+            value: 2,
+          },
+          {
+            label: '9 - Não Contribuinte',
+            value: 9,
+          }
+        ],
       }
     },
     methods: {
@@ -131,10 +206,16 @@
         this.pessoa.nome.value = data.nome;
         this.pessoa.cpf.value = data.cpf;
         this.pessoa.cnpj.value = data.cnpj;
+        this.pessoa.inscricaoEstrangeiro.value = data.inscricao_estrangeiro;
         this.pessoa.razaoSocial.value = data.razao_social;
         this.pessoa.inscricaoEstadual.value = data.inscricao_estadual;
+        this.pessoa.inscricaoEstadualIndicador.value = data.inscricao_estadual_indicador;
         this.pessoa.uf.value = data.uf;
         this.pessoa.inscricaoMunicipal.value = data.inscricao_municipal;
+        this.pessoa.inscricaoSuframa.value = data.inscricao_suframa;
+        this.pessoa.isConsumidor.value = data.is_consumidor;
+        this.pessoa.cnae.value = data.cnae;
+        this.pessoa.crt.value = data.crt;
       },
       getPessoa: function(id){
         this.$q.loading.show();
