@@ -25,13 +25,13 @@
         <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
           <span class="q-subheading text-faded">Informe a quantidade</span>
         </div>
-        <div class="row justify-center" v-if="negocioCultura">
+        <div class="row justify-center" v-if="currentNegocioCultura">
           <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
             <q-field>
               <q-input v-model="movimento.quantidade"
                        stack-label="Quantidade"
                        clearable align="right"
-                       :suffix="negocioCultura.unidade_medida.sigla"
+                       :suffix="currentNegocioCultura.unidade_medida.sigla"
                        type="number"
               />
             </q-field>
@@ -68,7 +68,8 @@
         tiposMovimentos: [],
         selectedNegocio: null,
         currentStep: 0,
-        negocioCultura: null,
+        currentNegocioCultura: null,
+        currentArmazemId: null,
         movimento: {
           quantidade: null,
           movimentoTipoId: null,
@@ -76,9 +77,10 @@
       }
     },
     methods: {
-      openModal(negocioCultura){
+      openModal(negocioCultura, armazemId){
         this.isModalOpened = true;
-        this.negocioCultura = negocioCultura;
+        this.currentNegocioCultura = negocioCultura;
+        this.currentArmazemId = armazemId;
 
         this.$refs.newMovimentoModal.showInnerProgress();
         Promise.all([
@@ -138,10 +140,11 @@
           return
         }
         let params = {
+          armazem_id: this.currentArmazemId,
           movimento_tipo_id: this.movimento.movimentoTipoId,
           quantidade: this.movimento.quantidade,
         };
-        this.negocioService.saveMovimento(this.negocioCultura.id, params).then(() => {
+        this.negocioService.saveMovimento(this.currentNegocioCultura.id, params).then(() => {
           this.$q.notify({type: 'positive', message: 'Movimento efetuado com sucesso'});
           this.closeModal();
         });

@@ -124,6 +124,7 @@
         currentStep: 0,
         searchNegociosQuery: '',
         currentNegocioCultura: null,
+        currentArmazemId: null,
         isSearching: false,
         transferencia: {
           quantidade: null,
@@ -142,9 +143,10 @@
       }
     },
     methods: {
-      openModal(negocioCultura){
+      openModal(negocioCultura, armazemId){
         this.isModalOpened = true;
         this.currentNegocioCultura = negocioCultura;
+        this.currentArmazemId = armazemId;
       },
       closeModal(){
         this.isModalOpened = false;
@@ -189,6 +191,7 @@
       },
       saveTransferencia(){
         let params = {
+          armazem_id: this.currentArmazemId,
           negocio_cultura_destino_id: this.transferencia.negocioCulturaDestinoId,
           quantidade: this.transferencia.quantidade,
         };
