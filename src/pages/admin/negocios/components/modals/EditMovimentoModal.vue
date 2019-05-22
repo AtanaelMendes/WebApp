@@ -1,5 +1,5 @@
 <template>
-  <ap-modal ref="newMovimentoModal" title="Novo movimento" :visible="isModalOpened" @hide="closeModal">
+  <ap-modal ref="editMovimentoModal" title="Editar movimento" :visible="isModalOpened" @hide="closeModal">
     <q-carousel slot="content" height="100%" no-swipe ref="stepperMovimento" @slide-trigger="setStepperIndex">
 
       <!--PASSO 1 ESCOLHER O TIPO DE MOVIMENTO-->
@@ -45,7 +45,7 @@
       <div class="float-right ">
         <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="currentStep !== 0"/>
         <q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep !== 1" />
-        <q-btn @click="saveMovimento" flat label="Salvar" color="primary" :disable="!isFormValid()" v-if="currentStep == 1"/>
+        <q-btn @click="updateMovimento" flat label="Salvar" color="primary" :disable="!isFormValid()" v-if="currentStep == 1"/>
       </div>
     </div>
   </ap-modal>
@@ -55,21 +55,18 @@
   import NegocioService from "assets/js/service/negocio/NegocioService";
   import apModal from 'components/ApModal'
   export default {
-    name: "new-movimento-modal",
+    name: "EditMovimentoModal",
     components: {
       apModal,
-    },
-    watch:{
     },
     data(){
       return {
         negocioService: new NegocioService(),
         isModalOpened: false,
         tiposMovimentos: [],
-        selectedNegocio: null,
         currentStep: 0,
         currentNegocioCultura: null,
-        currentArmazemId: null,
+        currentMovimentoId: null,
         movimento: {
           quantidade: null,
           movimentoTipoId: null,
@@ -77,17 +74,19 @@
       }
     },
     methods: {
-      openModal(negocioCultura, armazemId){
+      openModal(id, negocioCultura) {
         this.isModalOpened = true;
+        this.currentMovimentoId = id;
         this.currentNegocioCultura = negocioCultura;
-        this.currentArmazemId = armazemId;
 
-        this.$refs.newMovimentoModal.showInnerProgress();
+        this.$refs.editMovimentoModal.showInnerProgress();
         Promise.all([
           this.listTiposMovimento(),
+          this.getMovimento(id),
         ]).then(()=> {
-          this.$refs.newMovimentoModal.hideInnerProgress();
+          this.$refs.editMovimentoModal.hideInnerProgress();
         });
+
       },
       closeModal(){
         this.isModalOpened = false;
@@ -98,10 +97,6 @@
         this.$refs.stepperMovimento.goToSlide(0);
         this.movimento.quantidade = null;
         this.movimento.movimentoTipoId = null;
-      },
-      selectTipoMovimento(tipoId){
-        this.movimento.movimentoTipoId = tipoId;
-        this.goToNextStep();
       },
       setStepperIndex(oldIndex, newIndex, direction){
         this.currentStep = newIndex;
@@ -120,11 +115,6 @@
           return true;
         }
       },
-      async listTiposMovimento(){
-        return this.negocioService.listTiposMovimentos().then(tipos => {
-          this.tiposMovimentos = tipos;
-        });
-      },
       isFormValid(){
         if(this.movimento.quantidade === null || this.movimento.quantidade < 1){
           return false
@@ -134,24 +124,35 @@
         }
         return true
       },
-      saveMovimento(){
+      async listTiposMovimento(){
+        return this.negocioService.listTiposMovimentos().then(tipos => {
+          this.tiposMovimentos = tipos;
+        });
+      },
+      async getMovimento(id){
+        return this.negocioService.getMovimento(id).then(movimento => {
+          this.movimento.movimentoTipoId = movimento.negocio_cultura_movimento_tipo_id;
+          this.movimento.quantidade = movimento.quantidade;
+        });
+      },
+      updateMovimento(){
         if (!this.isFormValid()){
           this.$q.notify({type: 'negative', message: 'Preencha as informações corretamente'});
           return
         }
+
         let params = {
-          armazem_id: this.currentArmazemId,
           movimento_tipo_id: this.movimento.movimentoTipoId,
           quantidade: this.movimento.quantidade,
         };
-        this.$refs.newMovimentoModal.showOuterProgress();
-        this.negocioService.saveMovimento(this.currentNegocioCultura.id, params).then(() => {
-          this.$q.notify({type: 'positive', message: 'Movimento efetuado com sucesso'});
-          this.$refs.newMovimentoModal.hideOuterProgress();
+        this.$refs.editMovimentoModal.showOuterProgress();
+        this.negocioService.updateMovimento(this.currentMovimentoId, params).then(() => {
+          this.$q.notify({type: 'positive', message: 'Movimento atualizado com sucesso'});
+          this.$refs.editMovimentoModal.hideOuterProgress();
           this.closeModal();
-        });
-      },
-    }
+        })
+      }
+    },
   }
 </script>
 

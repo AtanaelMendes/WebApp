@@ -26,14 +26,6 @@ export default class NegocioCulturaAPI{
     return Vue.prototype.$axios.delete('negocio/'+ negocioId + '/cultura/' + id);
   }
 
-  static getAllMovimentosByNegocioCultura(negocioCulturaId){
-    return Vue.prototype.$axios.get('negocio/cultura/' + negocioCulturaId +  '/movimento');
-  }
-
-  static getAllMovimentosByNegocioCulturaAndArmazem(negocioCulturaId, armazemId){
-    return Vue.prototype.$axios.get('negocio/cultura/' + negocioCulturaId +  '/movimento?armazem_id=' + armazemId);
-  }
-
   static getAllNotasFiscaisByNegocioCulturaAndArmazem(negocioCulturaId, armazemId){
     return Vue.prototype.$axios.get('negocio/cultura/' + negocioCulturaId +  '/nota_fiscal?armazem_id=' + armazemId);
   }
@@ -44,9 +36,5 @@ export default class NegocioCulturaAPI{
 
   static listNegociosCulturasParaTransferir(negocioCulturaId, filter){
     return Vue.prototype.$axios.get('/negocio/cultura/'+negocioCulturaId+'/transferir/negocio' + (filter ? "?"+filter : ''));
-  }
-
-  static saveMovimento(negocioCulturaId, params){
-    return Vue.prototype.$axios.post('/negocio/cultura/'+negocioCulturaId+'/movimento', params);
   }
 }

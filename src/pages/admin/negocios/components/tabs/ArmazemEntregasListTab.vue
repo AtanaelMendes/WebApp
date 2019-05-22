@@ -23,6 +23,20 @@
             <div class="row_div" v-if="col.name === 'tipo'">
               <q-chip dense square color="amber" text-color="black">{{ col.value }}</q-chip>
             </div>
+            <div class="row_div" style="padding: 7px 0" v-else-if="col.name === 'actions'">
+              <q-btn flat dense icon="more_vert" round class="q-mr-sm">
+                <q-popover>
+                  <q-list link class="no-border">
+                    <q-item v-close-overlay @click.native="">
+                      <q-item-main label="Editar Transferência"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="">
+                      <q-item-main label="Apagar Transferência"/>
+                    </q-item>
+                  </q-list>
+                </q-popover>
+              </q-btn>
+            </div>
             <div class="row_div" v-else>{{ col.value }}</div>
           </q-td>
         </template>
@@ -31,6 +45,20 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props" style="padding: 0px; height: unset">
             <div class="row_div" v-if="col.name === 'tipo'">
               <q-chip dense square color="deep-purple">{{ col.value }}</q-chip>
+            </div>
+            <div class="row_div" style="padding: 7px 0" v-else-if="col.name === 'actions'">
+              <q-btn flat dense icon="more_vert" round class="q-mr-sm">
+                <q-popover>
+                  <q-list link class="no-border">
+                    <q-item v-close-overlay @click.native="editMovimento(props.row.id)">
+                      <q-item-main label="Editar Movimento"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="">
+                      <q-item-main label="Apagar Movimento"/>
+                    </q-item>
+                  </q-list>
+                </q-popover>
+              </q-btn>
             </div>
             <div class="row_div" v-else>{{ col.value }}</div>
           </q-td>
@@ -42,7 +70,10 @@
     <new-transferencia-modal ref="transferenciaModal"  />
 
     <!--MODAL NOVO MOVIMENTO -->
-    <new-movimento-modal ref="movimentoModal"  />
+    <new-movimento-modal ref="newMovimentoModal"  />
+
+    <!--MODAL EDITAR MOVIMENTO -->
+    <edit-movimento-modal ref="editMovimentoModal"  />
   </div>
 
 </template>
@@ -51,6 +82,7 @@
   import NegocioService from "../../../../../assets/js/service/negocio/NegocioService";
   import newTransferenciaModal from '../modals/NewTransferenciaModal';
   import newMovimentoModal from '../modals/NewMovimentoModal';
+  import editMovimentoModal from '../modals/EditMovimentoModal';
 
   export default {
     name: "ArmazemEntregasListTab",
@@ -61,6 +93,7 @@
     components:{
       newTransferenciaModal,
       newMovimentoModal,
+      editMovimentoModal,
     },
     computed:{
       movimentosMaped(){
@@ -102,6 +135,7 @@
           {label: 'Peso Desconto', name:'p_desconto', field:'p_desconto', align: 'left',},
           {label: 'Peso Líquido', name:'p_liquido', field:'p_liquido', align: 'left',},
           {label: 'Data', name:'data', field:'data', align: 'left',},
+          {label: '', name:'actions', field:'actions', align: 'right',},
         ],
       }
     },
@@ -110,7 +144,10 @@
         this.$refs.transferenciaModal.openModal(cultura, this.armazem.armazem_id);
       },
       newMovimento(negocioCultura){
-        this.$refs.movimentoModal.openModal(negocioCultura, this.armazem.armazem_id);
+        this.$refs.newMovimentoModal.openModal(negocioCultura, this.armazem.armazem_id);
+      },
+      editMovimento(movimentoId){
+        this.$refs.editMovimentoModal.openModal(movimentoId, this.negocioCultura);
       },
       listMovimentos(){
         this.negocioService.listMovimentosByArmazem(this.negocioCultura.id, this.armazem.armazem_id).then(movimentos => {

@@ -294,9 +294,37 @@ export default class NegocioService{
     });
   }
 
+  getMovimento(id){
+    return new Promise((resolve, reject) => {
+      NegocioCulturaMovimentoAPI.getMovimento(id).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  }
+
+  updateMovimento(id, params){
+    return new Promise((resolve, reject) => {
+      NegocioCulturaMovimentoAPI.updateMovimento(id, params).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  }
+
   listMovimentosByArmazem(negocioCulturaId, armazemId){
     return new Promise((resolve, reject) => {
-      NegocioCulturaAPI.getAllMovimentosByNegocioCulturaAndArmazem(negocioCulturaId, armazemId).then(response => {
+      NegocioCulturaMovimentoAPI.getAllMovimentosByNegocioCulturaAndArmazem(negocioCulturaId, armazemId).then(response => {
         if(response.status === 200) {
           resolve(response.data)
         }else{
@@ -366,7 +394,7 @@ export default class NegocioService{
 
   saveMovimento(negocioCulturaId, params){
     return new Promise((resolve, reject) => {
-      NegocioCulturaAPI.saveMovimento(negocioCulturaId, params).then( response => {
+      NegocioCulturaMovimentoAPI.saveMovimento(negocioCulturaId, params).then( response => {
         if(response.status === 201) {
           resolve(response.data);
         }else{
