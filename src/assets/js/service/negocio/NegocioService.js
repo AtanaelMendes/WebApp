@@ -322,6 +322,20 @@ export default class NegocioService{
     });
   }
 
+  deleteMovimento(id){
+    return new Promise((resolve, reject) => {
+      NegocioCulturaMovimentoAPI.deleteMovimento(id).then(response => {
+        if (response.status === 200) {
+          resolve(response.data)
+        } else {
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  }
+
   listMovimentosByArmazem(negocioCulturaId, armazemId){
     return new Promise((resolve, reject) => {
       NegocioCulturaMovimentoAPI.getAllMovimentosByNegocioCulturaAndArmazem(negocioCulturaId, armazemId).then(response => {

@@ -17,11 +17,16 @@ export default class NegocioCulturaMovimentoAPI {
   static getAllMovimentosByNegocioCulturaAndArmazem(negocioCulturaId, armazemId){
     return Vue.prototype.$axios.get('negocio/cultura/' + negocioCulturaId +  '/movimento?armazem_id=' + armazemId);
   }
+
   static getMovimento(id){
     return Vue.prototype.$axios.get('negocio/cultura/movimento/' + id);
   }
 
   static updateMovimento(id, params){
     return Vue.prototype.$axios.put('negocio/cultura/movimento/' + id, params);
+  }
+
+  static deleteMovimento(id){
+    return Vue.prototype.$axios.delete('negocio/cultura/movimento/' + id);
   }
 }

@@ -53,7 +53,7 @@
                     <q-item v-close-overlay @click.native="editMovimento(props.row.id)">
                       <q-item-main label="Editar Movimento"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="">
+                    <q-item v-close-overlay @click.native="deleteMovimento(props.row.id)">
                       <q-item-main label="Apagar Movimento"/>
                     </q-item>
                   </q-list>
@@ -148,6 +148,22 @@
       },
       editMovimento(movimentoId){
         this.$refs.editMovimentoModal.openModal(movimentoId, this.negocioCultura);
+      },
+      deleteMovimento(id){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar esta movimentação?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          this.$q.loading.show();
+          this.negocioService.deleteMovimento(id).then(() => {
+            this.$q.loading.hide();
+          }).catch(() =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível apagar esta movimentação'});
+            this.$q.loading.hide();
+          })
+        }).catch(()=>{});
       },
       listMovimentos(){
         this.negocioService.listMovimentosByArmazem(this.negocioCultura.id, this.armazem.armazem_id).then(movimentos => {
