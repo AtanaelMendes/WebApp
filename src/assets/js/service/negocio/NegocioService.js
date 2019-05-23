@@ -378,6 +378,20 @@ export default class NegocioService{
     });
   }
 
+  atualizarTransferencia(negocioCulturaId, transferenciaId, params){
+    return new Promise((resolve, reject) => {
+      NegocioCulturaAPI.atualizarTransferencia(negocioCulturaId, transferenciaId, params).then( response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  }
+
   listNegociosCulturasParaTransferir(negocioCulturaId, filter){
     return new Promise((resolve, reject) => {
       NegocioCulturaAPI.listNegociosCulturasParaTransferir(negocioCulturaId, filter).then( response => {

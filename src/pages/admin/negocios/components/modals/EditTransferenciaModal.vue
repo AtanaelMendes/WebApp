@@ -1,5 +1,5 @@
 <template>
-  <ap-modal ref="transferenciaModal" title="Nova Transferência" :visible="isModalOpened" @hide="closeModal">
+  <ap-modal ref="editTransferenciaModal" title="Editar Transferência" :visible="isModalOpened" @hide="closeModal">
     <q-carousel slot="content" height="100%" no-swipe ref="stepperTransferencia" @slide-trigger="setStepperIndex">
 
       <!--PASSO 1 ESCOLHER NEGOCIO DESTINO-->
@@ -99,7 +99,7 @@
         <q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep !== 1"
                :disable="transferencia.negocioCulturaDestinoId === null"
         />
-        <q-btn @click="saveTransferencia" flat label="Salvar" color="primary" :disable="transferencia.quantidade < 1" v-if="currentStep == 1"/>
+        <q-btn @click="updateTransferencia" flat label="Salvar" color="primary" :disable="transferencia.quantidade < 1" v-if="currentStep == 1"/>
       </div>
     </div>
   </ap-modal>
@@ -110,7 +110,7 @@
   import agroUtils from "assets/js/AgroUtils";
   import apModal from 'components/ApModal'
   export default {
-    name: "new-transferencia-modal",
+    name: "EditTransferenciaModal",
     components: {
       apModal,
     },
@@ -122,7 +122,7 @@
         currentStep: 0,
         searchNegociosQuery: '',
         currentNegocioCultura: null,
-        currentArmazemId: null,
+        currentMovimento: null,
         isSearching: false,
         transferencia: {
           quantidade: null,
@@ -141,12 +141,18 @@
       }
     },
     methods: {
-      openModal(negocioCultura, armazemId){
+      openModal(id, negocioCultura) {
         this.isModalOpened = true;
         this.currentNegocioCultura = negocioCultura;
-        this.currentArmazemId = armazemId;
+
+        this.$refs.editTransferenciaModal.showInnerProgress();
+        Promise.all([
+          this.getTransferencia(id)
+        ]).then(()=> {
+          this.$refs.editTransferenciaModal.hideInnerProgress();
+        });
       },
-      closeModal(){
+      closeModal() {
         this.isModalOpened = false;
         this.resetModal();
       },
@@ -187,14 +193,22 @@
           this.isSearching = false;
         });
       },
-      saveTransferencia(){
+      getTransferencia(id){
+        this.negocioService.getMovimento(id).then(movimento => {
+          this.currentMovimento = movimento;
+
+          this.searchNegocios(movimento.transferencia.negocio_cultura_destino.negocio.pessoa.nome);
+          this.transferencia.negocioCulturaDestinoId = movimento.transferencia.negocio_cultura_destino.id;
+          this.transferencia.quantidade = movimento.transferencia.quantidade;
+        });
+      },
+      updateTransferencia(){
         let params = {
-          armazem_id: this.currentArmazemId,
           negocio_cultura_destino_id: this.transferencia.negocioCulturaDestinoId,
           quantidade: this.transferencia.quantidade,
         };
-        this.negocioService.transferirParaNegocio(this.currentNegocioCultura.id, params).then(() => {
-          this.$q.notify({type: 'positive', message: 'Transferencia efetuada'});
+        this.negocioService.atualizarTransferencia(this.currentNegocioCultura.id, this.currentMovimento.transferencia.id, params).then(() => {
+          this.$q.notify({type: 'positive', message: 'Transferencia atualizada com sucesso'});
           this.closeModal();
         });
       },
@@ -203,19 +217,5 @@
 </script>
 
 <style scoped>
-  .list-empty{
-    height: 55px;
-    text-align: center;
-    padding-top: 15px;
-  }
-  .list-empty span{
-    color: #8c8c8c;
-    font-weight: 300;
-    font-size: 15px;
-  }
-  .list-empty i{
-    color: #ffb500;
-    font-size: 20px;
-    margin-right: 6px;
-  }
+
 </style>

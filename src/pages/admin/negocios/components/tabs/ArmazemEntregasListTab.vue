@@ -27,10 +27,10 @@
               <q-btn flat dense icon="more_vert" round class="q-mr-sm">
                 <q-popover>
                   <q-list link class="no-border">
-                    <q-item v-close-overlay @click.native="">
+                    <q-item v-close-overlay @click.native="editTransferencia(props.row.id)">
                       <q-item-main label="Editar Transferência"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="">
+                    <q-item v-close-overlay @click.native="deleteMovimento(props.row.id)">
                       <q-item-main label="Apagar Transferência"/>
                     </q-item>
                   </q-list>
@@ -74,6 +74,9 @@
 
     <!--MODAL EDITAR MOVIMENTO -->
     <edit-movimento-modal ref="editMovimentoModal"  />
+
+    <!--MODAL EDITAR TRANSFERENCIA -->
+    <edit-transferencia-modal ref="editTransferenciaModal"  />
   </div>
 
 </template>
@@ -83,6 +86,7 @@
   import newTransferenciaModal from '../modals/NewTransferenciaModal';
   import newMovimentoModal from '../modals/NewMovimentoModal';
   import editMovimentoModal from '../modals/EditMovimentoModal';
+  import editTransferenciaModal from '../modals/EditTransferenciaModal';
 
   export default {
     name: "ArmazemEntregasListTab",
@@ -94,6 +98,7 @@
       newTransferenciaModal,
       newMovimentoModal,
       editMovimentoModal,
+      editTransferenciaModal
     },
     computed:{
       movimentosMaped(){
@@ -148,6 +153,9 @@
       },
       editMovimento(movimentoId){
         this.$refs.editMovimentoModal.openModal(movimentoId, this.negocioCultura);
+      },
+      editTransferencia(movimentoId){
+        this.$refs.editTransferenciaModal.openModal(movimentoId, this.negocioCultura);
       },
       deleteMovimento(id){
         this.$q.dialog({
