@@ -149,6 +149,7 @@
         this.negocioService.updateMovimento(this.currentMovimentoId, params).then(() => {
           this.$q.notify({type: 'positive', message: 'Movimento atualizado com sucesso'});
           this.$refs.editMovimentoModal.hideOuterProgress();
+          this.$root.$emit('refreshNegocioMovimentos');
           this.closeModal();
         })
       }

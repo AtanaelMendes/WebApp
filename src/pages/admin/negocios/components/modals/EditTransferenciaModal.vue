@@ -209,6 +209,7 @@
         };
         this.negocioService.atualizarTransferencia(this.currentNegocioCultura.id, this.currentMovimento.transferencia.id, params).then(() => {
           this.$q.notify({type: 'positive', message: 'Transferencia atualizada com sucesso'});
+          this.$root.$emit('refreshNegocioMovimentos');
           this.closeModal();
         });
       },

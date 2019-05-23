@@ -195,10 +195,11 @@
         };
         this.negocioService.transferirParaNegocio(this.currentNegocioCultura.id, params).then(() => {
           this.$q.notify({type: 'positive', message: 'Transferencia efetuada'});
+          this.$root.$emit('refreshNegocioMovimentos');
           this.closeModal();
         });
       },
-    }
+    },
   }
 </script>
 

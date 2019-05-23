@@ -148,6 +148,7 @@
         this.negocioService.saveMovimento(this.currentNegocioCultura.id, params).then(() => {
           this.$q.notify({type: 'positive', message: 'Movimento efetuado com sucesso'});
           this.$refs.newMovimentoModal.hideOuterProgress();
+          this.$root.$emit('refreshNegocioMovimentos');
           this.closeModal();
         });
       },

@@ -1,71 +1,78 @@
 <template>
   <div>
-    <q-table :data="movimentosMaped" :columns="columns" row-key="n_nota" v-if="movimentos" class="custom-table">
-      <template slot="top" slot-scope="props" >
-        <q-btn outline label="Nova Transferência" size="sm" class="q-mr-sm" color="deep-orange" @click="newTrasnferencia(negocioCultura)" />
-        <q-btn outline label="Novo Movimento" size="sm" color="deep-orange" @click="newMovimento(negocioCultura)"/>
-      </template>
+    <div class="relative-position table-container">
+      <div style="min-height: 150px">
+        <q-table :data="movimentosMaped" :columns="columns" row-key="n_nota" v-if="movimentos" class="custom-table">
+          <template slot="top" slot-scope="props" >
+            <q-btn outline label="Nova Transferência" size="sm" class="q-mr-sm" color="deep-orange" @click="newTrasnferencia(negocioCultura)" />
+            <q-btn outline label="Novo Movimento" size="sm" color="deep-orange" @click="newMovimento(negocioCultura)"/>
+          </template>
 
-      <q-tr slot="body" slot-scope="props" :props="props" >
-        <template v-if="props.row.tipo === 'Entrega'">
-          <q-td v-for="col in props.cols" :key="col.name" :props="props" style="padding: 0px; height: unset">
-            <a :href="'/#/admin/entregas/' + props.row.entrega_id + '/view'" class="td-link">
-              <div class="row_div" v-if="col.name === 'tipo'">
-                <q-chip dense square color="blue-8" >{{ col.value }}</q-chip>
-              </div>
-              <div class="row_div" v-else>{{ col.value }}</div>
-            </a>
-          </q-td>
-        </template>
+          <q-tr slot="body" slot-scope="props" :props="props" >
+            <template v-if="props.row.tipo === 'Entrega'">
+              <q-td v-for="col in props.cols" :key="col.name" :props="props" style="padding: 0px; height: unset">
+                <a :href="'/#/admin/entregas/' + props.row.entrega_id + '/view'" class="td-link">
+                  <div class="row_div" v-if="col.name === 'tipo'">
+                    <q-chip dense square color="blue-8" >{{ col.value }}</q-chip>
+                  </div>
+                  <div class="row_div" v-else>{{ col.value }}</div>
+                </a>
+              </q-td>
+            </template>
 
-        <template v-else-if="props.row.tipo === 'Transferencia'">
-          <q-td v-for="col in props.cols" :key="col.name" :props="props" style="padding: 0px; height: unset">
-            <div class="row_div" v-if="col.name === 'tipo'">
-              <q-chip dense square color="amber" text-color="black">{{ col.value }}</q-chip>
-            </div>
-            <div class="row_div" style="padding: 7px 0" v-else-if="col.name === 'actions'">
-              <q-btn flat dense icon="more_vert" round class="q-mr-sm" v-if="props.row.is_editable">
-                <q-popover>
-                  <q-list link class="no-border">
-                    <q-item v-close-overlay @click.native="editTransferencia(props.row.id)">
-                      <q-item-main label="Editar Transferência"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="deleteTransferencia(props.row.id)">
-                      <q-item-main label="Apagar Transferência"/>
-                    </q-item>
-                  </q-list>
-                </q-popover>
-              </q-btn>
-            </div>
-            <div class="row_div" v-else>{{ col.value }}</div>
-          </q-td>
-        </template>
+            <template v-else-if="props.row.tipo === 'Transferencia'">
+              <q-td v-for="col in props.cols" :key="col.name" :props="props" style="padding: 0px; height: unset">
+                <div class="row_div" v-if="col.name === 'tipo'">
+                  <q-chip dense square color="amber" text-color="black">{{ col.value }}</q-chip>
+                </div>
+                <div class="row_div" style="padding: 7px 0" v-else-if="col.name === 'actions'">
+                  <q-btn flat dense icon="more_vert" round class="q-mr-sm" v-if="props.row.is_editable">
+                    <q-popover>
+                      <q-list link class="no-border">
+                        <q-item v-close-overlay @click.native="editTransferencia(props.row.id)">
+                          <q-item-main label="Editar Transferência"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="deleteTransferencia(props.row.id)">
+                          <q-item-main label="Apagar Transferência"/>
+                        </q-item>
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
+                </div>
+                <div class="row_div" v-else>{{ col.value }}</div>
+              </q-td>
+            </template>
 
-        <template v-else>
-          <q-td v-for="col in props.cols" :key="col.name" :props="props" style="padding: 0px; height: unset">
-            <div class="row_div" v-if="col.name === 'tipo'">
-              <q-chip dense square color="deep-purple">{{ col.value }}</q-chip>
-            </div>
-            <div class="row_div" style="padding: 7px 0" v-else-if="col.name === 'actions'">
-              <q-btn flat dense icon="more_vert" round class="q-mr-sm">
-                <q-popover>
-                  <q-list link class="no-border">
-                    <q-item v-close-overlay @click.native="editMovimento(props.row.id)">
-                      <q-item-main label="Editar Movimento"/>
-                    </q-item>
-                    <q-item v-close-overlay @click.native="deleteMovimento(props.row.id)">
-                      <q-item-main label="Apagar Movimento"/>
-                    </q-item>
-                  </q-list>
-                </q-popover>
-              </q-btn>
-            </div>
-            <div class="row_div" v-else>{{ col.value }}</div>
-          </q-td>
-        </template>
-      </q-tr>
-    </q-table>
+            <template v-else>
+              <q-td v-for="col in props.cols" :key="col.name" :props="props" style="padding: 0px; height: unset">
+                <div class="row_div" v-if="col.name === 'tipo'">
+                  <q-chip dense square color="deep-purple">{{ col.value }}</q-chip>
+                </div>
+                <div class="row_div" style="padding: 7px 0" v-else-if="col.name === 'actions'">
+                  <q-btn flat dense icon="more_vert" round class="q-mr-sm">
+                    <q-popover>
+                      <q-list link class="no-border">
+                        <q-item v-close-overlay @click.native="editMovimento(props.row.id)">
+                          <q-item-main label="Editar Movimento"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="deleteMovimento(props.row.id)">
+                          <q-item-main label="Apagar Movimento"/>
+                        </q-item>
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
+                </div>
+                <div class="row_div" v-else>{{ col.value }}</div>
+              </q-td>
+            </template>
+          </q-tr>
+        </q-table>
+      </div>
 
+      <q-inner-loading :visible="isLoadingMovimentos" >
+        <q-spinner size="60px" ></q-spinner>
+      </q-inner-loading>
+    </div>
     <!--MODAL NOVA TRANSFERENCIA -->
     <new-transferencia-modal ref="transferenciaModal"  />
 
@@ -135,6 +142,7 @@
       return {
         negocioService: new NegocioService(),
         movimentos: null,
+        isLoadingMovimentos: false,
         columns: [
           {label: 'Tipo', name:'tipo', field:'tipo', align: 'left',},
           {label: 'Nº Nota', name:'n_nota', field:'n_nota', align: 'left',},
@@ -171,6 +179,7 @@
           this.$q.loading.show();
           this.negocioService.deleteMovimento(id).then(() => {
             this.$q.loading.hide();
+            this.$root.$emit('refreshNegocioMovimentos');
             this.$q.notify({type: 'positive', message: 'Movimento apagado com sucesso'});
           }).catch(() =>{
             this.$q.notify({type: 'negative', message: 'Não foi possível apagar esta movimentação'});
@@ -188,6 +197,7 @@
           this.$q.loading.show();
           this.negocioService.deleteMovimento(id).then(() => {
             this.$q.loading.hide();
+            this.$root.$emit('refreshNegocioMovimentos');
             this.$q.notify({type: 'positive', message: 'Transferencia apagada com sucesso'});
           }).catch(() =>{
             this.$q.notify({type: 'negative', message: 'Não foi possível apagar esta transferência'});
@@ -196,22 +206,36 @@
         }).catch(()=>{});
       },
       listMovimentos(){
+        this.isLoadingMovimentos = true;
         this.negocioService.listMovimentosByArmazem(this.negocioCultura.id, this.armazem.armazem_id).then(movimentos => {
           this.movimentos = movimentos;
+          this.isLoadingMovimentos = false;
         })
       },
       formataNumeroNotaFiscal(numeros) {
         let numerosFormatted = numeros.map(numero => this.$_.padStart(numero, 8, '0'));
         return numerosFormatted.join(' | ');
       },
+      refreshNegocioMovimentos(){
+        this.$root.$emit('refreshNegocio');
+        this.listMovimentos();
+      }
     },
     mounted() {
       this.listMovimentos();
+      this.$root.$on('refreshNegocioMovimentos', this.refreshNegocioMovimentos);
+    },
+    destroyed() {
+      this.$root.$off('refreshNegocioMovimentos', this.refreshNegocioMovimentos);
     }
   }
 </script>
 
 <style >
+  .table-container .q-spinner circle{
+    stroke-width: 6px;
+    color: #8c8c8c;
+  }
   .custom-table{
     box-shadow: unset;
     -webkit-box-shadow: unset;
