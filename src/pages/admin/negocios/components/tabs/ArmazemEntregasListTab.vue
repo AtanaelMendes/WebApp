@@ -30,7 +30,7 @@
                     <q-item v-close-overlay @click.native="editTransferencia(props.row.id)">
                       <q-item-main label="Editar Transferência"/>
                     </q-item>
-                    <q-item v-close-overlay @click.native="deleteMovimento(props.row.id)">
+                    <q-item v-close-overlay @click.native="deleteTransferencia(props.row.id)">
                       <q-item-main label="Apagar Transferência"/>
                     </q-item>
                   </q-list>
@@ -167,8 +167,26 @@
           this.$q.loading.show();
           this.negocioService.deleteMovimento(id).then(() => {
             this.$q.loading.hide();
+            this.$q.notify({type: 'positive', message: 'Movimento apagado com sucesso'});
           }).catch(() =>{
             this.$q.notify({type: 'negative', message: 'Não foi possível apagar esta movimentação'});
+            this.$q.loading.hide();
+          })
+        }).catch(()=>{});
+      },
+      deleteTransferencia(id){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar esta transferência?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          this.$q.loading.show();
+          this.negocioService.deleteMovimento(id).then(() => {
+            this.$q.loading.hide();
+            this.$q.notify({type: 'positive', message: 'Transferencia apagada com sucesso'});
+          }).catch(() =>{
+            this.$q.notify({type: 'negative', message: 'Não foi possível apagar esta transferência'});
             this.$q.loading.hide();
           })
         }).catch(()=>{});
