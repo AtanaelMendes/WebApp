@@ -24,7 +24,7 @@
               <q-chip dense square color="amber" text-color="black">{{ col.value }}</q-chip>
             </div>
             <div class="row_div" style="padding: 7px 0" v-else-if="col.name === 'actions'">
-              <q-btn flat dense icon="more_vert" round class="q-mr-sm">
+              <q-btn flat dense icon="more_vert" round class="q-mr-sm" v-if="props.row.is_editable">
                 <q-popover>
                   <q-list link class="no-border">
                     <q-item v-close-overlay @click.native="editTransferencia(props.row.id)">
@@ -121,6 +121,10 @@
             movimentoMapped.n_nota = '-';
             movimentoMapped.n_ticket = '-';
             movimentoMapped.placa = '-';
+          }
+
+          if(movimento.tipo.nome === 'Transferencia'){
+            movimentoMapped.is_editable = movimento.transferencia.negocio_cultura_origem.id === this.negocioCultura.id;
           }
 
           return movimentoMapped;
