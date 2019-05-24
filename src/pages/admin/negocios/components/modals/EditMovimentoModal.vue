@@ -131,7 +131,7 @@
       },
       async getMovimento(id){
         return this.negocioService.getMovimento(id).then(movimento => {
-          this.movimento.movimentoTipoId = movimento.negocio_cultura_movimento_tipo_id;
+          this.movimento.movimentoTipoId = movimento.tipo.id;
           this.movimento.quantidade = movimento.quantidade;
         });
       },
