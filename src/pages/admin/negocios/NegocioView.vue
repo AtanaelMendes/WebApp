@@ -150,7 +150,7 @@
                                 Saldo
                               </q-item-main>
                               <q-item-side right>
-                                {{numeral(negocioCultura.quantidade - negocioCultura.quantidade_entregue).format('0,0')}} {{negocioCultura.unidade_medida.sigla}}
+                                {{numeral(negocioCultura.saldo).format('0,0')}} {{negocioCultura.unidade_medida.sigla}}
                               </q-item-side>
                             </q-item>
                           </q-list>
