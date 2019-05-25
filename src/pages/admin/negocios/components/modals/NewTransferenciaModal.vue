@@ -76,7 +76,30 @@
         <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
           <span class="q-subheading text-faded">Informe a quantidade a ser transferia</span>
         </div>
-        <div class="q-px-lg q-py-sm row justify-center" v-if="transferencia.negocioCulturaDestinoId">
+
+        <div class="q-px-lg q-py-sm" v-if="transferencia.negocioCulturaDestinoId">
+          <div class="row justify-center q-mt-lg">
+            <div class="col-xs-12 col-sm-6">
+              <q-datetime v-model="transferencia.lancamento" type="datetime" label="Lançamento"
+                          align="center" modal format="DD/MM/YYYY HH:mm"
+                          :min="lancamentoMinDate" :max="lancamentoMaxDate"/>
+            </div>
+          </div>
+
+          <div class="row justify-center q-mt-sm">
+            <div class="col-xs-12 col-sm-6">
+              <q-input v-model="transferencia.quantidade"
+                       stack-label="Quantidade"
+                       clearable align="right"
+                       :suffix="currentNegocioCultura.unidade_medida.sigla"
+                       type="number" min="1" :max="currentNegocioCultura.quantidade_entregue"
+                       @blur="checkQuantidadeValue"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!--<div class="q-px-lg q-py-sm row justify-center" v-if="transferencia.negocioCulturaDestinoId">
           <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
             <q-field>
               <q-input v-model="transferencia.quantidade"
@@ -88,7 +111,7 @@
               />
             </q-field>
           </div>
-        </div>
+        </div>-->
       </q-carousel-slide>
     </q-carousel>
 
@@ -124,9 +147,12 @@
         currentNegocioCultura: null,
         currentArmazemId: null,
         isSearching: false,
+        lancamentoMaxDate: null,
+        lancamentoMinDate: null,
         transferencia: {
           quantidade: null,
           negocioCulturaDestinoId: null,
+          lancamento: null
         }
       }
     },
@@ -145,6 +171,7 @@
         this.isModalOpened = true;
         this.currentNegocioCultura = negocioCultura;
         this.currentArmazemId = armazemId;
+        this.transferencia.lancamento = new Date(this.moment()).toISOString();
       },
       closeModal(){
         this.isModalOpened = false;
@@ -192,6 +219,7 @@
           armazem_id: this.currentArmazemId,
           negocio_cultura_destino_id: this.transferencia.negocioCulturaDestinoId,
           quantidade: this.transferencia.quantidade,
+          lancamento: this.transferencia.lancamento,
         };
         this.negocioService.transferirParaNegocio(this.currentNegocioCultura.id, params).then(() => {
           this.$q.notify({type: 'positive', message: 'Transferencia efetuada'});

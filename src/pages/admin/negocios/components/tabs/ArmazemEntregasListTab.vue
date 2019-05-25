@@ -98,8 +98,9 @@
   export default {
     name: "ArmazemEntregasListTab",
     props:{
-      armazem: Object,
+      negocio: Object,
       negocioCultura: Object,
+      armazem: Object,
     },
     components:{
       newTransferenciaModal,
@@ -161,7 +162,7 @@
         this.$refs.transferenciaModal.openModal(cultura, this.armazem.armazem_id);
       },
       newMovimento(negocioCultura){
-        this.$refs.newMovimentoModal.openModal(negocioCultura, this.armazem.armazem_id);
+        this.$refs.newMovimentoModal.openModal(negocioCultura, this.armazem.armazem_id, this.negocio.emissao);
       },
       editMovimento(movimentoId){
         this.$refs.editMovimentoModal.openModal(movimentoId, this.negocioCultura);

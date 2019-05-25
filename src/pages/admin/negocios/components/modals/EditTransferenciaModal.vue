@@ -127,6 +127,7 @@
         transferencia: {
           quantidade: null,
           negocioCulturaDestinoId: null,
+          lancamento: null,
         }
       }
     },
@@ -200,12 +201,14 @@
           this.searchNegocios(movimento.transferencia.negocio_cultura_destino.negocio.pessoa.nome);
           this.transferencia.negocioCulturaDestinoId = movimento.transferencia.negocio_cultura_destino.id;
           this.transferencia.quantidade = movimento.transferencia.quantidade;
+          this.transferencia.lancamento = movimento.transferencia.lancamento;
         });
       },
       updateTransferencia(){
         let params = {
           negocio_cultura_destino_id: this.transferencia.negocioCulturaDestinoId,
           quantidade: this.transferencia.quantidade,
+          lancamento: this.transferencia.lancamento
         };
         this.negocioService.atualizarTransferencia(this.currentNegocioCultura.id, this.currentMovimento.transferencia.id, params).then(() => {
           this.$q.notify({type: 'positive', message: 'Transferencia atualizada com sucesso'});

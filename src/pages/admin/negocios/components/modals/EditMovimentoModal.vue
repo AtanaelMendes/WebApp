@@ -25,16 +25,23 @@
         <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
           <span class="q-subheading text-faded">Informe a quantidade</span>
         </div>
-        <div class="row justify-center" v-if="currentNegocioCultura">
-          <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
-            <q-field>
+        <div class="q-px-lg q-py-sm" v-if="currentNegocioCultura">
+          <div class="row justify-center q-mt-lg">
+            <div class="col-xs-12 col-sm-6">
+              <q-datetime v-model="movimento.lancamento" type="datetime" label="Lançamento"
+                          align="center" modal format="DD/MM/YYYY HH:mm"/>
+            </div>
+          </div>
+
+          <div class="row justify-center q-mt-sm">
+            <div class="col-xs-12 col-sm-6">
               <q-input v-model="movimento.quantidade"
                        stack-label="Quantidade"
                        clearable align="right"
                        :suffix="currentNegocioCultura.unidade_medida.sigla"
                        type="number"
               />
-            </q-field>
+            </div>
           </div>
         </div>
       </q-carousel-slide>
@@ -70,6 +77,7 @@
         movimento: {
           quantidade: null,
           movimentoTipoId: null,
+          lancamento: null,
         }
       }
     },
@@ -133,6 +141,7 @@
         return this.negocioService.getMovimento(id).then(movimento => {
           this.movimento.movimentoTipoId = movimento.tipo.id;
           this.movimento.quantidade = movimento.quantidade;
+          this.movimento.lancamento = movimento.lancamento;
         });
       },
       updateMovimento(){
@@ -144,6 +153,7 @@
         let params = {
           movimento_tipo_id: this.movimento.movimentoTipoId,
           quantidade: this.movimento.quantidade,
+          lancamento: this.movimento.lancamento
         };
         this.$refs.editMovimentoModal.showOuterProgress();
         this.negocioService.updateMovimento(this.currentMovimentoId, params).then(() => {

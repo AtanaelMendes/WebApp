@@ -25,16 +25,25 @@
         <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
           <span class="q-subheading text-faded">Informe a quantidade</span>
         </div>
-        <div class="row justify-center" v-if="currentNegocioCultura">
-          <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
-            <q-field>
+
+        <div class="q-px-lg q-py-sm" v-if="currentNegocioCultura">
+          <div class="row justify-center q-mt-lg">
+            <div class="col-xs-12 col-sm-6">
+              <q-datetime v-model="movimento.lancamento" type="datetime" label="Lançamento"
+                          align="center" modal format="DD/MM/YYYY HH:mm"
+                          :min="lancamentoMinDate" :max="lancamentoMaxDate"/>
+            </div>
+          </div>
+
+          <div class="row justify-center q-mt-sm">
+            <div class="col-xs-12 col-sm-6">
               <q-input v-model="movimento.quantidade"
                        stack-label="Quantidade"
                        clearable align="right"
                        :suffix="currentNegocioCultura.unidade_medida.sigla"
                        type="number"
               />
-            </q-field>
+            </div>
           </div>
         </div>
       </q-carousel-slide>
@@ -44,7 +53,7 @@
       <q-btn @click="closeModal()" flat label="Cancelar" color="primary" />
       <div class="float-right ">
         <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="currentStep !== 0"/>
-        <q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep !== 1" />
+        <q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep !== 1" :disabled="movimento.movimentoTipoId === null" />
         <q-btn @click="saveMovimento" flat label="Salvar" color="primary" :disable="!isFormValid()" v-if="currentStep == 1"/>
       </div>
     </div>
@@ -70,17 +79,23 @@
         currentStep: 0,
         currentNegocioCultura: null,
         currentArmazemId: null,
+        lancamentoMaxDate: null,
+        lancamentoMinDate: null,
         movimento: {
           quantidade: null,
           movimentoTipoId: null,
+          lancamento: null,
         }
       }
     },
     methods: {
-      openModal(negocioCultura, armazemId){
+      openModal(negocioCultura, armazemId, dataEmissaoNegocio){
         this.isModalOpened = true;
         this.currentNegocioCultura = negocioCultura;
         this.currentArmazemId = armazemId;
+        this.movimento.lancamento = new Date(this.moment()).toISOString();
+        this.lancamentoMaxDate = new Date();
+        this.lancamentoMinDate = dataEmissaoNegocio;
 
         this.$refs.newMovimentoModal.showInnerProgress();
         Promise.all([
@@ -132,6 +147,9 @@
         if(this.movimento.movimentoTipoId === null || this.movimento.movimentoTipoId === undefined){
           return false
         }
+        if(this.movimento.lancamento === null){
+          return false
+        }
         return true
       },
       saveMovimento(){
@@ -143,6 +161,7 @@
           armazem_id: this.currentArmazemId,
           movimento_tipo_id: this.movimento.movimentoTipoId,
           quantidade: this.movimento.quantidade,
+          lancamento: this.movimento.lancamento
         };
         this.$refs.newMovimentoModal.showOuterProgress();
         this.negocioService.saveMovimento(this.currentNegocioCultura.id, params).then(() => {

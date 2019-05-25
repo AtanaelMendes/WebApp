@@ -156,7 +156,7 @@
                           </q-list>
                         </q-tab-pane>
                         <q-tab-pane class="q-pa-none" :name="'tab-' + index" v-for="(armazem, index) in negocioCultura.armazens" :key="armazem.id" keep-alive>
-                          <armazem-entregas-list-tabs :negocio-cultura="negocioCultura" :armazem="armazem" />
+                          <armazem-entregas-list-tabs :negocio="negocio" :negocio-cultura="negocioCultura" :armazem="armazem" />
                         </q-tab-pane>
                       </q-tabs>
                     </q-card>
