@@ -1,17 +1,62 @@
-import Vue from 'vue';
 import NotaFiscalAPI from "../api/NotaFiscalAPI";
-import NotaFiscalSerieRepository from "../repository/resource/NotaFiscalSerieRepository";
 
 export default class NotaFiscalService {
-  #notaFiscalSerieRepository;
 
-  constructor() {
-    this.notaFiscalSerieRepository = new NotaFiscalSerieRepository();
-  }
-
-  getNotaFiscalItemById(id){
+  listNotasFiscaisWithFilter(filter) {
     return new Promise((resolve, reject) => {
-      NotaFiscalAPI.getNotaFiscalItemById(id).then(response => {
+      NotaFiscalAPI.listNotasFiscaisWithFilter(filter).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  getNotaFiscalById(notaFiscalId) {
+    return new Promise((resolve, reject) => {
+      NotaFiscalAPI.getNotaFiscalById(notaFiscalId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  cretateNotaFiscal(params) {
+    return new Promise((resolve, reject) => {
+      NotaFiscalAPI.cretateNotaFiscal(params).then(response => {
+        if(response.status === 201){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  updateNotaFiscal(notaFiscalId, params) {
+    return new Promise((resolve, reject) => {
+      NotaFiscalAPI.updateNotaFiscal(params, notaFiscalId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  deleteNotaFiscal(notaFiscalId) {
+    return new Promise((resolve, reject) => {
+      NotaFiscalAPI.deleteNotaFiscal(notaFiscalId).then(response => {
         if(response.status === 200){
           resolve(response.data);
         }else{
@@ -23,25 +68,4 @@ export default class NotaFiscalService {
     });
   };
 
-  listSeries(){
-    return new Promise((resolve, reject) => {
-      if(Vue.prototype.serverStatus.isUp) {
-        NotaFiscalAPI.listSeries().then(response => {
-          if(response.status === 200){
-            resolve(response.data);
-          }else{
-            reject(response);
-          }
-        }).catch(error => {
-          reject(error);
-        })
-      }else{
-        this.notaFiscalSerieRepository.getAll().then(notasFiscaisSeries => {
-          resolve(notasFiscaisSeries);
-        }).catch(error => {
-          reject(error);
-        })
-      }
-    });
-  }
 }

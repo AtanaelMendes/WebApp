@@ -55,9 +55,18 @@
 
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 
+            <!--IS CONSUMIDOR-->
+            <q-item v-if="pessoa.is_consumidor">
+              <q-item-main>
+                <q-chip color="primary">
+                  Consumidor
+                </q-chip>
+              </q-item-main>
+            </q-item>
+
             <!--GRUPO ECONOMICO-->
             <q-item>
-              <q-item-main inset>
+              <q-item-main >
                 <q-item-tile class="q-subheading title-color">Grupo econômico</q-item-tile>
                 <q-item-tile sublabel>{{pessoa.grupo_economico.nome}}</q-item-tile>
               </q-item-main>
@@ -65,7 +74,7 @@
 
             <!--RAZAO SOCIAL-->
             <q-item v-if="pessoa.razao_social">
-              <q-item-main inset>
+              <q-item-main >
                 <q-item-tile class="q-subheading title-color">Razão social</q-item-tile>
                 <q-item-tile sublabel>{{pessoa.razao_social}}</q-item-tile>
               </q-item-main>
@@ -74,17 +83,9 @@
 
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 
-            <!--NOME FANTASIA-->
-            <q-item v-if="pessoa.nome_fantasia">
-              <q-item-main inset>
-                <q-item-tile class="q-subheading title-color">Nome fantasia</q-item-tile>
-                <q-item-tile sublabel>{{pessoa.nome_fantasia}}</q-item-tile>
-              </q-item-main>
-            </q-item>
-
             <!--INSCRICAO ESTADUAL-->
             <q-item v-if="pessoa.inscricao_estadual">
-              <q-item-main inset>
+              <q-item-main >
                 <q-item-tile class="q-subheading title-color">Inscrição estadual</q-item-tile>
                 <q-item-tile sublabel>
                   {{pessoa.inscricao_estadual}}
@@ -94,9 +95,41 @@
 
             <!--INSCRICAO MUNICIPAL-->
             <q-item v-if="pessoa.inscricao_municipal">
-              <q-item-main inset>
+              <q-item-main >
                 <q-item-tile class="q-subheading title-color">Inscrição municipal</q-item-tile>
                 <q-item-tile sublabel>{{pessoa.inscricao_municipal}}</q-item-tile>
+              </q-item-main>
+            </q-item>
+
+            <!--INSCRICAO SUFRAMA-->
+            <q-item v-if="pessoa.inscricao_suframa">
+              <q-item-main >
+                <q-item-tile class="q-subheading title-color">Inscrição suframa</q-item-tile>
+                <q-item-tile sublabel>{{pessoa.inscricao_suframa}}</q-item-tile>
+              </q-item-main>
+            </q-item>
+
+            <!--INSCRICAO ESTRANGEIRO-->
+            <q-item v-if="pessoa.inscricao_estrangeiro">
+              <q-item-main >
+                <q-item-tile class="q-subheading title-color">Inscrição estrangeiro</q-item-tile>
+                <q-item-tile sublabel>{{pessoa.inscricao_estrangeiro}}</q-item-tile>
+              </q-item-main>
+            </q-item>
+
+            <!--CNAE-->
+            <q-item v-if="pessoa.cnae">
+              <q-item-main >
+                <q-item-tile class="q-subheading title-color">CNAE</q-item-tile>
+                <q-item-tile sublabel>{{pessoa.cnae}}</q-item-tile>
+              </q-item-main>
+            </q-item>
+
+            <!--CRT-->
+            <q-item v-if="pessoa.crt">
+              <q-item-main >
+                <q-item-tile class="q-subheading title-color">CRT</q-item-tile>
+                <q-item-tile sublabel>{{pessoa.crt}}</q-item-tile>
               </q-item-main>
             </q-item>
 

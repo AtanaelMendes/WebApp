@@ -8,6 +8,10 @@ export default class {
     value: null,
     errorMessage: null
   };
+  razaoSocial = {
+    value: null,
+    errorMessage: null
+  };
   grupoEconomico = {
     value: null,
     errorMessage: null
@@ -24,6 +28,10 @@ export default class {
     value: null,
     errorMessage: null
   };
+  inscricaoEstadualIndicador = {
+    value: null,
+    errorMessage: null
+  };
   uf = {
     value: null,
     errorMessage: null
@@ -32,21 +40,43 @@ export default class {
     value: null,
     errorMessage: null
   };
-  razaoSocial = {
+  inscricaoSuframa = {
     value: null,
+    errorMessage: null
+  };
+  inscricaoEstrangeiro = {
+    value: null,
+    errorMessage: null
+  };
+  cnae = {
+    value: null,
+    errorMessage: null
+  };
+  crt = {
+    value: null,
+    errorMessage: null
+  };
+  isConsumidor = {
+    value: false,
     errorMessage: null
   };
   constructor(pessoaType, pessoa) {
     this.pessoaType = pessoaType;
     if (pessoa !== undefined || pessoa != null) {
       this.nome.value = pessoa.nome.value;
+      this.razaoSocial.value = pessoa.razaoSocial.value;
       this.grupoEconomico.value = pessoa.grupoEconomico.value;
       this.cpf.value = pessoa.cpf.value;
       this.cnpj.value = pessoa.cnpj.value;
       this.inscricaoEstadual.value = pessoa.inscricaoEstadual.value;
+      this.inscricaoEstadualIndicador.value = pessoa.inscricaoEstadualIndicador.value;
       this.uf.value = pessoa.uf.value;
       this.inscricaoMunicipal.value = pessoa.inscricaoMunicipal.value;
-      this.razaoSocial.value = pessoa.razaoSocial.value;
+      this.inscricaoSuframa.value = pessoa.inscricaoSuframa.value;
+      this.inscricaoEstrangeiro.value = pessoa.inscricaoEstrangeiro.value;
+      this.cnae.value = pessoa.cnae.value;
+      this.crt.value = pessoa.crt.value;
+      this.isConsumidor.value = pessoa.isConsumidor.value;
     }
   };
 
@@ -59,14 +89,40 @@ export default class {
         hasError = true;
       } else {
         if (!inscricaoEstadualValidator.validar(this.uf.value, this.inscricaoEstadual.value)) {
-          this.inscricaoEstadual.errorMessage = "Inscrição Inválida";
+          this.inscricaoEstadual.errorMessage = "Inscrição estadual inválida";
           hasError = true;
         }
       }
     }
 
+    if (!helpers.req(this.inscricaoEstadualIndicador.value)) {
+      this.inscricaoEstadualIndicador.errorMessage = "Informe o indicador de inscrição estadual";
+      hasError = true;
+    }
+
+    if (this.inscricaoSuframa.value !== null) {
+      if(this.inscricaoSuframa.value.length !== 9){
+        this.inscricaoSuframa.errorMessage = 'Inscrição suframa deve conter 9 digitos';
+        hasError = true;
+      }
+    }
+
+    if (this.inscricaoEstrangeiro.value !== null ) {
+      if(this.inscricaoEstrangeiro.value.length > 25){
+        this.inscricaoEstrangeiro.errorMessage = 'Inscrição estrangeiro contém máx. 25 caracteres';
+        hasError = true;
+      }
+    }
+
+    if (this.cnae.value !== null) {
+      if(this.cnae.value > 9999999){
+        this.cnae.errorMessage = 'CNAE contém mais de 7 números';
+        hasError = true;
+      }
+    }
+
     if (!helpers.req(this.nome.value)) {
-      this.nome.errorMessage = "Digite um nome";
+      this.nome.errorMessage = "Informe um nome";
       hasError = true;
     } else if (helpers.len(this.nome.value) < 3) {
       this.nome.errorMessage = "O nome deve ter no mínimo 3 caracteres";
@@ -78,9 +134,19 @@ export default class {
       hasError = true;
     }
 
+    if (!helpers.req(this.grupoEconomico.value)) {
+      this.grupoEconomico.errorMessage = "Selecione um Grupo Econòmico";
+      hasError = true;
+    }
+
+    if (!helpers.req(this.razaoSocial.value)) {
+      this.razaoSocial.errorMessage = "Informe uma razão social";
+      hasError = true;
+    }
+
     if (this.pessoaType === 1) {
       if (!helpers.req(this.cpf.value)) {
-        this.cpf.errorMessage = "Digite um CPF";
+        this.cpf.errorMessage = "Informe um CPF";
         hasError = true;
       } else if (!CPF.validate(this.cpf.value)) {
         this.cpf.errorMessage = "O CPF é inválido";
@@ -88,15 +154,10 @@ export default class {
       }
     } else if (this.pessoaType === 2) {
       if (!helpers.req(this.cnpj.value)) {
-        this.cnpj.errorMessage = "Digite um CNPJ";
+        this.cnpj.errorMessage = "Informe um CNPJ";
         hasError = true;
       } else if (!isValidCnpj(this.cnpj.value)) {
         this.cnpj.errorMessage = "O CNPJ é inválido.";
-        hasError = true;
-      }
-
-      if (!helpers.req(this.razaoSocial.value)) {
-        this.razaoSocial.errorMessage = "Digite uma razão social";
         hasError = true;
       }
 
@@ -113,8 +174,14 @@ export default class {
         cnpj: null,
         razao_social: this.razaoSocial.value,
         inscricao_estadual: this.inscricaoEstadual.value ? this.inscricaoEstadual.value.replace(/[^0-9]/g, '') : null,
+        inscricao_estadual_indicador: this.inscricaoEstadualIndicador.value,
         uf: this.uf.value,
         inscricao_municipal: this.inscricaoMunicipal.value ? this.inscricaoMunicipal.value.replace(/[^0-9]/g, '') : null,
+        inscricao_Suframa: this.inscricaoSuframa.value,
+        inscricao_estrangeiro: this.inscricaoEstrangeiro.value,
+        cnae: this.cnae.value,
+        crt: this.crt.value,
+        is_consumidor: this.isConsumidor.value,
       }
     } else if (this.pessoaType === 2) {
       return {
@@ -124,8 +191,14 @@ export default class {
         cnpj: this.cnpj.value.replace(/[^0-9]/g, ''),
         razao_social: this.razaoSocial.value,
         inscricao_estadual: this.inscricaoEstadual.value ? this.inscricaoEstadual.value.replace(/[^0-9]/g, '') : null,
+        inscricao_estadual_indicador: this.inscricaoEstadualIndicador.value,
         uf: this.uf.value,
         inscricao_municipal: this.inscricaoMunicipal.value ? this.inscricaoMunicipal.value.replace(/[^0-9]/g, '') : null,
+        inscricao_Suframa: this.inscricaoSuframa.value,
+        inscricao_estrangeiro: this.inscricaoEstrangeiro.value,
+        cnae: this.cnae.value,
+        crt: this.crt.value,
+        is_consumidor: this.isConsumidor.value,
       }
     }
   };

@@ -82,10 +82,10 @@
         </q-item>
 
         <!--NOTAS FISCAIS-->
-        <!--<q-item @click.native="$router.push({name:'notas-fiscais'})">
+        <q-item @click.native="$router.push({name:'notas-fiscais'})">
           <q-item-side icon="receipt" />
           <q-item-main label="Notas Fiscais" />
-        </q-item>-->
+        </q-item>
 
         <!--SAFRAS-->
         <q-item @click.native="$router.push({name:'safras'})">

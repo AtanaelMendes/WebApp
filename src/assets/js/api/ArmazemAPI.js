@@ -6,8 +6,8 @@ export default class ArmazemAPI{
     return Vue.prototype.$axios.get('/armazem/'+ id);
   }
 
-  static listArmazens(){
-    return Vue.prototype.$axios.get('/armazem');
+  static listArmazens(filter){
+    return Vue.prototype.$axios.get('/armazem' + (filter ? "?"+filter : ''));
   }
 
   static listArmazensByEntrega(entregaId){

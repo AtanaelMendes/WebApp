@@ -9,10 +9,10 @@ export default class ArmazemService{
     this.armazemRepository = new ArmazemRepository();
   }
 
-  listArmazens() {
+  listArmazens(filter) {
     return new Promise((resolve, reject) => {
       if(Vue.prototype.serverStatus.isUp) {
-        ArmazemAPI.listArmazens().then(response => {
+        ArmazemAPI.listArmazens(filter).then(response => {
           if(response.status === 200){
             resolve(response.data);
           }else{

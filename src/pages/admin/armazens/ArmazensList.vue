@@ -12,7 +12,7 @@
                                   :options="[
                             { label: 'Ativos', value: 'non-trashed'},
                             { label: 'Inativos', value: 'trashed' },
-                            { label: 'Todos', value: '' }
+                            { label: 'Todos', value: 'all' }
                             ]"
                   />
                 </q-item-main>
@@ -35,6 +35,10 @@
               <q-item-tile>
                 {{armazem.nome}}
                 <span class="text-faded">#{{armazem.id}}</span>
+
+                <q-chip color="negative" dense pointing="left" v-if="armazem.deleted_at">
+                  Inativo
+                </q-chip>
               </q-item-tile>
 
               <q-item-tile sublabel>
@@ -89,6 +93,7 @@
   import addArmazemModal from 'components/armazem/AddArmazemModal'
   import editArmazemModal from 'components/armazem/EditArmazemModal'
   import ArmazemService from "assets/js/service/armazem/ArmazemService";
+  import agroUtils from "assets/js/AgroUtils";
   export default {
     name: "armazens-list",
     components: {
@@ -122,11 +127,11 @@
     },
     methods: {
       listBySearch: function(val){
-        this.filter.nameOrPlaque = val;
+        this.filter.name = val;
       },
       listArmazens: function(filter) {
         this.$q.loading.show();
-        this.armazemService.listArmazens(filter).then(armazens => {
+        this.armazemService.listArmazens(agroUtils.serialize(filter)).then(armazens => {
           this.armazens = armazens;
           this.isEmptyList = this.armazens.length === 0;
           this.$q.loading.hide();
