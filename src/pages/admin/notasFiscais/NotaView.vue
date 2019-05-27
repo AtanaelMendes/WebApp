@@ -177,10 +177,10 @@
             <!--BASE CALCULO ICMS-->
             <div class="col-1 q-pa-xs">
               <div class="text-faded q-caption ellipsis">
-                Base de Calc. do ICMS
+                Base Calc. ICMS
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_icms_base_calculo).format('0,0.00')}}
               </div>
             </div>
 
@@ -190,7 +190,7 @@
                 Valor do ICMS
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_icms).format('0,0.00')}}
               </div>
             </div>
 
@@ -200,7 +200,7 @@
                 Base Calc. ICMS ST
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_icms_st_base_calculo).format('0,0.00')}}
               </div>
             </div>
 
@@ -210,7 +210,7 @@
                 Valor do ICMS SUBST
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_icms_st).format('0,0.00')}}
               </div>
             </div>
 
@@ -220,7 +220,7 @@
                 V IMP Importação
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_ii).format('0,0.00')}}
               </div>
             </div>
 
@@ -230,7 +230,7 @@
                 V ICMS UF REMET
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_icms_estado_remetente).format('0,0.00')}}
               </div>
             </div>
 
@@ -240,7 +240,7 @@
                 V FCP UF DEST
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_fcp_estado_destinatario).format('0,0.00')}}
               </div>
             </div>
 
@@ -250,7 +250,7 @@
                 Valor do PIS
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_pis).format('0,0.00')}}
               </div>
             </div>
 
@@ -260,7 +260,7 @@
                 V Total Produto
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_produto).format('0,0.00')}}
               </div>
             </div>
 
@@ -274,7 +274,7 @@
                 Valor do Frete
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_frete).format('0,0.00')}}
               </div>
             </div>
 
@@ -284,7 +284,7 @@
                 Valor do Seguro
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_seguro).format('0,0.00')}}
               </div>
             </div>
 
@@ -294,7 +294,7 @@
                 Desconto
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_desconto).format('0,0.00')}}
               </div>
             </div>
 
@@ -304,7 +304,7 @@
                 Outras Despesas
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_outro).format('0,0.00')}}
               </div>
             </div>
 
@@ -314,7 +314,7 @@
                 Valor Total IPI
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_ipi).format('0,0.00')}}
               </div>
             </div>
 
@@ -324,7 +324,7 @@
                 V ICMS UF DEST
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_icms_estado_destinatario).format('0,0.00')}}
               </div>
             </div>
 
@@ -334,7 +334,7 @@
                 V TOT TRIB
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_tributos).format('0,0.00')}}
               </div>
             </div>
 
@@ -344,7 +344,7 @@
                 Valor do COFINS
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_cofins).format('0,0.00')}}
               </div>
             </div>
 
@@ -354,7 +354,7 @@
                 V Total Nota
               </div>
               <div class="ellipsis text-right">
-                0,0
+                {{numeral(notaFiscal.total_nota_fiscal).format('0,0.00')}}
               </div>
             </div>
 
@@ -550,103 +550,247 @@
           Dados dos Produtos / Serviços
         </div>
         <q-card>
-          <div class="row" v-for="produtoServico in notaFiscal.nota_fiscal_itens">
 
-            <!--CODIGO PRODUTO-->
-            <div class="col-1 q-pa-xs">
-              <div class="text-faded q-caption">
-                Código Produto
-              </div>
-              <div class="ellipsis text-center">
-                {{produtoServico.codigo}}
+          <div class="row">
+
+            <div class="col-3">
+              <div class="row">
+
+                <!--CODIGO PRODUTO-->
+                <div class="col-4 q-pa-xs">
+                  <div class="text-faded q-caption">
+                    Código Produto
+                  </div>
+                </div>
+
+                <!--DESCRICAO PRODUTO-->
+                <div class="col-8 q-pa-xs borda-esquerda">
+                  <div class="text-faded q-caption ellipsis">
+                    Descrição Produto/Serviço
+                  </div>
+                </div>
+
               </div>
             </div>
 
-            <!--DESCRICAO PRODUTO-->
-            <div class="col-3 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                Descrição Produto/Serviço
-              </div>
-              <div class="ellipsis">
-                {{produtoServico.produto}}
+            <div class="col-3">
+              <div class="row">
+                <!--NCM / SH-->
+                <div class="col-4 q-pa-xs borda-esquerda">
+                  <div class="text-faded q-caption ellipsis">
+                    NCM / SH
+                  </div>
+                </div>
+
+                <!--O/CST-->
+                <div class="col-2 q-pa-xs borda-esquerda">
+                  <div class="text-faded q-caption ellipsis">
+                    O/CST
+                  </div>
+                </div>
+
+                <!--CFOP-->
+                <div class="col-2 q-pa-xs borda-esquerda">
+                  <div class="text-faded q-caption ellipsis">
+                    CFOP
+                  </div>
+                </div>
+
+                <!--UNIDADE-->
+                <div class="col-2 q-pa-xs borda-esquerda">
+                  <div class="text-faded q-caption ellipsis">
+                    UN
+                  </div>
+                </div>
               </div>
             </div>
 
-            <!--NCM / SH-->
-            <div class="col-1 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                NCM / SH
-              </div>
-              <div class="ellipsis">
-                {{produtoServico.ncm}}
+            <div class="col-3">
+              <div class="row">
+
+                <!--QUANTIDADE-->
+                <div class="col-4 q-pa-xs borda-esquerda">
+                  <div class="text-faded q-caption">
+                    Quantidade
+                  </div>
+                </div>
+
+                <!--VALOR  UNITARIO-->
+                <div class="col-4 q-pa-xs borda-esquerda">
+                  <div class="text-faded q-caption ellipsis">
+                    Valor Unit
+                  </div>
+                </div>
+
+                <!--VALOR TOTAL-->
+                <div class="col-4 q-pa-xs borda-esquerda">
+                  <div class="text-faded q-caption ellipsis">
+                    Valor Total
+                  </div>
+                </div>
+
               </div>
             </div>
 
-            <!--O/CST-->
-            <div class="col-1 q-pa-xs borda-esquerda">
+            <div class="col-3">
+              <div class="row">
+                <!--BASE CALCULO ICMS-->
+                <div class="col-3 q-pa-xs borda-esquerda">
+                  <div class="text-faded q-caption">
+                    B.CÁLC ICMS
+                  </div>
+                </div>
 
-              <div class="text-faded q-caption ellipsis">
-                O/CST
-              </div>
-              <div class="ellipsis">
-                260
-              </div>
-            </div>
+                <!--VALOR ICMS-->
+                <div class="col-2 q-pa-xs borda-esquerda">
+                  <div class="text-faded q-caption">
+                    V ICMS
+                  </div>
+                </div>
 
-            <!--CFOP-->
-            <div class="col-1 q-pa-xs borda-esquerda">
+                <!--VALOR IPI-->
+                <div class="col-2 q-pa-xs borda-esquerda">
+                  <div class="text-faded q-caption">
+                    V IPI
+                  </div>
+                </div>
 
-              <div class="text-faded q-caption ellipsis">
-                CFOP
-              </div>
-              <div class="ellipsis">
-                {{produtoServico.cfop.numero}}
-              </div>
-            </div>
+                <!--ALIQUOTA ICMS-->
+                <div class="col-3 q-pa-xs borda-esquerda">
+                  <div class="text-faded q-caption">
+                    ALIQ ICMS
+                  </div>
+                </div>
 
-            <!--UNIDADE/ QUANTIDADE-->
-            <div class="col-1 q-pa-xs borda-esquerda">
+                <!--ALIQUOTA IPI-->
+                <div class="col-2 q-pa-xs borda-esquerda">
+                  <div class="text-faded q-caption">
+                    ALIQ IPI
+                  </div>
+                </div>
 
-              <div class="text-faded q-caption ellipsis">
-                Unidade/Quantidade
-              </div>
-              <div class="ellipsis">
-                {{produtoServico.unidade_medida.sigla}}
-                {{produtoServico.quantidade}}
-              </div>
-            </div>
-
-            <!--VALOR  UNITARIO-->
-            <div class="col-2 q-pa-xs borda-esquerda">
-
-              <div class="text-faded q-caption ellipsis">
-                Valor Unit
-              </div>
-              <div class="ellipsis">
-                {{produtoServico.valor_unitario}} -
-                {{numeral(produtoServico.valor_unitario).format('0,0.0000')}}
               </div>
             </div>
 
-            <!--VALOR TOTAL-->
-            <div class="col-1 q-pa-xs borda-esquerda">
+          </div>
 
-              <div class="text-faded q-caption ellipsis">
-                Valor Total
-              </div>
-              <div class="ellipsis">
-                {{numeral(produtoServico.valor_total).format('0,0.0000')}}
+          <div class="row borda-superior" v-for="item in notaFiscal.itens">
+
+            <div class="col-3">
+              <div class="row">
+
+                <!--CODIGO PRODUTO-->
+                <div class="col-4 q-pa-xs">
+                  <div class="ellipsis text-center">
+                    {{item.codigo}}
+                  </div>
+                </div>
+
+                <!--DESCRICAO PRODUTO-->
+                <div class="col-8 q-pa-xs borda-esquerda">
+                  <div class="ellipsis">
+                    {{item.produto}}
+                  </div>
+                </div>
               </div>
             </div>
 
-            <!--BASE CALCULO ICMS-->
-            <div class="col-1 q-pa-xs borda-esquerda">
+            <div class="col-3">
+              <div class="row">
+                <!--NCM / SH-->
+                <div class="col-4 q-pa-xs borda-esquerda">
+                  <div class="ellipsis text-center">
+                    {{item.ncm}}
+                  </div>
+                </div>
 
-              <div class="text-faded q-caption">
-                Base Cálculo ICMS
+                <!--O/CST-->
+                <div class="col-2 q-pa-xs borda-esquerda">
+                  <div class="ellipsis text-center">
+                    260
+                  </div>
+                </div>
+
+                <!--CFOP-->
+                <div class="col-2 q-pa-xs borda-esquerda">
+                  <div class="ellipsis text-center">
+                    {{item.cfop.numero}}
+                  </div>
+                </div>
+
+                <!--UNIDADE-->
+                <div class="col-4 q-pa-xs borda-esquerda">
+                  <div class="ellipsis text-center">
+                    {{item.unidade_medida.sigla}}
+                  </div>
+                </div>
               </div>
-              <div class="ellipsis">
-                {{numeral(produtoServico.item).format('0,0.0000')}}
+            </div>
+
+            <div class="col-3">
+              <div class="row">
+
+                <!--QUANTIDADE-->
+                <div class="col-4 q-pa-xs borda-esquerda">
+                  <div class="ellipsis text-right">
+                    {{item.quantidade}}
+                  </div>
+                </div>
+
+                <!--VALOR  UNITARIO-->
+                <div class="col-4 q-pa-xs borda-esquerda">
+                  <div class="ellipsis text-right">
+                    {{numeral(item.valor_unitario).format('0,0.00')}}
+                  </div>
+                </div>
+
+                <!--VALOR TOTAL-->
+                <div class="col-4 q-pa-xs borda-esquerda">
+                  <div class="ellipsis text-right">
+                    {{numeral(item.valor_total).format('0,0.00')}}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="col-3">
+              <div class="row">
+                <!--BASE CALCULO ICMS-->
+                <div class="col-3 q-pa-xs borda-esquerda">
+                  <div class="ellipsis text-right">
+                    {{numeral(item.item_icms.base_calculo).format('0,0.00')}}
+                  </div>
+                </div>
+
+                <!--VALOR ICMS-->
+                <div class="col-2 q-pa-xs borda-esquerda">
+                  <div class="ellipsis text-right">
+                    {{numeral(item.item_icms.valor).format('0,0.00')}}
+                  </div>
+                </div>
+
+                <!--VALOR IPI-->
+                <div class="col-2 q-pa-xs borda-esquerda">
+                  <div class="ellipsis text-right">
+                    {{numeral(item.item_ipi.valor).format('0,0.00')}}
+                  </div>
+                </div>
+
+                <!--ALIQUOTA ICMS-->
+                <div class="col-3 q-pa-xs borda-esquerda">
+                  <div class="ellipsis text-right">
+                    0,0
+                  </div>
+                </div>
+
+                <!--ALIQUOTA IPI-->
+                <div class="col-2 q-pa-xs borda-esquerda">
+                  <div class="ellipsis text-right">
+                    0,0
+                  </div>
+                </div>
+
               </div>
             </div>
 
