@@ -3,7 +3,7 @@
     <q-carousel slot="content" height="100%" no-swipe ref="stepperMovimento" @slide-trigger="setStepperIndex">
 
       <!--PASSO 1 ESCOLHER O TIPO DE MOVIMENTO-->
-      <q-carousel-slide class="q-pa-none" style="width:300px; height: 200px">
+      <q-carousel-slide class="q-pa-none" style="width:300px; height: 300px">
         <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
           <span class="q-subheading text-faded">Informar o tipo de movimento</span>
         </div>
@@ -26,23 +26,38 @@
           <span class="q-subheading text-faded">Informe a quantidade</span>
         </div>
 
-        <div class="q-px-lg q-py-sm" v-if="currentNegocioCultura">
-          <div class="row justify-center q-mt-lg">
-            <div class="col-xs-12 col-sm-6">
-              <q-datetime v-model="movimento.lancamento" type="datetime" label="Lançamento"
-                          align="center" modal format="DD/MM/YYYY HH:mm"
-                          :min="lancamentoMinDate" :max="lancamentoMaxDate"/>
+        <div class="q-px-lg q-py-sm text-center" v-if="currentNegocioCultura">
+          <div style="display: inline-block">
+            <div class="row q-mt-lg text-left">
+              <div class="col-6">
+                <q-datetime v-model="movimento.lancamento" type="datetime" label="Lançamento"
+                            align="center" modal format="DD/MM/YYYY HH:mm"
+                            :min="lancamentoMinDate" :max="lancamentoMaxDate"/>
+              </div>
             </div>
-          </div>
 
-          <div class="row justify-center q-mt-sm">
-            <div class="col-xs-12 col-sm-6">
-              <q-input v-model="movimento.quantidade"
-                       stack-label="Quantidade"
-                       clearable align="right"
-                       :suffix="currentNegocioCultura.unidade_medida.sigla"
-                       type="number"
-              />
+            <div class="row q-mt-sm">
+              <div class="col-12">
+                <q-input stack-label="Descrição" v-model="movimento.descricao" />
+              </div>
+            </div>
+
+            <div class="row justify-center q-mt-sm">
+              <div class="col-xs-12 col-sm-6">
+                <q-input v-model="movimento.quantidade"
+                         stack-label="Quantidade"
+                         clearable align="right"
+                         :suffix="currentNegocioCultura.unidade_medida.sigla"
+                         type="number" min="1" @blur="checkQuantidadeValue"
+                />
+              </div>
+              <div class="col-xs-12 col-sm-6" style="align-self: center;">
+                <q-btn-toggle inverted size="sm"
+                              toggle-color="primary"
+                              v-model="quantidadeTipo"
+                              :options="[{label: 'Entrada', value: 0},{label: 'Saída', value: 1}]"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -81,10 +96,12 @@
         currentArmazemId: null,
         lancamentoMaxDate: null,
         lancamentoMinDate: null,
+        quantidadeTipo: 0,
         movimento: {
           quantidade: null,
           movimentoTipoId: null,
           lancamento: null,
+          descricao: null,
         }
       }
     },
@@ -113,6 +130,7 @@
         this.$refs.stepperMovimento.goToSlide(0);
         this.movimento.quantidade = null;
         this.movimento.movimentoTipoId = null;
+        this.movimento.descricao = null;
       },
       selectTipoMovimento(tipoId){
         this.movimento.movimentoTipoId = tipoId;
@@ -135,6 +153,11 @@
           return true;
         }
       },
+      checkQuantidadeValue(){
+        if(this.movimento.quantidade < 1){
+          this.movimento.quantidade = 1;
+        }
+      },
       async listTiposMovimento(){
         return this.negocioService.listTiposMovimentos().then(tipos => {
           this.tiposMovimentos = tipos;
@@ -150,26 +173,32 @@
         if(this.movimento.lancamento === null){
           return false
         }
+        if(this.movimento.descricao === null || this.movimento.descricao === ""){
+          return false
+        }
         return true
       },
       saveMovimento(){
-        if (!this.isFormValid()){
-          this.$q.notify({type: 'negative', message: 'Preencha as informações corretamente'});
-          return
-        }
-        let params = {
-          armazem_id: this.currentArmazemId,
-          movimento_tipo_id: this.movimento.movimentoTipoId,
-          quantidade: this.movimento.quantidade,
-          lancamento: this.movimento.lancamento
-        };
-        this.$refs.newMovimentoModal.showOuterProgress();
-        this.negocioService.saveMovimento(this.currentNegocioCultura.id, params).then(() => {
-          this.$q.notify({type: 'positive', message: 'Movimento efetuado com sucesso'});
-          this.$refs.newMovimentoModal.hideOuterProgress();
-          this.$root.$emit('refreshNegocioMovimentos');
-          this.closeModal();
-        });
+        setTimeout(() => {
+          if (!this.isFormValid()) {
+            this.$q.notify({type: 'negative', message: 'Preencha as informações corretamente'});
+            return
+          }
+          let params = {
+            armazem_id: this.currentArmazemId,
+            movimento_tipo_id: this.movimento.movimentoTipoId,
+            quantidade: this.quantidadeTipo === 0 ? this.movimento.quantidade : -this.movimento.quantidade,
+            lancamento: this.movimento.lancamento,
+            descricao: this.movimento.descricao
+          };
+          this.$refs.newMovimentoModal.showOuterProgress();
+          this.negocioService.saveMovimento(this.currentNegocioCultura.id, params).then(() => {
+            this.$q.notify({type: 'positive', message: 'Movimento efetuado com sucesso'});
+            this.$refs.newMovimentoModal.hideOuterProgress();
+            this.$root.$emit('refreshNegocioMovimentos');
+            this.closeModal();
+          });
+        }, 300);
       },
     }
   }

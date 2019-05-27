@@ -76,17 +76,35 @@
         <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
           <span class="q-subheading text-faded">Informe a quantidade a ser transferia</span>
         </div>
-        <div class="q-px-lg q-py-sm row justify-center" v-if="transferencia.negocioCulturaDestinoId">
-          <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6">
-            <q-field>
-              <q-input v-model="transferencia.quantidade"
-                       stack-label="Quantidade"
-                       clearable align="right"
-                       :suffix="currentNegocioCultura.unidade_medida.sigla"
-                       type="number" min="1" :max="currentNegocioCultura.quantidade_entregue"
-                       @blur="checkQuantidadeValue"
-              />
-            </q-field>
+        <div class="q-px-lg q-py-sm text-center" v-if="transferencia.negocioCulturaDestinoId">
+          <div style="display: inline-block">
+            <div class="row justify-center q-mt-lg">
+              <div class="col-12">
+                <q-datetime v-model="transferencia.lancamento" type="datetime" label="Lançamento"
+                            align="center" modal format="DD/MM/YYYY HH:mm"
+                            :min="lancamentoMinDate" :max="lancamentoMaxDate"/>
+              </div>
+            </div>
+
+            <div class="row q-mt-sm">
+              <div class="col-12">
+                <q-input stack-label="Descrição" v-model="transferencia.descricao" />
+              </div>
+            </div>
+
+            <div class="row justify-center q-mt-sm">
+              <div class="col-12">
+                <q-field>
+                  <q-input v-model="transferencia.quantidade"
+                           stack-label="Quantidade"
+                           clearable align="right"
+                           :suffix="currentNegocioCultura.unidade_medida.sigla"
+                           type="number" min="1" :max="currentNegocioCultura.quantidade_entregue"
+                           @blur="checkQuantidadeValue"
+                  />
+                </q-field>
+              </div>
+            </div>
           </div>
         </div>
       </q-carousel-slide>
@@ -124,10 +142,13 @@
         currentNegocioCultura: null,
         currentMovimento: null,
         isSearching: false,
+        lancamentoMaxDate: null,
+        lancamentoMinDate: null,
         transferencia: {
           quantidade: null,
           negocioCulturaDestinoId: null,
           lancamento: null,
+          descricao: null,
         }
       }
     },
@@ -163,6 +184,7 @@
         this.negociosCulturas = null;
         this.transferencia.quantidade = null;
         this.transferencia.negocioCulturaDestinoId = null;
+        this.transferencia.descricao = null;
       },
       checkQuantidadeValue(){
         if(this.transferencia.quantidade > this.currentNegocioCultura.quantidade_entregue){
@@ -202,13 +224,15 @@
           this.transferencia.negocioCulturaDestinoId = movimento.transferencia.negocio_cultura_destino.id;
           this.transferencia.quantidade = movimento.transferencia.quantidade;
           this.transferencia.lancamento = movimento.transferencia.lancamento;
+          this.transferencia.descricao = movimento.transferencia.descricao;
         });
       },
       updateTransferencia(){
         let params = {
           negocio_cultura_destino_id: this.transferencia.negocioCulturaDestinoId,
           quantidade: this.transferencia.quantidade,
-          lancamento: this.transferencia.lancamento
+          lancamento: this.transferencia.lancamento,
+          descricao: this.transferencia.descricao
         };
         this.negocioService.atualizarTransferencia(this.currentNegocioCultura.id, this.currentMovimento.transferencia.id, params).then(() => {
           this.$q.notify({type: 'positive', message: 'Transferencia atualizada com sucesso'});
