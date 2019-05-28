@@ -22,9 +22,107 @@
 
     </toolbar>
 
-    <div class="row q-pa-md gutter-sm" v-if="notaFiscal">
-      <div class="col-12">
+    <div class="row q-pa-md gutter-sm space-end">
+      <div class="col-12" v-if="notaFiscal">
 
+        <!--EMITENTE-->
+        <q-card class="q-mb-sm">
+          <div class="row">
+            <div class="col-5 q-pa-xs">
+              <div class="text-faded q-caption ellipsis text-center">
+                Identificação Emitente
+              </div>
+              <div class="ellipsis text-center">
+                <p>{{notaFiscal.nota_fiscal_serie.pessoa.nome}}</p>
+              </div>
+
+              <div class="row q-pb-sm">
+                <div class="col-12 text-center" v-for="contato in notaFiscal.nota_fiscal_serie.pessoa.contatos">
+                  <div class="row">
+                    <div class="col-12" v-for="telefone in contato.telefones">
+                      {{telefone.numero}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 text-center" v-for="localizacao in notaFiscal.nota_fiscal_serie.pessoa.localizacoes">
+                  {{localizacao.endereco}}, {{localizacao.numero}} - {{localizacao.complemento}} - {{localizacao.cep}},
+                  {{localizacao.cidade.nome}} - {{localizacao.cidade.estado.sigla}}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-2 borda-esquerda q-pa-xs">
+              <div class="q-title text-center">
+                DANFE
+              </div>
+              <p class="text-faded q-caption text-center">
+                Documento Auxiliar da Nota Fiscal Eletrônica
+              </p>
+              <div class="q-caption row">
+                <div class="col-8">
+                  0 - Entrada<br/>
+                  1 - Saída
+                </div>
+                <div class="col-4 q-title text-center all-border">
+                  <span v-if="notaFiscal.is_saida">1</span>
+                  <span v-if="!notaFiscal.is_saida">0</span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 text-center">
+                  Nº {{notaFiscal.numero}}
+                </div>
+                <div class="col-12 text-center">
+                  Série {{notaFiscal.nota_fiscal_serie.serie}}
+                </div>
+              </div>
+
+            </div>
+            <div class="col-5 borda-esquerda">
+              <div class="row q-pa-xs">
+                <div class="col-12 text-center">
+                  CODIGO DE BARRAS AQUI
+                </div>
+              </div>
+              <div class="row borda-superior q-pa-xs">
+                <div class="col-12">
+                  <div class="text-faded q-caption ellipsis">
+                    Chave de Acesso
+                  </div>
+                  <div class="row">
+                    <div class="col-12 text-center">
+                      {{notaFiscal.chave}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row q-pa-xs borda-superior">
+                <div class="col-12 text-center">
+                  Consulta de aunteticidade no portal nacional da NF-e www.nfe.fazenda.gov.br/portal ou no site da sefaz autorizada
+                </div>
+              </div>
+
+              <div class="row q-pa-xs borda-superior">
+                <div class="col-12">
+                  <div class="text-faded q-caption ellipsis">
+                    Protocolo de Autorização de uso
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </q-card>
+
+        <!--DESTINATARIO / REMETENTE-->
         <div class="row text-weight-light q-body-1 q-py-xs">
             Destinatário / Remetente
         </div>
@@ -38,7 +136,7 @@
                 Nome/Razão Social
               </div>
               <div class="ellipsis">
-                {{notaFiscal.localizacao_destinatario.razao_social}}
+                {{notaFiscal.nota_fiscal_localizacao_destinatario.razao_social}}
               </div>
             </div>
 
@@ -47,11 +145,11 @@
               <div class="text-faded q-caption ellipsis">
                 CPF / CNPJ
               </div>
-              <div class="ellipsis text-center" v-if="notaFiscal.localizacao_destinatario.cpf">
-                {{formatCPF(notaFiscal.localizacao_destinatario.cpf)}}
+              <div class="ellipsis text-center" v-if="notaFiscal.nota_fiscal_localizacao_destinatario.cpf">
+                {{formatCPF(notaFiscal.nota_fiscal_localizacao_destinatario.cpf)}}
               </div>
-              <div class="ellipsis text-center" v-if="notaFiscal.localizacao_destinatario.cnpj">
-                {{formatCNPJ(notaFiscal.localizacao_destinatario.cnpj)}}
+              <div class="ellipsis text-center" v-if="notaFiscal.nota_fiscal_localizacao_destinatario.cnpj">
+                {{formatCNPJ(notaFiscal.nota_fiscal_localizacao_destinatario.cnpj)}}
               </div>
             </div>
 
@@ -74,9 +172,9 @@
                 Endereço
               </div>
               <div class="ellipsis">
-                {{notaFiscal.localizacao_destinatario.endereco}},
-                {{notaFiscal.localizacao_destinatario.numero}},
-                {{notaFiscal.localizacao_destinatario.complemento}}
+                {{notaFiscal.nota_fiscal_localizacao_destinatario.endereco}},
+                {{notaFiscal.nota_fiscal_localizacao_destinatario.numero}},
+                {{notaFiscal.nota_fiscal_localizacao_destinatario.complemento}}
               </div>
             </div>
 
@@ -86,7 +184,7 @@
                 Bairro / Distrito
               </div>
               <div class="ellipsis text-center">
-                {{notaFiscal.localizacao_destinatario.bairro}}
+                {{notaFiscal.nota_fiscal_localizacao_destinatario.bairro}}
               </div>
             </div>
 
@@ -96,7 +194,7 @@
                 CEP
               </div>
               <div class="ellipsis text-center">
-                {{formatCEP(notaFiscal.localizacao_destinatario.cep)}}
+                {{formatCEP(notaFiscal.nota_fiscal_localizacao_destinatario.cep)}}
               </div>
             </div>
 
@@ -120,7 +218,7 @@
                 Município
               </div>
               <div class="ellipsis">
-                {{notaFiscal.localizacao_destinatario.cidade.nome}}
+                {{notaFiscal.nota_fiscal_localizacao_destinatario.cidade.nome}}
               </div>
             </div>
 
@@ -130,7 +228,7 @@
                 UF
               </div>
               <div class="ellipsis text-center">
-                {{notaFiscal.localizacao_destinatario.estado.sigla}}
+                {{notaFiscal.nota_fiscal_localizacao_destinatario.estado.sigla}}
               </div>
             </div>
 
@@ -140,7 +238,7 @@
                 Fone / Fax
               </div>
               <div class="ellipsis text-center">
-                {{notaFiscal.localizacao_destinatario.fone}}
+                {{notaFiscal.nota_fiscal_localizacao_destinatario.fone}}
               </div>
             </div>
 
@@ -150,7 +248,7 @@
                 Inscrição Estadual
               </div>
               <div class="ellipsis text-center">
-                {{notaFiscal.localizacao_destinatario.inscricao_estadual}}
+                {{notaFiscal.nota_fiscal_localizacao_destinatario.inscricao_estadual}}
               </div>
             </div>
 
@@ -172,6 +270,7 @@
           Cálculo do Imposto
         </div>
         <q-card>
+
           <div class="row">
 
             <!--BASE CALCULO ICMS-->
@@ -359,6 +458,7 @@
             </div>
 
           </div>
+
         </q-card>
 
         <!--TRANSPORTE E VOLUMES-->
@@ -478,7 +578,6 @@
 
             </div>
 
-            <!--VOLUMES-->
             <div class="row borda-superior" v-for="volume in transporte.volumes">
 
               <!--QUANTIDADE-->
@@ -542,6 +641,7 @@
               </div>
 
             </div>
+
           </q-card>
         </template>
 
@@ -634,6 +734,7 @@
 
             <div class="col-3">
               <div class="row">
+
                 <!--BASE CALCULO ICMS-->
                 <div class="col-3 q-pa-xs borda-esquerda">
                   <div class="text-faded q-caption">
@@ -674,7 +775,7 @@
 
           </div>
 
-          <div class="row borda-superior" v-for="item in notaFiscal.itens">
+          <div class="row borda-superior" v-for="item in notaFiscal.nota_fiscal_itens">
 
             <div class="col-3">
               <div class="row">
@@ -759,35 +860,35 @@
                 <!--BASE CALCULO ICMS-->
                 <div class="col-3 q-pa-xs borda-esquerda">
                   <div class="ellipsis text-right">
-                    {{numeral(item.item_icms.base_calculo).format('0,0.00')}}
+                    {{numeral(item.item_icms_base_calculo).format('0,0.00')}}
                   </div>
                 </div>
 
                 <!--VALOR ICMS-->
                 <div class="col-2 q-pa-xs borda-esquerda">
                   <div class="ellipsis text-right">
-                    {{numeral(item.item_icms.valor).format('0,0.00')}}
+                    {{numeral(item.nota_fiscal_item_icms.valor).format('0,0.00')}}
                   </div>
                 </div>
 
                 <!--VALOR IPI-->
                 <div class="col-2 q-pa-xs borda-esquerda">
                   <div class="ellipsis text-right">
-                    {{numeral(item.item_ipi.valor).format('0,0.00')}}
+                    {{numeral(item.nota_fiscal_item_ipi.valor).format('0,0.00')}}
                   </div>
                 </div>
 
                 <!--ALIQUOTA ICMS-->
                 <div class="col-3 q-pa-xs borda-esquerda">
                   <div class="ellipsis text-right">
-                    0,0
+                    {{numeral(item.nota_fiscal_item_icms.percentual).format('0,0.00')}}
                   </div>
                 </div>
 
                 <!--ALIQUOTA IPI-->
                 <div class="col-2 q-pa-xs borda-esquerda">
                   <div class="ellipsis text-right">
-                    0,0
+                    {{numeral(item.nota_fiscal_item_pis.percentual).format('0,0.00')}}
                   </div>
                 </div>
 
@@ -795,7 +896,43 @@
             </div>
 
           </div>
+
         </q-card>
+
+        <template>
+          <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
+            Dados Adicionais
+          </div>
+          <q-card>
+            <div class="row">
+
+              <div class="col-8 q-pa-xs">
+                <div class="text-faded q-caption ellipsis">
+                  Informações Complementares
+                </div>
+
+                <!--INFORMACOES ADICIONAIS / COMPLEMENTARES-->
+                <div class="ellipsis">
+                  <p>{{notaFiscal.informacoes_adicionais_fisco}}<p/>
+                  <p>{{notaFiscal.informacoes_complementares}}<p/>
+                </div>
+              </div>
+
+              <!--RESERVADO AO FISCO-->
+              <div class="col-4 borda-esquerda q-pa-xs">
+                <div class="text-faded q-caption ellipsis">
+                  Reservado ao Fisco
+                </div>
+
+              </div>
+
+            </div>
+          </q-card>
+        </template>
+      </div>
+
+      <div v-if="isEmptyList" class="no-result col-12">
+        <ap-no-results />
       </div>
     </div>
 
@@ -805,19 +942,21 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
+  import apNoResults from 'components/ApNoResults'
   import NotaFiscalService from '../../../assets/js/service/NotaFiscalService'
   export default {
     name: "nota-View",
     components: {
       toolbar,
       customPage,
+      apNoResults,
     },
     watch: { },
     data(){
       return{
         notaFiscalService: new NotaFiscalService(),
         notaFiscal: null,
-        isEmptyList:null,
+        isEmptyList: false,
       }
     },
     methods: {
@@ -835,7 +974,9 @@
         this.notaFiscalService.getNotaFiscalById(notaFiscalId).then(response => {
           this.$q.loading.hide();
           this.notaFiscal = response;
-          this.isEmptyList = this.notaFiscal === null;
+        }).catch(()=>{
+          this.isEmptyList = true
+          this.$q.loading.hide();
         })
       },
       editCulturaClassificacao: function(notaFiscalId){
@@ -880,6 +1021,31 @@
 
   .borda-superior {
     border-top: 1px solid rgba(0,0,0,0.14);
+  }
+
+  .all-border {
+    border: 1px solid rgba(0,0,0,0.14);
+  }
+
+  .space-end{
+    margin-bottom: 300px;
+  }
+  .no-result{
+    text-align: center;
+    padding-top: 150px;
+  }
+
+  .no-result img{
+    width: 300px;
+    height: auto;
+  }
+
+  .no-result span{
+    display: block;
+    margin-top: 30px;
+    font-size: 25px;
+    font-weight: 300;
+    color: #ababab;
   }
 
 </style>
