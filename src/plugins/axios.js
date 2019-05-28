@@ -5,14 +5,12 @@ import RefreshTokenCredential from "../assets/js/model/auth/RefreshTokenCredenti
 
 const axiosInstance = axios.create({
   baseURL: process.env.API_URL,
-  'X-Requested-With': 'XMLHttpRequest'
 });
 
 export default ({app, router, Vue}) => {
   Vue.prototype.$axios = axiosInstance;
 
   axiosInstance.interceptors.response.use(customSuccessResponse, customErrorResponse);
-
 
   let isRefreshing = false;
   let failedQueue = [];
@@ -25,15 +23,14 @@ export default ({app, router, Vue}) => {
         prom.resolve(token);
       }
     });
-
     failedQueue = [];
   };
-
 
   axiosInstance.interceptors.request.use(function (config) {
     const AUTH_TOKEN = localStorage.getItem('auth.token');
     if (AUTH_TOKEN) {
       config.headers.common['Authorization'] = 'Bearer ' + AUTH_TOKEN;
+      config.headers.common['X-Requested-With'] = 'XMLHttpRequest';
     }else{
       router.push('/login');
     }
@@ -41,7 +38,6 @@ export default ({app, router, Vue}) => {
   }, function (error) {
     return Promise.reject(error)
   });
-
 
   function customSuccessResponse(response) {
     return response;
