@@ -165,7 +165,7 @@
         this.$refs.newMovimentoModal.openModal(negocioCultura, this.armazem.armazem_id, this.negocio.emissao);
       },
       editMovimento(movimentoId){
-        this.$refs.editMovimentoModal.openModal(movimentoId, this.negocioCultura);
+        this.$refs.editMovimentoModal.openModal(movimentoId, this.negocioCultura, this.negocio.emissao);
       },
       editTransferencia(movimentoId){
         this.$refs.editTransferenciaModal.openModal(movimentoId, this.negocioCultura);
