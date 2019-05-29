@@ -119,9 +119,12 @@ export default class NotaFiscalService {
       return new Promise((resolve, reject) => {
         NfeAPI.mail(notaFiscalId, {para: para}).then(response => {
           Loading.hide()
+          console.log(response.status);
           if (response.status === 200) {
             var message = 'Email enviado para: '
-            message += response.data.para.join(', ')
+            if (typeof response.data.para !== 'undefined') {
+              message += response.data.para.join(', ')
+            }
             Notify.create({type: 'positive', message: message});
             resolve(response.data);
           } else {
@@ -132,7 +135,55 @@ export default class NotaFiscalService {
         }).catch(error => {
           Loading.hide();
           console.log(error);
-          Notify.create({type: 'negative', message: error.response.data.para[0]});
+          var message = "Erro ao enviar e-mail!";
+          if (typeof error.response.data.para !== 'undefined') {
+            message = error.response.data.para.join(', ');
+          }
+          if (typeof error.response.data.message !== 'undefined') {
+            message = error.response.data.message;
+          }
+          Notify.create({type: 'negative', message: message});
+          reject(error);
+        });
+      });
+    }).catch(() => {
+      // Picked "Cancel" or dismissed
+    })
+  };
+
+  cancelar(notaFiscalId) {
+    Dialog.create({
+        title: 'Justificativa',
+        message: 'Digite a justificativa para o cancelamento desta NF-e.',
+        cancel: true,
+        color: 'secondary',
+        prompt: {
+          model: '',
+          type: 'email' // optional
+        },
+    }).then(justificativa => {
+      Loading.show()
+      return new Promise((resolve, reject) => {
+        NfeAPI.cancelar(notaFiscalId, {justificativa: justificativa}).then(response => {
+          Loading.hide()
+          if (response.status === 200) {
+            Notify.create({type: 'positive', message: 'Nfe Cancelada!'});
+            resolve(response.data);
+          } else {
+            Notify.create({type: 'negative', message: 'Erro ao cancelar NFe na Sefaz!'});
+            reject(response);
+          }
+        }).catch(error => {
+          Loading.hide();
+          console.log(error);
+          var message = "Erro ao cancelar NFe na Sefaz!";
+          if (typeof error.response.data.justificativa !== 'undefined') {
+            message = error.response.data.justificativa.join(', ');
+          }
+          if (typeof error.response.data.message !== 'undefined') {
+            message = error.response.data.message;
+          }
+          Notify.create({type: 'negative', message: message});
           reject(error);
         });
       });
