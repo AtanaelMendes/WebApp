@@ -1103,6 +1103,9 @@
       nfeConsultar() {
         this.nfeService.consultar(this.notaFiscal.id);
       },
+      nfeCancelar() {
+        this.nfeService.cancelar(this.notaFiscal.id);
+      },
       nfeMail() {
         this.nfeService.mail(this.notaFiscal.id);
       },
