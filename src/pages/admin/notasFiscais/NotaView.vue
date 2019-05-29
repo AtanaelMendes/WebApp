@@ -643,7 +643,7 @@
                 <div class="text-faded q-caption ellipsis">
                   UF
                 </div>
-                <div class="ellipsis text-center">
+                <div class="ellipsis text-center" v-if="transporte.caminhao_estado">
                   {{transporte.caminhao_estado.sigla}}
                 </div>
               </div>
