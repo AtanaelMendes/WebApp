@@ -135,18 +135,57 @@
                 </div>
               </div>
 
-              <div class="row q-pa-xs borda-superior">
-                <div class="col-12">
-                  <div class="text-faded q-caption ellipsis">
-                    Protocolo de Autorização de uso
-                  </div>
-                  <div class="row">
-                    <div class="col-12">
-                      {{notaFiscal.protocolo_autorizacao}}
-                      {{notaFiscal.status}}
-                    </div>
-                  </div>
-                </div>
+            </div>
+          </div>
+
+          <div class="row borda-superior">
+            <div class="col-7 q-pa-xs">
+              <div class="text-faded q-caption ellipsis">
+                Natureza de Operação
+              </div>
+              <div class="text-center">
+                {{notaFiscal.natureza}}
+              </div>
+            </div>
+            <div class="col-5 borda-esquerda q-pa-xs">
+              <div class="text-faded q-caption ellipsis">
+                Protocolo de Autorização de uso
+              </div>
+              <div class="text-center">
+                {{notaFiscal.protocolo_autorizacao}}
+                <!--{{notaFiscal.status}}-->
+              </div>
+            </div>
+          </div>
+
+          <div class="row borda-superior">
+            <div class="col-4 q-pa-xs">
+              <div class="text-faded q-caption ellipsis">
+                Inscrição Estadual
+              </div>
+              <div class="text-center">
+                {{notaFiscal.nota_fiscal_serie.pessoa.inscricao_estadual}}
+              </div>
+            </div>
+            <div class="col-4 borda-esquerda q-pa-xs">
+              <div class="text-faded q-caption ellipsis">
+                Inscrição Estadual do SUBST. TRIBUT.
+              </div>
+              <div class="text-center">
+                ??????
+              </div>
+            </div>
+            <div class="col-4 borda-esquerda q-pa-xs">
+              <div class="text-faded q-caption ellipsis">
+                CNPJ / CPF
+              </div>
+              <div class="text-center">
+                <span v-if="notaFiscal.nota_fiscal_serie.pessoa.cpf">
+                  {{formatCPF(notaFiscal.nota_fiscal_serie.pessoa.cpf)}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_serie.pessoa.cnpj">
+                  {{formatCPF(notaFiscal.nota_fiscal_serie.pessoa.cnpj)}}
+                </span>
               </div>
             </div>
           </div>
@@ -202,9 +241,21 @@
                 Endereço
               </div>
               <div class="ellipsis">
-                {{notaFiscal.nota_fiscal_localizacao_destinatario.endereco}},
-                {{notaFiscal.nota_fiscal_localizacao_destinatario.numero}},
-                {{notaFiscal.nota_fiscal_localizacao_destinatario.complemento}}
+                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario">
+                  {{notaFiscal.nota_fiscal_localizacao_destinatario.endereco}},
+                  {{notaFiscal.nota_fiscal_localizacao_destinatario.numero}},
+                  {{notaFiscal.nota_fiscal_localizacao_destinatario.complemento}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega">
+                  {{notaFiscal.nota_fiscal_localizacao_entrega.endereco}},
+                  {{notaFiscal.nota_fiscal_localizacao_entrega.numero}},
+                  {{notaFiscal.nota_fiscal_localizacao_entrega.complemento}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada">
+                  {{notaFiscal.nota_fiscal_localizacao_retirada.endereco}},
+                  {{notaFiscal.nota_fiscal_localizacao_retirada.numero}},
+                  {{notaFiscal.nota_fiscal_localizacao_retirada.complemento}}
+                </span>
               </div>
             </div>
 
@@ -214,7 +265,15 @@
                 Bairro / Distrito
               </div>
               <div class="ellipsis text-center">
-                {{notaFiscal.nota_fiscal_localizacao_destinatario.bairro}}
+                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega">
+                  {{notaFiscal.nota_fiscal_localizacao_entrega.bairro}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada">
+                  {{notaFiscal.nota_fiscal_localizacao_retirada.bairro}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario">
+                  {{notaFiscal.nota_fiscal_localizacao_destinatario.bairro}}
+                </span>
               </div>
             </div>
 
@@ -224,7 +283,15 @@
                 CEP
               </div>
               <div class="ellipsis text-center">
-                {{formatCEP(notaFiscal.nota_fiscal_localizacao_destinatario.cep)}}
+                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario">
+                  {{formatCEP(notaFiscal.nota_fiscal_localizacao_destinatario.cep)}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada">
+                  {{formatCEP(notaFiscal.nota_fiscal_localizacao_retirada.cep)}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega">
+                  {{formatCEP(notaFiscal.nota_fiscal_localizacao_entrega.cep)}}
+                </span>
               </div>
             </div>
 
@@ -248,7 +315,15 @@
                 Município
               </div>
               <div class="ellipsis">
-                {{notaFiscal.nota_fiscal_localizacao_destinatario.cidade.nome}}
+                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario">
+                  {{notaFiscal.nota_fiscal_localizacao_destinatario.cidade.nome}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega">
+                  {{notaFiscal.nota_fiscal_localizacao_entrega.cidade.nome}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada">
+                  {{notaFiscal.nota_fiscal_localizacao_retirada.cidade.nome}}
+                </span>
               </div>
             </div>
 
@@ -258,7 +333,15 @@
                 UF
               </div>
               <div class="ellipsis text-center">
-                {{notaFiscal.nota_fiscal_localizacao_destinatario.estado.sigla}}
+                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario">
+                  {{notaFiscal.nota_fiscal_localizacao_destinatario.estado.sigla}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega">
+                  {{notaFiscal.nota_fiscal_localizacao_entrega.estado.sigla}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada">
+                  {{notaFiscal.nota_fiscal_localizacao_retirada.estado.sigla}}
+                </span>
               </div>
             </div>
 
@@ -268,7 +351,15 @@
                 Fone / Fax
               </div>
               <div class="ellipsis text-center">
-                {{notaFiscal.nota_fiscal_localizacao_destinatario.fone}}
+                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario">
+                  {{notaFiscal.nota_fiscal_localizacao_destinatario.fone}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega">
+                  {{notaFiscal.nota_fiscal_localizacao_entrega.fone}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada">
+                  {{notaFiscal.nota_fiscal_localizacao_retirada.fone}}
+                </span>
               </div>
             </div>
 
@@ -278,7 +369,15 @@
                 Inscrição Estadual
               </div>
               <div class="ellipsis text-center">
-                {{notaFiscal.nota_fiscal_localizacao_destinatario.inscricao_estadual}}
+                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario">
+                  {{notaFiscal.nota_fiscal_localizacao_destinatario.inscricao_estadual}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega">
+                  {{notaFiscal.nota_fiscal_localizacao_entrega.inscricao_estadual}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada">
+                  {{notaFiscal.nota_fiscal_localizacao_retirada.inscricao_estadual}}
+                </span>
               </div>
             </div>
 
@@ -492,7 +591,7 @@
         </q-card>
 
         <!--TRANSPORTE E VOLUMES-->
-        <template v-for="transporte in notaFiscal.transportes">
+        <template v-for="transporte in notaFiscal.notas_fiscais_transportes">
           <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
             Transportador / Volumes Transportados
           </div>
@@ -582,7 +681,7 @@
                   Município
                 </div>
                 <div class="ellipsis text-center">
-                  {{transporte.municipio.nome}}
+                  {{transporte.cidade.nome}}
                 </div>
               </div>
 
@@ -592,7 +691,7 @@
                   UF
                 </div>
                 <div class="ellipsis text-center">
-                  {{transporte.estado.sigla}}
+                  {{transporte.cidade.estado.sigla}}
                 </div>
               </div>
 
@@ -608,7 +707,7 @@
 
             </div>
 
-            <div class="row borda-superior" v-for="volume in transporte.volumes">
+            <div class="row borda-superior" v-for="volume in transporte.notas_fiscais_transportes_volumes">
 
               <!--QUANTIDADE-->
               <div class="col-2 q-pa-xs">
@@ -805,7 +904,7 @@
 
           </div>
 
-          <div class="row borda-superior" v-for="item in notaFiscal.nota_fiscal_itens">
+          <div class="row borda-superior" v-for="item in notaFiscal.notas_fiscais_itens">
 
             <div class="col-3">
               <div class="row">
@@ -845,7 +944,7 @@
                 <!--CFOP-->
                 <div class="col-2 q-pa-xs borda-esquerda">
                   <div class="ellipsis text-center">
-                    {{item.cfop.numero}}
+                    {{item.cfop}}
                   </div>
                 </div>
 
@@ -897,28 +996,28 @@
                 <!--VALOR ICMS-->
                 <div class="col-2 q-pa-xs borda-esquerda">
                   <div class="ellipsis text-right">
-                    {{numeral(item.nota_fiscal_item_icms.valor).format('0,0.00')}}
+                    {{numeral(item.notas_fiscais_itens_icms.valor).format('0,0.00')}}
                   </div>
                 </div>
 
                 <!--VALOR IPI-->
                 <div class="col-2 q-pa-xs borda-esquerda">
                   <div class="ellipsis text-right">
-                    {{numeral(item.nota_fiscal_item_ipi.valor).format('0,0.00')}}
+                    {{numeral(item.notas_fiscais_itens_ipi.valor).format('0,0.00')}}
                   </div>
                 </div>
 
                 <!--ALIQUOTA ICMS-->
                 <div class="col-3 q-pa-xs borda-esquerda">
                   <div class="ellipsis text-right">
-                    {{numeral(item.nota_fiscal_item_icms.percentual).format('0,0.00')}}
+                    {{numeral(item.notas_fiscais_itens_icms.percentual).format('0,0.00')}}
                   </div>
                 </div>
 
                 <!--ALIQUOTA IPI-->
                 <div class="col-2 q-pa-xs borda-esquerda">
                   <div class="ellipsis text-right">
-                    {{numeral(item.nota_fiscal_item_pis.percentual).format('0,0.00')}}
+                    {{numeral(item.notas_fiscais_itens_pis.percentual).format('0,0.00')}}
                   </div>
                 </div>
 
