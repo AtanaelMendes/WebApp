@@ -6,14 +6,44 @@
         <q-btn flat round dense icon="more_vert" >
           <q-popover anchor="bottom left">
             <q-list link>
-              <q-item @click.native="">
+              <q-item v-close-overlay @click.native="nfeCriar()">
+                <q-item-side icon="folder" color="primary" />
+                <q-item-main label="Criar"/>
+              </q-item>
+              <q-item v-close-overlay @click.native="nfeAssinar()">
+                <q-item-side icon="folder" color="primary" />
+                <q-item-main label="Assinar"/>
+              </q-item>
+              <q-item v-close-overlay @click.native="nfeEnviarSincrono()">
+                <q-item-side icon="folder" color="primary" />
+                <q-item-main label="Enviar"/>
+              </q-item>
+              <q-item v-close-overlay @click.native="nfeDanfe()">
+                <q-item-side icon="folder" color="primary" />
                 <q-item-main label="Danfe"/>
               </q-item>
-              <q-item @click.native="">
-                <q-item-main label="Email"/>
+              <q-item-separator  />
+              <q-item v-close-overlay @click.native="nfeConsultar()">
+                <q-item-side icon="info" color="info" />
+                <q-item-main label="Consultar"/>
               </q-item>
-              <q-item @click.native="">
-                <q-item-main label="Cancelar" />
+              <q-item v-close-overlay @click.native="nfeMail()">
+                <q-item-side icon="mail" color="info" />
+                <q-item-main label="E-mail"/>
+              </q-item>
+              <q-item-separator  />
+              <q-item v-close-overlay @click.native="nfeCancelar()">
+                <q-item-side icon="folder" color="negative" />
+                <q-item-main label="Cancelar"/>
+              </q-item>
+              <q-item v-close-overlay @click.native="nfeInutilizar()">
+                <q-item-side icon="folder" color="negative" />
+                <q-item-main label="Inutilizar"/>
+              </q-item>
+              <q-item-separator  />
+              <q-item v-close-overlay @click.native="nfeXml()">
+                <q-item-side icon="folder" color="negative" />
+                <q-item-main label="XML"/>
               </q-item>
             </q-list>
           </q-popover>
@@ -28,7 +58,7 @@
         <!--EMITENTE-->
         <q-card class="q-mb-sm">
           <div class="row">
-            <div class="col-5 q-pa-xs">
+            <div class="col-lg-5 col-sm-12 q-pa-xs ">
               <div class="text-faded q-caption ellipsis text-center">
                 Identificação Emitente
               </div>
@@ -54,9 +84,9 @@
               </div>
             </div>
 
-            <div class="col-2 borda-esquerda q-pa-xs">
+            <div class="col-xs-4 col-lg-2 borda-superior borda-esquerda q-pa-xs">
               <div class="q-title text-center">
-                DANFE
+                <q-btn icon-right="print" label="danfe" flat dense  @click="nfeDanfe()" />
               </div>
               <p class="text-faded q-caption text-center">
                 Documento Auxiliar da Nota Fiscal Eletrônica
@@ -82,10 +112,9 @@
               </div>
 
             </div>
-            <div class="col-5 borda-esquerda">
+            <div class="col-xs-8 col-lg-5 borda-superior borda-esquerda">
               <div class="row q-pa-xs">
                 <div class="col-12 text-center">
-                  CODIGO DE BARRAS AQUI
                 </div>
               </div>
               <div class="row borda-superior q-pa-xs">
@@ -94,15 +123,15 @@
                     Chave de Acesso
                   </div>
                   <div class="row">
-                    <div class="col-12 text-center">
+                    <div class="col-12 text-center ellipsis">
                       {{notaFiscal.chave}}
                     </div>
                   </div>
                 </div>
               </div>
               <div class="row q-pa-xs borda-superior">
-                <div class="col-12 text-center">
-                  Consulta de aunteticidade no portal nacional da NF-e www.nfe.fazenda.gov.br/portal ou no site da sefaz autorizada
+                <div class="col-12 text-center ellipsis">
+                  Consulta de auteticidade no portal nacional da NF-e www.nfe.fazenda.gov.br/portal ou no site da sefaz autorizada
                 </div>
               </div>
 
@@ -113,7 +142,8 @@
                   </div>
                   <div class="row">
                     <div class="col-12">
-                      
+                      {{notaFiscal.protocolo_autorizacao}}
+                      {{notaFiscal.status}}
                     </div>
                   </div>
                 </div>
@@ -944,6 +974,7 @@
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
   import NotaFiscalService from '../../../assets/js/service/NotaFiscalService'
+  import NfeService from '../../../assets/js/service/NfeService'
   export default {
     name: "nota-View",
     components: {
@@ -955,11 +986,33 @@
     data(){
       return{
         notaFiscalService: new NotaFiscalService(),
+        nfeService: new NfeService(),
         notaFiscal: null,
         isEmptyList: false,
       }
     },
     methods: {
+      nfeCriar() {
+        this.nfeService.criar(this.notaFiscal.id);
+      },
+      nfeAssinar() {
+        this.nfeService.assinar(this.notaFiscal.id);
+      },
+      nfeEnviarSincrono() {
+        this.nfeService.enviarSincrono(this.notaFiscal.id);
+      },
+      nfeConsultar() {
+        this.nfeService.consultar(this.notaFiscal.id);
+      },
+      nfeMail() {
+        this.nfeService.mail(this.notaFiscal.id);
+      },
+      nfeDanfe() {
+        this.nfeService.danfe(this.notaFiscal.id);
+      },
+      nfeXml() {
+        this.nfeService.xml(this.notaFiscal.id);
+      },
       formatCEP(cpf){
         return cpf.replace(/(\d{5})(\d{3})/, "$1-$2");
       },

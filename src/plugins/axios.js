@@ -1,7 +1,5 @@
 import axios from 'axios'
-import {Notify} from 'quasar'
 import RefreshTokenCredential from "../assets/js/model/auth/RefreshTokenCredential";
-
 
 const axiosInstance = axios.create({
   baseURL: process.env.API_URL,
