@@ -67,9 +67,9 @@
               </div>
 
               <div class="row q-pb-sm">
-                <div class="col-12 text-center" v-for="contato in notaFiscal.nota_fiscal_serie.pessoa.contatos">
+                <div class="col-12 text-center" v-for="contato in notaFiscal.nota_fiscal_serie.pessoa.contatos" :key="contato.id">
                   <div class="row">
-                    <div class="col-12" v-for="telefone in contato.telefones">
+                    <div class="col-12" v-for="telefone in contato.telefones" :key="telefone.numero">
                       {{telefone.numero}}
                     </div>
                   </div>
@@ -77,7 +77,7 @@
               </div>
 
               <div class="row">
-                <div class="col-12 text-center" v-for="localizacao in notaFiscal.nota_fiscal_serie.pessoa.localizacoes">
+                <div class="col-12 text-center" v-for="localizacao in notaFiscal.nota_fiscal_serie.pessoa.localizacoes" :key="localizacao.id">
                   {{localizacao.endereco}}, {{localizacao.numero}} - {{localizacao.complemento}} - {{localizacao.cep}},
                   {{localizacao.cidade.nome}} - {{localizacao.cidade.estado.sigla}}
                 </div>
@@ -159,7 +159,7 @@
           </div>
 
           <div class="row borda-superior">
-            <div class="col-4 q-pa-xs">
+            <div class="col-6 q-pa-xs">
               <div class="text-faded q-caption ellipsis">
                 Inscrição Estadual
               </div>
@@ -167,15 +167,15 @@
                 {{notaFiscal.nota_fiscal_serie.pessoa.inscricao_estadual}}
               </div>
             </div>
-            <div class="col-4 borda-esquerda q-pa-xs">
-              <div class="text-faded q-caption ellipsis">
-                Inscrição Estadual do SUBST. TRIBUT.
-              </div>
-              <div class="text-center">
-                ??????
-              </div>
-            </div>
-            <div class="col-4 borda-esquerda q-pa-xs">
+            <!--<div class="col-4 borda-esquerda q-pa-xs">-->
+              <!--<div class="text-faded q-caption ellipsis">-->
+                <!--Inscrição Estadual do SUBST. TRIBUT.-->
+              <!--</div>-->
+              <!--<div class="text-center">-->
+                <!--??????-->
+              <!--</div>-->
+            <!--</div>-->
+            <div class="col-6 borda-esquerda q-pa-xs">
               <div class="text-faded q-caption ellipsis">
                 CNPJ / CPF
               </div>
@@ -334,13 +334,13 @@
               </div>
               <div class="ellipsis text-center">
                 <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario">
-                  {{notaFiscal.nota_fiscal_localizacao_destinatario.estado.sigla}}
+                  {{notaFiscal.nota_fiscal_localizacao_destinatario.cidade.estado.sigla}}
                 </span>
                 <span v-if="notaFiscal.nota_fiscal_localizacao_entrega">
-                  {{notaFiscal.nota_fiscal_localizacao_entrega.estado.sigla}}
+                  {{notaFiscal.nota_fiscal_localizacao_entrega.cidade.estado.sigla}}
                 </span>
                 <span v-if="notaFiscal.nota_fiscal_localizacao_retirada">
-                  {{notaFiscal.nota_fiscal_localizacao_retirada.estado.sigla}}
+                  {{notaFiscal.nota_fiscal_localizacao_retirada.cidade.estado.sigla}}
                 </span>
               </div>
             </div>
@@ -592,7 +592,7 @@
 
         <!--TRANSPORTE E VOLUMES-->
         <template v-for="transporte in notaFiscal.notas_fiscais_transportes">
-          <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
+          <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm" :key="transporte.id">
             Transportador / Volumes Transportados
           </div>
           <q-card>
@@ -613,7 +613,7 @@
                 <div class="text-faded q-caption ellipsis">
                   Frete
                 </div>
-                <div class="ellipsis">
+                <div class="ellipsis text-center">
                   {{notaFiscal.frete}}
                 </div>
               </div>
@@ -707,7 +707,7 @@
 
             </div>
 
-            <div class="row borda-superior" v-for="volume in transporte.notas_fiscais_transportes_volumes">
+            <div class="row borda-superior" v-for="volume in transporte.notas_fiscais_transportes_volumes" :key="volume.id">
 
               <!--QUANTIDADE-->
               <div class="col-2 q-pa-xs">
@@ -904,7 +904,7 @@
 
           </div>
 
-          <div class="row borda-superior" v-for="item in notaFiscal.notas_fiscais_itens">
+          <div class="row borda-superior" v-for="item in notaFiscal.notas_fiscais_itens" :key="item.id">
 
             <div class="col-3">
               <div class="row">
@@ -936,8 +936,8 @@
 
                 <!--O/CST-->
                 <div class="col-2 q-pa-xs borda-esquerda">
-                  <div class="ellipsis text-center">
-                    260
+                  <div class="ellipsis text-center" v-for="icms in item.notas_fiscais_itens_icms" :key="icms.id">
+                    {{icms.origem}}{{icms.cst}}
                   </div>
                 </div>
 
@@ -977,7 +977,7 @@
                 <!--VALOR TOTAL-->
                 <div class="col-4 q-pa-xs borda-esquerda">
                   <div class="ellipsis text-right">
-                    {{numeral(item.valor_total).format('0,0.00')}}
+                    {{numeral(item.valor_produto).format('0,0.00')}}
                   </div>
                 </div>
 
@@ -988,36 +988,37 @@
               <div class="row">
                 <!--BASE CALCULO ICMS-->
                 <div class="col-3 q-pa-xs borda-esquerda">
-                  <div class="ellipsis text-right">
-                    {{numeral(item.item_icms_base_calculo).format('0,0.00')}}
+                  {{item.notas_fiscais_itens_icms.base_calculo}}
+                  <div class="ellipsis text-right" v-for="icms in item.notas_fiscais_itens_icms" :key="icms.id">
+                    {{numeral(icms.base_calculo).format('0,0.00')}}
                   </div>
                 </div>
 
                 <!--VALOR ICMS-->
                 <div class="col-2 q-pa-xs borda-esquerda">
-                  <div class="ellipsis text-right">
-                    {{numeral(item.notas_fiscais_itens_icms.valor).format('0,0.00')}}
+                  <div class="ellipsis text-right" v-for="icms in item.notas_fiscais_itens_icms" :key="icms.id">
+                    {{numeral(icms.valor).format('0,0.00')}}
                   </div>
                 </div>
 
                 <!--VALOR IPI-->
                 <div class="col-2 q-pa-xs borda-esquerda">
-                  <div class="ellipsis text-right">
-                    {{numeral(item.notas_fiscais_itens_ipi.valor).format('0,0.00')}}
+                  <div class="ellipsis text-right" v-for="ipi in item.notas_fiscais_itens_ipi" :key="ipi.id">
+                    {{numeral(ipi.valor).format('0,0.00')}}
                   </div>
                 </div>
 
                 <!--ALIQUOTA ICMS-->
                 <div class="col-3 q-pa-xs borda-esquerda">
-                  <div class="ellipsis text-right">
-                    {{numeral(item.notas_fiscais_itens_icms.percentual).format('0,0.00')}}
+                  <div class="ellipsis text-right" v-for="icms in item.notas_fiscais_itens_icms" :key="icms.id">
+                    {{numeral(icms.percentual).format('0,0.00')}}
                   </div>
                 </div>
 
                 <!--ALIQUOTA IPI-->
-                <div class="col-2 q-pa-xs borda-esquerda">
-                  <div class="ellipsis text-right">
-                    {{numeral(item.notas_fiscais_itens_pis.percentual).format('0,0.00')}}
+                <div class="col-2 q-pa-xs borda-esquerda full-height">
+                  <div class="ellipsis text-right" v-for="ipi in item.notas_fiscais_itens_ipi" :key="ipi.id">
+                    {{numeral(ipi.percentual).format('0,0.00')}}
                   </div>
                 </div>
 
@@ -1042,7 +1043,7 @@
 
                 <!--INFORMACOES ADICIONAIS / COMPLEMENTARES-->
                 <div class="ellipsis">
-                  <p>{{notaFiscal.informacoes_adicionais_fisco}}<p/>
+
                   <p>{{notaFiscal.informacoes_complementares}}<p/>
                 </div>
               </div>
@@ -1052,7 +1053,7 @@
                 <div class="text-faded q-caption ellipsis">
                   Reservado ao Fisco
                 </div>
-
+                <p>{{notaFiscal.informacoes_adicionais_fisco}}<p/>
               </div>
 
             </div>
