@@ -177,7 +177,7 @@
                           <br />
                           <span v-if="negocio.negocio_cultura.quantidade">
                             {{numeral(negocio.negocio_cultura.quantidade).format('0,0')}}
-                            {{negocio.negocio_cultura.unidade_medida.sigla}}&nbsp
+                            <!--{{negocio.negocio_cultura.unidade_medida.sigla}}&nbsp-->
                           </span>
                           <span v-if="negocio.negocio_cultura.prazo_entrega_final">
                             até {{moment(negocio.negocio_cultura.prazo_entrega_final).format('DD/MMM/YY')}}
@@ -190,7 +190,7 @@
                       <q-item-main>
                         <q-item-tile label>
                           {{numeral(negocio.quantidade).format('0,0')}}
-                          {{negocio.negocio_cultura.unidade_medida.sigla}}
+                          <!--{{negocio.negocio_cultura.unidade_medida.sigla}}-->
                         </q-item-tile>
                         <q-item-tile sublabel>
                           Considerado no negócio
@@ -332,10 +332,14 @@
                           <q-item-tile label>{{sct.talhao.area}} - {{sct.talhao.nome}}</q-item-tile>
                           <q-item-tile sublabel>
                             <template v-if="sct.quantidade">
-                              {{ numeral(sct.quantidade).format('0,0') }}
-                              {{ entrega.safra_cultura.view_unidade_medida.sigla }}
+                              {{ numeral(sct.quantidade).format('0,00') }}
+                              {{ entrega.safra_cultura.unidade_medida_pesagem.sigla }}
                             </template>
                             ({{sct.percentual}} %)
+                          </q-item-tile>
+                          <q-item-tile sublabel class="q-caption">
+                            {{ numeral(sct.quantidade_convertida).format('0,00') }}
+                            {{ entrega.safra_cultura.unidade_medida_preco.sigla }}
                           </q-item-tile>
                         </q-item-main>
 
@@ -403,7 +407,7 @@
                         {{pesagem.unidade_medida_sigla}}
                         <span class="float-right">
                             {{numeral(pesagem.peso_bruto_produto_convertido).format('0,0')}}
-                            {{entrega.safra_cultura.view_unidade_medida.sigla}}
+                            {{entrega.safra_cultura.unidade_medida_pesagem.sigla}}
                           </span>
                       </q-item-tile>
                       <q-item-tile sublabel>
@@ -424,7 +428,7 @@
                         {{pesagem.unidade_medida_sigla}}
                         <span class="float-right">
                             {{numeral(classificacao.desconto_convertido).format('0,0')}}
-                            {{entrega.safra_cultura.view_unidade_medida.sigla}}
+                            {{entrega.safra_cultura.unidade_medida_pesagem.sigla}}
                           </span>
                       </q-item-tile>
                       <q-item-tile sublabel>
@@ -444,7 +448,7 @@
                         {{pesagem.unidade_medida_sigla}}
                         <span class="float-right">
                             {{numeral(pesagem.peso_desconto_convertido).format('0,0')}}
-                            {{entrega.safra_cultura.view_unidade_medida.sigla}}
+                            {{entrega.safra_cultura.unidade_medida_pesagem.sigla}}
                           </span>
                       </q-item-tile>
                       <q-item-tile sublabel>
@@ -463,7 +467,7 @@
                         {{pesagem.unidade_medida_sigla}}
                         <span class="float-right">
                             {{numeral(pesagem.peso_liquido_convertido).format('0,0')}}
-                            {{entrega.safra_cultura.view_unidade_medida.sigla}}
+                            {{entrega.safra_cultura.unidade_medida_pesagem.sigla}}
                           </span>
                       </q-item-tile>
                       <q-item-tile sublabel>

@@ -1,4 +1,5 @@
 import NotaFiscalAPI from "../api/NotaFiscalAPI";
+import NotaFiscalSerieAPI from "../api/NotaFiscalSerieAPI";
 
 export default class NotaFiscalService {
 
@@ -64,6 +65,20 @@ export default class NotaFiscalService {
         }
       }).catch(error => {
         reject(error)
+      })
+    });
+  };
+
+  listSeries(){
+    return new Promise((resolve, reject) => {
+      NotaFiscalSerieAPI.listSeries().then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error);
       })
     });
   };

@@ -44,11 +44,11 @@
       </div>
 
       <!--NEGOCIO CULTURAS & NEGOCIO CULTURA FIXAÇOES-->
-      <div class="col-12" v-for="(negocioCultura, index) in negocio.culturas" :key="negocioCultura.id">
+      <div class="col-12" v-for="(negocioCultura, index) in negocio.negocios_culturas" :key="negocioCultura.id">
         <q-card class="full-height">
 
           <q-card-title>
-            {{negocioCultura.safra_cultura}}
+            {{negocioCultura.safra_cultura.cultura.nome}}
             <span v-if="negocioCultura.is_safrinha">Safrinha</span>
             {{negocioCultura.safra}}
             <q-btn slot="right" flat dense icon="more_vert" round>
@@ -65,7 +65,7 @@
             <div class="row gutter-sm" >
 
               <!--NEGOCIO CULTURAS-->
-              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="negocio.culturas.fixacoes || negocioCultura.quantidade || negocioCultura.observacoes">
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="negocio.negocios_culturas.fixacoes || negocioCultura.quantidade || negocioCultura.observacoes">
                 <div class="row gutter-xs text-faded">
 
                   <div class="col-12 q-caption" v-if="negocioCultura.quantidade">
@@ -73,7 +73,7 @@
                     <q-progress :percentage="negocioCultura.quantidade_entregue / negocioCultura.quantidade * 100" height="6px" color="blue" animate stripe/>
                   </div>
 
-                  <div class="col-12  q-caption" v-if="negocio.culturas.fixacoes">
+                  <div class="col-12  q-caption" v-if="negocio.negocios_culturas.fixacoes">
                     Fixações
                     <q-progress :percentage="negocioCultura.fixacao_porcentagem"  height="6px" color="blue" animate stripe/>
                   </div>

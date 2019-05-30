@@ -39,7 +39,7 @@
 <script>
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
-  import entregaService from 'assets/js/service/entrega/EntregaService'
+  import EntregaService from "../../assets/js/service/entrega/EntregaService";
   export default {
     name: "add-talhao-percentage",
     components:{
@@ -48,6 +48,7 @@
     },
     data () {
       return {
+        entregaService: new EntregaService(),
         isModalOpened: false,
         entrega: null,
         talhoes: [],
@@ -119,7 +120,7 @@
             });
 
             this.$q.loading.show();
-            entregaService.updateTalhoesPercentual(this.entrega.id, {talhoes: talhoesPost}).then(() => {
+            this.entregaService.updateTalhoesPercentual(this.entrega.id, {talhoes: talhoesPost}).then(() => {
               this.$q.notify({type: 'positive', message: 'Percentuais atualizado com sucesso!'});
               this.closeModal();
               this.$root.$emit('refreshEntregaView');
@@ -133,7 +134,7 @@
       },
       listTalhaoes: function(entregaId){
         this.$q.loading.show();
-        entregaService.listTalhoesFromEntrega(entregaId).then(talhoes => {
+        this.entregaService.listTalhoesFromEntrega(entregaId).then(talhoes => {
           this.talhoes = talhoes;
           this.$q.loading.hide();
         }).then(error => {

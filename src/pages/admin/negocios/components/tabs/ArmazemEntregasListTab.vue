@@ -4,8 +4,8 @@
       <div style="min-height: 150px">
         <q-table :data="movimentosMaped" :columns="columns" row-key="n_nota" v-if="movimentos" class="custom-table">
           <template slot="top" slot-scope="props" >
-            <q-btn outline label="Nova Transferência" size="sm" class="q-mr-sm" color="deep-orange" @click="newTrasnferencia(negocioCultura)" />
-            <q-btn outline label="Novo Movimento" size="sm" color="deep-orange" @click="newMovimento(negocioCultura)"/>
+            <q-btn outline label="Nova Transferência" size="sm" class="q-mr-sm" color="deep-orange" @click="newTrasnferencia()" />
+            <q-btn outline label="Novo Movimento" size="sm" color="deep-orange" @click="newMovimento()"/>
           </template>
 
           <q-tr slot="body" slot-scope="props" :props="props" >
@@ -132,7 +132,7 @@
           }
 
           if(movimento.tipo.nome === 'Transferencia'){
-            movimentoMapped.is_editable = movimento.transferencia.negocio_cultura_origem.id === this.negocioCultura.id;
+            movimentoMapped.is_editable = movimento.transferencia.negocio_cultura_armazem_origem.negocio_cultura.id === this.negocioCultura.id;
           }
 
           return movimentoMapped;
@@ -158,11 +158,11 @@
       }
     },
     methods:{
-      newTrasnferencia(cultura){
-        this.$refs.transferenciaModal.openModal(cultura, this.armazem.armazem_id);
+      newTrasnferencia(){
+        this.$refs.transferenciaModal.openModal(this.negocioCultura, this.armazem.armazem_id);
       },
-      newMovimento(negocioCultura){
-        this.$refs.newMovimentoModal.openModal(negocioCultura, this.armazem.armazem_id, this.negocio.emissao);
+      newMovimento(){
+        this.$refs.newMovimentoModal.openModal(this.negocioCultura, this.armazem.armazem_id, this.negocio.emissao);
       },
       editMovimento(movimentoId){
         this.$refs.editMovimentoModal.openModal(movimentoId, this.negocioCultura, this.negocio.emissao);

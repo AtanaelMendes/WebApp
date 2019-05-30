@@ -1,6 +1,6 @@
 <template>
   <ap-modal ref="editMovimentoModal" title="Editar movimento" :visible="isModalOpened" @hide="closeModal">
-    <q-carousel slot="content" height="100%" no-swipe ref="stepperMovimento" @slide-trigger="setStepperIndex">
+    <q-carousel slot="content" height="100%" no-swipe ref="stepperMovimento" v-if="movimento" @slide-trigger="setStepperIndex">
 
       <!--PASSO 1 ESCOLHER O TIPO DE MOVIMENTO-->
       <q-carousel-slide class="q-pa-none" style="width:300px; height: 300px">
@@ -28,11 +28,17 @@
         <div class="q-px-lg q-py-sm text-center" v-if="currentNegocioCultura">
           <div style="display: inline-block">
 
-            <div class="row q-mt-lg text-left">
-              <div class="col-sm-6">
+            <div class="row gutter-x-sm q-mt-lg text-left linha-1">
+              <div class="col-xs-12 col-sm-6 date-container" >
                 <q-datetime v-model="movimento.lancamento" type="datetime" label="Lançamento"
                             align="center" modal format="DD/MM/YYYY HH:mm"
                             :min="lancamentoMinDate" :max="lancamentoMaxDate"/>
+              </div>
+              <div class="col-xs-12 col-sm-6 toggle-container" style="align-self: center;text-align: center;">
+                <q-btn-toggle inverted size="sm"
+                              toggle-color="primary"
+                              v-model="quantidadeTipo"
+                              :options="[{label: 'Entrada', value: 0},{label: 'Saída', value: 1}]"/>
               </div>
             </div>
 
@@ -42,23 +48,23 @@
               </div>
             </div>
 
-            <div class="row justify-center q-mt-sm">
-              <div class="col-xs-12 col-sm-6">
-                <q-input v-model="movimento.quantidade"
-                         stack-label="Quantidade"
-                         clearable align="right"
-                         :suffix="currentNegocioCultura.unidade_medida.sigla"
-                         type="number" min="1" @blur="checkQuantidadeValue"
-                />
+            <q-field label="Quantidade" orientation="vertical" class="q-mt-sm">
+              <div class="row gutter-x-sm justify-center linha-3 ">
+                <div class="col-xs-12 col-sm-6 kg-container">
+                  <q-input v-model="quantidadeEmQuilograma"
+                           suffix="Kg" align="right"
+                           type="number" min="1" @blur="checkQuantidadeEmQuilograma"
+                  />
+                </div>
+
+                <div class="col-xs-12 col-sm-6 sc-container">
+                  <q-input v-model="quantidadeEmSaca"
+                           suffix="SC60" align="right"
+                           type="number" min="1" @blur="checkQuantidadeEmSaca"
+                  />
+                </div>
               </div>
-              <div class="col-xs-12 col-sm-6" style="align-self: center;">
-                <q-btn-toggle inverted size="sm"
-                              toggle-color="primary"
-                              v-model="quantidadeTipo"
-                              :options="[{label: 'Entrada', value: 0},{label: 'Saída', value: 1}]"
-                />
-              </div>
-            </div>
+            </q-field>
           </div>
         </div>
       </q-carousel-slide>
@@ -83,6 +89,16 @@
     components: {
       apModal,
     },
+    watch:{
+      quantidadeEmSaca(){
+        this.quantidadeEmQuilograma = this.quantidadeEmSaca * 60;
+        this.movimento.quantidade = this.quantidadeEmQuilograma;
+      },
+      quantidadeEmQuilograma(){
+        this.quantidadeEmSaca = this.quantidadeEmQuilograma / 60;
+        this.movimento.quantidade = this.quantidadeEmQuilograma;
+      }
+    },
     data(){
       return {
         negocioService: new NegocioService(),
@@ -94,6 +110,8 @@
         lancamentoMaxDate: null,
         lancamentoMinDate: null,
         quantidadeTipo: 0,
+        quantidadeEmSaca: 0,
+        quantidadeEmQuilograma: 0,
         movimento: {
           quantidade: null,
           movimentoTipoId: null,
@@ -127,6 +145,10 @@
         this.$refs.stepperMovimento.goToSlide(0);
         this.movimento.quantidade = null;
         this.movimento.movimentoTipoId = null;
+        this.movimento.descricao = null;
+        this.tiposMovimentos = [];
+        this.quantidadeEmSaca = 0;
+        this.quantidadeEmQuilograma = 0;
       },
       setStepperIndex(oldIndex, newIndex, direction){
         this.currentStep = newIndex;
@@ -145,9 +167,14 @@
           return true;
         }
       },
-      checkQuantidadeValue(){
-        if(this.movimento.quantidade < 1){
-          this.movimento.quantidade = 1;
+      checkQuantidadeEmSaca(){
+        if(this.quantidadeEmSaca < 0){
+          this.quantidadeEmSaca = 0;
+        }
+      },
+      checkQuantidadeEmQuilograma(){
+        if(this.quantidadeEmQuilograma < 0){
+          this.quantidadeEmQuilograma = 0;
         }
       },
       isFormValid(){
@@ -173,8 +200,9 @@
       async getMovimento(id){
         return this.negocioService.getMovimento(id).then(movimento => {
           this.movimento.movimentoTipoId = movimento.tipo.id;
-          this.quantidadeTipo = this.movimento.quantidade > 0 ? 0 : 1;
+          this.quantidadeTipo = movimento.quantidade > 0 ? 0 : 1;
           this.movimento.quantidade = this.quantidadeTipo === 1 ? Math.abs(movimento.quantidade) : movimento.quantidade;
+          this.quantidadeEmQuilograma = this.movimento.quantidade;
           this.movimento.lancamento = movimento.lancamento;
           this.movimento.descricao = movimento.descricao;
           this.lancamentoMaxDate = this.movimento.lancamento;
@@ -242,5 +270,19 @@
   .movimento-tipo-icon-selected{
     background: #005f5f;
     color: white;
+  }
+
+  @media (max-width: 575px) {
+    .q-modal-layout .linha-1 .date-container {
+      order:2;
+    }
+
+    .q-modal-layout .linha-1 .toggle-container {
+      order:1;
+      margin-bottom: 16px;
+    }
+    .q-modal-layout .linha-3 .kg-container {
+      margin-bottom: 16px;
+    }
   }
 </style>
