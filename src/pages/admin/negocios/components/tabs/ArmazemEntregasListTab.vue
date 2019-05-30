@@ -73,6 +73,7 @@
         <q-spinner size="60px" ></q-spinner>
       </q-inner-loading>
     </div>
+
     <!--MODAL NOVA TRANSFERENCIA -->
     <new-transferencia-modal ref="transferenciaModal"  />
 

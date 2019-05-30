@@ -10,7 +10,7 @@ export default class NotaFiscalAPI{
     return Vue.prototype.$axios.get('/nota_fiscal/'+ notaFiscalId);
   }
 
-  static cretateNotaFiscal(params){
+  static createNotaFiscal(params){
     return Vue.prototype.$axios.post('/nota_fiscal', params);
   }
 
@@ -20,6 +20,10 @@ export default class NotaFiscalAPI{
 
   static deleteNotaFiscal(notaFiscalId){
     return Vue.prototype.$axios.delete('/nota_fiscal/'+ notaFiscalId);
+  }
+
+  static listNaturezaOperacao(){
+    return Vue.prototype.$axios.get('/nota_fiscal_natureza_operacao');
   }
 
 }

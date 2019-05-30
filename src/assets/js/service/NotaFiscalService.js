@@ -1,4 +1,5 @@
 import NotaFiscalAPI from "../api/NotaFiscalAPI";
+import NotaFiscalSerieAPI from "../api/NotaFiscalSerieAPI";
 
 export default class NotaFiscalService {
 
@@ -28,9 +29,9 @@ export default class NotaFiscalService {
       })
     });
   };
-  cretateNotaFiscal(params) {
+  createNotaFiscal(params) {
     return new Promise((resolve, reject) => {
-      NotaFiscalAPI.cretateNotaFiscal(params).then(response => {
+      NotaFiscalAPI.createNotaFiscal(params).then(response => {
         if(response.status === 201){
           resolve(response.data);
         }else{
@@ -64,6 +65,34 @@ export default class NotaFiscalService {
         }
       }).catch(error => {
         reject(error)
+      })
+    });
+  };
+
+  listNaturezaOperacao(notaFiscalId) {
+    return new Promise((resolve, reject) => {
+      NotaFiscalAPI.listNaturezaOperacao(notaFiscalId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+
+  listSeries(){
+    return new Promise((resolve, reject) => {
+      NotaFiscalSerieAPI.listSeries().then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error);
       })
     });
   };

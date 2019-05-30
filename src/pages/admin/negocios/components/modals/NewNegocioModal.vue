@@ -87,6 +87,7 @@
           </div>
         </div>
       </q-carousel-slide>
+
     </q-carousel>
 
     <div slot="footer">
@@ -133,8 +134,8 @@
         currentStep: 0,
         searchPessoasQuery: '',
         pessoas: null,
-        negocio: new Negocio(),
         isSearching: false,
+        negocio: new Negocio(),
         tipoNegocioNome: "",
       }
     },

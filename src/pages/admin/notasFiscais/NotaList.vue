@@ -28,21 +28,24 @@
       </template>
     </toolbar>
 
-    <div style="margin-bottom: 100px">
+    <div class="space-end">
       <q-list highlight separator no-border link>
-        <q-item v-for="notaFiscal in 10" :key="notaFiscal" @click.native="selectNotaFiscal(notaFiscal)">
+        <q-item v-for="notaFiscal in notasFiscais" :key="notaFiscal.id" @click.native="selectNotaFiscal(notaFiscal.id)">
           <q-item-main>
 
             <div class="row">
 
               <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                <div class="row">BUNGE</div>
+                <div class="row">
+                  {{notaFiscal.nota_fiscal_serie.nome}}
+                </div>
                 <div class="row q-caption">
-                  <q-chip small :color="(notaFiscal == 2)?'green':(notaFiscal == 3)?'red':(notaFiscal == 4)?'orange':'grey'" class="q-mt-xs q-ml-xs">
-                    N-1-55-00342955
+                  <!--<q-chip small :color="(notaFiscal == 2)?'green':(notaFiscal == 3)?'red':(notaFiscal == 4)?'orange':'grey'" class="q-mt-xs q-ml-xs">-->
+                  <q-chip small color="primary">
+                    {{notaFiscal.numero}}
                   </q-chip>
-                  <q-chip small class="q-mt-xs q-ml-xs">
-                    R$ 10,999
+                  <q-chip small>
+                    {{numeral(notaFiscal.total_nota_fiscal).format('0,0.00')}}
                   </q-chip>
                 </div>
               </div>
@@ -51,14 +54,17 @@
                 <div class="row">
 
                   <div class="col-6">
-                    <div class="row">Sinop-MT</div>
-                    <div class="row">Venda</div>
+                    <div class="row">{{notaFiscal.natureza}}</div>
+                    <div class="row">
+                      <q-chip color="primary" small :color="(notaFiscal.status == 'Digitacao')?'amber-5':'positive'">
+                        {{notaFiscal.status}}
+                      </q-chip>
+                    </div>
                   </div>
 
                   <div class="col-6">
                     <div class="row q-caption text-faded">Emissão</div>
-                    <div class="row">22 outubro 2018</div>
-                    <div class="row q-caption">14:30:10</div>
+                    <div class="row">{{moment(notaFiscal.emissao).format('LLL')}}</div>
                   </div>
 
                 </div>
@@ -70,24 +76,34 @@
       </q-list>
     </div>
 
-    <q-btn slot="fab-container" round color="primary" @click="newNotaFiscal()" icon="add" size="20px" />
+    <create-nota-fiscal-modal ref="createNotaFiscalModal"/>
+
+    <q-page-sticky position="bottom-right" :offset="[35, 35]">
+      <q-btn round color="deep-orange" @click="createNotafiscal" icon="add" size="20px" />
+    </q-page-sticky>
+
   </custom-page>
 </template>
 
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
-  import NotaFiscalService from 'assets/js/service/NotaFiscalService'
+  import apNoResults from 'components/ApNoResults'
+  import agroUtils from "assets/js/AgroUtils";
+  import createNotaFiscalModal from './components/CreateNotaFiscalModal.vue'
+  import NotaFiscalService from '../../../assets/js/service/NotaFiscalService'
   export default {
     name: "notasFiscaisList",
     components: {
       toolbar,
-      customPage
+      customPage,
+      apNoResults,
+      createNotaFiscalModal,
     },
     data () {
       return {
+        notaFiscalService: new NotaFiscalService(),
         notasFiscais: [],
-        isEmptyList: null,
         notaFiscalLoaded: false,
         filter: {
           type: 'non-trashed',
@@ -104,29 +120,46 @@
       }
     },
     methods: {
-      /*list: function(filter) {
-        NotaFiscalService.listNotas(filter).then(response => {
-          this.notasFiscais = response.data;
-          this.isEmptyList = this.notasFiscais.length === 0;
-        });
-      },*/
+      listNotasFiscais: function(filter) {
+        this.$q.loading.show();
+        this.notaFiscalService.listNotasFiscaisWithFilter(agroUtils.serialize(filter)).then(response => {
+          this.$q.loading.hide();
+          this.notasFiscais = response;
+        }).catch(()=>{
+          this.isEmptyList = true;
+          this.$q.loading.hide();
+        })
+      },
       selectNotaFiscal: function(id) {
         this.$router.push({name: 'view_nota', params: {id:id}});
         // this.$router.push({name: 'add_pessoa'});
       },
-      newNotaFiscal: function(){
-        this.$router.push({name: 'new_nota'});
+      createNotafiscal: function(){
+        this.$refs.createNotaFiscalModal.openModal()
       },
     },
     mounted () {
-      //this.list(this.filter);
-      // this.$root.$on('refreshPessoaList', () => {
-      //
-      // });
+      this.listNotasFiscais(this.filter);
+      this.$root.$on('refreshNotasFiscaisList', () => {
+        this.listNotasFiscais(this.filter);
+      });
     },
   }
 </script>
 <style>
+  .space-end{
+    margin-bottom: 300px;
+  }
+  .no-result{
+    text-align: center;
+    padding-top: 150px;
+  }
+
+  .no-result img{
+    width: 300px;
+    height: auto;
+  }
+
   .no-result span{
     display: block;
     margin-top: 30px;

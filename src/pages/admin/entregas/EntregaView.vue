@@ -530,7 +530,7 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import PesagemService from 'assets/js/service/entrega/PesagemService'
-  import sendEntregaModal from 'components/entrega/SendEntregaModal'
+  import sendEntregaModal from '../../../components/entrega/SendEntregaModal'
   import newPesagemModal from 'components/entrega/NewPesagemModal'
   import addTalhaoPercentageModal from 'components/entrega/AddTalhaoPercentageModal'
   import setNegociosQuantidadeModal from 'components/entrega/SetNegociosQuantidadeModal'
