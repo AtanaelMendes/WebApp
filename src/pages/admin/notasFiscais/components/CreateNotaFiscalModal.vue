@@ -269,14 +269,6 @@
             value: null,
               errorMessage: null
           },
-          pessoaId:{
-            value: null,
-              errorMessage: null
-          },
-          emissao:{
-            value: null,
-              errorMessage: null
-          },
           natureza:{
             value: null,
               errorMessage: null
@@ -387,7 +379,6 @@
       getNotaFiscalValues(){
         let params = {
           numero: this.notaFiscal.numero.value,
-          emissao: this.notaFiscal.emissao.value,
           natureza: this.notaFiscal.natureza.value,
           natureza_operacao_id: this.notaFiscal.naturezaOperacaoId.value,
           finalidade: this.notaFiscal.finalidade.value,
@@ -397,7 +388,6 @@
           status: this.notaFiscal.status.value,
           frete: this.notaFiscal.frete.value,
           is_saida: this.notaFiscal.isSaida.value,
-          pessoa_id: this.notaFiscal.pessoaId.value,
 
           is_consumidor: false,
           ambiente: 2,
