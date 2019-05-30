@@ -21,4 +21,8 @@ export default class NotaFiscalAPI{
   static deleteNotaFiscal(notaFiscalId){
     return Vue.prototype.$axios.delete('/nota_fiscal/'+ notaFiscalId);
   }
+
+  static getNotaFiscalItemById(id) {
+    return Vue.prototype.$axios.get('/nota_fiscal_item/' + id);
+  }
 }
