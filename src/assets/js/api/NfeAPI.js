@@ -22,6 +22,10 @@ export default class NfeAPI {
     return Vue.prototype.$axios.post('/nota_fiscal/'+ notaFiscalId + '/nfe/cancelar', params);
   }
 
+  static inutilizar(notaFiscalId, params) {
+    return Vue.prototype.$axios.post('/nota_fiscal/'+ notaFiscalId + '/nfe/inutilizar', params);
+  }
+
   static mail(notaFiscalId, params) {
     return Vue.prototype.$axios.post('/nota_fiscal/'+ notaFiscalId + '/nfe/mail', params);
   }
@@ -35,6 +39,5 @@ export default class NfeAPI {
       responseType: 'blob'
     });
   }
-
 
 }

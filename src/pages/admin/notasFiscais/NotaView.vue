@@ -6,6 +6,10 @@
         <q-btn flat round dense icon="more_vert" >
           <q-popover anchor="bottom left">
             <q-list link>
+              <q-item v-close-overlay @click.native="nfeCriarAssinarEnviarDanfe()">
+                <q-item-side icon="folder" color="primary" />
+                <q-item-main label="Criar, Assinar e Enviar"/>
+              </q-item>
               <q-item v-close-overlay @click.native="nfeCriar()">
                 <q-item-side icon="folder" color="primary" />
                 <q-item-main label="Criar"/>
@@ -35,10 +39,6 @@
               <q-item v-close-overlay @click.native="nfeCancelar()">
                 <q-item-side icon="folder" color="negative" />
                 <q-item-main label="Cancelar"/>
-              </q-item>
-              <q-item v-close-overlay @click.native="nfeInutilizar()">
-                <q-item-side icon="folder" color="negative" />
-                <q-item-main label="Inutilizar"/>
               </q-item>
               <q-item-separator  />
               <q-item v-close-overlay @click.native="nfeXml()">
@@ -153,7 +153,7 @@
               </div>
               <div class="text-center">
                 {{notaFiscal.protocolo_autorizacao}}
-                <!--{{notaFiscal.status}}-->
+                {{notaFiscal.status}}
               </div>
             </div>
           </div>
@@ -1092,6 +1092,9 @@
       }
     },
     methods: {
+      nfeCriarAssinarEnviarDanfe() {
+        this.nfeService.criar(this.notaFiscal.id, true);
+      },
       nfeCriar() {
         this.nfeService.criar(this.notaFiscal.id);
       },
@@ -1107,8 +1110,11 @@
       nfeCancelar() {
         this.nfeService.cancelar(this.notaFiscal.id);
       },
+      nfeInutilizar() {
+        this.nfeService.inutilizar(this.notaFiscal.id);
+      },
       nfeMail() {
-        this.nfeService.mail(this.notaFiscal.id);
+        this.nfeService.mailPerguntar(this.notaFiscal.id);
       },
       nfeDanfe() {
         this.nfeService.danfe(this.notaFiscal.id);
