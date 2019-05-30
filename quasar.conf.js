@@ -14,6 +14,7 @@ module.exports = function (ctx) {
       'database',
       'account',
       'vuelazyload',
+      'serverstatus'
     ],
     css: [
       'app.styl'

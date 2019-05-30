@@ -33,7 +33,7 @@ export default ({ app, Vue, router}) => {
     ServiceWorker.sendMessage(new ServiceMessage(ServiceMessage.SERVER_STATUS, status));
   }
 
-  setInterval(checkServerStatus, 2000);
+  //setInterval(checkServerStatus, 2000);
 
   Vue.prototype.serverStatus = serverStatus;
 }
