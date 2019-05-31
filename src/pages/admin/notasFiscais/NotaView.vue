@@ -29,10 +29,12 @@
                 <q-item-main label="Danfe"/>
               </q-item>
               <q-item-separator  />
-              <q-item v-close-overlay @click.native="editarNotaFiscal(notaFiscal)" v-if="notaFiscal.status == 'Digitacao' || notaFiscal.status == 'Informada' ">
-                <q-item-side icon="edit" color="info" />
-                <q-item-main label="Editar"/>
-              </q-item>
+              <template v-if="notaFiscal">
+                <q-item v-close-overlay @click.native="editarNotaFiscal(notaFiscal)" v-if="notaFiscal.status == 'Digitacao' || notaFiscal.status == 'Informada' ">
+                  <q-item-side icon="edit" color="info" />
+                  <q-item-main label="Editar"/>
+                </q-item>
+              </template>
               <q-item v-close-overlay @click.native="nfeConsultar()">
                 <q-item-side icon="info" color="info" />
                 <q-item-main label="Consultar"/>
@@ -630,12 +632,12 @@
         </q-card>
 
         <!--TRANSPORTE E VOLUMES-->
-        <template v-for="transporte in notaFiscal.notas_fiscais_transportes">
-          <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm" :key="transporte.id">
-            Transportador / Volumes Transportados
-          </div>
-          <q-card>
-            <div class="row">
+        <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm" >
+          Transportador / Volumes Transportados
+        </div>
+        <q-card>
+          <template v-for="transporte in notaFiscal.notas_fiscais_transportes">
+            <div class="row" :key="transporte.id">
 
               <!--NOME RAZAO SOCIAL-->
               <div class="col-4 q-pa-xs">
@@ -810,8 +812,8 @@
 
             </div>
 
-          </q-card>
-        </template>
+          </template>
+        </q-card>
 
         <!--PRODUTOS / SERVICOS-->
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
@@ -1100,6 +1102,21 @@
         </template>
       </div>
 
+      <!--PAGE STICKY BUTTOMS-->
+      <q-page-sticky position="bottom-right" :offset="[35, 35]" >
+        <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
+          <q-fab-action color="grey-1" text-color="grey-7" @click="" icon="add">
+            <span class="shadow-2">Produto</span>
+          </q-fab-action>
+          <q-fab-action color="grey-1" text-color="grey-7" @click="" icon="add">
+            <span class="shadow-2">Transportador</span>
+          </q-fab-action>
+          <q-fab-action color="grey-1" text-color="grey-7" @click="" icon="add">
+            <span class="shadow-2">Destinatario/Rementente</span>
+          </q-fab-action>
+        </q-fab>
+      </q-page-sticky>
+
       <div v-if="isEmptyList" class="no-result col-12">
         <ap-no-results />
       </div>
@@ -1249,6 +1266,14 @@
     font-size: 25px;
     font-weight: 300;
     color: #ababab;
+  }
+
+  .custom-fab .q-fab-actions .q-btn  span{
+    position: absolute;
+    background: white;
+    right: 46px;
+    border-radius: 6px;
+    padding: 7px 10px;
   }
 
 </style>
