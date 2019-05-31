@@ -782,14 +782,14 @@
                 <!--CODIGO PRODUTO-->
                 <div class="col-4 q-pa-xs">
                   <div class="text-faded q-caption">
-                    Código Produto
+                    Código
                   </div>
                 </div>
 
                 <!--DESCRICAO PRODUTO-->
                 <div class="col-8 q-pa-xs borda-esquerda">
                   <div class="text-faded q-caption">
-                    Descrição Produto/Serviço
+                    Produto/Serviço
                   </div>
                 </div>
 
@@ -1017,10 +1017,10 @@
                   >
                     <q-popover>
                       <q-list link>
-                        <q-item v-close-overlay @click.native="deleteItem(item.id)">
+                        <q-item v-close-overlay @click.native="editItem(item)">
                           <q-item-main label="Editar Item"/>
                         </q-item>
-                        <q-item v-close-overlay @click.native="editItem(item)">
+                        <q-item v-close-overlay @click.native="deleteItem(item.id)">
                           <q-item-main label="Excluir Item"/>
                         </q-item>
                       </q-list>
