@@ -23,62 +23,6 @@
               <q-input type="number" v-model="notaFiscal.numero.value" float-label="Número" align="right"/>
             </div>
 
-            <div class="col-8">
-              <q-datetime v-model="notaFiscal.emissao.value" float-label="Emissão" type="datetime" align="center" format="DD/MM/YYYY HH:MM" modal/>
-            </div>
-          </div>
-
-        </template>
-      </q-carousel-slide>
-
-      <!--PASSO 1 INFORMAR O REMETENTE-->
-      <q-carousel-slide class="q-pa-none" style="padding-right: 1px">
-        <template>
-          <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
-            <span class="q-subheading text-faded">Selecione o remetente</span>
-          </div>
-
-          <div>
-            <div class="row justify-center q-mb-md">
-              <q-search inverted-light color="grey-2" v-model="searchPessoasQuery" placeholder="Busque por uma pessoa"/>
-            </div>
-
-            <div class="relative-position">
-              <q-scroll-area style="width: auto; height: 350px;">
-                <q-list no-border link separator>
-                  <template v-for="grupo in pessoas">
-                    <q-list-header :key="grupo.id" class="q-py-sm" style="min-height: unset; background: #f9f9f9; border-bottom: 1px solid #e2e2e2; border-top: 1px solid #e2e2e2;">
-                      {{grupo.nome}}
-                    </q-list-header>
-                    <q-item @click.native="selectPesssoa(pessoa.id)" v-for="pessoa in grupo.pessoas" :key="pessoa.id">
-                      <q-item-main>
-                        <q-item-tile label>{{pessoa.nome}}</q-item-tile>
-                        <q-item-tile sublabel v-if="pessoa.cpf">{{formatCPF(pessoa.cpf)}}</q-item-tile>
-                        <q-item-tile sublabel v-if="pessoa.cnpj">{{formatCNPJ(pessoa.cnpj)}}</q-item-tile>
-                        <q-item-tile sublabel>{{pessoa.inscricao_estadual}} {{pessoa.inscricao_municipal}}</q-item-tile>
-                      </q-item-main>
-
-                      <q-item-side right>
-                        <q-btn icon="done" size="8px" round dense color="positive" v-if="pessoa.id == notaFiscal.pessoaId.value"/>
-                      </q-item-side>
-                    </q-item>
-                  </template>
-                </q-list>
-                <div v-if="!pessoas" class="list-empty">
-                  <q-icon name="warning" />
-                  <span>Busque pela pessoa no campo acima.</span>
-                </div>
-                <div v-if="pessoas && pessoas.length === 0" class="list-empty">
-                  <q-icon name="warning" />
-                  <span>Nenhuma pessoa encontrada.</span>
-                </div>
-
-              </q-scroll-area>
-
-              <q-inner-loading :visible="isSearching">
-                <q-spinner size="60px"></q-spinner>
-              </q-inner-loading>
-            </div>
           </div>
 
         </template>
@@ -109,10 +53,10 @@
     <div slot="footer">
       <q-btn @click="closeModal()" flat label="Cancelar" color="primary" />
       <div class="float-right ">
-        <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="currentStep == 1 || currentStep == 2"/>
+        <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="currentStep == 1"/>
         <!--<q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep === 0" :disabled="!isNextButtomEnabled()"/>-->
-        <q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep !== 2"/>
-        <q-btn @click="saveNotaFiscal()" flat label="Salvar" color="primary" v-if="currentStep === 2"/>
+        <q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep !== 1"/>
+        <q-btn @click="saveNotaFiscal()" flat label="Salvar" color="primary" v-if="currentStep === 1"/>
       </div>
     </div>
 
@@ -193,14 +137,6 @@
             value: null,
             errorMessage: null
           },
-          pessoaId:{
-            value: null,
-            errorMessage: null
-          },
-          emissao:{
-            value: null,
-            errorMessage: null
-          },
           natureza:{
             value: null,
             errorMessage: null
@@ -243,7 +179,6 @@
     methods: {
       openModal(){
         this.isModalOpened = true;
-
 
         this.$refs.createNotaFiscalModal.showInnerProgress();
         Promise.all([
@@ -309,17 +244,6 @@
       },
       setStepperIndex(oldIndex, newIndex, direction){
         this.currentStep = newIndex;
-      },
-      selectPesssoa(id){
-        this.notaFiscal.pessoaId.value = id;
-        this.goToNextStep();
-      },
-      searchPessoas(params) {
-        this.isSearching = true;
-        this.pessoaService.searchPessoaGroupedByGrupoEconomico(params).then(result => {
-          this.pessoas = result;
-          this.isSearching = false;
-        });
       },
       selectNaturezaOperacao(){
         let selectedNaturezaOperacao = this.naturezaOperacoes.find(operacao => operacao.id === this.notaFiscal.naturezaOperacaoId.value);

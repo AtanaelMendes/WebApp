@@ -5,24 +5,23 @@
       <template slot="action_itens">
         <q-btn flat round dense icon="tune" >
           <q-popover anchor="bottom left">
-            <q-list>
-              <q-list-header>Filtrar por:</q-list-header>
-              <q-item dense>
-                <q-item-main>
-                  <q-option-group
-                    type="radio"
-                    color="primary"
-                    v-model="filter.type"
-                    :options="[
+
+            <q-item>
+              <q-item-main>
+                <q-option-group
+                  type="radio"
+                  color="primary"
+                  v-model="filter.type"
+                  :options="[
                                 { label: 'Autorizada', value: 100, color: 'positive' },
                                 { label: 'Não autorizada', value: 10, color: 'grey' },
                                 { label: 'Cancelada', value: 102, color: 'negative'},
                                 { label: 'Em digitacão', value: 104, color: 'orange' }
                               ]"
-                  />
-                </q-item-main>
-              </q-item>
-            </q-list>
+                />
+              </q-item-main>
+            </q-item>
+
           </q-popover>
         </q-btn>
       </template>

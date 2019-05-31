@@ -12,6 +12,45 @@
                 <q-item-side icon="folder" color="primary" />
                 <q-item-main label="Editar"/>
               </q-item>
+              <q-item v-close-overlay @click.native="nfeCriar()">
+                <q-item-side icon="folder" color="primary" />
+                <q-item-main label="Criar"/>
+              </q-item>
+              <q-item v-close-overlay @click.native="nfeAssinar()">
+                <q-item-side icon="folder" color="primary" />
+                <q-item-main label="Assinar"/>
+              </q-item>
+              <q-item v-close-overlay @click.native="nfeEnviarSincrono()">
+                <q-item-side icon="folder" color="primary" />
+                <q-item-main label="Enviar"/>
+              </q-item>
+              <q-item v-close-overlay @click.native="nfeDanfe()">
+                <q-item-side icon="folder" color="primary" />
+                <q-item-main label="Danfe"/>
+              </q-item>
+              <q-item-separator  />
+              <q-item v-close-overlay @click.native="editarNotaFiscal(notaFiscal)" v-if="notaFiscal.status == 'Digitacao' || notaFiscal.status == 'Informada' ">
+                <q-item-side icon="edit" color="info" />
+                <q-item-main label="Editar"/>
+              </q-item>
+              <q-item v-close-overlay @click.native="nfeConsultar()">
+                <q-item-side icon="info" color="info" />
+                <q-item-main label="Consultar"/>
+              </q-item>
+              <q-item v-close-overlay @click.native="nfeMail()">
+                <q-item-side icon="mail" color="info" />
+                <q-item-main label="E-mail"/>
+              </q-item>
+              <q-item-separator  />
+              <q-item v-close-overlay @click.native="nfeCancelar()">
+                <q-item-side icon="folder" color="negative" />
+                <q-item-main label="Cancelar"/>
+              </q-item>
+              <q-item-separator  />
+              <q-item v-close-overlay @click.native="nfeXml()">
+                <q-item-side icon="folder" color="negative" />
+                <q-item-main label="XML"/>
+              </q-item>
             </q-list>
           </q-popover>
         </q-btn>
@@ -1066,6 +1105,8 @@
       </div>
     </div>
 
+    <edit-nota-fiscal-modal ref="editNotaFiscalModal"/>
+
   </custom-page>
 </template>
 
@@ -1075,13 +1116,13 @@
   import apNoResults from 'components/ApNoResults'
   import nfeButtons from 'components/Nfe/NfeButtons'
   import NotaFiscalService from '../../../assets/js/service/NotaFiscalService'
+  import NfeService from '../../../assets/js/service/NfeService'
   export default {
     name: "nota-View",
     components: {
       toolbar,
       customPage,
       apNoResults,
-      nfeButtons,
     },
     watch: { },
     data(){
@@ -1125,6 +1166,9 @@
       formatCNPJ(cnpj){
         return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
       },
+      editarNotaFiscal(nf){
+        this.$refs.editNotaFiscalModal.openModal(nf)
+      },
       getNotaFiscalById: function(notaFiscalId) {
         this.$q.loading.show();
         this.notaFiscalService.getNotaFiscalById(notaFiscalId).then(response => {
@@ -1138,10 +1182,10 @@
       editCulturaClassificacao: function(notaFiscalId){
         this.$refs.editCulturaClassificacaoModal.openModal(notaFiscalId)
       },
-      deleteNotaFiscalClassificacao: function(notaFiscalId){
+      deleteNotaFiscal: function(notaFiscalId){
         this.$q.dialog({
           title: 'Atenção',
-          message: 'Realmente deseja excluir esta cultura classificação?',
+          message: 'Realmente deseja excluir esta nota?',
           ok: 'Sim', cancel: 'Não',
           color: 'primary'
         }).then(() =>{
@@ -1162,8 +1206,8 @@
     },
     mounted(){
       this.getNotaFiscalById(this.$route.params.id);
-      this.$root.$on('refreshNotaFiscalView', () => {
-        // this.getCulturasClassificacao(this.$route.params.id);
+      this.$root.$on('refreshNotafiscalView', () => {
+        this.getNotaFiscalById(this.$route.params.id);
       });
     }
   }
