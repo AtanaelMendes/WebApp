@@ -98,8 +98,8 @@ export default class ContatoService{
           reject(response);
         }
       }).catch(error => {
-        reject(error)
-      })
+        reject(error);
+      });
     });
   };
 

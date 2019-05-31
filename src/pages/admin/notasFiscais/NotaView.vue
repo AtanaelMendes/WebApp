@@ -3,47 +3,14 @@
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction">
 
       <template slot="action_itens">
+        <!-- <nfe-buttons :status="notaFiscal.status" :nota-fiscal-id="notaFiscal.id" @atualizada="nfeAtualizada()" /> -->
+
         <q-btn flat round dense icon="more_vert" >
           <q-popover anchor="bottom left">
             <q-list link>
-              <q-item v-close-overlay @click.native="nfeCriarAssinarEnviarDanfe()">
+              <q-item v-close-overlay >
                 <q-item-side icon="folder" color="primary" />
-                <q-item-main label="Criar, Assinar e Enviar"/>
-              </q-item>
-              <q-item v-close-overlay @click.native="nfeCriar()">
-                <q-item-side icon="folder" color="primary" />
-                <q-item-main label="Criar"/>
-              </q-item>
-              <q-item v-close-overlay @click.native="nfeAssinar()">
-                <q-item-side icon="folder" color="primary" />
-                <q-item-main label="Assinar"/>
-              </q-item>
-              <q-item v-close-overlay @click.native="nfeEnviarSincrono()">
-                <q-item-side icon="folder" color="primary" />
-                <q-item-main label="Enviar"/>
-              </q-item>
-              <q-item v-close-overlay @click.native="nfeDanfe()">
-                <q-item-side icon="folder" color="primary" />
-                <q-item-main label="Danfe"/>
-              </q-item>
-              <q-item-separator  />
-              <q-item v-close-overlay @click.native="nfeConsultar()">
-                <q-item-side icon="info" color="info" />
-                <q-item-main label="Consultar"/>
-              </q-item>
-              <q-item v-close-overlay @click.native="nfeMail()">
-                <q-item-side icon="mail" color="info" />
-                <q-item-main label="E-mail"/>
-              </q-item>
-              <q-item-separator  />
-              <q-item v-close-overlay @click.native="nfeCancelar()">
-                <q-item-side icon="folder" color="negative" />
-                <q-item-main label="Cancelar"/>
-              </q-item>
-              <q-item-separator  />
-              <q-item v-close-overlay @click.native="nfeXml()">
-                <q-item-side icon="folder" color="negative" />
-                <q-item-main label="XML"/>
+                <q-item-main label="Editar"/>
               </q-item>
             </q-list>
           </q-popover>
@@ -53,6 +20,12 @@
     </toolbar>
 
     <div class="row q-pa-md gutter-sm space-end">
+      <!-- <q-page-sticky position="bottom" :offset="[18, 18]" v-if="notaFiscal">
+        <div>
+          <nfe-buttons :status="notaFiscal.status" :nota-fiscal-id="notaFiscal.id" @atualizada="nfeAtualizada()" />
+        </div>
+      </q-page-sticky> -->
+
       <div class="col-12" v-if="notaFiscal">
 
         <!--EMITENTE-->
@@ -63,7 +36,7 @@
                 Identificação Emitente
               </div>
               <div class="ellipsis text-center">
-                <p>{{notaFiscal.nota_fiscal_serie.pessoa.nome}}</p>
+                <div>{{notaFiscal.nota_fiscal_serie.pessoa.nome}}</div>
               </div>
 
               <div class="row q-pb-sm">
@@ -86,7 +59,7 @@
 
             <div class="col-xs-4 col-lg-2 borda-superior borda-esquerda q-pa-xs">
               <div class="q-title text-center">
-                <q-btn icon-right="print" label="danfe" flat dense  @click="nfeDanfe()" />
+                DANFE
               </div>
               <p class="text-faded q-caption text-center">
                 Documento Auxiliar da Nota Fiscal Eletrônica
@@ -114,10 +87,6 @@
             </div>
             <div class="col-xs-8 col-lg-5 borda-superior borda-esquerda">
               <div class="row q-pa-xs">
-                <div class="col-12 text-center">
-                </div>
-              </div>
-              <div class="row borda-superior q-pa-xs">
                 <div class="col-12">
                   <div class="text-faded q-caption ellipsis">
                     Chave de Acesso
@@ -125,13 +94,19 @@
                   <div class="row">
                     <div class="col-12 text-center ellipsis">
                       {{notaFiscal.chave}}
+                      &nbsp;
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="row q-pa-xs borda-superior">
+              <!-- <div class="row q-pa-xs borda-superior">
                 <div class="col-12 text-center ellipsis">
                   Consulta de auteticidade no portal nacional da NF-e www.nfe.fazenda.gov.br/portal ou no site da sefaz autorizada
+                </div>
+              </div> -->
+              <div class="row q-pa-xs borda-superior">
+                <div class="col-12 text-center ellipsis">
+                  <nfe-buttons :status="notaFiscal.status" :nota-fiscal-id="notaFiscal.id" @atualizada="nfeAtualizada()" />
                 </div>
               </div>
 
@@ -149,11 +124,13 @@
             </div>
             <div class="col-5 borda-esquerda q-pa-xs">
               <div class="text-faded q-caption ellipsis">
-                Protocolo de Autorização de uso
+                Status / Protocolo de Autorização de uso
               </div>
-              <div class="text-center">
-                {{notaFiscal.protocolo_autorizacao}}
-                {{notaFiscal.status}}
+              <div class="text-center ellipsis">
+                <span :class="classStatus">
+                  {{notaFiscal.status}}
+                  {{notaFiscal.protocolo_autorizacao}}
+                </span>
               </div>
             </div>
           </div>
@@ -1073,54 +1050,48 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
+  import nfeButtons from 'components/Nfe/NfeButtons'
   import NotaFiscalService from '../../../assets/js/service/NotaFiscalService'
-  import NfeService from '../../../assets/js/service/NfeService'
   export default {
     name: "nota-View",
     components: {
       toolbar,
       customPage,
       apNoResults,
+      nfeButtons,
     },
     watch: { },
     data(){
       return{
         notaFiscalService: new NotaFiscalService(),
-        nfeService: new NfeService(),
         notaFiscal: null,
         isEmptyList: false,
       }
     },
+    computed: {
+      classStatus: function () {
+        switch (this.notaFiscal.status) {
+          case 'Digitacao':
+          case 'Enviada':
+            return 'text-warning';
+            break;
+
+          case 'Autorizada':
+            return 'text-positive';
+            break;
+
+          case 'Cancelada':
+          case 'Denegada':
+            return 'text-negative';
+
+          default:
+            return '';
+        }
+      },
+    },
     methods: {
-      nfeCriarAssinarEnviarDanfe() {
-        this.nfeService.criar(this.notaFiscal.id, true);
-      },
-      nfeCriar() {
-        this.nfeService.criar(this.notaFiscal.id);
-      },
-      nfeAssinar() {
-        this.nfeService.assinar(this.notaFiscal.id);
-      },
-      nfeEnviarSincrono() {
-        this.nfeService.enviarSincrono(this.notaFiscal.id);
-      },
-      nfeConsultar() {
-        this.nfeService.consultar(this.notaFiscal.id);
-      },
-      nfeCancelar() {
-        this.nfeService.cancelar(this.notaFiscal.id);
-      },
-      nfeInutilizar() {
-        this.nfeService.inutilizar(this.notaFiscal.id);
-      },
-      nfeMail() {
-        this.nfeService.mailPerguntar(this.notaFiscal.id);
-      },
-      nfeDanfe() {
-        this.nfeService.danfe(this.notaFiscal.id);
-      },
-      nfeXml() {
-        this.nfeService.xml(this.notaFiscal.id);
+      nfeAtualizada() {
+        this.getNotaFiscalById(this.$route.params.id);
       },
       formatCEP(cpf){
         return cpf.replace(/(\d{5})(\d{3})/, "$1-$2");
