@@ -172,7 +172,10 @@
         <div class="row text-weight-light q-body-1 q-py-xs">
             Destinatário / Remetente
         </div>
-        <q-card>
+        <q-card v-if="notaFiscal.nota_fiscal_localizacao_destinatario
+                || notaFiscal.nota_fiscal_localizacao_entrega
+                || notaFiscal.nota_fiscal_localizacao_retirada"
+        >
 
           <div class="row ">
 
@@ -191,11 +194,31 @@
               <div class="text-faded q-caption ellipsis">
                 CPF / CNPJ
               </div>
-              <div class="ellipsis text-center" v-if="notaFiscal.nota_fiscal_localizacao_destinatario.cpf">
-                {{formatCPF(notaFiscal.nota_fiscal_localizacao_destinatario.cpf)}}
+              <div class="ellipsis text-center" v-if="nota_fiscal_localizacao_destinatario">
+                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario.cpf">
+                  {{formatCPF(notaFiscal.nota_fiscal_localizacao_destinatario.cpf)}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario.cnpj">
+                  {{formatCNPJ(notaFiscal.nota_fiscal_localizacao_destinatario.cnpj)}}
+                </span>
               </div>
-              <div class="ellipsis text-center" v-if="notaFiscal.nota_fiscal_localizacao_destinatario.cnpj">
-                {{formatCNPJ(notaFiscal.nota_fiscal_localizacao_destinatario.cnpj)}}
+
+              <div class="ellipsis text-center" v-if="nota_fiscal_localizacao_entrega">
+                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega.cpf">
+                  {{formatCPF(notaFiscal.nota_fiscal_localizacao_entrega.cpf)}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega.cnpj">
+                  {{formatCNPJ(notaFiscal.nota_fiscal_localizacao_entrega.cnpj)}}
+                </span>
+              </div>
+
+              <div class="ellipsis text-center" v-if="nota_fiscal_localizacao_retirada">
+                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada.cpf">
+                  {{formatCPF(notaFiscal.nota_fiscal_localizacao_retirada.cpf)}}
+                </span>
+                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada.cnpj">
+                  {{formatCNPJ(notaFiscal.nota_fiscal_localizacao_retirada.cnpj)}}
+                </span>
               </div>
             </div>
 
@@ -204,7 +227,7 @@
               <div class="text-faded q-caption ellipsis">
                 Data Emissão
               </div>
-              <div class="ellipsis text-center">
+              <div class="ellipsis text-center" v-if="notaFiscal.emissao">
                 {{moment(notaFiscal.emissao).format('L')}}
               </div>
             </div>
