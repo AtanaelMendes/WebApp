@@ -14,7 +14,7 @@
           </q-item-main>
           <q-item-side right style="display: flex; align-items: baseline">
             <q-input type="number" align="right" @input="cultivarTamanhoInputEvent" @blur="cultivarTamanhoBlurEvent(getCultivarFormByIndex(index).tamanho, index)"
-                     v-model="getCultivarFormByIndex(index).tamanho" :suffix="currentSafraCultura.view_unidade_area.sigla"
+                     v-model="getCultivarFormByIndex(index).tamanho" :suffix="currentSafraCultura.unidade_medida_area.sigla"
                      style="width: 140px;" class="q-mr-sm" min="1"/>
           </q-item-side>
         </q-item>
@@ -24,16 +24,16 @@
             <ap-image size="200x125" :file-name="currentTalhao.image_file_name" />
           </q-item-side>
           <q-item-main>
-            Total Ocupado <br/>De {{currentTalhao.tamanho_talhao}} {{currentSafraCultura.view_unidade_area.plural}}
+            Total Ocupado <br/>De {{currentTalhao.tamanho_talhao}} {{currentSafraCultura.unidade_medida_area.plural}}
           </q-item-main>
           <q-item-side right>
             <q-input type="number" align="right" style="width: 140px;" class="q-mr-sm"  min="1"
                      v-if="cultivares.length > 0" v-model="tamanho"
-                     :suffix="currentSafraCultura.view_unidade_area.sigla" disabled readonly/>
+                     :suffix="currentSafraCultura.unidade_medida_area.sigla" disabled readonly/>
 
             <q-input type="number" align="right" style="width: 140px;" class="q-mr-sm" min="1"
                      :max="currentTalhao.tamanho_talhao" v-if="cultivares.length == 0" v-model="tamanho"
-                     :suffix="currentSafraCultura.view_unidade_area.sigla" @blur="tamanhoOcupadoBlurEvent"/>
+                     :suffix="currentSafraCultura.unidade_medida_area.sigla" @blur="tamanhoOcupadoBlurEvent"/>
           </q-item-side>
         </q-item>
         <q-item>
@@ -45,7 +45,7 @@
           </q-item-main>
           <q-item-side right>
             <q-input type="number" align="right" style="width: 140px;" class="q-mr-sm" @blur="estimativaBlurEvent" min="1"
-                     v-model="estimativa" :suffix="currentSafraCultura.view_unidade_medida.sigla + '/' + currentSafraCultura.view_unidade_area.sigla"/>
+                     v-model="estimativa" :suffix="currentSafraCultura.unidade_medida_preco.sigla + '/' + currentSafraCultura.unidade_medida_area.sigla"/>
           </q-item-side>
         </q-item>
         <q-item>
@@ -54,7 +54,7 @@
             Estimativa <br/>Total
           </q-item-main>
           <q-item-side right>
-            {{tamanho * estimativa}} {{currentSafraCultura.view_unidade_medida.sigla}}
+            {{tamanho * estimativa}} {{currentSafraCultura.unidade_medida_preco.sigla}}
           </q-item-side>
         </q-item>
       </q-list>
