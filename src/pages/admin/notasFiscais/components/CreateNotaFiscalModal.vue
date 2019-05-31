@@ -323,13 +323,13 @@
       saveNotaFiscal(){
         // console.table(this.getNotaFiscalValues());
         this.$q.loading.show();
-        this.notaFiscalService.createNotaFiscal(this.getNotaFiscalValues()).then(() => {
+        this.notaFiscalService.createNotaFiscal(this.getNotaFiscalValues()).then(notaFiscal => {
           this.$q.notify({type: 'positive', message: 'Nota fiscal criada com sucesso'});
           this.$q.loading.hide();
           this.closeModal();
-          this.$root.$emit('refreshNotasFiscaisList');
+          this.$router.push({name: 'view_nota', params: {id:notaFiscal.id}});
         }).catch(error => {
-          console.log('AQUI O ERRO', error.response);
+          this.$q.notify({type: 'negative', message: error.response.data.message});
           this.$q.loading.hide();
         });
       },

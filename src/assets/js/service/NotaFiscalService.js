@@ -55,20 +55,6 @@ export default class NotaFiscalService {
       })
     });
   };
-  deleteNotaFiscal(notaFiscalId) {
-    return new Promise((resolve, reject) => {
-      NotaFiscalAPI.deleteNotaFiscal(notaFiscalId).then(response => {
-        if(response.status === 200){
-          resolve(response.data);
-        }else{
-          reject(response);
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
-
   listNaturezaOperacao(notaFiscalId) {
     return new Promise((resolve, reject) => {
       NotaFiscalAPI.listNaturezaOperacao(notaFiscalId).then(response => {
@@ -82,7 +68,6 @@ export default class NotaFiscalService {
       })
     });
   };
-
   listSeries(){
     return new Promise((resolve, reject) => {
       NotaFiscalSerieAPI.listSeries().then(response => {
@@ -93,6 +78,47 @@ export default class NotaFiscalService {
         }
       }).catch(error => {
         reject(error);
+      })
+    });
+  };
+
+
+  createItem(params) {
+    return new Promise((resolve, reject) => {
+      NotaFiscalAPI.createItem(params).then(response => {
+        if(response.status === 201){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  updateItem(itemId, params) {
+    return new Promise((resolve, reject) => {
+      NotaFiscalAPI.updateItem(itemId, params).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+  deleteItem(itemId) {
+    return new Promise((resolve, reject) => {
+      NotaFiscalAPI.deleteItem(itemId).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
       })
     });
   };

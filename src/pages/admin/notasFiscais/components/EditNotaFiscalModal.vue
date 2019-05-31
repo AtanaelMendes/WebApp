@@ -143,7 +143,7 @@
           this.closeModal();
           this.$root.$emit('refreshNotafiscalView');
         }).catch(error => {
-          console.log('AQUI O ERRO', error.response);
+          this.$q.notify({type: 'negative', message: error.response.data.message});
           this.$q.loading.hide();
         });
       },

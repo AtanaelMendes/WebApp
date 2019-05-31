@@ -2,60 +2,13 @@
   <custom-page isChild noScroll style="background: #fdfdfd">
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction">
 
-      <template slot="action_itens">
+      <template slot="action_itens" v-if="notaFiscal">
         <!-- <nfe-buttons :status="notaFiscal.status" :nota-fiscal-id="notaFiscal.id" @atualizada="nfeAtualizada()" /> -->
 
-        <q-btn flat round dense icon="more_vert" >
-          <q-popover anchor="bottom left">
-            <q-list link>
-              <q-item v-close-overlay >
-                <q-item-side icon="folder" color="primary" />
-                <q-item-main label="Editar"/>
-              </q-item>
-              <q-item v-close-overlay @click.native="nfeCriar()">
-                <q-item-side icon="folder" color="primary" />
-                <q-item-main label="Criar"/>
-              </q-item>
-              <q-item v-close-overlay @click.native="nfeAssinar()">
-                <q-item-side icon="folder" color="primary" />
-                <q-item-main label="Assinar"/>
-              </q-item>
-              <q-item v-close-overlay @click.native="nfeEnviarSincrono()">
-                <q-item-side icon="folder" color="primary" />
-                <q-item-main label="Enviar"/>
-              </q-item>
-              <q-item v-close-overlay @click.native="nfeDanfe()">
-                <q-item-side icon="folder" color="primary" />
-                <q-item-main label="Danfe"/>
-              </q-item>
-              <q-item-separator  />
-              <template v-if="notaFiscal">
-                <q-item v-close-overlay @click.native="editarNotaFiscal(notaFiscal)" v-if="notaFiscal.status == 'Digitacao' || notaFiscal.status == 'Informada' ">
-                  <q-item-side icon="edit" color="info" />
-                  <q-item-main label="Editar"/>
-                </q-item>
-              </template>
-              <q-item v-close-overlay @click.native="nfeConsultar()">
-                <q-item-side icon="info" color="info" />
-                <q-item-main label="Consultar"/>
-              </q-item>
-              <q-item v-close-overlay @click.native="nfeMail()">
-                <q-item-side icon="mail" color="info" />
-                <q-item-main label="E-mail"/>
-              </q-item>
-              <q-item-separator  />
-              <q-item v-close-overlay @click.native="nfeCancelar()">
-                <q-item-side icon="folder" color="negative" />
-                <q-item-main label="Cancelar"/>
-              </q-item>
-              <q-item-separator  />
-              <q-item v-close-overlay @click.native="nfeXml()">
-                <q-item-side icon="folder" color="negative" />
-                <q-item-main label="XML"/>
-              </q-item>
-            </q-list>
-          </q-popover>
-        </q-btn>
+        <q-btn flat round dense icon="edit"
+               @click.native="editarNotaFiscal(notaFiscal)"
+               v-if="notaFiscal.status == 'Digitacao' || notaFiscal.status == 'Informada' "
+        />
       </template>
 
     </toolbar>
@@ -823,8 +776,8 @@
 
           <div class="row">
 
-            <div class="col-3">
-              <div class="row">
+            <div class="col-2">
+              <div class="row full-height">
 
                 <!--CODIGO PRODUTO-->
                 <div class="col-4 q-pa-xs">
@@ -835,7 +788,7 @@
 
                 <!--DESCRICAO PRODUTO-->
                 <div class="col-8 q-pa-xs borda-esquerda">
-                  <div class="text-faded q-caption ellipsis">
+                  <div class="text-faded q-caption">
                     Descrição Produto/Serviço
                   </div>
                 </div>
@@ -844,7 +797,7 @@
             </div>
 
             <div class="col-3">
-              <div class="row">
+              <div class="row full-height">
                 <!--NCM / SH-->
                 <div class="col-4 q-pa-xs borda-esquerda">
                   <div class="text-faded q-caption ellipsis">
@@ -876,7 +829,7 @@
             </div>
 
             <div class="col-3">
-              <div class="row">
+              <div class="row full-height">
 
                 <!--QUANTIDADE-->
                 <div class="col-4 q-pa-xs borda-esquerda">
@@ -902,11 +855,11 @@
               </div>
             </div>
 
-            <div class="col-3">
-              <div class="row">
+            <div class="col-4">
+              <div class="row full-height">
 
                 <!--BASE CALCULO ICMS-->
-                <div class="col-3 q-pa-xs borda-esquerda">
+                <div class="col-2 q-pa-xs borda-esquerda">
                   <div class="text-faded q-caption">
                     B.CÁLC ICMS
                   </div>
@@ -934,7 +887,7 @@
                 </div>
 
                 <!--ALIQUOTA IPI-->
-                <div class="col-2 q-pa-xs borda-esquerda">
+                <div class="col-3 q-pa-xs borda-esquerda">
                   <div class="text-faded q-caption">
                     ALIQ IPI
                   </div>
@@ -947,19 +900,20 @@
 
           <div class="row borda-superior" v-for="item in notaFiscal.notas_fiscais_itens" :key="item.id">
 
-            <div class="col-3">
-              <div class="row">
+            <div class="col-2">
+              <div class="row full-height">
 
                 <!--CODIGO PRODUTO-->
                 <div class="col-4 q-pa-xs">
+
                   <div class="ellipsis text-center">
                     {{item.codigo}}
                   </div>
                 </div>
 
                 <!--DESCRICAO PRODUTO-->
-                <div class="col-8 q-pa-xs borda-esquerda">
-                  <div class="ellipsis">
+                <div class="col-7 q-pa-xs borda-esquerda">
+                  <div class="ellipsis ">
                     {{item.produto}}
                   </div>
                 </div>
@@ -967,10 +921,10 @@
             </div>
 
             <div class="col-3">
-              <div class="row">
+              <div class="row full-height">
                 <!--NCM / SH-->
                 <div class="col-4 q-pa-xs borda-esquerda">
-                  <div class="ellipsis text-center">
+                  <div class="ellipsis text-center ">
                     {{item.ncm}}
                   </div>
                 </div>
@@ -999,12 +953,12 @@
             </div>
 
             <div class="col-3">
-              <div class="row">
+              <div class="row full-height">
 
                 <!--QUANTIDADE-->
                 <div class="col-4 q-pa-xs borda-esquerda">
                   <div class="ellipsis text-right">
-                    {{item.quantidade}}
+                    {{numeral(item.quantidade).format('0,0')}}
                   </div>
                 </div>
 
@@ -1016,7 +970,7 @@
                 </div>
 
                 <!--VALOR TOTAL-->
-                <div class="col-4 q-pa-xs borda-esquerda">
+                <div class="col-4 q-pa-xs borda-esquerda full-height">
                   <div class="ellipsis text-right">
                     {{numeral(item.valor_produto).format('0,0.00')}}
                   </div>
@@ -1025,10 +979,10 @@
               </div>
             </div>
 
-            <div class="col-3">
-              <div class="row">
+            <div class="col-4">
+              <div class="row full-height">
                 <!--BASE CALCULO ICMS-->
-                <div class="col-3 q-pa-xs borda-esquerda">
+                <div class="col-2 q-pa-xs borda-esquerda">
                   {{item.notas_fiscais_itens_icms.base_calculo}}
                   <div class="ellipsis text-right" v-for="icms in item.notas_fiscais_itens_icms" :key="icms.id">
                     {{numeral(icms.base_calculo).format('0,0.00')}}
@@ -1057,7 +1011,21 @@
                 </div>
 
                 <!--ALIQUOTA IPI-->
-                <div class="col-2 q-pa-xs borda-esquerda full-height">
+                <div class="col-3 q-pa-xs borda-esquerda full-height">
+                  <q-btn class="float-right" round flat dense icon="more_vert" color="grey-8"
+                         v-if="notaFiscal.status == 'Digitacao' || notaFiscal.status == 'Informada' "
+                  >
+                    <q-popover>
+                      <q-list link>
+                        <q-item v-close-overlay @click.native="deleteItem(item.id)">
+                          <q-item-main label="Editar Item"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="editItem(item)">
+                          <q-item-main label="Excluir Item"/>
+                        </q-item>
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
                   <div class="ellipsis text-right" v-for="ipi in item.notas_fiscais_itens_ipi" :key="ipi.id">
                     {{numeral(ipi.percentual).format('0,0.00')}}
                   </div>
@@ -1105,7 +1073,7 @@
       <!--PAGE STICKY BUTTOMS-->
       <q-page-sticky position="bottom-right" :offset="[35, 35]" >
         <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
-          <q-fab-action color="grey-1" text-color="grey-7" @click="" icon="add">
+          <q-fab-action color="grey-1" text-color="grey-7" @click="addItem(notaFiscal.id)" icon="add">
             <span class="shadow-2">Produto</span>
           </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" @click="" icon="add">
@@ -1124,6 +1092,8 @@
 
     <edit-nota-fiscal-modal ref="editNotaFiscalModal"/>
 
+    <nota-fiscal-item-form-modal ref="notaFiscalItemFormModal"/>
+
   </custom-page>
 </template>
 
@@ -1132,6 +1102,7 @@
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
   import editNotaFiscalModal from './components/EditNotaFiscalModal'
+  import notaFiscalItemFormModal from './components/NotaFiscalItemFormModal'
   import nfeButtons from 'components/Nfe/NfeButtons'
   import NotaFiscalService from '../../../assets/js/service/NotaFiscalService'
   import NfeService from '../../../assets/js/service/NfeService'
@@ -1143,6 +1114,7 @@
       apNoResults,
       nfeButtons,
       editNotaFiscalModal,
+      notaFiscalItemFormModal,
     },
     watch: { },
     data(){
@@ -1189,36 +1161,41 @@
       editarNotaFiscal(nf){
         this.$refs.editNotaFiscalModal.openModal(nf)
       },
+      addItem(notaFiscalId){
+        this.$refs.notaFiscalItemFormModal.openModal(notaFiscalId, 'add', null)
+      },
+      editItem(item){
+        this.$refs.notaFiscalItemFormModal.openModal(null, 'edit', item)
+      },
+      deleteItem(itemId){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja excluir este item?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(() =>{
+          this.$q.loading.show();
+          this.notaFiscalService.deleteItem(itemId).then(response => {
+            this.$q.loading.hide();
+            this.notaFiscal = response;
+          }).catch(()=>{
+            this.isEmptyList = true;
+            this.$q.loading.hide();
+          })
+        })
+      },
       getNotaFiscalById: function(notaFiscalId) {
         this.$q.loading.show();
         this.notaFiscalService.getNotaFiscalById(notaFiscalId).then(response => {
           this.$q.loading.hide();
           this.notaFiscal = response;
         }).catch(()=>{
-          this.isEmptyList = true
+          this.isEmptyList = true;
           this.$q.loading.hide();
         })
       },
       editCulturaClassificacao: function(notaFiscalId){
         this.$refs.editCulturaClassificacaoModal.openModal(notaFiscalId)
-      },
-      deleteNotaFiscal: function(notaFiscalId){
-        this.$q.dialog({
-          title: 'Atenção',
-          message: 'Realmente deseja excluir esta nota?',
-          ok: 'Sim', cancel: 'Não',
-          color: 'primary'
-        }).then(() =>{
-          this.$q.loading.show();
-          this.culturaClassificacaoService.deleteCulturaClassificacao(culturaClassificacaoId).then(response => {
-            this.$q.loading.hide();
-            this.getCulturasClassificacao(this.$route.params.id);
-            this.$q.notify({type: 'positive', message: 'Cultura classificação excluída com sucesso.'});
-          }).catch(error =>{
-            this.$q.loading.hide();
-            this.$q.notify({type: 'negative', message: 'Não foi possível excluir essa cultura classificação'});
-          })
-        })
       },
       backAction: function () {
         this.$router.back()
