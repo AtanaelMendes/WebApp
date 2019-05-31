@@ -1114,6 +1114,7 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
+  import editNotaFiscalModal from './components/EditNotaFiscalModal'
   import nfeButtons from 'components/Nfe/NfeButtons'
   import NotaFiscalService from '../../../assets/js/service/NotaFiscalService'
   import NfeService from '../../../assets/js/service/NfeService'
@@ -1123,6 +1124,8 @@
       toolbar,
       customPage,
       apNoResults,
+      nfeButtons,
+      editNotaFiscalModal,
     },
     watch: { },
     data(){
