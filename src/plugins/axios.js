@@ -5,7 +5,8 @@ import RefreshTokenCredential from "../assets/js/model/auth/RefreshTokenCredenti
 
 const axiosInstance = axios.create({
   baseURL: process.env.API_URL,
-  'X-Requested-With': 'XMLHttpRequest'
+  'X-Requested-With': 'XMLHttpRequest',
+  headers: {'tenant':localStorage.getItem('tenant_key')}
 });
 
 export default ({app, router, Vue}) => {

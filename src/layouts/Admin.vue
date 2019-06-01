@@ -185,6 +185,7 @@
   import ServiceWorker from "../assets/js/serviceWorker/ServiceWorker";
   import ViewAccountModal from "../components/account/ViewAccountModal";
   import apImage from 'components/ApImage'
+  import AuthService from "../assets/js/service/AuthService";
 
   export default {
     name: 'Admin',
@@ -198,6 +199,7 @@
     data () {
       return {
         accountService: new AccountService(),
+        authService: new AuthService(),
         syncService: null,
         leftDrawerOpen: this.$q.platform.is.desktop,
         currentAccount: null,
@@ -256,11 +258,11 @@
         this.isOfflineStatusBarVisible = true;
       },
       getAccountInfo(){
-        this.accountService.getInfo().then(info => {
+        this.authService.getAccountInfo().then(info => {
           this.currentAccount = info;
 
-          this.doSync();
-        })
+          //this.doSync();
+        });
       },
       toogleLeftDrawer() {
         this.leftDrawerOpen = !this.leftDrawerOpen;
