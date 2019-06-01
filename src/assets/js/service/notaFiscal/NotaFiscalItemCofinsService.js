@@ -1,10 +1,10 @@
-import NotaFiscalItemAPI from "../../api/notaFiscal/NotaFiscalItemAPI";
+import NotaFiscalItemCofinsAPI from "../../api/notaFiscal/NotaFiscalItemCofinsAPI";
 
-export default class NotaFiscalItemService {
+export default class NotaFiscalItemCofinsService {
 
   create(params) {
     return new Promise((resolve, reject) => {
-      NotaFiscalItemAPI.create(params).then(response => {
+      NotaFiscalItemCofinsAPI.create(params).then(response => {
         resolve(response);
       }).catch(error => {
         reject(error);
@@ -14,7 +14,7 @@ export default class NotaFiscalItemService {
 
   update(itemId, params) {
     return new Promise((resolve, reject) => {
-      NotaFiscalItemAPI.update(itemId, params).then(response => {
+      NotaFiscalItemCofinsAPI.update(itemId, params).then(response => {
         resolve(response);
       }).catch(error => {
         reject(error);
@@ -24,7 +24,7 @@ export default class NotaFiscalItemService {
 
   delete(itemId) {
     return new Promise((resolve, reject) => {
-      NotaFiscalItemAPI.delete(itemId).then(response => {
+      NotaFiscalItemCofinsAPI.delete(itemId).then(response => {
         resolve(response);
       }).catch(error => {
         reject(error);

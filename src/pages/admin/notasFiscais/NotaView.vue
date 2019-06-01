@@ -3,24 +3,16 @@
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction">
 
       <template slot="action_itens" v-if="notaFiscal">
-        <!-- <nfe-buttons :status="notaFiscal.status" :nota-fiscal-id="notaFiscal.id" @atualizada="nfeAtualizada()" /> -->
-
-        <q-btn flat round dense icon="edit"
-               @click.native="editarNotaFiscal(notaFiscal)"
-               v-if="notaFiscal.status == 'Digitacao' || notaFiscal.status == 'Informada' "
-        />
+        <q-btn flat round dense icon="edit" @click.native="editarNotaFiscal(notaFiscal)" />
       </template>
 
     </toolbar>
 
     <div class="row q-pa-md gutter-sm space-end">
-      <!-- <q-page-sticky position="bottom" :offset="[18, 18]" v-if="notaFiscal">
-        <div>
-          <nfe-buttons :status="notaFiscal.status" :nota-fiscal-id="notaFiscal.id" @atualizada="nfeAtualizada()" />
-        </div>
-      </q-page-sticky> -->
 
       <div class="col-12" v-if="notaFiscal">
+        <nota-fiscal-item-form-modal ref="notaFiscalItemFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+        <nota-fiscal-item-cofins-form-modal ref="notaFiscalItemCofinsFormModal" @atualizada='notaFiscalAtualizada'/>
 
         <!--EMITENTE-->
         <q-card class="q-mb-sm">
@@ -166,228 +158,10 @@
         <div class="row text-weight-light q-body-1 q-py-xs">
             Destinatário / Remetente
         </div>
-        <q-card v-if="notaFiscal.nota_fiscal_localizacao_destinatario
-                || notaFiscal.nota_fiscal_localizacao_entrega
-                || notaFiscal.nota_fiscal_localizacao_retirada"
-        >
 
-          <div class="row ">
-
-            <!--NOME RAZAO SOCIAL-->
-            <div class="col-7 q-pa-xs">
-              <div class="text-faded q-caption ellipsis">
-                Nome/Razão Social
-              </div>
-              <div class="ellipsis">
-                {{notaFiscal.nota_fiscal_localizacao_destinatario.razao_social}}
-              </div>
-            </div>
-
-            <!--CPF / CNPJ-->
-            <div class="col-3 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                CPF / CNPJ
-              </div>
-              <div class="ellipsis text-center" v-if="nota_fiscal_localizacao_destinatario">
-                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario.cpf">
-                  {{formatCPF(notaFiscal.nota_fiscal_localizacao_destinatario.cpf)}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario.cnpj">
-                  {{formatCNPJ(notaFiscal.nota_fiscal_localizacao_destinatario.cnpj)}}
-                </span>
-              </div>
-
-              <div class="ellipsis text-center" v-if="nota_fiscal_localizacao_entrega">
-                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega.cpf">
-                  {{formatCPF(notaFiscal.nota_fiscal_localizacao_entrega.cpf)}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega.cnpj">
-                  {{formatCNPJ(notaFiscal.nota_fiscal_localizacao_entrega.cnpj)}}
-                </span>
-              </div>
-
-              <div class="ellipsis text-center" v-if="nota_fiscal_localizacao_retirada">
-                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada.cpf">
-                  {{formatCPF(notaFiscal.nota_fiscal_localizacao_retirada.cpf)}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada.cnpj">
-                  {{formatCNPJ(notaFiscal.nota_fiscal_localizacao_retirada.cnpj)}}
-                </span>
-              </div>
-            </div>
-
-            <!--DATA EMISSAO-->
-            <div class="col-2 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                Data Emissão
-              </div>
-              <div class="ellipsis text-center" v-if="notaFiscal.emissao">
-                {{moment(notaFiscal.emissao).format('L')}}
-              </div>
-            </div>
-          </div>
-
-          <div class="row borda-superior">
-
-            <!--ENDERECO-->
-            <div class="col-6 q-pa-xs">
-              <div class="text-faded q-caption ellipsis">
-                Endereço
-              </div>
-              <div class="ellipsis">
-                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario">
-                  {{notaFiscal.nota_fiscal_localizacao_destinatario.endereco}},
-                  {{notaFiscal.nota_fiscal_localizacao_destinatario.numero}},
-                  {{notaFiscal.nota_fiscal_localizacao_destinatario.complemento}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega">
-                  {{notaFiscal.nota_fiscal_localizacao_entrega.endereco}},
-                  {{notaFiscal.nota_fiscal_localizacao_entrega.numero}},
-                  {{notaFiscal.nota_fiscal_localizacao_entrega.complemento}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada">
-                  {{notaFiscal.nota_fiscal_localizacao_retirada.endereco}},
-                  {{notaFiscal.nota_fiscal_localizacao_retirada.numero}},
-                  {{notaFiscal.nota_fiscal_localizacao_retirada.complemento}}
-                </span>
-              </div>
-            </div>
-
-            <!--BAIRRO DISTRITO-->
-            <div class="col-2 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                Bairro / Distrito
-              </div>
-              <div class="ellipsis text-center">
-                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega">
-                  {{notaFiscal.nota_fiscal_localizacao_entrega.bairro}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada">
-                  {{notaFiscal.nota_fiscal_localizacao_retirada.bairro}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario">
-                  {{notaFiscal.nota_fiscal_localizacao_destinatario.bairro}}
-                </span>
-              </div>
-            </div>
-
-            <!--CEP-->
-            <div class="col-2 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                CEP
-              </div>
-              <div class="ellipsis text-center">
-                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario">
-                  {{formatCEP(notaFiscal.nota_fiscal_localizacao_destinatario.cep)}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada">
-                  {{formatCEP(notaFiscal.nota_fiscal_localizacao_retirada.cep)}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega">
-                  {{formatCEP(notaFiscal.nota_fiscal_localizacao_entrega.cep)}}
-                </span>
-              </div>
-            </div>
-
-            <!--ENTRADA SAIDA-->
-            <div class="col-2 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                Data Entrada/Saída
-              </div>
-              <div class="ellipsis text-center">
-                {{moment(notaFiscal.saida).format('L')}}
-              </div>
-            </div>
-
-          </div>
-
-          <div class="row borda-superior">
-
-            <!--MUNICIPIO-->
-            <div class="col-5 q-pa-xs">
-              <div class="text-faded q-caption ellipsis">
-                Município
-              </div>
-              <div class="ellipsis">
-                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario">
-                  {{notaFiscal.nota_fiscal_localizacao_destinatario.cidade.nome}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega">
-                  {{notaFiscal.nota_fiscal_localizacao_entrega.cidade.nome}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada">
-                  {{notaFiscal.nota_fiscal_localizacao_retirada.cidade.nome}}
-                </span>
-              </div>
-            </div>
-
-            <!--ESTADO SIGLA-->
-            <div class="col-1 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                UF
-              </div>
-              <div class="ellipsis text-center">
-                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario">
-                  {{notaFiscal.nota_fiscal_localizacao_destinatario.cidade.estado.sigla}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega">
-                  {{notaFiscal.nota_fiscal_localizacao_entrega.cidade.estado.sigla}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada">
-                  {{notaFiscal.nota_fiscal_localizacao_retirada.cidade.estado.sigla}}
-                </span>
-              </div>
-            </div>
-
-            <!--FONE FAX-->
-            <div class="col-2 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                Fone / Fax
-              </div>
-              <div class="ellipsis text-center">
-                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario">
-                  {{notaFiscal.nota_fiscal_localizacao_destinatario.fone}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega">
-                  {{notaFiscal.nota_fiscal_localizacao_entrega.fone}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada">
-                  {{notaFiscal.nota_fiscal_localizacao_retirada.fone}}
-                </span>
-              </div>
-            </div>
-
-            <!--INSCRICAO ESTADUAL-->
-            <div class="col-2 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                Inscrição Estadual
-              </div>
-              <div class="ellipsis text-center">
-                <span v-if="notaFiscal.nota_fiscal_localizacao_destinatario">
-                  {{notaFiscal.nota_fiscal_localizacao_destinatario.inscricao_estadual}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_entrega">
-                  {{notaFiscal.nota_fiscal_localizacao_entrega.inscricao_estadual}}
-                </span>
-                <span v-if="notaFiscal.nota_fiscal_localizacao_retirada">
-                  {{notaFiscal.nota_fiscal_localizacao_retirada.inscricao_estadual}}
-                </span>
-              </div>
-            </div>
-
-            <!--HORA ENTRADA SAIDA-->
-            <div class="col-2 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                Hora da Saída/Entrada
-              </div>
-              <div class="ellipsis text-center">
-                {{moment(notaFiscal.saida).format('LTS')}}
-              </div>
-            </div>
-
-          </div>
-
-        </q-card>
+        <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_destinatario" v-if="notaFiscal.nota_fiscal_localizacao_destinatario" />
+        <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_entrega" v-if="notaFiscal.nota_fiscal_localizacao_entrega" />
+        <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_retirada" v-if="notaFiscal.nota_fiscal_localizacao_retirada" />
 
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
           Cálculo do Imposto
@@ -1012,20 +786,6 @@
 
                 <!--ALIQUOTA IPI-->
                 <div class="col-3 q-pa-xs borda-esquerda full-height">
-                  <q-btn class="float-right" round flat dense icon="more_vert" color="grey-8"
-                         v-if="notaFiscal.status == 'Digitacao' || notaFiscal.status == 'Informada' "
-                  >
-                    <q-popover>
-                      <q-list link>
-                        <q-item v-close-overlay @click.native="editItem(item)">
-                          <q-item-main label="Editar Item"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="deleteItem(item)">
-                          <q-item-main label="Excluir Item"/>
-                        </q-item>
-                      </q-list>
-                    </q-popover>
-                  </q-btn>
                   <div class="ellipsis text-right" v-for="ipi in item.notas_fiscais_itens_ipi" :key="ipi.id">
                     {{numeral(ipi.percentual).format('0,0.00')}}
                   </div>
@@ -1033,6 +793,40 @@
 
               </div>
             </div>
+            <q-btn class="float-right" round flat dense icon="more_vert" color="grey-8">
+              <q-popover>
+                <q-list link>
+                  <q-item v-close-overlay @click.native="editNotaFiscalItem(item)">
+                    <q-item-side icon="edit" />
+                    <q-item-main label="Editar"/>
+                  </q-item>
+                  <q-item v-close-overlay @click.native="deleteNotaFiscalItem(item)">
+                    <q-item-side icon="delete" />
+                    <q-item-main label="Excluir"/>
+                  </q-item>
+
+                  <q-item-separator />
+
+                  <q-collapsible icon="receipt" label="Cofins" class="cursor-pointer">
+                    <q-item v-close-overlay @click.native="addNotaFiscalItemCofins(item.id)" v-if='item.notas_fiscais_itens_cofins.length == 0'>
+                      <q-item-side icon="add" />
+                      <q-item-main label="Adicionar"/>
+                    </q-item>
+                    <template v-for="cofins in item.notas_fiscais_itens_cofins">
+                      <q-item v-close-overlay @click.native="editNotaFiscalItemCofins(cofins)">
+                        <q-item-side icon="edit" />
+                        <q-item-main label="Editar"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="deleteNotaFiscalItemCofins(cofins)">
+                        <q-item-side icon="delete" />
+                        <q-item-main label="Excluir"/>
+                      </q-item>
+                    </template>
+                  </q-collapsible>
+
+                </q-list>
+              </q-popover>
+            </q-btn>
 
           </div>
 
@@ -1073,7 +867,7 @@
       <!--PAGE STICKY BUTTOMS-->
       <q-page-sticky position="bottom-right" :offset="[35, 35]" >
         <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
-          <q-fab-action color="grey-1" text-color="grey-7" @click="addItem()" icon="add">
+          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalItem()" icon="add">
             <span class="shadow-2">Produto</span>
           </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" @click="" icon="add">
@@ -1092,9 +886,6 @@
 
     <edit-nota-fiscal-modal ref="editNotaFiscalModal"/>
 
-    <template v-if="notaFiscal">
-      <nota-fiscal-item-form-modal ref="notaFiscalItemFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
-    </template>
 
   </custom-page>
 </template>
@@ -1103,8 +894,12 @@
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
+
   import editNotaFiscalModal from './components/EditNotaFiscalModal'
   import notaFiscalItemFormModal from './components/NotaFiscalItemFormModal'
+  import notaFiscalItemCofinsFormModal from './components/NotaFiscalItemCofinsFormModal'
+  import notaFiscalLocalizacao from './components/NotaFiscalLocalizacao'
+
   import nfeButtons from 'components/Nfe/NfeButtons'
   import NotaFiscalService from '../../../assets/js/service/NotaFiscalService'
   import NfeService from '../../../assets/js/service/NfeService'
@@ -1117,6 +912,8 @@
       nfeButtons,
       editNotaFiscalModal,
       notaFiscalItemFormModal,
+      notaFiscalItemCofinsFormModal,
+      notaFiscalLocalizacao,
     },
     watch: { },
     data(){
@@ -1167,15 +964,29 @@
       editarNotaFiscal(nf){
         this.$refs.editNotaFiscalModal.openModal(nf)
       },
-      addItem(){
+
+      // notasFiscaisItens
+      addNotaFiscalItem(){
         this.$refs.notaFiscalItemFormModal.add()
       },
-      editItem(item){
+      editNotaFiscalItem(item){
         this.$refs.notaFiscalItemFormModal.edit(item)
       },
-      deleteItem(item){
+      deleteNotaFiscalItem(item){
         this.$refs.notaFiscalItemFormModal.delete(item)
       },
+
+      // ntoasFiscaisItensCofins
+      addNotaFiscalItemCofins(notaFiscalItemId){
+        this.$refs.notaFiscalItemCofinsFormModal.add(notaFiscalItemId)
+      },
+      editNotaFiscalItemCofins(item){
+        this.$refs.notaFiscalItemCofinsFormModal.edit(item)
+      },
+      deleteNotaFiscalItemCofins(item){
+        this.$refs.notaFiscalItemCofinsFormModal.delete(item)
+      },
+
       getNotaFiscalById: function(notaFiscalId) {
         this.$q.loading.show();
         this.notaFiscalService.getNotaFiscalById(notaFiscalId).then(response => {

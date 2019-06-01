@@ -172,42 +172,42 @@
       // criar
       createNotaFiscalItem: function(){
         this.$q.loading.show();
-        this.notaFiscalItemService.create(this.notaFiscalItem).then((notaFiscal) => {
+        this.notaFiscalItemService.create(this.notaFiscalItem).then((response) => {
           this.$q.loading.hide();
           this.$q.notify({type: 'positive', message: 'Item adicionado com sucesso!'});
-          this.$emit('atualizada', notaFiscal);
+          this.$emit('atualizada', response.data);
           this.close();
         }).catch(error => {
-          this.$q.notify({type: 'negative', message: error.response.data.message});
           this.$q.loading.hide();
+          this.$q.notify({type: 'negative', message: error.response.data.message});
         });
       },
 
       // editar
       updateNotaFiscalItem: function(){
         this.$q.loading.show();
-        this.notaFiscalItemService.update(this.notaFiscalItem.id, this.notaFiscalItem).then((notaFiscal) => {
+        this.notaFiscalItemService.update(this.notaFiscalItem.id, this.notaFiscalItem).then((response) => {
           this.$q.loading.hide();
           this.$q.notify({type: 'positive', message: 'Item atualizado com sucesso!'});
-          this.$emit('atualizada', notaFiscal);
+          this.$emit('atualizada', response.data);
           this.close();
         }).catch(error => {
-          this.$q.notify({type: 'negative', message: error.response.data.message});
           this.$q.loading.hide();
+          this.$q.notify({type: 'negative', message: error.response.data.message});
         });
       },
 
       // excluir
       deleteNotaFiscalItem: function(){
         this.$q.loading.show();
-        this.notaFiscalItemService.delete(this.notaFiscalItem.id).then((notaFiscal) => {
+        this.notaFiscalItemService.delete(this.notaFiscalItem.id).then((response) => {
           this.$q.loading.hide();
           this.$q.notify({type: 'positive', message: 'Item excluído com sucesso!'});
-          this.$emit('atualizada', notaFiscal);
+          this.$emit('atualizada', response.data);
           this.close();
         }).catch(error => {
-          this.$q.notify({type: 'negative', message: error.response.data.message});
           this.$q.loading.hide();
+          this.$q.notify({type: 'negative', message: error.response.data.message});
         });
       },
 
