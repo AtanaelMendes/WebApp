@@ -2,71 +2,182 @@
   <div>
     <div class="relative-position table-container">
       <div style="min-height: 150px">
-        <q-table :data="movimentosMaped" :columns="columns" row-key="n_nota" v-if="movimentos" class="custom-table">
-          <template slot="top" slot-scope="props" >
-            <q-btn outline label="Nova Transferência" size="sm" class="q-mr-sm" color="deep-orange" @click="newTrasnferencia()" />
-            <q-btn outline label="Novo Movimento" size="sm" color="deep-orange" @click="newMovimento()"/>
-          </template>
+        <div class="q-pa-sm">
+          <q-btn outline label="Nova Transferência" size="sm" class="q-mr-sm" color="deep-orange" @click="newTrasnferencia()" />
+          <q-btn outline label="Novo Movimento" size="sm" color="deep-orange" @click="newMovimento()"/>
+        </div>
 
-          <q-tr slot="body" slot-scope="props" :props="props" >
-            <template v-if="props.row.tipo === 'Entrega'">
-              <q-td v-for="col in props.cols" :key="col.name" :props="props" style="padding: 0px; height: unset">
-                <a :href="'/#/admin/entregas/' + props.row.entrega_id + '/view'" class="td-link">
-                  <div class="row_div" v-if="col.name === 'tipo'">
-                    <q-chip dense square color="blue-8" >{{ col.value }}</q-chip>
+        <template v-if="movimentos">
+          <q-list separator dense v-if="movimentos.length > 0">
+
+            <q-item style="padding-right: unset">
+              <q-item-main class="row">
+                <div class="col-1 table-header">
+                  Data
+                </div>
+
+                <div class="col-1 table-header">
+                  Quantidade
+                </div>
+
+                <div class="col-1 table-header">
+                  Tipo
+                </div>
+
+                <div class="col-8 table-header">
+
+                  <!-- ENTREGAS-->
+                  <div class="row">
+                    <div class="col-3">
+                      Placa
+                    </div>
+                    <div class="col-9">
+                      <div class="row">
+                        <div class="col-3 table-header">
+                          Ticket
+                        </div>
+                        <div class="col-3 table-header">
+                          Bruto
+                        </div>
+                        <div class="col-3 table-header">
+                          Desconto
+                        </div>
+                        <div class="col-3 table-header">
+                          Líquido
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
-                  <div class="row_div" v-else>{{ col.value }}</div>
-                </a>
-              </q-td>
-            </template>
+                </div>
+                <div class="col-1">
 
-            <template v-else-if="props.row.tipo === 'Transferencia'">
-              <q-td v-for="col in props.cols" :key="col.name" :props="props" style="padding: 0px; height: unset">
-                <div class="row_div" v-if="col.name === 'tipo'">
-                  <q-chip dense square color="amber" text-color="black">{{ col.value }}</q-chip>
                 </div>
-                <div class="row_div" style="padding: 7px 0" v-else-if="col.name === 'actions'">
-                  <q-btn flat dense icon="more_vert" round class="q-mr-sm" v-if="props.row.is_editable">
-                    <q-popover>
-                      <q-list link class="no-border">
-                        <q-item v-close-overlay @click.native="editTransferencia(props.row.id)">
-                          <q-item-main label="Editar Transferência"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="deleteTransferencia(props.row.id)">
-                          <q-item-main label="Apagar Transferência"/>
-                        </q-item>
-                      </q-list>
-                    </q-popover>
-                  </q-btn>
-                </div>
-                <div class="row_div" v-else>{{ col.value }}</div>
-              </q-td>
-            </template>
 
-            <template v-else>
-              <q-td v-for="col in props.cols" :key="col.name" :props="props" style="padding: 0px; height: unset">
-                <div class="row_div" v-if="col.name === 'tipo'">
-                  <q-chip dense square color="deep-purple">{{ col.value }}</q-chip>
+              </q-item-main>
+            </q-item>
+
+            <q-item v-for="movimento in movimentos" :key="movimento.id" style="padding-right: unset">
+              <q-item-main class="row">
+
+                <div class="col-1 text-center table-cell">
+                  {{moment(movimento.lancamento).format('DD/MMM/YY')}}
+                  <div class="text-faded ">
+                    {{moment(movimento.lancamento).format('HH:mm:ss')}}
+                  </div>
                 </div>
-                <div class="row_div" style="padding: 7px 0" v-else-if="col.name === 'actions'">
-                  <q-btn flat dense icon="more_vert" round class="q-mr-sm">
-                    <q-popover>
-                      <q-list link class="no-border">
-                        <q-item v-close-overlay @click.native="editMovimento(props.row.id)">
-                          <q-item-main label="Editar Movimento"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="deleteMovimento(props.row.id)">
-                          <q-item-main label="Apagar Movimento"/>
-                        </q-item>
-                      </q-list>
-                    </q-popover>
-                  </q-btn>
+
+                <div class="col-1 text-right table-cell">
+                  <div :class="(movimento.quantidade<0)?'text-negative':'text-indigo'">
+                    {{numeral(movimento.quantidade).format('0,0')}} KG
+                  </div>
+                  <div class="text-faded">
+                    {{numeral(movimento.quantidade_comercial).format('0,0')}} SC
+                  </div>
                 </div>
-                <div class="row_div" v-else>{{ col.value }}</div>
-              </q-td>
-            </template>
-          </q-tr>
-        </q-table>
+
+                <div class="col-1 text-center table-cell">
+                  <abbr :title="movimento.negocio_cultura_movimento_tipo.nome">
+                    <q-chip dense square color="blue-8" v-if="movimento.negocio_cultura_movimento_tipo.sigla==='ENT'">{{movimento.negocio_cultura_movimento_tipo.sigla}}</q-chip>
+                    <q-chip dense square color="amber" v-else-if="movimento.negocio_cultura_movimento_tipo.sigla==='TRA'">{{movimento.negocio_cultura_movimento_tipo.sigla}}</q-chip>
+                    <q-chip dense square color="deep-purple" v-else >{{movimento.negocio_cultura_movimento_tipo.sigla}}</q-chip>
+                  </abbr>
+                </div>
+
+                <div class="col-8">
+                  <!-- DESCRICAO -->
+                  <div v-if="movimento.descricao">
+                    <div class="row">
+                      <div class="col-12 text-faded table-cell">
+                        {{ movimento.descricao }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TRANSFERENCIAS -->
+                  <div v-if="movimento.negocio_cultura_transferencia" class="table-cell">
+                    <div class="row" v-for="tmov in movimento.negocio_cultura_transferencia.negocios_culturas_movimentos">
+                      {{tmov.negocio_cultura.negocio.pessoa}} -
+                      {{tmov.negocio_cultura.negocio.numero_contrato}} -
+                      {{tmov.negocio_cultura.negocio.numero_pedido}}
+                    </div>
+                    <div class="row">
+                      <div class="col-12 text-faded">
+                        {{ movimento.negocio_cultura_transferencia.descricao }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- ENTREGAS-->
+                  <div class="row" v-if="movimento.entrega">
+                    <div class="col-3 table-cell">
+                      {{movimento.entrega.caminhao.placa }}
+                    </div>
+                    <div class="col-9">
+                      <div class="row " v-for="pesagem in movimento.entrega.entregas_pesagens">
+                        <div class="col-3 text-center table-cell">
+                          {{pesagem.numero_ticket}} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
+                        </div>
+                        <div class="col-3 text-right table-cell">
+                          {{pesagem.peso_bruto_produto}} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
+                        </div>
+                        <div class="col-3 text-right table-cell">
+                          {{pesagem.peso_desconto}} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
+                        </div>
+                        <div class="col-3 text-right table-cell">
+                          {{pesagem.peso_liquido}} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-1 text-right">
+                  <div v-if="movimento.negocio_cultura_transferencia">
+                    <q-btn flat dense icon="more_vert" round class="q-mr-sm" v-if="movimento.negocio_cultura_transferencia.is_editable">
+                      <q-popover>
+                        <q-list link class="no-border">
+                          <q-item v-close-overlay @click.native="editTransferencia(movimento.id)">
+                            <q-item-main label="Editar Transferência"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="deleteTransferencia(movimento.id)">
+                            <q-item-main label="Apagar Transferência"/>
+                          </q-item>
+                        </q-list>
+                      </q-popover>
+                    </q-btn>
+                  </div>
+
+                  <div v-else-if="movimento.negocio_cultura_movimento_tipo.sigla === 'ENT'">
+                  </div>
+
+                  <div v-else>
+                    <q-btn flat dense icon="more_vert" round class="q-mr-sm">
+                      <q-popover>
+                        <q-list link class="no-border">
+                          <q-item v-close-overlay @click.native="editMovimento(movimento.id)">
+                            <q-item-main label="Editar Movimento"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="deleteMovimento(movimento.id)">
+                            <q-item-main label="Apagar Movimento"/>
+                          </q-item>
+                        </q-list>
+                      </q-popover>
+                    </q-btn>
+                  </div>
+
+                </div>
+              </q-item-main>
+            </q-item>
+          </q-list>
+
+          <div v-else>
+            <div class="list-empty">
+              <q-icon name="warning" />
+              <span>Nenhuma movimento encontrado.</span>
+            </div>
+          </div>
+        </template>
       </div>
 
       <q-inner-loading :visible="isLoadingMovimentos" >
@@ -232,25 +343,35 @@
   }
 </script>
 
-<style >
+<style scoped>
   .table-container .q-spinner circle{
     stroke-width: 6px;
     color: #8c8c8c;
   }
-  .custom-table{
-    box-shadow: unset;
-    -webkit-box-shadow: unset;
+  .table-header{
+    color: rgba(0,0,0,.54);
+    font-weight: 500;
+    font-size: 12px;
+    user-select: none;
+    text-align: center;
   }
-  .custom-table .q-table-top{
-    padding: 8px;
-    min-height: unset;
+  .table-cell{
+    font-size: 13px;
+    font-weight: 400;
   }
-  .td-link{
-    text-decoration: unset;
-    color: rgba(0,0,0,.87);
+  .list-empty{
+    height: 55px;
+    text-align: center;
+    padding-top: 15px;
   }
-  .row_div{
-    padding: 7px 24px;
-    line-height: 33px;
+  .list-empty span{
+    color: #8c8c8c;
+    font-weight: 300;
+    font-size: 15px;
+  }
+  .list-empty i{
+    color: #ffb500;
+    font-size: 20px;
+    margin-right: 6px;
   }
 </style>
