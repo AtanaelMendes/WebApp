@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import AuthAPI from "../api/AuthAPI";
 import PasswordCredential from "../model/auth/PasswordCredential";
 import AccountAPI from "../api/AccountAPI";
@@ -39,12 +40,48 @@ export default class AuthService{
 
   async getAccountInfo(){
     return AccountAPI. getAccountInfo().then(async response => {
-      localStorage.setItem('tenant_key', response.data.tenants.find(tenant => {return tenant.is_default === true}).key);
+      let user = this.buildUser(response.data);
+
+      if(!localStorage.key('tenant_key')){
+        localStorage.setItem('tenant_key', user.getDefaultTenant().key);
+      }else{
+        let actived_tenant = localStorage.getItem('tenant_key');
+        if(!user.tenants.includes(tenant => tenant.key === actived_tenant)){
+          localStorage.setItem('tenant_key', user.getDefaultTenant().key);
+        }
+      }
 
       await this.accountRepository.update(response.data);
 
-      return response.data;
+      return user;
     });
+  }
+
+  changeActiveTenant(key){
+    localStorage.setItem('tenant_key', key);
+  }
+
+  buildUser(data){
+    let user = Object.assign({}, data);
+
+    user.getTenantsParsed = function () {
+      return user.tenants.map(tenant => {
+        return {
+          label: tenant.nome,
+          value: tenant.key
+        }
+      })
+    };
+
+    user.getDefaultTenant = function(){
+      return user.tenants.find(tenant => {return tenant.is_default === true});
+    };
+
+    user.activedTenant = user.getDefaultTenant();
+
+    Vue.prototype.$user = user;
+
+    return user;
   }
 
 }

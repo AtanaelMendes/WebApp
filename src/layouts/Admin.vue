@@ -3,12 +3,24 @@
     <q-layout-header></q-layout-header>
 
     <q-layout-drawer v-model="leftDrawerOpen" class="layout-drawer" behavior="mobile">
-      <div class="navigation-header">
-        <template v-if="currentAccount">
+      <template v-if="currentAccount">
+        <div class="navigation-header" :class="{'with-tenant':$user.tenants.length > 1}">
           <img src="/statics/images/no-image-user.svg" v-if="currentAccount.image_file_name === null" class="profile-image shadow-2"/>
           <ap-image size="250x250" :fileName="currentAccount.image_file_name" v-if="currentAccount.image_file_name !== null" class="profile-image shadow-2"/>
           <span class="profile-name">{{currentAccount.nome}}</span>
           <span class="profile-email">{{currentAccount.email}}</span>
+          <div class="tenant-selector" v-if="currentAccount.tenants.length > 1">
+            <q-btn-dropdown :label="currentAccount.activedTenant.nome" color="white" text-color="black" size="sm" rounded >
+              <!-- dropdown content -->
+              <q-list link>
+                <q-item v-for="tenant in currentAccount.tenants" @click.native="changeTenant(tenant.key)">
+                  <q-item-main>
+                    <q-item-tile>{{tenant.nome}}</q-item-tile>
+                  </q-item-main>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
+          </div>
           <div>
             <q-btn flat round dense class="network_status_icon" @click="showOfflineAlertDialog" v-if="isOfflineStatusBarVisible" >
               <q-icon name="mdi-alert" color="warning"/>
@@ -41,8 +53,8 @@
             </q-btn>
             <span class="app-version" >v. {{app_version}}</span>
           </div>
-        </template>
-      </div>
+        </div>
+      </template>
       <q-list no-border link inset-delimiter>
 
         <!--DASHBOARD-->
@@ -216,6 +228,11 @@
       }
     },
     methods: {
+      changeTenant(tenant){
+        console.log('changeTenant', tenant)
+        this.authService.changeActiveTenant(tenant);
+        this.$router.go();
+      },
       doSync(){
         if(this.serverStatus.isUp) {
           this.syncService = new SyncService();
@@ -314,6 +331,9 @@
     background-color: teal;
     padding: 20px;
   }
+  .navigation-header.with-tenant{
+    height: 190px;
+  }
   .navigation-header .profile-image{
     border-radius: 50%;
     border: 2px solid white;
@@ -352,6 +372,10 @@
     right: 30px;
     margin: 20px;
     color: white;
+  }
+
+  .navigation-header .tenant-selector{
+    margin-top: 10px;
   }
 
   .app-version{
