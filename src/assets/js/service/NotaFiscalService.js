@@ -82,45 +82,4 @@ export default class NotaFiscalService {
     });
   };
 
-
-  createItem(params) {
-    return new Promise((resolve, reject) => {
-      NotaFiscalAPI.createItem(params).then(response => {
-        if(response.status === 201){
-          resolve(response.data);
-        }else{
-          reject(response);
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
-  updateItem(itemId, params) {
-    return new Promise((resolve, reject) => {
-      NotaFiscalAPI.updateItem(itemId, params).then(response => {
-        if(response.status === 200){
-          resolve(response.data);
-        }else{
-          reject(response);
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
-  deleteItem(itemId) {
-    return new Promise((resolve, reject) => {
-      NotaFiscalAPI.deleteItem(itemId).then(response => {
-        if(response.status === 200){
-          resolve(response.data);
-        }else{
-          reject(response);
-        }
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
-
 }

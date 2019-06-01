@@ -179,9 +179,9 @@
       },
 
       criar(continuar = false) {
-        Loading.show();
+        this.$q.loading.show();
         this.nfeService.criar(this.notaFiscalId).then((response) => {
-          Notify.create({type: 'positive', message: 'Arquivo da Nfe criado!'});
+          this.$q.notify({type: 'positive', message: 'Arquivo da Nfe criado!'});
           if (continuar) {
             this.assinar(continuar);
           } else {
@@ -194,32 +194,32 @@
           if (typeof error.response.data.message !== 'undefined') {
             message = error.response.data.message
           }
-          Notify.create({type: 'negative', message: message });
+          this.$q.notify({type: 'negative', message: message });
           this.$emit('atualizada');
         });
       },
 
       assinar(continuar = false) {
-        Loading.show();
+        this.$q.loading.show();
         this.nfeService.assinar(this.notaFiscalId).then((response) => {
           if (continuar) {
             this.enviarSincrono(continuar);
           } else {
             Loading.hide();
           }
-          Notify.create({type: 'positive', message: 'Arquivo da Nfe assinado!'});
+          this.$q.notify({type: 'positive', message: 'Arquivo da Nfe assinado!'});
         }).catch((error) => {
           Loading.hide();
           var message = 'Erro ao assinar arquivo da Nfe!'
           if (typeof error.response.data.message !== 'undefined') {
             message = error.response.data.message
           }
-          Notify.create({type: 'negative', message: message });
+          this.$q.notify({type: 'negative', message: message });
         });
       },
 
       enviarSincrono(continuar = false) {
-        Loading.show();
+        this.$q.loading.show();
         this.nfeService.enviarSincrono(this.notaFiscalId).then((response) => {
           if (continuar) {
             this.danfe();
@@ -228,7 +228,7 @@
             Loading.hide();
           }
           this.$emit('atualizada');
-          Notify.create({type: 'positive', message: 'NFe Autorizada!'});
+          this.$q.notify({type: 'positive', message: 'NFe Autorizada!'});
         }).catch((error) => {
           Loading.hide();
           this.$emit('atualizada');
@@ -236,19 +236,19 @@
           if (typeof error.response.data.message !== 'undefined') {
             message = error.response.data.message
           }
-          Notify.create({type: 'negative', message: message });
+          this.$q.notify({type: 'negative', message: message });
         });
       },
 
       consultar() {
-        Loading.show();
+        this.$q.loading.show();
         this.nfeService.consultar(this.notaFiscalId).then((response) => {
           Loading.hide();
           var type = 'positive';
           if (response.data.status != 'Autorizada') {
             type = 'negative';
           }
-          Notify.create({type: type, message: response.data.message});
+          this.$q.notify({type: type, message: response.data.message});
           this.$emit('atualizada');
         }).catch((error) => {
           Loading.hide();
@@ -256,7 +256,7 @@
           if (typeof error.response.data.message !== 'undefined') {
             message = error.response.data.message
           }
-          Notify.create({type: 'negative', message: message });
+          this.$q.notify({type: 'negative', message: message });
           this.$emit('atualizada');
         });
       },
@@ -272,11 +272,11 @@
               type: 'text' // optional
             },
         }).then(justificativa => {
-          Loading.show();
+          this.$q.loading.show();
           return new Promise((resolve, reject) => {
             this.nfeService.cancelar(this.notaFiscalId, justificativa).then(response => {
               Loading.hide();
-              Notify.create({type: 'positive', message: 'Nfe Cancelada!'});
+              this.$q.notify({type: 'positive', message: 'Nfe Cancelada!'});
               this.$emit('atualizada');
             }).catch(error => {
               Loading.hide();
@@ -287,7 +287,7 @@
               if (typeof error.response.data.message !== 'undefined') {
                 message = error.response.data.message;
               }
-              Notify.create({type: 'negative', message: message});
+              this.$q.notify({type: 'negative', message: message});
             });
           });
         });
@@ -304,11 +304,11 @@
               type: 'text' // optional
             },
         }).then(justificativa => {
-          Loading.show();
+          this.$q.loading.show();
           return new Promise((resolve, reject) => {
             this.nfeService.inutilizar(this.notaFiscalId, justificativa).then(response => {
               Loading.hide();
-              Notify.create({type: 'positive', message: 'Nfe Inutilizada!'});
+              this.$q.notify({type: 'positive', message: 'Nfe Inutilizada!'});
               this.$emit('atualizada');
             }).catch(error => {
               Loading.hide();
@@ -319,7 +319,7 @@
               if (typeof error.response.data.message !== 'undefined') {
                 message = error.response.data.message;
               }
-              Notify.create({type: 'negative', message: message});
+              this.$q.notify({type: 'negative', message: message});
             });
           });
         });
@@ -341,14 +341,14 @@
       },
 
       mail(para) {
-        Loading.show();
+        this.$q.loading.show();
         this.nfeService.mail(this.notaFiscalId, para).then((response) => {
           Loading.hide();
           var message = 'Email enviado para: ';
           if (typeof response.data.para !== 'undefined') {
             message += response.data.para.join(', ');
           }
-          Notify.create({type: 'positive', message: message});
+          this.$q.notify({type: 'positive', message: message});
         }).catch((error) => {
           Loading.hide();
           var message = "Erro ao enviar e-mail!";
@@ -358,7 +358,7 @@
           if (typeof error.response.data.message !== 'undefined') {
             message = error.response.data.message;
           }
-          Notify.create({type: 'negative', message: message});
+          this.$q.notify({type: 'negative', message: message});
         });
       },
 
@@ -391,12 +391,12 @@
           const file = new Blob([response.data], {type: 'application/pdf'});
           const fileURL = URL.createObjectURL(file);
           window.open(fileURL);
-          Notify.create({type: 'positive', message: 'Danfe aberta!'});
+          this.$q.notify({type: 'positive', message: 'Danfe aberta!'});
         }).catch((error) => {
           var reader = new FileReader();
           reader.onload = function() {
             var res = JSON.parse(reader.result);
-            Notify.create({type: 'negative', message: res.message});
+            this.$q.notify({type: 'negative', message: res.message});
           }
           reader.readAsText(error.response.data);
         });
@@ -407,9 +407,9 @@
           const file = new Blob([response.data], {type: 'application/xml'});
           const fileURL = URL.createObjectURL(file);
           window.open(fileURL);
-          Notify.create({type: 'positive', message: 'XML aberto!'});
+          this.$q.notify({type: 'positive', message: 'XML aberto!'});
         }).catch((error) => {
-          Notify.create({type: 'negative', message: error.response.data.message});
+          this.$q.notify({type: 'negative', message: error.response.data.message});
         });
       },
     },

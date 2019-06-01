@@ -100,7 +100,7 @@
               </div> -->
               <div class="row q-pa-xs borda-superior">
                 <div class="col-12 text-center ellipsis">
-                  <nfe-buttons :status="notaFiscal.status" :nota-fiscal-id="notaFiscal.id" @atualizada="nfeAtualizada()" />
+                  <nfe-buttons :status="notaFiscal.status" :nota-fiscal-id="notaFiscal.id" @atualizada="notaFiscalAtualizada()" />
                 </div>
               </div>
 
@@ -1020,7 +1020,7 @@
                         <q-item v-close-overlay @click.native="editItem(item)">
                           <q-item-main label="Editar Item"/>
                         </q-item>
-                        <q-item v-close-overlay @click.native="deleteItem(item.id)">
+                        <q-item v-close-overlay @click.native="deleteItem(item)">
                           <q-item-main label="Excluir Item"/>
                         </q-item>
                       </q-list>
@@ -1073,7 +1073,7 @@
       <!--PAGE STICKY BUTTOMS-->
       <q-page-sticky position="bottom-right" :offset="[35, 35]" >
         <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
-          <q-fab-action color="grey-1" text-color="grey-7" @click="addItem(notaFiscal.id)" icon="add">
+          <q-fab-action color="grey-1" text-color="grey-7" @click="addItem()" icon="add">
             <span class="shadow-2">Produto</span>
           </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" @click="" icon="add">
@@ -1092,7 +1092,9 @@
 
     <edit-nota-fiscal-modal ref="editNotaFiscalModal"/>
 
-    <nota-fiscal-item-form-modal ref="notaFiscalItemFormModal"/>
+    <template v-if="notaFiscal">
+      <nota-fiscal-item-form-modal ref="notaFiscalItemFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+    </template>
 
   </custom-page>
 </template>
@@ -1146,7 +1148,11 @@
       },
     },
     methods: {
-      nfeAtualizada() {
+      notaFiscalAtualizada(notaFiscal) {
+        if (notaFiscal) {
+          this.notaFiscal = notaFiscal;
+          return;
+        }
         this.getNotaFiscalById(this.$route.params.id);
       },
       formatCEP(cpf){
@@ -1161,28 +1167,14 @@
       editarNotaFiscal(nf){
         this.$refs.editNotaFiscalModal.openModal(nf)
       },
-      addItem(notaFiscalId){
-        this.$refs.notaFiscalItemFormModal.openModal(notaFiscalId, 'add', null)
+      addItem(){
+        this.$refs.notaFiscalItemFormModal.add()
       },
       editItem(item){
-        this.$refs.notaFiscalItemFormModal.openModal(null, 'edit', item)
+        this.$refs.notaFiscalItemFormModal.edit(item)
       },
-      deleteItem(itemId){
-        this.$q.dialog({
-          title: 'Atenção',
-          message: 'Realmente deseja excluir este item?',
-          ok: 'Sim', cancel: 'Não',
-          color: 'primary'
-        }).then(() =>{
-          this.$q.loading.show();
-          this.notaFiscalService.deleteItem(itemId).then(response => {
-            this.$q.loading.hide();
-            this.notaFiscal = response;
-          }).catch(()=>{
-            this.isEmptyList = true;
-            this.$q.loading.hide();
-          })
-        })
+      deleteItem(item){
+        this.$refs.notaFiscalItemFormModal.delete(item)
       },
       getNotaFiscalById: function(notaFiscalId) {
         this.$q.loading.show();
@@ -1203,9 +1195,6 @@
     },
     mounted(){
       this.getNotaFiscalById(this.$route.params.id);
-      this.$root.$on('refreshNotafiscalView', () => {
-        this.getNotaFiscalById(this.$route.params.id);
-      });
     }
   }
 </script>
