@@ -31,6 +31,7 @@
         <nota-fiscal-item-form-modal ref="notaFiscalItemFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
         <nota-fiscal-item-cofins-form-modal ref="notaFiscalItemCofinsFormModal" @atualizada='notaFiscalAtualizada'/>
         <nota-fiscal-item-pis-form-modal ref="notaFiscalItemPisFormModal" @atualizada='notaFiscalAtualizada'/>
+        <nota-fiscal-item-ipi-form-modal ref="notaFiscalItemIpiFormModal" @atualizada='notaFiscalAtualizada'/>
 
         <!--EMITENTE-->
         <q-card class="q-mb-sm">
@@ -864,6 +865,24 @@
                           </template>
                         </q-collapsible>
 
+                        <!--MANUTENCAO IPI-->
+                        <q-collapsible icon="receipt" label="IPI" class="cursor-pointer">
+                          <q-item v-close-overlay @click.native="addNotaFiscalItemIpi(item.id)" v-if='item.notas_fiscais_itens_ipi.length == 0'>
+                            <q-item-side icon="add" />
+                            <q-item-main label="Adicionar"/>
+                          </q-item>
+                          <template v-for="ipi in item.notas_fiscais_itens_ipi">
+                            <q-item v-close-overlay @click.native="editNotaFiscalItemIpi(ipi)">
+                              <q-item-side icon="edit" />
+                              <q-item-main label="Editar"/>
+                            </q-item>
+                            <q-item v-close-overlay @click.native="deleteNotaFiscalItemIpi(ipi)">
+                              <q-item-side icon="delete" />
+                              <q-item-main label="Excluir"/>
+                            </q-item>
+                          </template>
+                        </q-collapsible>
+
                       </q-list>
                     </q-popover>
                   </q-btn>
@@ -941,6 +960,7 @@
 
   import editNotaFiscalModal from './components/EditNotaFiscalModal'
   import notaFiscalItemFormModal from './components/NotaFiscalItemFormModal'
+  import notaFiscalItemIpiFormModal from './components/NotaFiscalItemIpiFormModal'
   import notaFiscalItemPisFormModal from './components/NotaFiscalItemPisFormModal'
   import notaFiscalItemCofinsFormModal from './components/NotaFiscalItemCofinsFormModal'
   import notaFiscalLocalizacao from './components/NotaFiscalLocalizacao'
@@ -958,6 +978,7 @@
       editNotaFiscalModal,
       notaFiscalLocalizacao,
       notaFiscalItemFormModal,
+      notaFiscalItemIpiFormModal,
       notaFiscalItemPisFormModal,
       notaFiscalItemCofinsFormModal,
     },
@@ -1074,6 +1095,17 @@
       },
       deleteNotaFiscalItemPis(item){
         this.$refs.notaFiscalItemPisFormModal.delete(item)
+      },
+
+      // notasFiscaisItensIpi
+      addNotaFiscalItemIpi(notaFiscalItemId){
+        this.$refs.notaFiscalItemIpiFormModal.add(notaFiscalItemId)
+      },
+      editNotaFiscalItemIpi(item){
+        this.$refs.notaFiscalItemIpiFormModal.edit(item)
+      },
+      deleteNotaFiscalItemIpi(item){
+        this.$refs.notaFiscalItemIpiFormModal.delete(item)
       },
 
       backAction: function () {
