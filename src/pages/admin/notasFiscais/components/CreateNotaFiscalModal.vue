@@ -327,7 +327,7 @@
           this.$q.notify({type: 'positive', message: 'Nota fiscal criada com sucesso'});
           this.$q.loading.hide();
           this.closeModal();
-          this.$router.push({name: 'view_nota', params: {id:notaFiscal.id}});
+          this.$router.push({name: 'view_nota_fiscal', params: {id:notaFiscal.id}});
         }).catch(error => {
           this.$q.notify({type: 'negative', message: error.response.data.message});
           this.$q.loading.hide();

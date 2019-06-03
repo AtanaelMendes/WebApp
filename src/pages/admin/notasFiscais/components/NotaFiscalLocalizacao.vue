@@ -48,21 +48,7 @@
             Endereço
           </div>
           <div class="ellipsis">
-            <span v-if="localizacao">
-              {{localizacao.endereco}},
-              {{localizacao.numero}},
-              {{localizacao.complemento}}
-            </span>
-            <span v-if="localizacao">
-              {{localizacao.endereco}},
-              {{localizacao.numero}},
-              {{localizacao.complemento}}
-            </span>
-            <span v-if="localizacao">
-              {{localizacao.endereco}},
-              {{localizacao.numero}},
-              {{localizacao.complemento}}
-            </span>
+            {{localizacao.endereco}}, {{localizacao.numero}}, {{localizacao.complemento}}
           </div>
         </div>
 
@@ -72,15 +58,7 @@
             Bairro / Distrito
           </div>
           <div class="ellipsis text-center">
-            <span v-if="localizacao">
-              {{localizacao.bairro}}
-            </span>
-            <span v-if="localizacao">
-              {{localizacao.bairro}}
-            </span>
-            <span v-if="localizacao">
-              {{localizacao.bairro}}
-            </span>
+            {{localizacao.bairro}}
           </div>
         </div>
 
@@ -90,15 +68,7 @@
             CEP
           </div>
           <div class="ellipsis text-center">
-            <span v-if="localizacao">
-              {{formatCEP(localizacao.cep)}}
-            </span>
-            <span v-if="localizacao">
-              {{formatCEP(localizacao.cep)}}
-            </span>
-            <span v-if="localizacao">
-              {{formatCEP(localizacao.cep)}}
-            </span>
+            {{formatCEP(localizacao.cep)}}
           </div>
         </div>
 
@@ -122,15 +92,7 @@
             Município
           </div>
           <div class="ellipsis">
-            <span v-if="localizacao">
-              {{localizacao.cidade.nome}}
-            </span>
-            <span v-if="localizacao">
-              {{localizacao.cidade.nome}}
-            </span>
-            <span v-if="localizacao">
-              {{localizacao.cidade.nome}}
-            </span>
+            {{localizacao.cidade.nome}}
           </div>
         </div>
 
@@ -140,15 +102,7 @@
             UF
           </div>
           <div class="ellipsis text-center">
-            <span v-if="localizacao">
-              {{localizacao.cidade.estado.sigla}}
-            </span>
-            <span v-if="localizacao">
-              {{localizacao.cidade.estado.sigla}}
-            </span>
-            <span v-if="localizacao">
-              {{localizacao.cidade.estado.sigla}}
-            </span>
+            {{localizacao.cidade.estado.sigla}}
           </div>
         </div>
 
@@ -158,15 +112,7 @@
             Fone / Fax
           </div>
           <div class="ellipsis text-center">
-            <span v-if="localizacao">
-              {{localizacao.fone}}
-            </span>
-            <span v-if="localizacao">
-              {{localizacao.fone}}
-            </span>
-            <span v-if="localizacao">
-              {{localizacao.fone}}
-            </span>
+            {{localizacao.fone}}
           </div>
         </div>
 
@@ -176,15 +122,7 @@
             Inscrição Estadual
           </div>
           <div class="ellipsis text-center">
-            <span v-if="localizacao">
-              {{localizacao.inscricao_estadual}}
-            </span>
-            <span v-if="localizacao">
-              {{localizacao.inscricao_estadual}}
-            </span>
-            <span v-if="localizacao">
-              {{localizacao.inscricao_estadual}}
-            </span>
+            {{localizacao.inscricao_estadual}}
           </div>
         </div>
 

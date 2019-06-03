@@ -131,7 +131,8 @@
         })
       },
       selectNotaFiscal: function(id) {
-        this.$router.push({name: 'view_nota', params: {id:id}});
+        this.$router.push({name: 'view_nota_fiscal', params: {id:id}});
+        // this.$router.push({name: 'add_pessoa'});
       },
       add: function(){
         console.log(this.$typesService.descriptionByKey('INSCRICAO_ESTADUAL_INDICADOR', 'ISENTO'))
