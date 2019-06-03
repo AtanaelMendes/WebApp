@@ -104,4 +104,17 @@ export default class NotaFiscalService {
     });
   };
 
+  getNotaFiscalItemById(id) {
+    return new Promise((resolve, reject) => {
+      NotaFiscalAPI.getNotaFiscalItemById(id).then(response => {
+        if (response.status === 200) {
+          resolve(response.data);
+        } else {
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  }
 }
