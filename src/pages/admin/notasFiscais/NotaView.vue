@@ -22,7 +22,7 @@
                 Identificação Emitente
               </div>
               <div class="ellipsis text-center">
-                <div>{{notaFiscal.nota_fiscal_serie.pessoa.nome}}</div>
+                <div>{{notaFiscal.pessoa.nome}}</div>
               </div>
 
               <div class="row q-pb-sm">
@@ -36,10 +36,10 @@
               </div>
 
               <div class="row">
-                <div class="col-12 text-center" v-for="localizacao in notaFiscal.nota_fiscal_serie.pessoa.localizacoes" :key="localizacao.id">
+                <!-- <div class="col-12 text-center" v-for="localizacao in notaFiscal.nota_fiscal_serie.pessoa.localizacoes" :key="localizacao.id">
                   {{localizacao.endereco}}, {{localizacao.numero}} - {{localizacao.complemento}} - {{localizacao.cep}},
                   {{localizacao.cidade.nome}} - {{localizacao.cidade.estado.sigla}}
-                </div>
+                </div> -->
               </div>
             </div>
 
@@ -901,8 +901,8 @@
   import notaFiscalLocalizacao from './components/NotaFiscalLocalizacao'
 
   import nfeButtons from 'components/Nfe/NfeButtons'
-  import NotaFiscalService from '../../../assets/js/service/NotaFiscalService'
-  import NfeService from '../../../assets/js/service/NfeService'
+  import NotaFiscalService from 'assets/js/service/NotaFiscalService'
+  import NfeService from 'assets/js/service/NfeService'
   export default {
     name: "nota-View",
     components: {

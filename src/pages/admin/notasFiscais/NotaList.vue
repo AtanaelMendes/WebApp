@@ -36,7 +36,7 @@
 
               <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                 <div class="row">
-                  {{notaFiscal.nota_fiscal_serie.nome}}
+                  {{notaFiscal.id}}
                 </div>
                 <div class="row q-caption">
                   <!--<q-chip small :color="(notaFiscal == 2)?'green':(notaFiscal == 3)?'red':(notaFiscal == 4)?'orange':'grey'" class="q-mt-xs q-ml-xs">-->
@@ -75,10 +75,11 @@
       </q-list>
     </div>
 
-    <create-nota-fiscal-modal ref="createNotaFiscalModal"/>
+    <!-- <create-nota-fiscal-modal ref="createNotaFiscalModal"/> -->
+    <nota-fiscal-form-modal ref="notaFiscalFormModal" @criada='selectNotaFiscal'/>
 
     <q-page-sticky position="bottom-right" :offset="[35, 35]">
-      <q-btn round color="deep-orange" @click="createNotafiscal" icon="add" size="20px" />
+      <q-btn round color="deep-orange" @click="add" icon="add" size="20px" />
     </q-page-sticky>
 
   </custom-page>
@@ -89,19 +90,19 @@
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
   import agroUtils from "assets/js/AgroUtils";
-  import createNotaFiscalModal from './components/CreateNotaFiscalModal.vue'
-  import NotaFiscalService from '../../../assets/js/service/NotaFiscalService'
+  import notaFiscalFormModal from './components/NotaFiscalFormModal.vue'
+  import notaFiscalService from '../../../assets/js/service/notaFiscal/NotaFiscalService'
   export default {
     name: "notasFiscaisList",
     components: {
       toolbar,
       customPage,
       apNoResults,
-      createNotaFiscalModal,
+      notaFiscalFormModal,
     },
     data () {
       return {
-        notaFiscalService: new NotaFiscalService(),
+        notaFiscalService: new notaFiscalService(),
         notasFiscais: [],
         notaFiscalLoaded: false,
         filter: {
@@ -131,10 +132,10 @@
       },
       selectNotaFiscal: function(id) {
         this.$router.push({name: 'view_nota', params: {id:id}});
-        // this.$router.push({name: 'add_pessoa'});
       },
-      createNotafiscal: function(){
-        this.$refs.createNotaFiscalModal.openModal()
+      add: function(){
+        console.log(this.$typesService.descriptionByKey('INSCRICAO_ESTADUAL_INDICADOR', 'ISENTO'))
+        this.$refs.notaFiscalFormModal.add()
       },
     },
     mounted () {
@@ -153,12 +154,10 @@
     text-align: center;
     padding-top: 150px;
   }
-
   .no-result img{
     width: 300px;
     height: auto;
   }
-
   .no-result span{
     display: block;
     margin-top: 30px;
