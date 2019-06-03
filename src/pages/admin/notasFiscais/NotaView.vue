@@ -3,7 +3,24 @@
     <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction">
 
       <template slot="action_itens" v-if="notaFiscal">
-        <q-btn flat round dense icon="edit" @click.native="editarNotaFiscal(notaFiscal)" />
+        <q-btn icon="more_vert" flat round>
+          <q-popover>
+            <q-list link>
+              <q-item v-close-overlay @click.native="editarNotaFiscal(notaFiscal)">
+                <q-item-side icon="edit" />
+                <q-item-main label="Editar"/>
+              </q-item>
+              <q-item v-close-overlay @click.native="duplicarNotaFiscal(notaFiscal.id)">
+                <q-item-side icon="file_copy" />
+                <q-item-main label="Duplicar"/>
+              </q-item>
+              <q-item v-close-overlay @click.native="excluirNotaFiscal(notaFiscal.id)">
+                <q-item-side icon="delete" />
+                <q-item-main label="Excluir"/>
+              </q-item>
+            </q-list>
+          </q-popover>
+        </q-btn>
       </template>
 
     </toolbar>
@@ -550,7 +567,7 @@
 
           <div class="row">
 
-            <div class="col-2">
+            <div class="col-3">
               <div class="row full-height">
 
                 <!--CODIGO PRODUTO-->
@@ -629,7 +646,7 @@
               </div>
             </div>
 
-            <div class="col-4">
+            <div class="col-3">
               <div class="row full-height">
 
                 <!--BASE CALCULO ICMS-->
@@ -654,17 +671,21 @@
                 </div>
 
                 <!--ALIQUOTA ICMS-->
-                <div class="col-3 q-pa-xs borda-esquerda">
+                <div class="col-2 q-pa-xs borda-esquerda">
                   <div class="text-faded q-caption">
                     ALIQ ICMS
                   </div>
                 </div>
 
                 <!--ALIQUOTA IPI-->
-                <div class="col-3 q-pa-xs borda-esquerda">
+                <div class="col-2 q-pa-xs borda-esquerda">
                   <div class="text-faded q-caption">
                     ALIQ IPI
                   </div>
+                </div>
+
+                <div class="col-1 borda-esquerda" >
+                  &nbsp
                 </div>
 
               </div>
@@ -674,7 +695,7 @@
 
           <div class="row borda-superior" v-for="item in notaFiscal.notas_fiscais_itens" :key="item.id">
 
-            <div class="col-2">
+            <div class="col-3">
               <div class="row full-height">
 
                 <!--CODIGO PRODUTO-->
@@ -753,7 +774,7 @@
               </div>
             </div>
 
-            <div class="col-4">
+            <div class="col-3">
               <div class="row full-height">
                 <!--BASE CALCULO ICMS-->
                 <div class="col-2 q-pa-xs borda-esquerda">
@@ -778,55 +799,58 @@
                 </div>
 
                 <!--ALIQUOTA ICMS-->
-                <div class="col-3 q-pa-xs borda-esquerda">
+                <div class="col-2 q-pa-xs borda-esquerda">
                   <div class="ellipsis text-right" v-for="icms in item.notas_fiscais_itens_icms" :key="icms.id">
                     {{numeral(icms.percentual).format('0,0.00')}}
                   </div>
                 </div>
 
                 <!--ALIQUOTA IPI-->
-                <div class="col-3 q-pa-xs borda-esquerda full-height">
+                <div class="col-2 q-pa-xs borda-esquerda full-height">
                   <div class="ellipsis text-right" v-for="ipi in item.notas_fiscais_itens_ipi" :key="ipi.id">
                     {{numeral(ipi.percentual).format('0,0.00')}}
                   </div>
                 </div>
 
+                <div class="col-1 borda-esquerda">
+                  <q-btn round flat dense icon="more_vert" color="grey-8">
+                    <q-popover>
+                      <q-list link>
+                        <q-item v-close-overlay @click.native="editNotaFiscalItem(item)">
+                          <q-item-side icon="edit" />
+                          <q-item-main label="Editar"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="deleteNotaFiscalItem(item)">
+                          <q-item-side icon="delete" />
+                          <q-item-main label="Excluir"/>
+                        </q-item>
+
+                        <q-item-separator />
+
+                        <q-collapsible icon="receipt" label="Cofins" class="cursor-pointer">
+                          <q-item v-close-overlay @click.native="addNotaFiscalItemCofins(item.id)" v-if='item.notas_fiscais_itens_cofins.length == 0'>
+                            <q-item-side icon="add" />
+                            <q-item-main label="Adicionar"/>
+                          </q-item>
+                          <template v-for="cofins in item.notas_fiscais_itens_cofins">
+                            <q-item v-close-overlay @click.native="editNotaFiscalItemCofins(cofins)">
+                              <q-item-side icon="edit" />
+                              <q-item-main label="Editar"/>
+                            </q-item>
+                            <q-item v-close-overlay @click.native="deleteNotaFiscalItemCofins(cofins)">
+                              <q-item-side icon="delete" />
+                              <q-item-main label="Excluir"/>
+                            </q-item>
+                          </template>
+                        </q-collapsible>
+
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
+                </div>
               </div>
             </div>
-            <q-btn class="float-right" round flat dense icon="more_vert" color="grey-8">
-              <q-popover>
-                <q-list link>
-                  <q-item v-close-overlay @click.native="editNotaFiscalItem(item)">
-                    <q-item-side icon="edit" />
-                    <q-item-main label="Editar"/>
-                  </q-item>
-                  <q-item v-close-overlay @click.native="deleteNotaFiscalItem(item)">
-                    <q-item-side icon="delete" />
-                    <q-item-main label="Excluir"/>
-                  </q-item>
 
-                  <q-item-separator />
-
-                  <q-collapsible icon="receipt" label="Cofins" class="cursor-pointer">
-                    <q-item v-close-overlay @click.native="addNotaFiscalItemCofins(item.id)" v-if='item.notas_fiscais_itens_cofins.length == 0'>
-                      <q-item-side icon="add" />
-                      <q-item-main label="Adicionar"/>
-                    </q-item>
-                    <template v-for="cofins in item.notas_fiscais_itens_cofins">
-                      <q-item v-close-overlay @click.native="editNotaFiscalItemCofins(cofins)">
-                        <q-item-side icon="edit" />
-                        <q-item-main label="Editar"/>
-                      </q-item>
-                      <q-item v-close-overlay @click.native="deleteNotaFiscalItemCofins(cofins)">
-                        <q-item-side icon="delete" />
-                        <q-item-main label="Excluir"/>
-                      </q-item>
-                    </template>
-                  </q-collapsible>
-
-                </q-list>
-              </q-popover>
-            </q-btn>
 
           </div>
 
@@ -964,6 +988,38 @@
       editarNotaFiscal(nf){
         this.$refs.editNotaFiscalModal.openModal(nf)
       },
+      duplicarNotaFiscal(id){
+        this.$q.loading.show();
+        this.notaFiscalService.duplicarNotaFiscal(id).then(nf => {
+          this.$q.loading.hide();
+          this.$router.push({name: 'view_nota_fiscal', params: {id: nf.id}});
+          this.getNotaFiscalById(nf.id);
+        }).catch(error=>{
+          this.$q.loading.hide();
+          // console.log('errou', error)
+          // this.$q.notify({type: 'negative', message: error.response})
+        })
+      },
+      excluirNotaFiscal(id){
+        this.$q.loading.show();
+        this.notaFiscalService.excluirNotaFiscal(id).then( () => {
+          this.$q.loading.hide();
+          this.backAction();
+        }).catch( error =>{
+          this.$q.loading.hide();
+          this.$q.notify({type: 'negative', message: error.response.data})
+        })
+      },
+      getNotaFiscalById: function(notaFiscalId) {
+        this.$q.loading.show();
+        this.notaFiscalService.getNotaFiscalById(notaFiscalId).then(response => {
+          this.$q.loading.hide();
+          this.notaFiscal = response;
+        }).catch(()=>{
+          this.isEmptyList = true;
+          this.$q.loading.hide();
+        })
+      },
 
       // notasFiscaisItens
       addNotaFiscalItem(){
@@ -987,21 +1043,8 @@
         this.$refs.notaFiscalItemCofinsFormModal.delete(item)
       },
 
-      getNotaFiscalById: function(notaFiscalId) {
-        this.$q.loading.show();
-        this.notaFiscalService.getNotaFiscalById(notaFiscalId).then(response => {
-          this.$q.loading.hide();
-          this.notaFiscal = response;
-        }).catch(()=>{
-          this.isEmptyList = true;
-          this.$q.loading.hide();
-        })
-      },
-      editCulturaClassificacao: function(notaFiscalId){
-        this.$refs.editCulturaClassificacaoModal.openModal(notaFiscalId)
-      },
       backAction: function () {
-        this.$router.back()
+        this.$router.push({name: 'notas_fiscais'});
       }
     },
     mounted(){

@@ -18,5 +18,11 @@ export default class NotaFiscalAPI{
   static updateNotaFiscal(params, notaFiscalId){
     return Vue.prototype.$axios.put('/nota_fiscal/'+ notaFiscalId, params);
   }
+  static duplicarNotaFiscal(notaFiscalId){
+    return Vue.prototype.$axios.post('/nota_fiscal/'+ notaFiscalId + '/duplicar');
+  }
+  static excluirNotaFiscal(notaFiscalId){
+    return Vue.prototype.$axios.delete('/nota_fiscal/'+ notaFiscalId);
+  }
 
 }
