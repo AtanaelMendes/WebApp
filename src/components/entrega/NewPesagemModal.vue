@@ -245,14 +245,15 @@
         this.$q.loading.show();
         this.culturaClassificacaoService.listClassificacoesByCultura(cultura_id).then(classificacoes => {
          if(this.pesagem.entregaClassificacao.length <= 0){
-           classificacoes.forEach(function (classificacao) {
+           classificacoes.forEach(function (culturaClassificacao) {
              this.pesagem.entregaClassificacao.push(
                {
-                 classificacao_id: classificacao.id,
+                 id: culturaClassificacao.id,
+                 classificacao_id: culturaClassificacao.classificacao_id,
                  verificado: {value: null},
                  peso_desconto: {value: null},
-                 nome: classificacao.nome,
-                 tolerancia: classificacao.tolerancia
+                 nome: culturaClassificacao.nome,
+                 tolerancia: culturaClassificacao.tolerancia
                }
              )
            }, this)
