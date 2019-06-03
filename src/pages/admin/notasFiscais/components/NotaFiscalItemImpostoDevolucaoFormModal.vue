@@ -45,7 +45,7 @@
     },
 
     mounted:function (){
-      this.newNotaFiscalItemIpi();
+      this.newNotaFiscalItemImpostoDevolucao();
     },
 
     props: {
@@ -63,7 +63,7 @@
 
     methods: {
       // limpa dados do formulario
-      newNotaFiscalItemIpi(notaFiscalItemId){
+      newNotaFiscalItemImpostoDevolucao(notaFiscalItemId){
         this.notaFiscalItemImpostoDevolucao = {
           nota_fiscal_item_id: notaFiscalItemId,
           percentual: null,
@@ -72,7 +72,7 @@
       },
 
       add: function(notaFiscalItemId) {
-        this.newNotaFiscalItemIpi(notaFiscalItemId);
+        this.newNotaFiscalItemImpostoDevolucao(notaFiscalItemId);
         this.isModalOpened = true;
       },
 

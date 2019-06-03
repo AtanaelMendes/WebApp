@@ -30,6 +30,7 @@
       <div class="col-12" v-if="notaFiscal">
         <nota-fiscal-item-form-modal ref="notaFiscalItemFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
         <nota-fiscal-item-cofins-form-modal ref="notaFiscalItemCofinsFormModal" @atualizada='notaFiscalAtualizada'/>
+        <nota-fiscal-item-icms-form-modal ref="notaFiscalItemIcmsFormModal" @atualizada='notaFiscalAtualizada'/>
         <nota-fiscal-item-pis-form-modal ref="notaFiscalItemPisFormModal" @atualizada='notaFiscalAtualizada'/>
         <nota-fiscal-item-ipi-form-modal ref="notaFiscalItemIpiFormModal" @atualizada='notaFiscalAtualizada'/>
         <nota-fiscal-item-imposto-devolucao-form-modal ref="notaFiscalItemImpostoDevolucaoFormModal" @atualizada='notaFiscalAtualizada'/>
@@ -848,6 +849,24 @@
                           </template>
                         </q-collapsible>
 
+                        <!--MANUITENCAO ICMS-->
+                        <q-collapsible icon="receipt" label="ICMS" class="cursor-pointer">
+                          <q-item v-close-overlay @click.native="addNotaFiscalItemIcms(item.id)" v-if='item.notas_fiscais_itens_icms.length == 0'>
+                            <q-item-side icon="add" />
+                            <q-item-main label="Adicionar"/>
+                          </q-item>
+                          <template v-for="icms in item.notas_fiscais_itens_icms">
+                            <q-item v-close-overlay @click.native="editNotaFiscalItemIcms(icms)">
+                              <q-item-side icon="edit" />
+                              <q-item-main label="Editar"/>
+                            </q-item>
+                            <q-item v-close-overlay @click.native="deleteNotaFiscalItemIcms(icms)">
+                              <q-item-side icon="delete" />
+                              <q-item-main label="Excluir"/>
+                            </q-item>
+                          </template>
+                        </q-collapsible>
+
                         <!--MANUTENCAO PIS-->
                         <q-collapsible icon="receipt" label="PIS" class="cursor-pointer">
                           <q-item v-close-overlay @click.native="addNotaFiscalItemPis(item.id)" v-if='item.notas_fiscais_itens_pis.length == 0'>
@@ -981,6 +1000,7 @@
   import notaFiscalItemFormModal from './components/NotaFiscalItemFormModal'
   import notaFiscalItemIpiFormModal from './components/NotaFiscalItemIpiFormModal'
   import notaFiscalItemPisFormModal from './components/NotaFiscalItemPisFormModal'
+  import notaFiscalItemIcmsFormModal from './components/NotaFiscalItemIcmsFormModal'
   import notaFiscalItemCofinsFormModal from './components/NotaFiscalItemCofinsFormModal'
   import notaFiscalItemImpostoDevolucaoFormModal from './components/NotaFiscalItemImpostoDevolucaoFormModal'
   import notaFiscalLocalizacao from './components/NotaFiscalLocalizacao'
@@ -1000,6 +1020,7 @@
       notaFiscalItemFormModal,
       notaFiscalItemIpiFormModal,
       notaFiscalItemPisFormModal,
+      notaFiscalItemIcmsFormModal,
       notaFiscalItemCofinsFormModal,
       notaFiscalItemImpostoDevolucaoFormModal,
     },
@@ -1126,6 +1147,17 @@
       },
       deleteNotaFiscalItemImpostoDevolucao(item){
         this.$refs.notaFiscalItemImpostoDevolucaoFormModal.delete(item)
+      },
+
+      // notaFiscalItemIcms
+      addNotaFiscalItemIcms(notaFiscalItemId){
+        this.$refs.notaFiscalItemIcmsFormModal.add(notaFiscalItemId)
+      },
+      editNotaFiscalItemIcms(item){
+        this.$refs.notaFiscalItemIcmsFormModal.edit(item)
+      },
+      deleteNotaFiscalItemIcms(item){
+        this.$refs.notaFiscalItemIcmsFormModal.delete(item)
       },
 
       backAction: function () {
