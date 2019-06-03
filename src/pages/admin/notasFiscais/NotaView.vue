@@ -32,6 +32,7 @@
         <nota-fiscal-item-cofins-form-modal ref="notaFiscalItemCofinsFormModal" @atualizada='notaFiscalAtualizada'/>
         <nota-fiscal-item-pis-form-modal ref="notaFiscalItemPisFormModal" @atualizada='notaFiscalAtualizada'/>
         <nota-fiscal-item-ipi-form-modal ref="notaFiscalItemIpiFormModal" @atualizada='notaFiscalAtualizada'/>
+        <nota-fiscal-item-imposto-devolucao-form-modal ref="notaFiscalItemImpostoDevolucaoFormModal" @atualizada='notaFiscalAtualizada'/>
 
         <!--EMITENTE-->
         <q-card class="q-mb-sm">
@@ -883,6 +884,24 @@
                           </template>
                         </q-collapsible>
 
+                        <!--MANUTENCAO IMPOSTO DEVOLUCAO-->
+                        <q-collapsible icon="receipt" label="Imposto Devolução" class="cursor-pointer">
+                          <q-item v-close-overlay @click.native="addNotaFiscalItemImpostoDevolucao(item.id)" v-if='item.notas_fiscais_itens_impostos_devolucoes.length == 0'>
+                            <q-item-side icon="add" />
+                            <q-item-main label="Adicionar"/>
+                          </q-item>
+                          <template v-for="impostoDevolucao in item.notas_fiscais_itens_impostos_devolucoes">
+                            <q-item v-close-overlay @click.native="editNotaFiscalItemImpostoDevolucao(impostoDevolucao)">
+                              <q-item-side icon="edit" />
+                              <q-item-main label="Editar"/>
+                            </q-item>
+                            <q-item v-close-overlay @click.native="deleteNotaFiscalItemImpostoDevolucao(impostoDevolucao)">
+                              <q-item-side icon="delete" />
+                              <q-item-main label="Excluir"/>
+                            </q-item>
+                          </template>
+                        </q-collapsible>
+
                       </q-list>
                     </q-popover>
                   </q-btn>
@@ -963,13 +982,14 @@
   import notaFiscalItemIpiFormModal from './components/NotaFiscalItemIpiFormModal'
   import notaFiscalItemPisFormModal from './components/NotaFiscalItemPisFormModal'
   import notaFiscalItemCofinsFormModal from './components/NotaFiscalItemCofinsFormModal'
+  import notaFiscalItemImpostoDevolucaoFormModal from './components/NotaFiscalItemImpostoDevolucaoFormModal'
   import notaFiscalLocalizacao from './components/NotaFiscalLocalizacao'
 
   import nfeButtons from 'components/Nfe/NfeButtons'
   import NotaFiscalService from 'assets/js/service/NotaFiscalService'
   import NfeService from 'assets/js/service/NfeService'
   export default {
-    name: "nota-View",
+    name: "notaFiscalView",
     components: {
       toolbar,
       customPage,
@@ -981,6 +1001,7 @@
       notaFiscalItemIpiFormModal,
       notaFiscalItemPisFormModal,
       notaFiscalItemCofinsFormModal,
+      notaFiscalItemImpostoDevolucaoFormModal,
     },
     watch: { },
     data(){
@@ -1039,8 +1060,7 @@
           this.getNotaFiscalById(nf.id);
         }).catch(error=>{
           this.$q.loading.hide();
-          // console.log('errou', error)
-          // this.$q.notify({type: 'negative', message: error.response})
+          this.$q.notify({type: 'negative', message: error.response.message})
         })
       },
       excluirNotaFiscal(id){
@@ -1050,7 +1070,7 @@
           this.backAction();
         }).catch( error =>{
           this.$q.loading.hide();
-          this.$q.notify({type: 'negative', message: error.response.data})
+          this.$q.notify({type: 'negative', message: error.response.data.message})
         })
       },
       getNotaFiscalById: function(notaFiscalId) {
@@ -1097,15 +1117,15 @@
         this.$refs.notaFiscalItemPisFormModal.delete(item)
       },
 
-      // notasFiscaisItensIpi
-      addNotaFiscalItemIpi(notaFiscalItemId){
-        this.$refs.notaFiscalItemIpiFormModal.add(notaFiscalItemId)
+      // notaFiscalItemImpostoDevolucao
+      addNotaFiscalItemImpostoDevolucao(notaFiscalItemId){
+        this.$refs.notaFiscalItemImpostoDevolucaoFormModal.add(notaFiscalItemId)
       },
-      editNotaFiscalItemIpi(item){
-        this.$refs.notaFiscalItemIpiFormModal.edit(item)
+      editNotaFiscalItemImpostoDevolucao(item){
+        this.$refs.notaFiscalItemImpostoDevolucaoFormModal.edit(item)
       },
-      deleteNotaFiscalItemIpi(item){
-        this.$refs.notaFiscalItemIpiFormModal.delete(item)
+      deleteNotaFiscalItemImpostoDevolucao(item){
+        this.$refs.notaFiscalItemImpostoDevolucaoFormModal.delete(item)
       },
 
       backAction: function () {
