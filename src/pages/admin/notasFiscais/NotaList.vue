@@ -130,7 +130,7 @@
         })
       },
       selectNotaFiscal: function(id) {
-        this.$router.push({name: 'view_nota', params: {id:id}});
+        this.$router.push({name: 'view_nota_fiscal', params: {id:id}});
         // this.$router.push({name: 'add_pessoa'});
       },
       createNotafiscal: function(){
