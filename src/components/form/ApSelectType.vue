@@ -2,6 +2,7 @@
   <q-select
     filter
     v-model="selected"
+    :float-label="floatLabel"
     :options="options"
     @input="handleInput"
   />
@@ -11,6 +12,10 @@
 export default {
   name: "ap-select-type",
   props: {
+    floatLabel: {
+      type: String,
+      default: 'Tipo'
+    },
     type: {
       type: String,
       default: ''

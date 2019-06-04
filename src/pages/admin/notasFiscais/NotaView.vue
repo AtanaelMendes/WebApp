@@ -28,6 +28,20 @@
     <div class="row q-pa-md gutter-sm space-end">
 
       <div class="col-12" v-if="notaFiscal">
+
+        <div class="row">
+          <div class='col-1'>
+            {{notaFiscal.pessoa.inscricao_estadual_indicador}}
+          </div>
+          <div class='col-2'>
+            <ap-label-type type="INSCRICAO_ESTADUAL_INDICADOR" v-model="notaFiscal.pessoa.inscricao_estadual_indicador"/>
+          </div>
+          <div class='col-3'>
+            <ap-select-type type="INSCRICAO_ESTADUAL_INDICADOR" v-model="notaFiscal.pessoa.inscricao_estadual_indicador"/>
+          </div>
+
+        </div>
+
         <nota-fiscal-form-modal ref="notaFiscalFormModal" @atualizada='notaFiscalAtualizada' @apagada='notaFiscalApagada' @duplicada='notaFiscalAtualizada'/>
         <nota-fiscal-item-form-modal ref="notaFiscalItemFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
         <nota-fiscal-item-cofins-form-modal ref="notaFiscalItemCofinsFormModal" @atualizada='notaFiscalAtualizada'/>
@@ -153,15 +167,9 @@
             <div class="col-6 q-pa-xs">
               <div class="text-faded q-caption ellipsis">
                 Inscrição Estadual
-                <ap-label-type type="INSCRICAO_ESTADUAL_INDICADOR" v-model="notaFiscal.pessoa.inscricao_estadual_indicador"/>
               </div>
               <div class="text-center">
-                {{notaFiscal.pessoa.inscricao_estadual_indicador}}
                 {{notaFiscal.pessoa.inscricao_estadual}}
-                <div>
-                  teste
-                  <ap-select-type type="INSCRICAO_ESTADUAL_INDICADOR" v-model="notaFiscal.pessoa.inscricao_estadual_indicador"/>
-                </div>
               </div>
             </div>
             <!--<div class="col-4 borda-esquerda q-pa-xs">-->

@@ -67,21 +67,33 @@ export default class TypeService{
   }
 
   keyById (type, id) {
-      var item = this.itemById(type, id);
-      return item[TypeService.KEY_POSITION];
+    if (id == null) {
+      return null;
+    }
+    var item = this.itemById(type, id);
+    return item[TypeService.KEY_POSITION];
   }
 
   labelById (type, id) {
-      var item = this.itemById(type, id);
-      return item[TypeService.LABEL_POSITION];
+    if (id == null) {
+      return null;
+    }
+    var item = this.itemById(type, id);
+    return item[TypeService.LABEL_POSITION];
   }
 
   idByKey (type, key) {
+    if (key == null) {
+      return null;
+    }
     var item = this.itemByKey(type, key);
     return item[TypeService.ID_POSITION];
   }
 
   labelByKey (type, key) {
+    if (key == null) {
+      return null;
+    }
     var item = this.itemByKey(type, key);
     return item[TypeService.LABEL_POSITION];
   }

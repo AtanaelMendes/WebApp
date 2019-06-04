@@ -114,7 +114,6 @@
 
       // limpa dados do formulario
       newNotaFiscal(notaFiscalItemId){
-        console.log(notaFiscalItemId);
         this.notaFiscal = {
           nota_fiscal_serie_id: null,
           numero: null,
