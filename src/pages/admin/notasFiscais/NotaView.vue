@@ -29,19 +29,6 @@
 
       <div class="col-12" v-if="notaFiscal">
 
-        <div class="row">
-          <div class='col-1'>
-            {{notaFiscal.pessoa.inscricao_estadual_indicador}}
-          </div>
-          <div class='col-2'>
-            <ap-label-type type="INSCRICAO_ESTADUAL_INDICADOR" v-model="notaFiscal.pessoa.inscricao_estadual_indicador"/>
-          </div>
-          <div class='col-3'>
-            <ap-select-type type="INSCRICAO_ESTADUAL_INDICADOR" v-model="notaFiscal.pessoa.inscricao_estadual_indicador"/>
-          </div>
-
-        </div>
-
         <nota-fiscal-form-modal ref="notaFiscalFormModal" @atualizada='notaFiscalAtualizada' @apagada='notaFiscalApagada' @duplicada='notaFiscalAtualizada'/>
         <nota-fiscal-item-form-modal ref="notaFiscalItemFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
         <nota-fiscal-item-cofins-form-modal ref="notaFiscalItemCofinsFormModal" @atualizada='notaFiscalAtualizada'/>
@@ -1099,7 +1086,7 @@
           this.notaFiscal = notaFiscal;
           return;
         }
-        // this.getNotaFiscalById(this.$route.params.id);
+        this.getNotaFiscalById(this.$route.params.id);
       },
       notaFiscalApagada() {
         this.$router.push({name: 'notas_fiscais'});

@@ -1,10 +1,18 @@
 <template>
   <q-select
-    filter
+
     v-model="selected"
-    :float-label="floatLabel"
-    :options="options"
     @input="handleInput"
+    :options="options"
+
+    :float-label="floatLabel"
+    :filter="filter"
+    :clearable="clearable"
+
+    :multiple="multiple"
+    :toggle="toggle"
+    :chips="chips"
+
   />
 </template>
 <script>
@@ -12,17 +20,37 @@
 export default {
   name: "ap-select-type",
   props: {
-    floatLabel: {
-      type: String,
-      default: 'Tipo'
-    },
     type: {
       type: String,
-      default: ''
+      required: true
     },
     value: {
       type: Number,
       default: null
+    },
+    floatLabel: {
+      type: String,
+      default: 'Tipo'
+    },
+    filter: {
+      type: Boolean,
+      default: true
+    },
+    clearable: {
+      type: Boolean,
+      default: true
+    },
+    multiple: {
+      type: Boolean,
+      default: false
+    },
+    toggle: {
+      type: Boolean,
+      default: true
+    },
+    chips: {
+      type: Boolean,
+      default: true
     },
   },
   data () {
