@@ -66,10 +66,13 @@
             <div class="row justify-center">
               <div class="">
                 <div>
-                  <q-select key="qtd" v-model="safraCultura.view_unidade_medida_id" :options="parsedUnidades(unidadesMedida)" float-label="Controlar quantidades em"/>
+                  <q-select key="pesagem" v-model="safraCultura.unidade_medida_pesagem_id" :options="parsedUnidades(unidadesMedida)" float-label="Unidade de pesagem"/>
                 </div>
                 <div>
-                  <q-select key="area" v-model="safraCultura.view_unidade_area_id" :options="parsedUnidades(unidadesArea)" float-label="Mostrar área em"/>
+                  <q-select key="preco" v-model="safraCultura.unidade_medida_preco_id" :options="parsedUnidades(unidadesMedida)" float-label="Unidade de preço"/>
+                </div>
+                <div>
+                  <q-select key="area" v-model="safraCultura.unidade_medida_area_id" :options="parsedUnidades(unidadesArea)" float-label="Unidade de área"/>
                 </div>
               </div>
             </div>
@@ -211,8 +214,9 @@
       setCultura(cultura){
         this.safraCultura.cultura_id = cultura.id;
         this.safraCultura.culturaNome = cultura.nome;
-        this.safraCultura.view_unidade_medida_id = cultura.default_unidade_medida_id;
-        this.safraCultura.view_unidade_area_id = cultura.default_unidade_area_id;
+        this.safraCultura.unidade_medida_pesagem_id = cultura.unidade_medida_pesagem_id;
+        this.safraCultura.unidade_medida_preco_id = cultura.unidade_medida_preco_id;
+        this.safraCultura.unidade_medida_area_id = cultura.unidade_medida_area_id;
         this.goToNextStep();
       },
       saveSafraCultura(){

@@ -1,150 +1,180 @@
 <template>
-  <div>
-    <q-card >
+  <q-card>
+    <div class="row ">
 
-      <div class="row ">
-
-        <!--NOME RAZAO SOCIAL-->
-        <div class="col-7 q-pa-xs">
-          <div class="text-faded q-caption ellipsis">
-            Nome/Razão Social
-          </div>
-          <div class="ellipsis">
-            {{localizacao.razao_social}}
-          </div>
+      <!--NOME RAZAO SOCIAL-->
+      <div class="col-6 q-pa-xs">
+        <div class="text-faded q-caption ellipsis">
+          Nome/Razão Social
         </div>
+        <div class="ellipsis">
+          {{localizacao.razao_social}}
+        </div>
+      </div>
 
-        <!--CPF / CNPJ-->
-        <div class="col-3 q-pa-xs borda-esquerda">
-          <div class="text-faded q-caption ellipsis">
-            CPF / CNPJ
-          </div>
-          <div class="ellipsis text-center">
+      <!--CPF / CNPJ-->
+      <div class="col-3 q-pa-xs borda-esquerda">
+        <div class="text-faded q-caption ellipsis">
+          CPF / CNPJ
+        </div>
+        <div class="ellipsis text-center">
             <span v-if="localizacao.cpf">
               {{formatCPF(localizacao.cpf)}}
             </span>
-            <span v-if="localizacao.cnpj">
+          <span v-if="localizacao.cnpj">
               {{formatCNPJ(localizacao.cnpj)}}
             </span>
-          </div>
-        </div>
-
-        <!--DATA EMISSAO-->
-        <div class="col-2 q-pa-xs borda-esquerda">
-          <div class="text-faded q-caption ellipsis">
-            Data Emissão
-          </div>
-          <div class="ellipsis text-center" v-if="notaFiscal.emissao">
-            {{moment(notaFiscal.emissao).format('L')}}
-          </div>
         </div>
       </div>
 
-      <div class="row borda-superior">
-
-        <!--ENDERECO-->
-        <div class="col-6 q-pa-xs">
-          <div class="text-faded q-caption ellipsis">
-            Endereço
-          </div>
-          <div class="ellipsis">
-            {{localizacao.endereco}}, {{localizacao.numero}}, {{localizacao.complemento}}
-          </div>
+      <!--DATA EMISSAO-->
+      <div class="col-2 q-pa-xs borda-esquerda">
+        <div class="text-faded q-caption ellipsis">
+          Data Emissão
         </div>
-
-        <!--BAIRRO DISTRITO-->
-        <div class="col-2 q-pa-xs borda-esquerda">
-          <div class="text-faded q-caption ellipsis">
-            Bairro / Distrito
-          </div>
-          <div class="ellipsis text-center">
-            {{localizacao.bairro}}
-          </div>
+        <div class="ellipsis text-center" v-if="notaFiscal.emissao">
+          {{moment(notaFiscal.emissao).format('L')}}
         </div>
-
-        <!--CEP-->
-        <div class="col-2 q-pa-xs borda-esquerda">
-          <div class="text-faded q-caption ellipsis">
-            CEP
-          </div>
-          <div class="ellipsis text-center">
-            {{formatCEP(localizacao.cep)}}
-          </div>
-        </div>
-
-        <!--ENTRADA SAIDA-->
-        <div class="col-2 q-pa-xs borda-esquerda">
-          <div class="text-faded q-caption ellipsis">
-            Data Entrada/Saída
-          </div>
-          <div class="ellipsis text-center">
-            {{moment(notaFiscal.saida).format('L')}}
-          </div>
-        </div>
-
       </div>
 
-      <div class="row borda-superior">
+      <div class="col-1 borda-esquerda">
+        <q-btn icon="more_vert" color="grey-7" flat round class="float-right">
 
-        <!--MUNICIPIO-->
-        <div class="col-5 q-pa-xs">
-          <div class="text-faded q-caption ellipsis">
-            Município
-          </div>
-          <div class="ellipsis">
-            {{localizacao.cidade.nome}}
-          </div>
-        </div>
+          <q-popover>
+            <q-list link>
+              <q-item v-close-overlay @click.native="editNotaFiscalLocalizacao(localizacao)">
+                <q-item-side icon="edit" />
+                <q-item-main label="Editar"/>
+              </q-item>
+              <q-item v-close-overlay @click.native="deleteNotaFiscalLocalizacao(localizacao)">
+                <q-item-side icon="delete" />
+                <q-item-main label="Excluir"/>
+              </q-item>
+            </q-list>
+          </q-popover>
 
-        <!--ESTADO SIGLA-->
-        <div class="col-1 q-pa-xs borda-esquerda">
-          <div class="text-faded q-caption ellipsis">
-            UF
-          </div>
-          <div class="ellipsis text-center">
-            {{localizacao.cidade.estado.sigla}}
-          </div>
-        </div>
-
-        <!--FONE FAX-->
-        <div class="col-2 q-pa-xs borda-esquerda">
-          <div class="text-faded q-caption ellipsis">
-            Fone / Fax
-          </div>
-          <div class="ellipsis text-center">
-            {{localizacao.fone}}
-          </div>
-        </div>
-
-        <!--INSCRICAO ESTADUAL-->
-        <div class="col-2 q-pa-xs borda-esquerda">
-          <div class="text-faded q-caption ellipsis">
-            Inscrição Estadual
-          </div>
-          <div class="ellipsis text-center">
-            {{localizacao.inscricao_estadual}}
-          </div>
-        </div>
-
-        <!--HORA ENTRADA SAIDA-->
-        <div class="col-2 q-pa-xs borda-esquerda">
-          <div class="text-faded q-caption ellipsis">
-            Hora da Saída/Entrada
-          </div>
-          <div class="ellipsis text-center">
-            {{moment(notaFiscal.saida).format('LTS')}}
-          </div>
-        </div>
-
+        </q-btn>
       </div>
-    </q-card>
-  </div>
+    </div>
+
+    <div class="row borda-superior">
+
+      <!--ENDERECO-->
+      <div class="col-5 q-pa-xs">
+        <div class="text-faded q-caption ellipsis">
+          Endereço
+        </div>
+        <div class="ellipsis">
+          {{localizacao.endereco}}, {{localizacao.numero}}, {{localizacao.complemento}}
+        </div>
+      </div>
+
+      <!--BAIRRO DISTRITO-->
+      <div class="col-2 q-pa-xs borda-esquerda">
+        <div class="text-faded q-caption ellipsis">
+          Bairro / Distrito
+        </div>
+        <div class="ellipsis text-center">
+          {{localizacao.bairro}}
+        </div>
+      </div>
+
+      <!--CEP-->
+      <div class="col-2 q-pa-xs borda-esquerda">
+        <div class="text-faded q-caption ellipsis">
+          CEP
+        </div>
+        <div class="ellipsis text-center">
+          {{formatCEP(localizacao.cep)}}
+        </div>
+      </div>
+
+      <!--ENTRADA SAIDA-->
+      <div class="col-2 q-pa-xs borda-esquerda">
+        <div class="text-faded q-caption ellipsis">
+          Data Entrada/Saída
+        </div>
+        <div class="ellipsis text-center">
+          {{moment(notaFiscal.saida).format('L')}}
+        </div>
+      </div>
+
+      <div class="col-1">
+        &nbsp
+      </div>
+
+    </div>
+
+    <div class="row borda-superior">
+
+      <!--MUNICIPIO-->
+      <div class="col-4 q-pa-xs">
+        <div class="text-faded q-caption ellipsis">
+          Município
+        </div>
+        <div class="ellipsis">
+          {{localizacao.cidade.nome}}
+        </div>
+      </div>
+
+      <!--ESTADO SIGLA-->
+      <div class="col-1 q-pa-xs borda-esquerda">
+        <div class="text-faded q-caption ellipsis">
+          UF
+        </div>
+        <div class="ellipsis text-center">
+          {{localizacao.cidade.estado.sigla}}
+        </div>
+      </div>
+
+      <!--FONE FAX-->
+      <div class="col-2 q-pa-xs borda-esquerda">
+        <div class="text-faded q-caption ellipsis">
+          Fone / Fax
+        </div>
+        <div class="ellipsis text-center">
+          {{localizacao.fone}}
+        </div>
+      </div>
+
+      <!--INSCRICAO ESTADUAL-->
+      <div class="col-2 q-pa-xs borda-esquerda">
+        <div class="text-faded q-caption ellipsis">
+          Inscrição Estadual
+        </div>
+        <div class="ellipsis text-center">
+          {{localizacao.inscricao_estadual}}
+        </div>
+      </div>
+
+      <!--HORA ENTRADA SAIDA-->
+      <div class="col-2 q-pa-xs borda-esquerda">
+        <div class="text-faded q-caption ellipsis">
+          Hora da Saída/Entrada
+        </div>
+        <div class="ellipsis text-center">
+          {{moment(notaFiscal.saida).format('LTS')}}
+        </div>
+      </div>
+
+      <div class="col-1 ">
+        &nbsp
+      </div>
+
+    </div>
+
+    <nota-fiscal-localizacao-form-modal ref="notaFiscalLocalizacaoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+
+  </q-card>
 </template>
 
 <script>
+  import notaFiscalLocalizacaoFormModal from './NotaFiscalLocalizacaoFormModal'
   export default {
     name: "notaFiscalLocalizacao",
-
+    components: {
+      notaFiscalLocalizacaoFormModal
+    },
     data(){
       return {
       }
@@ -164,6 +194,15 @@
       },
       formatCEP(cpf){
         return cpf.replace(/(\d{5})(\d{3})/, "$1-$2");
+      },
+      notaFiscalAtualizada(notaFiscal) {
+        this.$emit('atualizada', notaFiscal);
+      },
+      editNotaFiscalLocalizacao(item){
+        this.$refs.notaFiscalLocalizacaoFormModal.edit(item)
+      },
+      deleteNotaFiscalLocalizacao(item){
+        this.$refs.notaFiscalLocalizacaoFormModal.delete(item)
       },
     },
 

@@ -44,11 +44,11 @@
       </div>
 
       <!--NEGOCIO CULTURAS & NEGOCIO CULTURA FIXAÇOES-->
-      <div class="col-12" v-for="(negocioCultura, index) in negocio.culturas" :key="negocioCultura.id">
+      <div class="col-12" v-for="(negocioCultura, index) in negocio.negocios_culturas" :key="negocioCultura.id">
         <q-card class="full-height">
 
           <q-card-title>
-            {{negocioCultura.safra_cultura}}
+            {{negocioCultura.safra_cultura.cultura.nome}}
             <span v-if="negocioCultura.is_safrinha">Safrinha</span>
             {{negocioCultura.safra}}
             <q-btn slot="right" flat dense icon="more_vert" round>
@@ -65,7 +65,7 @@
             <div class="row gutter-sm" >
 
               <!--NEGOCIO CULTURAS-->
-              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="negocio.culturas.fixacoes || negocioCultura.quantidade || negocioCultura.observacoes">
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-if="negocio.negocios_culturas.fixacoes || negocioCultura.quantidade || negocioCultura.observacoes">
                 <div class="row gutter-xs text-faded">
 
                   <div class="col-12 q-caption" v-if="negocioCultura.quantidade">
@@ -73,7 +73,7 @@
                     <q-progress :percentage="negocioCultura.quantidade_entregue / negocioCultura.quantidade * 100" height="6px" color="blue" animate stripe/>
                   </div>
 
-                  <div class="col-12  q-caption" v-if="negocio.culturas.fixacoes">
+                  <div class="col-12  q-caption" v-if="negocio.negocios_culturas.fixacoes">
                     Fixações
                     <q-progress :percentage="negocioCultura.fixacao_porcentagem"  height="6px" color="blue" animate stripe/>
                   </div>
@@ -101,7 +101,7 @@
                     <span class="text-faded" v-if="negocioCultura.quantidade >0">
                       de {{ numeral(negocioCultura.quantidade).format('0,0') }}
                     </span>
-                     {{negocioCultura.unidade_medida.sigla}}
+                     {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
                     <template v-if="negocioCultura.prazo_entrega_inicial">
                       <span class="text-faded">entre</span> {{ moment(negocioCultura.prazo_entrega_inicial).format('DD/MMM') }}
                       <span class="text-faded">e</span> {{ moment(negocioCultura.prazo_entrega_final).format('DD/MMM/YYYY') }}.
@@ -131,27 +131,48 @@
                           <q-list no-border>
                             <q-item class="q-body-1">
                               <q-item-main>
-                                Total
+                                <div class="row">
+                                  <div class="col-4">
+                                    Total
+                                  </div>
+                                  <div class="col-4">
+                                    {{ numeral(negocioCultura.quantidade).format('0,0') }} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
+                                  </div>
+                                  <div class="col-4">
+                                    {{ numeral(negocioCultura.quantidade_preco).format('0,0') }} {{negocioCultura.safra_cultura.unidade_medida_preco.sigla}}
+                                  </div>
+                                </div>
                               </q-item-main>
-                              <q-item-side right>
-                                {{ numeral(negocioCultura.quantidade).format('0,0') }} {{negocioCultura.unidade_medida.sigla}}
-                              </q-item-side>
                             </q-item>
-                            <q-item v-for="armazem in negocioCultura.armazens" :key="armazem.id" class="q-body-1">
+                            <q-item class="q-body-1" v-for="armazem in negocioCultura.armazens" :key="armazem.id" >
                               <q-item-main>
-                                {{armazem.nome}}
+                                <div class="row">
+                                  <div class="col-4">
+                                    {{armazem.nome}}
+                                  </div>
+                                  <div class="col-4">
+                                    {{numeral(armazem.quantidade_entrega).format('0,0')}} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
+                                  </div>
+                                  <div class="col-4">
+                                    {{numeral(armazem.quantidade_entrega_preco).format('0,0')}} {{negocioCultura.safra_cultura.unidade_medida_preco.sigla}}
+                                  </div>
+                                </div>
                               </q-item-main>
-                              <q-item-side right>
-                                {{numeral(armazem.quantidade_entrega).format('0,0')}} {{negocioCultura.unidade_medida.sigla}}
-                              </q-item-side>
                             </q-item>
                             <q-item class="q-body-1">
                               <q-item-main>
-                                Saldo
+                                <div class="row">
+                                  <div class="col-4">
+                                    Saldo
+                                  </div>
+                                  <div class="col-4">
+                                    {{numeral(negocioCultura.saldo).format('0,0')}} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
+                                  </div>
+                                  <div class="col-4">
+                                    {{numeral(negocioCultura.saldo_preco).format('0,0')}} {{negocioCultura.safra_cultura.unidade_medida_preco.sigla}}
+                                  </div>
+                                </div>
                               </q-item-main>
-                              <q-item-side right>
-                                {{numeral(negocioCultura.saldo).format('0,0')}} {{negocioCultura.unidade_medida.sigla}}
-                              </q-item-side>
                             </q-item>
                           </q-list>
                         </q-tab-pane>
@@ -630,6 +651,7 @@
       getNegocioById(){
         this.$q.loading.show();
         this.negocioService.getNegocioById(this.$route.params.id, true).then(negocio => {
+          console.log('getNegocioById', negocio)
           this.negocio = negocio;
           this.$q.loading.hide();
         })

@@ -6,7 +6,7 @@
         <q-card-title slot="overlay">
           {{safraCultura.cultura.nome}} {{safraCultura.safra.ano_inicio}}/{{safraCultura.safra.ano_fim}}
           <span slot="subtitle">
-              {{numeral(safraCultura.totals.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}
+              {{numeral(safraCultura.totals.tamanho).format('0,0')}} {{safraCultura.unidade_medida_area.plural}}
             </span>
         </q-card-title>
       </q-card-media>
@@ -15,8 +15,8 @@
       <safra-quantidades
         :safra-cultura-id="safraCultura.id"
         :quantidades="safraCultura.totals"
-        :unidade-area="safraCultura.view_unidade_area"
-        :unidade-medida="safraCultura.view_unidade_medida"
+        :unidade-area="safraCultura.unidade_medida_area"
+        :unidade-medida="safraCultura.unidade_medida_preco"
       />
     </div>
 
@@ -34,7 +34,7 @@
             <div class="q-mb-lg" v-if="$q.screen.lt.md">
               <span class="q-subheading text-weight-medium text-primary uppercase">Diário de Colheita</span>
             </div>
-            <safra-grafico-diario v-if="diario.length > 0" :diario="diario" :unidade-medida="safraCultura.view_unidade_medida" :height="300" :width="100"/>
+            <safra-grafico-diario v-if="diario.length > 0" :diario="diario" :unidade-medida="safraCultura.unidade_medida_area" :height="300" :width="100"/>
             <div v-else class="text-center chart-empty">
               <q-icon name="warning" />
               <span>Nenhuma informação disponível.</span>
@@ -70,7 +70,7 @@
             <div class="q-mb-lg" v-if="$q.screen.lt.md">
               <span class="q-subheading text-weight-medium text-primary uppercase">Entregas Por Armazém</span>
             </div>
-            <safra-grafico-quantidades-por-armazem v-if="armazens.length > 0" :unidade-medida="safraCultura.view_unidade_medida" :armazens="armazens" :height="300" :width="100"/>
+            <safra-grafico-quantidades-por-armazem v-if="armazens.length > 0" :unidade-medida="safraCultura.unidade_medida_preco" :armazens="armazens" :height="300" :width="100"/>
             <div v-else class="text-center chart-empty">
               <q-icon name="warning" />
               <span>Nenhuma informação disponível.</span>
@@ -82,7 +82,7 @@
             <div class="q-mb-lg" v-if="$q.screen.lt.md">
               <span class="q-subheading text-weight-medium text-primary uppercase">Entregas Por Caminhão</span>
             </div>
-            <safra-grafico-quantidades-por-caminhao v-if="caminhoes.length > 0" :unidade-medida="safraCultura.view_unidade_medida" :caminhoes="caminhoes" :height="300" :width="100"/>
+            <safra-grafico-quantidades-por-caminhao v-if="caminhoes.length > 0" :unidade-medida="safraCultura.unidade_medida_preco" :caminhoes="caminhoes" :height="300" :width="100"/>
             <div v-else class="text-center chart-empty">
               <q-icon name="warning" />
               <span>Nenhuma informação disponível.</span>

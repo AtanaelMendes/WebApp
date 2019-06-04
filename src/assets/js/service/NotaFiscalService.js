@@ -95,4 +95,32 @@ export default class NotaFiscalService {
     });
   };
 
+  listSeries(){
+    return new Promise((resolve, reject) => {
+      NotaFiscalSerieAPI.listSeries().then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error);
+      })
+    });
+  };
+
+  getNotaFiscalItemById(id){
+    return new Promise((resolve, reject) => {
+      NotaFiscalAPI.getNotaFiscalItemById(id).then(response => {
+        if(response.status === 200){
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  }
+
 }

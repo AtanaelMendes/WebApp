@@ -201,8 +201,12 @@
 
           <div class="col-xs-12 col-sm-9 col-md-7 col-lg-5 col-xl-3">
             <div class="row gutter-xs">
+              <div class="col-7">
+                <q-datetime v-model="sendEntrega.emissao.value" float-label="Emissão" type="date" align="center" format="DD/MM/YYYY" modal :disable="!hasNotaFiscal"/>
+              </div>
+            </div>
 
-
+            <div class="row gutter-xs">
               <div class="col-7">
                 <q-select v-model="sendEntrega.serieId" float-label="Série" :options="parseNotasFiscaisSeries(notasFiscaisSeries)" @input="changeNumeroSerie()" :disable="!hasNotaFiscal"/>
               </div>
@@ -210,15 +214,9 @@
               <div class="col-5">
                 <q-input type="number" v-model="sendEntrega.notaNumero" float-label="Numero" align="right" :disable="!hasNotaFiscal"/>
               </div>
+            </div>
 
-              <div class="col-7">
-                <q-datetime v-model="sendEntrega.emissao.value" float-label="Emissão" type="date" align="center" format="DD/MM/YYYY" modal :disable="!hasNotaFiscal"/>
-              </div>
-
-              <div class="col-5">
-                <q-select v-model="sendEntrega.unidadeMedidaId" float-label="Unidade" :options="parseUnidadesMedida(unidadesMedida)" align="right" :disable="!hasNotaFiscal"/>
-              </div>
-
+            <div class="row gutter-xs">
               <div class="col-4">
                 <q-input type="number" v-model="sendEntrega.peso" @input="calculaTotal()" float-label="Peso" align="right" :disable="!hasNotaFiscal"/>
               </div>
@@ -230,7 +228,9 @@
               <div class="col-5">
                 <q-input type="number" v-model="sendEntrega.total" @input="calculaValor()" float-label="Total" align="right" :disable="!hasNotaFiscal"/>
               </div>
+            </div>
 
+            <div class="row gutter-xs">
               <div class="col-4">
                 <q-input type="number" v-model="cfopSearchText" float-label="CFOP" @input="getCfopByNumero()" align="center" :disable="!hasNotaFiscal"/>
               </div>
@@ -264,7 +264,6 @@
   import MotoristaService from "../../assets/js/service/motorista/MotoristaService";
   import ArmazemService from "../../assets/js/service/armazem/ArmazemService";
   import NotaFiscalService from "../../assets/js/service/NotaFiscalService";
-  import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
   import EntregaService from "../../assets/js/service/entrega/EntregaService";
   import CfopService from "../../assets/js/service/CfopService";
 
@@ -278,7 +277,6 @@
     data () {
       return {
         entregaService: new EntregaService(),
-        unidadeMedidaService: new UnidadeMedidaService(),
         cfopService: new CfopService(),
         armazemService: new ArmazemService(),
         negocioService: new NegocioService(),
@@ -290,7 +288,6 @@
         negocioCulturas: [],
         armazens: [],
         motoristas: [],
-        unidadesMedida: [],
         selectedNota: null,
         selectedNegocio: null,
         selectedEntrega: null,
@@ -392,7 +389,6 @@
         this.isModalOpened = true;
         this.listNegocioCulturas();
         this.listMotoristas();
-        this.getUnidadesMedida();
         this.listNotasFiscaisSeries()
       },
       closeModal: function(){
@@ -468,7 +464,6 @@
         this.$q.loading.show();
         //this.negocioService.listNegociosCulturasWithoutEmpty().then(negocios => {
         this.negocioService.listNegociosCulturas().then(negocios => {
-          console.log('negocios', negocios);
           this.negocioCulturas = negocios;
           this.$q.loading.hide();
         }).catch(error => {
@@ -667,19 +662,6 @@
       },
       goToNextStep(){
         this.$refs.stepper.next();
-      },
-      getUnidadesMedida:function(){
-        this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
-          this.unidadesMedida = unidades;
-        })
-      },
-      parseUnidadesMedida(unidadesMedida){
-        return unidadesMedida.map(unidade => {
-          return {
-            label: unidade.sigla,
-            value: unidade.id
-          }
-        })
       },
       listNotasFiscaisSeries(){
         this.notaFiscalService.listSeries().then(series => {

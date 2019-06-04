@@ -117,7 +117,7 @@
           </q-card-media>
 
           <q-card-main>
-            {{numeral(talhao.tamanho).format('0,0')}}&nbsp{{talhao.unidade.nome}}
+            {{numeral(talhao.tamanho).format('0,0')}}&nbsp{{talhao.unidade_area.nome}}
           </q-card-main>
 
         </q-card>

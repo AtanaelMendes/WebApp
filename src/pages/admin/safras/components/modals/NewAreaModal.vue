@@ -60,7 +60,7 @@
                     </q-card-media>
 
                     <q-card-main class="q-px-none">
-                      <q-list-header>{{getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).plural}} à serem utilizados</q-list-header>
+                      <q-list-header>{{getUnidadeAreaById(selectedSafraCultura.unidade_medida_area.id).plural}} à serem utilizados</q-list-header>
                       <q-item dense >
                         <div class="row full-width">
                           <div class="col-9 self-center">
@@ -69,7 +69,7 @@
                               :min="0"
                               :max="talhao.tamanho"
                               v-model="getTalhaoById(talhao.id).tamanho"
-                              :label-value="`${getTalhaoById(talhao.id).tamanho} ${getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).sigla}`"
+                              :label-value="`${getTalhaoById(talhao.id).tamanho} ${getUnidadeAreaById(selectedSafraCultura.unidade_medida_area.id).sigla}`"
                             />
                           </div>
                           <div class="col-3 q-pl-sm">
@@ -91,7 +91,7 @@
                               <q-input type="number" align="center" v-model="getTalhaoById(talhao.id).estimativa" />
                             </div>
                             <div class="col-9 self-center">
-                              {{getUnidadeMedidaById(selectedSafraCultura.view_unidade_medida.id).sigla}} por {{getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).nome}}
+                              {{getUnidadeMedidaById(selectedSafraCultura.unidade_medida_preco.id).sigla}} por {{getUnidadeAreaById(selectedSafraCultura.unidade_medida_area.id).nome}}
                             </div>
                           </div>
                         </q-item>
@@ -128,7 +128,7 @@
                   <q-item-main>
                     <div class="row">
                       <div class="col-6">{{talhao.nome}}</div>
-                      <div class="col-6">{{talhao.tamanho}}&nbsp<span class="text-faded q-caption">{{getUnidadeAreaById(selectedSafraCultura.view_unidade_area.id).plural}}</span></div>
+                      <div class="col-6">{{talhao.tamanho}}&nbsp<span class="text-faded q-caption">{{getUnidadeAreaById(selectedSafraCultura.unidade_medida_area.id).plural}}</span></div>
                     </div>
                   </q-item-main>
                 </q-item>

@@ -61,7 +61,7 @@
 
                   {{safraCultura.nome}} {{safra.inicio}}/{{safra.fim}}
                   <span slot="subtitle">
-                  {{safraCultura.tamanho}} {{safraCultura.view_unidade_area.plural}}
+                  {{safraCultura.tamanho}} {{safraCultura.unidade_medida_area.plural}}
                   </span>
                   <q-btn @click.stop round flat dense icon="more_vert" slot="right" color="white">
                     <q-popover>
@@ -86,8 +86,8 @@
                 <safra-quantidades
                   :safra-cultura-id="safraCultura.id"
                   :quantidades="safraCultura.totals"
-                  :unidade-area="safraCultura.view_unidade_area"
-                  :unidade-medida="safraCultura.view_unidade_medida"
+                  :unidade-area="safraCultura.unidade_medida_area"
+                  :unidade-medida="safraCultura.unidade_medida_preco"
                 />
               </q-card-main>
             </q-card>

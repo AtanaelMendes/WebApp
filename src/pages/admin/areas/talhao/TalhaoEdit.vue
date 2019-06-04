@@ -52,7 +52,7 @@
         this.talhao.areaId.value = data.area.id;
         this.talhao.nome.value = data.nome;
         this.talhao.tamanho.value = data.tamanho;
-        this.talhao.unidadeAreaId.value = data.unidade.id
+        this.talhao.unidadeAreaId.value = data.unidade_area.id
       },
       getTalhaoById: function(){
         this.$q.loading.show();

@@ -31,6 +31,13 @@
         <nota-fiscal-form-modal ref="notaFiscalFormModal" @atualizada='notaFiscalAtualizada' @apagada='notaFiscalApagada' @duplicada='notaFiscalAtualizada'/>
         <nota-fiscal-item-form-modal ref="notaFiscalItemFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
         <nota-fiscal-item-cofins-form-modal ref="notaFiscalItemCofinsFormModal" @atualizada='notaFiscalAtualizada'/>
+        <nota-fiscal-item-icms-form-modal ref="notaFiscalItemIcmsFormModal" @atualizada='notaFiscalAtualizada'/>
+        <nota-fiscal-item-pis-form-modal ref="notaFiscalItemPisFormModal" @atualizada='notaFiscalAtualizada'/>
+        <nota-fiscal-item-ipi-form-modal ref="notaFiscalItemIpiFormModal" @atualizada='notaFiscalAtualizada'/>
+        <nota-fiscal-item-imposto-devolucao-form-modal ref="notaFiscalItemImpostoDevolucaoFormModal" @atualizada='notaFiscalAtualizada'/>
+
+        <nota-fiscal-localizacao-form-modal ref="notaFiscalLocalizacaoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+        <nota-fiscal-referenciada-form-modal ref="notaFiscalReferenciadaFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
 
         <!--EMITENTE-->
         <q-card class="q-mb-sm">
@@ -79,7 +86,7 @@
                 </div>
               </div>
 
-              <div class="row">
+              <div class="row" v-if="notaFiscal.numero">
                 <div class="col-12 text-center">
                   Nº {{notaFiscal.numero}}
                 </div>
@@ -177,10 +184,9 @@
         <div class="row text-weight-light q-body-1 q-py-xs">
             Destinatário / Remetente
         </div>
-
-        <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_destinatario" v-if="notaFiscal.nota_fiscal_localizacao_destinatario" />
-        <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_entrega" v-if="notaFiscal.nota_fiscal_localizacao_entrega" />
-        <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_retirada" v-if="notaFiscal.nota_fiscal_localizacao_retirada" />
+        <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_destinatario" @atualizada='notaFiscalAtualizada' v-if="notaFiscal.nota_fiscal_localizacao_destinatario" />
+        <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_entrega" @atualizada='notaFiscalAtualizada' v-if="notaFiscal.nota_fiscal_localizacao_entrega" />
+        <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_retirada" @atualizada='notaFiscalAtualizada' v-if="notaFiscal.nota_fiscal_localizacao_retirada" />
 
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
           Cálculo do Imposto
@@ -686,7 +692,7 @@
                   </div>
                 </div>
 
-                <div class="col-1 borda-esquerda" >
+                <div class="col-2 borda-esquerda" >
                   &nbsp
                 </div>
 
@@ -814,8 +820,9 @@
                   </div>
                 </div>
 
-                <div class="col-1 borda-esquerda">
-                  <q-btn round flat dense icon="more_vert" color="grey-8">
+                <!--BOTOES DE MANUTENCAO-->
+                <div class="col-2 borda-esquerda" align="center">
+                  <q-btn round flat dense icon="more_vert" color="grey-7">
                     <q-popover>
                       <q-list link>
                         <q-item v-close-overlay @click.native="editNotaFiscalItem(item)">
@@ -829,6 +836,7 @@
 
                         <q-item-separator />
 
+                        <!--MANUITENCAO COFINS-->
                         <q-collapsible icon="receipt" label="Cofins" class="cursor-pointer">
                           <q-item v-close-overlay @click.native="addNotaFiscalItemCofins(item.id)" v-if='item.notas_fiscais_itens_cofins.length == 0'>
                             <q-item-side icon="add" />
@@ -846,13 +854,84 @@
                           </template>
                         </q-collapsible>
 
+                        <!--MANUITENCAO ICMS-->
+                        <q-collapsible icon="receipt" label="ICMS" class="cursor-pointer">
+                          <q-item v-close-overlay @click.native="addNotaFiscalItemIcms(item.id)" v-if='item.notas_fiscais_itens_icms.length == 0'>
+                            <q-item-side icon="add" />
+                            <q-item-main label="Adicionar"/>
+                          </q-item>
+                          <template v-for="icms in item.notas_fiscais_itens_icms">
+                            <q-item v-close-overlay @click.native="editNotaFiscalItemIcms(icms)">
+                              <q-item-side icon="edit" />
+                              <q-item-main label="Editar"/>
+                            </q-item>
+                            <q-item v-close-overlay @click.native="deleteNotaFiscalItemIcms(icms)">
+                              <q-item-side icon="delete" />
+                              <q-item-main label="Excluir"/>
+                            </q-item>
+                          </template>
+                        </q-collapsible>
+
+                        <!--MANUTENCAO PIS-->
+                        <q-collapsible icon="receipt" label="PIS" class="cursor-pointer">
+                          <q-item v-close-overlay @click.native="addNotaFiscalItemPis(item.id)" v-if='item.notas_fiscais_itens_pis.length == 0'>
+                            <q-item-side icon="add" />
+                            <q-item-main label="Adicionar"/>
+                          </q-item>
+                          <template v-for="pis in item.notas_fiscais_itens_pis">
+                            <q-item v-close-overlay @click.native="editNotaFiscalItemPis(pis)">
+                              <q-item-side icon="edit" />
+                              <q-item-main label="Editar"/>
+                            </q-item>
+                            <q-item v-close-overlay @click.native="deleteNotaFiscalItemPis(pis)">
+                              <q-item-side icon="delete" />
+                              <q-item-main label="Excluir"/>
+                            </q-item>
+                          </template>
+                        </q-collapsible>
+
+                        <!--MANUTENCAO IPI-->
+                        <q-collapsible icon="receipt" label="IPI" class="cursor-pointer">
+                          <q-item v-close-overlay @click.native="addNotaFiscalItemIpi(item.id)" v-if='item.notas_fiscais_itens_ipi.length == 0'>
+                            <q-item-side icon="add" />
+                            <q-item-main label="Adicionar"/>
+                          </q-item>
+                          <template v-for="ipi in item.notas_fiscais_itens_ipi">
+                            <q-item v-close-overlay @click.native="editNotaFiscalItemIpi(ipi)">
+                              <q-item-side icon="edit" />
+                              <q-item-main label="Editar"/>
+                            </q-item>
+                            <q-item v-close-overlay @click.native="deleteNotaFiscalItemIpi(ipi)">
+                              <q-item-side icon="delete" />
+                              <q-item-main label="Excluir"/>
+                            </q-item>
+                          </template>
+                        </q-collapsible>
+
+                        <!--MANUTENCAO IMPOSTO DEVOLUCAO-->
+                        <q-collapsible icon="receipt" label="Imposto Devolução" class="cursor-pointer">
+                          <q-item v-close-overlay @click.native="addNotaFiscalItemImpostoDevolucao(item.id)" v-if='item.notas_fiscais_itens_impostos_devolucoes.length == 0'>
+                            <q-item-side icon="add" />
+                            <q-item-main label="Adicionar"/>
+                          </q-item>
+                          <template v-for="impostoDevolucao in item.notas_fiscais_itens_impostos_devolucoes">
+                            <q-item v-close-overlay @click.native="editNotaFiscalItemImpostoDevolucao(impostoDevolucao)">
+                              <q-item-side icon="edit" />
+                              <q-item-main label="Editar"/>
+                            </q-item>
+                            <q-item v-close-overlay @click.native="deleteNotaFiscalItemImpostoDevolucao(impostoDevolucao)">
+                              <q-item-side icon="delete" />
+                              <q-item-main label="Excluir"/>
+                            </q-item>
+                          </template>
+                        </q-collapsible>
+
                       </q-list>
                     </q-popover>
                   </q-btn>
                 </div>
               </div>
             </div>
-
 
           </div>
 
@@ -893,13 +972,16 @@
       <!--PAGE STICKY BUTTOMS-->
       <q-page-sticky position="bottom-right" :offset="[35, 35]" >
         <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
+          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalReferenciada()" icon="add">
+            <span class="shadow-2">Nota Fiscal Referênciada</span>
+          </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalItem()" icon="add">
             <span class="shadow-2">Produto</span>
           </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" @click="" icon="add">
             <span class="shadow-2">Transportador</span>
           </q-fab-action>
-          <q-fab-action color="grey-1" text-color="grey-7" @click="" icon="add">
+          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalLocalizacao()" icon="add">
             <span class="shadow-2">Destinatario/Rementente</span>
           </q-fab-action>
         </q-fab>
@@ -919,23 +1001,36 @@
   import apNoResults from 'components/ApNoResults'
 
   import notaFiscalItemFormModal from './components/NotaFiscalItemFormModal'
+  import notaFiscalItemIpiFormModal from './components/NotaFiscalItemIpiFormModal'
+  import notaFiscalItemPisFormModal from './components/NotaFiscalItemPisFormModal'
+  import notaFiscalItemIcmsFormModal from './components/NotaFiscalItemIcmsFormModal'
   import notaFiscalItemCofinsFormModal from './components/NotaFiscalItemCofinsFormModal'
+  import notaFiscalItemImpostoDevolucaoFormModal from './components/NotaFiscalItemImpostoDevolucaoFormModal'
+
   import notaFiscalLocalizacao from './components/NotaFiscalLocalizacao'
+  import notaFiscalLocalizacaoFormModal from './components/NotaFiscalLocalizacaoFormModal'
+  import notaFiscalReferenciadaFormModal from './components/NotaFiscalReferenciadaFormModal'
   import notaFiscalFormModal from './components/NotaFiscalFormModal.vue'
 
   import nfeButtons from 'components/Nfe/NfeButtons'
   import NotaFiscalService from 'assets/js/service/NotaFiscalService'
   import NfeService from 'assets/js/service/NfeService'
   export default {
-    name: "nota-View",
+    name: "notaFiscalView",
     components: {
       toolbar,
       customPage,
       apNoResults,
       nfeButtons,
       notaFiscalItemFormModal,
+      notaFiscalItemIpiFormModal,
+      notaFiscalItemPisFormModal,
+      notaFiscalItemIcmsFormModal,
       notaFiscalItemCofinsFormModal,
+      notaFiscalItemImpostoDevolucaoFormModal,
       notaFiscalLocalizacao,
+      notaFiscalLocalizacaoFormModal,
+      notaFiscalReferenciadaFormModal,
       notaFiscalFormModal,
     },
     watch: { },
@@ -973,7 +1068,7 @@
           this.notaFiscal = notaFiscal;
           return;
         }
-        this.getNotaFiscalById(this.$route.params.id);
+        // this.getNotaFiscalById(this.$route.params.id);
       },
       notaFiscalApagada() {
         this.$router.push({name: 'notas_fiscais'});
@@ -1020,7 +1115,7 @@
         this.$refs.notaFiscalItemFormModal.delete(notaFiscalItem)
       },
 
-      // ntoasFiscaisItensCofins
+      // notasFiscaisItensCofins
       addNotaFiscalItemCofins(notaFiscalItemId){
         this.$refs.notaFiscalItemCofinsFormModal.add(notaFiscalItemId)
       },
@@ -1029,6 +1124,55 @@
       },
       deleteNotaFiscalItemCofins(notaFiscalItemCofins){
         this.$refs.notaFiscalItemCofinsFormModal.delete(notaFiscalItemCofins)
+      },
+
+      // notasFiscaisItensPis
+      addNotaFiscalItemPis(notaFiscalItemId){
+        this.$refs.notaFiscalItemPisFormModal.add(notaFiscalItemId)
+      },
+      editNotaFiscalItemPis(item){
+        this.$refs.notaFiscalItemPisFormModal.edit(item)
+      },
+      deleteNotaFiscalItemPis(item){
+        this.$refs.notaFiscalItemPisFormModal.delete(item)
+      },
+
+      // notaFiscalItemImpostoDevolucao
+      addNotaFiscalItemImpostoDevolucao(notaFiscalItemId){
+        this.$refs.notaFiscalItemImpostoDevolucaoFormModal.add(notaFiscalItemId)
+      },
+      editNotaFiscalItemImpostoDevolucao(item){
+        this.$refs.notaFiscalItemImpostoDevolucaoFormModal.edit(item)
+      },
+      deleteNotaFiscalItemImpostoDevolucao(item){
+        this.$refs.notaFiscalItemImpostoDevolucaoFormModal.delete(item)
+      },
+
+      // notaFiscalItemIcms
+      addNotaFiscalItemIcms(notaFiscalItemId){
+        this.$refs.notaFiscalItemIcmsFormModal.add(notaFiscalItemId)
+      },
+      editNotaFiscalItemIcms(item){
+        this.$refs.notaFiscalItemIcmsFormModal.edit(item)
+      },
+      deleteNotaFiscalItemIcms(item){
+        this.$refs.notaFiscalItemIcmsFormModal.delete(item)
+      },
+
+      // notaFiscalLocalizacao
+      addNotaFiscalLocalizacao(){
+        this.$refs.notaFiscalLocalizacaoFormModal.add()
+      },
+
+      // notaFiscalReferenciada
+      addNotaFiscalReferenciada(){
+        this.$refs.notaFiscalReferenciadaFormModal.add()
+      },
+      editNotaFiscalReferenciada(notaFiscalReferenciada){
+        this.$refs.notaFiscalReferenciadaFormModal.edit(notaFiscalReferenciada)
+      },
+      deleteNotaFiscalReferenciada(notaFiscalReferenciada){
+        this.$refs.notaFiscalReferenciadaFormModal.delete(notaFiscalReferenciada)
       },
 
       backAction: function () {
