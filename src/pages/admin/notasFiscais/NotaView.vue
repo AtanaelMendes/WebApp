@@ -38,6 +38,7 @@
 
         <nota-fiscal-localizacao-form-modal ref="notaFiscalLocalizacaoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
         <nota-fiscal-referenciada-form-modal ref="notaFiscalReferenciadaFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+        <nota-fiscal-forma-pagamento-form-modal ref="notaFiscalFormaPagamentoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
 
         <!--EMITENTE-->
         <q-card class="q-mb-sm">
@@ -975,6 +976,9 @@
           <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalReferenciada()" icon="add">
             <span class="shadow-2">Nota Fiscal Referênciada</span>
           </q-fab-action>
+          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalFormaPagamento()" icon="add">
+            <span class="shadow-2">Forma de Pagamento</span>
+          </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalItem()" icon="add">
             <span class="shadow-2">Produto</span>
           </q-fab-action>
@@ -1007,10 +1011,11 @@
   import notaFiscalItemCofinsFormModal from './components/NotaFiscalItemCofinsFormModal'
   import notaFiscalItemImpostoDevolucaoFormModal from './components/NotaFiscalItemImpostoDevolucaoFormModal'
 
-  import notaFiscalLocalizacao from './components/NotaFiscalLocalizacao'
-  import notaFiscalLocalizacaoFormModal from './components/NotaFiscalLocalizacaoFormModal'
-  import notaFiscalReferenciadaFormModal from './components/NotaFiscalReferenciadaFormModal'
   import notaFiscalFormModal from './components/NotaFiscalFormModal.vue'
+  import notaFiscalLocalizacao from './components/NotaFiscalLocalizacao'
+  import notaFiscalReferenciadaFormModal from './components/NotaFiscalReferenciadaFormModal'
+  import notaFiscalLocalizacaoFormModal from './components/NotaFiscalLocalizacaoFormModal'
+  import notaFiscalFormaPagamentoFormModal from './components/NotaFiscalFormaPagamentoFormModal'
 
   import nfeButtons from 'components/Nfe/NfeButtons'
   import NotaFiscalService from 'assets/js/service/NotaFiscalService'
@@ -1022,16 +1027,17 @@
       customPage,
       apNoResults,
       nfeButtons,
+      notaFiscalFormModal,
+      notaFiscalLocalizacao,
       notaFiscalItemFormModal,
-      notaFiscalItemIpiFormModal,
       notaFiscalItemPisFormModal,
+      notaFiscalItemIpiFormModal,
       notaFiscalItemIcmsFormModal,
       notaFiscalItemCofinsFormModal,
-      notaFiscalItemImpostoDevolucaoFormModal,
-      notaFiscalLocalizacao,
       notaFiscalLocalizacaoFormModal,
       notaFiscalReferenciadaFormModal,
-      notaFiscalFormModal,
+      notaFiscalFormaPagamentoFormModal,
+      notaFiscalItemImpostoDevolucaoFormModal,
     },
     watch: { },
     data(){
@@ -1173,6 +1179,17 @@
       },
       deleteNotaFiscalReferenciada(notaFiscalReferenciada){
         this.$refs.notaFiscalReferenciadaFormModal.delete(notaFiscalReferenciada)
+      },
+
+      // notaFiscalReferenciada
+      addNotaFiscalFormaPagamento(){
+        this.$refs.notaFiscalFormaPagamentoFormModal.add()
+      },
+      editNotaFiscalFormaPagamento(notaFiscalFormaPagamento){
+        this.$refs.notaFiscalFormaPagamentoFormModal.edit(notaFiscalFormaPagamento)
+      },
+      deleteNotaFiscalFormaPagamento(notaFiscalReferenciada){
+        this.$refs.notaFiscalFormaPagamentoFormModal.delete(notaFiscalFormaPagamento)
       },
 
       backAction: function () {
