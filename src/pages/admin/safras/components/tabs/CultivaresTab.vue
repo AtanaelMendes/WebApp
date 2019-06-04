@@ -11,19 +11,19 @@
                 <q-toggle v-model="media" color="secondary" />
                 <template v-if="media">
                   Média
-                  {{safraCultura.view_unidade_medida.sigla}}
-                  por {{safraCultura.view_unidade_area.sigla}}
+                  {{safraCultura.unidade_medida_preco.sigla}}
+                  por {{safraCultura.unidade_medida_area.sigla}}
                 </template>
                 <template v-else>
                   Total de
-                  {{safraCultura.view_unidade_medida.sigla}}
+                  {{safraCultura.unidade_medida_preco.sigla}}
                 </template>
               </div>
               <safra-grafico-quantidades-por-marca
                 :marcas="marcas"
                 :media="media"
-                :unidade-medida="safraCultura.view_unidade_medida"
-                :unidade-area="safraCultura.view_unidade_area"
+                :unidade-medida="safraCultura.unidade_medida_preco"
+                :unidade-area="safraCultura.unidade_medida_area"
                 :height="200"
                 :width="100"
                 v-model="iMarca"
@@ -43,7 +43,7 @@
                           <ap-image size="400x250" :file-name="marca.image_file_name" />
                           <q-card-title slot="overlay">
                             {{marca.nome}}
-                            <span slot="subtitle">{{numeral(marca.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}</span>
+                            <span slot="subtitle">{{numeral(marca.tamanho).format('0,0')}} {{safraCultura.unidade_medida_area.plural}}</span>
                           </q-card-title>
                         </q-card-media>
                       </q-card>
@@ -55,8 +55,8 @@
                   <safra-quantidades
                     :safra-cultura-id="safraCultura.id"
                     :quantidades="marcas[iMarca]"
-                    :unidade-area="safraCultura.view_unidade_area"
-                    :unidade-medida="safraCultura.view_unidade_medida"
+                    :unidade-area="safraCultura.unidade_medida_area"
+                    :unidade-medida="safraCultura.unidade_medida_preco"
                   />
                 </div>
               </div>
@@ -74,8 +74,8 @@
                 :cultivares="cultivares"
                 :marcaId="activeMarca.id"
                 :media="media"
-                :unidade-medida="safraCultura.view_unidade_medida"
-                :unidade-area="safraCultura.view_unidade_area"
+                :unidade-medida="safraCultura.unidade_medida_preco"
+                :unidade-area="safraCultura.unidade_medida_area"
                 :height="200"
                 :width="100"
                 v-model="iCultivar"
@@ -94,7 +94,7 @@
                           <ap-image size="400x250" :file-name="safraCultura.cultura.image_file_name" />
                           <q-card-title slot="overlay">
                             {{activeMarca.nome}} {{cultivar.nome}}
-                            <span slot="subtitle">{{numeral(cultivar.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.plural}}</span>
+                            <span slot="subtitle">{{numeral(cultivar.tamanho).format('0,0')}} {{safraCultura.unidade_medida_area.plural}}</span>
                           </q-card-title>
                         </q-card-media>
                       </q-card>
@@ -106,8 +106,8 @@
                   <safra-quantidades
                     :safra-cultura-id="safraCultura.id"
                     :quantidades="activeCultivar"
-                    :unidade-area="safraCultura.view_unidade_area"
-                    :unidade-medida="safraCultura.view_unidade_medida">
+                    :unidade-area="safraCultura.unidade_medida_area"
+                    :unidade-medida="safraCultura.unidade_medida_preco">
                   </safra-quantidades>
                   <q-item link v-for="talhao in activeCultivar.talhoes" :key="talhao.id" @click.native="goToTalhao(talhao)">
                     <q-item-side v-if="talhao.image_file_name" :image="imageMakeUrl(talhao.image_file_name, '200x125')" color="primary"/>
@@ -119,7 +119,7 @@
                       </q-item-tile>
                       <q-item-tile sublabel>
                         {{numeral(talhao.tamanho * 100 / activeCultivar.tamanho).format('0,0.0')}}%
-                        ({{numeral(talhao.tamanho).format('0,0')}} {{safraCultura.view_unidade_area.sigla}})
+                        ({{numeral(talhao.tamanho).format('0,0')}} {{safraCultura.unidade_medida_area.sigla}})
                       </q-item-tile>
                     </q-item-main>
                   </q-item>

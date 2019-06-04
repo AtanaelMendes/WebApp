@@ -28,11 +28,17 @@
 
         <div class="q-px-lg q-py-sm text-center" v-if="currentNegocioCultura">
           <div style="display: inline-block">
-            <div class="row q-mt-lg text-left">
-              <div class="col-6">
+            <div class="row gutter-x-sm q-mt-lg text-left linha-1">
+              <div class="col-xs-12 col-sm-6 date-container" >
                 <q-datetime v-model="movimento.lancamento" type="datetime" label="Lançamento"
                             align="center" modal format="DD/MM/YYYY HH:mm"
                             :min="lancamentoMinDate" :max="lancamentoMaxDate"/>
+              </div>
+              <div class="col-xs-12 col-sm-6 toggle-container" style="align-self: center;text-align: center;">
+                <q-btn-toggle inverted size="sm"
+                              toggle-color="primary"
+                              v-model="quantidadeTipo"
+                              :options="[{label: 'Entrada', value: 0},{label: 'Saída', value: 1}]"/>
               </div>
             </div>
 
@@ -42,23 +48,23 @@
               </div>
             </div>
 
-            <div class="row justify-center q-mt-sm">
-              <div class="col-xs-12 col-sm-6">
-                <q-input v-model="movimento.quantidade"
-                         stack-label="Quantidade"
-                         clearable align="right"
-                         :suffix="currentNegocioCultura.unidade_medida.sigla"
-                         type="number" min="1" @blur="checkQuantidadeValue"
-                />
+            <q-field label="Quantidade" orientation="vertical" class="q-mt-sm">
+              <div class="row gutter-x-sm justify-center linha-3 ">
+                <div class="col-xs-12 col-sm-6 kg-container">
+                  <q-input v-model="quantidadeEmQuilograma"
+                           suffix="Kg" align="right"
+                           type="number" min="1" @blur="checkQuantidadeEmQuilograma"
+                  />
+                </div>
+
+                <div class="col-xs-12 col-sm-6 sc-container">
+                  <q-input v-model="quantidadeEmSaca"
+                           suffix="SC60" align="right"
+                           type="number" min="1" @blur="checkQuantidadeEmSaca"
+                  />
+                </div>
               </div>
-              <div class="col-xs-12 col-sm-6" style="align-self: center;">
-                <q-btn-toggle inverted size="sm"
-                              toggle-color="primary"
-                              v-model="quantidadeTipo"
-                              :options="[{label: 'Entrada', value: 0},{label: 'Saída', value: 1}]"
-                />
-              </div>
-            </div>
+            </q-field>
           </div>
         </div>
       </q-carousel-slide>
@@ -84,6 +90,14 @@
       apModal,
     },
     watch:{
+      quantidadeEmSaca(){
+        this.quantidadeEmQuilograma = this.quantidadeEmSaca * 60;
+        this.movimento.quantidade = this.quantidadeEmQuilograma;
+      },
+      quantidadeEmQuilograma(){
+        this.quantidadeEmSaca = this.quantidadeEmQuilograma / 60;
+        this.movimento.quantidade = this.quantidadeEmQuilograma;
+      }
     },
     data(){
       return {
@@ -97,6 +111,8 @@
         lancamentoMaxDate: null,
         lancamentoMinDate: null,
         quantidadeTipo: 0,
+        quantidadeEmSaca: 0,
+        quantidadeEmQuilograma: 0,
         movimento: {
           quantidade: null,
           movimentoTipoId: null,
@@ -131,6 +147,8 @@
         this.movimento.quantidade = null;
         this.movimento.movimentoTipoId = null;
         this.movimento.descricao = null;
+        this.quantidadeEmSaca = 0;
+        this.quantidadeEmQuilograma = 0;
       },
       selectTipoMovimento(tipoId){
         this.movimento.movimentoTipoId = tipoId;
@@ -153,9 +171,14 @@
           return true;
         }
       },
-      checkQuantidadeValue(){
-        if(this.movimento.quantidade < 1){
-          this.movimento.quantidade = 1;
+      checkQuantidadeEmSaca(){
+        if(this.quantidadeEmSaca < 0){
+          this.quantidadeEmSaca = 0;
+        }
+      },
+      checkQuantidadeEmQuilograma(){
+        if(this.quantidadeEmQuilograma < 0){
+          this.quantidadeEmQuilograma = 0;
         }
       },
       async listTiposMovimento(){
@@ -184,6 +207,7 @@
             this.$q.notify({type: 'negative', message: 'Preencha as informações corretamente'});
             return
           }
+
           let params = {
             armazem_id: this.currentArmazemId,
             movimento_tipo_id: this.movimento.movimentoTipoId,
@@ -243,4 +267,20 @@
     background: #005f5f;
     color: white;
   }
+
+
+  @media (max-width: 575px) {
+    .q-modal-layout .linha-1 .date-container {
+      order:2;
+    }
+
+    .q-modal-layout .linha-1 .toggle-container {
+      order:1;
+      margin-bottom: 16px;
+    }
+    .q-modal-layout .linha-3 .kg-container {
+      margin-bottom: 16px;
+    }
+  }
+
 </style>

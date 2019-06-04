@@ -7,7 +7,6 @@ export default class{
   serieId = null;
   notaNumero = null;
   peso = null;
-  unidadeMedidaId = null;
   valor = null;
   total = null;
   cfopId = null;
@@ -28,9 +27,6 @@ export default class{
       hasError = true;
     }
     if (!helpers.req(this.peso)) {
-      hasError = true;
-    }
-    if (!helpers.req(this.unidadeMedidaId)) {
       hasError = true;
     }
     if (!helpers.req(this.valor)) {
@@ -60,7 +56,6 @@ export default class{
         nota_fiscal_serie_id: this.serieId,
         numero: this.notaNumero,
         peso: this.peso,
-        unidade_medida_id: this.unidadeMedidaId,
         valor_unitario: this.valor,
         valor_total: this.total,
         cfop_id: this.cfopId,

@@ -25,7 +25,6 @@ export default class{
     value: null,
     errorMessage: null
   };
-  unidadeMedidaId = null;
   entregaClassificacao = [];
   isValid(){
     let hasError = false;
@@ -44,9 +43,6 @@ export default class{
     if(!helpers.req(this.pesoBrutoProduto.value)){
       hasError = true;
     }
-    if(!helpers.req(this.unidadeMedidaId)){
-      hasError = true;
-    }
     return !hasError;
   };
   getValues(){
@@ -60,7 +56,6 @@ export default class{
       peso_desconto: this.entregaClassificacao.reduce(function (accumulator, classificacao) {
         return accumulator + classificacao.peso_desconto.value;
       }, 0),
-      unidade_medida_id: this.unidadeMedidaId,
       classificacoes: this.entregaClassificacao.map(function(classificacao){
         return {
           classificacao_id: classificacao.classificacao_id,

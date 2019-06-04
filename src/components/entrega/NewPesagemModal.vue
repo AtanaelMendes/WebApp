@@ -18,17 +18,23 @@
             <div class="row q-mb-lg">
               <div class="col-8 q-pr-lg ">
 
-                  <q-input class="q-mb-none" type="number" v-model="pesagem.pesoBrutoTotal.value" align="right"
-                           float-label="Peso bruto total" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>
+                  <!--<q-input class="q-mb-none" type="number" v-model="pesagem.pesoBrutoTotal.value" align="right"
+                           float-label="Peso bruto total" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>-->
+                <q-input class="q-mb-none" type="number" v-model="pesagem.pesoBrutoTotal.value" align="right"
+                         float-label="Peso bruto total" />
 
               </div>
-              <q-select class="col-4 q-pt-none" v-model="pesagem.unidadeMedidaId"  :options="parseUnidadesMedida(unidadesMedida)" align="right"/>
             </div>
 
-            <custom-input-text type="number" :model="pesagem.pesoTara" align="right"
+            <!--<custom-input-text type="number" :model="pesagem.pesoTara" align="right"
                                label="Peso tara" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>
             <custom-input-text type="number" :model="pesoBrutoProduto" disabled="true" align="right"
-                               label="Peso produto" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>
+                               label="Peso produto" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>-->
+
+            <custom-input-text type="number" :model="pesagem.pesoTara" align="right"
+                               label="Peso tara" />
+            <custom-input-text type="number" :model="pesoBrutoProduto" disabled="true" align="right"
+                               label="Peso produto" />
           </div>
         </div>
       </q-step>
@@ -68,16 +74,18 @@
 
                 <div class="col-3">
                   <!--<custom-input-text suffix="KG" align="right" type="number":model="classificacao.peso_desconto"/>-->
-                  <q-input :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)" align="right" type="number" v-model="classificacao.peso_desconto.value" />
+                  <q-input align="right" type="number" v-model="classificacao.peso_desconto.value" />
                 </div>
 
               </div>
 
               <div class="col-12 text-right">
-                Total Descontos {{totalDesc}} {{getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)}}
+                <!--Total Descontos {{totalDesc}} {{getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)}}-->
+                Total Descontos {{totalDesc}}
               </div>
               <div class="col-12 text-right">
-                Total Líquido {{totalLiquido}} {{getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)}}
+                <!--Total Líquido {{totalLiquido}} {{getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)}}-->
+                Total Líquido {{totalLiquido}}
               </div>
             </div>
           </div>
@@ -99,8 +107,6 @@
   import Pesagem from 'assets/js/model/entrega/Pesagem'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
-  import { debounce } from 'quasar'
-  import UnidadeMedidaService from "../../assets/js/service/UnidadeMedidaService";
   import CulturaClassificacaoService from "../../assets/js/service/cultura/CulturaClassificacaoService";
   import PesagemService from "../../assets/js/service/entrega/PesagemService";
   export default {
@@ -113,13 +119,11 @@
       return {
         pesagemService: new PesagemService(),
         culturaClassificacaoService: new CulturaClassificacaoService(),
-        unidadeMedidaService: new UnidadeMedidaService(),
         currentStep: 'dadosDaEntrega',
         pesagem: new Pesagem(),
         isModalOpened: false,
         entrega: null,
         errorValue: '',
-        unidadesMedida: [],
       }
     },
     watch: {},
@@ -148,8 +152,6 @@
         this.currentStep = 'dadosDaEntrega';
         this.listClassificacoesByCultura(entrega.negocios[0].negocio_cultura.safra_cultura.cultura.id);
         this.entrega = entrega;
-        this.getUnidadesMedida();
-        this.pesagem.unidadeMedidaId = entrega.negocios[0].negocio_cultura.safra_cultura.cultura.default_unidade_pesagem_id;
       },
       closeModal: function(){
         this.isModalOpened = false;
@@ -216,30 +218,6 @@
         }else{
           this.$refs.stepper.next();
         }
-      },
-      getUnidadesMedida:function(){
-        this.$q.loading.show();
-        this.unidadeMedidaService.listUnidadesMedida().then(unidades => {
-          this.unidadesMedida = unidades;
-          this.$q.loading.hide();
-        }).catch(error => {
-          this.$q.loading.hide();
-        })
-      },
-      getUnidadeMedidaById:function(id){
-        return this.unidadesMedida.filter(unidade => unidade.id === id)[0];
-      },
-      getUnidadeMedidaSiglaById:function(id){
-        let unidadeMedida = this.getUnidadeMedidaById(id);
-        return unidadeMedida ? unidadeMedida.sigla : '';
-      },
-      parseUnidadesMedida:function(unidadesMedida){
-        return unidadesMedida.map(unidade => {
-          return {
-            label: unidade.sigla,
-            value: unidade.id
-          }
-        })
       },
       listClassificacoesByCultura(cultura_id){
         this.$q.loading.show();

@@ -2,8 +2,12 @@
   <ap-modal ref="editCulturaModal" title="Editar Cultura" :visible="isModalOpened" @hide="closeModal">
 
     <div slot="content" class="q-mx-lg q-mb-lg" v-if="safraCultura && unidadesMedida && unidadesArea">
-      <q-select key="qtd" v-model="safraCultura.view_unidade_medida.id" :options="parsedUnidades(unidadesMedida)" float-label="Controlar quantidades em"/>
-      <q-select key="area" v-model="safraCultura.view_unidade_area.id" :options="parsedUnidades(unidadesArea)" float-label="Mostrar área em"/>
+        <q-select key="pesagem" v-model="safraCultura.unidade_medida_pesagem.id" :options="parsedUnidades(unidadesMedida)" float-label="Unidade de pesagem"/>
+
+        <q-select key="preco" v-model="safraCultura.unidade_medida_preco.id" :options="parsedUnidades(unidadesMedida)" float-label="Unidade de preço"/>
+
+        <q-select key="area" v-model="safraCultura.unidade_medida_area.id" :options="parsedUnidades(unidadesArea)" float-label="Unidade de área"/>
+
     </div>
 
     <div slot="footer" class="text-right">
@@ -67,8 +71,9 @@
           this.safraCultura.safra.id,
           this.safraCultura.id,
           {
-            view_unidade_medida_id:this.safraCultura.view_unidade_medida.id,
-            view_unidade_area_id: this.safraCultura.view_unidade_area.id
+            unidade_medida_pesagem_id:this.safraCultura.unidade_medida_pesagem.id,
+            unidade_medida_preco_id:this.safraCultura.unidade_medida_preco.id,
+            unidade_medida_area_id: this.safraCultura.unidade_medida_area.id
           }
         ).then(() => {
           this.$q.notify({type: 'positive', message: 'Cultura atualizada com sucesso!'});

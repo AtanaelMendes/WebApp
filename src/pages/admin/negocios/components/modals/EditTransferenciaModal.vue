@@ -43,7 +43,7 @@
                       <span v-if="negocioCultura.negocio.quantidade">
                     de {{numeral(negocioCultura.negocio.quantidade).format('0,0')}}
                   </span>
-                      {{negocioCultura.negocio.unidade_medida.sigla}}
+                      <!--{{negocioCultura.negocio.unidade_medida.sigla}}-->
                     </q-item-tile>
 
                   </q-item-main>
@@ -92,19 +92,23 @@
               </div>
             </div>
 
-            <div class="row justify-center q-mt-sm">
-              <div class="col-12">
-                <q-field>
-                  <q-input v-model="transferencia.quantidade"
-                           stack-label="Quantidade"
-                           clearable align="right"
-                           :suffix="currentNegocioCultura.unidade_medida.sigla"
-                           type="number" min="1" :max="currentNegocioCultura.quantidade_entregue"
-                           @blur="checkQuantidadeValue"
+            <q-field label="Quantidade" orientation="vertical" class="q-mt-sm">
+              <div class="row gutter-x-sm justify-center linha-3 ">
+                <div class="col-xs-12 col-sm-6 kg-container">
+                  <q-input v-model="quantidadeEmQuilograma"
+                           suffix="Kg" align="right"
+                           type="number" min="1" :max="currentNegocioCultura.quantidade_entregue" @blur="checkQuantidadeEmQuilograma"
                   />
-                </q-field>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 sc-container">
+                  <q-input v-model="quantidadeEmSaca"
+                           suffix="SC60" align="right"
+                           type="number" min="1" :max="currentNegocioCultura.quantidade_entregue / 60" @blur="checkQuantidadeEmSaca"
+                  />
+                </div>
               </div>
-            </div>
+            </q-field>
           </div>
         </div>
       </q-carousel-slide>
@@ -132,6 +136,24 @@
     components: {
       apModal,
     },
+    watch:{
+      quantidadeEmSaca(){
+        this.quantidadeEmQuilograma = this.quantidadeEmSaca * 60;
+        this.transferencia.quantidade = this.quantidadeEmQuilograma;
+      },
+      quantidadeEmQuilograma(){
+        this.quantidadeEmSaca = this.quantidadeEmQuilograma / 60;
+        this.transferencia.quantidade = this.quantidadeEmQuilograma;
+      },
+      searchNegociosQuery: function(value){
+        this.transferencia.negocioCulturaDestinoId = null;
+        if(value === ""){
+          this.negociosCulturas = null;
+        }else{
+          this.searchNegocios(value);
+        }
+      }
+    },
     data(){
       return {
         negocioService: new NegocioService(),
@@ -144,21 +166,13 @@
         isSearching: false,
         lancamentoMaxDate: null,
         lancamentoMinDate: null,
+        quantidadeEmSaca: 0,
+        quantidadeEmQuilograma: 0,
         transferencia: {
           quantidade: null,
           negocioCulturaDestinoId: null,
           lancamento: null,
           descricao: null,
-        }
-      }
-    },
-    watch: {
-      searchNegociosQuery: function(value){
-        this.transferencia.negocioCulturaDestinoId = null;
-        if(value === ""){
-          this.negociosCulturas = null;
-        }else{
-          this.searchNegocios(value);
         }
       }
     },
@@ -185,10 +199,17 @@
         this.transferencia.quantidade = null;
         this.transferencia.negocioCulturaDestinoId = null;
         this.transferencia.descricao = null;
+        this.quantidadeEmSaca = 0;
+        this.quantidadeEmQuilograma = 0;
       },
-      checkQuantidadeValue(){
-        if(this.transferencia.quantidade > this.currentNegocioCultura.quantidade_entregue){
-          this.transferencia.quantidade = this.currentNegocioCultura.quantidade_entregue;
+      checkQuantidadeEmSaca(){
+        if(this.quantidadeEmSaca > this.currentNegocioCultura.quantidade_entregue / 60){
+          this.quantidadeEmSaca = this.currentNegocioCultura.quantidade_entregue / 60;
+        }
+      },
+      checkQuantidadeEmQuilograma(){
+        if(this.quantidadeEmQuilograma > this.currentNegocioCultura.quantidade_entregue){
+          this.quantidadeEmQuilograma = this.currentNegocioCultura.quantidade_entregue;
         }
       },
       selectNegocioCulturaDestino(negocioCulturaId){
@@ -220,11 +241,12 @@
         this.negocioService.getMovimento(id).then(movimento => {
           this.currentMovimento = movimento;
 
-          this.searchNegocios(movimento.transferencia.negocio_cultura_destino.negocio.pessoa.nome);
-          this.transferencia.negocioCulturaDestinoId = movimento.transferencia.negocio_cultura_destino.id;
+          this.searchNegocios(movimento.transferencia.negocio_cultura_armazem_destino.negocio_cultura.negocio.pessoa.nome);
+          this.transferencia.negocioCulturaDestinoId = movimento.transferencia.negocio_cultura_armazem_destino.negocio_cultura.id;
           this.transferencia.quantidade = movimento.transferencia.quantidade;
           this.transferencia.lancamento = movimento.transferencia.lancamento;
           this.transferencia.descricao = movimento.transferencia.descricao;
+          this.quantidadeEmQuilograma = this.transferencia.quantidade;
         });
       },
       updateTransferencia(){
