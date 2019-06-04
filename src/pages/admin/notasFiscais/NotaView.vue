@@ -6,15 +6,15 @@
         <q-btn icon="more_vert" flat round>
           <q-popover>
             <q-list link>
-              <q-item v-close-overlay @click.native="editarNotaFiscal(notaFiscal)">
+              <q-item v-close-overlay @click.native="editNotaFiscal(notaFiscal)">
                 <q-item-side icon="edit" />
                 <q-item-main label="Editar"/>
               </q-item>
-              <q-item v-close-overlay @click.native="duplicarNotaFiscal(notaFiscal.id)">
+              <q-item v-close-overlay @click.native="duplicarNotaFiscal(notaFiscal)">
                 <q-item-side icon="file_copy" />
                 <q-item-main label="Duplicar"/>
               </q-item>
-              <q-item v-close-overlay @click.native="excluirNotaFiscal(notaFiscal.id)">
+              <q-item v-close-overlay @click.native="deleteNotaFiscal(notaFiscal)">
                 <q-item-side icon="delete" />
                 <q-item-main label="Excluir"/>
               </q-item>
@@ -28,6 +28,7 @@
     <div class="row q-pa-md gutter-sm space-end">
 
       <div class="col-12" v-if="notaFiscal">
+        <nota-fiscal-form-modal ref="notaFiscalFormModal" @atualizada='notaFiscalAtualizada' @apagada='notaFiscalApagada' @duplicada='notaFiscalAtualizada'/>
         <nota-fiscal-item-form-modal ref="notaFiscalItemFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
         <nota-fiscal-item-cofins-form-modal ref="notaFiscalItemCofinsFormModal" @atualizada='notaFiscalAtualizada'/>
 
@@ -43,7 +44,7 @@
               </div>
 
               <div class="row q-pb-sm">
-                <div class="col-12 text-center" v-for="contato in notaFiscal.nota_fiscal_serie.pessoa.contatos" :key="contato.id">
+                <div class="col-12 text-center" v-for="contato in notaFiscal.pessoa.contatos" :key="contato.id">
                   <div class="row">
                     <div class="col-12" v-for="telefone in contato.telefones" :key="telefone.numero">
                       {{telefone.numero}}
@@ -53,10 +54,10 @@
               </div>
 
               <div class="row">
-                <!-- <div class="col-12 text-center" v-for="localizacao in notaFiscal.nota_fiscal_serie.pessoa.localizacoes" :key="localizacao.id">
+                <div class="col-12 text-center" v-for="localizacao in notaFiscal.pessoa.localizacoes" :key="localizacao.id">
                   {{localizacao.endereco}}, {{localizacao.numero}} - {{localizacao.complemento}} - {{localizacao.cep}},
                   {{localizacao.cidade.nome}} - {{localizacao.cidade.estado.sigla}}
-                </div> -->
+                </div>
               </div>
             </div>
 
@@ -83,7 +84,7 @@
                   Nº {{notaFiscal.numero}}
                 </div>
                 <div class="col-12 text-center">
-                  Série {{notaFiscal.nota_fiscal_serie.serie}}
+                  Série {{notaFiscal.serie}}
                 </div>
               </div>
 
@@ -96,6 +97,7 @@
                   </div>
                   <div class="row">
                     <div class="col-12 text-center ellipsis">
+                      {{notaFiscal.id}} -
                       {{notaFiscal.chave}}
                       &nbsp;
                     </div>
@@ -144,7 +146,7 @@
                 Inscrição Estadual
               </div>
               <div class="text-center">
-                {{notaFiscal.nota_fiscal_serie.pessoa.inscricao_estadual}}
+                {{notaFiscal.pessoa.inscricao_estadual}}
               </div>
             </div>
             <!--<div class="col-4 borda-esquerda q-pa-xs">-->
@@ -160,11 +162,11 @@
                 CNPJ / CPF
               </div>
               <div class="text-center">
-                <span v-if="notaFiscal.nota_fiscal_serie.pessoa.cpf">
-                  {{formatCPF(notaFiscal.nota_fiscal_serie.pessoa.cpf)}}
+                <span v-if="notaFiscal.pessoa.cpf">
+                  {{formatCPF(notaFiscal.pessoa.cpf)}}
                 </span>
-                <span v-if="notaFiscal.nota_fiscal_serie.pessoa.cnpj">
-                  {{formatCPF(notaFiscal.nota_fiscal_serie.pessoa.cnpj)}}
+                <span v-if="notaFiscal.pessoa.cnpj">
+                  {{formatCPF(notaFiscal.pessoa.cnpj)}}
                 </span>
               </div>
             </div>
@@ -908,9 +910,6 @@
       </div>
     </div>
 
-    <edit-nota-fiscal-modal ref="editNotaFiscalModal"/>
-
-
   </custom-page>
 </template>
 
@@ -919,10 +918,10 @@
   import customPage from 'components/CustomPage.vue'
   import apNoResults from 'components/ApNoResults'
 
-  import editNotaFiscalModal from './components/EditNotaFiscalModal'
   import notaFiscalItemFormModal from './components/NotaFiscalItemFormModal'
   import notaFiscalItemCofinsFormModal from './components/NotaFiscalItemCofinsFormModal'
   import notaFiscalLocalizacao from './components/NotaFiscalLocalizacao'
+  import notaFiscalFormModal from './components/NotaFiscalFormModal.vue'
 
   import nfeButtons from 'components/Nfe/NfeButtons'
   import NotaFiscalService from 'assets/js/service/NotaFiscalService'
@@ -934,10 +933,10 @@
       customPage,
       apNoResults,
       nfeButtons,
-      editNotaFiscalModal,
       notaFiscalItemFormModal,
       notaFiscalItemCofinsFormModal,
       notaFiscalLocalizacao,
+      notaFiscalFormModal,
     },
     watch: { },
     data(){
@@ -976,6 +975,9 @@
         }
         this.getNotaFiscalById(this.$route.params.id);
       },
+      notaFiscalApagada() {
+        this.$router.push({name: 'notas_fiscais'});
+      },
       formatCEP(cpf){
         return cpf.replace(/(\d{5})(\d{3})/, "$1-$2");
       },
@@ -984,31 +986,6 @@
       },
       formatCNPJ(cnpj){
         return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
-      },
-      editarNotaFiscal(nf){
-        this.$refs.editNotaFiscalModal.openModal(nf)
-      },
-      duplicarNotaFiscal(id){
-        this.$q.loading.show();
-        this.notaFiscalService.duplicarNotaFiscal(id).then(nf => {
-          this.$q.loading.hide();
-          this.$router.push({name: 'view_nota_fiscal', params: {id: nf.id}});
-          this.getNotaFiscalById(nf.id);
-        }).catch(error=>{
-          this.$q.loading.hide();
-          // console.log('errou', error)
-          // this.$q.notify({type: 'negative', message: error.response})
-        })
-      },
-      excluirNotaFiscal(id){
-        this.$q.loading.show();
-        this.notaFiscalService.excluirNotaFiscal(id).then( () => {
-          this.$q.loading.hide();
-          this.backAction();
-        }).catch( error =>{
-          this.$q.loading.hide();
-          this.$q.notify({type: 'negative', message: error.response.data})
-        })
       },
       getNotaFiscalById: function(notaFiscalId) {
         this.$q.loading.show();
@@ -1021,26 +998,37 @@
         })
       },
 
+      // NotaFiscal
+      editNotaFiscal(notaFiscal){
+        this.$refs.notaFiscalFormModal.edit(notaFiscal)
+      },
+      deleteNotaFiscal(notaFiscal){
+        this.$refs.notaFiscalFormModal.delete(notaFiscal)
+      },
+      duplicarNotaFiscal(notaFiscal){
+        this.$refs.notaFiscalFormModal.duplicar(notaFiscal)
+      },
+
       // notasFiscaisItens
       addNotaFiscalItem(){
         this.$refs.notaFiscalItemFormModal.add()
       },
-      editNotaFiscalItem(item){
-        this.$refs.notaFiscalItemFormModal.edit(item)
+      editNotaFiscalItem(notaFiscalItem){
+        this.$refs.notaFiscalItemFormModal.edit(notaFiscalItem)
       },
-      deleteNotaFiscalItem(item){
-        this.$refs.notaFiscalItemFormModal.delete(item)
+      deleteNotaFiscalItem(notaFiscalItem){
+        this.$refs.notaFiscalItemFormModal.delete(notaFiscalItem)
       },
 
       // ntoasFiscaisItensCofins
       addNotaFiscalItemCofins(notaFiscalItemId){
         this.$refs.notaFiscalItemCofinsFormModal.add(notaFiscalItemId)
       },
-      editNotaFiscalItemCofins(item){
-        this.$refs.notaFiscalItemCofinsFormModal.edit(item)
+      editNotaFiscalItemCofins(notaFiscalItemCofins){
+        this.$refs.notaFiscalItemCofinsFormModal.edit(notaFiscalItemCofins)
       },
-      deleteNotaFiscalItemCofins(item){
-        this.$refs.notaFiscalItemCofinsFormModal.delete(item)
+      deleteNotaFiscalItemCofins(notaFiscalItemCofins){
+        this.$refs.notaFiscalItemCofinsFormModal.delete(notaFiscalItemCofins)
       },
 
       backAction: function () {

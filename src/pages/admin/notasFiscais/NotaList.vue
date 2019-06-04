@@ -135,7 +135,6 @@
         // this.$router.push({name: 'add_pessoa'});
       },
       add: function(){
-        console.log(this.$typesService.descriptionByKey('INSCRICAO_ESTADUAL_INDICADOR', 'ISENTO'))
         this.$refs.notaFiscalFormModal.add()
       },
     },

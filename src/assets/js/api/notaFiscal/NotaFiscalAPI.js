@@ -13,4 +13,7 @@ export default class NotaFiscalAPI{
   static listNotasFiscaisWithFilter(filter){
     return Vue.prototype.$axios.get('/nota_fiscal' + (filter ? "?"+filter : ''));
   }
+  static duplicar(notaFiscalId){
+    return Vue.prototype.$axios.post('/nota_fiscal/'+ notaFiscalId + '/duplicar');
+  }
 }
