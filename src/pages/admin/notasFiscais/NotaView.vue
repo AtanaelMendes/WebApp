@@ -153,7 +153,12 @@
                 Inscrição Estadual
               </div>
               <div class="text-center">
+                {{notaFiscal.pessoa.inscricao_estadual_indicador}}
                 {{notaFiscal.pessoa.inscricao_estadual}}
+                <div>
+                  teste
+                  <ap-select-type type="INSCRICAO_ESTADUAL_INDICADOR" v-model="notaFiscal.pessoa.inscricao_estadual_indicador"/>
+                </div>
               </div>
             </div>
             <!--<div class="col-4 borda-esquerda q-pa-xs">-->
@@ -998,7 +1003,9 @@
 <script>
   import toolbar from 'components/Toolbar.vue'
   import customPage from 'components/CustomPage.vue'
+
   import apNoResults from 'components/ApNoResults'
+  import apSelectType from 'components/form/ApSelectType'
 
   import notaFiscalItemFormModal from './components/NotaFiscalItemFormModal'
   import notaFiscalItemIpiFormModal from './components/NotaFiscalItemIpiFormModal'
@@ -1021,6 +1028,7 @@
       toolbar,
       customPage,
       apNoResults,
+      apSelectType,
       nfeButtons,
       notaFiscalItemFormModal,
       notaFiscalItemIpiFormModal,

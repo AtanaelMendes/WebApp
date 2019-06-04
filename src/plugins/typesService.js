@@ -1,6 +1,6 @@
-import TypesService from "../assets/js/service/utils/TypesService";
+import TypeService from "../assets/js/service/utils/TypeService";
 
 export default ({ Vue }) => {
-  var ts = new TypesService ();
-  Vue.prototype.$typesService = ts;
+  var ts = new TypeService ();
+  Vue.prototype.$typeService = ts;
 }
