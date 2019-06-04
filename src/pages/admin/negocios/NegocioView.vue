@@ -101,7 +101,7 @@
                     <span class="text-faded" v-if="negocioCultura.quantidade >0">
                       de {{ numeral(negocioCultura.quantidade).format('0,0') }}
                     </span>
-                     {{negocioCultura.unidade_medida.sigla}}
+                     {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
                     <template v-if="negocioCultura.prazo_entrega_inicial">
                       <span class="text-faded">entre</span> {{ moment(negocioCultura.prazo_entrega_inicial).format('DD/MMM') }}
                       <span class="text-faded">e</span> {{ moment(negocioCultura.prazo_entrega_final).format('DD/MMM/YYYY') }}.
@@ -651,6 +651,7 @@
       getNegocioById(){
         this.$q.loading.show();
         this.negocioService.getNegocioById(this.$route.params.id, true).then(negocio => {
+          console.log('getNegocioById', negocio)
           this.negocio = negocio;
           this.$q.loading.hide();
         })
