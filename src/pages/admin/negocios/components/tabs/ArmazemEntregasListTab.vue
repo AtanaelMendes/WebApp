@@ -12,15 +12,15 @@
 
             <q-item style="padding-right: unset">
               <q-item-main class="row">
-                <div class="col-1 table-header">
+                <div class="col-1 table-header text-center">
                   Data
                 </div>
 
-                <div class="col-1 table-header">
+                <div class="col-1 table-header text-right">
                   Quantidade
                 </div>
 
-                <div class="col-1 table-header">
+                <div class="col-1 table-header text-center">
                   Tipo
                 </div>
 
@@ -33,16 +33,16 @@
                     </div>
                     <div class="col-9">
                       <div class="row">
-                        <div class="col-3 table-header">
+                        <div class="col-3 table-header text-center">
                           Ticket
                         </div>
-                        <div class="col-3 table-header">
+                        <div class="col-3 table-header text-right">
                           Bruto
                         </div>
-                        <div class="col-3 table-header">
+                        <div class="col-3 table-header text-right">
                           Desconto
                         </div>
-                        <div class="col-3 table-header">
+                        <div class="col-3 table-header text-right">
                           Líquido
                         </div>
                       </div>
@@ -116,7 +116,7 @@
                     <div class="col-9">
                       <div class="row " v-for="pesagem in movimento.entrega.entregas_pesagens">
                         <div class="col-3 text-center table-cell">
-                          {{pesagem.numero_ticket}} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
+                          {{pesagem.numero_ticket}}
                         </div>
                         <div class="col-3 text-right table-cell">
                           {{pesagem.peso_bruto_produto}} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
@@ -354,7 +354,6 @@
     font-weight: 500;
     font-size: 12px;
     user-select: none;
-    text-align: center;
   }
   .table-cell{
     font-size: 13px;
