@@ -40,6 +40,19 @@
       <div class="col-1 borda-esquerda">
         <q-btn icon="more_vert" color="grey-7" flat round class="float-right">
 
+          <q-popover>
+            <q-list link>
+              <q-item v-close-overlay @click.native="editNotaFiscalLocalizacao(localizacao)">
+                <q-item-side icon="edit" />
+                <q-item-main label="Editar"/>
+              </q-item>
+              <q-item v-close-overlay @click.native="deleteNotaFiscalLocalizacao(localizacao)">
+                <q-item-side icon="delete" />
+                <q-item-main label="Excluir"/>
+              </q-item>
+            </q-list>
+          </q-popover>
+
         </q-btn>
       </div>
     </div>
@@ -150,13 +163,18 @@
 
     </div>
 
+    <nota-fiscal-localizacao-form-modal ref="notaFiscalLocalizacaoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+
   </q-card>
 </template>
 
 <script>
+  import notaFiscalLocalizacaoFormModal from './NotaFiscalLocalizacaoFormModal'
   export default {
     name: "notaFiscalLocalizacao",
-
+    components: {
+      notaFiscalLocalizacaoFormModal
+    },
     data(){
       return {
       }
@@ -176,6 +194,15 @@
       },
       formatCEP(cpf){
         return cpf.replace(/(\d{5})(\d{3})/, "$1-$2");
+      },
+      notaFiscalAtualizada(notaFiscal) {
+        this.$emit('atualizada', notaFiscal);
+      },
+      editNotaFiscalLocalizacao(item){
+        this.$refs.notaFiscalLocalizacaoFormModal.edit(item)
+      },
+      deleteNotaFiscalLocalizacao(item){
+        this.$refs.notaFiscalLocalizacaoFormModal.delete(item)
       },
     },
 

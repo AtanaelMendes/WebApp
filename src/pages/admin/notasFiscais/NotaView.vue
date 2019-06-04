@@ -181,9 +181,9 @@
         <div class="row text-weight-light q-body-1 q-py-xs">
             Destinatário / Remetente
         </div>
-        <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_destinatario" v-if="notaFiscal.nota_fiscal_localizacao_destinatario" />
-        <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_entrega" v-if="notaFiscal.nota_fiscal_localizacao_entrega" />
-        <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_retirada" v-if="notaFiscal.nota_fiscal_localizacao_retirada" />
+        <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_destinatario" @atualizada='notaFiscalAtualizada' v-if="notaFiscal.nota_fiscal_localizacao_destinatario" />
+        <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_entrega" @atualizada='notaFiscalAtualizada' v-if="notaFiscal.nota_fiscal_localizacao_entrega" />
+        <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_retirada" @atualizada='notaFiscalAtualizada' v-if="notaFiscal.nota_fiscal_localizacao_retirada" />
 
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
           Cálculo do Imposto
@@ -817,8 +817,9 @@
                   </div>
                 </div>
 
+                <!--BOTOES DE MANUTENCAO-->
                 <div class="col-2 borda-esquerda" align="center">
-                  <q-btn round flat dense icon="more_vert" color="grey-8">
+                  <q-btn round flat dense icon="more_vert" color="grey-7">
                     <q-popover>
                       <q-list link>
                         <q-item v-close-overlay @click.native="editNotaFiscalItem(item)">
@@ -1064,7 +1065,7 @@
           this.notaFiscal = notaFiscal;
           return;
         }
-        this.getNotaFiscalById(this.$route.params.id);
+        // this.getNotaFiscalById(this.$route.params.id);
       },
       formatCEP(cpf){
         return cpf.replace(/(\d{5})(\d{3})/, "$1-$2");
@@ -1168,12 +1169,6 @@
       // notaFiscalLocalizacao
       addNotaFiscalLocalizacao(notaFiscalItemId){
         this.$refs.notaFiscalLocalizacaoFormModal.add(notaFiscalItemId)
-      },
-      editNotaFiscalLocalizacao(item){
-        this.$refs.notaFiscalLocalizacaoFormModal.edit(item)
-      },
-      deleteNotaFiscalLocalizacao(item){
-        this.$refs.notaFiscalLocalizacaoFormModal.delete(item)
       },
 
       backAction: function () {
