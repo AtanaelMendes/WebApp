@@ -36,6 +36,7 @@
         <nota-fiscal-item-imposto-devolucao-form-modal ref="notaFiscalItemImpostoDevolucaoFormModal" @atualizada='notaFiscalAtualizada'/>
 
         <nota-fiscal-localizacao-form-modal ref="notaFiscalLocalizacaoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+        <nota-fiscal-referenciada-form-modal ref="notaFiscalReferenciadaFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
 
         <!--EMITENTE-->
         <q-card class="q-mb-sm">
@@ -969,6 +970,9 @@
       <!--PAGE STICKY BUTTOMS-->
       <q-page-sticky position="bottom-right" :offset="[35, 35]" >
         <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
+          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalReferenciada()" icon="add">
+            <span class="shadow-2">Nota Fiscal Referênciada</span>
+          </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalItem()" icon="add">
             <span class="shadow-2">Produto</span>
           </q-fab-action>
@@ -1007,6 +1011,7 @@
 
   import notaFiscalLocalizacao from './components/NotaFiscalLocalizacao'
   import notaFiscalLocalizacaoFormModal from './components/NotaFiscalLocalizacaoFormModal'
+  import notaFiscalReferenciadaFormModal from './components/NotaFiscalReferenciadaFormModal'
 
   import nfeButtons from 'components/Nfe/NfeButtons'
   import NotaFiscalService from 'assets/js/service/NotaFiscalService'
@@ -1029,6 +1034,7 @@
 
       notaFiscalLocalizacao,
       notaFiscalLocalizacaoFormModal,
+      notaFiscalReferenciadaFormModal,
     },
     watch: { },
     data(){
@@ -1167,8 +1173,19 @@
       },
 
       // notaFiscalLocalizacao
-      addNotaFiscalLocalizacao(notaFiscalItemId){
-        this.$refs.notaFiscalLocalizacaoFormModal.add(notaFiscalItemId)
+      addNotaFiscalLocalizacao(){
+        this.$refs.notaFiscalLocalizacaoFormModal.add()
+      },
+
+      // notaFiscalReferenciada
+      addNotaFiscalReferenciada(){
+        this.$refs.notaFiscalReferenciadaFormModal.add()
+      },
+      editNotaFiscalReferenciada(notaFiscalReferenciada){
+        this.$refs.notaFiscalReferenciadaFormModal.edit(notaFiscalReferenciada)
+      },
+      deleteNotaFiscalReferenciada(notaFiscalReferenciada){
+        this.$refs.notaFiscalReferenciadaFormModal.delete(notaFiscalReferenciada)
       },
 
       backAction: function () {
