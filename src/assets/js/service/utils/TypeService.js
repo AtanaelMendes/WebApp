@@ -14,7 +14,7 @@ export default class TypeService{
 
   all () {
     return new Promise((resolve, reject) => {
-      TypesAPI.all().then((response) => {
+      TypeAPI.all().then((response) => {
         store.state.type = response.data;
       }).catch(error => {
         reject(error);

@@ -153,6 +153,7 @@
             <div class="col-6 q-pa-xs">
               <div class="text-faded q-caption ellipsis">
                 Inscrição Estadual
+                <ap-label-type type="INSCRICAO_ESTADUAL_INDICADOR" v-model="notaFiscal.pessoa.inscricao_estadual_indicador"/>
               </div>
               <div class="text-center">
                 {{notaFiscal.pessoa.inscricao_estadual_indicador}}
@@ -1014,6 +1015,7 @@
 
   import apNoResults from 'components/ApNoResults'
   import apSelectType from 'components/form/ApSelectType'
+  import apLabelType from 'components/form/ApLabelType'
 
   import notaFiscalItemFormModal from './components/NotaFiscalItemFormModal'
   import notaFiscalItemIpiFormModal from './components/NotaFiscalItemIpiFormModal'
@@ -1039,6 +1041,7 @@
       customPage,
       apNoResults,
       apSelectType,
+      apLabelType,
       nfeButtons,
       notaFiscalFormModal,
       notaFiscalLocalizacao,
