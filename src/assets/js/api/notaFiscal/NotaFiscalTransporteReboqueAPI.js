@@ -8,6 +8,6 @@ export default class NotaFiscalTransporteReboqueAPI{
     return Vue.prototype.$axios.put('/nota_fiscal_transporte_reboque/'+ id, params);
   }
   static delete(id){
-    return Vue.prototype.$axios.delete('/nota_fiscal_transnota_fiscal_transporte_reboqueporte/'+ id);
+    return Vue.prototype.$axios.delete('/nota_fiscal_transporte_reboque/'+ id);
   }
 }

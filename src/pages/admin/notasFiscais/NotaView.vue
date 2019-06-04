@@ -50,6 +50,7 @@
         <nota-fiscal-item-ipi-form-modal ref="notaFiscalItemIpiFormModal" @atualizada='notaFiscalAtualizada'/>
         <nota-fiscal-item-imposto-devolucao-form-modal ref="notaFiscalItemImpostoDevolucaoFormModal" @atualizada='notaFiscalAtualizada'/>
 
+        <nota-fiscal-transporte-volume-form-modal ref="notaFiscalTransporteVolumeFormModal" @atualizada='notaFiscalAtualizada'/>
         <nota-fiscal-transporte-reboque-form-modal ref="notaFiscalTransporteReboqueFormModal" @atualizada='notaFiscalAtualizada'/>
         <nota-fiscal-transporte-form-modal ref="notaFiscalTransporteFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
 
@@ -504,6 +505,26 @@
                         </q-item>
                       </template>
                     </q-collapsible>
+
+                    <!--MANUITENCAO VOLUME-->
+                    <q-collapsible icon="shopping_basket" label="Volume" class="cursor-pointer">
+                      <q-item v-close-overlay @click.native="addNotaFiscalTransporteVolume(transporte.id)" v-if='transporte.notas_fiscais_transportes_volumes.length == 0'>
+                        <q-item-side icon="add" />
+                        <q-item-main label="Adicionar"/>
+                      </q-item>
+                      <template v-for="volume in transporte.notas_fiscais_transportes_volumes">
+                        <q-item v-close-overlay @click.native="editNotaFiscalTransporteVolume(volume)">
+                          <q-item-side icon="edit" />
+                          <q-item-main label="Editar"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="deleteNotaFiscalTransporteVolume(volume)">
+                          <q-item-side icon="delete" />
+                          <q-item-main label="Excluir"/>
+                        </q-item>
+                      </template>
+                    </q-collapsible>
+
+
                   </q-list>
                 </q-popover>
               </q-btn>
@@ -1073,6 +1094,7 @@
   import notaFiscalItemImpostoDevolucaoFormModal from './components/NotaFiscalItemImpostoDevolucaoFormModal'
 
   import notaFiscalTransporteFormModal from './components/NotaFiscalTransporteFormModal'
+  import notaFiscalTransporteVolumeFormModal from './components/NotaFiscalTransporteVolumeFormModal'
   import notaFiscalTransporteReboqueFormModal from './components/NotaFiscalTransporteReboqueFormModal'
 
   import notaFiscalFormModal from './components/NotaFiscalFormModal.vue'
@@ -1106,6 +1128,7 @@
       notaFiscalLocalizacaoFormModal,
       notaFiscalReferenciadaFormModal,
       notaFiscalFormaPagamentoFormModal,
+      notaFiscalTransporteVolumeFormModal,
       notaFiscalTransporteReboqueFormModal,
       notaFiscalItemImpostoDevolucaoFormModal,
     },
@@ -1293,6 +1316,17 @@
       },
       deleteNotaFiscalTransporteReboque(notaFiscalTransporteReboque){
         this.$refs.notaFiscalTransporteReboqueFormModal.delete(notaFiscalTransporteReboque)
+      },
+
+      // notaFiscalTransporteVolume
+      addNotaFiscalTransporteVolume(notaFiscalTransporteId){
+        this.$refs.notaFiscalTransporteVolumeFormModal.add(notaFiscalTransporteId)
+      },
+      editNotaFiscalTransporteVolume(notaFiscalTransporteVolume){
+        this.$refs.notaFiscalTransporteVolumeFormModal.edit(notaFiscalTransporteVolume)
+      },
+      deleteNotaFiscalTransporteVolume(notaFiscalTransporteVolume){
+        this.$refs.notaFiscalTransporteVolumeFormModal.delete(notaFiscalTransporteVolume)
       },
 
       backAction: function () {
