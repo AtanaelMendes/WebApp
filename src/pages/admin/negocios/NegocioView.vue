@@ -131,27 +131,48 @@
                           <q-list no-border>
                             <q-item class="q-body-1">
                               <q-item-main>
-                                Total
+                                <div class="row">
+                                  <div class="col-4">
+                                    Total
+                                  </div>
+                                  <div class="col-4">
+                                    {{ numeral(negocioCultura.quantidade).format('0,0') }} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
+                                  </div>
+                                  <div class="col-4">
+                                    {{ numeral(negocioCultura.quantidade_preco).format('0,0') }} {{negocioCultura.safra_cultura.unidade_medida_preco.sigla}}
+                                  </div>
+                                </div>
                               </q-item-main>
-                              <q-item-side right>
-                                {{ numeral(negocioCultura.quantidade).format('0,0') }} {{negocioCultura.unidade_medida.sigla}}
-                              </q-item-side>
                             </q-item>
-                            <q-item v-for="armazem in negocioCultura.armazens" :key="armazem.id" class="q-body-1">
+                            <q-item class="q-body-1" v-for="armazem in negocioCultura.armazens" :key="armazem.id" >
                               <q-item-main>
-                                {{armazem.nome}}
+                                <div class="row">
+                                  <div class="col-4">
+                                    {{armazem.nome}}
+                                  </div>
+                                  <div class="col-4">
+                                    {{numeral(armazem.quantidade_entrega).format('0,0')}} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
+                                  </div>
+                                  <div class="col-4">
+                                    {{numeral(armazem.quantidade_entrega_preco).format('0,0')}} {{negocioCultura.safra_cultura.unidade_medida_preco.sigla}}
+                                  </div>
+                                </div>
                               </q-item-main>
-                              <q-item-side right>
-                                {{numeral(armazem.quantidade_entrega).format('0,0')}} {{negocioCultura.unidade_medida.sigla}}
-                              </q-item-side>
                             </q-item>
                             <q-item class="q-body-1">
                               <q-item-main>
-                                Saldo
+                                <div class="row">
+                                  <div class="col-4">
+                                    Saldo
+                                  </div>
+                                  <div class="col-4">
+                                    {{numeral(negocioCultura.saldo).format('0,0')}} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
+                                  </div>
+                                  <div class="col-4">
+                                    {{numeral(negocioCultura.saldo_preco).format('0,0')}} {{negocioCultura.safra_cultura.unidade_medida_preco.sigla}}
+                                  </div>
+                                </div>
                               </q-item-main>
-                              <q-item-side right>
-                                {{numeral(negocioCultura.saldo).format('0,0')}} {{negocioCultura.unidade_medida.sigla}}
-                              </q-item-side>
                             </q-item>
                           </q-list>
                         </q-tab-pane>
