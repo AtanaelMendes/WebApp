@@ -50,7 +50,6 @@
             </div>
           </div>
         </div>
-      </div>
       <div class="q-pa-sm text-right" slot="footer">
         <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm"/>
         <q-btn flat label="Salvar"   color="primary"  @click="save"  key="edit"/>

@@ -36,6 +36,7 @@
         <nota-fiscal-item-ipi-form-modal ref="notaFiscalItemIpiFormModal" @atualizada='notaFiscalAtualizada'/>
         <nota-fiscal-item-imposto-devolucao-form-modal ref="notaFiscalItemImpostoDevolucaoFormModal" @atualizada='notaFiscalAtualizada'/>
 
+        <nota-fiscal-duplicata-form-modal ref="notaFiscalDuplicataFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
         <nota-fiscal-localizacao-form-modal ref="notaFiscalLocalizacaoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
         <nota-fiscal-referenciada-form-modal ref="notaFiscalReferenciadaFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
         <nota-fiscal-forma-pagamento-form-modal ref="notaFiscalFormaPagamentoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
@@ -979,6 +980,9 @@
           <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalFormaPagamento()" icon="add">
             <span class="shadow-2">Forma de Pagamento</span>
           </q-fab-action>
+          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalDuplicata()" icon="add">
+            <span class="shadow-2">Duplicatas</span>
+          </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalItem()" icon="add">
             <span class="shadow-2">Produto</span>
           </q-fab-action>
@@ -1013,8 +1017,9 @@
 
   import notaFiscalFormModal from './components/NotaFiscalFormModal.vue'
   import notaFiscalLocalizacao from './components/NotaFiscalLocalizacao'
-  import notaFiscalReferenciadaFormModal from './components/NotaFiscalReferenciadaFormModal'
+  import notaFiscalDuplicataFormModal from './components/NotaFiscalDuplicataFormModal.vue'
   import notaFiscalLocalizacaoFormModal from './components/NotaFiscalLocalizacaoFormModal'
+  import notaFiscalReferenciadaFormModal from './components/NotaFiscalReferenciadaFormModal'
   import notaFiscalFormaPagamentoFormModal from './components/NotaFiscalFormaPagamentoFormModal'
 
   import nfeButtons from 'components/Nfe/NfeButtons'
@@ -1033,6 +1038,7 @@
       notaFiscalItemPisFormModal,
       notaFiscalItemIpiFormModal,
       notaFiscalItemIcmsFormModal,
+      notaFiscalDuplicataFormModal,
       notaFiscalItemCofinsFormModal,
       notaFiscalLocalizacaoFormModal,
       notaFiscalReferenciadaFormModal,
@@ -1181,15 +1187,26 @@
         this.$refs.notaFiscalReferenciadaFormModal.delete(notaFiscalReferenciada)
       },
 
-      // notaFiscalReferenciada
+      // notaFiscalFormaPagamento
       addNotaFiscalFormaPagamento(){
         this.$refs.notaFiscalFormaPagamentoFormModal.add()
       },
       editNotaFiscalFormaPagamento(notaFiscalFormaPagamento){
         this.$refs.notaFiscalFormaPagamentoFormModal.edit(notaFiscalFormaPagamento)
       },
-      deleteNotaFiscalFormaPagamento(notaFiscalReferenciada){
+      deleteNotaFiscalFormaPagamento(notaFiscalFormaPagamento){
         this.$refs.notaFiscalFormaPagamentoFormModal.delete(notaFiscalFormaPagamento)
+      },
+
+      // notaFiscalDuplicata
+      addNotaFiscalDuplicata(){
+        this.$refs.notaFiscalDuplicataFormModal.add()
+      },
+      editNotaFiscalDuplicata(notaFiscalDuplicata){
+        this.$refs.notaFiscalDuplicataFormModal.edit(notaFiscalDuplicata)
+      },
+      deleteNotaFiscalDuplicata(notaFiscalDuplicata){
+        this.$refs.notaFiscalDuplicataFormModal.delete(notaFiscalDuplicata)
       },
 
       backAction: function () {
