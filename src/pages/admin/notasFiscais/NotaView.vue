@@ -51,6 +51,7 @@
         <nota-fiscal-item-imposto-devolucao-form-modal ref="notaFiscalItemImpostoDevolucaoFormModal" @atualizada='notaFiscalAtualizada'/>
 
         <nota-fiscal-duplicata-form-modal ref="notaFiscalDuplicataFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+        <nota-fiscal-transporte-form-modal ref="notaFiscalTransporteFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
         <nota-fiscal-localizacao-form-modal ref="notaFiscalLocalizacaoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
         <nota-fiscal-referenciada-form-modal ref="notaFiscalReferenciadaFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
         <nota-fiscal-forma-pagamento-form-modal ref="notaFiscalFormaPagamentoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
@@ -408,7 +409,7 @@
             <div class="row" :key="transporte.id">
 
               <!--NOME RAZAO SOCIAL-->
-              <div class="col-4 q-pa-xs">
+              <div class="col-3 q-pa-xs">
                 <div class="text-faded q-caption ellipsis">
                   Nome / Razão Social
                 </div>
@@ -468,6 +469,23 @@
                 <div class="ellipsis text-center" v-if="transporte.cpf">
                   {{formatCPF(transporte.cpf)}}
                 </div>
+              </div>
+
+              <div class="col-1 borda-esquerda">
+                <q-btn icon="more_vert" color="grey-7" flat round class="float-right">
+                  <q-popover>
+                    <q-list link>
+                      <q-item v-close-overlay @click.native="editNotaFiscalTransporte(transporte)">
+                        <q-item-side icon="edit" />
+                        <q-item-main label="Editar"/>
+                      </q-item>
+                      <q-item v-close-overlay @click.native="deleteNotaFiscalTransporte(transporte)">
+                        <q-item-side icon="delete" />
+                        <q-item-main label="Excluir"/>
+                      </q-item>
+                    </q-list>
+                  </q-popover>
+                </q-btn>
               </div>
 
             </div>
@@ -997,6 +1015,9 @@
           <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalDuplicata()" icon="add">
             <span class="shadow-2">Duplicatas</span>
           </q-fab-action>
+          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalTransporte()" icon="add">
+            <span class="shadow-2">Transporte</span>
+          </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalItem()" icon="add">
             <span class="shadow-2">Produto</span>
           </q-fab-action>
@@ -1034,8 +1055,9 @@
 
   import notaFiscalFormModal from './components/NotaFiscalFormModal.vue'
   import notaFiscalLocalizacao from './components/NotaFiscalLocalizacao'
-  import notaFiscalDuplicataFormModal from './components/NotaFiscalDuplicataFormModal.vue'
+  import notaFiscalTransporteFormModal from './components/NotaFiscalTransporteFormModal'
   import notaFiscalLocalizacaoFormModal from './components/NotaFiscalLocalizacaoFormModal'
+  import notaFiscalDuplicataFormModal from './components/NotaFiscalDuplicataFormModal.vue'
   import notaFiscalReferenciadaFormModal from './components/NotaFiscalReferenciadaFormModal'
   import notaFiscalFormaPagamentoFormModal from './components/NotaFiscalFormaPagamentoFormModal'
 
@@ -1058,6 +1080,7 @@
       notaFiscalItemIpiFormModal,
       notaFiscalItemIcmsFormModal,
       notaFiscalDuplicataFormModal,
+      notaFiscalTransporteFormModal,
       notaFiscalItemCofinsFormModal,
       notaFiscalLocalizacaoFormModal,
       notaFiscalReferenciadaFormModal,
@@ -1226,6 +1249,17 @@
       },
       deleteNotaFiscalDuplicata(notaFiscalDuplicata){
         this.$refs.notaFiscalDuplicataFormModal.delete(notaFiscalDuplicata)
+      },
+
+      // notaFiscalTransporte
+      addNotaFiscalTransporte(){
+        this.$refs.notaFiscalTransporteFormModal.add()
+      },
+      editNotaFiscalTransporte(notaFiscalTransporte){
+        this.$refs.notaFiscalTransporteFormModal.edit(notaFiscalTransporte)
+      },
+      deleteNotaFiscalTransporte(notaFiscalTransporte){
+        this.$refs.notaFiscalTransporteFormModal.delete(notaFiscalTransporte)
       },
 
       backAction: function () {
