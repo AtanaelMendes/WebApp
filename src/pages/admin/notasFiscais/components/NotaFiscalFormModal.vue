@@ -114,7 +114,6 @@
 
       // limpa dados do formulario
       newNotaFiscal(notaFiscalItemId){
-        console.log(notaFiscalItemId);
         this.notaFiscal = {
           nota_fiscal_serie_id: null,
           numero: null,
@@ -170,6 +169,18 @@
         })
       },
 
+      duplicar: function(notaFiscal) {
+        this.notaFiscal = Object.assign({}, notaFiscal);
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja duplicar esta Nota Fiscal?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(() =>{
+          this.duplicarNotaFiscal()
+        })
+      },
+
       // fecha o modal e limpa formulario
       close: function(){
         this.isModalOpened = false;
@@ -218,13 +229,28 @@
         this.notaFiscalService.delete(this.notaFiscal.id).then((response) => {
           this.$q.loading.hide();
           this.$q.notify({type: 'positive', message: 'Nota Fiscal excluida com sucesso!'});
-          this.$emit('atualizada', response.data);
+          this.$emit('apagada');
           this.close();
         }).catch(error => {
           this.$q.loading.hide();
           this.$q.notify({type: 'negative', message: error.response.data.message});
         });
       },
+
+      // duplicar
+      duplicarNotaFiscal(id){
+        this.$q.loading.show();
+        this.notaFiscalService.duplicar(this.notaFiscal.id).then(response => {
+          this.$q.loading.hide();
+          this.$q.notify({type: 'positive', message: 'Nota Fiscal duplicada com sucesso!'});
+          this.$emit('duplicada', response.data);
+          this.$router.push({name: 'view_nota_fiscal', params: {id: response.data.id}});
+        }).catch(error=>{
+          this.$q.loading.hide();
+          this.$q.notify({type: 'negative', message: error.response.data.message});
+        })
+      },
+
 
     }
   }

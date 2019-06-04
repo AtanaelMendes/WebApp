@@ -72,13 +72,8 @@
 
     methods: {
 
-      teste() {
-        console.log('aqui');
-      },
-
       // limpa dados do formulario
       newNotaFiscalItemCofins(notaFiscalItemId){
-        console.log(notaFiscalItemId);
         this.notaFiscalItemCofins = {
           nota_fiscal_item_id: notaFiscalItemId,
           cst: null,

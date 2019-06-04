@@ -22,9 +22,9 @@ export default class NotaFiscalService {
     });
   };
 
-  update(itemId, params) {
+  update(NotaFiscalId, params) {
     return new Promise((resolve, reject) => {
-      NotaFiscalAPI.update(itemId, params).then(response => {
+      NotaFiscalAPI.update(NotaFiscalId, params).then(response => {
         resolve(response);
       }).catch(error => {
         reject(error);
@@ -32,14 +32,25 @@ export default class NotaFiscalService {
     });
   };
 
-  delete(itemId) {
+  delete(NotaFiscalId) {
     return new Promise((resolve, reject) => {
-      NotaFiscalAPI.delete(itemId).then(response => {
+      NotaFiscalAPI.delete(NotaFiscalId).then(response => {
         resolve(response);
       }).catch(error => {
         reject(error);
       })
     });
   };
+
+  duplicar(NotaFiscalId) {
+    return new Promise((resolve, reject) => {
+      NotaFiscalAPI.duplicar(NotaFiscalId).then(response => {
+        resolve(response);
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  };
+
 
 }

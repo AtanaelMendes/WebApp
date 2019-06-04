@@ -55,15 +55,6 @@ export default class NotaFiscalService {
       })
     });
   };
-  duplicarNotaFiscal(notaFiscalId) {
-    return new Promise((resolve, reject) => {
-      NotaFiscalAPI.duplicarNotaFiscal(notaFiscalId).then(response => {
-          resolve(response.data);
-      }).catch(error => {
-        reject(error)
-      })
-    });
-  };
   excluirNotaFiscal(notaFiscalId) {
     return new Promise((resolve, reject) => {
       NotaFiscalAPI.excluirNotaFiscal(notaFiscalId).then(response => {
