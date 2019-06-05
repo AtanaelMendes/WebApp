@@ -341,6 +341,7 @@
             this.stepMotorista = true;
             this.stepInformacoes = true;
             this.sendEntrega.peso = object.caminhao.lotacao;
+            this.selectedEntrega = object;
             break;
           case 'addNota':
             this.selectedNegocio = object;
@@ -435,7 +436,7 @@
       },
       listNegocioCulturas: function(){
         if(this.funcao === 'sendEntrega'){
-          this.listNegociosCulturas();
+          this.listNegociosCulturasBySafraCultura();
         }else{
           this.listNegociosCulturasAvaliablesByEntrega()
         }
@@ -464,6 +465,16 @@
         this.$q.loading.show();
         //this.negocioService.listNegociosCulturasWithoutEmpty().then(negocios => {
         this.negocioService.listNegociosCulturas().then(negocios => {
+          this.negocioCulturas = negocios;
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.loading.hide();
+        });
+      },
+      listNegociosCulturasBySafraCultura(){
+        this.$q.loading.show();
+        //this.negocioService.listNegociosCulturasWithoutEmpty().then(negocios => {
+        this.negocioService.listNegociosCulturasBySafraCultura(this.selectedEntrega.safra_cultura.id).then(negocios => {
           this.negocioCulturas = negocios;
           this.$q.loading.hide();
         }).catch(error => {

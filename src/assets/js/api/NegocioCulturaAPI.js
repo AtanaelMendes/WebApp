@@ -18,6 +18,10 @@ export default class NegocioCulturaAPI{
     return Vue.prototype.$axios.get('negocio/cultura/by_entrega/' + entregaId);
   }
 
+  static listNegociosCulturasByCultura(safraCulturaId){
+    return Vue.prototype.$axios.get('negocio/cultura/by_safra_cultura/' + safraCulturaId)
+  }
+
   static addNegocioCultura(negocioCultura, negocioId){
     return Vue.prototype.$axios.post('negocio/'+ negocioId + '/cultura', negocioCultura);
   }
