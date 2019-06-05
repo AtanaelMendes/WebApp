@@ -17,20 +17,18 @@
 </template>
 <script>
 
+import NotaFiscalSerieService from '../../assets/js/service/notaFiscal/NotaFiscalSerieService'
+
 export default {
   name: "ap-select-nota-fiscal-serie",
   props: {
-    type: {
-      type: String,
-      required: true
-    },
     value: {
       type: Number,
       default: null
     },
     floatLabel: {
       type: String,
-      default: 'Tipo'
+      default: 'Série'
     },
     filter: {
       type: Boolean,
@@ -53,15 +51,27 @@ export default {
       default: true
     },
   },
-  computed: {
-    options: function () {
-      return this.$typeService.optionsByType(this.type, this.value)
+  data () {
+    return {
+      notaFiscalSerieService: new NotaFiscalSerieService(),
+      options: [],
     }
   },
   methods:{
+    loadOptions() {
+      this.notaFiscalSerieService.options().then(response => {
+        this.options = response.data;
+      }).catch(error => {
+        this.$q.notify({type: 'negative', message: 'Erro ao carregar opções de Séries de Notas Fiscais!'});
+      })
+    },
     handleInput(value) {
+      console.log(value);
       this.$emit('input', value)
     },
   },
+  mounted(){
+    this.loadOptions();
+  }
 }
 </script>

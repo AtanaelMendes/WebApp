@@ -180,7 +180,7 @@
                   {{formatCPF(notaFiscal.pessoa.cpf)}}
                 </span>
                 <span v-if="notaFiscal.pessoa.cnpj">
-                  {{formatCPF(notaFiscal.pessoa.cnpj)}}
+                  {{formatCNPJ(notaFiscal.pessoa.cnpj)}}
                 </span>
               </div>
             </div>
@@ -1070,7 +1070,6 @@
   import customPage from 'components/CustomPage.vue'
 
   import apNoResults from 'components/ApNoResults'
-  import apSelectType from 'components/form/ApSelectType'
   import apLabelType from 'components/form/ApLabelType'
 
   import notaFiscalItemFormModal from './components/NotaFiscalItemFormModal'
@@ -1100,7 +1099,6 @@
       toolbar,
       customPage,
       apNoResults,
-      apSelectType,
       apLabelType,
       nfeButtons,
       notaFiscalFormModal,
