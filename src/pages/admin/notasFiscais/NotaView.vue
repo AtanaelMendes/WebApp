@@ -35,6 +35,7 @@
         <nota-fiscal-item-icms-form-modal ref="notaFiscalItemIcmsFormModal" @atualizada='notaFiscalAtualizada'/>
         <nota-fiscal-item-pis-form-modal ref="notaFiscalItemPisFormModal" @atualizada='notaFiscalAtualizada'/>
         <nota-fiscal-item-ipi-form-modal ref="notaFiscalItemIpiFormModal" @atualizada='notaFiscalAtualizada'/>
+        <nota-fiscal-item-nve-form-modal ref="notaFiscalItemNveFormModal" @atualizada='notaFiscalAtualizada'/>
         <nota-fiscal-item-imposto-devolucao-form-modal ref="notaFiscalItemImpostoDevolucaoFormModal" @atualizada='notaFiscalAtualizada'/>
 
         <nota-fiscal-transporte-volume-form-modal ref="notaFiscalTransporteVolumeFormModal" @atualizada='notaFiscalAtualizada'/>
@@ -961,6 +962,24 @@
                           </template>
                         </q-collapsible>
 
+                        <!--MANUTENCAO NVE-->
+                        <q-collapsible icon="receipt" label="NVE" class="cursor-pointer">
+                          <q-item v-close-overlay @click.native="addNotaFiscalItemNve(item.id)" v-if='item.notas_fiscais_itens_nves.length == 0'>
+                            <q-item-side icon="add" />
+                            <q-item-main label="Adicionar"/>
+                          </q-item>
+                          <template v-for="nve in item.notas_fiscais_itens_nves">
+                            <q-item v-close-overlay @click.native="editNotaFiscalItemNve(nve)">
+                              <q-item-side icon="edit" />
+                              <q-item-main label="Editar"/>
+                            </q-item>
+                            <q-item v-close-overlay @click.native="deleteNotaFiscalItemNve(nve)">
+                              <q-item-side icon="delete" />
+                              <q-item-main label="Excluir"/>
+                            </q-item>
+                          </template>
+                        </q-collapsible>
+
                         <!--MANUTENCAO IPI-->
                         <q-collapsible icon="receipt" label="IPI" class="cursor-pointer">
                           <q-item v-close-overlay @click.native="addNotaFiscalItemIpi(item.id)" v-if='item.notas_fiscais_itens_ipi.length == 0'>
@@ -1202,6 +1221,7 @@
   import notaFiscalItemFormModal from './components/NotaFiscalItemFormModal'
   import notaFiscalItemIpiFormModal from './components/NotaFiscalItemIpiFormModal'
   import notaFiscalItemPisFormModal from './components/NotaFiscalItemPisFormModal'
+  import notaFiscalItemNveFormModal from './components/NotaFiscalItemNveFormModal'
   import notaFiscalItemIcmsFormModal from './components/NotaFiscalItemIcmsFormModal'
   import notaFiscalItemCofinsFormModal from './components/NotaFiscalItemCofinsFormModal'
   import notaFiscalItemImpostoDevolucaoFormModal from './components/NotaFiscalItemImpostoDevolucaoFormModal'
@@ -1235,6 +1255,7 @@
       notaFiscalLocalizacao,
       notaFiscalItemFormModal,
       notaFiscalItemPisFormModal,
+      notaFiscalItemNveFormModal,
       notaFiscalItemIpiFormModal,
       notaFiscalItemIcmsFormModal,
       notaFiscalProcessoFormModal,
@@ -1352,6 +1373,17 @@
       },
       deleteNotaFiscalItemPis(item){
         this.$refs.notaFiscalItemPisFormModal.delete(item)
+      },
+
+      // notasFiscaisItensNve
+      addNotaFiscalItemNve(notaFiscalItemId){
+        this.$refs.notaFiscalItemNveFormModal.add(notaFiscalItemId)
+      },
+      editNotaFiscalItemNve(notaFiscalItemNve){
+        this.$refs.notaFiscalItemNveFormModal.edit(notaFiscalItemNve)
+      },
+      deleteNotaFiscalItemNve(notaFiscalItemNve){
+        this.$refs.notaFiscalItemNveFormModal.delete(notaFiscalItemNve)
       },
 
       // notaFiscalItemImpostoDevolucao
