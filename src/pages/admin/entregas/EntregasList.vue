@@ -244,14 +244,14 @@
   import customPage from 'components/CustomPage.vue'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
-  import NewEntregaModal from 'components/entrega/NewEntregaModal'
-  import FilterEntregasModal from 'components/entrega/FilterEntregasModal'
+  import NewEntregaModal from './components/modals/NewEntregaModal'
+  import FilterEntregasModal from './components/modals/FilterEntregasModal'
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
-  import apFilterResultBar from 'components/ApFilterResultBar'
+  import apFilterResultBar from '../../../components/ApFilterResultBar'
   import AgroUtils from 'assets/js/AgroUtils'
-  import EntregaService from "../../../assets/js/service/entrega/EntregaService";
   import ServiceMessage from '../../../assets/js/serviceWorker/ServiceMessage';
+  import EntregaService from "../../../assets/js/service/entrega/EntregaService";
 
   export default {
     name: "entregas",

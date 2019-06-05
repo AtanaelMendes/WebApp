@@ -39,7 +39,7 @@
 <script>
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
-  import EntregaService from "../../assets/js/service/entrega/EntregaService";
+  import EntregaService from "../../../../../assets/js/service/entrega/EntregaService";
   export default {
     name: "add-talhao-percentage",
     components:{
