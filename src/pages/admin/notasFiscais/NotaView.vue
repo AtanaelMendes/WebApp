@@ -208,26 +208,62 @@
           Fatura/Duplicata
         </div>
         <q-card>
-          <div class="row" v-for="duplicata in notaFiscal.notas_fiscais_duplicatas" :key="duplicata.id">
-            <div class="col-11 q-pa-xs">
-              {{duplicata}}
-            </div>
-            <div class="col-1 q-pa-xs borda-esquerda">
-              <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
-                <q-popover>
-                  <q-list link>
-                    <q-item @click.native="editNotaFiscalDuplicata(duplicata)">
-                      <q-item-side icon="edit" />
-                      <q-item-main label="Editar"/>
-                    </q-item>
-                    <q-item @click.native="deleteNotaFiscalDuplicata(duplicata)">
-                      <q-item-side icon="delete" />
-                      <q-item-main label="Excluir"/>
-                    </q-item>
-                  </q-list>
-                </q-popover>
-              </q-btn>
-            </div>
+          <div class="row">
+            <template v-for="duplicata in notaFiscal.notas_fiscais_duplicatas">
+              <div class="col-2 q-pa-xs all-border" :key="duplicata.id">
+                <q-item class="q-pa-none">
+                  <q-item-main>
+                    <q-item-tile class="row">
+                      <div class="col-6 q-caption text-faded">
+                        Num.
+                      </div>
+                      <div class="col-6 text-right">
+                        {{duplicata.numero}}
+                      </div>
+                    </q-item-tile>
+
+                    <q-item-tile class="row">
+                      <div class="col-6 q-caption text-faded">
+                        Venc.
+                      </div>
+                      <div class="col-6 text-right">
+                        {{moment(duplicata.vencimento).format('L')}}
+                      </div>
+                    </q-item-tile>
+
+                    <q-item-tile class="row">
+
+                      <div class="col-6 q-caption text-faded">
+                        Valor.
+                      </div>
+                      <div class="col-6 text-right">
+                        {{numeral(duplicata.valor).format('0,0.00')}}
+                      </div>
+
+                    </q-item-tile>
+                  </q-item-main>
+                  <q-item-side class="self-start">
+
+                    <q-btn icon="more_vert" flat round color="grey-7">
+                      <q-popover>
+                        <q-list link>
+                          <q-item @click.native="editNotaFiscalDuplicata(duplicata)">
+                            <q-item-side icon="edit" />
+                            <q-item-main label="Editar"/>
+                          </q-item>
+                          <q-item @click.native="deleteNotaFiscalDuplicata(duplicata)">
+                            <q-item-side icon="delete" />
+                            <q-item-main label="Excluir"/>
+                          </q-item>
+                        </q-list>
+                      </q-popover>
+                    </q-btn>
+
+                  </q-item-side>
+                </q-item>
+              </div>
+            </template>
+
           </div>
         </q-card>
 
