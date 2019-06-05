@@ -40,6 +40,7 @@
 
         <nota-fiscal-transporte-volume-form-modal ref="notaFiscalTransporteVolumeFormModal" @atualizada='notaFiscalAtualizada'/>
         <nota-fiscal-transporte-reboque-form-modal ref="notaFiscalTransporteReboqueFormModal" @atualizada='notaFiscalAtualizada'/>
+        <nota-fiscal-transporte-volume-lacre-form-modal ref="notaFiscalTransporteVolumeLacreFormModal" @atualizada='notaFiscalAtualizada'/>
         <nota-fiscal-transporte-form-modal ref="notaFiscalTransporteFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
 
         <nota-fiscal-processo-form-modal ref="notaFiscalProcessoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
@@ -199,6 +200,7 @@
         <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_entrega" @atualizada='notaFiscalAtualizada' v-if="notaFiscal.nota_fiscal_localizacao_entrega" />
         <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_retirada" @atualizada='notaFiscalAtualizada' v-if="notaFiscal.nota_fiscal_localizacao_retirada" />
 
+        <!--CALCULO DE IMPOSTO-->
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
           Cálculo do Imposto
         </div>
@@ -631,6 +633,25 @@
                       <q-item-side icon="delete" />
                       <q-item-main label="Excluir"/>
                     </q-item>
+
+                    <!--VOLUME LACRE-->
+                    <q-collapsible icon="local_offer" label="Lacre" class="cursor-pointer">
+                      <q-item v-close-overlay @click.native="addNotaFiscalTransporteVolumeLacre(volume.id)" v-if='volume.notas_fiscais_transportes_volumes_lacres.length == 0'>
+                        <q-item-side icon="add" />
+                        <q-item-main label="Adicionar"/>
+                      </q-item>
+                      <template v-for="lacre in volume.notas_fiscais_transportes_volumes_lacres">
+                        <q-item v-close-overlay @click.native="editNotaFiscalTransporteVolumeLacre(lacre)">
+                          <q-item-side icon="edit" />
+                          <q-item-main label="Editar"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="deleteNotaFiscalTransporteVolumeLacre(lacre)">
+                          <q-item-side icon="delete" />
+                          <q-item-main label="Excluir"/>
+                        </q-item>
+                      </template>
+                    </q-collapsible>
+
                   </q-list>
                 </q-popover>
               </q-btn>
@@ -1027,6 +1048,7 @@
 
         </q-card>
 
+        <!--DADOS ADICIONAIS-->
         <template>
           <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
             Dados Adicionais
@@ -1225,6 +1247,7 @@
   import notaFiscalItemIcmsFormModal from './components/NotaFiscalItemIcmsFormModal'
   import notaFiscalItemCofinsFormModal from './components/NotaFiscalItemCofinsFormModal'
   import notaFiscalItemImpostoDevolucaoFormModal from './components/NotaFiscalItemImpostoDevolucaoFormModal'
+  import notaFiscalTransporteVolumeLacreFormModal from './components/NotaFiscalTransporteVolumeLacreFormModal'
 
   import notaFiscalTransporteFormModal from './components/NotaFiscalTransporteFormModal'
   import notaFiscalTransporteVolumeFormModal from './components/NotaFiscalTransporteVolumeFormModal'
@@ -1270,6 +1293,7 @@
       notaFiscalTransporteVolumeFormModal,
       notaFiscalTransporteReboqueFormModal,
       notaFiscalItemImpostoDevolucaoFormModal,
+      notaFiscalTransporteVolumeLacreFormModal,
     },
     watch: { },
     data(){
@@ -1477,6 +1501,17 @@
       },
       deleteNotaFiscalTransporteVolume(notaFiscalTransporteVolume){
         this.$refs.notaFiscalTransporteVolumeFormModal.delete(notaFiscalTransporteVolume)
+      },
+
+      // notaFiscalTransporteVolumeLacre
+      addNotaFiscalTransporteVolumeLacre(notaFiscalTransporteVolumeId){
+        this.$refs.notaFiscalTransporteVolumeLacreFormModal.add(notaFiscalTransporteVolumeId)
+      },
+      editNotaFiscalTransporteVolumeLacre(notaFiscalTransporteVolumeLacre){
+        this.$refs.notaFiscalTransporteVolumeLacreFormModal.edit(notaFiscalTransporteVolumeLacre)
+      },
+      deleteNotaFiscalTransporteVolumeLacre(notaFiscalTransporteVolumeLacre){
+        this.$refs.notaFiscalTransporteVolumeLacreFormModal.delete(notaFiscalTransporteVolumeLacre)
       },
 
       // notaFiscalObservacao

@@ -1,10 +1,10 @@
-import NotaFiscalTransporteVolumeAPI from "../../api/notaFiscal/NotaFiscalTransporteVolumeAPI";
+import NotaFiscalTransporteVolumeLacreAPI from "../../api/notaFiscal/NotaFiscalTransporteVolumeLacreAPI";
 
-export default class NotaFiscalTransporteVolumeService {
+export default class NotaFiscalTransporteVolumeLacreService {
 
   create(params) {
     return new Promise((resolve, reject) => {
-      NotaFiscalTransporteVolumeAPI.create(params).then(response => {
+      NotaFiscalTransporteVolumeLacreAPI.create(params).then(response => {
         resolve(response);
       }).catch(error => {
         reject(error);
@@ -14,7 +14,7 @@ export default class NotaFiscalTransporteVolumeService {
 
   update(itemId, params) {
     return new Promise((resolve, reject) => {
-      NotaFiscalTransporteVolumeAPI.update(itemId, params).then(response => {
+      NotaFiscalTransporteVolumeLacreAPI.update(itemId, params).then(response => {
         resolve(response);
       }).catch(error => {
         reject(error);
@@ -24,7 +24,7 @@ export default class NotaFiscalTransporteVolumeService {
 
   delete(itemId) {
     return new Promise((resolve, reject) => {
-      NotaFiscalTransporteVolumeAPI.delete(itemId).then(response => {
+      NotaFiscalTransporteVolumeLacreAPI.delete(itemId).then(response => {
         resolve(response);
       }).catch(error => {
         reject(error);
