@@ -34,7 +34,7 @@
             <div class="q-mb-lg" v-if="$q.screen.lt.md">
               <span class="q-subheading text-weight-medium text-primary uppercase">Diário de Colheita</span>
             </div>
-            <safra-grafico-diario v-if="diario.length > 0" :diario="diario" :unidade-medida="safraCultura.unidade_medida_area" :height="300" :width="100"/>
+            <safra-grafico-diario v-if="diario.length > 0" :diario="diario" :unidade-medida="safraCultura.unidade_medida_pesagem" :height="300" :width="100"/>
             <div v-else class="text-center chart-empty">
               <q-icon name="warning" />
               <span>Nenhuma informação disponível.</span>

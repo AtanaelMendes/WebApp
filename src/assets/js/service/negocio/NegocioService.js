@@ -267,6 +267,20 @@ export default class NegocioService{
     });
   }
 
+  listNegociosCulturasBySafraCultura(safraCulturaId){
+    return new Promise((resolve, reject) => {
+      NegocioCulturaAPI.listNegociosCulturasByCultura(safraCulturaId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data)
+        }else{
+          reject(response)
+        }
+      }).catch(error => {
+        reject(error.response)
+      })
+    });
+  }
+
   listArmazensByNegocioCultura(negocioCulturaId){
     return new Promise(async (resolve, reject) => {
       if(Vue.prototype.serverStatus.isUp) {
