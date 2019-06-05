@@ -42,6 +42,7 @@
         <nota-fiscal-transporte-form-modal ref="notaFiscalTransporteFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
 
         <nota-fiscal-duplicata-form-modal ref="notaFiscalDuplicataFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+        <nota-fiscal-observacao-form-modal ref="notaFiscalObservacaoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
         <nota-fiscal-localizacao-form-modal ref="notaFiscalLocalizacaoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
         <nota-fiscal-referenciada-form-modal ref="notaFiscalReferenciadaFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
         <nota-fiscal-forma-pagamento-form-modal ref="notaFiscalFormaPagamentoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
@@ -495,20 +496,10 @@
 
                     <!--MANUITENCAO VOLUME-->
                     <q-collapsible icon="shopping_basket" label="Volume" class="cursor-pointer">
-                      <q-item v-close-overlay @click.native="addNotaFiscalTransporteVolume(transporte.id)" v-if='transporte.notas_fiscais_transportes_volumes.length == 0'>
+                      <q-item v-close-overlay @click.native="addNotaFiscalTransporteVolume(transporte.id)">
                         <q-item-side icon="add" />
                         <q-item-main label="Adicionar"/>
                       </q-item>
-                      <template v-for="volume in transporte.notas_fiscais_transportes_volumes">
-                        <q-item v-close-overlay @click.native="editNotaFiscalTransporteVolume(volume)">
-                          <q-item-side icon="edit" />
-                          <q-item-main label="Editar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="deleteNotaFiscalTransporteVolume(volume)">
-                          <q-item-side icon="delete" />
-                          <q-item-main label="Excluir"/>
-                        </q-item>
-                      </template>
                     </q-collapsible>
 
 
@@ -628,7 +619,16 @@
             <div class="col-1 borda-esquerda">
               <q-btn icon="more_vert" flat round color="grey-7" class="float-right">
                 <q-popover>
-
+                  <q-list link>
+                    <q-item @click.native="editNotaFiscalTransporteVolume(volume)">
+                      <q-item-side icon="edit" />
+                      <q-item-main label="Editar"/>
+                    </q-item>
+                    <q-item @click.native="deleteNotaFiscalTransporteVolume(volume)">
+                      <q-item-side icon="delete" />
+                      <q-item-main label="Excluir"/>
+                    </q-item>
+                  </q-list>
                 </q-popover>
               </q-btn>
             </div>
@@ -1014,20 +1014,19 @@
             <div class="row">
 
               <div class="col-8 q-pa-xs">
-                <div class="text-faded q-caption ellipsis">
+                <div class="text-faded q-caption">
                   Informações Complementares
                 </div>
 
                 <!--INFORMACOES ADICIONAIS / COMPLEMENTARES-->
-                <div class="ellipsis">
-
-                  <p>{{notaFiscal.informacoes_complementares}}<p/>
+                <div>
+                  {{notaFiscal.informacoes_complementares}}
                 </div>
               </div>
 
               <!--RESERVADO AO FISCO-->
               <div class="col-4 borda-esquerda q-pa-xs">
-                <div class="text-faded q-caption ellipsis">
+                <div class="text-faded q-caption">
                   Reservado ao Fisco
                 </div>
                 <p>{{notaFiscal.informacoes_adicionais_fisco}}<p/>
@@ -1036,6 +1035,88 @@
             </div>
           </q-card>
         </template>
+
+        <!--OBSERVACOES-->
+        <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
+          Observações
+        </div>
+        <q-card class="q-pa-xs">
+          <div class="row">
+            <div class="col-12" v-for="observacao in notaFiscal.notas_fiscais_observacoes">
+              <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
+                <q-popover>
+                  <q-list link>
+                    <q-item @click.native="editNotaFiscalObservacao(observacao)">
+                      <q-item-side icon="edit" />
+                      <q-item-main label="Editar"/>
+                    </q-item>
+                    <q-item @click.native="deleteNotaFiscalObservacao(observacao)">
+                      <q-item-side icon="delete" />
+                      <q-item-main label="Excluir"/>
+                    </q-item>
+                  </q-list>
+                </q-popover>
+              </q-btn>
+              {{observacao}}
+            </div>
+          </div>
+        </q-card>
+
+        <!--NOTA FISCAL AUTORIZADOS-->
+        <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
+          Nota Fiscal Autorizados
+        </div>
+        <q-card class="q-pa-xs">
+          <div class="row">
+            <div class="col-12">
+              <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
+
+              </q-btn>
+            </div>
+          </div>
+        </q-card>
+
+        <!--NOTA FISCAL REFERENCIADA-->
+        <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
+          Nota Fiscal Referenciada
+        </div>
+        <q-card class="q-pa-xs">
+          <div class="row">
+            <div class="col-12">
+              <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
+
+              </q-btn>
+            </div>
+          </div>
+        </q-card>
+
+        <!--FORMA DE PAGAMANETO-->
+        <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
+          Formas de Pagamento
+        </div>
+        <q-card class="q-pa-xs">
+          <div class="row">
+            <div class="col-12">
+              <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
+
+              </q-btn>
+            </div>
+          </div>
+        </q-card>
+
+        <!--NOTA FISCAL PROCESSOS-->
+        <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
+          Nota FIscal Processos
+        </div>
+        <q-card class="q-pa-xs">
+          <div class="row">
+            <div class="col-12">
+              <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
+
+              </q-btn>
+            </div>
+          </div>
+        </q-card>
       </div>
 
       <!--PAGE STICKY BUTTOMS-->
@@ -1052,6 +1133,9 @@
           </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalTransporte()" icon="add">
             <span class="shadow-2">Transporte</span>
+          </q-fab-action>
+          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalObservacao()" icon="add">
+            <span class="shadow-2">Observações</span>
           </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalItem()" icon="add">
             <span class="shadow-2">Produto</span>
@@ -1092,6 +1176,7 @@
   import notaFiscalLocalizacao from './components/NotaFiscalLocalizacao'
   import notaFiscalLocalizacaoFormModal from './components/NotaFiscalLocalizacaoFormModal'
   import notaFiscalDuplicataFormModal from './components/NotaFiscalDuplicataFormModal.vue'
+  import notaFiscalObservacaoFormModal from './components/NotaFiscalObservacaoFormModal.vue'
   import notaFiscalReferenciadaFormModal from './components/NotaFiscalReferenciadaFormModal'
   import notaFiscalFormaPagamentoFormModal from './components/NotaFiscalFormaPagamentoFormModal'
 
@@ -1114,6 +1199,7 @@
       notaFiscalItemIcmsFormModal,
       notaFiscalDuplicataFormModal,
       notaFiscalTransporteFormModal,
+      notaFiscalObservacaoFormModal,
       notaFiscalItemCofinsFormModal,
       notaFiscalLocalizacaoFormModal,
       notaFiscalReferenciadaFormModal,
@@ -1317,6 +1403,17 @@
       },
       deleteNotaFiscalTransporteVolume(notaFiscalTransporteVolume){
         this.$refs.notaFiscalTransporteVolumeFormModal.delete(notaFiscalTransporteVolume)
+      },
+
+      // notaFiscalObservacao
+      addNotaFiscalObservacao(){
+        this.$refs.notaFiscalObservacaoFormModal.add()
+      },
+      editNotaFiscalObservacao(notaFiscalObservacao){
+        this.$refs.notaFiscalObservacaoFormModal.edit(notaFiscalObservacao)
+      },
+      deleteNotaFiscalObservacao(notaFiscalObservacao){
+        this.$refs.notaFiscalObservacaoFormModal.delete(notaFiscalObservacao)
       },
 
       backAction: function () {
