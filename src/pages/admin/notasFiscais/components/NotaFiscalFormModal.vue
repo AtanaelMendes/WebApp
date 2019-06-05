@@ -15,58 +15,96 @@
         <div class="row justify-center">
             <div class="col-12">
               <form v-on:submit.prevent="save"><input type="submit" hidden />
-                <q-input v-model="notaFiscal.nota_fiscal_serie_id" float-label="nota_fiscal_serie_id"/>
-                <q-input v-model="notaFiscal.numero" float-label="numero"/>
-                <q-input v-model="notaFiscal.emissao" float-label="emissao"/>
-                <q-input v-model="notaFiscal.is_saida" float-label="is_saida"/>
-                <q-input v-model="notaFiscal.chave" float-label="chave"/>
-                <q-input v-model="notaFiscal.natureza_operacao_id" float-label="natureza_operacao_id"/>
-                <q-input v-model="notaFiscal.natureza" float-label="natureza"/>
-                <q-input v-model="notaFiscal.presenca" float-label="presenca"/>
-                <q-input v-model="notaFiscal.modelo" float-label="modelo"/>
-                <q-input v-model="notaFiscal.serie" float-label="serie"/>
-                <q-input v-model="notaFiscal.saida" float-label="saida"/>
-                <q-input v-model="notaFiscal.tipo_emissao" float-label="tipo_emissao"/>
-                <q-input v-model="notaFiscal.ambiente" float-label="ambiente"/>
-                <q-input v-model="notaFiscal.finalidade" float-label="finalidade"/>
-                <q-input v-model="notaFiscal.is_consumidor" float-label="is_consumidor"/>
-                <q-input v-model="notaFiscal.contingencia" float-label="contingencia"/>
-                <q-input v-model="notaFiscal.contingencia_justificativa" float-label="contingencia_justificativa"/>
-                <q-input v-model="notaFiscal.pessoa_id" float-label="pessoa_id"/>
-                <q-input v-model="notaFiscal.frete" float-label="frete"/>
-                <q-input v-model="notaFiscal.informacoes_adicionais_fisco" float-label="informacoes_adicionais_fisco"/>
-                <q-input v-model="notaFiscal.informacoes_complementares" float-label="informacoes_complementares"/>
-                <q-input v-model="notaFiscal.exportacao_estado_id" float-label="exportacao_estado_id"/>
-                <q-input v-model="notaFiscal.exportacao_local_embarque" float-label="exportacao_local_embarque"/>
-                <q-input v-model="notaFiscal.exportacao_local_despacho" float-label="exportacao_local_despacho"/>
-                <q-input v-model="notaFiscal.empenho" float-label="empenho"/>
-                <q-input v-model="notaFiscal.pedido" float-label="pedido"/>
-                <q-input v-model="notaFiscal.contrato" float-label="contrato"/>
-                <q-input v-model="notaFiscal.status" float-label="status"/>
-                <q-input v-model="notaFiscal.protocolo_autorizacao" float-label="protocolo_autorizacao"/>
-                <q-input v-model="notaFiscal.total_produto" float-label="total_produto"/>
-                <q-input v-model="notaFiscal.total_frete" float-label="total_frete"/>
-                <q-input v-model="notaFiscal.total_seguro" float-label="total_seguro"/>
-                <q-input v-model="notaFiscal.total_outro" float-label="total_outro"/>
-                <q-input v-model="notaFiscal.total_desconto" float-label="total_desconto"/>
-                <q-input v-model="notaFiscal.total_icms_base_calculo" float-label="total_icms_base_calculo"/>
-                <q-input v-model="notaFiscal.total_icms" float-label="total_icms"/>
-                <q-input v-model="notaFiscal.total_icms_desonerado" float-label="total_icms_desonerado"/>
-                <q-input v-model="notaFiscal.total_icms_estado_destinatario" float-label="total_icms_estado_destinatario"/>
-                <q-input v-model="notaFiscal.total_icms_estado_remetente" float-label="total_icms_estado_remetente"/>
-                <q-input v-model="notaFiscal.total_icms_st_base_calculo" float-label="total_icms_st_base_calculo"/>
-                <q-input v-model="notaFiscal.total_icms_st" float-label="total_icms_st"/>
-                <q-input v-model="notaFiscal.total_fcp" float-label="total_fcp"/>
-                <q-input v-model="notaFiscal.total_fcp_st" float-label="total_fcp_st"/>
-                <q-input v-model="notaFiscal.total_fcp_st_retido" float-label="total_fcp_st_retido"/>
-                <q-input v-model="notaFiscal.total_fcp_estado_destinatario" float-label="total_fcp_estado_destinatario"/>
-                <q-input v-model="notaFiscal.total_ii" float-label="total_ii"/>
-                <q-input v-model="notaFiscal.total_ipi" float-label="total_ipi"/>
-                <q-input v-model="notaFiscal.total_ipi_devolucao" float-label="total_ipi_devolucao"/>
-                <q-input v-model="notaFiscal.total_pis" float-label="total_pis"/>
-                <q-input v-model="notaFiscal.total_cofins" float-label="total_cofins"/>
-                <q-input v-model="notaFiscal.total_nota_fiscal" float-label="total_nota_fiscal"/>
-                <q-input v-model="notaFiscal.total_tributos" float-label="total_tributos"/>
+
+                <q-field icon="format_list_numbered" v-if="isSerieEditavel || isNumeroEditavel">
+                  <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+                    <div class="row" v-if="isSerieEditavel">
+                      <div class="col-12">
+                        <ap-select-nota-fiscal-serie v-model="notaFiscal.nota_fiscal_serie_id"/>
+                      </div>
+                    </div>
+                  </transition>
+                  <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+                    <div class="row" v-if="isNumeroEditavel">
+                      <div class="col-2 q-pr-sm">
+                        <q-input v-model="notaFiscal.modelo" stack-label="Modelo" align="center" />
+                      </div>
+                      <div class="col-2 q-pr-sm">
+                        <q-input v-model="notaFiscal.serie" stack-label="Série" type="number" step="1" min="0" max="999999999999" align="center" />
+                      </div>
+                      <div class="col-4">
+                        <q-input v-model="notaFiscal.numero" stack-label="Número" type="number" step="1" min="0" max="999999999999" align="center" />
+                      </div>
+                      <div class="col-4 text-center q-pt-lg">
+                        <q-toggle v-model="notaFiscal.is_saida" label="Saída" />
+                      </div>
+                    </div>
+                  </transition>
+                </q-field>
+
+                <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+                  <q-field icon="calendar_today" v-if="isNumeroEditavel" :count="44">
+                    <q-input v-model="notaFiscal.chave" stack-label="Chave" align="center" :max-length="44" />
+                  </q-field>
+                </transition>
+
+                <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+                  <q-field icon="calendar_today" v-if="isNumeroEditavel">
+                    <div class="row">
+                      <div class="col-6 q-pr-sm">
+                        <q-datetime v-model="notaFiscal.emissao" type="datetime" format="DD/MMM/YY HH:mm" stack-label="Emissão"  align="center" />
+                      </div>
+                      <div class="col-6">
+                        <q-datetime v-model="notaFiscal.saida" type="datetime" format="DD/MMM/YY HH:mm" stack-label="Saída / Entrada"  align="center"/>
+                      </div>
+                    </div>
+                  </q-field>
+                </transition>
+
+
+                <q-input v-model="notaFiscal.natureza_operacao_id" stack-label="natureza_operacao_id"/>
+                <q-input v-model="notaFiscal.natureza" stack-label="natureza"/>
+                <ap-select-type v-model="notaFiscal.presenca" type="PRESENCA" stack-label="Presença" />
+                <q-input v-model="notaFiscal.ambiente" stack-label="ambiente"/>
+                <q-input v-model="notaFiscal.finalidade" stack-label="finalidade"/>
+                <q-input v-model="notaFiscal.is_consumidor" stack-label="is_consumidor"/>
+                <q-input v-model="notaFiscal.contingencia" stack-label="contingencia"/>
+                <q-input v-model="notaFiscal.contingencia_justificativa" stack-label="contingencia_justificativa"/>
+                <q-input v-model="notaFiscal.pessoa_id" stack-label="pessoa_id"/>
+                <q-input v-model="notaFiscal.frete" stack-label="frete"/>
+                <q-input v-model="notaFiscal.informacoes_adicionais_fisco" stack-label="informacoes_adicionais_fisco"/>
+                <q-input v-model="notaFiscal.informacoes_complementares" stack-label="informacoes_complementares"/>
+                <q-input v-model="notaFiscal.exportacao_estado_id" stack-label="exportacao_estado_id"/>
+                <q-input v-model="notaFiscal.exportacao_local_embarque" stack-label="exportacao_local_embarque"/>
+                <q-input v-model="notaFiscal.exportacao_local_despacho" stack-label="exportacao_local_despacho"/>
+                <q-input v-model="notaFiscal.empenho" stack-label="empenho"/>
+                <q-input v-model="notaFiscal.pedido" stack-label="pedido"/>
+                <q-input v-model="notaFiscal.contrato" stack-label="contrato"/>
+                <q-input v-model="notaFiscal.status" stack-label="status"/>
+                <q-input v-model="notaFiscal.protocolo_autorizacao" stack-label="protocolo_autorizacao"/>
+                <q-input v-model="notaFiscal.total_produto" stack-label="total_produto"/>
+                <q-input v-model="notaFiscal.total_frete" stack-label="total_frete"/>
+                <q-input v-model="notaFiscal.total_seguro" stack-label="total_seguro"/>
+                <q-input v-model="notaFiscal.total_outro" stack-label="total_outro"/>
+                <q-input v-model="notaFiscal.total_desconto" stack-label="total_desconto"/>
+                <q-input v-model="notaFiscal.total_icms_base_calculo" stack-label="total_icms_base_calculo"/>
+                <q-input v-model="notaFiscal.total_icms" stack-label="total_icms"/>
+                <q-input v-model="notaFiscal.total_icms_desonerado" stack-label="total_icms_desonerado"/>
+                <q-input v-model="notaFiscal.total_icms_estado_destinatario" stack-label="total_icms_estado_destinatario"/>
+                <q-input v-model="notaFiscal.total_icms_estado_remetente" stack-label="total_icms_estado_remetente"/>
+                <q-input v-model="notaFiscal.total_icms_st_base_calculo" stack-label="total_icms_st_base_calculo"/>
+                <q-input v-model="notaFiscal.total_icms_st" stack-label="total_icms_st"/>
+                <q-input v-model="notaFiscal.total_fcp" stack-label="total_fcp"/>
+                <q-input v-model="notaFiscal.total_fcp_st" stack-label="total_fcp_st"/>
+                <q-input v-model="notaFiscal.total_fcp_st_retido" stack-label="total_fcp_st_retido"/>
+                <q-input v-model="notaFiscal.total_fcp_estado_destinatario" stack-label="total_fcp_estado_destinatario"/>
+                <q-input v-model="notaFiscal.total_ii" stack-label="total_ii"/>
+                <q-input v-model="notaFiscal.total_ipi" stack-label="total_ipi"/>
+                <q-input v-model="notaFiscal.total_ipi_devolucao" stack-label="total_ipi_devolucao"/>
+                <q-input v-model="notaFiscal.total_pis" stack-label="total_pis"/>
+                <q-input v-model="notaFiscal.total_cofins" stack-label="total_cofins"/>
+                <q-input v-model="notaFiscal.total_nota_fiscal" stack-label="total_nota_fiscal"/>
+                <q-input v-model="notaFiscal.total_tributos" stack-label="total_tributos"/>
               </form>
             </div>
           </div>
@@ -80,10 +118,17 @@
 </template>
 
 <script>
+  import apSelectType from 'components/form/ApSelectType'
+  import apSelectNotaFiscalSerie from 'components/form/ApSelectNotaFiscalSerie'
   import NotaFiscalService from "../../../../assets/js/service/notaFiscal/NotaFiscalService";
   export default {
 
     name: "notaFiscalFormModal",
+
+    components: {
+      apSelectNotaFiscalSerie,
+      apSelectType,
+    },
 
     data(){
       return {
@@ -107,7 +152,19 @@
           return 'edit'
         }
         return 'add'
-      }
+      },
+      isNumeroEditavel: function () {
+        return this.notaFiscal.nota_fiscal_serie_id === null
+      },
+      isSerieEditavel: function () {
+        if (this.editionType == 'add') {
+          return true;
+        }
+        if (this.notaFiscal.numero == null) {
+          return true;
+        }
+        return false;
+      },
     },
 
     methods: {
@@ -117,8 +174,8 @@
         this.notaFiscal = {
           nota_fiscal_serie_id: null,
           numero: null,
-          emissao: new Date(),
-          saida: new Date(),
+          emissao: null,
+          saida: null,
           is_saida: true,
           chave: null,
           natureza_operacao_id: null,

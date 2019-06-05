@@ -31,14 +31,11 @@ export default class TypeService{
 
   optionsByType (type) {
     let items = this.itemsByType(type);
-    var ret = [{
-      label: '',
-      value: null
-    }];
+    var ret = [];
     items.forEach(function (item) {
       ret.push({
         label: item[TypeService.LABEL_POSITION],
-        value: item[TypeService.ID_POSITION]
+        value: item[TypeService.ID_POSITION],
       });
     });
     return ret;
