@@ -1,107 +1,111 @@
 <template>
-  <q-modal key="safraCultura" v-model="isModalOpened" maximized @hide="closeModal">
+  <ap-modal ref="newPesagemModal" title="Informar Pesagem" :visible="isModalOpened" @hide="closeModal">
 
-    <q-stepper key="sendCargo" ref="stepper" contractable color="positive" v-model="currentStep" class="no-shadow q-mb-xl" v-if="entrega">
+    <q-stepper slot="content" ref="stepper" color="positive" v-model="currentStep" class="custom-stepper" v-if="entrega">
 
       <!--PASSO 1 DADOS DA ENTREGA-->
-      <q-step default title="Dados da Entrega" name="dadosDaEntrega">
-        <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
+      <q-step default title="Dados da Entrega" name="dadosDaEntrega" class="q-pa-none">
+        <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
+          <span class="q-subheading text-faded">Dados da Entrega</span>
+        </div>
 
-          <div class="col-12 text-center q-title">
-            Dados da Entrega
+        <div class="q-px-lg q-py-sm">
+          <div class="row q-mb-sm">
+            <div class="col-12">
+              <q-input v-model="pesagem.numeroTicket.value" align="right" stack-label="Número do ticket" />
+            </div>
           </div>
 
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <custom-input-text type="number" :model="pesagem.numeroTicket" align="right" label="Número do ticket"/>
-            <q-datetime v-model="pesagem.emissao.value" type="datetime" label="Data descarga"
-                        align="center" modal format="DD/MM/YYYY HH:mm"/>
-            <div class="row q-mb-lg">
-              <div class="col-8 q-pr-lg ">
-
-                  <!--<q-input class="q-mb-none" type="number" v-model="pesagem.pesoBrutoTotal.value" align="right"
-                           float-label="Peso bruto total" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>-->
-                <q-input class="q-mb-none" type="number" v-model="pesagem.pesoBrutoTotal.value" align="right"
-                         float-label="Peso bruto total" />
-
-              </div>
+          <div class="row q-mb-sm">
+            <div class="col-12">
+              <q-datetime v-model="pesagem.emissao.value" type="datetime" stack-label="Data descarga"
+                          align="center" modal format="DD/MM/YYYY HH:mm"/>
             </div>
+          </div>
 
-            <!--<custom-input-text type="number" :model="pesagem.pesoTara" align="right"
-                               label="Peso tara" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>
-            <custom-input-text type="number" :model="pesoBrutoProduto" disabled="true" align="right"
-                               label="Peso produto" :suffix="getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)"/>-->
+          <div class="row q-mb-sm">
+            <div class="col-12">
+              <q-input class="q-mb-none" type="number" v-model="pesoBrutoTotal" align="right"
+                       stack-label="Peso bruto total" :suffix="entrega.safra_cultura.unidade_medida_pesagem.sigla"/>
+            </div>
+          </div>
 
-            <custom-input-text type="number" :model="pesagem.pesoTara" align="right"
-                               label="Peso tara" />
-            <custom-input-text type="number" :model="pesoBrutoProduto" disabled="true" align="right"
-                               label="Peso produto" />
+          <div class="row q-mb-sm">
+            <div class="col-12">
+              <q-input class="q-mb-none" type="number" v-model="pesoTara" align="right"
+                       stack-label="Peso tara" :suffix="entrega.safra_cultura.unidade_medida_pesagem.sigla"/>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <q-input class="q-mb-none" type="number" v-model="pesoBrutoProduto" align="right"
+                       stack-label="Peso produto" :suffix="entrega.safra_cultura.unidade_medida_pesagem.sigla"/>
+            </div>
           </div>
         </div>
+
       </q-step>
 
       <!--PASSO 2 INFORMAR CALISSIFICACAO -->
       <q-step title="Informar Classificação" name="classificacao">
-        <div class="row justify-center items-center gutter-sm" style="min-height: 80vh">
+        <div class="text-center" style="position: sticky; top: 0; z-index:1; background: white; padding: 8px">
+          <span class="q-subheading text-faded">Informe a classificação da pesagem</span>
+        </div>
 
-          <div class="col-12 text-center q-title">
-            Classificação
+        <div class="q-px-lg q-py-sm">
+
+          <div class="row q-mb-md q-mt-md">
+            <div class="col-4 text-center text-faded q-caption">Classificação</div>
+            <div class="col-3 text-center text-faded q-caption">Verificado</div>
+            <div class="col-2 text-center text-faded q-caption">Tolerância</div>
+            <div class="col-3 text-center text-faded q-caption">Desconto</div>
           </div>
 
-          <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
-            <div class="row justify-center">
+          <div v-for="classificacao in pesagem.entregaClassificacao" class="row q-mb-lg">
 
-              <div class="col-12 row q-mb-md">
-                <div class="col-4 text-center text-faded q-caption">Classificação</div>
-                <div class="col-2 text-center text-faded q-caption">Verificado</div>
-                <div class="col-3 text-center text-faded q-caption">Tolerância</div>
-                <div class="col-3 text-center text-faded q-caption">Desconto</div>
-              </div>
+            <div class="col-4 align-left">
+              {{classificacao.nome}}
+            </div>
 
-              <div v-for="classificacao in pesagem.entregaClassificacao" class="row q-mb-lg">
+            <div class="col-3" :key="classificacao.nome">
+              <q-input suffix="%" align="right" type="number"v-model="classificacao.verificado.value"/>
+            </div>
 
-                <div class="col-4  self-center">
-                  {{classificacao.nome}}
-                </div>
+            <div class="col-2 text-faded self-center text-center ">
+              {{classificacao.tolerancia}}%
+            </div>
 
-                <div class="col-2" :key="classificacao.nome">
-                  <!--<custom-input-text suffix="%" align="right" type="number":model="classificacao.verificado"/>-->
-                  <q-input suffix="%" align="right" type="number"v-model="classificacao.verificado.value"/>
-                </div>
+            <div class="col-3">
+              <q-input align="right" type="number" v-model="classificacao.peso_desconto.value"
+                       :suffix="entrega.safra_cultura.unidade_medida_pesagem.sigla" />
+            </div>
 
-                <div class="col-3 text-faded self-center text-center ">
-                  {{classificacao.tolerancia}}%
-                </div>
+          </div>
 
-                <div class="col-3">
-                  <!--<custom-input-text suffix="KG" align="right" type="number":model="classificacao.peso_desconto"/>-->
-                  <q-input align="right" type="number" v-model="classificacao.peso_desconto.value" />
-                </div>
-
-              </div>
-
-              <div class="col-12 text-right">
-                <!--Total Descontos {{totalDesc}} {{getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)}}-->
-                Total Descontos {{totalDesc}}
-              </div>
-              <div class="col-12 text-right">
-                <!--Total Líquido {{totalLiquido}} {{getUnidadeMedidaSiglaById(pesagem.unidadeMedidaId)}}-->
-                Total Líquido {{totalLiquido}}
-              </div>
+          <div class="row justify-center">
+            <div class="col-12 text-right">
+              Total Descontos {{totalDesc}} {{entrega.safra_cultura.unidade_medida_pesagem.sigla}}
+            </div>
+            <div class="col-12 text-right">
+              Total Líquido {{totalLiquido}} {{entrega.safra_cultura.unidade_medida_pesagem.sigla}}
             </div>
           </div>
-
         </div>
       </q-step>
 
     </q-stepper>
 
-    <q-page-sticky position="bottom-right" :offset="[30, 30]">
-      <q-btn label="cancelar" color="primary" @click="closeModal" class="q-mr-sm"/>
-      <q-btn label="próximo" color="primary" @click="goToNextStep" :disable="isNextStepEnabled()" v-if="currentStep === 'dadosDaEntrega'"/>
-      <q-btn label="salvar" color="primary" @click="saveNewPesagem" :disable="isNextStepEnabled()" v-if="currentStep === 'classificacao'"/>
-    </q-page-sticky>
+    <div slot="footer">
+      <q-btn @click="closeModal()" flat label="Cancelar" color="primary" />
+      <div class="float-right ">
+        <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="currentStep !== 'dadosDaEntrega'"/>
+        <q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep === 'dadosDaEntrega'" :disable="isNextStepEnabled()"/>
+        <q-btn @click="saveNewPesagem" flat label="Salvar" color="primary" v-if="currentStep === 'classificacao'"/>
+      </div>
+    </div>
+  </ap-modal>
 
-  </q-modal>
 </template>
 <script>
   import Pesagem from 'assets/js/model/entrega/Pesagem'
@@ -109,11 +113,14 @@
   import customInputDateTime from 'components/CustomInputDateTime.vue'
   import CulturaClassificacaoService from "../../../../../assets/js/service/cultura/CulturaClassificacaoService";
   import PesagemService from "../../../../../assets/js/service/entrega/PesagemService";
+  import apModal from 'components/ApModal'
+
   export default {
     name: "stepper-new-pesagem",
     components:{
       customInputDateTime,
       customInputText,
+      apModal,
     },
     data () {
       return {
@@ -124,15 +131,30 @@
         isModalOpened: false,
         entrega: null,
         errorValue: '',
+
+        pesoBrutoTotal: 0,
+        pesoTara: 0,
+        pesoBrutoProduto: 0,
       }
     },
-    watch: {},
-    computed: {
-      pesoBrutoProduto: function(){
-        let value = this.pesagem.pesoBrutoTotal.value - this.pesagem.pesoTara.value;
-        this.pesagem.pesoBrutoProduto.value = value;
-        return {value: value};
+    watch: {
+      pesoBrutoTotal(value){
+        this.pesoBrutoProduto = value - this.pesoTara;
+        this.pesagem.pesoBrutoProduto.value = this.pesoBrutoProduto;
+        this.pesagem.pesoTara.value = this.pesoTara;
       },
+      pesoTara(value){
+        this.pesoBrutoProduto = this.pesoBrutoTotal - value;
+        this.pesagem.pesoBrutoProduto.value = this.pesoBrutoProduto;
+        this.pesagem.pesoTara.value = value;
+      },
+      pesoBrutoProduto(value){
+        this.pesoBrutoTotal = value + this.pesoTara
+        this.pesagem.pesoBrutoTotal.value = this.pesoBrutoTotal;
+      },
+    },
+    computed: {
+
       totalDesc: function () {
         let soma = 0;
         this.pesagem.entregaClassificacao.forEach(function (val) {
@@ -156,6 +178,9 @@
       closeModal: function(){
         this.isModalOpened = false;
         this.pesagem = new Pesagem();
+        this.pesoBrutoTotal = 0;
+        this.pesoTara = 0;
+        this.pesoBrutoProduto = 0;
       },
       isNextStepEnabled: function(){
         if(!this.pesagem.isValid()){
@@ -219,6 +244,9 @@
           this.$refs.stepper.next();
         }
       },
+      goToPreviousStep(){
+        this.$refs.stepper.previous();
+      },
       listClassificacoesByCultura(cultura_id){
         this.$q.loading.show();
         this.culturaClassificacaoService.listClassificacoesByCultura(cultura_id).then(classificacoes => {
@@ -244,5 +272,12 @@
     },
   }
 </script>
-<style scoped>
+<style>
+  .custom-stepper .q-stepper-header{
+    display: none;
+  }
+
+  .custom-stepper .q-stepper-step-inner{
+    padding: 0px !important;
+  }
 </style>
