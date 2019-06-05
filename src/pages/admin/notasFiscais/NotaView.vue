@@ -566,7 +566,7 @@
           <div class="row borda-superior" v-for="volume in transporte.notas_fiscais_transportes_volumes" :key="volume.id">
 
             <!--QUANTIDADE-->
-            <div class="col-2 q-pa-xs">
+            <div class="col-1 q-pa-xs">
               <div class="text-faded q-caption ellipsis">
                 Quantidade
               </div>
@@ -623,6 +623,14 @@
               <div class="ellipsis text-right">
                 {{numeral(volume.peso_liquido).format('0,0')}}
               </div>
+            </div>
+
+            <div class="col-1 borda-esquerda">
+              <q-btn icon="more_vert" flat round color="grey-7" class="float-right">
+                <q-popover>
+
+                </q-popover>
+              </q-btn>
             </div>
 
           </div>
@@ -1047,9 +1055,6 @@
           </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalItem()" icon="add">
             <span class="shadow-2">Produto</span>
-          </q-fab-action>
-          <q-fab-action color="grey-1" text-color="grey-7" @click="" icon="add">
-            <span class="shadow-2">Transportador</span>
           </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalLocalizacao()" icon="add">
             <span class="shadow-2">Destinatario/Rementente</span>
