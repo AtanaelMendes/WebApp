@@ -126,10 +126,10 @@
   import customInputText from 'components/CustomInputText.vue'
   import customInputDatetime from 'components/CustomInputDateTime.vue'
   import apImage from 'components/ApImage'
-  import EntregaService from "../../assets/js/service/entrega/EntregaService";
-  import CaminhaoService from "../../assets/js/service/CaminhaoService";
-  import SafraCulturaService from "../../assets/js/service/safra/SafraCulturaService";
-  import SafraCulturaTalhaoService from "../../assets/js/service/safra/SafraCulturaTalhaoService";
+  import EntregaService from "../../../../../assets/js/service/entrega/EntregaService";
+  import CaminhaoService from "../../../../../assets/js/service/CaminhaoService";
+  import SafraCulturaService from "../../../../../assets/js/service/safra/SafraCulturaService";
+  import SafraCulturaTalhaoService from "../../../../../assets/js/service/safra/SafraCulturaTalhaoService";
 
   export default {
     name: "stepper-nova-carga",

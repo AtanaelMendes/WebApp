@@ -119,9 +119,7 @@
 </template>
 
 <script>
-
-
-  import EntregaService from "../../assets/js/service/entrega/EntregaService";
+  import EntregaService from "../../../../../assets/js/service/entrega/EntregaService";
 
   export default {
     name: "FilterEntregasModal",

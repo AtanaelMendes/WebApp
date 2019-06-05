@@ -259,13 +259,13 @@
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
   import apImage from 'components/ApImage'
-  import AgroUtils from "../../assets/js/AgroUtils";
-  import NegocioService from "../../assets/js/service/negocio/NegocioService";
-  import MotoristaService from "../../assets/js/service/motorista/MotoristaService";
-  import ArmazemService from "../../assets/js/service/armazem/ArmazemService";
-  import NotaFiscalService from "../../assets/js/service/NotaFiscalService";
-  import EntregaService from "../../assets/js/service/entrega/EntregaService";
-  import CfopService from "../../assets/js/service/CfopService";
+  import AgroUtils from "../../../../../assets/js/AgroUtils";
+  import NegocioService from "../../../../../assets/js/service/negocio/NegocioService";
+  import MotoristaService from "../../../../../assets/js/service/motorista/MotoristaService";
+  import ArmazemService from "../../../../../assets/js/service/armazem/ArmazemService";
+  import NotaFiscalService from "../../../../../assets/js/service/NotaFiscalService";
+  import EntregaService from "../../../../../assets/js/service/entrega/EntregaService";
+  import CfopService from "../../../../../assets/js/service/CfopService";
 
   export default {
     name: "stepper-send-carga",

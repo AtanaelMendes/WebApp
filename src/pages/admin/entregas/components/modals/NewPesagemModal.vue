@@ -107,8 +107,8 @@
   import Pesagem from 'assets/js/model/entrega/Pesagem'
   import customInputText from 'components/CustomInputText.vue'
   import customInputDateTime from 'components/CustomInputDateTime.vue'
-  import CulturaClassificacaoService from "../../assets/js/service/cultura/CulturaClassificacaoService";
-  import PesagemService from "../../assets/js/service/entrega/PesagemService";
+  import CulturaClassificacaoService from "../../../../../assets/js/service/cultura/CulturaClassificacaoService";
+  import PesagemService from "../../../../../assets/js/service/entrega/PesagemService";
   export default {
     name: "stepper-new-pesagem",
     components:{
