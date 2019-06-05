@@ -29,27 +29,29 @@
 
       <div class="col-12" v-if="notaFiscal">
 
-        <nota-fiscal-form-modal ref="notaFiscalFormModal" @atualizada='notaFiscalAtualizada' @apagada='notaFiscalApagada' @duplicada='notaFiscalAtualizada'/>
-        <nota-fiscal-item-form-modal ref="notaFiscalItemFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
-        <nota-fiscal-item-cofins-form-modal ref="notaFiscalItemCofinsFormModal" @atualizada='notaFiscalAtualizada'/>
-        <nota-fiscal-item-icms-form-modal ref="notaFiscalItemIcmsFormModal" @atualizada='notaFiscalAtualizada'/>
-        <nota-fiscal-item-pis-form-modal ref="notaFiscalItemPisFormModal" @atualizada='notaFiscalAtualizada'/>
-        <nota-fiscal-item-ipi-form-modal ref="notaFiscalItemIpiFormModal" @atualizada='notaFiscalAtualizada'/>
-        <nota-fiscal-item-nve-form-modal ref="notaFiscalItemNveFormModal" @atualizada='notaFiscalAtualizada'/>
-        <nota-fiscal-item-imposto-devolucao-form-modal ref="notaFiscalItemImpostoDevolucaoFormModal" @atualizada='notaFiscalAtualizada'/>
+        <template>
+          <nota-fiscal-form-modal ref="notaFiscalFormModal" @atualizada='notaFiscalAtualizada' @apagada='notaFiscalApagada' @duplicada='notaFiscalAtualizada'/>
+          <nota-fiscal-item-form-modal ref="notaFiscalItemFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+          <nota-fiscal-item-cofins-form-modal ref="notaFiscalItemCofinsFormModal" @atualizada='notaFiscalAtualizada'/>
+          <nota-fiscal-item-icms-form-modal ref="notaFiscalItemIcmsFormModal" @atualizada='notaFiscalAtualizada'/>
+          <nota-fiscal-item-pis-form-modal ref="notaFiscalItemPisFormModal" @atualizada='notaFiscalAtualizada'/>
+          <nota-fiscal-item-ipi-form-modal ref="notaFiscalItemIpiFormModal" @atualizada='notaFiscalAtualizada'/>
+          <nota-fiscal-item-nve-form-modal ref="notaFiscalItemNveFormModal" @atualizada='notaFiscalAtualizada'/>
+          <nota-fiscal-item-imposto-devolucao-form-modal ref="notaFiscalItemImpostoDevolucaoFormModal" @atualizada='notaFiscalAtualizada'/>
 
-        <nota-fiscal-transporte-volume-form-modal ref="notaFiscalTransporteVolumeFormModal" @atualizada='notaFiscalAtualizada'/>
-        <nota-fiscal-transporte-reboque-form-modal ref="notaFiscalTransporteReboqueFormModal" @atualizada='notaFiscalAtualizada'/>
-        <nota-fiscal-transporte-volume-lacre-form-modal ref="notaFiscalTransporteVolumeLacreFormModal" @atualizada='notaFiscalAtualizada'/>
-        <nota-fiscal-transporte-form-modal ref="notaFiscalTransporteFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+          <nota-fiscal-transporte-volume-form-modal ref="notaFiscalTransporteVolumeFormModal" @atualizada='notaFiscalAtualizada'/>
+          <nota-fiscal-transporte-reboque-form-modal ref="notaFiscalTransporteReboqueFormModal" @atualizada='notaFiscalAtualizada'/>
+          <nota-fiscal-transporte-volume-lacre-form-modal ref="notaFiscalTransporteVolumeLacreFormModal" @atualizada='notaFiscalAtualizada'/>
+          <nota-fiscal-transporte-form-modal ref="notaFiscalTransporteFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
 
-        <nota-fiscal-processo-form-modal ref="notaFiscalProcessoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
-        <nota-fiscal-duplicata-form-modal ref="notaFiscalDuplicataFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
-        <nota-fiscal-observacao-form-modal ref="notaFiscalObservacaoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
-        <nota-fiscal-autorizado-form-modal ref="notaFiscalAutorizadoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
-        <nota-fiscal-localizacao-form-modal ref="notaFiscalLocalizacaoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
-        <nota-fiscal-referenciada-form-modal ref="notaFiscalReferenciadaFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
-        <nota-fiscal-forma-pagamento-form-modal ref="notaFiscalFormaPagamentoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+          <nota-fiscal-processo-form-modal ref="notaFiscalProcessoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+          <nota-fiscal-duplicata-form-modal ref="notaFiscalDuplicataFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+          <nota-fiscal-observacao-form-modal ref="notaFiscalObservacaoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+          <nota-fiscal-autorizado-form-modal ref="notaFiscalAutorizadoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+          <nota-fiscal-localizacao-form-modal ref="notaFiscalLocalizacaoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+          <nota-fiscal-referenciada-form-modal ref="notaFiscalReferenciadaFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+          <nota-fiscal-forma-pagamento-form-modal ref="notaFiscalFormaPagamentoFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
+        </template>
 
         <!--EMITENTE-->
         <q-card class="q-mb-sm">
@@ -199,6 +201,35 @@
         <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_destinatario" @atualizada='notaFiscalAtualizada' v-if="notaFiscal.nota_fiscal_localizacao_destinatario" />
         <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_entrega" @atualizada='notaFiscalAtualizada' v-if="notaFiscal.nota_fiscal_localizacao_entrega" />
         <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_retirada" @atualizada='notaFiscalAtualizada' v-if="notaFiscal.nota_fiscal_localizacao_retirada" />
+
+
+        <!--FATURA DUPLICATA-->
+        <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
+          Fatura/Duplicata
+        </div>
+        <q-card>
+          <div class="row" v-for="duplicata in notaFiscal.notas_fiscais_duplicatas" :key="duplicata.id">
+            <div class="col-11 q-pa-xs">
+              {{duplicata}}
+            </div>
+            <div class="col-1 q-pa-xs borda-esquerda">
+              <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
+                <q-popover>
+                  <q-list link>
+                    <q-item @click.native="editNotaFiscalDuplicata(duplicata)">
+                      <q-item-side icon="edit" />
+                      <q-item-main label="Editar"/>
+                    </q-item>
+                    <q-item @click.native="deleteNotaFiscalDuplicata(duplicata)">
+                      <q-item-side icon="delete" />
+                      <q-item-main label="Excluir"/>
+                    </q-item>
+                  </q-list>
+                </q-popover>
+              </q-btn>
+            </div>
+          </div>
+        </q-card>
 
         <!--CALCULO DE IMPOSTO-->
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
@@ -1139,11 +1170,25 @@
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
           Nota Fiscal Referenciada
         </div>
-        <q-card class="q-pa-xs">
-          <div class="row">
-            <div class="col-12">
+        <q-card>
+          <div class="row" v-for="notaFiscalReferenciada in notaFiscal.notas_fiscais_referenciadas" :key="notaFiscalReferenciada.id">
+            <div class="col-11 q-pa-xs">
+              {{notaFiscalReferenciada}}
+            </div>
+            <div class="col-1 q-pa-xs borda-esquerda">
               <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
-
+                <q-popover>
+                  <q-list link>
+                    <q-item @click.native="editNotaFiscalReferenciada(notaFiscalReferenciada)">
+                      <q-item-side icon="edit" />
+                      <q-item-main label="Editar"/>
+                    </q-item>
+                    <q-item @click.native="deleteNotaFiscalReferenciada(notaFiscalReferenciada)">
+                      <q-item-side icon="delete" />
+                      <q-item-main label="Excluir"/>
+                    </q-item>
+                  </q-list>
+                </q-popover>
               </q-btn>
             </div>
           </div>
@@ -1153,11 +1198,25 @@
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
           Formas de Pagamento
         </div>
-        <q-card class="q-pa-xs">
-          <div class="row">
-            <div class="col-12">
+        <q-card>
+          <div class="row" v-for="formaPagamento in notaFiscal.notas_fiscais_formas_pagamento" :key="formaPagamento.id">
+            <div class="col-11 q-pa-xs">
+              {{formaPagamento}}
+            </div>
+            <div class="col-1 q-pa-xs borda-esquerda">
               <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
-
+                <q-popover>
+                  <q-list link>
+                    <q-item @click.native="editNotaFiscalFormaPagamento(formaPagamento)">
+                      <q-item-side icon="edit" />
+                      <q-item-main label="Editar"/>
+                    </q-item>
+                    <q-item @click.native="deleteNotaFiscalFormaPagamento(formaPagamento)">
+                      <q-item-side icon="delete" />
+                      <q-item-main label="Excluir"/>
+                    </q-item>
+                  </q-list>
+                </q-popover>
               </q-btn>
             </div>
           </div>
