@@ -615,6 +615,9 @@
         return 'red'
       },
       hasInconsitentDate(){
+        if(!this.entrega.pesagens){
+          return false;
+        }
         let pesagens = this.entrega.pesagens.sort(function(pesagem1, pesagem2){
           return new Date(pesagem1.emissao) - new Date(pesagem2.emissao)
         });
