@@ -5,9 +5,6 @@
         <q-btn slot="right" flat dense icon="more_vert" round>
           <q-popover>
             <q-list link class="no-border">
-              <q-item v-close-overlay @click.native="editEntregaDates(entrega.id)">
-                <q-item-main label="Alterar Datas"/>
-              </q-item>
               <q-item v-close-overlay @click.native="deleteEntrega(entrega.id)">
                 <q-item-main label="Excluir"/>
               </q-item>
@@ -131,7 +128,24 @@
                           para descarregar.
                         </template>
                       </q-item-tile>
+                      <q-item-tile v-if="hasInconsitentDate">
+                        <div  class="inconsistent-date">
+                          <q-icon name="warning" />
+                          <span>Datas inconsistentes</span>
+                        </div>
+                      </q-item-tile>
                     </q-item-main>
+                    <q-item-side right>
+                      <q-btn flat dense icon="more_vert" round>
+                        <q-popover>
+                          <q-list link class="no-border">
+                            <q-item v-close-overlay @click.native="editEntregaDates()">
+                              <q-item-main label="Alterar Datas"/>
+                            </q-item>
+                          </q-list>
+                        </q-popover>
+                      </q-btn>
+                    </q-item-side>
                   </q-item>
                 </q-list>
               </q-card>
@@ -599,6 +613,13 @@
           return 'primary'
         }
         return 'red'
+      },
+      hasInconsitentDate(){
+        let pesagens = this.entrega.pesagens.sort(function(pesagem1, pesagem2){
+          return new Date(pesagem1.emissao) - new Date(pesagem2.emissao)
+        });
+
+        return this.entrega.envio_armazem > pesagens[0].emissao;
       }
     },
     methods: {
@@ -777,8 +798,8 @@
           })
         }).catch(()=>{});
       },
-      editEntregaDates(id){
-        this.$refs.editDatesModal.openModal(id);
+      editEntregaDates(){
+        this.$refs.editDatesModal.openModal(this.entrega);
       },
       backAction: function () {
         this.$router.back();
@@ -811,6 +832,21 @@
     font-weight: 300;
   }
   .list-empty i{
+    color: #ffb500;
+    font-size: 20px;
+    margin-right: 6px;
+  }
+
+  .inconsistent-date{
+    height: 55px;
+    padding-top: 5px;
+  }
+  .inconsistent-date span{
+    color: #8c8c8c;
+    font-weight: 300;
+    font-size: 15px;
+  }
+  .inconsistent-date i{
     color: #ffb500;
     font-size: 20px;
     margin-right: 6px;
