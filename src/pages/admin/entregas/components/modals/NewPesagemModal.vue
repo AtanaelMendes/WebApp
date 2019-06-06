@@ -172,7 +172,7 @@
       openModal: function(entrega){
         this.isModalOpened = true;
         this.currentStep = 'dadosDaEntrega';
-        this.listClassificacoesByCultura(entrega.negocios[0].negocio_cultura.safra_cultura.cultura.id);
+        this.listClassificacoesByCultura(entrega.safra_cultura.cultura.id);
         this.entrega = entrega;
       },
       closeModal: function(){
