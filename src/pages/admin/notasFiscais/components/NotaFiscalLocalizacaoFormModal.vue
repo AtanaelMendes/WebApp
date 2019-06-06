@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}">
+  <q-modal no-esc-dismiss	 v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}" @show="$refs.primeiroCampo.focus()">
     <q-modal-layout v-if="notaFiscalLocalizacao">
       <q-toolbar slot="header">
         <q-toolbar-title>
@@ -15,19 +15,19 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalLocalizacao.tipo" float-label="tipo"/>
+              <ap-select-type v-model="notaFiscalLocalizacao.tipo" type="NOTA_FISCAL_LOCALIZACAO_TIPO" stack-label="Tipo" />
               <q-input v-model="notaFiscalLocalizacao.localizacao_id" float-label="localizacao_id"/>
-              <q-input v-model="notaFiscalLocalizacao.razao_social" float-label="razao_social"/>
-              <q-input v-model="notaFiscalLocalizacao.cnpj" float-label="cnpj"/>
-              <q-input v-model="notaFiscalLocalizacao.cpf" float-label="cpf"/>
+              <q-input v-model="notaFiscalLocalizacao.razao_social" float-label="razao_social" ref="primeiroCampo"/>
+              <q-input v-model="notaFiscalLocalizacao.cnpj" float-label="cnpj" align="right"/>
+              <q-input v-model="notaFiscalLocalizacao.cpf" float-label="cpf" align="right"/>
               <q-input v-model="notaFiscalLocalizacao.inscricao_estrangeiro" float-label="inscricao_estrangeiro"/>
-              <q-input v-model="notaFiscalLocalizacao.inscricao_estadual_indicador" float-label="inscricao_estadual_indicador"/>
-              <q-input v-model="notaFiscalLocalizacao.inscricao_estadual" float-label="inscricao_estadual"/>
+              <ap-select-type v-model="notaFiscalLocalizacao.inscricao_estadual_indicador" type="INSCRICAO_ESTADUAL_INDICADOR" stack-label="Inscrição Estadual Indocador" />
+              <q-input v-model="notaFiscalLocalizacao.inscricao_estadual" float-label="inscricao_estadual" align="right"/>
               <q-input v-model="notaFiscalLocalizacao.inscricao_suframa" float-label="inscricao_suframa"/>
               <q-input v-model="notaFiscalLocalizacao.inscricao_municipal" float-label="inscricao_municipal"/>
               <q-input v-model="notaFiscalLocalizacao.email" float-label="email"/>
               <q-input v-model="notaFiscalLocalizacao.endereco" float-label="endereco"/>
-              <q-input v-model="notaFiscalLocalizacao.numero" float-label="numero"/>
+              <q-input v-model="notaFiscalLocalizacao.numero" float-label="numero" align="right" type="number"/>
               <q-input v-model="notaFiscalLocalizacao.complemento" float-label="complemento"/>
               <q-input v-model="notaFiscalLocalizacao.bairro" float-label="bairro"/>
               <q-input v-model="notaFiscalLocalizacao.cidade_id" float-label="cidade_id"/>
@@ -38,7 +38,7 @@
         </div>
       </div>
       <div class="q-pa-sm text-right" slot="footer">
-        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm"/>
+        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm" :tabindex="-1"/>
         <q-btn flat label="Salvar"   color="primary"  @click="save"  key="edit"/>
       </div>
     </q-modal-layout>
@@ -46,11 +46,13 @@
 </template>
 
 <script>
+  import apSelectType from '../../../../components/form/ApSelectType'
   import NotaFiscalLocalizacaoService from "../../../../assets/js/service/notaFiscal/NotaFiscalLocalizacaoService";
   export default {
-
     name: "notaFiscalLocalizacaoFormModal",
-
+    components: {
+      apSelectType,
+    },
     data(){
       return {
         isModalOpened: false,

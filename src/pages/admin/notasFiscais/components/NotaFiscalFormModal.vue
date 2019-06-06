@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}">
+  <q-modal no-esc-dismiss v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}" @show="$refs.primeiroCampo.focus()">
     <q-modal-layout v-if="notaFiscal">
       <q-toolbar slot="header">
         <q-toolbar-title>
@@ -27,7 +27,7 @@
                   <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
                     <div class="row" v-if="isNumeroEditavel">
                       <div class="col-2 q-pr-sm">
-                        <q-input v-model="notaFiscal.modelo" stack-label="Modelo" align="center" />
+                        <q-input v-model="notaFiscal.modelo" stack-label="Modelo" align="center" ref="primeiroCampo"/>
                       </div>
                       <div class="col-2 q-pr-sm">
                         <q-input v-model="notaFiscal.serie" stack-label="Série" type="number" step="1" min="0" max="999999999999" align="center" />
@@ -71,7 +71,7 @@
                 <q-input v-model="notaFiscal.contingencia" stack-label="contingencia"/>
                 <q-input v-model="notaFiscal.contingencia_justificativa" stack-label="contingencia_justificativa"/>
                 <q-input v-model="notaFiscal.pessoa_id" stack-label="pessoa_id"/>
-                <q-input v-model="notaFiscal.frete" stack-label="frete"/>
+                <ap-select-type v-model="notaFiscal.frete" type="FRETE" stack-label="Frete" />
                 <q-input v-model="notaFiscal.informacoes_adicionais_fisco" stack-label="informacoes_adicionais_fisco"/>
                 <q-input v-model="notaFiscal.informacoes_complementares" stack-label="informacoes_complementares"/>
                 <q-input v-model="notaFiscal.exportacao_estado_id" stack-label="exportacao_estado_id"/>
@@ -110,7 +110,7 @@
           </div>
         </div>
       <div class="q-pa-sm text-right" slot="footer">
-        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm"/>
+        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm" :tabindex="-1"/>
         <q-btn flat label="Salvar"   color="primary"  @click="save"  key="edit"/>
       </div>
     </q-modal-layout>
@@ -118,8 +118,8 @@
 </template>
 
 <script>
-  import apSelectType from 'components/form/ApSelectType'
-  import apSelectNotaFiscalSerie from 'components/form/ApSelectNotaFiscalSerie'
+  import apSelectType from '../../../../components/form/ApSelectType'
+  import apSelectNotaFiscalSerie from '../../../../components/form/ApSelectNotaFiscalSerie'
   import NotaFiscalService from "../../../../assets/js/service/notaFiscal/NotaFiscalService";
   export default {
 

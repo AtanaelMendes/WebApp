@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}">
+  <q-modal no-esc-dismiss v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}" @show="$refs.primeiroCampo.focus()">
     <q-modal-layout v-if="notaFiscalTransporteVolume">
       <q-toolbar slot="header">
         <q-toolbar-title>
@@ -15,18 +15,18 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalTransporteVolume.quantidade" float-label="quantidade"/>
+              <q-input v-model="notaFiscalTransporteVolume.quantidade" float-label="quantidade" ref="primeiroCampo" align="right" type="number"/>
               <q-input v-model="notaFiscalTransporteVolume.especie" float-label="especie"/>
               <q-input v-model="notaFiscalTransporteVolume.marca" float-label="marca"/>
-              <q-input v-model="notaFiscalTransporteVolume.numeracao" float-label="numeracao"/>
-              <q-input v-model="notaFiscalTransporteVolume.peso_bruto" float-label="peso_bruto"/>
-              <q-input v-model="notaFiscalTransporteVolume.peso_liquido" float-label="peso_liquido"/>
+              <q-input v-model="notaFiscalTransporteVolume.numeracao" float-label="numeracao" align="right" />
+              <q-input v-model="notaFiscalTransporteVolume.peso_bruto" float-label="peso_bruto" align="right" type="number"/>
+              <q-input v-model="notaFiscalTransporteVolume.peso_liquido" float-label="peso_liquido" align="right" type="number"/>
             </form>
           </div>
         </div>
       </div>
       <div class="q-pa-sm text-right" slot="footer">
-        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm"/>
+        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm" :tabindex="-1"/>
         <q-btn flat label="Salvar"   color="primary"  @click="save"  key="edit"/>
       </div>
     </q-modal-layout>

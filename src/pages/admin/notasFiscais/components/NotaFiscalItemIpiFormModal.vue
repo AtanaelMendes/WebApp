@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}">
+  <q-modal no-esc-dismiss v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}" @show="$refs.primeiroCampo.focus()">
     <q-modal-layout v-if="notaFiscalItemIpi">
       <q-toolbar slot="header">
         <q-toolbar-title>
@@ -15,22 +15,22 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalItemIpi.cst" float-label="cst"/>
-              <q-input v-model="notaFiscalItemIpi.base_calculo" float-label="base_calculo"/>
-              <q-input v-model="notaFiscalItemIpi.percentual" float-label="percentual"/>
-              <q-input v-model="notaFiscalItemIpi.valor" float-label="valor"/>
-              <q-input v-model="notaFiscalItemIpi.cnpj_produtor" float-label="cnpj_produtor"/>
+              <q-input v-model="notaFiscalItemIpi.cst" float-label="cst" ref="primeiroCampo"/>
+              <q-input v-model="notaFiscalItemIpi.base_calculo" float-label="base_calculo" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIpi.percentual" float-label="percentual" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIpi.valor" float-label="valor" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIpi.cnpj_produtor" float-label="cnpj_produtor" align="right" type="number"/>
               <q-input v-model="notaFiscalItemIpi.codigo_selo" float-label="codigo_selo"/>
-              <q-input v-model="notaFiscalItemIpi.quantidade_selo" float-label="quantidade_selo"/>
+              <q-input v-model="notaFiscalItemIpi.quantidade_selo" float-label="quantidade_selo" align="right" type="number"/>
               <q-input v-model="notaFiscalItemIpi.codigo_enquadramento" float-label="codigo_enquadramento"/>
-              <q-input v-model="notaFiscalItemIpi.quantidade_unidade" float-label="quantidade_unidade"/>
-              <q-input v-model="notaFiscalItemIpi.valor_unidade" float-label="valor_unidade"/>
+              <q-input v-model="notaFiscalItemIpi.quantidade_unidade" float-label="quantidade_unidade" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIpi.valor_unidade" float-label="valor_unidade" align="right" type="number"/>
             </form>
           </div>
         </div>
       </div>
       <div class="q-pa-sm text-right" slot="footer">
-        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm"/>
+        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm" :tabindex="-1"/>
         <q-btn flat label="Salvar"   color="primary"  @click="save"  key="edit"/>
       </div>
     </q-modal-layout>

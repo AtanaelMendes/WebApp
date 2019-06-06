@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}" @show="$refs.primeiroCampo.focus()">
+  <q-modal no-esc-dismiss v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}" @show="$refs.primeiroCampo.focus()">
     <q-modal-layout v-if="notaFiscalRefenciada">
       <q-toolbar slot="header">
         <q-toolbar-title>
@@ -15,23 +15,23 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalRefenciada.tipo" float-label="tipo" ref="primeiroCampo"/>
-              <q-input v-model="notaFiscalRefenciada.chave" float-label="chave"/>
+              <ap-select-type v-model="notaFiscalRefenciada.tipo" type="NOTA_FISCAL_REFERENCIADA_TIPO" stack-label="Tipo" />
+              <q-input v-model="notaFiscalRefenciada.chave" float-label="chave" ref="primeiroCampo"/>
               <q-input v-model="notaFiscalRefenciada.estado_id" float-label="estado_id"/>
-              <q-input v-model="notaFiscalRefenciada.emissao" float-label="emissao"/>
-              <q-input v-model="notaFiscalRefenciada.cnpj" float-label="cnpj"/>
-              <q-input v-model="notaFiscalRefenciada.cpf" float-label="cpf"/>
-              <q-input v-model="notaFiscalRefenciada.inscricao_estadual" float-label="inscricao_estadual"/>
-              <q-input v-model="notaFiscalRefenciada.modelo" float-label="modelo"/>
+              <q-datetime v-model="notaFiscalRefenciada.emissao" type="datetime" format="DD/MMM/YY HH:mm" stack-label="Emissão"  align="center" />
+              <q-input v-model="notaFiscalRefenciada.cnpj" float-label="cnpj" align="right"/>
+              <q-input v-model="notaFiscalRefenciada.cpf" float-label="cpf" align="right"/>
+              <q-input v-model="notaFiscalRefenciada.inscricao_estadual" float-label="inscricao_estadual" align="right" />
+              <ap-select-type v-model="notaFiscalRefenciada.modelo" type="NOTA_FISCAL_REFERENCIADA_TIPO" stack-label="Modelo" />
               <q-input v-model="notaFiscalRefenciada.serie" float-label="serie"/>
-              <q-input v-model="notaFiscalRefenciada.numero" float-label="numero"/>
+              <q-input v-model="notaFiscalRefenciada.numero" float-label="numero" align="right" type="number"/>
               <q-input v-model="notaFiscalRefenciada.coo" float-label="coo"/>
             </form>
           </div>
         </div>
       </div>
       <div class="q-pa-sm text-right" slot="footer">
-        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm" tabindex="-1"/>
+        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm" :tabindex="-1"/>
         <q-btn flat label="Salvar"   color="primary"  @click="save"  key="edit"/>
       </div>
     </q-modal-layout>
@@ -39,11 +39,13 @@
 </template>
 
 <script>
+  import apSelectType from '../../../../components/form/ApSelectType'
   import NotaFiscalReferenciadaService from "../../../../assets/js/service/notaFiscal/NotaFiscalReferenciadaService";
   export default {
-
     name: "notaFiscalReferenciadaFormModal",
-
+    components:{
+      apSelectType,
+    },
     data(){
       return {
         isModalOpened: false,

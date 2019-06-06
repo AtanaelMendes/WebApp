@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}">
+  <q-modal no-esc-dismiss v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}" @show="$refs.primeiroCampo.focus()">
     <q-modal-layout v-if="notaFiscalItem">
       <q-toolbar slot="header">
         <q-toolbar-title>
@@ -15,22 +15,22 @@
         <div class="row justify-center">
             <div class="col-12">
               <form v-on:submit.prevent="save"><input type="submit" hidden />
-                <q-input v-model="notaFiscalItem.codigo" float-label="codigo"/>
+                <q-input v-model="notaFiscalItem.codigo" float-label="codigo" ref="primeiroCampo"/>
                 <q-input v-model="notaFiscalItem.barras" float-label="barras"/>
                 <q-input v-model="notaFiscalItem.produto" float-label="produto"/>
-                <q-input v-model="notaFiscalItem.cfop_id" float-label="cfop_id"/>
+                <q-input v-model="notaFiscalItem.cfop_id" float-label="cfop_id" align="right" type="number"/>
                 <q-input v-model="notaFiscalItem.is_totalizador" float-label="is_totalizador"/>
-                <q-input v-model="notaFiscalItem.quantidade" float-label="quantidade"/>
-                <q-input v-model="notaFiscalItem.unidade_medida_id" float-label="unidade_medida_id"/>
-                <q-input v-model="notaFiscalItem.valor_unitario" float-label="valor_unitario"/>
-                <q-input v-model="notaFiscalItem.entrega_negocio_id" float-label="entrega_negocio_id"/>
+                <q-input v-model="notaFiscalItem.quantidade" float-label="quantidade" align="right" type="number"/>
+                <q-input v-model="notaFiscalItem.unidade_medida_id" float-label="unidade_medida_id" align="right" type="number"/>
+                <q-input v-model="notaFiscalItem.valor_unitario" float-label="valor_unitario" align="right" type="number"/>
+                <q-input v-model="notaFiscalItem.entrega_negocio_id" float-label="entrega_negocio_id" align="right" type="number"/>
                 <q-input v-model="notaFiscalItem.negocio_cultura_movimento_id" float-label="negocio_cultura_movimento_id"/>
-                <q-input v-model="notaFiscalItem.valor_produto" float-label="valor_produto"/>
-                <q-input v-model="notaFiscalItem.valor_frete" float-label="valor_frete"/>
-                <q-input v-model="notaFiscalItem.valor_seguro" float-label="valor_seguro"/>
-                <q-input v-model="notaFiscalItem.valor_outro" float-label="valor_outro"/>
-                <q-input v-model="notaFiscalItem.valor_desconto" float-label="valor_desconto"/>
-                <q-input v-model="notaFiscalItem.produto_barra_id" float-label="produto_barra_id"/>
+                <q-input v-model="notaFiscalItem.valor_produto" float-label="valor_produto" align="right" type="number"/>
+                <q-input v-model="notaFiscalItem.valor_frete" float-label="valor_frete" align="right" type="number"/>
+                <q-input v-model="notaFiscalItem.valor_seguro" float-label="valor_seguro" align="right" type="number"/>
+                <q-input v-model="notaFiscalItem.valor_outro" float-label="valor_outro" align="right" type="number"/>
+                <q-input v-model="notaFiscalItem.valor_desconto" float-label="valor_desconto" align="right" type="number"/>
+                <q-input v-model="notaFiscalItem.produto_barra_id" float-label="produto_barra_id" align="right" type="number"/>
                 <q-input v-model="notaFiscalItem.ncm" float-label="ncm"/>
                 <q-input v-model="notaFiscalItem.beneficio_fiscal" float-label="beneficio_fiscal"/>
                 <q-input v-model="notaFiscalItem.excecao_tabela_ipi" float-label="excecao_tabela_ipi"/>
@@ -38,9 +38,9 @@
                 <q-input v-model="notaFiscalItem.pedido_item" float-label="pedido_item"/>
                 <q-input v-model="notaFiscalItem.ficha_conteudo_importacao" float-label="ficha_conteudo_importacao"/>
                 <q-input v-model="notaFiscalItem.barras_tributacao" float-label="barras_tributacao"/>
-                <q-input v-model="notaFiscalItem.unidade_medida_tributacao_id" float-label="unidade_medida_tributacao_id"/>
+                <q-input v-model="notaFiscalItem.unidade_medida_tributacao_id" float-label="unidade_medida_tributacao_id" align="right" type="number"/>
                 <q-input v-model="notaFiscalItem.quantidade_tributacao" float-label="quantidade_tributacao"/>
-                <q-input v-model="notaFiscalItem.valor_unitario_tributacao" float-label="valor_unitario_tributacao"/>
+                <q-input v-model="notaFiscalItem.valor_unitario_tributacao" float-label="valor_unitario_tributacao" align="right" type="number"/>
                 <q-input v-model="notaFiscalItem.informacoes_adicionais" float-label="informacoes_adicionais"/>
                 <q-input v-model="notaFiscalItem.cest" float-label="cest"/>
                 <q-input v-model="notaFiscalItem.escala_relevante" float-label="escala_relevante"/>
@@ -51,7 +51,7 @@
           </div>
         </div>
       <div class="q-pa-sm text-right" slot="footer">
-        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm"/>
+        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm" :tabindex="-1"/>
         <q-btn flat label="Salvar"   color="primary"  @click="save"  key="edit"/>
       </div>
     </q-modal-layout>

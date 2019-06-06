@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}">
+  <q-modal no-esc-dismiss v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}" @show="$refs.primeiroCampo.focus()">
     <q-modal-layout v-if="NotaFiscalProcesso">
       <q-toolbar slot="header">
         <q-toolbar-title>
@@ -15,14 +15,14 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="NotaFiscalProcesso.numero" float-label="numero"/>
-              <q-input v-model="NotaFiscalProcesso.origem" float-label="origem"/>
+              <q-input v-model="NotaFiscalProcesso.numero" float-label="numero" ref="primeiroCampo"/>
+              <ap-select-type v-model="NotaFiscalProcesso.origem" type="ORIGEM_PROCESSO" stack-label="Origem do Processo" />
             </form>
           </div>
         </div>
       </div>
       <div class="q-pa-sm text-right" slot="footer">
-        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm"/>
+        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm" :tabindex="-1"/>
         <q-btn flat label="Salvar"   color="primary"  @click="save"  key="edit"/>
       </div>
     </q-modal-layout>
@@ -30,11 +30,13 @@
 </template>
 
 <script>
+  import apSelectType from '../../../../components/form/ApSelectType'
   import NotaFiscalProcessoService from "../../../../assets/js/service/notaFiscal/NotaFiscalProcessoService";
   export default {
-
     name: "notaFiscalProcessoFormModal",
-
+    components:{
+      apSelectType,
+    },
     data(){
       return {
         isModalOpened: false,

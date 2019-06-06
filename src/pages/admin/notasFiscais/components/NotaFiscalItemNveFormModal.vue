@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}">
+  <q-modal no-esc-dismiss v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}" @show="$refs.primeiroCampo.focus()">
     <q-modal-layout v-if="notaFiscalItemNve">
       <q-toolbar slot="header">
         <q-toolbar-title>
@@ -15,7 +15,7 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalItemNve.nve" float-label="nve"/>
+              <q-input v-model="notaFiscalItemNve.nve" float-label="nve" ref="primeiroCampo"/>
             </form>
           </div>
         </div>

@@ -170,10 +170,12 @@
 
 <script>
   import notaFiscalLocalizacaoFormModal from './NotaFiscalLocalizacaoFormModal'
+  import apSelectType from '../../../../components/form/ApSelectType'
   export default {
     name: "notaFiscalLocalizacao",
     components: {
-      notaFiscalLocalizacaoFormModal
+      apSelectType,
+      notaFiscalLocalizacaoFormModal,
     },
     data(){
       return {

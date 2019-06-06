@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}">
+  <q-modal no-esc-dismiss v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}" @show="$refs.primeiroCampo.focus()">
     <q-modal-layout v-if="notaFiscalItemIcms">
       <q-toolbar slot="header">
         <q-toolbar-title>
@@ -15,54 +15,55 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalItemIcms.origem" float-label="origem"/>
-              <q-input v-model="notaFiscalItemIcms.cst" float-label="cst"/>
+              <ap-select-type v-model="notaFiscalItemIcms.origem" type="ORIGEM_ICMS" stack-label="ICMS Origem" />
+              <q-input v-model="notaFiscalItemIcms.cst" float-label="cst" ref="primeiroCampo"/>
               <q-input v-model="notaFiscalItemIcms.csosn" float-label="csosn"/>
-              <q-input v-model="notaFiscalItemIcms.base_calculo" float-label="base_calculo"/>
-              <q-input v-model="notaFiscalItemIcms.percentual" float-label="percentual"/>
-              <q-input v-model="notaFiscalItemIcms.valor" float-label="valor"/>
-              <q-input v-model="notaFiscalItemIcms.base_calculo_modalidade" float-label="base_calculo_modalidade"/>
-              <q-input v-model="notaFiscalItemIcms.base_calculo_percentual_reducao" float-label="base_calculo_percentual_reducao"/>
-              <q-input v-model="notaFiscalItemIcms.st_base_calculo_modalidade" float-label="st_base_calculo_modalidade"/>
-              <q-input v-model="notaFiscalItemIcms.st_percentual_margem" float-label="st_percentual_margem"/>
-              <q-input v-model="notaFiscalItemIcms.st_base_calculo_percentual_reducao" float-label="st_base_calculo_percentual_reducao"/>
-              <q-input v-model="notaFiscalItemIcms.st_base_calculo" float-label="st_base_calculo"/>
-              <q-input v-model="notaFiscalItemIcms.st_percentual" float-label="st_percentual"/>
-              <q-input v-model="notaFiscalItemIcms.st_valor" float-label="st_valor"/>
-              <q-input v-model="notaFiscalItemIcms.fcp_percentual" float-label="fcp_percentual"/>
-              <q-input v-model="notaFiscalItemIcms.fcp_valor" float-label="fcp_valor"/>
-              <q-input v-model="notaFiscalItemIcms.fcp_base_calculo" float-label="fcp_base_calculo"/>
-              <q-input v-model="notaFiscalItemIcms.fcp_st_base_calculo" float-label="fcp_st_base_calculo"/>
-              <q-input v-model="notaFiscalItemIcms.fcp_st_percentual" float-label="fcp_st_percentual"/>
-              <q-input v-model="notaFiscalItemIcms.fcp_st_valor" float-label="fcp_st_valor"/>
-              <q-input v-model="notaFiscalItemIcms.desoneracao_valor" float-label="desoneracao_valor"/>
-              <q-input v-model="notaFiscalItemIcms.desoneracao_motivo" float-label="desoneracao_motivo"/>
-              <q-input v-model="notaFiscalItemIcms.op_base_calculo_percentual" float-label="op_base_calculo_percentual"/>
-              <q-input v-model="notaFiscalItemIcms.op_valor" float-label="op_valor"/>
-              <q-input v-model="notaFiscalItemIcms.diferimento_percentual" float-label="diferimento_percentual"/>
-              <q-input v-model="notaFiscalItemIcms.diferimento_valor" float-label="diferimento_valor"/>
-              <q-input v-model="notaFiscalItemIcms.st_retido_base_calculo" float-label="st_retido_base_calculo"/>
-              <q-input v-model="notaFiscalItemIcms.st_retido_valor" float-label="st_retido_valor"/>
-              <q-input v-model="notaFiscalItemIcms.consumidor_percentual" float-label="consumidor_percentual"/>
-              <q-input v-model="notaFiscalItemIcms.fcp_st_retido_base_calculo" float-label="fcp_st_retido_base_calculo"/>
-              <q-input v-model="notaFiscalItemIcms.fcp_st_retido_percentual" float-label="fcp_st_retido_percentual"/>
-              <q-input v-model="notaFiscalItemIcms.fcp_st_retido_valor" float-label="fcp_st_retido_valor"/>
-              <q-input v-model="notaFiscalItemIcms.efetivo_base_calculo_percentual_reducao" float-label="efetivo_base_calculo_percentual_reducao"/>
-              <q-input v-model="notaFiscalItemIcms.efetivo_base_calculo" float-label="efetivo_base_calculo"/>
-              <q-input v-model="notaFiscalItemIcms.efetivo_percentual" float-label="efetivo_percentual"/>
-              <q-input v-model="notaFiscalItemIcms.efetivo_valor" float-label="efetivo_valor"/>
-              <q-input v-model="notaFiscalItemIcms.substituto_valor" float-label="substituto_valor"/>
-              <q-input v-model="notaFiscalItemIcms.st_estado_id" float-label="st_estado_id"/>
-              <q-input v-model="notaFiscalItemIcms.destino_st_base_calculo" float-label="destino_st_base_calculo"/>
-              <q-input v-model="notaFiscalItemIcms.destino_st_valor" float-label="destino_st_valor"/>
-              <q-input v-model="notaFiscalItemIcms.simples_credito_percentual" float-label="simples_credito_percentual"/>
-              <q-input v-model="notaFiscalItemIcms.simples_credito_valor" float-label="simples_credito_valor"/>
+              <q-input v-model="notaFiscalItemIcms.base_calculo" float-label="base_calculo" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.percentual" float-label="percentual" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.valor" float-label="valor" align="right" type="number"/>
+              <ap-select-type v-model="notaFiscalItemIcms.base_calculo_modalidade" type="BASE_CALCULO_MODALIDADE" stack-label="Base Cálculo Modalidade"/>
+              <q-input v-model="notaFiscalItemIcms.base_calculo_percentual_reducao" float-label="base_calculo_percentual_reducao" align="right" type="number"/>
+              <ap-select-type v-model="notaFiscalItemIcms.st_base_calculo_modalidade" type="ST_BASE_CALCULO_MODALIDADE" stack-label="ST Base Cálculo Modalidade"/>
+              <q-input v-model="notaFiscalItemIcms.st_percentual_margem" float-label="st_percentual_margem" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.st_base_calculo_percentual_reducao" float-label="st_base_calculo_percentual_reducao" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.st_base_calculo" float-label="st_base_calculo" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.st_percentual" float-label="st_percentual"align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.st_valor" float-label="st_valor" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.fcp_percentual" float-label="fcp_percentual" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.fcp_valor" float-label="fcp_valor" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.fcp_base_calculo" float-label="fcp_base_calculo" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.fcp_st_base_calculo" float-label="fcp_st_base_calculo" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.fcp_st_percentual" float-label="fcp_st_percentual" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.fcp_st_valor" float-label="fcp_st_valor"align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.desoneracao_valor" float-label="desoneracao_valor" align="right" type="number"/>
+              <ap-select-type v-model="notaFiscalItemIcms.desoneracao_motivo" type="DESONERACAO_MOTIVO" stack-label="Desoneração Motivo"/>
+              <q-input v-model="notaFiscalItemIcms.desoneracao_motivo" float-label="desoneracao_motivo" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.op_base_calculo_percentual" float-label="op_base_calculo_percentual" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.op_valor" float-label="op_valor" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.diferimento_percentual" float-label="diferimento_percentual" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.diferimento_valor" float-label="diferimento_valor" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.st_retido_base_calculo" float-label="st_retido_base_calculo" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.st_retido_valor" float-label="st_retido_valor" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.consumidor_percentual" float-label="consumidor_percentual" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.fcp_st_retido_base_calculo" float-label="fcp_st_retido_base_calculo" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.fcp_st_retido_percentual" float-label="fcp_st_retido_percentual" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.fcp_st_retido_valor" float-label="fcp_st_retido_valor" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.efetivo_base_calculo_percentual_reducao" float-label="efetivo_base_calculo_percentual_reducao" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.efetivo_base_calculo" float-label="efetivo_base_calculo" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.efetivo_percentual" float-label="efetivo_percentual" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.efetivo_valor" float-label="efetivo_valor" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.substituto_valor" float-label="substituto_valor" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.st_estado_id" float-label="st_estado_id" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.destino_st_base_calculo" float-label="destino_st_base_calculo" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.destino_st_valor" float-label="destino_st_valor" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.simples_credito_percentual" float-label="simples_credito_percentual" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIcms.simples_credito_valor" float-label="simples_credito_valor" align="right" type="number"/>
             </form>
           </div>
         </div>
       </div>
       <div class="q-pa-sm text-right" slot="footer">
-        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm"/>
+        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm" :tabindex="-1"/>
         <q-btn flat label="Salvar"   color="primary"  @click="save"  key="edit"/>
       </div>
     </q-modal-layout>
@@ -70,11 +71,13 @@
 </template>
 
 <script>
+  import apSelectType from '../../../../components/form/ApSelectType'
   import NotaFiscalItemIcmsService from "../../../../assets/js/service/notaFiscal/NotaFiscalItemIcmsService";
   export default {
-
     name: "notaFiscalItemIcmsFormModal",
-
+    components:{
+      apSelectType
+    },
     data(){
       return {
         isModalOpened: false,

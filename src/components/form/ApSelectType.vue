@@ -6,6 +6,7 @@
     :options="options"
 
     :float-label="floatLabel"
+    :stack-label="stackLabel"
     :filter="filter"
     :clearable="clearable"
 
@@ -29,6 +30,10 @@ export default {
       default: null
     },
     floatLabel: {
+      type: String,
+      default: null
+    },
+    stackLabel: {
       type: String,
       default: 'Tipo'
     },

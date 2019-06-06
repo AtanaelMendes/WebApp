@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}">
+  <q-modal no-esc-dismiss v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}" @show="$refs.primeiroCampo.focus()">
     <q-modal-layout v-if="notaFiscalItemCofins">
       <q-toolbar slot="header">
         <q-toolbar-title>
@@ -15,24 +15,24 @@
         <div class="row justify-center">
             <div class="col-12">
               <form v-on:submit.prevent="save"><input type="submit" hidden />
-                <q-input v-model="notaFiscalItemCofins.cst" float-label="cst"/>
-                <q-input v-model="notaFiscalItemCofins.base_calculo" float-label="base_calculo"/>
-                <q-input v-model="notaFiscalItemCofins.percentual" float-label="percentual"/>
-                <q-input v-model="notaFiscalItemCofins.valor" float-label="valor"/>
-                <q-input v-model="notaFiscalItemCofins.produto_base_calculo" float-label="produto_base_calculo"/>
-                <q-input v-model="notaFiscalItemCofins.produto_aliquota" float-label="produto_aliquota"/>
-                <q-input v-model="notaFiscalItemCofins.st_base_calculo" float-label="st_base_calculo"/>
-                <q-input v-model="notaFiscalItemCofins.st_percentual" float-label="st_percentual"/>
+                <q-input v-model="notaFiscalItemCofins.cst" float-label="cst" ref="primeiroCampo"/>
+                <q-input v-model="notaFiscalItemCofins.base_calculo" float-label="base_calculo" align="right" type="number"/>
+                <q-input v-model="notaFiscalItemCofins.percentual" float-label="percentual" align="right" type="number"/>
+                <q-input v-model="notaFiscalItemCofins.valor" float-label="valor" align="right" type="number"/>
+                <q-input v-model="notaFiscalItemCofins.produto_base_calculo" float-label="produto_base_calculo" align="right" type="number"/>
+                <q-input v-model="notaFiscalItemCofins.produto_aliquota" float-label="produto_aliquota" align="right" type="number"/>
+                <q-input v-model="notaFiscalItemCofins.st_base_calculo" float-label="st_base_calculo" align="right" type="number"/>
+                <q-input v-model="notaFiscalItemCofins.st_percentual" float-label="st_percentual" align="right" type="number"/>
                 <q-input v-model="notaFiscalItemCofins.st_valor" float-label="st_valor"/>
-                <q-input v-model="notaFiscalItemCofins.st_produto_base_calculo" float-label="st_produto_base_calculo"/>
-                <q-input v-model="notaFiscalItemCofins.st_produto_aliquota" float-label="st_produto_aliquota"/>
+                <q-input v-model="notaFiscalItemCofins.st_produto_base_calculo" float-label="st_produto_base_calculo" align="right" type="number"/>
+                <q-input v-model="notaFiscalItemCofins.st_produto_aliquota" float-label="st_produto_aliquota" align="right" type="number"/>
               </form>
             </div>
           </div>
         </div>
       </div>
       <div class="q-pa-sm text-right" slot="footer">
-        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm"/>
+        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm" :tabindex="-1"/>
         <q-btn flat label="Salvar"   color="primary"  @click="save"  key="edit"/>
       </div>
     </q-modal-layout>
