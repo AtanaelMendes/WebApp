@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}">
+  <q-modal v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}" @show="$refs.primeiroCampo.focus()">
     <q-modal-layout v-if="notaFiscalRefenciada">
       <q-toolbar slot="header">
         <q-toolbar-title>
@@ -15,7 +15,7 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalRefenciada.tipo" float-label="tipo"/>
+              <q-input v-model="notaFiscalRefenciada.tipo" float-label="tipo" ref="primeiroCampo"/>
               <q-input v-model="notaFiscalRefenciada.chave" float-label="chave"/>
               <q-input v-model="notaFiscalRefenciada.estado_id" float-label="estado_id"/>
               <q-input v-model="notaFiscalRefenciada.emissao" float-label="emissao"/>
@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="q-pa-sm text-right" slot="footer">
-        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm"/>
+        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm" tabindex="-1"/>
         <q-btn flat label="Salvar"   color="primary"  @click="save"  key="edit"/>
       </div>
     </q-modal-layout>

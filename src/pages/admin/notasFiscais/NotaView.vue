@@ -1312,7 +1312,7 @@
             <span class="shadow-2">Autorizado</span>
           </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalItem()" icon="add">
-            <span class="shadow-2">Produto</span>
+            <span class="shadow-2">Item</span>
           </q-fab-action>
           <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalLocalizacao()" icon="add">
             <span class="shadow-2">Destinatario/Rementente</span>
