@@ -1,6 +1,6 @@
 <template>
   <q-modal key="safraCultura" v-model="isModalOpened" maximized @hide="closeModal">
-    <div class="row justify-center items-center q-pa-md" style="min-height: 80vh">
+    <div class="row justify-center items-center q-pa-md" style="min-height: 80vh" v-if="entrega">
 
       <div class="col-12 q-title text-center">
         Definir Quantidade dos Negócios
