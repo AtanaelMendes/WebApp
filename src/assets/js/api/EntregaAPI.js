@@ -69,4 +69,12 @@ export default class EntregaAPI{
   static getFilterOptions(){
     return Vue.prototype.$axios.get('/entrega/filter_option');
   }
+
+  static getEntregaDatas(id){
+    return Vue.prototype.$axios.get('/entrega/' + id + '/dates')
+  }
+
+  static saveEntregaDatas(id, params){
+    return Vue.prototype.$axios.put('/entrega/' + id + '/dates', params)
+  }
 }

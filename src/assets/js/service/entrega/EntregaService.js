@@ -412,4 +412,31 @@ export default class EntregaService{
     });
   };
 
+  getDates(id){
+    return new Promise((resolve, reject) => {
+      EntregaAPI.getEntregaDatas(id).then( response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    });
+  }
+
+  updateDates(id, params){
+    return new Promise((resolve, reject) =>{
+      EntregaAPI.saveEntregaDatas(id, params).then(response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  }
 }

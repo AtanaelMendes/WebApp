@@ -1,6 +1,21 @@
 <template>
   <custom-page widthInner="60%" isParent>
-    <toolbar slot="toolbar" title="Detalhes da entrega" navigation_type="back" @navigation_clicked="backAction"></toolbar>
+    <toolbar slot="toolbar" title="Detalhes da entrega" navigation_type="back" @navigation_clicked="backAction">
+      <template slot="action_itens" v-if="entrega">
+        <q-btn slot="right" flat dense icon="more_vert" round>
+          <q-popover>
+            <q-list link class="no-border">
+              <q-item v-close-overlay @click.native="editEntregaDates(entrega.id)">
+                <q-item-main label="Alterar Datas"/>
+              </q-item>
+              <q-item v-close-overlay @click.native="deleteEntrega(entrega.id)">
+                <q-item-main label="Excluir"/>
+              </q-item>
+            </q-list>
+          </q-popover>
+        </q-btn>
+      </template>
+    </toolbar>
 
     <div class="row space-end q-pa-md gutter-sm" v-if="entrega">
       <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
@@ -526,6 +541,7 @@
     <!--MODAL ADD TALHAO-->
     <new-entrega-modal ref="entregaModal"/>
 
+    <edit-dates-modal ref="editDatesModal" />
   </custom-page>
 </template>
 
@@ -539,6 +555,7 @@
   import addTalhaoPercentageModal from './components/modals/AddTalhaoPercentageModal'
   import setNegociosQuantidadeModal from './components/modals/SetNegociosQuantidadeModal'
   import newEntregaModal from './components/modals/NewEntregaModal'
+  import editDatesModal from './components/modals/EditDatasModal'
   import apNoResults from 'components/ApNoResults'
   import apImage from 'components/ApImage'
   import agroUtils from 'assets/js/AgroUtils'
@@ -556,6 +573,7 @@
       addTalhaoPercentageModal,
       setNegociosQuantidadeModal,
       apImage,
+      editDatesModal,
     },
     data () {
       return {
@@ -568,10 +586,10 @@
     },
     computed: {
       statusIconColor: function() {
-        if (this.entrega.status == 'No Armazem') {
+        if (this.entrega.status === 'No Armazem') {
           return 'warning'
         }
-        if (this.entrega.status == 'Entregue') {
+        if (this.entrega.status === 'Entregue') {
           return 'primary'
         }
         return 'negative'
@@ -740,6 +758,27 @@
           this.$q.loading.hide();
           this.entrega = entrega;
         })
+      },
+      deleteEntrega(id){
+        this.$q.dialog({
+          title: 'Atenção',
+          message: 'Realmente deseja apagar esta entrega?',
+          ok: 'Sim', cancel: 'Não',
+          color: 'primary'
+        }).then(data => {
+          this.$q.loading.show();
+          this.entregaService.deleteEntrega(id).then(() => {
+            //this.backAction();
+            this.$router.go('entregas');
+            this.$q.loading.hide();
+          }).catch(error => {
+            this.$q.notify({type: 'negative', message: 'Não foi possível excluir a entrega'});
+            this.$q.loading.hide();
+          })
+        }).catch(()=>{});
+      },
+      editEntregaDates(id){
+        this.$refs.editDatesModal.openModal(id);
       },
       backAction: function () {
         this.$router.back();
