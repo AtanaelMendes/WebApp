@@ -366,6 +366,7 @@
             this.stepArmazem = false;
             this.stepMotorista = false;
             this.stepInformacoes = true;
+            this.selectedEntrega = object;
             break;
           case 'updateMotorista':
             this.selectedEntrega = object;
@@ -435,7 +436,7 @@
         }
       },
       listNegocioCulturas: function(){
-        if(this.funcao === 'sendEntrega'){
+        if(this.funcao === 'sendEntrega' || this.funcao === 'novoNegocio'){
           this.listNegociosCulturasBySafraCultura();
         }else{
           this.listNegociosCulturasAvaliablesByEntrega()
