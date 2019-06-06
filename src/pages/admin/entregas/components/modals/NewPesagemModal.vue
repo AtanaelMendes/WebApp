@@ -12,14 +12,14 @@
         <div class="q-px-lg q-py-sm">
           <div class="row q-mb-sm">
             <div class="col-12">
-              <q-input v-model="pesagem.numeroTicket.value" align="right" stack-label="Número do ticket" />
+              <q-input type="number" v-model="pesagem.numeroTicket.value" align="right" stack-label="Número do ticket" />
             </div>
           </div>
 
           <div class="row q-mb-sm">
             <div class="col-12">
               <q-datetime v-model="pesagem.emissao.value" type="datetime" stack-label="Data descarga"
-                          align="center" modal format="DD/MM/YYYY HH:mm"/>
+                          align="center" modal format="DD/MM/YYYY HH:mm" :min="minDate" :max="new Date()" />
             </div>
           </div>
 
@@ -44,7 +44,6 @@
             </div>
           </div>
         </div>
-
       </q-step>
 
       <!--PASSO 2 INFORMAR CALISSIFICACAO -->
@@ -83,14 +82,17 @@
 
           </div>
 
-          <div class="row justify-center">
-            <div class="col-12 text-right">
-              Total Descontos {{totalDesc}} {{entrega.safra_cultura.unidade_medida_pesagem.sigla}}
-            </div>
-            <div class="col-12 text-right">
-              Total Líquido {{totalLiquido}} {{entrega.safra_cultura.unidade_medida_pesagem.sigla}}
-            </div>
-          </div>
+          <table style="float: right">
+            <tr>
+              <td class="q-pr-md">Descontos</td>
+              <td style="text-align: right">{{totalDesc}} {{entrega.safra_cultura.unidade_medida_pesagem.sigla}}</td>
+            </tr>
+            <tr>
+              <td class="q-pr-md">Líquido</td>
+              <td style="text-align: right">{{totalLiquido}} {{entrega.safra_cultura.unidade_medida_pesagem.sigla}}</td>
+            </tr>
+          </table>
+
         </div>
       </q-step>
 
@@ -131,10 +133,10 @@
         isModalOpened: false,
         entrega: null,
         errorValue: '',
-
-        pesoBrutoTotal: 0,
-        pesoTara: 0,
-        pesoBrutoProduto: 0,
+        isEditMode: false,
+        pesoBrutoTotal: null,
+        pesoTara: null,
+        pesoBrutoProduto: null,
       }
     },
     watch: {
@@ -154,7 +156,9 @@
       },
     },
     computed: {
-
+      minDate(){
+        return new Date(this.entrega.safra_cultura.safra.ano_inicio, 0, 1);
+      },
       totalDesc: function () {
         let soma = 0;
         this.pesagem.entregaClassificacao.forEach(function (val) {
@@ -178,9 +182,9 @@
       closeModal: function(){
         this.isModalOpened = false;
         this.pesagem = new Pesagem();
-        this.pesoBrutoTotal = 0;
-        this.pesoTara = 0;
-        this.pesoBrutoProduto = 0;
+        this.pesoBrutoTotal = null;
+        this.pesoTara = null;
+        this.pesoBrutoProduto = null;
       },
       isNextStepEnabled: function(){
         if(!this.pesagem.isValid()){
