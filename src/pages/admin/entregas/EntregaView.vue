@@ -5,9 +5,6 @@
         <q-btn slot="right" flat dense icon="more_vert" round>
           <q-popover>
             <q-list link class="no-border">
-              <q-item v-close-overlay @click.native="editEntregaDates(entrega.id)">
-                <q-item-main label="Alterar Datas"/>
-              </q-item>
               <q-item v-close-overlay @click.native="deleteEntrega(entrega.id)">
                 <q-item-main label="Excluir"/>
               </q-item>
@@ -132,6 +129,17 @@
                         </template>
                       </q-item-tile>
                     </q-item-main>
+                    <q-item-side right>
+                      <q-btn flat dense icon="more_vert" round>
+                        <q-popover>
+                          <q-list link class="no-border">
+                            <q-item v-close-overlay @click.native="editEntregaDates(entrega.id)">
+                              <q-item-main label="Alterar Datas"/>
+                            </q-item>
+                          </q-list>
+                        </q-popover>
+                      </q-btn>
+                    </q-item-side>
                   </q-item>
                 </q-list>
               </q-card>
