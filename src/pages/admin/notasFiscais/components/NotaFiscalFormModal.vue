@@ -30,10 +30,10 @@
                         <q-input v-model="notaFiscal.modelo" stack-label="Modelo" align="center" ref="primeiroCampo"/>
                       </div>
                       <div class="col-2 q-pr-sm">
-                        <q-input v-model="notaFiscal.serie" stack-label="Série" type="number" step="1" min="0" max="999999999999" align="center" />
+                        <q-input v-model="notaFiscal.serie" stack-label="Série" type="number" :step="1" min="0" max="999999999999" align="center" />
                       </div>
                       <div class="col-4">
-                        <q-input v-model="notaFiscal.numero" stack-label="Número" type="number" step="1" min="0" max="999999999999" align="center" />
+                        <q-input v-model="notaFiscal.numero" stack-label="Número" type="number" :step="1" min="0" max="999999999999" align="center" />
                       </div>
                       <div class="col-4 text-center q-pt-lg">
                         <q-toggle v-model="notaFiscal.is_saida" label="Saída" />
