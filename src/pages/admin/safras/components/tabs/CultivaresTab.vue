@@ -57,6 +57,7 @@
                     :quantidades="marcas[iMarca]"
                     :unidade-area="safraCultura.unidade_medida_area"
                     :unidade-medida="safraCultura.unidade_medida_preco"
+                    :show-negociado="false"
                   />
                 </div>
               </div>
@@ -107,7 +108,8 @@
                     :safra-cultura-id="safraCultura.id"
                     :quantidades="activeCultivar"
                     :unidade-area="safraCultura.unidade_medida_area"
-                    :unidade-medida="safraCultura.unidade_medida_preco">
+                    :unidade-medida="safraCultura.unidade_medida_preco"
+                    :show-negociado="false">
                   </safra-quantidades>
                   <q-item link v-for="talhao in activeCultivar.talhoes" :key="talhao.id" @click.native="goToTalhao(talhao)">
                     <q-item-side v-if="talhao.image_file_name" :image="imageMakeUrl(talhao.image_file_name, '200x125')" color="primary"/>

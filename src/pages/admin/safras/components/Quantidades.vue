@@ -54,7 +54,7 @@
       </q-item>
 
       <!-- NEGOCIADO -->
-      <q-item>
+      <q-item v-if="showNegociado">
         <q-item-side icon="work" color="primary"/>
         <q-item-main multiline>
           <q-item-tile label lines="2">
@@ -122,6 +122,10 @@
       quantidades: Object,
       unidadeMedida: Object,
       unidadeArea: Object,
+      showNegociado: {
+        type: Boolean,
+        default: true
+      },
     },
     components:{
       changeColheitaStatusModal,

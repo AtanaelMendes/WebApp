@@ -68,6 +68,7 @@
                     :quantidades="areas[iArea]"
                     :unidade-area="safraCultura.unidade_medida_area"
                     :unidade-medida="safraCultura.unidade_medida_preco"
+                    :show-negociado="false"
                   />
                 </div>
               </div>
@@ -136,7 +137,8 @@
                     :safra-cultura-id="safraCultura.id"
                     :quantidades="activeTalhao"
                     :unidade-area="safraCultura.unidade_medida_area"
-                    :unidade-medida="safraCultura.unidade_medida_preco">
+                    :unidade-medida="safraCultura.unidade_medida_preco"
+                    :show-negociado="false">
                   </safra-quantidades>
 
                   <template v-if="activeTalhao.cultivares.length > 0">
