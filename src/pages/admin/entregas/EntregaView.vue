@@ -780,7 +780,6 @@
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
         }
-
       },
       getEntrega: function(){
         this.$q.loading.show();

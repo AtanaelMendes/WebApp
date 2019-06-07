@@ -436,8 +436,10 @@
         }
       },
       listNegocioCulturas: function(){
-        if(this.funcao === 'sendEntrega' || this.funcao === 'novoNegocio'){
+        if(this.funcao === 'sendEntrega') {
           this.listNegociosCulturasBySafraCultura();
+        }else if(this.funcao === 'novoNegocio'){
+          this.listNegociosCulturasBySafraCulturaAndArmazem()
         }else{
           this.listNegociosCulturasAvaliablesByEntrega()
         }
@@ -476,6 +478,15 @@
         this.$q.loading.show();
         //this.negocioService.listNegociosCulturasWithoutEmpty().then(negocios => {
         this.negocioService.listNegociosCulturasBySafraCultura(this.selectedEntrega.safra_cultura.id).then(negocios => {
+          this.negocioCulturas = negocios;
+          this.$q.loading.hide();
+        }).catch(error => {
+          this.$q.loading.hide();
+        });
+      },
+      listNegociosCulturasBySafraCulturaAndArmazem(){
+        this.$q.loading.show();
+        this.entregaService.listNegociosCulturasByEntrega(this.selectedEntrega.id, this.selectedEntrega.safra_cultura.id, this.selectedEntrega.armazem.id).then(negocios => {
           this.negocioCulturas = negocios;
           this.$q.loading.hide();
         }).catch(error => {
