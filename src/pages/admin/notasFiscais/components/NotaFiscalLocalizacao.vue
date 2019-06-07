@@ -212,7 +212,6 @@
     },
 
     mounted(){
-      console.log(this.localizacao);
     }
 
   }

@@ -487,7 +487,7 @@
                 Frete
               </div>
               <div class="ellipsis text-center">
-                {{notaFiscal.frete}}
+                <ap-label-type type="FRETE" :value="notaFiscal.frete"/>
               </div>
             </div>
 
@@ -1153,7 +1153,9 @@
         <q-card>
           <div class="row" v-for="observacao in notaFiscal.notas_fiscais_observacoes" :key="observacao.id">
             <div class="col-11 q-pa-xs">
-              {{observacao}}
+              <span v-for="campo in getAtributes(observacao)" :key="campo.id">
+                {{campo[0]}} = {{campo[1]}}<br>
+              </span>
             </div>
             <div class="col-1 borda-esquerda q-pa-xs">
               <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
@@ -1181,7 +1183,9 @@
         <q-card>
           <div class="row" v-for="autorizado in notaFiscal.notas_fiscais_autorizados" :key="autorizado.id">
             <div class="col-11 q-pa-xs">
-              {{autorizado}}
+              <span v-for="campo in getAtributes(autorizado)" :key="campo.id">
+                {{campo[0]}} = {{campo[1]}}<br>
+              </span>
             </div>
             <div class="col-1 borda-esquerda q-pa-xs">
               <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
@@ -1209,7 +1213,9 @@
         <q-card>
           <div class="row" v-for="notaFiscalReferenciada in notaFiscal.notas_fiscais_referenciadas" :key="notaFiscalReferenciada.id">
             <div class="col-11 q-pa-xs">
-              {{notaFiscalReferenciada}}
+              <span v-for="campo in getAtributes(notaFiscalReferenciada)" :key="campo.id">
+                {{campo[0]}} = {{campo[1]}}<br>
+              </span>
             </div>
             <div class="col-1 q-pa-xs borda-esquerda">
               <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
@@ -1237,7 +1243,9 @@
         <q-card>
           <div class="row" v-for="formaPagamento in notaFiscal.notas_fiscais_formas_pagamento" :key="formaPagamento.id">
             <div class="col-11 q-pa-xs">
-              {{formaPagamento}}
+              <span v-for="campo in getAtributes(formaPagamento)" :key="campo.id">
+                {{campo[0]}} = {{campo[1]}}<br>
+              </span>
             </div>
             <div class="col-1 q-pa-xs borda-esquerda">
               <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
@@ -1265,7 +1273,9 @@
         <q-card>
           <div class="row" v-for="processo in notaFiscal.notas_fiscais_processos" :key="processo.id">
             <div class="col-11 q-pa-xs">
-              {{processo}}
+              <span v-for="campo in getAtributes(processo)" :key="campo.id">
+                {{campo[0]}} = {{campo[1]}}<br>
+              </span>
             </div>
             <div class="col-1 q-pa-xs borda-esquerda">
               <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
@@ -1333,7 +1343,7 @@
   import customPage from 'components/CustomPage.vue'
 
   import apNoResults from 'components/ApNoResults'
-  import apLabelType from 'components/form/ApLabelType'
+  import apLabelType from '../../../components/form/ApLabelType'
 
   import notaFiscalItemFormModal from './components/NotaFiscalItemFormModal'
   import notaFiscalItemIpiFormModal from './components/NotaFiscalItemIpiFormModal'
@@ -1420,6 +1430,9 @@
       },
     },
     methods: {
+      getAtributes(obj){
+        return Object.entries(obj)
+      },
       notaFiscalAtualizada(notaFiscal) {
         if (notaFiscal) {
           this.notaFiscal = notaFiscal;
