@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}">
+  <q-modal no-esc-dismiss v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}" @show="$refs.primeiroCampo.focus()">
     <q-modal-layout v-if="notaFiscalFormaPagamento">
       <q-toolbar slot="header">
         <q-toolbar-title>
@@ -15,17 +15,17 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalFormaPagamento.tipo" float-label="tipo"/>
-              <q-input v-model="notaFiscalFormaPagamento.valor" float-label="valor"/>
+              <ap-select-type v-model="notaFiscalFormaPagamento.tipo" type="PAGAMENTO_TIPO" stack-label="Forma de Pagamento" />
+              <q-input v-model="notaFiscalFormaPagamento.valor" float-label="valor" align="right" type="number" ref="primeiroCampo"/>
               <q-input v-model="notaFiscalFormaPagamento.is_prazo" float-label="is_prazo"/>
-              <q-input v-model="notaFiscalFormaPagamento.troco" float-label="troco"/>
+              <q-input v-model="notaFiscalFormaPagamento.troco" float-label="troco" align="right" type="number"/>
               <q-input v-model="notaFiscalFormaPagamento.fatura" float-label="fatura"/>
             </form>
           </div>
         </div>
       </div>
       <div class="q-pa-sm text-right" slot="footer">
-        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm"/>
+        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm" :tabindex="-1"/>
         <q-btn flat label="Salvar"   color="primary"  @click="save"  key="edit"/>
       </div>
     </q-modal-layout>
@@ -33,11 +33,13 @@
 </template>
 
 <script>
+  import apSelectType from '../../../../components/form/ApSelectType'
   import NotaFiscalFormaPagamentoService from "../../../../assets/js/service/notaFiscal/NotaFiscalFormaPagamentoService";
   export default {
-
     name: "notaFiscalFormaPagamentoFormModal",
-
+    components:{
+      apSelectType,
+    },
     data(){
       return {
         isModalOpened: false,
