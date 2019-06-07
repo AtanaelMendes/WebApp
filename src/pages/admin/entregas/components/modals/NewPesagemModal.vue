@@ -229,7 +229,7 @@
         return isValid;
       },
       save(){
-        if(this.isEditMode){
+        if(!this.isEditMode){
           this.saveNewPesagem()
         }else{
           this.updatePesagem()
