@@ -194,7 +194,7 @@
           placa: this.caminhao.placa.value,
           tara: this.caminhao.tara,
           pbt: this.caminhao.pesoBruto,
-          estimativa_carga: this.estimativaCarga,
+          estimativa_carga: this.caminhao.estimativaCarga,
           unidade_medida_id: this.caminhao.unidadeMedidaSigla.value
         };
         this.caminhaoService.updateCaminhao(this.selectCaminhaoId, params).then(() => {
