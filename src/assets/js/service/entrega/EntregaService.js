@@ -439,4 +439,18 @@ export default class EntregaService{
       })
     })
   }
+
+  listNegociosCulturasByEntrega(id, safraCulturaId, armazemId){
+    return new Promise((resolve, reject) =>{
+      EntregaAPI.listNegociosCulturasBySafraCulturaAndArmazem(id, safraCulturaId, armazemId).then(response => {
+        if(response.status === 200) {
+          resolve(response.data);
+        }else{
+          reject(response);
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  }
 }

@@ -412,6 +412,9 @@
                   <q-btn slot="right" icon="more_vert" dense round flat>
                     <q-popover>
                       <q-list link class="no-border">
+                        <q-item v-close-overlay @click.native="editPesagem(pesagem.id)">
+                          <q-item-main label="Editar"/>
+                        </q-item>
                         <q-item v-close-overlay @click.native="deletePesagem(pesagem.id, entrega.pesagens)">
                           <q-item-main label="Excluir"/>
                         </q-item>
@@ -753,6 +756,9 @@
         }
 
       },
+      editPesagem(id){
+        this.$refs.newPesagemModal.openModalInEditMode(id, this.entrega)
+      },
       deletePesagem: function(id, pesagens){
         if(this.serverStatus.isUp){
           this.$q.dialog({
@@ -774,7 +780,6 @@
         }else{
           this.$root.$emit('openForbiddenAccessDialog');
         }
-
       },
       getEntrega: function(){
         this.$q.loading.show();

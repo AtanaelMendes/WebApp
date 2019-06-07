@@ -77,4 +77,8 @@ export default class EntregaAPI{
   static saveEntregaDatas(id, params){
     return Vue.prototype.$axios.put('/entrega/' + id + '/dates', params)
   }
+
+  static listNegociosCulturasBySafraCulturaAndArmazem(id, safraCulturaId, armazemId){
+    return Vue.prototype.$axios.get('/entrega/' + id + '/negocios_disponiveis?safra_cultura_id=' + safraCulturaId + '&armazem_id=' + armazemId)
+  }
 }
