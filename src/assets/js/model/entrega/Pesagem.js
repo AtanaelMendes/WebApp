@@ -1,6 +1,7 @@
 import { helpers} from 'vuelidate/lib/validators'
 const moment = require('moment');
 export default class{
+  id = null;
   numeroTicket = {
     value: null,
     errorMessage: null
@@ -57,11 +58,16 @@ export default class{
         return accumulator + classificacao.peso_desconto.value;
       }, 0),
       classificacoes: this.entregaClassificacao.map(function(classificacao){
-        return {
+        let ret = {
           classificacao_id: classificacao.classificacao_id,
           peso_desconto: classificacao.peso_desconto.value,
           verificado: classificacao.verificado.value,
         };
+
+        if(classificacao.id){
+          ret.id = classificacao.id
+        }
+        return ret;
       }),
     }
   }

@@ -103,7 +103,7 @@
       <div class="float-right ">
         <q-btn @click="goToPreviousStep" flat label="voltar" color="primary" class="q-mr-sm" v-if="currentStep !== 'dadosDaEntrega'"/>
         <q-btn @click="goToNextStep" flat label="próximo" color="primary" v-if="currentStep === 'dadosDaEntrega'" :disable="isNextStepEnabled()"/>
-        <q-btn @click="saveNewPesagem" flat label="Salvar" color="primary" v-if="currentStep === 'classificacao'"/>
+        <q-btn @click="save" flat label="Salvar" color="primary" v-if="currentStep === 'classificacao'"/>
       </div>
     </div>
   </ap-modal>
@@ -173,11 +173,38 @@
       }
     },
     methods: {
-      openModal: function(entrega){
+      openModal(entrega){
         this.isModalOpened = true;
         this.currentStep = 'dadosDaEntrega';
         this.listClassificacoesByCultura(entrega.safra_cultura.cultura.id);
         this.entrega = entrega;
+      },
+      openModalInEditMode(id, entrega){
+        this.isModalOpened = true;
+        this.openModal(entrega);
+
+        this.pesagemService.getPesagem(entrega.id, id).then(pesagem => {
+          this.pesagem.id = pesagem.id;
+          this.pesagem.numeroTicket.value = pesagem.numero_ticket;
+          this.pesagem.emissao.value = pesagem.emissao;
+          this.pesoBrutoTotal = this.pesagem.pesoBrutoTotal.value = pesagem.peso_bruto_total;
+          this.pesoBrutoProduto = this.pesagem.pesoBrutoProduto.value = pesagem.peso_bruto_produto;
+          this.pesoTara = this.pesagem.pesoTara.value = pesagem.peso_tara;
+          this.pesagem.pesoLiquido.value = pesagem.peso_liquido;
+          this.pesagem.entregaClassificacao = pesagem.entregas_classificacoes.map(entrega_classificacao => {
+            return {
+              id: entrega_classificacao.id,
+              classificacao_id: entrega_classificacao.classificacao_id,
+              peso_desconto: {
+                value: entrega_classificacao.peso_desconto
+              },
+              verificado: {
+                value: entrega_classificacao.verificado
+              }
+            }
+
+          });
+        })
       },
       closeModal: function(){
         this.isModalOpened = false;
@@ -201,8 +228,14 @@
         }
         return isValid;
       },
-      saveNewPesagem: function(){
-
+      save(){
+        if(this.isEditMode){
+          this.saveNewPesagem()
+        }else{
+          this.updatePesagem()
+        }
+      },
+      saveNewPesagem(){
         setTimeout(() => {
           if(this.currentStep === 'classificacao'){
             if(!this.isFormEntregaClassificacaoValid()){
@@ -225,6 +258,36 @@
               this.$router.back();
             }
           }).catch(error => {
+            this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
+            this.$q.loading.hide();
+          });
+        }, 300);
+      },
+      updatePesagem(){
+        setTimeout(() => {
+          if(this.currentStep === 'classificacao'){
+            if(!this.isFormEntregaClassificacaoValid()){
+              this.$q.dialog({ title: 'Atenção', message: 'Preencha os campos corretamente.', ok: 'OK', color: 'primary' });
+              return
+            }
+          }
+
+          this.$q.loading.show();
+          let entregaId = this.$route.params.id;
+          console.log(this.pesagem.getValues())
+          this.pesagemService.updatePesagem(this.pesagem.id, entregaId, this.pesagem.getValues()).then(() => {
+            this.$q.notify({type: 'positive', message: 'Pesagem criada com sucesso'});
+            this.closeModal();
+            this.$root.$emit('refreshEntregasList', 'no_armazem');
+            this.$root.$emit('refreshEntregasList', 'entregue');
+            this.$root.$emit('refreshEntregaView');
+            this.$q.loading.hide();
+
+            if(this.entrega.pesagens === null || this.entrega.pesagens === undefined){
+              this.$router.back();
+            }
+          }).catch(error => {
+            console.log(error)
             this.$q.notify({type: 'negative', message: 'http:' + error.status + error.response})
             this.$q.loading.hide();
           });
