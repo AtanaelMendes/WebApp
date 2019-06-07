@@ -1,5 +1,5 @@
 <template>
-  <q-modal v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}">
+  <q-modal no-esc-dismiss v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}" @show="$refs.primeiroCampo.focus()">
     <q-modal-layout v-if="notaFiscalAutorizado">
       <q-toolbar slot="header">
         <q-toolbar-title>
@@ -16,14 +16,14 @@
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
               <q-input v-model="notaFiscalAutorizado.pessoa_id" float-label="pessoa_id"/>
-              <q-input v-model="notaFiscalAutorizado.cnpj" float-label="cnpj"/>
+              <q-input v-model="notaFiscalAutorizado.cnpj" float-label="cnpj" ref="primeiroCampo"/>
               <q-input v-model="notaFiscalAutorizado.cpf" float-label="cpf"/>
             </form>
           </div>
         </div>
       </div>
       <div class="q-pa-sm text-right" slot="footer">
-        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm"/>
+        <q-btn flat label="cancelar" color="negative" @click="close" class="q-mr-sm" :tabindex="-1"/>
         <q-btn flat label="Salvar"   color="primary"  @click="save"  key="edit"/>
       </div>
     </q-modal-layout>
