@@ -15,8 +15,8 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalItemImpostoDevolucao.percentual" float-label="percentual" align="right" type="number" ref="primeiroCampo"/>
-              <q-input v-model="notaFiscalItemImpostoDevolucao.ipi_valor" float-label="ipi_valor" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemImpostoDevolucao.percentual" stack-label="percentual" align="right" type="number" ref="primeiroCampo"/>
+              <q-input v-model="notaFiscalItemImpostoDevolucao.ipi_valor" stack-label="ipi_valor" align="right" type="number"/>
 
             </form>
           </div>

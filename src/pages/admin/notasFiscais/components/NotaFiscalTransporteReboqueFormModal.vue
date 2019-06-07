@@ -15,10 +15,10 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalTransporteReboque.reboque_id" float-label="reboque_id"/>
-              <q-input v-model="notaFiscalTransporteReboque.placa" float-label="placa" ref="primeiroCampo"/>
-              <q-input v-model="notaFiscalTransporteReboque.estado_id" float-label="estado_id"/>
-              <q-input v-model="notaFiscalTransporteReboque.antt" float-label="antt"/>
+              <q-input v-model="notaFiscalTransporteReboque.reboque_id" stack-label="reboque_id"/>
+              <q-input v-model="notaFiscalTransporteReboque.placa" stack-label="placa" ref="primeiroCampo"/>
+              <q-input v-model="notaFiscalTransporteReboque.estado_id" stack-label="estado_id"/>
+              <q-input v-model="notaFiscalTransporteReboque.antt" stack-label="antt"/>
             </form>
           </div>
         </div>

@@ -15,12 +15,12 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalTransporteVolume.quantidade" float-label="quantidade" ref="primeiroCampo" align="right" type="number"/>
-              <q-input v-model="notaFiscalTransporteVolume.especie" float-label="especie"/>
-              <q-input v-model="notaFiscalTransporteVolume.marca" float-label="marca"/>
-              <q-input v-model="notaFiscalTransporteVolume.numeracao" float-label="numeracao" align="right" />
-              <q-input v-model="notaFiscalTransporteVolume.peso_bruto" float-label="peso_bruto" align="right" type="number"/>
-              <q-input v-model="notaFiscalTransporteVolume.peso_liquido" float-label="peso_liquido" align="right" type="number"/>
+              <q-input v-model="notaFiscalTransporteVolume.quantidade" stack-label="quantidade" ref="primeiroCampo" align="right" type="number"/>
+              <q-input v-model="notaFiscalTransporteVolume.especie" stack-label="especie"/>
+              <q-input v-model="notaFiscalTransporteVolume.marca" stack-label="marca"/>
+              <q-input v-model="notaFiscalTransporteVolume.numeracao" stack-label="numeracao" align="right" />
+              <q-input v-model="notaFiscalTransporteVolume.peso_bruto" stack-label="peso_bruto" align="right" type="number"/>
+              <q-input v-model="notaFiscalTransporteVolume.peso_liquido" stack-label="peso_liquido" align="right" type="number"/>
             </form>
           </div>
         </div>

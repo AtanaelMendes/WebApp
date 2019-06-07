@@ -15,9 +15,9 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalAutorizado.pessoa_id" float-label="pessoa_id"/>
-              <q-input v-model="notaFiscalAutorizado.cnpj" float-label="cnpj" ref="primeiroCampo"/>
-              <q-input v-model="notaFiscalAutorizado.cpf" float-label="cpf"/>
+              <q-input v-model="notaFiscalAutorizado.pessoa_id" stack-label="pessoa_id"/>
+              <q-input v-model="notaFiscalAutorizado.cnpj" stack-label="cnpj" ref="primeiroCampo"/>
+              <q-input v-model="notaFiscalAutorizado.cpf" stack-label="cpf"/>
             </form>
           </div>
         </div>

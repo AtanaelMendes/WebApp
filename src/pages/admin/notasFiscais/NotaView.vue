@@ -1,6 +1,6 @@
 <template>
   <custom-page isChild noScroll style="background: #fdfdfd">
-    <toolbar slot="toolbar" navigation_type="closeAndBack" @navigation_clicked="backAction">
+    <toolbar slot="toolbar"  title="Nota Fiscal" navigation_type="closeAndBack" @navigation_clicked="backAction">
 
       <template slot="action_itens" v-if="notaFiscal">
         <q-btn icon="more_vert" flat round>
@@ -202,15 +202,15 @@
         <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_entrega" @atualizada='notaFiscalAtualizada' v-if="notaFiscal.nota_fiscal_localizacao_entrega" />
         <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_retirada" @atualizada='notaFiscalAtualizada' v-if="notaFiscal.nota_fiscal_localizacao_retirada" />
 
-
         <!--FATURA DUPLICATA-->
-        <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
+        <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm items-center	 q-mt-md">
           Fatura/Duplicata
+          <q-btn class="float-right q-ml-sm" icon="add" color="primary" size="sm" round @click="addNotaFiscalDuplicata()"/>
         </div>
         <q-card>
           <div class="row">
             <template v-for="duplicata in notaFiscal.notas_fiscais_duplicatas">
-              <div class="col-2 q-pa-xs all-border" :key="duplicata.id">
+              <div class="col-xs-12  col-sm-6 col-md-3 col-lg-2 q-pa-xs all-border" :key="duplicata.id">
                 <q-item class="q-pa-none">
                   <q-item-main>
                     <q-item-tile class="row">
@@ -1148,7 +1148,9 @@
 
         <!--OBSERVACOES-->
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm">
-          Observações
+          <div class="col-12">
+            Observações
+          </div>
         </div>
         <q-card>
           <div class="row" v-for="observacao in notaFiscal.notas_fiscais_observacoes" :key="observacao.id">
@@ -1271,27 +1273,34 @@
           Nota FIscal Processos
         </div>
         <q-card>
-          <div class="row" v-for="processo in notaFiscal.notas_fiscais_processos" :key="processo.id">
-            <div class="col-11 q-pa-xs">
-              <span v-for="campo in getAtributes(processo)" :key="campo.id">
-                {{campo[0]}} = {{campo[1]}}<br>
-              </span>
-            </div>
-            <div class="col-1 q-pa-xs borda-esquerda">
-              <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
-                <q-popover>
-                  <q-list link>
-                    <q-item @click.native="editNotaFiscalProcesso(processo)">
-                      <q-item-side icon="edit" />
-                      <q-item-main label="Editar"/>
-                    </q-item>
-                    <q-item @click.native="deleteNotaFiscalProcesso(processo)">
-                      <q-item-side icon="delete" />
-                      <q-item-main label="Excluir"/>
-                    </q-item>
-                  </q-list>
-                </q-popover>
-              </q-btn>
+          <div class="row" >
+            <div class="col-3 " v-for="processo in notaFiscal.notas_fiscais_processos" :key="processo.id">
+              <q-item class="all-border">
+                <q-item-main>
+                  <q-item-tile v-for="campo in getAtributes(processo)" :key="campo.id">
+                    <span class="text-faded">{{campo[0]}} = </span>
+                    <span>{{campo[1]}} </span>
+                  </q-item-tile>
+                </q-item-main>
+                <q-item-side class="self-start">
+                  <q-btn icon="more_vert" flat round  color="grey-7">
+                    <q-popover>
+                      <q-list link>
+                        <q-item @click.native="editNotaFiscalProcesso(processo)">
+                          <q-item-side icon="edit" />
+                          <q-item-main label="Editar"/>
+                        </q-item>
+                        <q-item @click.native="deleteNotaFiscalProcesso(processo)">
+                          <q-item-side icon="delete" />
+                          <q-item-main label="Excluir"/>
+                        </q-item>
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
+
+                </q-item-side>
+              </q-item>
+
             </div>
           </div>
         </q-card>
@@ -1306,9 +1315,9 @@
           <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalFormaPagamento()" icon="add">
             <span class="shadow-2">Forma de Pagamento</span>
           </q-fab-action>
-          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalDuplicata()" icon="add">
-            <span class="shadow-2">Duplicatas</span>
-          </q-fab-action>
+          <!--<q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalDuplicata()" icon="add">-->
+            <!--<span class="shadow-2">Duplicatas</span>-->
+          <!--</q-fab-action>-->
           <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalProcesso()" icon="add">
             <span class="shadow-2">Processos</span>
           </q-fab-action>
@@ -1443,14 +1452,23 @@
       notaFiscalApagada() {
         this.$router.push({name: 'notas_fiscais'});
       },
-      formatCEP(cpf){
-        return cpf.replace(/(\d{5})(\d{3})/, "$1-$2");
+      formatCEP(cep){
+        if(cep){
+          return cep.replace(/(\d{5})(\d{3})/, "$1-$2");
+        }
+        return null
       },
       formatCPF(cpf){
-        return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+        if(cpf){
+          return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+        }
+        return  null;
       },
       formatCNPJ(cnpj){
-        return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+        if(cnpj){
+          return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+        }
+        return null;
       },
       getNotaFiscalById: function(notaFiscalId) {
         this.$q.loading.show();
@@ -1569,7 +1587,11 @@
 
       // notaFiscalDuplicata
       addNotaFiscalDuplicata(){
-        this.$refs.notaFiscalDuplicataFormModal.add()
+        var numero = _.maxBy(this.notaFiscal.notas_fiscais_duplicatas, 'numero');
+        // var vencimento = _.maxBy(this.notaFiscal.notas_fiscais_duplicatas, 'vencimento');
+        // var valor = _.maxBy(this.notaFiscal.notas_fiscais_duplicatas, 'valor');
+        console.log(numero);
+        this.$refs.notaFiscalDuplicataFormModal.add();
       },
       editNotaFiscalDuplicata(notaFiscalDuplicata){
         this.$refs.notaFiscalDuplicataFormModal.edit(notaFiscalDuplicata)

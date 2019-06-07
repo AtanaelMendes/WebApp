@@ -16,23 +16,23 @@
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
               <ap-select-type v-model="notaFiscalLocalizacao.tipo" type="NOTA_FISCAL_LOCALIZACAO_TIPO" stack-label="Tipo" />
-              <q-input v-model="notaFiscalLocalizacao.localizacao_id" float-label="localizacao_id"/>
-              <q-input v-model="notaFiscalLocalizacao.razao_social" float-label="razao_social" ref="primeiroCampo"/>
-              <q-input v-model="notaFiscalLocalizacao.cnpj" float-label="cnpj" align="right"/>
-              <q-input v-model="notaFiscalLocalizacao.cpf" float-label="cpf" align="right"/>
-              <q-input v-model="notaFiscalLocalizacao.inscricao_estrangeiro" float-label="inscricao_estrangeiro"/>
+              <q-input v-model="notaFiscalLocalizacao.localizacao_id" stack-label="localizacao_id"/>
+              <q-input v-model="notaFiscalLocalizacao.razao_social" stack-label="razao_social" ref="primeiroCampo"/>
+              <q-input v-model="notaFiscalLocalizacao.cnpj" stack-label="cnpj" align="right"/>
+              <q-input v-model="notaFiscalLocalizacao.cpf" stack-label="cpf" align="right"/>
+              <q-input v-model="notaFiscalLocalizacao.inscricao_estrangeiro" stack-label="inscricao_estrangeiro"/>
               <ap-select-type v-model="notaFiscalLocalizacao.inscricao_estadual_indicador" type="INSCRICAO_ESTADUAL_INDICADOR" stack-label="Inscrição Estadual Indocador" />
-              <q-input v-model="notaFiscalLocalizacao.inscricao_estadual" float-label="inscricao_estadual" align="right"/>
-              <q-input v-model="notaFiscalLocalizacao.inscricao_suframa" float-label="inscricao_suframa"/>
-              <q-input v-model="notaFiscalLocalizacao.inscricao_municipal" float-label="inscricao_municipal"/>
-              <q-input v-model="notaFiscalLocalizacao.email" float-label="email"/>
-              <q-input v-model="notaFiscalLocalizacao.endereco" float-label="endereco"/>
-              <q-input v-model="notaFiscalLocalizacao.numero" float-label="numero" align="right" type="number"/>
-              <q-input v-model="notaFiscalLocalizacao.complemento" float-label="complemento"/>
-              <q-input v-model="notaFiscalLocalizacao.bairro" float-label="bairro"/>
-              <q-input v-model="notaFiscalLocalizacao.cidade_id" float-label="cidade_id"/>
-              <q-input v-model="notaFiscalLocalizacao.cep" float-label="cep"/>
-              <q-input v-model="notaFiscalLocalizacao.fone" float-label="fone"/>
+              <q-input v-model="notaFiscalLocalizacao.inscricao_estadual" stack-label="inscricao_estadual" align="right"/>
+              <q-input v-model="notaFiscalLocalizacao.inscricao_suframa" stack-label="inscricao_suframa"/>
+              <q-input v-model="notaFiscalLocalizacao.inscricao_municipal" stack-label="inscricao_municipal"/>
+              <q-input v-model="notaFiscalLocalizacao.email" stack-label="email"/>
+              <q-input v-model="notaFiscalLocalizacao.endereco" stack-label="endereco"/>
+              <q-input v-model="notaFiscalLocalizacao.numero" stack-label="numero" align="right" type="number"/>
+              <q-input v-model="notaFiscalLocalizacao.complemento" stack-label="complemento"/>
+              <q-input v-model="notaFiscalLocalizacao.bairro" stack-label="bairro"/>
+              <q-input v-model="notaFiscalLocalizacao.cidade_id" stack-label="cidade_id"/>
+              <q-input v-model="notaFiscalLocalizacao.cep" stack-label="cep"/>
+              <q-input v-model="notaFiscalLocalizacao.fone" stack-label="fone"/>
             </form>
           </div>
         </div>

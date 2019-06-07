@@ -15,16 +15,16 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalItemIpi.cst" float-label="cst" ref="primeiroCampo"/>
-              <q-input v-model="notaFiscalItemIpi.base_calculo" float-label="base_calculo" align="right" type="number"/>
-              <q-input v-model="notaFiscalItemIpi.percentual" float-label="percentual" align="right" type="number"/>
-              <q-input v-model="notaFiscalItemIpi.valor" float-label="valor" align="right" type="number"/>
-              <q-input v-model="notaFiscalItemIpi.cnpj_produtor" float-label="cnpj_produtor" align="right" type="number"/>
-              <q-input v-model="notaFiscalItemIpi.codigo_selo" float-label="codigo_selo"/>
-              <q-input v-model="notaFiscalItemIpi.quantidade_selo" float-label="quantidade_selo" align="right" type="number"/>
-              <q-input v-model="notaFiscalItemIpi.codigo_enquadramento" float-label="codigo_enquadramento"/>
-              <q-input v-model="notaFiscalItemIpi.quantidade_unidade" float-label="quantidade_unidade" align="right" type="number"/>
-              <q-input v-model="notaFiscalItemIpi.valor_unidade" float-label="valor_unidade" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIpi.cst" stack-label="cst" ref="primeiroCampo"/>
+              <q-input v-model="notaFiscalItemIpi.base_calculo" stack-label="base_calculo" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIpi.percentual" stack-label="percentual" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIpi.valor" stack-label="valor" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIpi.cnpj_produtor" stack-label="cnpj_produtor" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIpi.codigo_selo" stack-label="codigo_selo"/>
+              <q-input v-model="notaFiscalItemIpi.quantidade_selo" stack-label="quantidade_selo" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIpi.codigo_enquadramento" stack-label="codigo_enquadramento"/>
+              <q-input v-model="notaFiscalItemIpi.quantidade_unidade" stack-label="quantidade_unidade" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemIpi.valor_unidade" stack-label="valor_unidade" align="right" type="number"/>
             </form>
           </div>
         </div>

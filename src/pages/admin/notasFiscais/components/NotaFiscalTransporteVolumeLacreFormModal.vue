@@ -15,7 +15,7 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalTransporteVolumeLacre.numero" float-label="numero" ref="primeiroCampo"/>
+              <q-input v-model="notaFiscalTransporteVolumeLacre.numero" stack-label="numero" ref="primeiroCampo"/>
             </form>
           </div>
         </div>

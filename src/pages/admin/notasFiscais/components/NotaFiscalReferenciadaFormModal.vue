@@ -16,16 +16,16 @@
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
               <ap-select-type v-model="notaFiscalRefenciada.tipo" type="NOTA_FISCAL_REFERENCIADA_TIPO" stack-label="Tipo" />
-              <q-input v-model="notaFiscalRefenciada.chave" float-label="chave" ref="primeiroCampo"/>
-              <q-input v-model="notaFiscalRefenciada.estado_id" float-label="estado_id"/>
+              <q-input v-model="notaFiscalRefenciada.chave" stack-label="chave" ref="primeiroCampo"/>
+              <q-input v-model="notaFiscalRefenciada.estado_id" stack-label="estado_id"/>
               <q-datetime v-model="notaFiscalRefenciada.emissao" type="datetime" format="DD/MMM/YY HH:mm" stack-label="Emissão"  align="center" />
-              <q-input v-model="notaFiscalRefenciada.cnpj" float-label="cnpj" align="right"/>
-              <q-input v-model="notaFiscalRefenciada.cpf" float-label="cpf" align="right"/>
-              <q-input v-model="notaFiscalRefenciada.inscricao_estadual" float-label="inscricao_estadual" align="right" />
+              <q-input v-model="notaFiscalRefenciada.cnpj" stack-label="cnpj" align="right"/>
+              <q-input v-model="notaFiscalRefenciada.cpf" stack-label="cpf" align="right"/>
+              <q-input v-model="notaFiscalRefenciada.inscricao_estadual" stack-label="inscricao_estadual" align="right" />
               <ap-select-type v-model="notaFiscalRefenciada.modelo" type="NOTA_FISCAL_REFERENCIADA_TIPO" stack-label="Modelo" />
-              <q-input v-model="notaFiscalRefenciada.serie" float-label="serie"/>
-              <q-input v-model="notaFiscalRefenciada.numero" float-label="numero" align="right" type="number"/>
-              <q-input v-model="notaFiscalRefenciada.coo" float-label="coo"/>
+              <q-input v-model="notaFiscalRefenciada.serie" stack-label="serie"/>
+              <q-input v-model="notaFiscalRefenciada.numero" stack-label="numero" align="right" type="number"/>
+              <q-input v-model="notaFiscalRefenciada.coo" stack-label="coo"/>
             </form>
           </div>
         </div>

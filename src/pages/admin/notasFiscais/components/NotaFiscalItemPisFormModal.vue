@@ -15,17 +15,17 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalItemPis.cst" float-label="cst" ref="primeiroCampo"/>
-              <q-input v-model="notaFiscalItemPis.base_calculo" float-label="base_calculo" align="right" type="number"/>
-              <q-input v-model="notaFiscalItemPis.percentual" float-label="percentual" align="right" type="number"/>
-              <q-input v-model="notaFiscalItemPis.valor" float-label="valor" align="right" type="number"/>
-              <q-input v-model="notaFiscalItemPis.produto_base_calculo" float-label="produto_base_calculo" align="right" type="number"/>
-              <q-input v-model="notaFiscalItemPis.produto_aliquota" float-label="produto_aliquota" align="right" type="number"/>
-              <q-input v-model="notaFiscalItemPis.st_base_calculo" float-label="st_base_calculo" align="right" type="number"/>
-              <q-input v-model="notaFiscalItemPis.st_percentual" float-label="st_percentual" align="right" type="number"/>
-              <q-input v-model="notaFiscalItemPis.st_valor" float-label="st_valor" align="right" type="number"/>
-              <q-input v-model="notaFiscalItemPis.st_produto_base_calculo" float-label="st_produto_base_calculo" align="right" type="number"/>
-              <q-input v-model="notaFiscalItemPis.st_produto_aliquota" float-label="st_produto_aliquota" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemPis.cst" stack-label="cst" ref="primeiroCampo"/>
+              <q-input v-model="notaFiscalItemPis.base_calculo" stack-label="base_calculo" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemPis.percentual" stack-label="percentual" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemPis.valor" stack-label="valor" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemPis.produto_base_calculo" stack-label="produto_base_calculo" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemPis.produto_aliquota" stack-label="produto_aliquota" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemPis.st_base_calculo" stack-label="st_base_calculo" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemPis.st_percentual" stack-label="st_percentual" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemPis.st_valor" stack-label="st_valor" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemPis.st_produto_base_calculo" stack-label="st_produto_base_calculo" align="right" type="number"/>
+              <q-input v-model="notaFiscalItemPis.st_produto_aliquota" stack-label="st_produto_aliquota" align="right" type="number"/>
 
             </form>
           </div>
