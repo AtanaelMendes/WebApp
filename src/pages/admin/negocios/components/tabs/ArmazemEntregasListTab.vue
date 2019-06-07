@@ -119,13 +119,13 @@
                           {{pesagem.numero_ticket}}
                         </div>
                         <div class="col-3 text-right table-cell">
-                          {{pesagem.peso_bruto_produto}} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
+                          {{numeral(pesagem.peso_bruto_produto).format('0,00')}} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
                         </div>
                         <div class="col-3 text-right table-cell">
-                          {{pesagem.peso_desconto}} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
+                          {{numeral(pesagem.peso_desconto).format('0,00')}} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
                         </div>
                         <div class="col-3 text-right table-cell">
-                          {{pesagem.peso_liquido}} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
+                          {{numeral(pesagem.peso_liquido).format('0,00')}} {{negocioCultura.safra_cultura.unidade_medida_pesagem.sigla}}
                         </div>
                       </div>
                     </div>
