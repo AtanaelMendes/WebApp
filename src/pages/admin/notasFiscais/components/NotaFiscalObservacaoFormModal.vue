@@ -15,9 +15,9 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalObservacao.is_fisco" float-label="is_fisco"/>
-              <q-input v-model="notaFiscalObservacao.campo" float-label="campo"/>
-              <q-input v-model="notaFiscalObservacao.texto" float-label="texto"/>
+              <q-input v-model="notaFiscalObservacao.is_fisco" stack-label="is_fisco"/>
+              <q-input v-model="notaFiscalObservacao.campo" stack-label="campo"/>
+              <q-input v-model="notaFiscalObservacao.texto" stack-label="texto"/>
             </form>
           </div>
         </div>

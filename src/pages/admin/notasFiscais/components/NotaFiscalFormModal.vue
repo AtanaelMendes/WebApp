@@ -49,7 +49,8 @@
                 </transition>
 
                 <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-                  <q-field icon="calendar_today" v-if="isNumeroEditavel">
+                  <q-field icon="calendar_today">
+                  <!--<q-field icon="calendar_today" v-if="isNumeroEditavel">-->
                     <div class="row">
                       <div class="col-6 q-pr-sm">
                         <q-datetime v-model="notaFiscal.emissao" type="datetime" format="DD/MMM/YY HH:mm" stack-label="Emissão"  align="center" />

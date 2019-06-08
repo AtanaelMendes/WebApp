@@ -16,10 +16,10 @@
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
               <ap-select-type v-model="notaFiscalFormaPagamento.tipo" type="PAGAMENTO_TIPO" stack-label="Forma de Pagamento" />
-              <q-input v-model="notaFiscalFormaPagamento.valor" float-label="valor" align="right" type="number" ref="primeiroCampo"/>
-              <q-input v-model="notaFiscalFormaPagamento.is_prazo" float-label="is_prazo"/>
-              <q-input v-model="notaFiscalFormaPagamento.troco" float-label="troco" align="right" type="number"/>
-              <q-input v-model="notaFiscalFormaPagamento.fatura" float-label="fatura"/>
+              <q-input v-model="notaFiscalFormaPagamento.valor" stack-label="valor" align="right" type="number" ref="primeiroCampo"/>
+              <q-input v-model="notaFiscalFormaPagamento.is_prazo" stack-label="is_prazo"/>
+              <q-input v-model="notaFiscalFormaPagamento.troco" stack-label="troco" align="right" type="number"/>
+              <q-input v-model="notaFiscalFormaPagamento.fatura" stack-label="fatura"/>
             </form>
           </div>
         </div>

@@ -15,7 +15,7 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="NotaFiscalProcesso.numero" float-label="numero" ref="primeiroCampo"/>
+              <q-input v-model="NotaFiscalProcesso.numero" stack-label="numero" ref="primeiroCampo"/>
               <ap-select-type v-model="NotaFiscalProcesso.origem" type="ORIGEM_PROCESSO" stack-label="Origem do Processo" />
             </form>
           </div>

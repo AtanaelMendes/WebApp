@@ -1,5 +1,5 @@
 <template>
-  <q-modal no-esc-dismiss v-model="isModalOpened" @hide="close" :content-css="{minWidth: '50vw', minHeight: '80vh'}">
+  <q-modal no-esc-dismiss v-model="isModalOpened" @hide="close" :content-css="{minWidth: '30vw', minHeight: '80vh'}">
     <q-modal-layout v-if="notaFiscalDuplicata">
       <q-toolbar slot="header">
         <q-toolbar-title>
@@ -15,9 +15,9 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalDuplicata.numero" float-label="Numero" align="right"/>
-              <q-datetime v-model="notaFiscalDuplicata.vencimento" type="datetime" format="DD/MMM/YY HH:mm" stack-label="Vencimento"  align="center" />
-              <q-input v-model="notaFiscalDuplicata.valor" float-label="Valor" align="right"/>
+              <q-input v-model="notaFiscalDuplicata.numero" stack-label="Número da Duplicata" align="right" required/>
+              <q-datetime v-model="notaFiscalDuplicata.vencimento" type="date" format="DD/MMM/YY" stack-label="Vencimento"  align="center" required/>
+              <q-input v-model="notaFiscalDuplicata.valor" stack-label="Valor" type="number" :step="0.01" min="0.01" align="right" required/>
             </form>
           </div>
         </div>

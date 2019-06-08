@@ -25,17 +25,17 @@
           <div class="row q-pa-md justify-center">
 
             <div class="col-xs-12 col-sm-8 col-md-6 col-lg-4">
-              <q-input v-model="notaFiscal.natureza" float-label="Natureza"/>
-              <q-input v-model="notaFiscal.presenca" float-label="Presenca"/>
-              <q-input v-model="notaFiscal.serie" float-label="Série"/>
-              <q-input v-model="notaFiscal.numero" float-label="Número"/>
-              <q-input v-model="notaFiscal.tipoEmissao" float-label="Tipo Emissão"/>
-              <q-input v-model="notaFiscal.finalidade" float-label="Finalidade"/>
-              <q-input v-model="notaFiscal.frete" float-label="Frete"/>
-              <q-input v-model="notaFiscal.informacoesComplementares" float-label="Observações"/>
-              <q-input v-model="notaFiscal.empenho" float-label="Empenho"/>
-              <q-input v-model="notaFiscal.pedido" float-label="Pedido"/>
-              <q-input v-model="notaFiscal.contrato" float-label="Contrato"/>
+              <q-input v-model="notaFiscal.natureza" stack-label="Natureza"/>
+              <q-input v-model="notaFiscal.presenca" stack-label="Presenca"/>
+              <q-input v-model="notaFiscal.serie" stack-label="Série"/>
+              <q-input v-model="notaFiscal.numero" stack-label="Número"/>
+              <q-input v-model="notaFiscal.tipoEmissao" stack-label="Tipo Emissão"/>
+              <q-input v-model="notaFiscal.finalidade" stack-label="Finalidade"/>
+              <q-input v-model="notaFiscal.frete" stack-label="Frete"/>
+              <q-input v-model="notaFiscal.informacoesComplementares" stack-label="Observações"/>
+              <q-input v-model="notaFiscal.empenho" stack-label="Empenho"/>
+              <q-input v-model="notaFiscal.pedido" stack-label="Pedido"/>
+              <q-input v-model="notaFiscal.contrato" stack-label="Contrato"/>
             </div>
 
           </div>

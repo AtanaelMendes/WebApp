@@ -13,14 +13,14 @@
           <div class="row justify-center">
             <div class="col-8 q-mt-lg">
               <q-select v-model="notaFiscal.notaFiscalSerieId.value"
-                        float-label="Série"
+                        stack-label="Série"
                         :options="parseNotasFiscaisSeries(notasFiscaisSeries)"
                         @input="changeNumeroSerie()"
               />
             </div>
 
             <div class="col-8">
-              <q-input type="number" v-model="notaFiscal.numero.value" float-label="Número" align="right"/>
+              <q-input type="number" v-model="notaFiscal.numero.value" stack-label="Número" align="right"/>
             </div>
 
           </div>
@@ -36,13 +36,13 @@
 
         <div class="row gutter-x-sm justify-center">
           <div class="col-8 q-mt-lg">
-            <q-select v-model="notaFiscal.naturezaOperacaoId.value" float-label="Natureza Operação" :options="parseNaturazaOperacao(naturezaOperacoes)" @input="selectNaturezaOperacao"/>
+            <q-select v-model="notaFiscal.naturezaOperacaoId.value" stack-label="Natureza Operação" :options="parseNaturazaOperacao(naturezaOperacoes)" @input="selectNaturezaOperacao"/>
           </div>
           <div class="col-8">
-            <q-select v-model="notaFiscal.isSaida.value" float-label="Entrada/Saída" :options="saidaOrEntrada"/>
+            <q-select v-model="notaFiscal.isSaida.value" stack-label="Entrada/Saída" :options="saidaOrEntrada"/>
           </div>
           <div class="col-8">
-            <q-select v-model="notaFiscal.frete.value" float-label="Frete" :options="tiposFrete"/>
+            <q-select v-model="notaFiscal.frete.value" stack-label="Frete" :options="tiposFrete"/>
           </div>
         </div>
       </q-carousel-slide>

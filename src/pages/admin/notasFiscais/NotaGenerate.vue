@@ -39,7 +39,7 @@
               @click.native="buscaUnidadeMedida()"
               filter v-model="area.unidade_medida.value"
               :options="UnidadeMedidaOptions"
-              float-label="Unidade Medida"
+              stack-label="Unidade Medida"
             />
             <div class="q-field-bottom row no-wrap" style="height: 22px">
               <div class="q-field-error col" v-if="area.unidade_medida.errorMessage != null" >{{area.unidade_medida.errorMessage}}</div>
@@ -88,7 +88,7 @@
         <form @keyup.enter="addTalhao(novoTalhao)">
           <custom-input-text label="Nome talhão" :model="novoTalhao.nome" style="flex-grow: 1; margin-right: 20px" />
           <!--<q-field :error="arrayTalhaoes.nome.errorMessage != null">-->
-          <!--<q-input float-label="Nome do talhão" v-model="novoTalhao.nome"/>-->
+          <!--<q-input stack-label="Nome do talhão" v-model="novoTalhao.nome"/>-->
           <!--<div class="q-field-bottom row no-wrap" style="height: 22px">-->
           <!--<div class="q-field-error col" v-if="arrayTalhaoes.nome.errorMessage != null" >{{arrayTalhaoes.nome.errorMessage}}</div>-->
           <!--</div>-->

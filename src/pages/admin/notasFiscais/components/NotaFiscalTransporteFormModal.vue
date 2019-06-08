@@ -15,25 +15,25 @@
         <div class="row justify-center">
           <div class="col-12">
             <form v-on:submit.prevent="save"><input type="submit" hidden />
-              <q-input v-model="notaFiscalTransporte.localizacao_id" float-label="localizacao_id"/>
-              <q-input v-model="notaFiscalTransporte.razao_social" float-label="razao_social" ref="primeiroCampo"/>
-              <q-input v-model="notaFiscalTransporte.inscricao_estadual" float-label="inscricao_estadual"/>
-              <q-input v-model="notaFiscalTransporte.cnpj" float-label="cnpj"/>
-              <q-input v-model="notaFiscalTransporte.cpf" float-label="cpf"/>
-              <q-input v-model="notaFiscalTransporte.endereco" float-label="endereco"/>
-              <q-input v-model="notaFiscalTransporte.cidade_id" float-label="cidade_id"/>
-              <q-input v-model="notaFiscalTransporte.retencao_valor_servico" float-label="retencao_valor_servico"/>
-              <q-input v-model="notaFiscalTransporte.retencao_base_calculo" float-label="retencao_base_calculo"/>
-              <q-input v-model="notaFiscalTransporte.retencao_percentual" float-label="retencao_percentual"/>
-              <q-input v-model="notaFiscalTransporte.retencao_valor" float-label="retencao_valor"/>
-              <q-input v-model="notaFiscalTransporte.retencao_cfop_id" float-label="retencao_cfop_id"/>
-              <q-input v-model="notaFiscalTransporte.retencao_cidade_id" float-label="retencao_cidade_id"/>
-              <q-input v-model="notaFiscalTransporte.caminhao_id" float-label="caminhao_id"/>
-              <q-input v-model="notaFiscalTransporte.caminhao_placa" float-label="caminhao_placa"/>
-              <q-input v-model="notaFiscalTransporte.caminhao_estado_id" float-label="caminhao_estado_id"/>
-              <q-input v-model="notaFiscalTransporte.caminhao_antt" float-label="caminhao_antt"/>
-              <q-input v-model="notaFiscalTransporte.vagao" float-label="vagao"/>
-              <q-input v-model="notaFiscalTransporte.balsa" float-label="balsa"/>
+              <q-input v-model="notaFiscalTransporte.localizacao_id" stack-label="localizacao_id"/>
+              <q-input v-model="notaFiscalTransporte.razao_social" stack-label="razao_social" ref="primeiroCampo"/>
+              <q-input v-model="notaFiscalTransporte.inscricao_estadual" stack-label="inscricao_estadual"/>
+              <q-input v-model="notaFiscalTransporte.cnpj" stack-label="cnpj"/>
+              <q-input v-model="notaFiscalTransporte.cpf" stack-label="cpf"/>
+              <q-input v-model="notaFiscalTransporte.endereco" stack-label="endereco"/>
+              <q-input v-model="notaFiscalTransporte.cidade_id" stack-label="cidade_id"/>
+              <q-input v-model="notaFiscalTransporte.retencao_valor_servico" stack-label="retencao_valor_servico"/>
+              <q-input v-model="notaFiscalTransporte.retencao_base_calculo" stack-label="retencao_base_calculo"/>
+              <q-input v-model="notaFiscalTransporte.retencao_percentual" stack-label="retencao_percentual"/>
+              <q-input v-model="notaFiscalTransporte.retencao_valor" stack-label="retencao_valor"/>
+              <q-input v-model="notaFiscalTransporte.retencao_cfop_id" stack-label="retencao_cfop_id"/>
+              <q-input v-model="notaFiscalTransporte.retencao_cidade_id" stack-label="retencao_cidade_id"/>
+              <q-input v-model="notaFiscalTransporte.caminhao_id" stack-label="caminhao_id"/>
+              <q-input v-model="notaFiscalTransporte.caminhao_placa" stack-label="caminhao_placa"/>
+              <q-input v-model="notaFiscalTransporte.caminhao_estado_id" stack-label="caminhao_estado_id"/>
+              <q-input v-model="notaFiscalTransporte.caminhao_antt" stack-label="caminhao_antt"/>
+              <q-input v-model="notaFiscalTransporte.vagao" stack-label="vagao"/>
+              <q-input v-model="notaFiscalTransporte.balsa" stack-label="balsa"/>
             </form>
           </div>
         </div>

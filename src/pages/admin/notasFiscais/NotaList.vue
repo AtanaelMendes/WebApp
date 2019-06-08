@@ -55,7 +55,7 @@
                   <div class="col-6">
                     <div class="row">{{notaFiscal.natureza}}</div>
                     <div class="row">
-                      <q-chip color="primary" small :color="(notaFiscal.status == 'Digitacao')?'amber-5':'positive'">
+                      <q-chip color="primary" small :color="(notaFiscal.status == 'Digitacao')?'amber-5':(notaFiscal.status == 'Cancelada')?'negative':(notaFiscal.status == 'Autorizada')?'positive':'grey' ">
                         {{notaFiscal.status}}
                       </q-chip>
                     </div>
