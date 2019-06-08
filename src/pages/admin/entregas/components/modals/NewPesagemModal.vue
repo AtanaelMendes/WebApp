@@ -181,6 +181,7 @@
       },
       openModalInEditMode(id, entrega){
         this.isModalOpened = true;
+        this.isEditMode = true;
         this.openModal(entrega);
 
         this.pesagemService.getPesagem(entrega.id, id).then(pesagem => {
