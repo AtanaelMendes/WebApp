@@ -1155,27 +1155,32 @@
           <q-btn class="float-right q-ml-sm" icon="add" color="primary" size="sm" round @click="addNotaFiscalObservacao()"/>
         </div>
         <q-card>
-          <div class="row" v-for="observacao in notaFiscal.notas_fiscais_observacoes" :key="observacao.id">
-            <div class="col-11 q-pa-xs">
-              <span v-for="campo in getAtributes(observacao)" :key="campo.id">
-                {{campo[0]}} = {{campo[1]}}<br>
-              </span>
-            </div>
-            <div class="col-1 borda-esquerda q-pa-xs">
-              <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
-                <q-popover>
-                  <q-list link>
-                    <q-item @click.native="editNotaFiscalObservacao(observacao)">
-                      <q-item-side icon="edit" />
-                      <q-item-main label="Editar"/>
-                    </q-item>
-                    <q-item @click.native="deleteNotaFiscalObservacao(observacao)">
-                      <q-item-side icon="delete" />
-                      <q-item-main label="Excluir"/>
-                    </q-item>
-                  </q-list>
-                </q-popover>
-              </q-btn>
+          <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 " v-for="observacao in notaFiscal.notas_fiscais_observacoes" :key="observacao.id">
+              <q-item class="all-border">
+                <q-item-main>
+                  <q-item-tile v-for="campo in getAtributes(observacao)" :key="campo.id" class="row">
+                    <div class="col-6"><span class="text-faded">{{campo[0]}} = </span></div>
+                    <div class="col-6"><span>{{campo[1]}} </span></div>
+                  </q-item-tile>
+                </q-item-main>
+                <q-item-side class="self-start">
+                  <q-btn icon="more_vert" flat round  color="grey-7">
+                    <q-popover>
+                      <q-list link>
+                        <q-item @click.native="editNotaFiscalObservacao(observacao)">
+                          <q-item-side icon="edit" />
+                          <q-item-main label="Editar"/>
+                        </q-item>
+                        <q-item @click.native="deleteNotaFiscalObservacao(observacao)">
+                          <q-item-side icon="delete" />
+                          <q-item-main label="Excluir"/>
+                        </q-item>
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
+                </q-item-side>
+              </q-item>
             </div>
           </div>
         </q-card>
@@ -1186,27 +1191,32 @@
           <q-btn class="float-right q-ml-sm" icon="add" color="primary" size="sm" round @click="addNotaFiscalAutorizado()"/>
         </div>
         <q-card>
-          <div class="row" v-for="autorizado in notaFiscal.notas_fiscais_autorizados" :key="autorizado.id">
-            <div class="col-11 q-pa-xs">
-              <span v-for="campo in getAtributes(autorizado)" :key="campo.id">
-                {{campo[0]}} = {{campo[1]}}<br>
-              </span>
-            </div>
-            <div class="col-1 borda-esquerda q-pa-xs">
-              <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
-                <q-popover>
-                  <q-list link>
-                    <q-item @click.native="editNotaFiscalAutorizado(autorizado)">
-                      <q-item-side icon="edit" />
-                      <q-item-main label="Editar"/>
-                    </q-item>
-                    <q-item @click.native="deleteNotaFiscalAutorizado(autorizado)">
-                      <q-item-side icon="delete" />
-                      <q-item-main label="Excluir"/>
-                    </q-item>
-                  </q-list>
-                </q-popover>
-              </q-btn>
+          <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 " v-for="autorizado in notaFiscal.notas_fiscais_autorizados" :key="autorizado.id">
+              <q-item class="all-border">
+                <q-item-main>
+                  <q-item-tile v-for="campo in getAtributes(autorizado)" :key="campo.id" class="row">
+                    <div class="col-6"><span class="text-faded">{{campo[0]}} = </span></div>
+                    <div class="col-6"><span>{{campo[1]}} </span></div>
+                  </q-item-tile>
+                </q-item-main>
+                <q-item-side class="self-start">
+                  <q-btn icon="more_vert" flat round  color="grey-7">
+                    <q-popover>
+                      <q-list link>
+                        <q-item @click.native="editNotaFiscalAutorizado(autorizado)">
+                          <q-item-side icon="edit" />
+                          <q-item-main label="Editar"/>
+                        </q-item>
+                        <q-item @click.native="deleteNotaFiscalAutorizado(autorizado)">
+                          <q-item-side icon="delete" />
+                          <q-item-main label="Excluir"/>
+                        </q-item>
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
+                </q-item-side>
+              </q-item>
             </div>
           </div>
         </q-card>
@@ -1217,27 +1227,32 @@
           <q-btn class="float-right q-ml-sm" icon="add" color="primary" size="sm" round @click="addNotaFiscalReferenciada()"/>
         </div>
         <q-card>
-          <div class="row" v-for="notaFiscalReferenciada in notaFiscal.notas_fiscais_referenciadas" :key="notaFiscalReferenciada.id">
-            <div class="col-11 q-pa-xs">
-              <span v-for="campo in getAtributes(notaFiscalReferenciada)" :key="campo.id">
-                {{campo[0]}} = {{campo[1]}}<br>
-              </span>
-            </div>
-            <div class="col-1 q-pa-xs borda-esquerda">
-              <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
-                <q-popover>
-                  <q-list link>
-                    <q-item @click.native="editNotaFiscalReferenciada(notaFiscalReferenciada)">
-                      <q-item-side icon="edit" />
-                      <q-item-main label="Editar"/>
-                    </q-item>
-                    <q-item @click.native="deleteNotaFiscalReferenciada(notaFiscalReferenciada)">
-                      <q-item-side icon="delete" />
-                      <q-item-main label="Excluir"/>
-                    </q-item>
-                  </q-list>
-                </q-popover>
-              </q-btn>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-for="notaFiscalReferenciada in notaFiscal.notas_fiscais_referenciadas" :key="notaFiscalReferenciada.id">
+              <q-item class="all-border">
+                <q-item-main>
+                  <q-item-tile v-for="campo in getAtributes(notaFiscalReferenciada)" :key="campo.id" class="row">
+                    <div class="col-4"><span class="text-faded">{{campo[0]}} = </span></div>
+                    <div class="col-8"><span>{{campo[1]}} </span></div>
+                  </q-item-tile>
+                </q-item-main>
+                <q-item-side class="self-start">
+                  <q-btn icon="more_vert" flat round  color="grey-7">
+                    <q-popover>
+                      <q-list link>
+                        <q-item @click.native="editNotaFiscalReferenciada(notaFiscalReferenciada)">
+                          <q-item-side icon="edit" />
+                          <q-item-main label="Editar"/>
+                        </q-item>
+                        <q-item @click.native="deleteNotaFiscalReferenciada(notaFiscalReferenciada)">
+                          <q-item-side icon="delete" />
+                          <q-item-main label="Excluir"/>
+                        </q-item>
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
+                </q-item-side>
+              </q-item>
             </div>
           </div>
         </q-card>
@@ -1248,27 +1263,34 @@
           <q-btn class="float-right q-ml-sm" icon="add" color="primary" size="sm" round @click="addNotaFiscalFormaPagamento()"/>
         </div>
         <q-card>
-          <div class="row" v-for="formaPagamento in notaFiscal.notas_fiscais_formas_pagamento" :key="formaPagamento.id">
-            <div class="col-11 q-pa-xs">
-              <span v-for="campo in getAtributes(formaPagamento)" :key="campo.id">
-                {{campo[0]}} = {{campo[1]}}<br>
-              </span>
-            </div>
-            <div class="col-1 q-pa-xs borda-esquerda">
-              <q-btn icon="more_vert" flat round class="float-right" color="grey-7">
-                <q-popover>
-                  <q-list link>
-                    <q-item @click.native="editNotaFiscalFormaPagamento(formaPagamento)">
-                      <q-item-side icon="edit" />
-                      <q-item-main label="Editar"/>
-                    </q-item>
-                    <q-item @click.native="deleteNotaFiscalFormaPagamento(formaPagamento)">
-                      <q-item-side icon="delete" />
-                      <q-item-main label="Excluir"/>
-                    </q-item>
-                  </q-list>
-                </q-popover>
-              </q-btn>
+          <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" v-for="formaPagamento in notaFiscal.notas_fiscais_formas_pagamento" :key="formaPagamento.id">
+
+              <q-item class="all-border">
+                <q-item-main>
+                  <q-item-tile v-for="campo in getAtributes(formaPagamento)" :key="campo.id" class="row">
+                    <div class="col-6"><span class="text-faded">{{campo[0]}} = </span></div>
+                    <div class="col-6"><span>{{campo[1]}} </span></div>
+                  </q-item-tile>
+                </q-item-main>
+                <q-item-side class="self-start">
+                  <q-btn icon="more_vert" flat round  color="grey-7">
+                    <q-popover>
+                      <q-list link>
+                        <q-item @click.native="editNotaFiscalFormaPagamento(formaPagamento)">
+                          <q-item-side icon="edit" />
+                          <q-item-main label="Editar"/>
+                        </q-item>
+                        <q-item @click.native="deleteNotaFiscalFormaPagamento(formaPagamento)">
+                          <q-item-side icon="delete" />
+                          <q-item-main label="Excluir"/>
+                        </q-item>
+                      </q-list>
+                    </q-popover>
+                  </q-btn>
+
+                </q-item-side>
+              </q-item>
             </div>
           </div>
         </q-card>
@@ -1280,12 +1302,12 @@
         </div>
         <q-card>
           <div class="row" >
-            <div class="col-3 " v-for="processo in notaFiscal.notas_fiscais_processos" :key="processo.id">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 " v-for="processo in notaFiscal.notas_fiscais_processos" :key="processo.id">
               <q-item class="all-border">
                 <q-item-main>
-                  <q-item-tile v-for="campo in getAtributes(processo)" :key="campo.id">
-                    <span class="text-faded">{{campo[0]}} = </span>
-                    <span>{{campo[1]}} </span>
+                  <q-item-tile v-for="campo in getAtributes(processo)" :key="campo.id" class="row">
+                    <div class="col-6"><span class="text-faded">{{campo[0]}} = </span></div>
+                    <div class="col-6"><span>{{campo[1]}} </span></div>
                   </q-item-tile>
                 </q-item-main>
                 <q-item-side class="self-start">
