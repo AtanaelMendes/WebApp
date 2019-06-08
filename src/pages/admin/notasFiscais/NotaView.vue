@@ -197,7 +197,7 @@
         <!--DESTINATARIO / REMETENTE-->
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm items-center	 q-mt-md">
           Destinatário / Remetente
-          <q-btn class="float-right q-ml-sm" icon="add" color="primary" size="sm" round @click="addNotaFiscalLocalizacao()"/>
+          <q-btn class="float-right q-ml-sm" icon="add" color="primary" dense size="sm" @click="addNotaFiscalLocalizacao()"/>
         </div>
         <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_destinatario" @atualizada='notaFiscalAtualizada' v-if="notaFiscal.nota_fiscal_localizacao_destinatario" />
         <nota-fiscal-localizacao :nota-fiscal="notaFiscal" :localizacao="notaFiscal.nota_fiscal_localizacao_entrega" @atualizada='notaFiscalAtualizada' v-if="notaFiscal.nota_fiscal_localizacao_entrega" />
@@ -206,7 +206,7 @@
         <!--FATURA DUPLICATA-->
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm items-center	 q-mt-md">
           Fatura/Duplicata
-          <q-btn class="float-right q-ml-sm" icon="add" color="primary" size="sm" round @click="addNotaFiscalDuplicata()"/>
+          <q-btn class="float-right q-ml-sm" icon="add" color="primary" dense size="sm" @click="addNotaFiscalDuplicata()"/>
         </div>
         <q-card>
           <div class="row">
@@ -467,7 +467,7 @@
         <!--TRANSPORTE E VOLUMES-->
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm items-center	 q-mt-md" >
           Transportador / Volumes Transportados
-          <q-btn class="float-right q-ml-sm" icon="add" color="primary" size="sm" round @click="addNotaFiscalTransporte()"/>
+          <q-btn class="float-right q-ml-sm" icon="add" color="primary" dense size="sm" @click="addNotaFiscalTransporte()"/>
         </div>
         <q-card v-for="transporte in notaFiscal.notas_fiscais_transportes" :key="transporte.id">
 
@@ -732,7 +732,7 @@
         <!--PRODUTOS / SERVICOS-->
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm items-center	 q-mt-md">
           Dados dos Produtos / Serviços
-          <q-btn class="float-right q-ml-sm" icon="add" color="primary" size="sm" round @click="addNotaFiscalItem()"/>
+          <q-btn class="float-right q-ml-sm" icon="add" color="primary" dense size="sm" @click="addNotaFiscalItem()"/>
         </div>
         <q-card>
 
@@ -1152,7 +1152,7 @@
         <!--OBSERVACOES-->
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm items-center	 q-mt-md">
           Observações
-          <q-btn class="float-right q-ml-sm" icon="add" color="primary" size="sm" round @click="addNotaFiscalObservacao()"/>
+          <q-btn class="float-right q-ml-sm" icon="add" color="primary" dense size="sm" @click="addNotaFiscalObservacao()"/>
         </div>
         <q-card>
           <div class="row" v-for="observacao in notaFiscal.notas_fiscais_observacoes" :key="observacao.id">
@@ -1183,7 +1183,7 @@
         <!--NOTA FISCAL AUTORIZADOS-->
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm items-center	 q-mt-md">
           Nota Fiscal Autorizados
-          <q-btn class="float-right q-ml-sm" icon="add" color="primary" size="sm" round @click="addNotaFiscalAutorizado()"/>
+          <q-btn class="float-right q-ml-sm" icon="add" color="primary" dense size="sm" @click="addNotaFiscalAutorizado()"/>
         </div>
         <q-card>
           <div class="row" v-for="autorizado in notaFiscal.notas_fiscais_autorizados" :key="autorizado.id">
@@ -1214,7 +1214,7 @@
         <!--NOTA FISCAL REFERENCIADA-->
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm items-center	 q-mt-md">
           Nota Fiscal Referenciada
-          <q-btn class="float-right q-ml-sm" icon="add" color="primary" size="sm" round @click="addNotaFiscalReferenciada()"/>
+          <q-btn class="float-right q-ml-sm" icon="add" color="primary" dense size="sm" @click="addNotaFiscalReferenciada()"/>
         </div>
         <q-card>
           <div class="row" v-for="notaFiscalReferenciada in notaFiscal.notas_fiscais_referenciadas" :key="notaFiscalReferenciada.id">
@@ -1245,7 +1245,7 @@
         <!--FORMA DE PAGAMANETO-->
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm items-center	 q-mt-md">
           Formas de Pagamento
-          <q-btn class="float-right q-ml-sm" icon="add" color="primary" size="sm" round @click="addNotaFiscalFormaPagamento()"/>
+          <q-btn class="float-right q-ml-sm" icon="add" color="primary" dense size="sm" @click="addNotaFiscalFormaPagamento()"/>
         </div>
         <q-card>
           <div class="row" v-for="formaPagamento in notaFiscal.notas_fiscais_formas_pagamento" :key="formaPagamento.id">
@@ -1276,7 +1276,7 @@
         <!--NOTA FISCAL PROCESSOS-->
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm items-center	 q-mt-md">
           Nota Fiscal Processos
-          <q-btn class="float-right q-ml-sm" icon="add" color="primary" size="sm" round @click="addNotaFiscalProcesso()"/>
+          <q-btn class="float-right q-ml-sm" icon="add" color="primary" dense size="sm" @click="addNotaFiscalProcesso()"/>
         </div>
         <q-card>
           <div class="row" >
@@ -1529,6 +1529,17 @@
       },
       deleteNotaFiscalItemPis(item){
         this.$refs.notaFiscalItemPisFormModal.delete(item)
+      },
+
+      // notaFiscalItemIpi
+      addNotaFiscalItemIpi(notaFiscalItemId){
+        this.$refs.notaFiscalItemIpiFormModal.add(notaFiscalItemId)
+      },
+      editNotaFiscalItemIpi(item){
+        this.$refs.notaFiscalItemIpiFormModal.edit(item)
+      },
+      deleteNotaFiscalItemIpi(item){
+        this.$refs.notaFiscalItemIpiFormModal.delete(item)
       },
 
       // notasFiscaisItensNve
