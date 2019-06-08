@@ -22,7 +22,7 @@
               <q-input v-model="notaFiscalRefenciada.cnpj" stack-label="cnpj" align="right"/>
               <q-input v-model="notaFiscalRefenciada.cpf" stack-label="cpf" align="right"/>
               <q-input v-model="notaFiscalRefenciada.inscricao_estadual" stack-label="inscricao_estadual" align="right" />
-              <ap-select-type v-model="notaFiscalRefenciada.modelo" type="NOTA_FISCAL_REFERENCIADA_TIPO" stack-label="Modelo" />
+              <ap-select-type v-model="notaFiscalRefenciada.modelo" type="NOTA_FISCAL_REFERENCIADA_MODELO" stack-label="Modelo" />
               <q-input v-model="notaFiscalRefenciada.serie" stack-label="serie"/>
               <q-input v-model="notaFiscalRefenciada.numero" stack-label="numero" align="right" type="number"/>
               <q-input v-model="notaFiscalRefenciada.coo" stack-label="coo"/>
