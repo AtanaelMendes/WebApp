@@ -88,7 +88,7 @@
                       <template v-if="entrega.total_peso_liquido > 0">
                         <q-item-tile label>
                           {{numeral(entrega.total_peso_liquido).format('0,0')}}
-                          {{entrega.total_peso_unidade_medida_sigla}}
+                          {{entrega.safra_cultura.unidade_medida_pesagem.sigla}}
                         </q-item-tile>
                         <q-item-tile sublabel>
                           Bruto {{numeral(entrega.total_peso_bruto_produto).format('0,0')}}
@@ -206,7 +206,7 @@
                           <br />
                           <span v-if="negocio.negocio_cultura.quantidade">
                             {{numeral(negocio.negocio_cultura.quantidade).format('0,0')}}
-                            <!--{{negocio.negocio_cultura.unidade_medida.sigla}}&nbsp-->
+                            {{entrega.safra_cultura.unidade_medida_pesagem.sigla}}
                           </span>
                           <span v-if="negocio.negocio_cultura.prazo_entrega_final">
                             até {{moment(negocio.negocio_cultura.prazo_entrega_final).format('DD/MMM/YY')}}
@@ -219,7 +219,7 @@
                       <q-item-main>
                         <q-item-tile label>
                           {{numeral(negocio.quantidade).format('0,0')}}
-                          <!--{{negocio.negocio_cultura.unidade_medida.sigla}}-->
+                          {{entrega.safra_cultura.unidade_medida_pesagem.sigla}}
                         </q-item-tile>
                         <q-item-tile sublabel>
                           Considerado no negócio
