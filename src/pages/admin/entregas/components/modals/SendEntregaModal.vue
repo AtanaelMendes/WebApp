@@ -202,37 +202,37 @@
           <div class="col-xs-12 col-sm-9 col-md-7 col-lg-5 col-xl-3">
             <div class="row gutter-xs">
               <div class="col-7">
-                <q-datetime v-model="sendEntrega.emissao.value" float-label="Emissão" type="date" align="center" format="DD/MM/YYYY" modal :disable="!hasNotaFiscal"/>
+                <q-datetime v-model="sendEntrega.emissao.value" stack-label="Emissão" type="date" align="center" format="DD/MM/YYYY" modal :disable="!hasNotaFiscal"/>
               </div>
             </div>
 
             <div class="row gutter-xs">
               <div class="col-7">
-                <q-select v-model="sendEntrega.serieId" float-label="Série" :options="parseNotasFiscaisSeries(notasFiscaisSeries)" @input="changeNumeroSerie()" :disable="!hasNotaFiscal"/>
+                <q-select v-model="sendEntrega.serieId" stack-label="Série" :options="parseNotasFiscaisSeries(notasFiscaisSeries)" @input="changeNumeroSerie()" :disable="!hasNotaFiscal"/>
               </div>
 
               <div class="col-5">
-                <q-input type="number" v-model="sendEntrega.notaNumero" float-label="Numero" align="right" :disable="!hasNotaFiscal"/>
+                <q-input type="number" v-model="sendEntrega.notaNumero" stack-label="Numero" align="right" :disable="!hasNotaFiscal"/>
               </div>
             </div>
 
             <div class="row gutter-xs">
               <div class="col-4">
-                <q-input type="number" v-model="sendEntrega.peso" @input="calculaTotal()" float-label="Peso" align="right" :disable="!hasNotaFiscal"/>
+                <q-input type="number" v-model="sendEntrega.peso" :suffix="selectedEntrega.safra_cultura.unidade_medida_pesagem.sigla" @input="calculaTotal()" stack-label="Peso" align="right" :disable="!hasNotaFiscal"/>
               </div>
 
               <div class="col-3">
-                <q-input type="number" v-model="sendEntrega.valor" @input="calculaTotal()" float-label="Valor" align="right" :disable="!hasNotaFiscal"/>
+                <q-input type="number" v-model="sendEntrega.valor" @input="calculaTotal()" stack-label="Valor" align="right" :disable="!hasNotaFiscal"/>
               </div>
 
               <div class="col-5">
-                <q-input type="number" v-model="sendEntrega.total" @input="calculaValor()" float-label="Total" align="right" :disable="!hasNotaFiscal"/>
+                <q-input type="number" v-model="sendEntrega.total" @input="calculaValor()" stack-label="Total" align="right" :disable="!hasNotaFiscal"/>
               </div>
             </div>
 
             <div class="row gutter-xs">
               <div class="col-4">
-                <q-input type="number" v-model="cfopSearchText" float-label="CFOP" @input="getCfopByNumero()" align="center" :disable="!hasNotaFiscal"/>
+                <q-input type="number" v-model="cfopSearchText" stack-label="CFOP" @input="getCfopByNumero()" align="center" :disable="!hasNotaFiscal"/>
               </div>
               <div class="col-8 self-center" >
                 <span class="q-caption text-faded" v-if="cfopDescricao">{{cfopDescricao}}</span>
@@ -331,6 +331,7 @@
         }
       },
       openModal: async function(funcao, object = null){
+        console.log('openModal', object)
         this.funcao = funcao;
         this.sendEntrega = new SendEntrega();
         switch (funcao) {
