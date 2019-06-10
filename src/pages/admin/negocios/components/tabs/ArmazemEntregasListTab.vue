@@ -8,7 +8,7 @@
         </div>
 
         <template v-if="movimentos">
-          <q-list separator  dense v-if="movimentos.length > 0">
+          <q-list separator dense v-if="movimentos.length > 0">
 
             <q-item style="padding-right: unset" class="gt-xs">
               <q-item-main class="row">
@@ -443,6 +443,9 @@
   .table-container .q-spinner circle{
     stroke-width: 6px;
     color: #8c8c8c;
+  }
+  .table-container .q-item{
+    border-top: 1px solid #e0e0e0;
   }
   .table-container .link{
     text-decoration: none;
