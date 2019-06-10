@@ -17,14 +17,11 @@
               <form v-on:submit.prevent="save"><input type="submit" hidden />
 
                 <q-field icon="format_list_numbered" v-if="isSerieEditavel || isNumeroEditavel">
-                  <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
                     <div class="row" v-if="isSerieEditavel">
                       <div class="col-12">
                         <ap-select-nota-fiscal-serie v-model="notaFiscal.nota_fiscal_serie_id"/>
                       </div>
                     </div>
-                  </transition>
-                  <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
                     <div class="row" v-if="isNumeroEditavel">
                       <div class="col-2 q-pr-sm">
                         <q-input v-model="notaFiscal.modelo" stack-label="Modelo" align="center" ref="primeiroCampo"/>
@@ -39,28 +36,22 @@
                         <q-toggle v-model="notaFiscal.is_saida" label="Saída" />
                       </div>
                     </div>
-                  </transition>
                 </q-field>
 
-                <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-                  <q-field icon="calendar_today" v-if="isNumeroEditavel" :count="44">
-                    <q-input v-model="notaFiscal.chave" stack-label="Chave" align="center" :max-length="44" />
-                  </q-field>
-                </transition>
+                <q-field icon="calendar_today" v-if="isNumeroEditavel" :count="44">
+                  <q-input v-model="notaFiscal.chave" stack-label="Chave" align="center" :max-length="44" />
+                </q-field>
 
-                <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-                  <q-field icon="calendar_today">
-                  <!--<q-field icon="calendar_today" v-if="isNumeroEditavel">-->
-                    <div class="row">
-                      <div class="col-6 q-pr-sm">
-                        <q-datetime v-model="notaFiscal.emissao" type="datetime" format="DD/MMM/YY HH:mm" stack-label="Emissão"  align="center" />
-                      </div>
-                      <div class="col-6">
-                        <q-datetime v-model="notaFiscal.saida" type="datetime" format="DD/MMM/YY HH:mm" stack-label="Saída / Entrada"  align="center"/>
-                      </div>
+                <q-field icon="calendar_today" v-if="isNumeroEditavel">
+                  <div class="row">
+                    <div class="col-6 q-pr-sm">
+                      <q-datetime v-model="notaFiscal.emissao" type="datetime" format="DD/MMM/YY HH:mm" stack-label="Emissão"  align="center" />
                     </div>
-                  </q-field>
-                </transition>
+                    <div class="col-6">
+                      <q-datetime v-model="notaFiscal.saida" type="datetime" format="DD/MMM/YY HH:mm" stack-label="Saída / Entrada"  align="center"/>
+                    </div>
+                  </div>
+                </q-field>
 
 
                 <q-input v-model="notaFiscal.natureza_operacao_id" stack-label="natureza_operacao_id"/>
@@ -81,6 +72,8 @@
                 <q-input v-model="notaFiscal.empenho" stack-label="empenho"/>
                 <q-input v-model="notaFiscal.pedido" stack-label="pedido"/>
                 <q-input v-model="notaFiscal.contrato" stack-label="contrato"/>
+
+                <!--
                 <q-input v-model="notaFiscal.status" stack-label="status"/>
                 <q-input v-model="notaFiscal.protocolo_autorizacao" stack-label="protocolo_autorizacao"/>
                 <q-input v-model="notaFiscal.total_produto" stack-label="total_produto"/>
@@ -106,6 +99,8 @@
                 <q-input v-model="notaFiscal.total_cofins" stack-label="total_cofins"/>
                 <q-input v-model="notaFiscal.total_nota_fiscal" stack-label="total_nota_fiscal"/>
                 <q-input v-model="notaFiscal.total_tributos" stack-label="total_tributos"/>
+                -->
+
               </form>
             </div>
           </div>
