@@ -26,9 +26,9 @@
     </toolbar>
 
     <div class="row q-pa-md gutter-sm space-end">
-
       <div class="col-12" v-if="notaFiscal">
 
+        <!--MODAIS-->
         <template>
           <nota-fiscal-form-modal ref="notaFiscalFormModal" @atualizada='notaFiscalAtualizada' @apagada='notaFiscalApagada' @duplicada='notaFiscalAtualizada'/>
           <nota-fiscal-item-form-modal ref="notaFiscalItemFormModal" @atualizada='notaFiscalAtualizada' :nota-fiscal-id="notaFiscal.id"/>
@@ -56,7 +56,7 @@
         <!--EMITENTE-->
         <q-card class="q-mb-sm">
           <div class="row">
-            <div class="col-lg-5 col-sm-12 q-pa-xs ">
+            <div class="col-sm-12 col-lg-5 q-pa-xs ">
               <div class="text-faded q-caption ellipsis text-center">
                 Identificação Emitente
               </div>
@@ -277,7 +277,7 @@
           <div class="row">
 
             <!--BASE CALCULO ICMS-->
-            <div class="col-1 q-pa-xs">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-1 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 Base Calc. ICMS
               </div>
@@ -287,7 +287,7 @@
             </div>
 
             <!--VALO ICMS-->
-            <div class="col-1 q-pa-xs borda-esquerda">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-1 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 Valor do ICMS
               </div>
@@ -297,7 +297,7 @@
             </div>
 
             <!--BASE CALCULO ICMS ST-->
-            <div class="col-1 q-pa-xs borda-esquerda">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-1 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 Base Calc. ICMS ST
               </div>
@@ -307,7 +307,7 @@
             </div>
 
             <!-- VALOR DO ICMS SUBST-->
-            <div class="col-1 q-pa-xs borda-esquerda">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-1 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 Valor do ICMS SUBST
               </div>
@@ -317,7 +317,7 @@
             </div>
 
             <!--VALOR IMPOSTO IMPORTACAO-->
-            <div class="col-1 q-pa-xs borda-esquerda">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-1 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 V IMP Importação
               </div>
@@ -327,7 +327,7 @@
             </div>
 
             <!-- VALOR ICMS UF REMET-->
-            <div class="col-1 q-pa-xs borda-esquerda">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-1 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 V ICMS UF REMET
               </div>
@@ -337,7 +337,7 @@
             </div>
 
             <!-- V FCP UF DEST-->
-            <div class="col-2 q-pa-xs borda-esquerda">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 V FCP UF DEST
               </div>
@@ -347,7 +347,7 @@
             </div>
 
             <!-- VALOR DO PIS-->
-            <div class="col-2 q-pa-xs borda-esquerda">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 Valor do PIS
               </div>
@@ -357,7 +357,7 @@
             </div>
 
             <!-- VALOR TOTAL PRODUTO-->
-            <div class="col-2 q-pa-xs borda-esquerda">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 V Total Produto
               </div>
@@ -366,12 +366,8 @@
               </div>
             </div>
 
-          </div>
-
-          <div class="row borda-superior">
-
             <!--VALOR DO FRETE-->
-            <div class="col-1 q-pa-xs">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-1 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 Valor do Frete
               </div>
@@ -381,7 +377,7 @@
             </div>
 
             <!--VALOR SEGURO-->
-            <div class="col-1 q-pa-xs borda-esquerda">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-1 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 Valor do Seguro
               </div>
@@ -391,7 +387,7 @@
             </div>
 
             <!--DESCONTO-->
-            <div class="col-1 q-pa-xs borda-esquerda">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-1 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 Desconto
               </div>
@@ -401,7 +397,7 @@
             </div>
 
             <!--OUTRAS DESPESAS-->
-            <div class="col-1 q-pa-xs borda-esquerda">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-1 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 Outras Despesas
               </div>
@@ -411,7 +407,7 @@
             </div>
 
             <!--VALOR TOTAL IPI-->
-            <div class="col-1 q-pa-xs borda-esquerda">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-1 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 Valor Total IPI
               </div>
@@ -421,7 +417,7 @@
             </div>
 
             <!--V ICMS UF DEST-->
-            <div class="col-1 q-pa-xs borda-esquerda">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-1 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 V ICMS UF DEST
               </div>
@@ -431,7 +427,7 @@
             </div>
 
             <!-- V TOT TRIB-->
-            <div class="col-2 q-pa-xs borda-esquerda">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 V TOT TRIB
               </div>
@@ -441,7 +437,7 @@
             </div>
 
             <!--VALOR DO COFINS-->
-            <div class="col-2 q-pa-xs borda-esquerda">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 Valor do COFINS
               </div>
@@ -451,7 +447,7 @@
             </div>
 
             <!--VALOR TOTAL DA NOTA-->
-            <div class="col-2 q-pa-xs borda-esquerda">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 V Total Nota
               </div>
@@ -460,21 +456,22 @@
               </div>
             </div>
 
-          </div>
+            <div class="col-md-6 lt-lg gt-sm borda-esquerda borda-superior"></div>
 
+          </div>
         </q-card>
 
         <!--TRANSPORTE E VOLUMES-->
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm items-center	 q-mt-md" >
-          Transportador / Volumes Transportados
+          Transportador
           <q-btn class="float-right q-ml-sm" icon="add" color="primary" dense size="sm" @click="addNotaFiscalTransporte()"/>
         </div>
-        <q-card v-for="transporte in notaFiscal.notas_fiscais_transportes" :key="transporte.id">
+        <template v-for="transporte in notaFiscal.notas_fiscais_transportes">
+          <q-card :key="transporte.id" class="row">
 
-          <div class="row">
 
             <!--NOME RAZAO SOCIAL-->
-            <div class="col-3 q-pa-xs">
+            <div class="col-xs-10 col-sm-10 col-md-10 col-lg-3 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 Nome / Razão Social
               </div>
@@ -483,60 +480,8 @@
               </div>
             </div>
 
-            <!--FRETE-->
-            <div class="col-2 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                Frete
-              </div>
-              <div class="ellipsis text-center">
-                <ap-label-type type="FRETE" :value="notaFiscal.frete"/>
-              </div>
-            </div>
-
-            <!--CODIGO ANTT-->
-            <div class="col-2 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                Código ANTT
-              </div>
-              <div class="ellipsis text-center">
-                {{transporte.caminhao_antt}}
-              </div>
-            </div>
-
-            <!-- PLACA DO VEICULO-->
-            <div class="col-1 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                Placa do Veículo
-              </div>
-              <div class="ellipsis text-center">
-                {{transporte.caminhao_placa}}
-              </div>
-            </div>
-
-            <!-- CAMINHAO UF-->
-            <div class="col-1 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                UF
-              </div>
-              <div class="ellipsis text-center" v-if="transporte.caminhao_estado">
-                {{transporte.caminhao_estado.sigla}}
-              </div>
-            </div>
-
-            <!-- CNPJ / CPF-->
-            <div class="col-2 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                CNPJ / CPF
-              </div>
-              <div class="ellipsis text-center" v-if="transporte.cnpj">
-                {{formatCNPJ(transporte.cnpj)}}
-              </div>
-              <div class="ellipsis text-center" v-if="transporte.cpf">
-                {{formatCPF(transporte.cpf)}}
-              </div>
-            </div>
-
-            <div class="col-1 borda-esquerda">
+            <!--ACTION BUTTON LT-LG-->
+            <div class="col-2 lt-lg borda-esquerda borda-superior">
               <q-btn icon="more_vert" color="grey-7" flat round class="float-right">
                 <q-popover>
                   <q-list link>
@@ -567,27 +512,103 @@
                         </q-item>
                       </template>
                     </q-collapsible>
-
-                    <!--MANUITENCAO VOLUME-->
-                    <q-collapsible icon="shopping_basket" label="Volume" class="cursor-pointer">
-                      <q-item v-close-overlay @click.native="addNotaFiscalTransporteVolume(transporte.id)">
-                        <q-item-side icon="add" />
-                        <q-item-main label="Adicionar"/>
-                      </q-item>
-                    </q-collapsible>
-
-
                   </q-list>
                 </q-popover>
               </q-btn>
             </div>
 
-          </div>
+            <!--FRETE-->
+            <div class="col-xs-6 col-sm-3 col-md-2 col-lg-2 q-pa-xs borda-esquerda borda-superior">
+              <div class="text-faded q-caption ellipsis">
+                Frete
+              </div>
+              <div class="ellipsis text-center">
+                <ap-label-type type="FRETE" :value="notaFiscal.frete"/>
+              </div>
+            </div>
 
-          <div class="row borda-superior">
+            <!--CODIGO ANTT-->
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 q-pa-xs borda-esquerda borda-superior">
+              <div class="text-faded q-caption ellipsis">
+                Código ANTT
+              </div>
+              <div class="ellipsis text-center">
+                {{transporte.caminhao_antt}}
+              </div>
+            </div>
+
+            <!-- PLACA DO VEICULO-->
+            <div class="col-xs-6 col-sm-3 col-md-2 col-lg-1 q-pa-xs borda-esquerda borda-superior">
+              <div class="text-faded q-caption ellipsis">
+                Placa do Veículo
+              </div>
+              <div class="ellipsis text-center">
+                {{transporte.caminhao_placa}}
+              </div>
+            </div>
+
+            <!-- CAMINHAO UF-->
+            <div class="col-xs-6 col-sm-2 col-md-1 col-lg-1 q-pa-xs borda-esquerda borda-superior">
+              <div class="text-faded q-caption ellipsis">
+                UF
+              </div>
+              <div class="ellipsis text-center" v-if="transporte.caminhao_estado">
+                {{transporte.caminhao_estado.sigla}}
+              </div>
+            </div>
+
+            <!-- CNPJ / CPF-->
+            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2 q-pa-xs borda-esquerda borda-superior">
+              <div class="text-faded q-caption ellipsis">
+                CNPJ / CPF
+              </div>
+              <div class="ellipsis text-center" v-if="transporte.cnpj">
+                {{formatCNPJ(transporte.cnpj)}}
+              </div>
+              <div class="ellipsis text-center" v-if="transporte.cpf">
+                {{formatCPF(transporte.cpf)}}
+              </div>
+            </div>
+
+            <!--ACTION BUTTON GT-MD-->
+            <div class="col-lg-1 gt-md borda-esquerda borda-superior">
+              <q-btn icon="more_vert" color="grey-7" flat round class="float-right">
+                <q-popover>
+                  <q-list link>
+                    <q-item v-close-overlay @click.native="editNotaFiscalTransporte(transporte)">
+                      <q-item-side icon="edit" />
+                      <q-item-main label="Editar"/>
+                    </q-item>
+                    <q-item v-close-overlay @click.native="deleteNotaFiscalTransporte(transporte)">
+                      <q-item-side icon="delete" />
+                      <q-item-main label="Excluir"/>
+                    </q-item>
+                    <q-item-separator />
+
+                    <!--MANUITENCAO REBOQUE-->
+                    <q-collapsible icon="local_shipping" label="Reboque" class="cursor-pointer">
+                      <q-item v-close-overlay @click.native="addNotaFiscalTransporteReboque(transporte.id)" v-if='transporte.notas_fiscais_transportes_reboques.length == 0'>
+                        <q-item-side icon="add" />
+                        <q-item-main label="Adicionar"/>
+                      </q-item>
+                      <template v-for="reboque in transporte.notas_fiscais_transportes_reboques">
+                        <q-item v-close-overlay @click.native="editNotaFiscalTransporteReboque(reboque)">
+                          <q-item-side icon="edit" />
+                          <q-item-main label="Editar"/>
+                        </q-item>
+                        <q-item v-close-overlay @click.native="deleteNotaFiscalTransporteReboque(reboque)">
+                          <q-item-side icon="delete" />
+                          <q-item-main label="Excluir"/>
+                        </q-item>
+                      </template>
+                    </q-collapsible>
+                  </q-list>
+                </q-popover>
+              </q-btn>
+            </div>
 
             <!--ENDERECO-->
-            <div class="col-5 q-pa-xs">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-5 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 Endereço
               </div>
@@ -597,7 +618,7 @@
             </div>
 
             <!--MUNICIPIO-->
-            <div class="col-3 q-pa-xs borda-esquerda">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 Município
               </div>
@@ -607,7 +628,7 @@
             </div>
 
             <!--UF-->
-            <div class="col-1 q-pa-xs borda-esquerda">
+            <div class="col-xs-3 col-sm-3 col-md-1 col-lg-1 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 UF
               </div>
@@ -617,7 +638,7 @@
             </div>
 
             <!--INSCRICAO ESTADUAL-->
-            <div class="col-3 q-pa-xs borda-esquerda">
+            <div class="col-xs-9 col-sm-9 col-md-3 col-lg-3 q-pa-xs borda-esquerda borda-superior">
               <div class="text-faded q-caption ellipsis">
                 Inscração Estadual
               </div>
@@ -625,109 +646,154 @@
                 {{transporte.inscricao_estadual}}
               </div>
             </div>
+          </q-card>
 
+          <!--VOLUMES TRANSPORTADOS-->
+          <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm items-center	 q-mt-md" >
+            Volumes Transportados
+            <q-btn class="float-right q-ml-sm" icon="add" color="primary" dense size="sm" @click="addNotaFiscalTransporteVolume(transporte.id)"/>
           </div>
+          <q-card>
+            <div class="row" v-for="volume in transporte.notas_fiscais_transportes_volumes" :key="volume.id">
 
-          <div class="row borda-superior" v-for="volume in transporte.notas_fiscais_transportes_volumes" :key="volume.id">
+              <!--QUANTIDADE-->
+              <div class="col-xs-4 col-lg-1 q-pa-xs borda-esquerda borda-superior">
+                <div class="text-faded q-caption ellipsis">
+                  Quantidade
+                </div>
+                <div class="ellipsis text-right">
+                  {{numeral(volume.quantidade).format('0,0')}}
+                </div>
+              </div>
 
-            <!--QUANTIDADE-->
-            <div class="col-1 q-pa-xs">
-              <div class="text-faded q-caption ellipsis">
-                Quantidade
+              <!--ESPECIE-->
+              <div class="col-xs-6 col-lg-2 q-pa-xs borda-esquerda borda-superior">
+                <div class="text-faded q-caption ellipsis">
+                  Espécie
+                </div>
+                <div class="ellipsis text-center">
+                  {{volume.especie}}
+                </div>
               </div>
-              <div class="ellipsis text-right">
-                {{numeral(volume.quantidade).format('0,0')}}
-              </div>
-            </div>
 
-            <!--ESPECIE-->
-            <div class="col-2 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                Espécie
-              </div>
-              <div class="ellipsis text-center">
-                {{volume.especie}}
-              </div>
-            </div>
-
-            <!--MARCA-->
-            <div class="col-2 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                Marca
-              </div>
-              <div class="ellipsis text-center">
-                {{volume.marca}}
-              </div>
-            </div>
-
-            <!--NUMERACAO-->
-            <div class="col-2 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                Numeração
-              </div>
-              <div class="ellipsis text-right">
-                {{volume.numeracao}}
-              </div>
-            </div>
-
-            <!--PESOBRUTO-->
-            <div class="col-2 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                Peso Bruto
-              </div>
-              <div class="ellipsis text-right">
-                {{numeral(volume.peso_bruto).format('0,0')}}
-              </div>
-            </div>
-
-            <!--PESO LIQUIDO-->
-            <div class="col-2 q-pa-xs borda-esquerda">
-              <div class="text-faded q-caption ellipsis">
-                Peso Líquido
-              </div>
-              <div class="ellipsis text-right">
-                {{numeral(volume.peso_liquido).format('0,0')}}
-              </div>
-            </div>
-
-            <div class="col-1 borda-esquerda">
-              <q-btn icon="more_vert" flat round color="grey-7" class="float-right">
-                <q-popover>
-                  <q-list link>
-                    <q-item @click.native="editNotaFiscalTransporteVolume(volume)">
-                      <q-item-side icon="edit" />
-                      <q-item-main label="Editar"/>
-                    </q-item>
-                    <q-item @click.native="deleteNotaFiscalTransporteVolume(volume)">
-                      <q-item-side icon="delete" />
-                      <q-item-main label="Excluir"/>
-                    </q-item>
-
-                    <!--VOLUME LACRE-->
-                    <q-collapsible icon="local_offer" label="Lacre" class="cursor-pointer">
-                      <q-item v-close-overlay @click.native="addNotaFiscalTransporteVolumeLacre(volume.id)" v-if='volume.notas_fiscais_transportes_volumes_lacres.length == 0'>
-                        <q-item-side icon="add" />
-                        <q-item-main label="Adicionar"/>
+              <!--ACTION BUTTON LT-LG-->
+              <div class="col-2 lt-lg borda-esquerda borda-superior">
+                <q-btn icon="more_vert" flat round color="grey-7" class="float-right">
+                  <q-popover>
+                    <q-list link>
+                      <q-item @click.native="editNotaFiscalTransporteVolume(volume)">
+                        <q-item-side icon="edit" />
+                        <q-item-main label="Editar"/>
                       </q-item>
-                      <template v-for="lacre in volume.notas_fiscais_transportes_volumes_lacres">
-                        <q-item v-close-overlay @click.native="editNotaFiscalTransporteVolumeLacre(lacre)">
-                          <q-item-side icon="edit" />
-                          <q-item-main label="Editar"/>
-                        </q-item>
-                        <q-item v-close-overlay @click.native="deleteNotaFiscalTransporteVolumeLacre(lacre)">
-                          <q-item-side icon="delete" />
-                          <q-item-main label="Excluir"/>
-                        </q-item>
-                      </template>
-                    </q-collapsible>
+                      <q-item @click.native="deleteNotaFiscalTransporteVolume(volume)">
+                        <q-item-side icon="delete" />
+                        <q-item-main label="Excluir"/>
+                      </q-item>
 
-                  </q-list>
-                </q-popover>
-              </q-btn>
+                      <!--VOLUME LACRE-->
+                      <q-collapsible icon="local_offer" label="Lacre" class="cursor-pointer">
+                        <q-item v-close-overlay @click.native="addNotaFiscalTransporteVolumeLacre(volume.id)" v-if='volume.notas_fiscais_transportes_volumes_lacres.length == 0'>
+                          <q-item-side icon="add" />
+                          <q-item-main label="Adicionar"/>
+                        </q-item>
+                        <template v-for="lacre in volume.notas_fiscais_transportes_volumes_lacres">
+                          <q-item v-close-overlay @click.native="editNotaFiscalTransporteVolumeLacre(lacre)">
+                            <q-item-side icon="edit" />
+                            <q-item-main label="Editar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="deleteNotaFiscalTransporteVolumeLacre(lacre)">
+                            <q-item-side icon="delete" />
+                            <q-item-main label="Excluir"/>
+                          </q-item>
+                        </template>
+                      </q-collapsible>
+
+                    </q-list>
+                  </q-popover>
+                </q-btn>
+              </div>
+
+
+              <!--MARCA-->
+              <div class="col-xs-6 col-md-3 col-lg-2 q-pa-xs borda-esquerda borda-superior">
+                <div class="text-faded q-caption ellipsis">
+                  Marca
+                </div>
+                <div class="ellipsis text-center">
+                  {{volume.marca}}
+                </div>
+              </div>
+
+              <!--NUMERACAO-->
+              <div class="col-xs-6 col-md-3 col-lg-2 q-pa-xs borda-esquerda borda-superior">
+                <div class="text-faded q-caption ellipsis">
+                  Numeração
+                </div>
+                <div class="ellipsis text-right">
+                  {{volume.numeracao}}
+                </div>
+              </div>
+
+              <!--PESOBRUTO-->
+              <div class="col-xs-6 col-md-3 col-lg-2 q-pa-xs borda-esquerda borda-superior">
+                <div class="text-faded q-caption ellipsis">
+                  Peso Bruto
+                </div>
+                <div class="ellipsis text-right">
+                  {{numeral(volume.peso_bruto).format('0,0')}}
+                </div>
+              </div>
+
+              <!--PESO LIQUIDO-->
+              <div class="col-xs-6 col-md-3 col-lg-2 q-pa-xs borda-esquerda borda-superior">
+                <div class="text-faded q-caption ellipsis">
+                  Peso Líquido
+                </div>
+                <div class="ellipsis text-right">
+                  {{numeral(volume.peso_liquido).format('0,0')}}
+                </div>
+              </div>
+
+              <!--ACTION BUTTON GT-MD-->
+              <div class="col-lg-1 gt-md borda-esquerda borda-superior">
+                <q-btn icon="more_vert" flat round color="grey-7" class="float-right">
+                  <q-popover>
+                    <q-list link>
+                      <q-item @click.native="editNotaFiscalTransporteVolume(volume)">
+                        <q-item-side icon="edit" />
+                        <q-item-main label="Editar"/>
+                      </q-item>
+                      <q-item @click.native="deleteNotaFiscalTransporteVolume(volume)">
+                        <q-item-side icon="delete" />
+                        <q-item-main label="Excluir"/>
+                      </q-item>
+
+                      <!--VOLUME LACRE-->
+                      <q-collapsible icon="local_offer" label="Lacre" class="cursor-pointer">
+                        <q-item v-close-overlay @click.native="addNotaFiscalTransporteVolumeLacre(volume.id)" v-if='volume.notas_fiscais_transportes_volumes_lacres.length == 0'>
+                          <q-item-side icon="add" />
+                          <q-item-main label="Adicionar"/>
+                        </q-item>
+                        <template v-for="lacre in volume.notas_fiscais_transportes_volumes_lacres">
+                          <q-item v-close-overlay @click.native="editNotaFiscalTransporteVolumeLacre(lacre)">
+                            <q-item-side icon="edit" />
+                            <q-item-main label="Editar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="deleteNotaFiscalTransporteVolumeLacre(lacre)">
+                            <q-item-side icon="delete" />
+                            <q-item-main label="Excluir"/>
+                          </q-item>
+                        </template>
+                      </q-collapsible>
+
+                    </q-list>
+                  </q-popover>
+                </q-btn>
+              </div>
+
             </div>
-
-          </div>
-        </q-card>
+          </q-card>
+        </template>
 
         <!--PRODUTOS / SERVICOS-->
         <div class="row text-weight-light q-body-1 q-py-xs q-mt-sm items-center	 q-mt-md">
@@ -736,7 +802,8 @@
         </div>
         <q-card>
 
-          <div class="row">
+          <!--CABECALHO ITEMS GT-MD-->
+          <div class="row gt-md">
 
             <div class="col-3">
               <div class="row full-height">
@@ -864,21 +931,158 @@
 
           </div>
 
+          <!--ITEMS-->
           <div class="row borda-superior" v-for="item in notaFiscal.notas_fiscais_itens" :key="item.id">
 
-            <div class="col-3">
+            <div class="col-xs-12 col-lg-3">
               <div class="row full-height">
 
                 <!--CODIGO PRODUTO-->
-                <div class="col-4 q-pa-xs">
-
+                <div class="col-xs-10 col-lg-4 q-pa-xs borda-esquerda">
+                  <div class="text-faded q-caption lt-lg">
+                    Código
+                  </div>
                   <div class="ellipsis text-center">
                     {{item.codigo}}
                   </div>
                 </div>
 
+                <div class="col-2 lt-lg">
+                  <!--BOTOES DE MANUTENCAO-->
+                  <div class="col-2 borda-esquerda" align="end">
+                    <q-btn round flat icon="more_vert" color="grey-7">
+                      <q-popover>
+                        <q-list link>
+                          <q-item v-close-overlay @click.native="editNotaFiscalItem(item)">
+                            <q-item-side icon="edit" />
+                            <q-item-main label="Editar"/>
+                          </q-item>
+                          <q-item v-close-overlay @click.native="deleteNotaFiscalItem(item)">
+                            <q-item-side icon="delete" />
+                            <q-item-main label="Excluir"/>
+                          </q-item>
+
+                          <q-item-separator />
+
+                          <!--MANUITENCAO COFINS-->
+                          <q-collapsible icon="receipt" label="Cofins" class="cursor-pointer">
+                            <q-item v-close-overlay @click.native="addNotaFiscalItemCofins(item.id)" v-if='item.notas_fiscais_itens_cofins.length == 0'>
+                              <q-item-side icon="add" />
+                              <q-item-main label="Adicionar"/>
+                            </q-item>
+                            <template v-for="cofins in item.notas_fiscais_itens_cofins">
+                              <q-item v-close-overlay @click.native="editNotaFiscalItemCofins(cofins)">
+                                <q-item-side icon="edit" />
+                                <q-item-main label="Editar"/>
+                              </q-item>
+                              <q-item v-close-overlay @click.native="deleteNotaFiscalItemCofins(cofins)">
+                                <q-item-side icon="delete" />
+                                <q-item-main label="Excluir"/>
+                              </q-item>
+                            </template>
+                          </q-collapsible>
+
+                          <!--MANUITENCAO ICMS-->
+                          <q-collapsible icon="receipt" label="ICMS" class="cursor-pointer">
+                            <q-item v-close-overlay @click.native="addNotaFiscalItemIcms(item.id)" v-if='item.notas_fiscais_itens_icms.length == 0'>
+                              <q-item-side icon="add" />
+                              <q-item-main label="Adicionar"/>
+                            </q-item>
+                            <template v-for="icms in item.notas_fiscais_itens_icms">
+                              <q-item v-close-overlay @click.native="editNotaFiscalItemIcms(icms)">
+                                <q-item-side icon="edit" />
+                                <q-item-main label="Editar"/>
+                              </q-item>
+                              <q-item v-close-overlay @click.native="deleteNotaFiscalItemIcms(icms)">
+                                <q-item-side icon="delete" />
+                                <q-item-main label="Excluir"/>
+                              </q-item>
+                            </template>
+                          </q-collapsible>
+
+                          <!--MANUTENCAO PIS-->
+                          <q-collapsible icon="receipt" label="PIS" class="cursor-pointer">
+                            <q-item v-close-overlay @click.native="addNotaFiscalItemPis(item.id)" v-if='item.notas_fiscais_itens_pis.length == 0'>
+                              <q-item-side icon="add" />
+                              <q-item-main label="Adicionar"/>
+                            </q-item>
+                            <template v-for="pis in item.notas_fiscais_itens_pis">
+                              <q-item v-close-overlay @click.native="editNotaFiscalItemPis(pis)">
+                                <q-item-side icon="edit" />
+                                <q-item-main label="Editar"/>
+                              </q-item>
+                              <q-item v-close-overlay @click.native="deleteNotaFiscalItemPis(pis)">
+                                <q-item-side icon="delete" />
+                                <q-item-main label="Excluir"/>
+                              </q-item>
+                            </template>
+                          </q-collapsible>
+
+                          <!--MANUTENCAO NVE-->
+                          <q-collapsible icon="receipt" label="NVE" class="cursor-pointer">
+                            <q-item v-close-overlay @click.native="addNotaFiscalItemNve(item.id)" v-if='item.notas_fiscais_itens_nves.length == 0'>
+                              <q-item-side icon="add" />
+                              <q-item-main label="Adicionar"/>
+                            </q-item>
+                            <template v-for="nve in item.notas_fiscais_itens_nves">
+                              <q-item v-close-overlay @click.native="editNotaFiscalItemNve(nve)">
+                                <q-item-side icon="edit" />
+                                <q-item-main label="Editar"/>
+                              </q-item>
+                              <q-item v-close-overlay @click.native="deleteNotaFiscalItemNve(nve)">
+                                <q-item-side icon="delete" />
+                                <q-item-main label="Excluir"/>
+                              </q-item>
+                            </template>
+                          </q-collapsible>
+
+                          <!--MANUTENCAO IPI-->
+                          <q-collapsible icon="receipt" label="IPI" class="cursor-pointer">
+                            <q-item v-close-overlay @click.native="addNotaFiscalItemIpi(item.id)" v-if='item.notas_fiscais_itens_ipi.length == 0'>
+                              <q-item-side icon="add" />
+                              <q-item-main label="Adicionar"/>
+                            </q-item>
+                            <template v-for="ipi in item.notas_fiscais_itens_ipi">
+                              <q-item v-close-overlay @click.native="editNotaFiscalItemIpi(ipi)">
+                                <q-item-side icon="edit" />
+                                <q-item-main label="Editar"/>
+                              </q-item>
+                              <q-item v-close-overlay @click.native="deleteNotaFiscalItemIpi(ipi)">
+                                <q-item-side icon="delete" />
+                                <q-item-main label="Excluir"/>
+                              </q-item>
+                            </template>
+                          </q-collapsible>
+
+                          <!--MANUTENCAO IMPOSTO DEVOLUCAO-->
+                          <q-collapsible icon="receipt" label="Imposto Devolução" class="cursor-pointer">
+                            <q-item v-close-overlay @click.native="addNotaFiscalItemImpostoDevolucao(item.id)" v-if='item.notas_fiscais_itens_impostos_devolucoes.length == 0'>
+                              <q-item-side icon="add" />
+                              <q-item-main label="Adicionar"/>
+                            </q-item>
+                            <template v-for="impostoDevolucao in item.notas_fiscais_itens_impostos_devolucoes">
+                              <q-item v-close-overlay @click.native="editNotaFiscalItemImpostoDevolucao(impostoDevolucao)">
+                                <q-item-side icon="edit" />
+                                <q-item-main label="Editar"/>
+                              </q-item>
+                              <q-item v-close-overlay @click.native="deleteNotaFiscalItemImpostoDevolucao(impostoDevolucao)">
+                                <q-item-side icon="delete" />
+                                <q-item-main label="Excluir"/>
+                              </q-item>
+                            </template>
+                          </q-collapsible>
+
+                        </q-list>
+                      </q-popover>
+                    </q-btn>
+                  </div>
+                </div>
+
                 <!--DESCRICAO PRODUTO-->
-                <div class="col-7 q-pa-xs borda-esquerda">
+                <div class="col-xs-12 col-lg-7 q-pa-xs borda-esquerda borda-superior">
+                  <div class="text-faded q-caption lt-lg">
+                    Produto/Serviço
+                  </div>
                   <div class="ellipsis ">
                     {{item.produto}}
                   </div>
@@ -886,31 +1090,31 @@
               </div>
             </div>
 
-            <div class="col-3">
+            <div class="col-xs-12 col-lg-3">
               <div class="row full-height">
                 <!--NCM / SH-->
-                <div class="col-4 q-pa-xs borda-esquerda">
+                <div class="col-xs-12 col-lg-4 q-pa-xs borda-esquerda borda-superior">
                   <div class="ellipsis text-center ">
                     {{item.ncm}}
                   </div>
                 </div>
 
                 <!--O/CST-->
-                <div class="col-2 q-pa-xs borda-esquerda">
+                <div class="col-xs-12 col-lg-2 q-pa-xs borda-esquerda borda-superior">
                   <div class="ellipsis text-center" v-for="icms in item.notas_fiscais_itens_icms" :key="icms.id">
                     {{icms.origem}}{{icms.cst}}
                   </div>
                 </div>
 
                 <!--CFOP-->
-                <div class="col-2 q-pa-xs borda-esquerda">
+                <div class="col-xs-12 col-lg-2 q-pa-xs borda-esquerda borda-superior">
                   <div class="ellipsis text-center">
                     {{item.cfop}}
                   </div>
                 </div>
 
                 <!--UNIDADE-->
-                <div class="col-4 q-pa-xs borda-esquerda">
+                <div class="col-xs-12 col-lg-4 q-pa-xs borda-esquerda borda-superior">
                   <div class="ellipsis text-center">
                     {{item.unidade_medida.sigla}}
                   </div>
@@ -918,25 +1122,25 @@
               </div>
             </div>
 
-            <div class="col-3">
+            <div class="col-xs-12 col-lg-3">
               <div class="row full-height">
 
                 <!--QUANTIDADE-->
-                <div class="col-4 q-pa-xs borda-esquerda">
+                <div class="col-xs-12 col-lg-4 q-pa-xs borda-esquerda borda-superior">
                   <div class="ellipsis text-right">
                     {{numeral(item.quantidade).format('0,0')}}
                   </div>
                 </div>
 
                 <!--VALOR  UNITARIO-->
-                <div class="col-4 q-pa-xs borda-esquerda">
+                <div class="col-xs-12 col-lg-4 q-pa-xs borda-esquerda borda-superior">
                   <div class="ellipsis text-right">
                     {{numeral(item.valor_unitario).format('0,0.00')}}
                   </div>
                 </div>
 
                 <!--VALOR TOTAL-->
-                <div class="col-4 q-pa-xs borda-esquerda full-height">
+                <div class="col-xs-12 col-lg-4 q-pa-xs borda-esquerda borda-superior full-height">
                   <div class="ellipsis text-right">
                     {{numeral(item.valor_produto).format('0,0.00')}}
                   </div>
@@ -945,10 +1149,10 @@
               </div>
             </div>
 
-            <div class="col-3">
+            <div class="col-xs-12 col-lg-3">
               <div class="row full-height">
                 <!--BASE CALCULO ICMS-->
-                <div class="col-2 q-pa-xs borda-esquerda">
+                <div class="col-2 q-pa-xs borda-esquerda borda-superior">
                   {{item.notas_fiscais_itens_icms.base_calculo}}
                   <div class="ellipsis text-right" v-for="icms in item.notas_fiscais_itens_icms" :key="icms.id">
                     {{numeral(icms.base_calculo).format('0,0.00')}}
@@ -956,28 +1160,28 @@
                 </div>
 
                 <!--VALOR ICMS-->
-                <div class="col-2 q-pa-xs borda-esquerda">
+                <div class="col-xs-12 col-lg-2 q-pa-xs borda-esquerda borda-superior">
                   <div class="ellipsis text-right" v-for="icms in item.notas_fiscais_itens_icms" :key="icms.id">
                     {{numeral(icms.valor).format('0,0.00')}}
                   </div>
                 </div>
 
                 <!--VALOR IPI-->
-                <div class="col-2 q-pa-xs borda-esquerda">
+                <div class="col-xs-12 col-lg-2 q-pa-xs borda-esquerda borda-superior">
                   <div class="ellipsis text-right" v-for="ipi in item.notas_fiscais_itens_ipi" :key="ipi.id">
                     {{numeral(ipi.valor).format('0,0.00')}}
                   </div>
                 </div>
 
                 <!--ALIQUOTA ICMS-->
-                <div class="col-2 q-pa-xs borda-esquerda">
+                <div class="col-xs-12 col-lg-2 q-pa-xs borda-esquerda borda-superior">
                   <div class="ellipsis text-right" v-for="icms in item.notas_fiscais_itens_icms" :key="icms.id">
                     {{numeral(icms.percentual).format('0,0.00')}}
                   </div>
                 </div>
 
                 <!--ALIQUOTA IPI-->
-                <div class="col-2 q-pa-xs borda-esquerda full-height">
+                <div class="col-xs-12 col-lg-2 q-pa-xs borda-esquerda borda-superior full-height">
                   <div class="ellipsis text-right" v-for="ipi in item.notas_fiscais_itens_ipi" :key="ipi.id">
                     {{numeral(ipi.percentual).format('0,0.00')}}
                   </div>
@@ -1333,39 +1537,6 @@
           </div>
         </q-card>
       </div>
-
-<!--      PAGE STICKY BUTTOMS
-      <q-page-sticky position="bottom-right" :offset="[35, 35]" >
-        <q-fab icon="add" direction="up" color="deep-orange" class="custom-fab" >
-          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalReferenciada()" icon="add">
-            <span class="shadow-2">Nota Fiscal Referênciada</span>
-          </q-fab-action>
-          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalFormaPagamento()" icon="add">
-            <span class="shadow-2">Forma de Pagamento</span>
-          </q-fab-action>
-          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalDuplicata()" icon="add">
-            <span class="shadow-2">Duplicatas</span>
-          </q-fab-action>
-          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalProcesso()" icon="add">
-            <span class="shadow-2">Processos</span>
-          </q-fab-action>
-          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalTransporte()" icon="add">
-            <span class="shadow-2">Transporte</span>
-          </q-fab-action>
-          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalObservacao()" icon="add">
-            <span class="shadow-2">Observações</span>
-          </q-fab-action>
-          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalAutorizado()" icon="add">
-            <span class="shadow-2">Autorizado</span>
-          </q-fab-action>
-          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalItem()" icon="add">
-            <span class="shadow-2">Item</span>
-          </q-fab-action>
-          <q-fab-action color="grey-1" text-color="grey-7" @click="addNotaFiscalLocalizacao()" icon="add">
-            <span class="shadow-2">Destinatario/Rementente</span>
-          </q-fab-action>
-        </q-fab>
-      </q-page-sticky>-->
 
       <div v-if="isEmptyList" class="no-result col-12">
         <ap-no-results />

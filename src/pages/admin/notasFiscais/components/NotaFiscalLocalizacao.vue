@@ -3,7 +3,7 @@
     <div class="row ">
 
       <!--NOME RAZAO SOCIAL-->
-      <div class="col-6 q-pa-xs">
+      <div class="col-xs-10 col-lg-6 borda-esquerda borda-superior q-pa-xs">
         <div class="text-faded q-caption ellipsis">
           Nome/Razão Social
         </div>
@@ -12,8 +12,28 @@
         </div>
       </div>
 
+      <!--ACTION BUTTONS LT-LG-->
+      <div class="col-2 borda-esquerda borda-superior lt-lg">
+        <q-btn icon="more_vert" color="grey-7" flat round class="float-right">
+
+          <q-popover>
+            <q-list link>
+              <q-item v-close-overlay @click.native="editNotaFiscalLocalizacao(localizacao)">
+                <q-item-side icon="edit" />
+                <q-item-main label="Editar"/>
+              </q-item>
+              <q-item v-close-overlay @click.native="deleteNotaFiscalLocalizacao(localizacao)">
+                <q-item-side icon="delete" />
+                <q-item-main label="Excluir"/>
+              </q-item>
+            </q-list>
+          </q-popover>
+
+        </q-btn>
+      </div>
+
       <!--CPF / CNPJ-->
-      <div class="col-3 q-pa-xs borda-esquerda">
+      <div class="col-xs-12 col-sm-6 col-lg-3 q-pa-xs borda-esquerda borda-superior">
         <div class="text-faded q-caption ellipsis">
           CPF / CNPJ
         </div>
@@ -28,7 +48,7 @@
       </div>
 
       <!--DATA EMISSAO-->
-      <div class="col-2 q-pa-xs borda-esquerda">
+      <div class="col-xs-12 col-sm-6 col-lg-2 q-pa-xs borda-esquerda borda-superior">
         <div class="text-faded q-caption ellipsis">
           Data Emissão
         </div>
@@ -37,7 +57,8 @@
         </div>
       </div>
 
-      <div class="col-1 borda-esquerda">
+      <!--ACTION BUTTONS GT-MD-->
+      <div class="col-1 borda-esquerda borda-superior gt-md">
         <q-btn icon="more_vert" color="grey-7" flat round class="float-right">
 
           <q-popover>
@@ -57,20 +78,18 @@
       </div>
     </div>
 
-    <div class="row borda-superior">
+    <div class="row">
 
       <!--ENDERECO-->
-      <div class="col-5 q-pa-xs">
-        <div class="text-faded q-caption ellipsis">
+      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5 q-pa-xs borda-esquerda borda-superior">
+        <div class="text-faded q-caption">
           Endereço
         </div>
-        <div class="ellipsis">
-          {{localizacao.endereco}}, {{localizacao.numero}}, {{localizacao.complemento}}
-        </div>
+        {{localizacao.endereco}}, {{localizacao.numero}}, {{localizacao.complemento}}
       </div>
 
       <!--BAIRRO DISTRITO-->
-      <div class="col-2 q-pa-xs borda-esquerda">
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-2 q-pa-xs borda-esquerda borda-superior">
         <div class="text-faded q-caption ellipsis">
           Bairro / Distrito
         </div>
@@ -80,7 +99,7 @@
       </div>
 
       <!--CEP-->
-      <div class="col-2 q-pa-xs borda-esquerda">
+      <div class="col-xs-6 col-lg-2 q-pa-xs borda-esquerda borda-superior">
         <div class="text-faded q-caption ellipsis">
           CEP
         </div>
@@ -90,7 +109,7 @@
       </div>
 
       <!--ENTRADA SAIDA-->
-      <div class="col-2 q-pa-xs borda-esquerda">
+      <div class="col-xs-12 col-sm-6 col-lg-2 q-pa-xs borda-esquerda borda-superior">
         <div class="text-faded q-caption ellipsis">
           Data Entrada/Saída
         </div>
@@ -99,16 +118,15 @@
         </div>
       </div>
 
-      <div class="col-1">
+      <div class="col-1 gt-md borda-superior">
         &nbsp
       </div>
-
     </div>
 
     <div class="row borda-superior">
 
       <!--MUNICIPIO-->
-      <div class="col-4 q-pa-xs">
+      <div class="col-xs-10 col-lg-4 q-pa-xs borda-esquerda">
         <div class="text-faded q-caption ellipsis">
           Município
         </div>
@@ -118,7 +136,7 @@
       </div>
 
       <!--ESTADO SIGLA-->
-      <div class="col-1 q-pa-xs borda-esquerda">
+      <div class="col-xs-2 col-lg-1 q-pa-xs borda-esquerda">
         <div class="text-faded q-caption ellipsis">
           UF
         </div>
@@ -128,7 +146,7 @@
       </div>
 
       <!--FONE FAX-->
-      <div class="col-2 q-pa-xs borda-esquerda">
+      <div class="col-xs-6 col-md-4 col-lg-2 q-pa-xs borda-esquerda borda-superior">
         <div class="text-faded q-caption ellipsis">
           Fone / Fax
         </div>
@@ -138,7 +156,7 @@
       </div>
 
       <!--INSCRICAO ESTADUAL-->
-      <div class="col-2 q-pa-xs borda-esquerda">
+      <div class="col-xs-6 col-md-4 col-lg-2 q-pa-xs borda-esquerda borda-superior">
         <div class="text-faded q-caption ellipsis">
           Inscrição Estadual
         </div>
@@ -148,7 +166,7 @@
       </div>
 
       <!--HORA ENTRADA SAIDA-->
-      <div class="col-2 q-pa-xs borda-esquerda">
+      <div class="col-xs-12 col-md-4 col-lg-2 q-pa-xs borda-esquerda borda-superior">
         <div class="text-faded q-caption ellipsis">
           Hora da Saída/Entrada
         </div>
@@ -157,7 +175,7 @@
         </div>
       </div>
 
-      <div class="col-1 ">
+      <div class="col-1 gt-md ">
         &nbsp
       </div>
 
